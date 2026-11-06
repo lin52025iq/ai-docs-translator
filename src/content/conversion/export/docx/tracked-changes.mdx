@@ -1,13 +1,13 @@
 ---
-title: Export tracked changes to DOCX
+title: 将修订导出为 DOCX
 tags:
   - type: addon
-    tooltip: Add Tracked Changes to your subscription
+    tooltip: 将修订跟踪添加到订阅中
   - type: beta
 meta:
-  title: Export tracked changes | Tiptap Conversion
-  description: Export Tiptap suggestions as Word insertions and deletions so they appear in Word's review pane.
-  category: Conversion
+  title: 导出修订 | Tiptap Conversion
+  description: 将 Tiptap 建议导出为 Word 插入和删除修订，使其显示在 Word 的审阅窗格中。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
@@ -16,87 +16,78 @@ import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 
 <EnterpriseCalloutAuto variant="docx" renderMode="sidebar" disableWaitlist />
 
-<Callout title="Tracked Changes add-on" variant="hint">
-  Tracked Changes is a paid add-on that isn't included in any plan. Test it during the free trial
-  or purchase it in [your dashboard](https://cloud.tiptap.dev/v2/billing). Once [integrated in
-  your editor](/tracked-changes/getting-started/install), it works with Conversion to round-trip
-  reviews between Word and Tiptap.
+<Callout title="修订跟踪附加组件" variant="hint">
+  修订跟踪是一项付费附加组件，不包含在任何套餐中。你可以在免费试用期间进行测试，或在[控制面板](https://cloud.tiptap.dev/v2/billing)中购买。在[集成到编辑器](/tracked-changes/getting-started/install)后，它便可与 Conversion 配合使用，在 Word 和 Tiptap 之间往返传递审阅内容。
 </Callout>
 
 <Requirements>
-  <RequirementItem label="1. Activate trial or subscribe">
-    Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start
-    plan](https://cloud.tiptap.dev/v2/billing) in your account.
+  <RequirementItem label="1. 开始试用或订阅">
+    在你的账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 套餐](https://cloud.tiptap.dev/v2/billing)。
   </RequirementItem>
-  <RequirementItem label="2. Get the Tracked Changes add-on">
-    Tracked Changes is a paid add-on that isn't included in any plan. Test it during the free
-    trial or purchase it separately in [your dashboard](https://cloud.tiptap.dev/v2/billing).
+  <RequirementItem label="2. 获取修订跟踪附加组件">
+    修订跟踪是一项付费附加组件，不包含在任何套餐中。你可以在免费试用期间进行测试，或在[控制面板](https://cloud.tiptap.dev/v2/billing)中单独购买。
   </RequirementItem>
-  <RequirementItem label="3. Install from private registry">
-    To install this frontend extension, authenticate to Tiptap's private npm registry by following
-    the [setup guide](/guides/pro-extensions).
+  <RequirementItem label="3. 从私有注册表安装">
+    若要安装此前端扩展，请按照[设置指南](/guides/pro-extensions)进行身份验证，以访问 Tiptap 的私有 npm 注册表。
   </RequirementItem>
 </Requirements>
 
-Text carrying a [tracked changes](/tracked-changes/getting-started/overview) suggestion is exported as a real Word revision, so it appears in Word's review pane and can be accepted or rejected there.
+带有[修订跟踪](/tracked-changes/getting-started/overview)建议的文本会导出为真正的 Word 修订，因此会显示在 Word 的审阅窗格中，并可在那里接受或拒绝。
 
-## How it works
+## 工作原理
 
-Nothing to configure. If the content you export has suggestions on it, they become revisions:
+无需配置。如果导出的内容中包含建议，它们就会转换为修订：
 
 ```ts
 editor.chain().exportDocx().run()
 ```
 
-| Mark type          | Becomes                       |
-| ------------------ | ----------------------------- |
-| `add`              | A Word insertion              |
-| `delete`           | A Word deletion               |
-| `replaceInsertion` | The insertion half of an edit |
-| `replaceDeletion`  | The deletion half of an edit  |
+| 标记类型           | 转换为             |
+| ------------------ | ------------------ |
+| `add`              | Word 插入修订      |
+| `delete`           | Word 删除修订      |
+| `replaceInsertion` | 编辑中的插入部分   |
+| `replaceDeletion`  | 编辑中的删除部分   |
 
-These are the values on the suggestion mark itself. The tracked changes query API reports the last two together as a single `replace` suggestion, so you see `replace` there and the two halves here.
+这些值直接对应建议标记本身。修订跟踪查询 API 会将后两项合并报告为一个 `replace` 建议，因此在查询结果中会看到 `replace`，而这里则会看到这两个部分。
 
-A replacement is written as a deletion immediately followed by an insertion, which is how Word represents text being swapped for other text. Imported documents only ever carry `add` and `delete`, so the two halves come from edits made in the editor.
+替换会写成先删除、紧接着再插入，这是 Word 表示文本替换的方式。导入的文档只会包含 `add` 和 `delete`，因此这两个部分来自在编辑器中进行的编辑。
 
-## Node type changes
+## 节点类型更改
 
-DOCX export rejects documents containing pending [node type suggestions](/tracked-changes/usage/advanced-usage#node-type-changes), such as a paragraph-to-heading conversion. Accept or reject those proposals before exporting tracked changes.
+如果文档包含待处理的[节点类型建议](/tracked-changes/usage/advanced-usage#node-type-changes)，例如将段落转换为标题，DOCX 导出会拒绝处理。导出修订跟踪内容前，请先接受或拒绝这些提议。
 
-## Whole blocks
+## 整块内容
 
-A suggestion that covers a whole node, the shape [Compare](/compare/guides/tracked-changes) produces for an added or removed paragraph and the editor produces for an inserted image, is exported the way Word tracks it. The content inside the node becomes revisions, and the node itself is marked as inserted or deleted, so accepting or rejecting in Word removes or restores the whole thing without leaving an empty line behind.
+当建议涵盖整个节点时，例如 [Compare](/compare/guides/tracked-changes) 为新增或删除的段落生成的建议，或编辑器为插入的图像生成的建议，导出结果会按照 Word 跟踪修订的方式处理。节点内部的内容会成为修订，而节点本身会标记为已插入或已删除。因此，在 Word 中接受或拒绝时，会删除或还原整个内容，不会留下空行。
 
-This covers paragraphs, headings, blockquotes, lists and list items, task items, table rows and cells, images and horizontal rules. A suggestion on a container such as a list or a table cell reaches everything inside it.
+这适用于段落、标题、引用块、列表和列表项、任务项、表格行和单元格、图像以及水平线。针对容器（如列表或表格单元格）的建议会作用于其中的所有内容。
 
-A suggestion on a link keeps both the link and the revision, matching how Word writes a tracked link.
+针对链接的建议会同时保留链接和修订，与 Word 编写跟踪链接的方式一致。
 
-## Author and date
+## 作者和日期
 
-Each revision carries the reviewer's name and a timestamp, taken from the suggestion:
+每条修订都会带有审阅者姓名和时间戳，这些信息取自建议：
 
-- The name comes from `userMetadata.name`. Without one it falls back to `userId`, and failing that to `anonymous`.
-- The date comes from `createdAt`. A suggestion with no usable timestamp gets a fixed placeholder date, because Word rejects a revision with an empty one.
+- 姓名取自 `userMetadata.name`。如果没有该值，则使用 `userId`；如果也没有，则使用 `anonymous`。
+- 日期取自 `createdAt`。如果建议没有可用的时间戳，则会使用固定的占位日期，因为 Word 不接受日期为空的修订。
 
-Opening the file in Word shows these in the review pane, grouped by reviewer, exactly as if the edits had been made in Word.
+在 Word 中打开文件后，这些信息会显示在审阅窗格中，并按审阅者分组，效果与直接在 Word 中进行编辑完全相同。
 
-## What is not exported (work in progress)
+## 不会导出的内容（正在完善中）
 
-In each of these the content itself is exported, so the document reads correctly in Word. What is missing is the record that a particular thing was a tracked change.
+以下情况都会导出内容本身，因此文档在 Word 中仍可正常阅读。缺少的是某项内容属于跟踪修订的记录。
 
-- **Formatting suggestions.** A suggestion recording that text was made bold is not written as a Word formatting revision. The formatting is exported, so the text looks right, but it does not appear as a tracked change.
-- **The checkbox of a task item.** The text of a tracked task item is exported as a revision, the checkbox is not, because Word does not allow a checkbox control inside a revision. Accepting the deletion in Word leaves the empty box behind.
-- **One stacking order of overlapping suggestions.** Where a deletion and an insertion sit on the same text, one reviewer deleting what another inserted is written with both revisions nested, so Word shows both authors. The opposite stacking order is written as the deletion alone.
+- **格式建议。** 记录文本已设为粗体的建议不会写成 Word 格式修订。格式本身会导出，因此文本显示正常，但不会显示为跟踪修订。
+- **任务项的复选框。** 带有跟踪修订的任务项文本会作为修订导出，但复选框不会，因为 Word 不允许在修订中包含复选框控件。在 Word 中接受删除后，空复选框仍会保留。
+- **重叠建议的一种堆叠顺序。** 当删除和插入作用于同一段文本时，如果一位审阅者删除了另一位审阅者插入的内容，导出结果会将两条修订嵌套，因此 Word 会显示两位作者。相反的堆叠顺序则只会写入删除修订。
 
-## Round-trip
+## 往返转换
 
-A document imported from Word with [`trackedChanges: 'preserve'`](/conversion/import/docx/tracked-changes) and exported again keeps its revisions, along with each reviewer's name and date.
+从 Word 导入并设置 [`trackedChanges: 'preserve'`](/conversion/import/docx/tracked-changes) 的文档，再次导出后会保留修订以及每位审阅者的姓名和日期。
 
-One detail changes shape. Word writes one revision record per run of text, and the export does the same, so a single suggestion that spans differently formatted text is written as several adjacent revisions rather than one. Word groups them back together in its review pane, so a reader sees the same set of changes.
+有一点会有所不同：Word 会为每段文本分别写入一条修订记录，导出时也会如此。因此，跨越不同格式文本的单条建议会被写成多条相邻修订，而不是一条。Word 会在审阅窗格中将它们重新组合，因此读者看到的更改内容仍然相同。
 
-<Callout variant="info" title="Accepting in Word matches accepting in Tiptap">
-  Accepting every change in Word produces the same text as importing the same file with
-  `trackedChanges: 'accept'`, and rejecting everything matches `trackedChanges: 'reject'`. The
-  exceptions are the cases in [what is not exported](#what-is-not-exported-work-in-progress), where
-  the revision is not written and so cannot be accepted or rejected.
+<Callout variant="info" title="在 Word 中接受更改与在 Tiptap 中接受效果相同">
+  在 Word 中接受所有更改后得到的文本，与使用 `trackedChanges: 'accept'` 导入同一文件得到的文本相同；拒绝所有更改则与 `trackedChanges: 'reject'` 的效果相同。例外是[不会导出的内容](#what-is-not-exported-work-in-progress)中列出的情况：修订不会写入，因此无法接受或拒绝。
 </Callout>
