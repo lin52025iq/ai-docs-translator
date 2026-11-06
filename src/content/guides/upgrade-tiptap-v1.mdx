@@ -1,59 +1,59 @@
 ---
 tags:
   - type: editor
-title: How to upgrade Tiptap v1 to v2
+title: 如何将 Tiptap v1 升级到 v2
 meta:
-  title: Upgrade v1 to v2 | Tiptap Collaboration Docs
-  description: Upgrade your Tiptap v1 project to version 2. Learn about the changes and how to migrate your project.
-  category: Collaboration
+  title: 从 v1 升级到 v2 | Tiptap 协作文档
+  description: 将 Tiptap v1 项目升级到版本 2。了解相关变更以及如何迁移项目。
+  category: 协作
 ---
 
-First of all, Tiptap v1 isn’t supported anymore and won’t receive any further updates.
+首先，Tiptap v1 已不再受支持，也不会再收到任何更新。
 
-If you’re still using Tiptap v1, you can find the documentation [here](https://v1.tiptap.dev/), but we strongly recommend that you upgrade to version 2.
+如果你仍在使用 Tiptap v1，可以在[这里](https://v1.tiptap.dev/)查看文档，但我们强烈建议你升级到版本 2。
 
-Yes, it’s tedious work to upgrade your favorite text editor to a new API, but we made sure you’ve got enough reasons to upgrade to the newest version.
+是的，将你最喜欢的文本编辑器升级到新的 API 是件繁琐的事，不过我们确保你有足够的理由升级到最新版本。
 
-- Autocompletion in your IDE (thanks to TypeScript)
-- Amazing documentation with 100+ pages and 100+ interactive examples
-- Active development, new features in the making, new releases every week
-- Tons of new extensions
-- Well-tested code base
+- IDE 中的自动补全（感谢 TypeScript）
+- 出色的文档，包含 100 多个页面和 100 多个交互式示例
+- 持续活跃的开发、正在开发的新功能，以及每周发布的新版本
+- 大量全新扩展
+- 经过充分测试的代码库
 
-The new API will look pretty familiar to you, but there are a ton of changes though. To make the upgrade a little bit easier, here is everything you need to know:
+新的 API 看起来会让你很熟悉，但其中确实有很多变化。为了让升级更轻松，以下是你需要了解的所有内容：
 
-## Uninstall Tiptap v1
+## 卸载 Tiptap v1
 
-The whole package structure has changed, we even moved to another npm namespace, so you’ll need to remove the old version entirely before upgrading to Tiptap 2.
+整个包结构都发生了变化，我们甚至换用了另一个 npm 命名空间，因此在升级到 Tiptap 2 之前，你需要彻底移除旧版本。
 
-Otherwise you’ll run into an exception, for example “looks like multiple versions of prosemirror-model were loaded”.
+否则你可能会遇到异常，例如“似乎加载了多个版本的 prosemirror-model”。
 
 ```bash
 npm uninstall tiptap tiptap-commands tiptap-extensions tiptap-utils
 ```
 
-## Install Tiptap v2
+## 安装 Tiptap v2
 
-Once you have uninstalled the old version of Tiptap, install the new Vue 2 package, the ProseMirror library and the starter kit:
+卸载旧版 Tiptap 后，安装新的 Vue 2 包、ProseMirror 库和 starter kit：
 
 ```bash
 npm install @tiptap/vue-2 @tiptap/pm @tiptap/starter-kit
 ```
 
-## Keep Tiptap v2 up to date
+## 保持 Tiptap v2 为最新版本
 
-We are constantly releasing updates to Tiptap.
+我们会持续发布 Tiptap 更新。
 
-Unfortunately, for npm there is no integrated tool to easily update your dependencies, but you can use the `npm-check` package:
+遗憾的是，npm 没有内置工具可以轻松更新依赖，不过你可以使用 `npm-check` 包：
 
 ```bash
 npm install -g npm-check
 npm-check -u
 ```
 
-## Explicitly register the Document, Text and Paragraph extensions
+## 显式注册 Document、Text 和 Paragraph 扩展
 
-Tiptap 1 tried to hide a few required extensions from you with the default setting `useBuiltInExtensions: true`. That setting has been removed and you’re required to import all extensions. Be sure to explicitly import at least the [`Document`](/editor/extensions/nodes/document), [`Paragraph`](/editor/extensions/nodes/paragraph) and [`Text`](/editor/extensions/nodes/text) extensions.
+Tiptap 1 曾通过默认设置 `useBuiltInExtensions: true` 隐藏了一些必需的扩展。该设置已被移除，你需要导入所有扩展。请务必显式导入至少 [`Document`](/editor/extensions/nodes/document)、[`Paragraph`](/editor/extensions/nodes/paragraph) 和 [`Text`](/editor/extensions/nodes/text) 扩展。
 
 ```js
 import Document from '@tiptap/extension-document'
@@ -70,33 +70,33 @@ new Editor({
 })
 ```
 
-And we removed some settings: `dropCursor`, `enableDropCursor`, and `enableGapCursor`. Those are separate extensions now: [`Dropcursor`](/editor/extensions/functionality/dropcursor) and [`Gapcursor`](/editor/extensions/functionality/gapcursor). You probably want to load them, but if you don’t, just ignore this.
+我们还移除了一些设置：`dropCursor`、`enableDropCursor` 和 `enableGapCursor`。它们现在是独立的扩展：[`Dropcursor`](/editor/extensions/functionality/dropcursor) 和 [`Gapcursor`](/editor/extensions/functionality/gapcursor)。你可能会想加载它们；如果不需要，忽略这一点即可。
 
-## New names for most extensions
+## 大多数扩展都采用了新名称
 
-We switched to lowerCamelCase, so there’s a lot type names that changed. If you stored your content as JSON you need to loop through it and rename them. Sorry for that one.
+我们改用了小驼峰命名法，因此许多类型名称都发生了变化。如果你将内容存储为 JSON，就需要遍历内容并重命名这些类型。为此带来的不便，我们深表歉意。
 
-| Old type              | New type               |
-| --------------------- | ---------------------- |
-| ~~`bullet_list`~~     | `bulletList`           |
-| ~~`code_block`~~      | `codeBlock`            |
-| ~~`hard_break`~~      | `hardBreak`            |
-| ~~`horizontal_rule`~~ | `horizontalRule`       |
-| ~~`list_item`~~       | `listItem`             |
-| ~~`ordered_list`~~    | `orderedList`          |
-| ~~`table_cell`~~      | `tableCell`            |
-| ~~`table_header`~~    | `tableHeader`          |
-| ~~`table_row`~~       | `tableRow`             |
-| ~~`todo_list`~~       | `taskList` (new name!) |
-| ~~`todo_item`~~       | `taskItem` (new name!) |
+| 旧类型                 | 新类型                 |
+| ---------------------- | ---------------------- |
+| ~~`bullet_list`~~      | `bulletList`           |
+| ~~`code_block`~~       | `codeBlock`            |
+| ~~`hard_break`~~       | `hardBreak`            |
+| ~~`horizontal_rule`~~  | `horizontalRule`       |
+| ~~`list_item`~~        | `listItem`             |
+| ~~`ordered_list`~~     | `orderedList`          |
+| ~~`table_cell`~~       | `tableCell`            |
+| ~~`table_header`~~     | `tableHeader`          |
+| ~~`table_row`~~        | `tableRow`             |
+| ~~`todo_list`~~        | `taskList`（新名称！） |
+| ~~`todo_item`~~        | `taskItem`（新名称！） |
 
-## Removed methods
+## 已移除的方法
 
-We removed the `.state()` method. No worries though, it’s still available through `editor.state`.
+我们移除了 `.state()` 方法。不过不用担心，你仍然可以通过 `editor.state` 访问状态。
 
-## New extension API
+## 新的扩展 API
 
-In case you’ve built some custom extensions for your project, you’re required to rewrite them to fit the new API. No worries, you can keep a lot of your work though. The `schema`, `commands`, `keys`, `inputRules` and `pasteRules` all work like they did before. It’s just different how you register them.
+如果你为项目构建了自定义扩展，就需要重写它们以适配新的 API。不过不用担心，你的大部分工作仍然可以保留。`schema`、`commands`、`keys`、`inputRules` 和 `pasteRules` 的工作方式与以前相同，只是注册方式不同。
 
 ```js
 import { Node } from '@tiptap/core'
@@ -128,25 +128,25 @@ const CustomExtension = Node.create({
 })
 ```
 
-Read more about [all the nifty details building custom extensions](/editor/extensions/custom-extensions) in our guide.
+请阅读我们的指南，了解[构建自定义扩展的各种实用细节](/editor/extensions/custom-extensions)。
 
-## Renamed settings and methods
+## 设置和方法已重命名
 
-[We renamed a lot of settings and methods](/editor/api/editor). Hopefully you can migrate to the new API with search & replace. Here is a list of what changed:
+[我们重命名了许多设置和方法](/editor/api/editor)。希望你可以通过查找和替换迁移到新的 API。以下是变更列表：
 
-| Old name        | New name    |
-| --------------- | ----------- |
-| ~~`autoFocus`~~ | `autofocus` |
+| 旧名称           | 新名称      |
+| ---------------- | ----------- |
+| ~~`autoFocus`~~  | `autofocus` |
 
-## Renamed commands
+## 命令已重命名
 
-All new extensions come with specific commands to set, unset and toggle styles. So instead of `.bold()`, it’s now `.toggleBold()`. Also, we switched to lowerCamelCase, below are a few examples. Oh, and we renamed `todo_list`, to `taskList`, sorry for that one.
+所有新扩展都提供了用于设置、取消设置和切换样式的专用命令。因此，`.bold()` 现在改为 `.toggleBold()`。此外，我们改用了小驼峰命名法，下面列出了一些示例。还有，`todo_list` 已重命名为 `taskList`，为此带来的不便，我们深表歉意。
 
-| Old command              | New command                     |
+| 旧命令                   | 新命令                          |
 | ------------------------ | ------------------------------- |
-| `.redo()`                | `.redo()` (nothing changed)     |
-| `.undo()`                | `.undo()` (nothing changed)     |
-| ~~`.todo_list()`~~       | `.toggleTaskList()` (new name!) |
+| `.redo()`                | `.redo()`（没有变化）           |
+| `.undo()`                | `.undo()`（没有变化）           |
+| ~~`.todo_list()`~~       | `.toggleTaskList()`（新名称！） |
 | ~~`.blockquote()`~~      | `.toggleBlockquote()`           |
 | ~~`.bold()`~~            | `.toggleBold()`                 |
 | ~~`.bullet_list()`~~     | `.toggleBulletList()`           |
@@ -163,40 +163,40 @@ All new extensions come with specific commands to set, unset and toggle styles. 
 | ~~`.underline()`~~       | `.toggleUnderline()`            |
 | …                        | …                               |
 
-## MenuBar, BubbleMenu and FloatingMenu
+## MenuBar、BubbleMenu 和 FloatingMenu
 
-Read the dedicated [guide on creating menus](/editor/getting-started/style-editor/custom-menus) to migrate your menus.
+请阅读专门的[菜单创建指南](/editor/getting-started/style-editor/custom-menus)，了解如何迁移菜单。
 
-## Commands can be chained now
+## 现在可以串联命令
 
-Most commands can be combined to one call now. That’s shorter than separate function calls in most cases. Here is an example to make the selected text bold:
-
-```js
-editor.chain().focus().toggleBold().run()
-```
-
-The `.chain()` is required to start a new chain and the `.run()` is needed to actually execute all the commands in between. Read more about [the new Tiptap commands](/editor/api/commands) in our API documentation.
-
-## .focus() isn’t called on every command anymore
-
-We tried to hide the `.focus()` command from you with Tiptap 1 and executed that on every command. That led to issues in specific use cases, where you want to run a command, but don’t want to focus the editor.
-
-With Tiptap v2 you have to explicitly call the `focus()` and you probably want to do that in a lot of places. Here is an example:
+现在，大多数命令都可以合并为一次调用。在大多数情况下，这比单独调用函数更简洁。下面以将选中文本设为粗体为例：
 
 ```js
 editor.chain().focus().toggleBold().run()
 ```
 
-## Event callbacks have fewer parameters
+需要使用 `.chain()` 开始新的命令链，并使用 `.run()` 实际执行其中的所有命令。请阅读 API 文档，进一步了解[新的 Tiptap 命令](/editor/api/commands)。
 
-The new event callbacks have fewer parameters. The same things should be available through `this.` now. [Read more about events here.](/editor/api/events)
+## 不再对每个命令都调用 .focus()
 
-## Collaborative editing
+在 Tiptap 1 中，我们尝试隐藏 `.focus()` 命令，并在每个命令上都执行它。这在某些使用场景中会造成问题，例如你希望运行命令，但不希望聚焦编辑器。
 
-The reference implementation for collaborative editing uses Y.js now. That’s a whole different thing. You still can use the Tiptap 1 extension, but it’s up to you to adapt it to the new extension API. If you’ve done this, don’t forget to share it with us so we can link to it from here!
+在 Tiptap v2 中，你需要显式调用 `focus()`，而且很多时候可能都需要这样做。示例如下：
 
-Read more about [the new collaborative editing experience](/collaboration/getting-started/install) in our guide.
+```js
+editor.chain().focus().toggleBold().run()
+```
 
-## Marks don’t support node view anymore
+## 事件回调的参数更少
 
-For marks, node views are [not well supported in ProseMirror](https://discuss.prosemirror.net/t/there-is-a-bug-in-marks-nodeview/2722/2). There is also [a related issue](https://github.com/ueberdosis/tiptap/issues/613) for Tiptap 1. That’s why we removed it in Tiptap 2.
+新的事件回调参数更少了。现在你应该可以通过 `this.` 访问相同的信息。[在这里了解更多事件相关内容。](/editor/api/events)
+
+## 协同编辑
+
+协同编辑的参考实现现在使用 Y.js。这是完全不同的一套实现。你仍然可以使用 Tiptap 1 的扩展，但需要自行将其适配到新的扩展 API。如果你完成了适配，别忘了与我们分享，这样我们就可以在这里添加链接！
+
+请阅读我们的指南，进一步了解[全新的协同编辑体验](/collaboration/getting-started/install)。
+
+## Mark 不再支持 Node View
+
+对于 Mark，ProseMirror 对 Node View 的[支持并不完善](https://discuss.prosemirror.net/t/there-is-a-bug-in-marks-nodeview/2722/2)。Tiptap 1 中也有一个[相关问题](https://github.com/ueberdosis/tiptap/issues/613)。因此，我们在 Tiptap 2 中移除了这项支持。
