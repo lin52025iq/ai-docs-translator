@@ -1,0 +1,346 @@
+---
+title: Vanilla JavaScript
+meta:
+  title: Vanilla JavaScript | Tiptap 编辑器文档
+  description: 在文档中了解如何使用 Vanilla JavaScript 设置 Tiptap 编辑器、安装依赖项并初始化编辑器！
+category: 编辑器
+---
+
+import { Callout } from '@/components/ui/Callout'
+
+如果你在使用 React 或 Vue 等前端框架之外进行开发，也不用担心，可以直接在原生 JavaScript 中使用 Tiptap。
+
+<Callout title="提示" variant="hint">
+
+这里的“Vanilla JavaScript”指的是**不使用前端框架**，但仍使用**带有 ES 模块导入的现代 JavaScript**（例如通过 Vite、Rollup 或 Webpack）。
+
+如果你想完全跳过构建工具，请查看下方的 [CDN 部分](#without-a-build-tool-cdn)，了解如何直接在浏览器中运行。
+
+</Callout>
+
+## 使用构建工具（Vite、Webpack、Rollup）
+
+如果你已经在使用打包器，或者只想采用标准的 npm 工作流，建议使用此方式。
+
+### 安装依赖项
+
+开始使用前，需要安装 Tiptap 的核心软件包：
+
+- `@tiptap/core` – 编辑器的主要 API
+- `@tiptap/pm` – ProseMirror，Tiptap 背后的引擎
+- `@tiptap/starter-kit` – 常用扩展的便捷组合包
+
+```bash
+npm install @tiptap/core @tiptap/pm @tiptap/starter-kit
+```
+
+### 添加标记
+
+在 HTML 中添加一个简单的容器，作为编辑器的显示位置：
+
+```html
+<div class="element"></div>
+```
+
+### 初始化编辑器
+
+创建一个 JavaScript 文件（例如 `src/main.js`），并添加以下代码：
+
+```js
+import { Editor } from '@tiptap/core'
+import StarterKit from '@tiptap/starter-kit'
+
+new Editor({
+  element: document.querySelector('.element'),
+  extensions: [StarterKit],
+  content: '<p>Hello World!</p>',
+})
+```
+
+现在运行开发服务器（例如使用 Vite 时运行 `npm run dev`），并在浏览器中打开页面。你应该会看到一个可以正常使用的 Tiptap 编辑器。
+
+---
+
+## 不使用构建工具（CDN）
+
+如果你想完全跳过 npm 和构建工具，可以通过 ES 模块导入直接从 CDN 加载 Tiptap。所有现代浏览器均支持这种方式。
+
+<Callout title="注意" variant="hint">
+
+要让导入语法能在浏览器中使用，`<script>` 标签必须包含 `type="module"`。
+
+</Callout>
+
+### 最简示例
+
+```html
+<script type="module">
+  import { Editor } from 'https://cdn.jsdelivr.net/npm/@tiptap/core@3.31.3/+esm'
+  import StarterKit from 'https://cdn.jsdelivr.net/npm/@tiptap/starter-kit@3.31.3/+esm'
+
+  new Editor({
+    element: document.querySelector('.element'),
+    extensions: [StarterKit],
+    content: '<p>Hello from CDN!</p>',
+  })
+</script>
+
+<div class="element"></div>
+```
+
+### 包含工具栏的完整 HTML 文件
+
+下面是一个可直接复制粘贴的示例，其中包含带有格式按钮的工具栏：
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tiptap Editor</title>
+    <style>
+      body {
+        margin: 2rem;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+      .editor-container {
+        max-width: 48rem;
+        margin: 0 auto;
+      }
+      .toolbar {
+        display: flex;
+        gap: 0.25rem;
+        padding: 0.5rem;
+        border: 1px solid #d1d5db;
+        border-bottom: none;
+        border-radius: 0.375rem 0.375rem 0 0;
+        background: #f9fafb;
+        flex-wrap: wrap;
+      }
+      .toolbar button {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        border: 1px solid transparent;
+        border-radius: 0.25rem;
+        background: transparent;
+        cursor: pointer;
+      }
+      .toolbar button:hover {
+        background: #e5e7eb;
+      }
+      .toolbar button.is-active {
+        background: #111827;
+        color: #fff;
+      }
+      .tiptap {
+        padding: 0.75rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0 0 0.375rem 0.375rem;
+        min-height: 10rem;
+        outline: none;
+      }
+      .tiptap p { margin: 0.5rem 0; }
+      .tiptap h1, .tiptap h2, .tiptap h3 { margin: 1rem 0 0.5rem; }
+      .tiptap ul, .tiptap ol { padding-left: 1.5rem; }
+      .tiptap pre {
+        background: #111827;
+        color: #f3f4f6;
+        padding: 0.75rem;
+        border-radius: 0.25rem;
+        font-size: 0.875rem;
+      }
+      .tiptap code {
+        background: #f3f4f6;
+        padding: 0.125rem 0.25rem;
+        border-radius: 0.25rem;
+        font-size: 0.875rem;
+      }
+      .tiptap pre code {
+        background: transparent;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="editor-container">
+      <div class="toolbar" id="toolbar">
+        <button data-tiptap-button="bold">Bold</button>
+        <button data-tiptap-button="italic">Italic</button>
+        <button data-tiptap-button="strike">Strike</button>
+        <button data-tiptap-button="code">Code</button>
+        <button data-tiptap-button="h1">H1</button>
+        <button data-tiptap-button="h2">H2</button>
+        <button data-tiptap-button="bulletList">Bullet List</button>
+        <button data-tiptap-button="orderedList">Ordered List</button>
+        <button data-tiptap-button="blockquote">Blockquote</button>
+        <button data-tiptap-button="codeBlock">Code Block</button>
+      </div>
+      <div id="editor"></div>
+    </div>
+
+    <script type="module">
+      import { Editor } from 'https://cdn.jsdelivr.net/npm/@tiptap/core@3.31.3/+esm'
+      import StarterKit from 'https://cdn.jsdelivr.net/npm/@tiptap/starter-kit@3.31.3/+esm'
+
+      const editor = new Editor({
+        element: document.querySelector('#editor'),
+        extensions: [StarterKit],
+        content: `
+          <h1>Welcome to Tiptap</h1>
+          <p>This is a text editor built with <strong>Vanilla JavaScript</strong> and loaded from a CDN.</p>
+          <p>Try the toolbar buttons above to format your text.</p>
+        `,
+      })
+
+      // Wire up toolbar buttons
+      const buttons = document.querySelectorAll('[data-tiptap-button]')
+      buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const command = button.dataset.tiptapButton
+
+          switch (command) {
+            case 'bold':
+              editor.chain().focus().toggleBold().run()
+              break
+            case 'italic':
+              editor.chain().focus().toggleItalic().run()
+              break
+            case 'strike':
+              editor.chain().focus().toggleStrike().run()
+              break
+            case 'code':
+              editor.chain().focus().toggleCode().run()
+              break
+            case 'h1':
+              editor.chain().focus().toggleHeading({ level: 1 }).run()
+              break
+            case 'h2':
+              editor.chain().focus().toggleHeading({ level: 2 }).run()
+              break
+            case 'bulletList':
+              editor.chain().focus().toggleBulletList().run()
+              break
+            case 'orderedList':
+              editor.chain().focus().toggleOrderedList().run()
+              break
+            case 'blockquote':
+              editor.chain().focus().toggleBlockquote().run()
+              break
+            case 'codeBlock':
+              editor.chain().focus().toggleCodeBlock().run()
+              break
+          }
+
+          updateActiveButtons()
+        })
+      })
+
+      function updateActiveButtons() {
+        const map = {
+          bold: () => editor.isActive('bold'),
+          italic: () => editor.isActive('italic'),
+          strike: () => editor.isActive('strike'),
+          code: () => editor.isActive('code'),
+          h1: () => editor.isActive('heading', { level: 1 }),
+          h2: () => editor.isActive('heading', { level: 2 }),
+          bulletList: () => editor.isActive('bulletList'),
+          orderedList: () => editor.isActive('orderedList'),
+          blockquote: () => editor.isActive('blockquote'),
+          codeBlock: () => editor.isActive('codeBlock'),
+        }
+
+        buttons.forEach((button) => {
+          const command = button.dataset.tiptapButton
+          const check = map[command]
+          if (check && check()) {
+            button.classList.add('is-active')
+          } else {
+            button.classList.remove('is-active')
+          }
+        })
+      }
+
+      editor.on('selectionUpdate', updateActiveButtons)
+      editor.on('update', updateActiveButtons)
+    </script>
+  </body>
+</html>
+```
+
+将此文件保存为 `index.html`，然后用任意现代浏览器打开——无需服务器。
+
+### 在线演示
+
+你可以在 CodeSandbox 上查看类似的可运行示例：
+
+[https://codesandbox.io/s/throbbing-smoke-now37q](https://codesandbox.io/s/throbbing-smoke-now37q?file=/index.html)
+
+---
+
+## 连接工具栏（原生 JS）
+
+Tiptap 是无头编辑器，因此不会内置工具栏。你需要自行连接 UI 按钮。以下是在原生 JavaScript 中实现的示例：
+
+```js
+import { Editor } from '@tiptap/core'
+import StarterKit from '@tiptap/starter-kit'
+
+const editor = new Editor({
+  element: document.querySelector('#editor'),
+  extensions: [StarterKit],
+  content: '<p>Hello World!</p>',
+})
+
+// Listen for clicks and call editor commands
+document.querySelector('#bold-button').addEventListener('click', () => {
+  editor.chain().focus().toggleBold().run()
+})
+
+// Check if a mark or node is active to style the button
+const isBold = editor.isActive('bold')
+const isHeading1 = editor.isActive('heading', { level: 1 })
+const isBulletList = editor.isActive('bulletList')
+
+// Update button active state on selection change
+editor.on('selectionUpdate', () => {
+  document.querySelector('#bold-button').classList.toggle('is-active', editor.isActive('bold'))
+})
+```
+
+### 常用编辑器命令
+
+| 命令 | 代码 |
+|---|---|
+| 粗体 | `editor.chain().focus().toggleBold().run()` |
+| 斜体 | `editor.chain().focus().toggleItalic().run()` |
+| 删除线 | `editor.chain().focus().toggleStrike().run()` |
+| 行内代码 | `editor.chain().focus().toggleCode().run()` |
+| 标题 1 | `editor.chain().focus().toggleHeading({ level: 1 }).run()` |
+| 标题 2 | `editor.chain().focus().toggleHeading({ level: 2 }).run()` |
+| 项目符号列表 | `editor.chain().focus().toggleBulletList().run()` |
+| 有序列表 | `editor.chain().focus().toggleOrderedList().run()` |
+| 引用块 | `editor.chain().focus().toggleBlockquote().run()` |
+| 代码块 | `editor.chain().focus().toggleCodeBlock().run()` |
+| 撤销 | `editor.chain().focus().undo().run()` |
+| 重做 | `editor.chain().focus().redo().run()` |
+
+有关可用命令，请参阅各扩展的文档。
+
+---
+
+## 样式
+
+Tiptap 默认不包含视觉样式——它只会输出语义化 HTML。你可以使用自己的 CSS，或 Tailwind、Bootstrap 等框架按需添加样式。
+
+StarterKit 包含一些最基本的默认样式，让文本呈现为普通文档的样子。
+
+了解更多信息，请参阅[样式指南](/editor/getting-started/style-editor)。
+
+## 后续步骤
+
+- [配置编辑器](/editor/getting-started/configure)
+- [为编辑器添加样式](/editor/getting-started/style-editor)
+- [深入了解 Tiptap 的概念](/editor/core-concepts/introduction)
+- [了解如何持久化编辑器状态](/editor/core-concepts/persistence)
+- [开始构建自己的扩展](/editor/extensions/custom-extensions)
