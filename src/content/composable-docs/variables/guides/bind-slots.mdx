@@ -1,21 +1,21 @@
 ---
-title: Bind slots to variables
+title: 将插槽绑定到变量
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Bind slots to variables | Tiptap Docs
-  description: Keep editable slots and reactive variable values synchronized inside the editor.
+  title: 将插槽绑定到变量 | Tiptap Docs
+  description: 在编辑器中保持可编辑插槽与响应式变量值同步。
   category: Composable Docs
 ---
 
-Bind one or more [slots](/composable-docs/slots/getting-started/overview) to a variable so that their content syncs with the variable.
+将一个或多个[插槽](/composable-docs/slots/getting-started/overview)绑定到变量，使插槽内容与变量保持同步。
 
-## Configure the bindings
+## 配置绑定
 
-Install both `@tiptap-pro/extension-slot` and `@tiptap-pro/extension-variable`.
+安装 `@tiptap-pro/extension-slot` 和 `@tiptap-pro/extension-variable`。
 
-First, give both slots a `variable` attribute with the same name:
+首先，为两个插槽添加同名的 `variable` 属性：
 
 ```ts
 const content = {
@@ -41,7 +41,7 @@ const content = {
 }
 ```
 
-Then, create the editor with both extensions:
+然后，使用这两个扩展创建编辑器：
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -55,11 +55,11 @@ const editor = new Editor({
 })
 ```
 
-The value appears directly inside each slot. No extra variable node is needed.
+变量值会直接显示在每个插槽中，无需额外的变量节点。
 
-## Let slots supply the value
+## 让插槽提供变量值
 
-With no explicit value or resolver for `customer`, the first bound slot supplies its value. Edit either slot, or fill it with a command. The variable and the other slot update together:
+如果没有为 `customer` 显式指定值或解析器，第一个绑定的插槽会提供变量值。编辑任一插槽，或使用命令填充它，变量和另一个插槽都会同步更新：
 
 ```ts
 editor.commands.fillSlot({
@@ -68,26 +68,26 @@ editor.commands.fillSlot({
 })
 ```
 
-The command returns `true` when the fill succeeds. The binding alone does not make a slot read-only.
+填充成功时，命令返回 `true`。仅绑定变量不会使插槽变为只读。
 
-If a dependent resolver fails, the new content cannot fit another bound slot, or Content Protection prevents a peer update, the command returns `false` and preserves the previous document and values. `Variable.onError` receives the error, and `slotCommandRejected` reports `code: 'variableSyncFailed'`. Dry runs do not evaluate resolvers or predict synchronization failures.
+如果依赖项解析器执行失败、新内容无法放入另一个绑定的插槽，或内容保护阻止了同步更新，命令会返回 `false`，并保留之前的文档和变量值。`Variable.onError` 会接收到错误，`slotCommandRejected` 会报告 `code: 'variableSyncFailed'`。试运行不会执行解析器，也不会预测同步失败。
 
-## Let the variable control the slots
+## 让变量控制插槽
 
-An explicit value or resolver takes precedence over slot content. Setting one refills both slots and makes them read-only:
+显式设置的值或解析器优先于插槽内容。设置变量后，两个插槽都会重新填充并变为只读：
 
 ```ts
 editor.commands.setVariable({ name: 'customer', value: 'Lin' })
 ```
 
-To use a resolver instead:
+也可以使用解析器：
 
 ```ts
 const currentCustomer = { name: 'Lin' }
 editor.commands.setVariables({ variables: { customer: () => currentCustomer.name } })
 ```
 
-While the variable controls the slot, `fillSlot()`, `fillSlots()`, and `clearSlot()` return `false` without changing its content, even if the replacement matches its current value. `editor.can()` returns `false` for these writes too:
+变量控制插槽时，`fillSlot()`、`fillSlots()` 和 `clearSlot()` 会返回 `false`，且不会更改插槽内容，即使替换内容与当前值相同也是如此。对于这些写入操作，`editor.can()` 也会返回 `false`：
 
 ```ts
 const filled = editor.commands.fillSlot({
@@ -97,9 +97,9 @@ const filled = editor.commands.fillSlot({
 // filled === false; both slots still display "Lin".
 ```
 
-A refused batch or chain applies none of its writes. Slot commands also refuse content writes through parent or nested slots. To change controlled content, update the variable instead.
+批量操作或命令链被拒绝时，其中的写入操作都不会执行。插槽命令也会拒绝通过父级插槽或嵌套插槽写入内容。若要更改受控内容，请改为更新变量。
 
-For debugging or application feedback, listen for the Slot extension's `slotCommandRejected` event:
+如需调试或向应用提供反馈，可以监听 Slot 扩展的 `slotCommandRejected` 事件：
 
 ```ts
 editor.on('slotCommandRejected', ({ command, code, slotIds }) => {
@@ -109,35 +109,35 @@ editor.on('slotCommandRejected', ({ command, code, slotIds }) => {
 })
 ```
 
-This refusal uses `slotCommandRejected`, rather than `Variable.onError`. Dry runs emit no events. Other edits rejected by the Variable plugin still report through `Variable.onError`.
+此类拒绝通过 `slotCommandRejected` 报告，而不是通过 `Variable.onError`。试运行不会触发事件。Variable 插件拒绝的其他编辑操作仍会通过 `Variable.onError` 报告。
 
-Remove the explicit definition to make the slots editable again. Their current content becomes the variable's value:
+移除显式定义后，插槽会恢复可编辑状态，其当前内容将成为变量值：
 
 ```ts
 editor.commands.removeVariables({ names: ['customer'] })
 ```
 
-Explicit `null` and `undefined` values also make slots read-only; they display empty content.
+显式设置为 `null` 或 `undefined` 也会使插槽变为只读；插槽会显示为空内容。
 
-## Change bindings
+## 更改绑定
 
-Bind an existing slot to a variable, or change its current binding:
+将现有插槽绑定到变量，或更改其当前绑定：
 
 ```ts
 editor.commands.bindSlotVariable({ id: 'customerField', name: 'customer' })
 ```
 
-An unknown name creates a slot-driven variable. If the variable already has a bound slot, the newly bound slot takes its value.
+如果指定的变量名不存在，就会创建一个由插槽驱动的变量。如果该变量已有绑定的插槽，新绑定的插槽会采用该变量值。
 
-Remove the binding while keeping the slot's content:
+移除绑定，同时保留插槽内容：
 
 ```ts
 editor.commands.unbindSlotVariable({ id: 'customerField' })
 ```
 
-## Rich content
+## 富文本内容
 
-Plain text slots supply strings. Formatted slots supply Tiptap JSON, preserving marks, line breaks, and structure:
+纯文本插槽提供字符串。格式化插槽提供 Tiptap JSON，并保留标记、换行和结构：
 
 ```ts
 editor.commands.setVariable({
@@ -146,11 +146,11 @@ editor.commands.setVariable({
 })
 ```
 
-- Content must fit every bound slot. Use block slots for multiple paragraphs.
-- Bindings inside another bound slot are ignored. They stay saved and take effect when the outer binding is removed or the inner slot moves outside it.
-- Other objects display as JSON text. `null` and `undefined` empty the slot.
+- 内容必须适用于所有绑定的插槽。需要多个段落时，请使用块级插槽。
+- 另一个已绑定插槽中的绑定会被忽略，但仍会保留；移除外层绑定或将内层插槽移到外层插槽之外后，这些绑定才会生效。
+- 其他对象会显示为 JSON 文本。`null` 和 `undefined` 会清空插槽。
 
-Use `getText()` in a dependent resolver when you need the slot's plain text, even if users add formatting:
+如果需要获取插槽的纯文本，即使用户添加了格式，也请在依赖项解析器中使用 `getText()`：
 
 ```ts
 editor.commands.addVariable({
@@ -159,18 +159,18 @@ editor.commands.addVariable({
 })
 ```
 
-Editing the customer slot updates the greeting automatically. Use `get()` instead when you need to preserve its Tiptap JSON.
+编辑 customer 插槽时，问候语会自动更新。如果需要保留 Tiptap JSON，请改用 `get()`。
 
-## Saving and protection
+## 保存与保护
 
-Slot content and bindings are saved with the document. Bindings support undo and redo. Runtime values and resolvers stay in the editor configuration.
+插槽内容和绑定会与文档一同保存。绑定支持撤销和重做。运行时变量值和解析器则保留在编辑器配置中。
 
-In collaborative editors, incoming slot content is preserved even when a client's local variable value differs. Cursor movement and unrelated edits do not restore that local value. An explicit local variable update can write its value to the shared slot. Keep runtime definitions consistent across clients if they should display the same variable values.
+在协同编辑器中，即使客户端的本地变量值不同，收到的插槽内容也会保留。移动光标和进行无关编辑都不会恢复该本地值。显式更新本地变量可以将其值写入共享插槽。如果希望各客户端显示相同的变量值，请确保它们的运行时定义一致。
 
-With [Content Protection](/composable-docs/content-protection/getting-started/overview):
+启用[内容保护](/composable-docs/content-protection/getting-started/overview)时：
 
-- Local edits require permission to update every bound slot.
-- Unreadable source slots conceal their slot-driven variable and dependent values until access is restored.
-- Incoming collaborative edits still apply. Additional local slot writes require edit permission.
+- 本地编辑需要拥有更新每个绑定插槽的权限。
+- 无法读取源插槽时，由其驱动的变量及其依赖值会被隐藏，直到恢复访问权限。
+- 收到的协同编辑仍会应用。额外的本地插槽写入操作需要编辑权限。
 
-Synchronization runs in the client-side editor. Provide explicit values and resolvers again when loading a document.
+同步在客户端编辑器中运行。加载文档时，请再次提供显式值和解析器。
