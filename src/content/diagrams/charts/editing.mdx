@@ -1,6 +1,6 @@
 ---
-title: 'Editing in the chart'
-intro: 'Double-click a text in a drawn chart, such as its title or a series name, and a text field opens over it. When you confirm, the new text is written into the Chart Data or the Chart Spec. This works only while the editor is editable.'
+title: '图表内编辑'
+intro: '双击绘制的图表中的文本（例如标题或系列名称），文本字段就会在该文本上方打开。确认后，新文本会写入 Chart Data 或 Chart Spec。仅当编辑器可编辑时，此功能才可用。'
 headerDemo:
   path: '/Extensions/DiagramsRenameInChart'
   isPro: true
@@ -8,43 +8,36 @@ tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Editing in the chart | Tiptap Diagrams Docs'
-  description: 'Double-click a text in a drawn chart, such as its title or a series name, and a text field opens over it.'
+  title: '图表内编辑 | Tiptap Diagrams 文档'
+  description: '双击绘制的图表中的文本（例如标题或系列名称），文本字段就会在该文本上方打开。'
   category: Diagrams
 ---
 
-## Renaming a text
+## 重命名文本
 
-| Text you double-click            | Command that writes it, and where               |
-| -------------------------------- | ----------------------------------------------- |
-| The title                        | `updateChartSpec`, as `spec.title`              |
-| An axis title                    | `updateChartAxis`, as the `title` of that axis  |
-| A series name in the legend      | `updateChartData`, as the header of its column  |
-| A category label, or a pie slice | `updateChartData`, as the label cell of its row |
+| 双击的文本                     | 写入该文本的命令及写入位置                         |
+| ------------------------------ | -------------------------------------------------- |
+| 标题                           | `updateChartSpec`，写入 `spec.title`               |
+| 坐标轴标题                     | `updateChartAxis`，写入该坐标轴的 `title`          |
+| 图例中的系列名称               | `updateChartData`，写入该列的表头                  |
+| 分类标签或饼图扇区             | `updateChartData`，写入该行的标签单元格            |
 
-**Confirming and canceling.** Enter, or moving the focus out of the text field, writes the text
-in one undo step. Escape closes the text field and changes nothing.
+**确认和取消。** 按 Enter，或将焦点移出文本字段，即可写入文本，并作为一步撤销操作处理。按 Escape 会关闭文本字段，不做任何更改。
 
-**Column ids.** A column keeps its id when you rename its header, so `spec.series` still applies
-to it.
+**列 ID。** 重命名表头时，列会保留其 ID，因此 `spec.series` 仍会应用于该列。
 
-**Rows as series.** With `encoding.seriesIn: 'rows'`, a series name is the label cell of a row,
-and a category label is a column header.
+**以行作为系列。** 当 `encoding.seriesIn: 'rows'` 时，系列名称是行的标签单元格，分类标签则是列标题。
 
-**Read-only data.** On a chart linked to a read-only Data Source, only the title and the axis
-titles open a text field. The series and categories come from the source.
+**只读数据。** 对于链接到只读 Data Source 的图表，只有标题和坐标轴标题会打开文本字段。系列和分类来自数据源。
 
-**Which Renderers support it.** Not every Renderer does.
-[Text in the chart](/diagrams/renderers/custom#text-in-the-chart) says which.
+**支持此功能的渲染器。** 并非所有渲染器都支持此功能。
+[图表中的文本](/diagrams/renderers/custom#text-in-the-chart)说明了哪些渲染器支持此功能。
 
-**Value labels.** The numbers along the value axis are not stored, so double-clicking them opens
-nothing.
+**值标签。** 值轴上的数字不会被存储，因此双击这些数字不会打开任何内容。
 
-## Without a drawn chart
+## 未绘制图表时
 
-`renameChartDataText` from `@tiptap-pro/extension-diagrams/core` renames a series or a category
-in Chart Data. It returns the new Chart Data, or `null` when the target
-is not a series or a category of that data.
+`@tiptap-pro/extension-diagrams/core` 中的 `renameChartDataText` 可重命名 Chart Data 中的系列或分类。它会返回新的 Chart Data；如果目标不是该数据中的系列或分类，则返回 `null`。
 
 ```ts
 import { parseChartSyntax, renameChartDataText } from '@tiptap-pro/extension-diagrams/core'
