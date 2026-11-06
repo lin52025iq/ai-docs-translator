@@ -1,15 +1,15 @@
 ---
-title: Styling
+title: 样式
 tags:
   - type: addon
-    tooltip: Contact our team to add Compare to your plan
+    tooltip: 联系我们的团队，将 Compare 添加到您的套餐中
 meta:
-  title: Styling | Tiptap Compare Docs
-  description: Style diff suggestions rendered by the Tiptap Compare extension.
+  title: 样式 | Tiptap Compare 文档
+  description: 设置 Tiptap Compare 扩展渲染的差异建议的样式。
   category: Compare
 ---
 
-Compare renders its default diff UI with CSS classes. Add your own class or attributes with `displayOptions` when calling a command like [`compareDocuments`](/compare/api-reference/commands#comparedocuments) or [`compareVersions`](/compare/api-reference/commands#compareversions).
+Compare 使用 CSS 类渲染默认的差异界面。调用 [`compareDocuments`](/compare/api-reference/commands#comparedocuments) 或 [`compareVersions`](/compare/api-reference/commands#compareversions) 等命令时，可以通过 `displayOptions` 添加自己的类或属性。
 
 ```ts
 editor.commands.compareDocuments({
@@ -22,50 +22,50 @@ editor.commands.compareDocuments({
 })
 ```
 
-## Default CSS classes
+## 默认 CSS 类
 
-Every diff suggestion renders the current document content and the suggested replacement content. The following classes are applied to those elements.
+每条差异建议都会渲染当前文档内容和建议的替换内容。以下类会应用于这些元素。
 
-### Current content
+### 当前内容
 
-- `.diff-suggestion` — applied to every current-content element.
-- `.diff-suggestion--selected` — applied when the suggestion is selected.
-- `.diff-suggestion--change-group` — applied when the suggestion contains grouped inline changes.
+- `.diff-suggestion` — 应用于每个当前内容元素。
+- `.diff-suggestion--selected` — 在选中建议时应用。
+- `.diff-suggestion--change-group` — 在建议包含分组的行内更改时应用。
 
-If the suggestion is created from a change group and it has sub-changes, the sub-changes contain these classes:
+如果建议由更改组创建且包含子更改，则子更改会包含以下类：
 
-- `.diff-suggestion-sub-change` — applied to each individual change within a group.
-- `.diff-suggestion-sub-change--selected` — applied to a current-content sub-change when its suggestion is selected.
+- `.diff-suggestion-sub-change` — 应用于组中的每个单独更改。
+- `.diff-suggestion-sub-change--selected` — 在选中建议时，应用于当前内容的子更改。
 
-Nested changes are displayed in the current-content side of the review and have these classes:
+嵌套更改显示在审阅视图的当前内容一侧，并带有以下类：
 
-- `.diff-suggestion-nested-change` — applied to every nested change.
-- `.diff-suggestion-nested-change--inline` — applied when the nested change covers inline content.
-- `.diff-suggestion-nested-change--block` — applied when the nested change covers block content.
-- `.diff-suggestion-nested-change--selected` — applied when the parent suggestion is selected.
+- `.diff-suggestion-nested-change` — 应用于每个嵌套更改。
+- `.diff-suggestion-nested-change--inline` — 在嵌套更改包含行内内容时应用。
+- `.diff-suggestion-nested-change--block` — 在嵌套更改包含块级内容时应用。
+- `.diff-suggestion-nested-change--selected` — 在选中父级建议时应用。
 
-Use `displayOptions.getNestedChangeAttributes` to add attributes to a nested change. A returned `class` is appended to these default classes.
+使用 `displayOptions.getNestedChangeAttributes` 为嵌套更改添加属性。返回的 `class` 会追加到这些默认类中。
 
-### Suggested content
+### 建议内容
 
-- `.diff-suggestion-diff` — applied to every suggested-content element.
-- `.diff-suggestion-diff--selected` — applied when the suggestion is selected.
-- `.diff-suggestion-diff--change-group` — applied when the suggestion contains grouped inline changes.
+- `.diff-suggestion-diff` — 应用于每个建议内容元素。
+- `.diff-suggestion-diff--selected` — 在选中建议时应用。
+- `.diff-suggestion-diff--change-group` — 在建议包含分组的行内更改时应用。
 
-If the suggestion is created from a change group and it has sub-changes, the sub-changes contain these classes:
+如果建议由更改组创建且包含子更改，则子更改会包含以下类：
 
-- `.diff-suggestion-diff-sub-change` — applied to each individual suggested-content change within a group.
-- `.diff-suggestion-diff-sub-change--selected` — applied to a suggested-content sub-change when its suggestion is selected.
+- `.diff-suggestion-diff-sub-change` — 应用于组中的每个单独的建议内容更改。
+- `.diff-suggestion-diff-sub-change--selected` — 在选中建议时，应用于建议内容的子更改。
 
-## Example CSS styles
+## CSS 样式示例
 
-The [Compare documents guide](/compare/guides/compare-documents#style-the-changes) includes example CSS stylesheets that work out of the box with the default suggestions that are rendered by the Compare extension.
+[比较文档指南](/compare/guides/compare-documents#style-the-changes)中包含示例 CSS 样式表，可直接用于 Compare 扩展渲染的默认建议。
 
-The [Compare versions guide](/compare/guides/compare-versions#style-the-changes) includes a CSS stylesheet for a diff view where changes are marked with a different color depending on their author.
+[比较版本指南](/compare/guides/compare-versions#style-the-changes)中包含一个 CSS 样式表，用于根据更改作者以不同颜色标记更改的差异视图。
 
-## Custom suggestion rendering
+## 自定义建议渲染
 
-The [renderDecorations](/compare/api-reference/types#custom-decoration-rendering) option gives you full control over how the suggestion is rendered. It's a function that receives a [DiffSuggestion object](/compare/api-reference/types#diffsuggestion) and returns a list of [ProseMirror decorations](https://prosemirror.net/docs/ref/#view.Decorations).
+[`renderDecorations`](/compare/api-reference/types#custom-decoration-rendering) 选项可让您完全控制建议的渲染方式。它是一个接收 [DiffSuggestion 对象](/compare/api-reference/types#diffsuggestion)并返回 [ProseMirror 装饰项](https://prosemirror.net/docs/ref/#view.Decorations)列表的函数。
 
 ```ts
 editor.commands.compareDocuments({
@@ -83,7 +83,7 @@ editor.commands.compareDocuments({
 })
 ```
 
-To combine your custom decorations with the default decorations displayed by the Compare extension, use the `defaultRenderDecorations` option:
+要将自定义装饰项与 Compare 扩展显示的默认装饰项结合使用，请使用 `defaultRenderDecorations` 选项：
 
 ```ts
 editor.commands.compareDocuments({
@@ -108,11 +108,11 @@ editor.commands.compareDocuments({
 })
 ```
 
-## Render custom Node Views
+## 渲染自定义节点视图
 
-To apply different styling to a [Tiptap Node View](/editor/extensions/custom-extensions/node-views) when it's inside a diff suggestion, use the [`getSuggestionNodeViewContext` utility](/compare/api-reference/utilities#getsuggestionnodeviewcontext).
+如果 [Tiptap 节点视图](/editor/extensions/custom-extensions/node-views)位于差异建议中，并且您希望为其应用不同样式，请使用 [`getSuggestionNodeViewContext` 工具函数](/compare/api-reference/utilities#getsuggestionnodeviewcontext)。
 
-The function returns useful context about the suggestion. Learn more about it in the [API Reference](/compare/api-reference/utilities#getsuggestionnodeviewcontext).
+该函数会返回有关建议的实用上下文信息。请在 [API 参考](/compare/api-reference/utilities#getsuggestionnodeviewcontext)中了解详情。
 
 ```tsx
 import { getSuggestionNodeViewContext } from '@tiptap-pro/compare'
