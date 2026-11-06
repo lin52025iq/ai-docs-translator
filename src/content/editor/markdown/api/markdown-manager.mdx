@@ -3,16 +3,16 @@ title: MarkdownManager API
 tags:
   - type: beta
 meta:
-  title: Markdown Manager API | Tiptap Editor Docs
-  description: Learn about the Markdown Manager API in Tiptap Editor. Get methods and options for handling Markdown content.
-  category: Editor
+  title: Markdown Manager API | Tiptap 编辑器文档
+  description: 了解 Tiptap 编辑器中的 Markdown Manager API，获取用于处理 Markdown 内容的方法和选项。
+  category: 编辑器
 ---
 
-The `MarkdownManager` class is a stand-alone class that provides support for parsing and serializing Markdown content into Tiptap's document model.
+`MarkdownManager` 类是一个独立的类，可用于将 Markdown 内容解析并序列化为 Tiptap 文档模型。
 
-## Methods
+## 方法
 
-### Constructor
+### 构造函数
 
 ```typescript
 new MarkdownManager(options?: {
@@ -27,9 +27,9 @@ new MarkdownManager(options?: {
 
 ### `MarkdownManager.hasMarked()`
 
-Returns `true` or `false` depending on whether the `marked` library is available.
+根据 `marked` 库是否可用，返回 `true` 或 `false`。
 
-- **returns**: `boolean`
+- **返回值**：`boolean`
 
 ```js
 const manager = new MarkdownManager()
@@ -38,11 +38,11 @@ manager.hasMarked() // true or false
 
 ### `MarkdownManager.registerExtension()`
 
-Registers a Tiptap extension to be used for parsing and serializing Markdown content.
+注册一个用于解析和序列化 Markdown 内容的 Tiptap 扩展。
 
-- **returns**: `void`
-- **parameters**:
-  - `extension`: A Tiptap extension to register.
+- **返回值**：`void`
+- **参数**：
+  - `extension`：要注册的 Tiptap 扩展。
 
 ```js
 const manager = new MarkdownManager()
@@ -51,26 +51,26 @@ manager.registerExtension(MyCustomExtension)
 
 ### `MarkdownManager.parse()`
 
-Parses a Markdown string into a Tiptap document.
+将 Markdown 字符串解析为 Tiptap 文档。
 
-- **returns**: `JSON` - The Tiptap document in JSON format.
-- **parameters**:
-  - `markdown`: A string containing the Markdown content to parse.
+- **返回值**：`JSON` - JSON 格式的 Tiptap 文档。
+- **参数**：
+  - `markdown`：包含要解析的 Markdown 内容的字符串。
 
 ```js
 const manager = new MarkdownManager()
 const doc = manager.parse('# Hello World')
 ```
 
-Markdown parsing preserves consecutive empty paragraphs by combining normal blank-line separation with `&nbsp;` markers when needed. For example, the first empty paragraph in a run is represented by blank lines, while later empty paragraphs in the same run are represented by `&nbsp;` so they survive a roundtrip back to JSON.
+Markdown 解析会保留连续的空段落：必要时结合常规空行分隔和 `&nbsp;` 标记。例如，一组连续空段落中的第一个空段落以空行表示，而同一组中后续的空段落则以 `&nbsp;` 表示，从而确保往返转换为 JSON 时这些段落不会丢失。
 
 ### `MarkdownManager.serialize()`
 
-Serializes a Tiptap document or JSON content into a Markdown string.
+将 Tiptap 文档或 JSON 内容序列化为 Markdown 字符串。
 
-- **returns**: `string` - The serialized Markdown string.
-- **parameters**:
-  - `content`: A Tiptap document or JSON content to serialize.
+- **返回值**：`string` - 序列化后的 Markdown 字符串。
+- **参数**：
+  - `content`：要序列化的 Tiptap 文档或 JSON 内容。
 
 ```js
 const manager = new MarkdownManager()
@@ -79,44 +79,44 @@ const markdown = manager.serialize(doc)
 
 ### `MarkdownManager.renderNodeToMarkdown()`
 
-Renders a single ProseMirror node to its Markdown representation.
+将单个 ProseMirror 节点渲染为对应的 Markdown 表示形式。
 
-- **returns**: `string` - The Markdown string for the given node.
-- **parameters**:
-  - **node**: A ProseMirror node to render.
-  - **parentNode**: (optional) The parent ProseMirror node.
-  - **index**: (optional) The index of the node within its parent.
-  - **level**: (optional) The nesting level of the node.
+- **返回值**：`string` - 给定节点对应的 Markdown 字符串。
+- **参数**：
+  - **node**：要渲染的 ProseMirror 节点。
+  - **parentNode**：（可选）父级 ProseMirror 节点。
+  - **index**：（可选）该节点在父级节点中的索引。
+  - **level**：（可选）该节点的嵌套层级。
 
 ```
 const manager = new MarkdownManager()
 const markdown = manager.renderNodeToMarkdown(node)
 ```
 
-The renderer passes sibling context to extensions through `RenderContext.previousNode`, which is useful for decisions that depend on the previous node at the same level, such as preserving runs of empty paragraphs.
+渲染器会通过 `RenderContext.previousNode` 将同级节点的上下文传递给扩展。这对于依赖同一层级中前一个节点做出判断的场景很有用，例如保留连续的空段落。
 
 ### `MarkdownManager.renderNodes()`
 
-Renders an array of ProseMirror nodes to their combined Markdown representation.
+将一组 ProseMirror 节点渲染为合并后的 Markdown 表示形式。
 
-- **returns**: `string` - The combined Markdown string for the given nodes.
-- **parameters**:
-  - **nodes**: An array of ProseMirror nodes to render.
-  - **parentNode**: (optional) The parent ProseMirror node.
-  - **separator**: (optional) A string to separate the rendered nodes. Defaults to `''`
-  - **level**: (optional) The nesting level of the nodes. Defaults to `0`.
-  - **level**: `number` - The nesting level of the nodes. Defaults to `0`.
+- **返回值**：`string` - 给定节点对应的合并后 Markdown 字符串。
+- **参数**：
+  - **nodes**：要渲染的 ProseMirror 节点数组。
+  - **parentNode**：（可选）父级 ProseMirror 节点。
+  - **separator**：（可选）用于分隔渲染后节点的字符串。默认为 `''`
+  - **level**：（可选）节点的嵌套层级。默认为 `0`。
+  - **level**：`number` - 节点的嵌套层级。默认为 `0`。
 
-## Properties
+## 属性
 
 ### `Markdown.instance`
 
-The MarkedJS instance used for parsing Markdown content.
+用于解析 Markdown 内容的 MarkedJS 实例。
 
 ### `Markdown.indentCharacter`
 
-The character used for indentation in lists. Defaults to a space (`' '`).
+列表中用于缩进的字符。默认为空格（`' '`）。
 
 ### `Markdown.indentString`
 
-The string used for indentation in lists. Defaults to two spaces (`'  '`).
+列表中用于缩进的字符串。默认为两个空格（`'  '`）。
