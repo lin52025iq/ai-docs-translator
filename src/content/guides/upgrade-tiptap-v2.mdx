@@ -1,26 +1,26 @@
 ---
 tags:
   - type: editor
-title: How to upgrade Tiptap v2 to v3
+title: 如何将 Tiptap v2 升级到 v3
 meta:
-  title: Upgrade v2 to v3 | Tiptap Collaboration Docs
-  description: Upgrade your Tiptap v2 project to version 3. Learn about the changes and how to migrate your project.
-  category: Collaboration
+  title: 从 v2 升级到 v3 | Tiptap 协作文档
+  description: 将 Tiptap v2 项目升级到版本 3。了解相关变更以及如何迁移项目。
+  category: 协作
 ---
 
 import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 
 <EnterpriseCalloutAuto variant="migration" renderMode="sidebar" disableWaitlist/>
 
-Tiptap v3 is a major update with breaking changes. This guide will help you upgrade your Tiptap v2 project to version 3.
+Tiptap v3 是一次包含重大破坏性变更的版本升级。本指南将帮助你把 Tiptap v2 项目升级到版本 3。
 
-## Breaking Changes
+## 破坏性变更
 
-### Package Changes
+### 包变更
 
-- UMD builds have been removed (now using tsup)
+- 已移除 UMD 构建（现在使用 tsup）
 
-Some packages may have been removed or renamed, so you may need to update your imports and dependencies. Here are some common changes:
+部分包可能已被移除或重命名，因此你可能需要更新导入和依赖项。以下是一些常见变更：
 
 ```diff
 Table packages
@@ -69,9 +69,9 @@ Vue 2 Menus
 + import { BubbleMenu, FloatingMenu } from '@tiptap/vue-2/menus'
 ```
 
-### Menu Systems
+### 菜单系统
 
-Tippy.js has been replaced with Floating UI for all floating elements. This affects:
+所有浮动元素的定位方案都已从 Tippy.js 替换为 Floating UI。这会影响以下内容：
 
 - @tiptap/extension-bubble-menu
 - @tiptap/extension-drag-handle
@@ -83,7 +83,7 @@ Tippy.js has been replaced with Floating UI for all floating elements. This affe
 - @tiptap/suggestion
 - @tiptap-pro/extension-emoji
 
-Example migration:
+迁移示例：
 
 ```tsx
 // Before
@@ -106,28 +106,28 @@ const menu = (
 )
 ```
 
-- New required dependency: `@floating-ui/dom`. Install it with:
+- 新增必需依赖：`@floating-ui/dom`。使用以下命令安装：
 
 ```bash
 npm install @floating-ui/dom@^1.6.0
 ```
 
-Make sure to uninstall `tippy.js` if you were using it, as it is no longer needed.
+如果你使用了 `tippy.js`，请务必将其卸载，因为现在已不再需要它。
 
 ```bash
 npm uninstall tippy.js
 ```
 
-### API Changes Text Style Updates
+### API 变更与文本样式更新
 
-- `mergeNestedSpanStyles` now defaults to `true`
-- New text style extensions added:
+- `mergeNestedSpanStyles` 现在默认值为 `true`
+- 新增文本样式扩展：
   - `font-size`
   - `background-color`
   - `line-height`
-- `TextStyleKit` API available for configuring multiple extensions
+- 新增 `TextStyleKit` API，可用于配置多个扩展
 
-You can now use the new `TextStyleKit` for easier configuration:
+现在可以使用新的 `TextStyleKit`，更轻松地进行配置：
 
 ```ts
 import { TextStyleKit } from '@tiptap/extension-text-style'
@@ -155,15 +155,15 @@ new Editor({
 })
 ```
 
-### Introducing `shouldRerenderOnTransaction`
+### 新增 `shouldRerenderOnTransaction`
 
-The `@tiptap/react` Editor configuration now includes `shouldRerenderOnTransaction`, controlling component rerendering.
+`@tiptap/react` 的 Editor 配置现在包含 `shouldRerenderOnTransaction`，用于控制组件是否重新渲染。
 
-Previously (pre-3.0.0), the Editor rerendered on every transaction-induced state update, facilitating continuous editor object tracking but potentially impacting rendering performance.
+在 3.0.0 之前，Editor 会在每次事务引发状态更新时重新渲染。这便于持续跟踪 editor 对象，但可能会影响渲染性能。
 
-`shouldRerenderOnTransaction` is disabled by default. Enable it by setting `shouldRerenderOnTransaction: true` in the editor configuration.
+`shouldRerenderOnTransaction` 默认处于禁用状态。要启用它，请在 editor 配置中将 `shouldRerenderOnTransaction` 设为 `true`。
 
-Post-upgrade, UI elements relying on the Editor's state might become unresponsive. Solutions include disabling the option (potential performance implications) or implementing manual state tracking, as demonstrated:
+升级后，依赖 Editor 状态的 UI 元素可能会变得无响应。解决方法包括禁用此选项（可能会影响性能），或像下面这样手动跟踪状态：
 
 ```js
 function MyEditor() {
@@ -181,7 +181,7 @@ function MyEditor() {
 }
 ```
 
-You can also use `useEditorState` to extract either the whole state or select specific values to extract.
+你也可以使用 `useEditorState` 提取整个状态，或选择要提取的特定值。
 
 ```js
 const { currentSelection } = useEditorState({
@@ -192,17 +192,17 @@ const { currentSelection } = useEditorState({
 })
 ```
 
-This allows explicit state extraction and management for dependent UI logic.
+这样便可以显式提取和管理状态，以供依赖该状态的 UI 逻辑使用。
 
-### Command Changes
+### 命令变更
 
-- `clearContent` and `setContent` now emit updates by default
-- `setContent` signature changed to (content, options)
-- `insertContent` behavior modified to prevent splitting text nodes at the beginning
+- `clearContent` 和 `setContent` 现在默认会触发更新
+- `setContent` 的签名已变更为 (content, options)
+- `insertContent` 的行为已调整，以避免在文本节点开头将其拆分
 
-### NodeView Changes
+### NodeView 变更
 
-The `getPos` function in NodeViewRendererProps can now return `undefined`. Update your code to handle this case:
+NodeViewRendererProps 中的 `getPos` 函数现在可能返回 `undefined`。请更新代码以处理这种情况：
 
 ```ts
 // Before
@@ -215,38 +215,38 @@ if (pos !== undefined) {
 }
 ```
 
-### Removed Features
+### 已移除的功能
 
-- `editor.getCharacterCount()` method has been removed
-- `considerAnyAsEmpty` option removed from placeholder extension
+- 已移除 `editor.getCharacterCount()` 方法
+- 已从 placeholder 扩展中移除 `considerAnyAsEmpty` 选项
 
-## New Features
+## 新功能
 
-### Extensions Package
+### 扩展包
 
-The new `@tiptap/extensions` package combines multiple utility extensions:
+新的 `@tiptap/extensions` 包整合了多个实用扩展：
 
 - [CharacterCount](/editor/extensions/functionality/character-count)
 - [Dropcursor](/editor/extensions/functionality/dropcursor)
 - [Gapcursor](/editor/extensions/functionality/gapcursor)
-- [History](/editor/extensions/functionality/undo-redo) (now named `UndoRedo`)
+- [History](/editor/extensions/functionality/undo-redo)（现已更名为 `UndoRedo`）
 - [Placeholder](/editor/extensions/functionality/placeholder)
 - [TrailingNode](/editor/extensions/functionality/trailing-node)
 - [Focus](/editor/extensions/functionality/focus)
 - [Selection](/editor/extensions/functionality/selection)
 
-This will automatically update the imports in your project.
+这会自动更新项目中的导入语句。
 
-Example migration:
+迁移示例：
 
 ```diff
 - import CharacterCount from '@tiptap/extension-character-count'
 + import { CharacterCount } from '@tiptap/extensions'
 ```
 
-### Server-Side Rendering
+### 服务端渲染
 
-Improved SSR support with the ability to run the editor on the server-side without rendering:
+改进了 SSR 支持，现在可以在服务端运行 editor 而不进行渲染：
 
 ```ts
 const editor = new Editor({
@@ -263,11 +263,11 @@ const editor = new Editor({
 })
 ```
 
-### Mark Views
+### Mark 视图
 
-Adds support for [mark views](https://prosemirror.net/docs/ref/#view.MarkView), which allow you to render custom views for marks within the editor. This is useful for rendering custom UI for marks, like a color picker for a text color mark or a link editor for a link mark.
+新增对 [mark 视图](https://prosemirror.net/docs/ref/#view.MarkView) 的支持，可用于在 editor 中为 mark 渲染自定义视图。这对于渲染 mark 的自定义 UI 很有用，例如为文本颜色 mark 提供颜色选择器，或为链接 mark 提供链接编辑器。
 
-Including support for React and Vue 3 frameworks
+支持 React 和 Vue 3 框架。
 
 ```ts
 // Plain JS
@@ -312,22 +312,22 @@ Mark.create({
 })
 ```
 
-### Other Improvements
+### 其他改进
 
-- New delete event tracking
-- HTML parsing now uses happy-dom-without-node
-- New node/mark attribute validation support
-- Performance improvements for transaction handling
+- 新增删除事件跟踪
+- HTML 解析现在使用 happy-dom-without-node
+- 新增节点/mark 属性验证支持
+- 改进了事务处理性能
 
-## StarterKit Updates
+## StarterKit 更新
 
-StarterKit now includes these extensions by default:
+StarterKit 现在默认包含以下扩展：
 
 - [Link](/editor/extensions/marks/link)
 - [ListKeymap](/editor/extensions/functionality/listkeymap)
 - [Underline](/editor/extensions/marks/underline)
 
-If you've installed these separately, you can remove them:
+如果你单独安装了这些扩展，可以将它们移除：
 
 ```diff
 - import Link from '@tiptap/extension-link'
@@ -335,7 +335,7 @@ If you've installed these separately, you can remove them:
 - import Underline from '@tiptap/extension-underline'
 ```
 
-Also make sure to update disabled extension names in your StarterKit configuration if you were using them:
+如果你曾在 StarterKit 配置中禁用这些扩展，也请务必更新禁用的扩展名称：
 
 ```diff
 const editor = new Editor({
@@ -348,30 +348,30 @@ const editor = new Editor({
 })
 ```
 
-## Migration Steps
+## 迁移步骤
 
-1. Update Dependencies
+1. 更新依赖项
 
-   - Remove UMD-dependent code
-   - Install `@floating-ui/dom` (for bubble & floating menus)
-   - Update Tiptap packages to v3
+   - 移除依赖 UMD 的代码
+   - 安装 `@floating-ui/dom`（用于气泡菜单和浮动菜单）
+   - 将 Tiptap 包更新到 v3
 
-2. Update Menu Implementations
+2. 更新菜单实现
 
-   - Replace `tippyOptions` with Floating UI options
-   - Update menu imports to use `/menus` suffix
+   - 将 `tippyOptions` 替换为 Floating UI 选项
+   - 更新菜单导入，使用 `/menus` 后缀
 
-3. Review NodeView Usage
+3. 检查 NodeView 的用法
 
-   - Add checks for `undefined` `getPos`
+   - 添加对 `getPos` 返回 `undefined` 的检查
 
-4. Update Extensions
+4. 更新扩展
 
-   - Migrate to `@tiptap/extensions` where applicable
-   - Remove redundant `StarterKit` extensions
-   - Update text style configurations
+   - 在适用情况下迁移到 `@tiptap/extensions`
+   - 移除冗余的 `StarterKit` 扩展
+   - 更新文本样式配置
 
-5. Review Command Usage
+5. 检查命令用法
 
-   - Update `setContent` calls to use new signature
-   - Check `clearContent` behavior with default updates
+   - 更新 `setContent` 调用，以使用新的签名
+   - 检查 `clearContent` 在默认触发更新时的行为
