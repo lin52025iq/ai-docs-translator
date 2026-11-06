@@ -1,56 +1,56 @@
 ---
-title: Text alignment
+title: 文本对齐
 tags:
   - type: beta
 meta:
-  title: Text Alignment | Tiptap Conversion
-  description: How text alignment converts between DOCX and Tiptap, and how to configure the TextAlign extension for clean round-trips.
-  category: Conversion
+  title: 文本对齐 | Tiptap 转换
+  description: 了解文本对齐如何在 DOCX 与 Tiptap 之间转换，以及如何配置 TextAlign 扩展以实现可靠的往返转换。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Text alignment is a paragraph-level attribute that round-trips between DOCX and the editor. Configure the TextAlign extension and alignment is preserved through import, editing, and export.
+文本对齐是段落级属性，可在 DOCX 与编辑器之间往返转换。配置 TextAlign 扩展后，导入、编辑和导出时都会保留对齐方式。
 
-## What you need
+## 所需内容
 
-- **Extensions:** [`ConvertKit`](/conversion/import/docx/convertkit) bundles `TextAlign` and preconfigures it with `types: ['paragraph', 'heading']`.
-- **Configuration:** None required.
-- **That is it.** Alignment works end-to-end with the standard ConvertKit setup.
+- **扩展：**[`ConvertKit`](/conversion/import/docx/convertkit) 内置 `TextAlign`，并预先将其配置为 `types: ['paragraph', 'heading']`。
+- **配置：**无需配置。
+- **就是这么简单。**使用标准的 ConvertKit 设置即可实现端到端的对齐处理。
 
-## Support overview
+## 支持情况概览
 
-|         | Import    | Editor    | Export    |
+|         | 导入    | 编辑器    | 导出    |
 | ------- | --------- | --------- | --------- |
-| Left    | Supported | Supported | Supported |
-| Center  | Supported | Supported | Supported |
-| Right   | Supported | Supported | Supported |
-| Justify | Supported | Supported | Supported |
+| 左对齐    | 支持 | 支持 | 支持 |
+| 居中  | 支持 | 支持 | 支持 |
+| 右对齐   | 支持 | 支持 | 支持 |
+| 两端对齐 | 支持 | 支持 | 支持 |
 
-## Import
+## 导入
 
-Import text alignment using the [editor extension](/conversion/import/docx/editor-extension) or the [REST API](/conversion/import/docx/rest-api). Both produce identical output.
+使用[编辑器扩展](/conversion/import/docx/editor-extension)或 [REST API](/conversion/import/docx/rest-api)导入文本对齐。两者生成的输出完全相同。
 
-The conversion service reads the `<w:jc>` element from each DOCX paragraph and maps it to a `textAlign` attribute on the corresponding Tiptap node.
+转换服务会读取每个 DOCX 段落中的 `<w:jc>` 元素，并将其映射为对应 Tiptap 节点上的 `textAlign` 属性。
 
-| Word `<w:jc>` value | Tiptap `textAlign`                                           |
+| Word `<w:jc>` 值 | Tiptap `textAlign`                                           |
 | ------------------- | ------------------------------------------------------------ |
 | `left`              | `left`                                                       |
 | `center`            | `center`                                                     |
 | `right`             | `right`                                                      |
 | `both`              | `justify`                                                    |
-| `start`             | `start` (passed through, may not be recognized by TextAlign) |
-| `end`               | `end` (passed through, may not be recognized by TextAlign)   |
+| `start`             | `start`（原样传递，TextAlign 可能无法识别） |
+| `end`               | `end`（原样传递，TextAlign 可能无法识别）   |
 
-The `textAlign` attribute is set on both `paragraph` and `heading` nodes.
+`textAlign` 属性会同时设置在 `paragraph` 和 `heading` 节点上。
 
-<Callout title="Right-to-left text direction is not supported" variant="warning">
-  DOCX paragraph direction (`<w:bidi>`) and run direction (`<w:rtl>`) are not parsed by the importer. Documents authored in Arabic, Hebrew, Persian, Urdu, or other RTL languages render with Tiptap's CSS direction (LTR by default), regardless of how the source document was authored. The exporter does not write direction back either, so a document edited as LTR exports as LTR. To handle RTL content today, set `dir="rtl"` on the editor root in your CSS or detect language at the application level and apply direction yourself.
+<Callout title="不支持从右向左的文本方向" variant="warning">
+  导入器不会解析 DOCX 段落方向（`<w:bidi>`）和文本运行方向（`<w:rtl>`）。无论源文档的编写方式如何，阿拉伯语、希伯来语、波斯语、乌尔都语或其他 RTL 语言的文档都会按照 Tiptap 的 CSS 方向渲染（默认为 LTR）。导出器也不会写入方向信息，因此以 LTR 方向编辑的文档导出时仍为 LTR。若要处理 RTL 内容，目前可在 CSS 中为编辑器根元素设置 `dir="rtl"`，也可以在应用层检测语言并自行设置方向。
 </Callout>
 
-## Editor rendering
+## 编辑器渲染
 
-The [`TextAlign`](/editor/extensions/functionality/textalign) extension adds `textAlign` as a global attribute on the node types you specify. It renders as an inline `style="text-align: ..."` on the HTML element. ConvertKit registers it with `types: ['paragraph', 'heading']` so imported alignment renders out of the box:
+[`TextAlign`](/editor/extensions/functionality/textalign) 扩展会在指定的节点类型上添加全局属性 `textAlign`。该属性会以行内样式 `style="text-align: ..."` 的形式渲染到 HTML 元素上。ConvertKit 将其注册为 `types: ['paragraph', 'heading']`，因此导入的对齐方式开箱即用：
 
 ```ts
 import { ConvertKit } from '@tiptap-pro/extension-convert-kit'
@@ -58,7 +58,7 @@ import { ConvertKit } from '@tiptap-pro/extension-convert-kit'
 new Editor({ extensions: [ConvertKit] })
 ```
 
-If you need different types (e.g. table cells), override the slot:
+如果需要用于其他类型（例如表格单元格），可以覆盖配置项：
 
 ```ts
 ConvertKit.configure({
@@ -66,12 +66,12 @@ ConvertKit.configure({
 })
 ```
 
-<Callout title="Disabling textAlign drops the attribute" variant="warning">
-  If you set `ConvertKit.configure({ textAlign: false })`, the `textAlign` attribute from import isn't recognized by the schema and won't be applied. No error is thrown. See the [invalid schema guide](/guides/invalid-schema) for more on this behavior.
+<Callout title="禁用 textAlign 会丢弃该属性" variant="warning">
+  如果设置 `ConvertKit.configure({ textAlign: false })`，导入的 `textAlign` 属性将无法被 schema 识别，也不会生效。此时不会抛出错误。有关此行为的更多信息，请参阅[无效 schema 指南](/guides/invalid-schema)。
 </Callout>
 
-## Export
+## 导出
 
-Export text alignment using the [editor extension](/conversion/export/docx/editor-extension) or the [REST API](/conversion/export/docx/rest-api). Both handle text alignment identically.
+使用[编辑器扩展](/conversion/export/docx/editor-extension)或 [REST API](/conversion/export/docx/rest-api)导出文本对齐。两者对文本对齐的处理方式完全相同。
 
-The exporter reads `node.attrs.textAlign` from each paragraph and heading and maps it back to the DOCX alignment type. No additional configuration is required. If import and editor are configured correctly, export follows automatically.
+导出器会读取每个段落和标题中的 `node.attrs.textAlign`，并将其映射回 DOCX 对齐类型。无需额外配置。如果导入和编辑器配置正确，导出会自动完成。
