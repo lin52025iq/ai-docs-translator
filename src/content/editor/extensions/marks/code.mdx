@@ -1,45 +1,45 @@
 ---
-title: Code extension
+title: Code 扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-code?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-code
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-code.svg
     url: https://npmcharts.com/compare/@tiptap/extension-code?minimal=true
-    label: Downloads
+    label: 下载量
 extension:
   name: Code
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-code
-  description: 'Developers love to add some inline code to their texts.'
+  description: '开发者喜欢在文本中添加行内代码。'
   type: mark
   icon: Code
 meta:
-  title: Code extension | Tiptap Editor Docs
-  description: Use the Code extension in your Tiptap Editor to add inline code to your texts. Learn more in our docs!
-  category: Editor
+  title: Code 扩展 | Tiptap 编辑器文档
+  description: 在 Tiptap 编辑器中使用 Code 扩展，为文本添加行内代码。欢迎阅读文档了解更多！
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-The Code extensions enables you to use the `<code>` HTML tag in the editor. If you paste in text with `<code>` tags it will be rendered accordingly.
+Code 扩展使你可以在编辑器中使用 `<code>` HTML 标签。粘贴包含 `<code>` 标签的文本时，内容会相应地呈现。
 
-Type something with <code>\`back-ticks around\`</code> and it will magically transform to `inline code` while you type.
+输入一段用 <code>反引号括起来</code> 的内容，输入时它就会自动转换为 `行内代码`。
 
 <CodeDemo path="/Marks/Code" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-code
 ```
 
-## Settings
+## 设置
 
 ### HTMLAttributes
 
-Custom HTML attributes that should be added to the rendered HTML tag.
+要添加到渲染后 HTML 标签中的自定义 HTML 属性。
 
 ```js
 Code.configure({
@@ -49,11 +49,11 @@ Code.configure({
 })
 ```
 
-## Commands
+## 命令
 
 ### setCode()
 
-Mark text as inline code.
+将文本标记为行内代码。
 
 ```js
 editor.commands.setCode()
@@ -61,7 +61,7 @@ editor.commands.setCode()
 
 ### toggleCode()
 
-Toggle inline code mark.
+切换行内代码标记。
 
 ```js
 editor.commands.toggleCode()
@@ -69,18 +69,18 @@ editor.commands.toggleCode()
 
 ### unsetCode()
 
-Remove inline code mark.
+移除行内代码标记。
 
 ```js
 editor.commands.unsetCode()
 ```
 
-## Keyboard shortcuts
+## 键盘快捷键
 
-| Command      | Windows/Linux                     | macOS                         |
+| 命令         | Windows/Linux                     | macOS                         |
 | ------------ | --------------------------------- | ----------------------------- |
 | toggleCode() | <kbd>Control</kbd> + <kbd>E</kbd> | <kbd>Cmd</kbd> + <kbd>E</kbd> |
 
-## Source code
+## 源代码
 
 [packages/extension-code/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-code/)
