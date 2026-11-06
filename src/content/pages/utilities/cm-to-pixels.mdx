@@ -1,16 +1,16 @@
 ---
-title: cmToPixels utility
+title: cmToPixels 工具
 meta:
-  title: cmToPixels utility | Tiptap Pages Docs
-  description: Convert centimeters to pixels for page formatting in Tiptap Pages.
+  title: cmToPixels 工具 | Tiptap Pages 文档
+  description: 在 Tiptap Pages 中将厘米转换为像素，用于页面格式设置。
   category: Pages
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-The `cmToPixels` helper lets you easily convert centimeters to pixels, which is useful if you want to define your page or margin sizes in centimeters and need to convert them to pixels for the `pageFormat` option or custom layouts in the Tiptap Pages extension.
+`cmToPixels` 辅助函数可轻松将厘米转换为像素。如果你想以厘米为单位设置页面或边距大小，并需要将其转换为像素以用于 Tiptap Pages 扩展中的 `pageFormat` 选项或自定义布局，这个函数会非常有用。
 
-## Import
+## 导入
 
 ```js
 import { cmToPixels } from '@tiptap-pro/extension-pages'
@@ -22,6 +22,6 @@ import { cmToPixels } from '@tiptap-pro/extension-pages'
 cmToPixels(cm: number, dpi?: number): number
 ```
 
-- `cm`: The value in centimeters to convert.
-- `dpi` (optional): Dots per inch. If not provided, the utility will auto-detect the DPI of the current environment.
-- **Returns:** The equivalent value in pixels (rounded).
+- `cm`：要转换的厘米值。
+- `dpi`（可选）：每英寸点数。如果未提供，该工具会自动检测当前环境的 DPI。
+- **返回值：**等效的像素值（已四舍五入）。
