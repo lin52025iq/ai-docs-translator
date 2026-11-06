@@ -1,0 +1,435 @@
+---
+title: Hocuspocus 服务器示例
+meta:
+  title: Hocuspocus 服务器示例 | Hocuspocus 文档
+  category: Hocuspocus
+---
+
+## 运行 Hocuspocus
+
+### 命令行界面（CLI）
+
+有时，你只想快速启动一个本地 Hocuspocus 实例。也许只是想试用一下，或者在本地测试 Webhook。使用我们的 CLI，只需几秒钟就能在命令行中运行 Hocuspocus。
+
+你很可能只需使用 npx 命令运行它。当然，也可以通过 npm 或 yarn 在全局或项目中安装。
+
+```bash
+npx @hocuspocus/cli
+npx @hocuspocus/cli --port 8080
+npx @hocuspocus/cli --webhook http://localhost/webhooks/hocuspocus
+npx @hocuspocus/cli --sqlite
+npx @hocuspocus/cli --s3 --s3-bucket my-documents
+```
+
+### Express
+
+如果不在 Hocuspocus 上调用 `listen()`，它就不会自行启动 WebSocket 服务器——你需要负责调用其 [`handleConnection()` 方法](/hocuspocus/server/usage)，并将消息和关闭事件转发给返回的 `ClientConnection`。
+
+从 v4 开始，Hocuspocus 基于 [crossws](https://github.com/unjs/crossws) 构建，因此 Express、Koa、原生 `node:http` 以及其他 Node 框架都可以采用相同的集成方式：在服务器的 `upgrade` 事件上挂载 `crossws` 的 Node 适配器，并将其连接到 Hocuspocus：
+
+```ts
+import { Logger } from '@hocuspocus/extension-logger'
+import { Hocuspocus, type WebSocketLike } from '@hocuspocus/server'
+import { createServer } from 'node:http'
+import crossws from 'crossws/adapters/node'
+import express from 'express'
+
+const hocuspocus = new Hocuspocus({
+  extensions: [new Logger()],
+})
+
+const app = express()
+
+app.get('/', (request, response) => {
+  response.send('Hello World!')
+})
+
+const server = createServer(app)
+
+const ws = crossws({
+  hooks: {
+    open(peer) {
+      const clientConnection = hocuspocus.handleConnection(
+        peer.websocket as unknown as WebSocketLike,
+        peer.request as Request,
+        { user_id: 1234 },
+      )
+      ;(peer as any)._hocuspocus = clientConnection
+    },
+    message(peer, message) {
+      ;(peer as any)._hocuspocus?.handleMessage(message.uint8Array())
+    },
+    close(peer, event) {
+      ;(peer as any)._hocuspocus?.handleClose({
+        code: event.code,
+        reason: event.reason,
+      })
+    },
+    error(peer, error) {
+      console.error('WebSocket error for peer:', peer.id)
+      console.error(error)
+    },
+  },
+})
+
+server.on('upgrade', (request, socket, head) => {
+  ws.handleUpgrade(request, socket, head)
+})
+
+server.listen(1234, () => console.log('Listening on http://127.0.0.1:1234'))
+```
+
+重要！某些扩展会使用 `onRequest`、`onUpgrade` 和 `onListen` 钩子，但在这种情况下，这些钩子不会触发。
+
+### Hono
+
+Hono 是一个适用于多种运行时的现代 Web 框架。它开箱即支持 WebSocket 协议，因此非常适合与 Hocuspocus 搭配使用。只有在 Node.js 中运行时，Hono 的实现才需要一些额外代码来支持 WebSocket 协议。
+
+```ts
+import { Hono } from 'hono'
+import { Hocuspocus } from '@hocuspocus/server'
+
+// Node.js specific
+import { serve } from '@hono/node-server'
+import { createNodeWebSocket } from '@hono/node-ws'
+
+const hocuspocus = new Hocuspocus({
+  // …
+})
+
+const app = new Hono()
+
+const { injectWebSocket, upgradeWebSocket } = createNodeWebSocket({ app })
+
+app.get(
+  '/',
+  upgradeWebSocket((c) => {
+    let clientConnection
+    return {
+      onOpen(_evt, ws) {
+        ws.raw.binaryType = 'arraybuffer'
+        clientConnection = hocuspocus.handleConnection(ws.raw, c.req.raw, {})
+      },
+      onMessage(evt) {
+        clientConnection?.handleMessage(new Uint8Array(evt.data))
+      },
+      onClose() {
+        clientConnection?.handleClose()
+      },
+    }
+  }),
+)
+
+const server = serve(
+  {
+    fetch: app.fetch,
+    port: 8000,
+  },
+  (info) => {
+    hocuspocus.hooks('onListen', {
+      instance: hocuspocus,
+      configuration: hocuspocus.configuration,
+      port: info.port,
+    })
+  },
+)
+
+injectWebSocket(server)
+```
+
+重要！某些扩展会使用 `onUpgrade` 和 `onRequest` 钩子，但在这种情况下，这些钩子不会触发。
+
+### Bun
+
+从 v4 开始，Hocuspocus 在底层使用 [crossws](https://github.com/unjs/crossws)，因此可以在 Node.js 之外运行。在 Bun 中，直接实例化 `Hocuspocus`，并将 `crossws` 接入 `Bun.serve`：
+
+```ts
+import { Logger } from "@hocuspocus/extension-logger";
+import { Hocuspocus } from "@hocuspocus/server";
+import crossws from "crossws/adapters/bun";
+
+const hocuspocus = new Hocuspocus({
+	extensions: [new Logger()],
+});
+
+const ws = crossws({
+	hooks: {
+		open(peer) {
+			// Use peer methods instead of peer.websocket to avoid
+			// Bun's Proxy `this` binding issue with ServerWebSocket
+			const wsLike = {
+				get readyState() {
+					return peer.websocket.readyState ?? 3; // 3 = CLOSED
+				},
+				send(data: any) {
+					peer.send(data);
+				},
+				close(code?: number, reason?: string) {
+					peer.close(code, reason);
+				},
+			};
+			const clientConnection = hocuspocus.handleConnection(
+				wsLike,
+				peer.request as Request,
+			);
+			(peer as any)._hocuspocus = clientConnection;
+		},
+		message(peer, message) {
+			(peer as any)._hocuspocus?.handleMessage(message.uint8Array());
+		},
+		close(peer, event) {
+			(peer as any)._hocuspocus?.handleClose({
+				code: event.code,
+				reason: event.reason,
+			});
+		},
+		error(peer, error) {
+			console.error("WebSocket error for peer:", peer.id);
+			console.error(error);
+		},
+	},
+});
+
+Bun.serve({
+	port: 8000,
+	websocket: ws.websocket,
+	fetch(request, server) {
+		if (request.headers.get("upgrade") === "websocket") {
+			return ws.handleUpgrade(request, server);
+		}
+
+		return new Response("Welcome to Hocuspocus!");
+	},
+});
+```
+
+### Deno
+
+Deno 提供 `Deno.upgradeWebSocket()` 和标准的 `WebSocket` 事件，可以直接映射到 `handleConnection()`：
+
+```ts
+import { Hocuspocus } from "@hocuspocus/server"
+
+const hocuspocus = new Hocuspocus({
+  name: "collaboration",
+})
+
+Deno.serve((req) => {
+  if (req.headers.get("upgrade") !== "websocket") {
+    return new Response(null, { status: 501 })
+  }
+
+  const { socket, response } = Deno.upgradeWebSocket(req)
+  socket.binaryType = "arraybuffer"
+
+  const clientConnection = hocuspocus.handleConnection(socket, req)
+
+  socket.addEventListener("message", (event) => {
+    clientConnection.handleMessage(new Uint8Array(event.data))
+  })
+
+  socket.addEventListener("close", (event) => {
+    clientConnection.handleClose({ code: event.code, reason: event.reason })
+  })
+
+  return response
+})
+```
+
+具体的连接方式取决于你的运行时，但基本步骤相同：将 WebSocket、`Request` 和可选上下文传递给 `handleConnection()`，然后将收到的消息和关闭事件分派给返回的 `ClientConnection`。
+
+### Koa
+
+与上面的 Express 示例类似，v4 的做法是在底层 HTTP 服务器上使用 `crossws` 的 Node 适配器：
+
+```ts
+import { Logger } from '@hocuspocus/extension-logger'
+import { Hocuspocus, type WebSocketLike } from '@hocuspocus/server'
+import { createServer } from 'node:http'
+import crossws from 'crossws/adapters/node'
+import Koa from 'koa'
+
+const hocuspocus = new Hocuspocus({
+  extensions: [new Logger()],
+})
+
+const app = new Koa()
+
+app.use(async (ctx) => {
+  ctx.body = 'Hello World!'
+})
+
+const server = createServer(app.callback())
+
+const ws = crossws({
+  hooks: {
+    open(peer) {
+      const clientConnection = hocuspocus.handleConnection(
+        peer.websocket as unknown as WebSocketLike,
+        peer.request as Request,
+        { user_id: 1234 },
+      )
+      ;(peer as any)._hocuspocus = clientConnection
+    },
+    message(peer, message) {
+      ;(peer as any)._hocuspocus?.handleMessage(message.uint8Array())
+    },
+    close(peer, event) {
+      ;(peer as any)._hocuspocus?.handleClose({
+        code: event.code,
+        reason: event.reason,
+      })
+    },
+    error(peer, error) {
+      console.error('WebSocket error for peer:', peer.id)
+      console.error(error)
+    },
+  },
+})
+
+server.on('upgrade', (request, socket, head) => {
+  ws.handleUpgrade(request, socket, head)
+})
+
+server.listen(1234)
+```
+
+重要！某些扩展会使用 `onRequest`、`onUpgrade` 和 `onListen` 钩子，但在这种情况下，这些钩子不会触发。
+
+### PHP / Laravel（草案）
+
+我们创建了一个 Laravel 软件包，让 Laravel 与 Hocuspocus 的集成变得轻松顺畅。
+
+详情请见：[ueberdosis/hocuspocus-laravel](https://github.com/ueberdosis/hocuspocus-laravel)
+
+Hocuspocus 的主存储必须以 Y.Doc 的 Uint8Array 二进制格式保存。目前没有兼容的 PHP 库能够读取 YJS 格式，因此有两种方式访问数据：除了写入主存储之外，再以 Laravel 兼容的格式（例如 JSON）保存一份数据；或者单独创建一个 nodejs 服务器，通过 API 读取主存储、解析 YJS 格式，并将结果返回给 Laravel。
+
+_注意：不要将 Y.Doc 以 JSON 格式保存，并在用户连接时再将其还原为 YJS 二进制数据。这样会导致更新合并出现问题，而且新连接时内容会重复。必须以二进制格式存储数据，才能使用 YJS 格式。_
+
+#### 将数据保存到主存储
+
+使用 Laravel 的迁移系统创建一张表，用于存储 YJS 二进制数据：
+
+```
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('documents', function (Blueprint $table) {
+            $table->id();
+            $table->binary('data');
+        });
+    }
+    public function down()
+    {
+        Schema::dropIfExists('documents');
+    }
+};
+```
+
+在 Hocuspocus 服务器中，可以使用 dotenv 库从 `.env` 获取数据库登录信息：
+
+```
+import mysql from 'mysql2';
+import dotenv from 'dotenv';
+dotenv.config()
+const pool = mysql.createPool({
+    connectionLimit: 100, //important
+    host: '127.0.0.1',
+    user: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    debug: false
+});
+```
+
+然后使用 [database 扩展](/hocuspocus/server/extensions/database)，通过 `pool.query` 存储和读取二进制数据。
+
+##### 选项 1：同时以另一种格式存储数据
+
+使用 [webhook 扩展](/hocuspocus/server/extensions/webhook)，在文档更新时向 Laravel 发送请求，并以 JSON 格式发送文档（参见[此处](https://tiptap.dev/hocuspocus/guide/transformations#tiptap>）。
+
+##### 选项 2：通过单独的 nodejs 守护进程按需获取数据（高级）
+
+使用 http 模块创建一个 nodejs 服务器：
+
+```
+const server = http.createServer(
+...
+).listen(3000, '127.0.0.1')
+```
+
+像上面一样使用 dotenv 软件包获取 mysql 登录信息并执行 mysql 请求。然后，你可以使用 YJS 库解析二进制数据（`Y.applyUpdate(doc, row.data)`）。你可以按需对数据进行格式化，再将其返回给 Laravel。
+
+#### 身份验证集成
+
+可以使用 webhook 扩展进行身份验证——拒绝 `onConnect` 请求会导致 Hocuspocus 服务器断开连接。不过，对于安全性要求较高的应用，最好使用自定义的 `onAuthenticate` 钩子，因为攻击者可能会在 `onConnect` 钩子被拒绝之前，从 Hocuspocus 服务器获取一些数据。
+
+要通过 Laravel 服务器进行身份验证，可以使用 Laravel 内置的身份验证系统，并通过会话 Cookie 和 CSRF 令牌进行验证。在 Hocuspocus 服务器脚本中添加一个 `onAuthenticate` 钩子，将请求标头（因此也包括会话 Cookie）一并传递，并在发往 Laravel 服务器的请求中添加 CSRF 令牌：
+
+```
+const hocusServer = new Server({
+  ...
+  onAuthenticate(data) {
+        return new Promise((resolve, reject) => {
+            // In v4, requestHeaders is a web-standard Headers object
+            const headers = Object.fromEntries(data.requestHeaders.entries());
+            headers["X-CSRF-TOKEN"] = data.token;
+            axios.get(
+                process.env.APP_URL + '/api/hocus',
+                { headers: headers },
+            ).then(function (response) {
+                if (response.status === 200)
+                    resolve()
+                else
+                    reject()
+            }).catch(function (error) {
+                reject()
+            })
+        })
+    },
+```
+
+并在 provider 的请求中添加 CSRF 令牌：
+
+```
+const provider = new HocuspocusProvider({
+  ...
+  token: '{{ csrf_token() }}',
+```
+
+最后，在 `api.php` 中添加一个路由来响应请求。可以返回空响应，只根据请求状态来验证身份（即状态码为 200 或 403）。此示例使用 Laravel 内置中间件验证会话 Cookie 和 CSRF 令牌。你也可以按需添加其他中间件，例如 `verified` 或任何自定义中间件：
+
+```
+Route::middleware(['web', 'auth'])->get('/hocus', function (Request $request) {
+    return response('');
+});
+```
+
+就这么简单！
+
+## 在本地编辑文档
+
+如果你想直接在服务器上编辑文档（同时保持钩子和同步正常运行），最简单的方法是使用 Hocuspocus 的 `getDirectConnection` 方法。
+
+```typescript
+const hocuspocus = new Hocuspocus()
+
+const docConnection = await hocuspocus.openDirectConnection('my-document', {})
+
+await docConnection.transact((doc) => {
+  doc.getMap('test').set('a', 'b')
+})
+
+await docConnection.disconnect()
+```
+
+### 断开连接后让文档保持热状态
+
+默认情况下，`disconnect()` 会立即持久化文档，并在调用完成后将其从内存中卸载。如果你预计很快会再次与同一文档建立直接连接，可以传入 `unloadImmediately: false`。这样，存储操作会通过防抖计时器进行调度，文档也会继续保留在内存中；后续连接便可复用该文档，连续的写入也会合并处理——这与 WebSocket 连接关闭时的行为一致。
+
+```typescript
+await docConnection.disconnect({ unloadImmediately: false })
+```
+
+请注意，使用 `unloadImmediately: false` 时，无法保证在 `disconnect()` 完成时持久化已经完成。
