@@ -1,0 +1,193 @@
+---
+tags:
+  - type: editor
+title: 高性能地将 Tiptap 集成到应用中
+meta:
+  title: 集成性能 | Tiptap 编辑器文档
+  description: 了解如何高性能地将 Tiptap 编辑器集成到应用中。更多内容请参阅文档！
+  category: 编辑器
+---
+
+import { CodeDemo } from '@/components/CodeDemo'
+
+<CodeDemo path="/Examples/Book" />
+
+Tiptap 是一款性能非常出色的编辑器（甚至可以编辑整本书！）。通常，遇到性能问题时，问题并不在于 Tiptap 本身，而在于将它集成到应用中的方式。以下是一些建议，可确保编辑器流畅运行。
+
+## React 中的 Tiptap 编辑器集成
+
+<CodeDemo path="/Examples/Performance?hideSource=true" />
+
+在 React 中使用 Tiptap 时，最常见的性能问题是编辑器被重新渲染得过于频繁。这可能由多种原因造成：
+
+- 使用 `useEditor` hook 时，默认情况下，每次发生更改都会重新渲染编辑器。因此，你应该将编辑器（以及依赖它的内容）隔离到单独的组件中，以避免不必要的重新渲染。
+- 编辑器应与不会影响它的渲染隔离开来。例如，如果侧边栏不会与编辑器交互，就应该将它放在单独的组件中。
+
+幸运的是，大多数这类问题的解决方法都相同：将编辑器隔离到单独的组件中。下面是一个示例：
+
+应该这样做：将编辑器隔离到单独的组件中
+
+```jsx
+import { EditorContent, useEditor } from '@tiptap/react'
+
+const TiptapEditor = () => {
+  const editor = useEditor({
+    extensions,
+    content,
+  })
+
+  return (
+    <>
+      <EditorContent editor={editor} />
+      {/* Other components that depend on the editor instance */}
+      <MenuComponent editor={editor} />
+    </>
+  )
+}
+
+export default TiptapEditor
+```
+
+不要这样做：在包含其他组件的同一个组件中渲染编辑器
+
+```jsx
+import { EditorContent, useEditor } from '@tiptap/react'
+
+const App = () => {
+  const [sidebarOpen, setSidebarOpen] = React.useState(false)
+  const editor = useEditor({
+    extensions,
+    content,
+  })
+
+  return (
+    <>
+      <UnrelatedSidebar onChange={setSidebarOpen} />
+      <EditorContent editor={editor} />
+      <MenuComponent editor={editor} />
+      <Sidenav isSidebarOpen={sidebarOpen}>
+        <AnotherComponent />
+      </Sidenav>
+    </>
+  )
+}
+
+export default App
+```
+
+这些无关组件会导致编辑器进行不必要的重新渲染，并增加每次渲染的开销。
+
+### 排查性能问题
+
+你可以使用 React DevTools Profiler 查看哪些组件正在重新渲染，以及原因。另一种方法是在编辑器组件中加入 `console.count('editor render')`，观察它被重新渲染的频率。这有助于你找出导致不必要重新渲染的组件。
+
+如果编辑器重新渲染的频率高于预期，可以采取以下措施：
+
+- 检查编辑器是否因父组件而重新渲染。
+- 将编辑器与无关的状态更改隔离开来（例如，打开侧边栏不应导致编辑器重新渲染）。
+- 使用 `useEditorState` 避免编辑器组件内部不必要的重新渲染。
+
+希望这些建议能帮助你找出并解决遇到的性能问题。
+
+### 使用 `useEditorState` 避免不必要的重新渲染
+
+`useEditorState` hook 可让你订阅编辑器状态的更改，并仅在必要时重新渲染。这有助于避免编辑器及其组件不必要的重新渲染。
+
+```tsx
+import { useEditor, useEditorState } from '@tiptap/react'
+
+function Component() {
+  const editor = useEditor({
+    extensions,
+    content,
+  })
+
+  const editorState = useEditorState({
+    editor,
+    // This function will be called every time the editor state changes
+    selector: ({ editor }: { editor: Editor }) => ({
+      // It will only re-render if the bold or italic state changes
+      isBold: editor.isActive('bold'),
+      isItalic: editor.isActive('italic'),
+    }),
+  })
+
+  return (
+    <>
+      <EditorContent editor={editor} />
+      <button
+        onClick={() => editor.chain().focus().toggleBold().run()}
+        className={editorState.isBold ? 'primary' : ''}
+      >
+        Bold
+      </button>
+      <button
+        onClick={() => editor.chain().focus().toggleItalic().run()}
+        className={editorState.isItalic ? 'primary' : ''}
+      >
+        Italic
+      </button>
+    </>
+  )
+}
+```
+
+`selector` 函数可让你指定要订阅的编辑器状态部分。默认情况下，系统会将所选状态与之前的状态进行深度比较，只有状态发生变化时才会重新渲染。你可以选择编辑器状态的任意部分，也可以从中派生新值。
+
+### 更灵活地控制渲染
+
+从 Tiptap v2.5.0 开始，你可以通过 `immediatelyRender` 和 `shouldRerenderOnTransaction` 选项，更灵活地控制渲染。如果你想阻止编辑器立即渲染或在每次事务发生时渲染，这些选项会很有用。
+
+```tsx
+import { useEditor } from '@tiptap/react'
+
+function Component() {
+  const editor = useEditor({
+    extensions,
+    content,
+    /**
+     * This option gives us the control to enable the default behavior of rendering the editor immediately.
+     */
+    immediatelyRender: true,
+    /**
+     * This option gives us the control to disable the default behavior of re-rendering the editor on every transaction.
+     */
+    shouldRerenderOnTransaction: false,
+  })
+
+  return <EditorContent editor={editor} />
+}
+```
+
+## React 节点视图的性能
+
+节点视图允许你在编辑器中用自定义组件替代节点进行渲染，因此可以在编辑器中嵌入任意类型的内容。不过，使用 React 组件时，请留意可能产生的性能影响。
+
+由于技术原因，节点视图需要同步渲染。Tiptap 会为每个节点视图创建新元素，并在其中挂载 React 组件。这个过程可能开销较大，尤其是在编辑器中有许多节点视图实例时。
+
+我们已经尽可能地优化了这部分。如果发现渲染节点视图导致性能问题，可以考虑使用普通 HTML 元素，或采用其他方式在节点视图中渲染内容。
+
+## 避免 React 中的 `flushSync` 警告
+
+在 React 中使用 Tiptap 时，你可能会在控制台看到 `flushSync was called from inside a lifecycle method` 警告。
+
+Tiptap 会同步分发事务。如果你在 Tiptap 的[回调或事件处理程序](/editor/api/events)中直接更新 React 状态，React 可能正处于渲染周期中，因此会触发此警告，以避免 React 渲染期间出现性能问题。
+
+要解决此问题，请找到触发警告的代码，并将其包装在 `queueMicrotask` 中。这样会将更新安排在当前同步执行结束后立即运行，从而避免与 React 的渲染周期冲突。
+
+```tsx
+import { useState } from 'react'
+import { useEditor } from '@tiptap/react'
+
+function Component() {
+  const [state, setState] = useState([])
+
+  const editor = useEditor({
+    onUpdate() {
+      queueMicrotask(() => setState('new state'))
+    },
+  })
+
+  // ...
+}
+```
