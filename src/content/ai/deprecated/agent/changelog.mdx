@@ -1,71 +1,71 @@
 ---
-title: Changelog
+title: 更新日志
 meta:
-  title: Changelog | Tiptap AI Agent extension
-  description: Changelog for the AI Agent extension
-  category: Content AI
+  title: 更新日志 | Tiptap AI Agent 扩展
+  description: AI Agent 扩展的更新日志
+  category: 内容 AI
 ---
 
 ## 3.0.0-beta.40
 
-### Patch Changes
+### 补丁变更
 
-- Fix issue with unsupported import path
+- 修复不受支持的导入路径问题
 
 ## 3.0.0-beta.39
 
-### Patch Changes
+### 补丁变更
 
-- Add TypeScript module declaration for `AiAgentStorage` to improve type safety
+- 为 `AiAgentStorage` 添加 TypeScript 模块声明，以提高类型安全性
 
 ## 3.0.0-beta.38
 
-### Patch Changes
+### 补丁变更
 
-- Fix a bug where `rejectToolCall` did not undo all changes when using the AI Agent with the AI Changes extension
-- Fix a bug where `acceptToolCall` did not apply all changes when using the AI Agent with the AI Suggestion extension
+- 修复使用 AI Agent 和 AI Changes 扩展时，`rejectToolCall` 未能撤销所有更改的问题
+- 修复使用 AI Agent 和 AI Suggestion 扩展时，`acceptToolCall` 未能应用所有更改的问题
 
 ## 3.0.0-beta.37
 
-### Minor Changes
+### 次要变更
 
-- Set the default model to `gpt-5`
+- 将默认模型设为 `gpt-5`
 
 ## 3.0.0-beta.36
 
-### Patch Changes
+### 补丁变更
 
-- Fixes bug where the `systemPrompt` option was ignored by the AI Agent extension
+- 修复 AI Agent 扩展忽略 `systemPrompt` 选项的问题
 
 ## 3.0.0-beta.35
 
-### Minor Changes
+### 次要变更
 
-- Add support for GPT-5 models in `AiAgentModelName` type
-  - Added `gpt-5`, `gpt-5-mini`, `gpt-5-nano`, `gpt-5-chat` models
-  - Added timestamped versions: `gpt-5-2025-08-07`, `gpt-5-mini-2025-08-07`, `gpt-5-nano-2025-08-07`, `gpt-5-chat-2025-08-07`
+- 在 `AiAgentModelName` 类型中添加对 GPT-5 模型的支持
+  - 添加 `gpt-5`、`gpt-5-mini`、`gpt-5-nano`、`gpt-5-chat` 模型
+  - 添加带时间戳的版本：`gpt-5-2025-08-07`、`gpt-5-mini-2025-08-07`、`gpt-5-nano-2025-08-07`、`gpt-5-chat-2025-08-07`
 
 ## 3.0.0-beta.34
 
-### Patch Changes
+### 补丁变更
 
-- Use unpinned Tiptap dependencies to avoid peer dependency issues with Tiptap 3.x.x
+- 使用未固定版本的 Tiptap 依赖项，以避免与 Tiptap 3.x.x 的对等依赖问题
 
 ## 3.0.0-beta.33
 
-### Major Changes
+### 重大变更
 
-- `useAiChangesExtension` option of `AiAgentProvider` has been renamed to `reviewOptions.extension`
-- `autoAccept` option of `AiAgentProvider` has been renamed to `reviewOptions.autoAccept`
-- Requires `@tiptap-pro/extension-ai-suggestion` version `3.0.0-beta.33` or later
+- `AiAgentProvider` 的 `useAiChangesExtension` 选项已重命名为 `reviewOptions.extension`
+- `AiAgentProvider` 的 `autoAccept` 选项已重命名为 `reviewOptions.autoAccept`
+- 需要 `@tiptap-pro/extension-ai-suggestion` 版本 `3.0.0-beta.33` 或更高版本
 
-### Minor Changes
+### 次要变更
 
-- Review changes before they are inserted into the document, using the AI Suggestion extension
+- 使用 AI Suggestion 扩展，在更改插入文档之前对其进行审核
 
 ## 3.0.0-beta.32
 
-### Major Changes
+### 重大变更
 
-- Publish AI Agent extension (beta) for Tiptap 3
-- On-premises customers: upgrade the AI Server to version 2.9.0 or later
+- 为 Tiptap 3 发布 AI Agent 扩展（测试版）
+- 本地部署客户：请将 AI Server 升级到 2.9.0 或更高版本
