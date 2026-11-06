@@ -1,15 +1,15 @@
 ---
-title: Editor events
+title: 编辑器事件
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Editor events | Tiptap Slots Docs
-  description: Slot event payloads and subscription lifecycle.
-  category: Composable Docs
+  title: 编辑器事件 | Tiptap Slots 文档
+  description: Slot 事件负载和订阅生命周期。
+  category: 可组合文档
 ---
 
-Subscribe with `editor.on(name, listener)` or the corresponding `Slot.configure()` callback. Remove listeners with `editor.off(name, listener)`.
+使用 `editor.on(name, listener)` 或相应的 `Slot.configure()` 回调进行订阅。使用 `editor.off(name, listener)` 移除监听器。
 
 ```ts
 const onValidation = ({ state }: SlotValidationUpdateEvent) => showValidation(state)
@@ -18,66 +18,66 @@ editor.on('slotValidationUpdate', onValidation)
 editor.off('slotValidationUpdate', onValidation)
 ```
 
-Import payload types from `@tiptap-pro/extension-slot`. `Editor` comes from `@tiptap/core`.
+从 `@tiptap-pro/extension-slot` 导入负载类型。`Editor` 来自 `@tiptap/core`。
 
 ## `slotsUpdate`
 
-Emitted for the initial index and each applied document change. Option: `onSlotsUpdate`.
+初始索引以及每次应用文档更改时都会触发。选项：`onSlotsUpdate`。
 
-### Payload (`SlotsUpdateEvent`)
+### 负载（`SlotsUpdateEvent`）
 
-- `editor` (`Editor`): Source editor.
-- `snapshot` (`SlotSnapshot`): Updated document and index.
+- `editor`（`Editor`）：源编辑器。
+- `snapshot`（`SlotSnapshot`）：更新后的文档和索引。
 
 ## `activeSlotChange`
 
-Emitted initially and when the active entry changes. Option: `onActiveSlotChange`.
+首次初始化以及活动条目发生变化时都会触发。选项：`onActiveSlotChange`。
 
-### Payload (`ActiveSlotChangeEvent`)
+### 负载（`ActiveSlotChangeEvent`）
 
-- `editor` (`Editor`): Source editor.
-- `slot` (`SlotEntry | null`): Active Slot, or `null` outside Slots.
+- `editor`（`Editor`）：源编辑器。
+- `slot`（`SlotEntry | null`）：活动 Slot；不在 Slots 范围内时为 `null`。
 
 ## `slotValidationUpdate`
 
-Emitted when validation becomes pending, current or unvalidated, including explicit context invalidation. Option: `onValidationUpdate`.
+验证状态变为待处理、当前有效或未经验证时触发，也包括显式使上下文失效的情况。选项：`onValidationUpdate`。
 
-### Payload (`SlotValidationUpdateEvent`)
+### 负载（`SlotValidationUpdateEvent`）
 
-- `editor` (`Editor`): Source editor.
-- `state` (`SlotValidationState`): Updated validation storage.
+- `editor`（`Editor`）：源编辑器。
+- `state`（`SlotValidationState`）：更新后的验证存储状态。
 
 ## `slotValidationError`
 
-Emitted when an editor-bound validator throws, rejects or returns malformed findings. Option: `onValidationError`.
+绑定到编辑器的验证器抛出异常、拒绝请求或返回格式错误的验证结果时触发。选项：`onValidationError`。
 
-### Payload (`SlotValidationErrorEvent`)
+### 负载（`SlotValidationErrorEvent`）
 
-Extends [`SlotValidationError`](/composable-docs/slots/api-reference/validation#slotvalidationerror) with:
+在 [`SlotValidationError`](/composable-docs/slots/api-reference/validation#slotvalidationerror) 的基础上增加：
 
-- `editor` (`Editor`): Source editor.
+- `editor`（`Editor`）：源编辑器。
 
-Missing validators and aborted requests do not emit this event.
+缺少验证器或请求已中止时，不会触发此事件。
 
 ## `slotCommandRejected`
 
-Emitted when an actual Slot command is refused, including preflight refusal. Option: `onCommandRejected`.
+实际的 Slot 命令被拒绝时触发，包括预检阶段的拒绝。选项：`onCommandRejected`。
 
-### Payload (`SlotCommandRejectedEvent`)
+### 负载（`SlotCommandRejectedEvent`）
 
-Extends [`SlotCommandRejection`](/composable-docs/slots/api-reference/types#slotcommandrejection) with:
+在 [`SlotCommandRejection`](/composable-docs/slots/api-reference/types#slotcommandrejection) 的基础上增加：
 
-- `editor` (`Editor`): Source editor.
+- `editor`（`Editor`）：源编辑器。
 
-## Delivery
+## 事件派发
 
-- Option callbacks and editor listeners receive the same payload. Registering both creates two subscriptions.
-- Initial index and active-Slot events follow editor creation. Late subscribers read storage; events are not replayed.
-- Update events follow storage updates. Refusal events follow the decision; listener return values do not change it.
-- Payload data is read-only. Application UI must respect read permissions before displaying it.
-- `editor.can()` and pure validation functions emit no editor events.
-- `validateEditorSlots` emits validation events. Validator errors precede the final validation-state update.
-- Follow-up writes should be scheduled by the application.
-- Extension-owned listeners and pending validation are cleaned up on editor destruction.
+- 选项回调和编辑器监听器会收到相同的负载。两者都注册会创建两个订阅。
+- 初始索引和活动 Slot 事件会在编辑器创建后触发。较晚订阅的监听器应读取存储；事件不会重放。
+- 更新事件在存储更新后触发。拒绝事件在做出决定后触发；监听器的返回值不会改变决定。
+- 负载数据为只读。应用界面在显示数据前必须遵守读取权限。
+- `editor.can()` 和纯验证函数不会触发编辑器事件。
+- `validateEditorSlots` 会触发验证事件。验证器错误会先于最终验证状态更新发生。
+- 后续写入应由应用安排。
+- 编辑器销毁时，会清理扩展所拥有的监听器和待处理的验证。
 
-See [Content Protection events](/composable-docs/content-protection/api-reference/extension#editor-events) for policy updates and protection refusals.
+有关策略更新和保护拒绝，请参阅[内容保护事件](/composable-docs/content-protection/api-reference/extension#editor-events)。
