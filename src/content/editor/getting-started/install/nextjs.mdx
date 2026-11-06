@@ -1,25 +1,25 @@
 ---
 title: Next.js
 meta:
-  title: Next.js | Tiptap Editor Docs
-  description: Learn how to integrate Tiptap with Next.js to create a versatile and powerful rich text editor for your project.
+  title: Next.js | Tiptap 编辑器文档
+  description: 了解如何将 Tiptap 集成到 Next.js，打造功能丰富、强大的富文本编辑器。
   category: Editor
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Integrate Tiptap with your Next.js project using this step-by-step guide.
+按照本指南中的步骤，将 Tiptap 集成到 Next.js 项目中。
 
-### Requirements
+### 要求
 
-- [Node](https://nodejs.org/en/download/) installed on your machine
-- Experience with [React](https://reactjs.org/)
+- 在计算机上安装 [Node](https://nodejs.org/en/download/)
+- 具备 [React](https://reactjs.org/) 使用经验
 
-## Create a project (optional)
+## 创建项目（可选）
 
-If you already have an existing Next.js project, that's fine too. Just skip this step.
+如果你已经有 Next.js 项目，也可以直接使用，跳过此步骤即可。
 
-For the purpose of this guide, start a new Next.js project called `my-tiptap-project`. The following command sets up everything we need to get started.
+本指南将创建一个名为 `my-tiptap-project` 的新 Next.js 项目。运行以下命令即可完成所需的初始设置。
 
 ```bash
 # create a project
@@ -29,19 +29,19 @@ npx create-next-app my-tiptap-project
 cd my-tiptap-project
 ```
 
-### Install dependencies
+### 安装依赖
 
-Now that we have a standard boilerplate set up, we can get Tiptap up and running! For this, we will need to install three packages: `@tiptap/react`, `@tiptap/pm`, and `@tiptap/starter-kit`, which includes all the extensions you need to get started quickly.
+现在，标准项目模板已经就绪，可以开始使用 Tiptap 了！首先需要安装三个包：`@tiptap/react`、`@tiptap/pm` 和 `@tiptap/starter-kit`。其中，`@tiptap/starter-kit` 包含了快速入门所需的所有扩展。
 
 ```bash
 npm install @tiptap/react @tiptap/pm @tiptap/starter-kit
 ```
 
-If you followed steps 1 and 2, you can now start your project with `npm run dev` and open [http://localhost:3000/](http://localhost:3000/) in your favorite browser. This might be different if you're working with an existing project.
+如果你已完成步骤 1 和 2，现在可以运行 `npm run dev` 启动项目，并在常用浏览器中打开 [http://localhost:3000/](http://localhost:3000/)。如果你使用的是现有项目，具体情况可能有所不同。
 
-## Integrate Tiptap
+## 集成 Tiptap
 
-To start using Tiptap, you'll need to add a new component to your app. To do so, first create a directory called `components/`. Now it's time to create our component which we'll call `Tiptap`. To do this, add the following example code in `components/Tiptap.jsx`.
+要开始使用 Tiptap，需要在应用中添加一个新组件。首先创建一个名为 `components/` 的目录，然后创建名为 `Tiptap` 的组件。在 `components/Tiptap.jsx` 中添加以下示例代码。
 
 ```jsx
 'use client'
@@ -63,13 +63,13 @@ const Tiptap = () => {
 export default Tiptap
 ```
 
-<Callout title="Why immediatelyRender: false?" variant="hint">
-  Next.js uses server-side rendering by default. Setting `immediatelyRender: false` prevents the editor from rendering on the server, which avoids [React hydration mismatch errors](https://react.dev/errors/418). The editor will initialize client-side after hydration completes. The `'use client'` directive ensures this component only runs in the browser.
+<Callout title="为什么要设置 immediatelyRender: false？" variant="hint">
+  Next.js 默认使用服务器端渲染。设置 `immediatelyRender: false` 可阻止编辑器在服务器上渲染，从而避免 [React 水合不匹配错误](https://react.dev/errors/418)。水合完成后，编辑器将在客户端初始化。`'use client'` 指令可确保此组件仅在浏览器中运行。
 </Callout>
 
-### Add it to your app
+### 将组件添加到应用
 
-Now, let's replace the content of `app/page.js` (or `pages/index.js`, if you are using the Pages router) with the following example code to use the `Tiptap` component in our app.
+现在，将 `app/page.js`（如果使用 Pages 路由，则为 `pages/index.js`）中的内容替换为以下示例代码，以便在应用中使用 `Tiptap` 组件。
 
 ```jsx
 import Tiptap from '../components/Tiptap'
@@ -79,16 +79,16 @@ export default function Home() {
 }
 ```
 
-You should now see Tiptap in your browser. Time to give yourself a pat on the back! :)
+现在，你应该能在浏览器中看到 Tiptap 了。给自己一个鼓励吧！:)
 
-## Optimize your performance
+## 优化性能
 
-We recommend visiting the [React Performance Guide](/guides/performance) to integrate the Tiptap Editor efficiently. This will help you avoid potential issues as your app scales.
+建议阅读 [React 性能指南](/guides/performance)，了解如何高效集成 Tiptap 编辑器。这有助于你在应用扩展时避免潜在问题。
 
-## Next steps
+## 后续步骤
 
-- [Configure your editor](/editor/getting-started/configure)
-- [Add styles to your editor](/editor/getting-started/style-editor)
-- [Learn more about Tiptap's concepts](/editor/core-concepts/introduction)
-- [Learn how to persist the editor state](/editor/core-concepts/persistence)
-- [Start building your own extensions](/editor/extensions/custom-extensions)
+- [配置编辑器](/editor/getting-started/configure)
+- [为编辑器添加样式](/editor/getting-started/style-editor)
+- [深入了解 Tiptap 的概念](/editor/core-concepts/introduction)
+- [了解如何持久化编辑器状态](/editor/core-concepts/persistence)
+- [开始构建自己的扩展](/editor/extensions/custom-extensions)
