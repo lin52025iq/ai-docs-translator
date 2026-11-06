@@ -1,16 +1,16 @@
 ---
-title: AI Caret
+title: AI 光标
 meta:
-  title: AI Caret | Tiptap AI Toolkit
-  description: Display a cursor that shows where the AI is inserting content during streaming operations.
+  title: AI 光标 | Tiptap AI Toolkit
+  description: 在流式操作期间显示光标，指示 AI 正在插入内容的位置。
   category: AI Toolkit
 ---
 
-The `AiCaret` extension displays a cursor decoration at the position where the AI is currently inserting content. It provides real-time visual feedback during streaming operations, similar to the [Collaboration Caret extension](/editor/extensions/functionality/collaboration-caret).
+`AiCaret` 扩展会在 AI 当前插入内容的位置显示光标装饰。它能在流式操作期间提供实时视觉反馈，类似于 [Collaboration Caret 扩展](/editor/extensions/functionality/collaboration-caret)。
 
-## Usage
+## 用法
 
-Import the `AiCaret` extension from `@tiptap-pro/client-ai-toolkit` and add it to your editor extensions.
+从 `@tiptap-pro/client-ai-toolkit` 导入 `AiCaret` 扩展，并将其添加到编辑器扩展中。
 
 ```tsx
 import { AiCaret, AiToolkit } from '@tiptap-pro/client-ai-toolkit'
@@ -20,17 +20,17 @@ const editor = useEditor({
 })
 ```
 
-The caret appears automatically during streaming operations like `streamHtml`, `streamTool`, and `tiptapEditWorkflow`. It disappears after the streaming finishes.
+在 `streamHtml`、`streamTool` 和 `tiptapEditWorkflow` 等流式操作期间，光标会自动显示。流式处理结束后，光标会消失。
 
-## Configuration
+## 配置
 
-You can configure the caret's timeout, user label, and rendering.
+你可以配置光标的超时时间、用户标签和渲染方式。
 
 ```tsx
 AiCaret.configure({
-  // How long the caret stays visible after the last update (ms)
+  // 最后一次更新后光标继续显示的时长（毫秒）
   timeout: 2000,
-  // User details for the caret label
+  // 光标标签的用户信息
   user: {
     name: 'AI',
     color: '#a5b4fc',
@@ -38,17 +38,17 @@ AiCaret.configure({
 })
 ```
 
-### Options
+### 选项
 
-| Option    | Type                                 | Default                            | Description                                                  |
-| --------- | ------------------------------------ | ---------------------------------- | ------------------------------------------------------------ |
-| `timeout` | `number`                             | `2000`                             | How long the caret stays visible after the last update (ms). |
-| `user`    | `{ name: string, color: string }`    | `{ name: 'AI', color: '#a5b4fc' }` | The name and color displayed on the caret label.             |
-| `render`  | `(user: AiCaretUser) => HTMLElement` | Built-in render function           | Custom function to render the caret DOM element.             |
+| 选项      | 类型                                 | 默认值                              | 说明                                      |
+| --------- | ------------------------------------ | ---------------------------------- | ----------------------------------------- |
+| `timeout` | `number`                             | `2000`                             | 最后一次更新后光标继续显示的时长（毫秒）。 |
+| `user`    | `{ name: string, color: string }`    | `{ name: 'AI', color: '#a5b4fc' }` | 光标标签上显示的名称和颜色。               |
+| `render`  | `(user: AiCaretUser) => HTMLElement` | 内置渲染函数                       | 用于渲染光标 DOM 元素的自定义函数。        |
 
-## CSS styles
+## CSS 样式
 
-The default render function creates a DOM element with the class `tiptap-ai-caret` and a label with the class `tiptap-ai-caret__label`. Add the following CSS to style the caret:
+默认渲染函数会创建一个带有 `tiptap-ai-caret` 类的 DOM 元素，以及一个带有 `tiptap-ai-caret__label` 类的标签。添加以下 CSS 来设置光标样式：
 
 ```css
 .tiptap .tiptap-ai-caret {
@@ -77,11 +77,11 @@ The default render function creates a DOM element with the class `tiptap-ai-care
 }
 ```
 
-The `border-color` and `background-color` of the caret and label are set inline based on the `user.color` option.
+光标和标签的 `border-color` 与 `background-color` 会根据 `user.color` 选项以内联样式设置。
 
-## Custom rendering
+## 自定义渲染
 
-You can provide a custom `render` function to fully control the caret DOM element.
+你可以提供自定义 `render` 函数，完全控制光标 DOM 元素。
 
 ```tsx
 AiCaret.configure({
@@ -95,21 +95,21 @@ AiCaret.configure({
 })
 ```
 
-## Events
+## 事件
 
-The `AiCaret` extension emits events through the Tiptap events API. You can subscribe to them to react to the caret's movement — for example, to follow the AI's writing position with custom UI behavior.
+`AiCaret` 扩展通过 Tiptap 事件 API 触发事件。你可以订阅这些事件，以便在光标移动时作出响应，例如通过自定义 UI 行为跟随 AI 的写入位置。
 
-### Available events
+### 可用事件
 
-| Event                      | Description                                                                                    | Payload                |
-| -------------------------- | ---------------------------------------------------------------------------------------------- | ---------------------- |
-| `aiCaret:positionChanged`  | Fired whenever the AI caret position is updated during a streaming or edit operation.          | `{ position: number }` |
+| 事件                     | 说明                                                    | 负载                   |
+| ------------------------ | ------------------------------------------------------- | ---------------------- |
+| `aiCaret:positionChanged` | AI 光标在流式或编辑操作期间更新位置时触发。             | `{ position: number }` |
 
-The `position` value is a ProseMirror document position pointing to where the AI caret is currently placed.
+`position` 值是一个 ProseMirror 文档位置，指向 AI 光标当前所在的位置。
 
-### Subscribing to events
+### 订阅事件
 
-Use `editor.on` to listen for the event, and `editor.off` to unsubscribe when no longer needed.
+使用 `editor.on` 监听事件；不再需要时，使用 `editor.off` 取消订阅。
 
 ```tsx
 editor.on('aiCaret:positionChanged', ({ position }) => {
@@ -117,4 +117,4 @@ editor.on('aiCaret:positionChanged', ({ position }) => {
 })
 ```
 
-The `aiCaret:positionChanged` event can fire frequently during streaming — once per streamed chunk. If your handler performs expensive work, consider throttling it with `requestAnimationFrame` or a utility like `lodash.throttle`.
+流式处理期间，`aiCaret:positionChanged` 事件可能会频繁触发——每个流式数据块触发一次。如果处理程序执行开销较大的操作，可以考虑使用 `requestAnimationFrame` 或 `lodash.throttle` 等工具进行节流。
