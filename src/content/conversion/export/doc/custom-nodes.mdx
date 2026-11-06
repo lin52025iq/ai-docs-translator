@@ -1,14 +1,14 @@
 ---
-title: Export custom nodes to .doc
+title: 将自定义节点导出为 .doc
 tags:
   - type: start
   - type: beta
   - type: version
     label: v0.6.2
 meta:
-    title: Export custom nodes to DOC | Tiptap Conversion
-    description: Learn how to export custom nodes to DOC (legacy Word) files using the Export DOC extension.
-    category: Conversion
+    title: 将自定义节点导出为 DOC | Tiptap 转换
+    description: 了解如何使用 Export DOC 扩展将自定义节点导出为 DOC（旧版 Word）文件。
+    category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
@@ -19,23 +19,23 @@ import CustomNodeConversionGuide from '../_shared/_custom-node-conversion-guide.
 <EnterpriseCalloutAuto variant="doc" renderMode="sidebar" disableWaitlist />
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 激活试用或订阅">
+        在账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 计划](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Install from private registry">
-        To install this frontend extensions, authenticate to Tiptap's private npm registry by following the [setup guide](/guides/pro-extensions).
+    <RequirementItem label="2. 从私有注册表安装">
+        要安装这些前端扩展，请按照[设置指南](/guides/pro-extensions)进行操作，以通过身份验证访问 Tiptap 的私有 npm 注册表。
     </RequirementItem>
 </Requirements>
 
-The `@tiptap-pro/extension-export-doc` extension supports custom node conversion, allowing you to define how custom nodes in your Tiptap schema should be rendered in DOC exports.
+`@tiptap-pro/extension-export-doc` 扩展支持自定义节点转换，因此你可以定义 Tiptap schema 中的自定义节点在导出为 DOC 时的呈现方式。
 
-<Callout title="Requires Export DOCX extension" variant="warning">
-  Custom node conversion for DOC export requires the `@tiptap-pro/extension-export-docx` extension to be installed and configured in your editor. The DOC export uses DOCX generation under the hood before converting to DOC. Without it, the `customNodes` option will have no effect.
+<Callout title="需要 Export DOCX 扩展" variant="warning">
+  要在导出 DOC 时转换自定义节点，必须在编辑器中安装并配置 `@tiptap-pro/extension-export-docx` 扩展。DOC 导出会先在底层生成 DOCX，再将其转换为 DOC。若未安装该扩展，`customNodes` 选项将不起作用。
 </Callout>
 
-## Export custom nodes to .doc
+## 将自定义节点导出为 .doc
 
-Pass your custom node definitions via the `customNodes` option when configuring `ExportDoc`:
+配置 `ExportDoc` 时，通过 `customNodes` 选项传入自定义节点定义：
 
 ```ts
 import { ExportDoc } from '@tiptap-pro/extension-export-doc'
@@ -64,9 +64,9 @@ const editor = new Editor({
 
 <CustomNodeConversionGuide />
 
-### Define the custom node render function
+### 定义自定义节点的 render 函数
 
-And we will define how the `Hintbox` custom node should be rendered in the exported document:
+接下来，我们定义导出文档中 `Hintbox` 自定义节点的呈现方式：
 
 ```ts
 import { ExportDoc } from '@tiptap-pro/extension-export-doc'
@@ -142,6 +142,6 @@ const editor = new Editor({
 })
 ```
 
-You can construct any supported DOCX elements in the `render` function using the `Docx` library classes (`Paragraph`, `TextRun`, `Table`, etc.) that are provided via the `Docx` import from the `@tiptap-pro/extension-export-docx` package.
+你可以在 `render` 函数中使用 `Docx` 库的类（`Paragraph`、`TextRun`、`Table` 等）来构造任何受支持的 DOCX 元素。这些类由从 `@tiptap-pro/extension-export-docx` 包导入的 `Docx` 提供。
 
-The `render` function gets the same second argument as in DOCX exports, so a custom node can fit its image to the page or table cell. See [Fit images to the page or table cell](/conversion/export/docx/custom-nodes#fit-images-to-the-page-or-table-cell).
+`render` 函数接收与 DOCX 导出相同的第二个参数，因此自定义节点可以将图像适配到页面或表格单元格。请参阅[将图像适配到页面或表格单元格](/conversion/export/docx/custom-nodes#fit-images-to-the-page-or-table-cell)。
