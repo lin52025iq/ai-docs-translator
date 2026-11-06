@@ -1,6 +1,6 @@
 ---
-title: 'A diagram from a table'
-intro: 'You can draw a table as a Mermaid flowchart, with one row per step. When you edit the table, the diagram follows.'
+title: '从表格生成图表'
+intro: '可以将表格绘制为 Mermaid 流程图，每行对应一个步骤。编辑表格时，图表也会随之更新。'
 headerDemo:
   path: '/Extensions/DiagramsFromTable'
   isPro: true
@@ -8,15 +8,14 @@ tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'A diagram from a table | Tiptap Diagrams Docs'
-  description: 'You can draw a table as a Mermaid flowchart, with one row per step.'
-  category: Diagrams
+  title: '从表格生成图表 | Tiptap Diagrams 文档'
+  description: '可以将表格绘制为 Mermaid 流程图，每行对应一个步骤。'
+  category: 图表
 ---
 
-## Quick start
+## 快速开始
 
-This needs the `chart.linkTables` option, as a [chart that follows a table](/diagrams/data/tables)
-does. Take this table:
+这需要启用 `chart.linkTables` 选项，与[跟随表格更新的图表](/diagrams/data/tables)一样。来看这个表格：
 
 | Step        | Next             | Team      | Label             | Shape    |
 | ----------- | ---------------- | --------- | ----------------- | -------- |
@@ -24,7 +23,7 @@ does. Take this table:
 | Check stock | Pack, Back order | Warehouse | in stock, missing | decision |
 | Pack        | Invoice          | Warehouse |                   |          |
 
-Place the selection in the table and call:
+将光标放在表格中，然后调用：
 
 ```ts
 editor.commands.insertDiagramFromTable({
@@ -33,71 +32,62 @@ editor.commands.insertDiagramFromTable({
 })
 ```
 
-One undo takes back an edit of the table and the update of the diagram together.
+撤销一次即可同时撤回对表格的编辑和图表的更新。
 
-## How the table is read
+## 如何读取表格
 
-`columns` maps each role to a column, by its header text (ignoring case) or by its position from 0. Without `columns`, the extension guesses the roles from headers such as Step, Task, Next,
-Then, Team, Owner, Label, Condition and Shape. When no header names `step` and `next`, it takes
-the first remaining columns for them. It uses each column once.
+`columns` 将每种角色映射到一个列，可以使用列标题（不区分大小写）或从 0 开始的位置。未提供 `columns` 时，扩展会根据 Step、Task、Next、Then、Team、Owner、Label、Condition 和 Shape 等标题猜测各列的角色。如果没有标题对应 `step` 和 `next`，则使用剩余列中的前两列。每列只使用一次。
 
-| Role    | Required | Cell holds                                                            | Becomes                    |
-| ------- | -------- | --------------------------------------------------------------------- | -------------------------- |
-| `step`  | Yes      | The step's name                                                       | A node                     |
-| `next`  | Yes      | The steps that follow, separated by commas                            | Arrows to those steps      |
-| `lane`  | No       | A lane name                                                           | A `subgraph` with the step |
-| `label` | No       | Arrow labels, separated by commas                                     | Text on the arrows         |
-| `shape` | No       | A shape name, see [Shapes](/diagrams/flow-diagrams/from-table#shapes) | The node's shape           |
+| 角色    | 必填 | 单元格内容                                             | 转换结果               |
+| ------- | ---- | ------------------------------------------------------ | ---------------------- |
+| `step`  | 是   | 步骤名称                                               | 一个节点               |
+| `next`  | 是   | 后续步骤，使用逗号分隔                                 | 指向这些步骤的箭头     |
+| `lane`  | 否   | 泳道名称                                               | 包含该步骤的 `subgraph` |
+| `label` | 否   | 箭头标签，使用逗号分隔                                 | 箭头上的文本           |
+| `shape` | 否   | 形状名称，参见[形状](/diagrams/flow-diagrams/from-table#shapes) | 节点形状               |
 
-- A step named only in a `next` cell is drawn too.
-- A `label` cell gives one label per next step when the counts match. Otherwise, every arrow gets
-  the whole cell.
-- With `header: 'none'`, `columns` must give positions.
+- 仅在 `next` 单元格中提及的步骤也会绘制出来。
+- 当标签数量与后续步骤数量相同时，`label` 单元格会为每个后续步骤提供一个标签。否则，每支箭头都会使用整个单元格的内容。
+- 使用 `header: 'none'` 时，`columns` 必须指定列的位置。
 
-### Shapes
+### 形状
 
-| Shape         | Cell text                             |
-| ------------- | ------------------------------------- |
-| Box           | `box`, `rect`, `task`                 |
-| Rounded box   | `rounded`, `round`                    |
-| Stadium       | `start`, `end`, `stadium`, `terminal` |
-| Diamond       | `decision`, `diamond`, `gateway`      |
-| Circle        | `circle`, `event`                     |
-| Parallelogram | `data`                                |
-| Cylinder      | `database`                            |
-| Subroutine    | `subroutine`                          |
+| 形状     | 单元格文本                            |
+| -------- | ------------------------------------- |
+| 方框     | `box`、`rect`、`task`                 |
+| 圆角方框 | `rounded`、`round`                    |
+| 体育场形 | `start`、`end`、`stadium`、`terminal` |
+| 菱形     | `decision`、`diamond`、`gateway`      |
+| 圆形     | `circle`、`event`                     |
+| 平行四边形 | `data`                              |
+| 圆柱体   | `database`                            |
+| 子程序   | `subroutine`                          |
 
-Any other text gives a box.
+其他文本都会生成方框。
 
-## When the table changes
+## 表格发生变化时
 
-- **Renaming a step** in its row renames it in every `next` cell too, so its arrows stay. Names
-  are compared ignoring case and the spaces around them.
-- **Emptying a step cell**, or giving it another step's name, is not a rename. The `next` cells
-  stay as they are.
-- **Changing a lane cell** moves that one step to another lane. To rename a lane in every row,
-  use [`renameDiagramLane`](/diagrams/flow-diagrams/from-table#renamediagramlane). Lanes are compared by their text without the
-  spaces around it, case included.
-- **Removing a column** that the link names keeps the diagram as it is, until the column is back.
-- **Changing the source** with `updateFlowDiagram` ends the link, as `detachDiagramFromTable`
-  does.
-- **Double-clicking a shape** does not edit its text. The text belongs to the table.
+- **重命名某一行中的步骤**时，该名称也会在每个 `next` 单元格中同步更新，因此箭头关系会保留。比较名称时不区分大小写，也会忽略名称前后的空格。
+- **清空步骤单元格**或将其改为另一个步骤的名称，都不算重命名。`next` 单元格保持不变。
+- **更改泳道单元格**会将该步骤移至另一个泳道。若要重命名所有行中的泳道，请使用 [`renameDiagramLane`](/diagrams/flow-diagrams/from-table#renamediagramlane)。比较泳道时会忽略文本前后的空格，但区分大小写。
+- **移除链接所指向的列**后，图表会保持原样，直到该列恢复。
+- 使用 `updateFlowDiagram` **更改源内容**会断开链接，与 `detachDiagramFromTable` 的效果相同。
+- **双击形状**不会编辑其中的文本。文本属于表格。
 
-## Stored in the document
+## 文档中的存储内容
 
-| Where                        | What                                    |
-| ---------------------------- | --------------------------------------- |
-| The diagram's `options.link` | `{ tableId, columns, header?, range? }` |
-| The table                    | A `chartTableId`                        |
+| 位置                       | 内容                                    |
+| -------------------------- | --------------------------------------- |
+| 图表的 `options.link`      | `{ tableId, columns, header?, range? }` |
+| 表格                       | 一个 `chartTableId`                      |
 
-Read the link with `flowDiagramLink(diagram)`, or as `link` in `listDiagrams()`, which also
-returns the lanes as `lanes`. `updateLinkedTable` changes how the table is read.
+使用 `flowDiagramLink(diagram)` 读取链接，也可以从 `listDiagrams()` 的 `link` 属性读取；该方法还会通过 `lanes` 返回泳道。`updateLinkedTable` 会更改读取表格的方式。
 
-## Commands
+## 命令
 
 ### insertDiagramFromTable
 
-Inserts a flowchart drawn from the table at the selection, or at `table`.
+根据表格绘制流程图，并将其插入到光标所在位置，或者插入到 `table` 指定的位置。
 
 ```ts
 editor.commands.insertDiagramFromTable({
@@ -113,73 +103,67 @@ editor.commands.insertDiagramFromTable({
 })
 ```
 
-| Option    | Type                                    | Description                                                                                                                 |
-| --------- | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `columns` | `{ step, next, lane?, label?, shape? }` | Header texts or positions from 0. Guessed from the header when left out                                                     |
-| `header`  | `'none'`                                | Reads every row as a step. Without it, the first row is the header                                                          |
-| `range`   | `{ rows }`                              | Reads only some rows, as for [`insertLinkedChart`](/diagrams/data/tables#insertlinkedchart). `range.columns` does not apply |
-| `table`   | `number`                                | The table's position. Defaults to the table at the selection                                                                |
-| `title`   | `string`                                | The diagram's title                                                                                                         |
-| `below`   | `boolean`                               | `false` inserts the diagram above the table. Default `true`                                                                 |
+| 选项      | 类型                                    | 说明                                                                                                                |
+| --------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `columns` | `{ step, next, lane?, label?, shape? }` | 标题文本或从 0 开始的位置。不提供时，会根据标题行进行猜测                                                          |
+| `header`  | `'none'`                                | 将每一行都作为步骤读取。未设置时，第一行是标题                                                                     |
+| `range`   | `{ rows }`                              | 只读取部分行，类似于 [`insertLinkedChart`](/diagrams/data/tables#insertlinkedchart)。`range.columns` 不适用          |
+| `table`   | `number`                                | 表格的位置。默认为光标所在的表格                                                                                   |
+| `title`   | `string`                                | 图表标题                                                                                                            |
+| `below`   | `boolean`                               | `false` 会将图表插入表格上方。默认为 `true`                                                                         |
 
-Returns `false` when a named column is not in the table, when the table has fewer than two
-columns, when the selection is outside a table, or when `chart.linkTables` is off.
+当命名列不存在于表格中、表格少于两列、光标不在表格中，或 `chart.linkTables` 未启用时，返回 `false`。
 
 ### linkDiagramToTable
 
-Draws an existing diagram from a table, replacing its source, and makes it follow that table.
+根据表格绘制已有图表，替换其源内容，并使图表跟随该表格更新。
 
 ```ts
 editor.commands.linkDiagramToTable({ table: tablePos, columns: { step: 'Step', next: 'Next' } })
 ```
 
-It takes `table`, `columns`, `header?` and `range?` as `insertDiagramFromTable` does, and `pos?`
-for a diagram other than the selected one.
+它接受与 `insertDiagramFromTable` 相同的 `table`、`columns`、`header?` 和 `range?` 参数；若要指定当前选中图表以外的图表，还可以使用 `pos?`。
 
 ### detachDiagramFromTable
 
-Stops a diagram from following its table. The source stays, and you can edit it.
+停止图表跟随表格更新。图表源内容会保留，你可以继续编辑。
 
 ```ts
 editor.commands.detachDiagramFromTable({ removeTable: true })
 ```
 
-| Option        | Type      | Description                                                                                                                         |
-| ------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `pos`         | `number`  | The diagram's position. Defaults to the selected diagram                                                                            |
-| `removeTable` | `boolean` | Also removes the table, unless another chart or diagram follows it. It works like `setChartLayout({ layout: 'chart' })` for a chart |
+| 选项          | 类型      | 说明                                                                                                                         |
+| ------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `pos`         | `number`  | 图表的位置。默认为当前选中的图表                                                                                             |
+| `removeTable` | `boolean` | 同时移除表格，除非还有其他图表或图示跟随该表格。对于图表，此选项的效果类似于 `setChartLayout({ layout: 'chart' })` |
 
-Returns `false` for a diagram that follows no table.
+如果图表没有跟随任何表格，则返回 `false`。
 
 ### renameDiagramLane
 
-Renames a lane in every row of the table, also in rows outside `range`. The diagram follows in
-the same undo step.
+重命名表格每一行中的泳道，包括 `range` 之外的行。图表会在同一次撤销操作中同步更新。
 
 ```ts
 editor.commands.renameDiagramLane({ lane: 'Warehouse', name: 'Warehouse North' })
 ```
 
-| Option | Type     | Description                                              |
-| ------ | -------- | -------------------------------------------------------- |
-| `lane` | `string` | The lane's current name                                  |
-| `name` | `string` | The new name                                             |
-| `pos`  | `number` | The diagram's position. Defaults to the selected diagram |
+| 选项   | 类型     | 说明                 |
+| ------ | -------- | -------------------- |
+| `lane` | `string` | 泳道的当前名称       |
+| `name` | `string` | 新名称               |
+| `pos`  | `number` | 图表的位置。默认为当前选中的图表 |
 
-Returns `false` for a diagram that follows no table, for a link without a `lane` column, for a
-lane that no cell names, and for an empty `name`.
+如果图表没有跟随任何表格、链接未指定 `lane` 列、没有单元格使用该泳道名称，或 `name` 为空，则返回 `false`。
 
-## Without an editor
+## 不使用编辑器时
 
-These functions from `@tiptap-pro/extension-diagrams/core` do the work of the commands on the
-cell texts of a table, such as on a server. `rows` is the cell texts, header row first unless
-`read.header` is `'none'`.
+这些来自 `@tiptap-pro/extension-diagrams/core` 的函数可以对表格单元格文本执行与这些命令相同的操作，例如在服务器上使用。`rows` 是单元格文本；除非 `read.header` 为 `'none'`，否则第一行是标题行。
 
-| Function                                          | Returns                                                                                                               |
-| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `tableToMermaid(rows, columns, read?)`            | The flowchart source, or `null` when a named column is missing                                                        |
-| `guessTableDiagramColumns(header)`                | `columns` guessed from the header row, or `null` for fewer than two columns                                           |
-| `tableStepRenames(before, after, columns, read?)` | `{ renames, firstRow, nextColumn }`. `renames` maps each old name (lower-cased, trimmed) to the new one, or is `null` |
-| `stepRenameEdits(text, renames)`                  | The `{ from, to, text }` replacements for one `next` cell                                                             |
-| `tableDiagramLanes(rows, columns, read?)`         | The lanes, in the order they appear                                                                                   |
-| `tableLaneCells(rows, columns, read, lane)`       | The `{ row, column }` of every cell below the header that names `lane`                                                |
+| 函数                                              | 返回值                                                                                         |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `tableToMermaid(rows, columns, read?)`            | 流程图源内容；如果命名列缺失，则返回 `null`                                                    |
+| `guessTableDiagramColumns(header)`                | 根据标题行猜测出的 `columns`；列数少于两列时返回 `null`                                        |
+| `tableStepRenames(before, after, columns, read?)` | `{ renames, firstRow, nextColumn }`。`renames` 将每个旧名称（转为小写并去除首尾空格）映射到新名称；无更改时为 `null` |
+| `stepRenameEdits(text, renames)`                  | 一个 `next` 单元格中 `{ from, to, text }` 形式的替换项                                         |
+| `tableDiagramLanes(rows, columns, read?)`         | 按出现顺序排列的泳道                                                                         |
+| `tableLaneCells(rows, columns, read, lane)`       | 标题行下方所有使用 `lane` 名称的单元格对应的 `{ row, column }`                                 |
