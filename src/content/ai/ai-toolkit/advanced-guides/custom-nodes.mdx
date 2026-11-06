@@ -1,31 +1,27 @@
 ---
-title: Custom nodes
+title: 自定义节点
 meta:
-  title: Custom nodes | Tiptap AI Toolkit
-  description: Configure custom nodes and marks for the Server AI Toolkit so AI models can generate them correctly.
+  title: 自定义节点 | Tiptap AI Toolkit
+  description: 为 Server AI Toolkit 配置自定义节点和标记，让 AI 模型能够正确生成它们。
   category: AI Toolkit
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-<Callout title="Continuation from the AI agent chatbot guide" variant="info">
-  This guide continues the [AI agent chatbot
-  guide](/ai/ai-toolkit/agents/ai-agent-chatbot). Read it first.
+<Callout title="承接 AI agent 聊天机器人指南" variant="info">
+  本指南接续 [AI agent 聊天机器人
+  指南](/ai/ai-toolkit/agents/ai-agent-chatbot)。请先阅读该指南。
 </Callout>
 
-If your document includes custom nodes or marks, configure editor context so the Server AI
-Toolkit can describe them correctly to your AI model.
+如果文档包含自定义节点或标记，请配置编辑器上下文，以便 Server AI Toolkit 能向 AI 模型准确描述这些元素。
 
-<Callout title="Why configure custom nodes?" variant="default">
-  Without editor context, the AI model might generate content that your editor does not support, or
-  miss custom elements entirely. Adding custom node metadata gives the model enough context to
-  generate those elements reliably.
+<Callout title="为什么要配置自定义节点？" variant="default">
+  如果没有编辑器上下文，AI 模型可能会生成编辑器不支持的内容，或完全遗漏自定义元素。添加自定义节点元数据可以为模型提供充足的上下文，帮助它可靠地生成这些元素。
 </Callout>
 
-## Get editor context data
+## 获取编辑器上下文数据
 
-Start by generating editor context data from your editor. The Server AI Toolkit uses this data to
-describe your document structure to the AI model.
+首先，从编辑器生成编辑器上下文数据。Server AI Toolkit 会使用这些数据向 AI 模型描述文档结构。
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -40,19 +36,15 @@ const editor = new Editor({
 const editorContext = getEditorContext(editor)
 ```
 
-<Callout title="Store the editor context data" variant="info">
-  The editor context data returned by `getEditorContext` is a JSON-serializable object that you can
-  store in your database. You don't need to generate it every time. Update it when your editor
-  extensions or schema change.
+<Callout title="存储编辑器上下文数据" variant="info">
+  `getEditorContext` 返回的编辑器上下文数据是可序列化为 JSON 的对象，可以存储在数据库中。无需每次都重新生成。编辑器扩展或架构发生变化时，再更新这些数据即可。
 </Callout>
 
-## Configure custom nodes
+## 配置自定义节点
 
-If your document contains [custom Nodes and Marks](/editor/extensions/custom-extensions), add the
-`addJsonSchemaAwareness` option to the extension configuration. This allows the AI model to
-understand and generate that custom node or mark accurately.
+如果文档包含[自定义节点和标记](/editor/extensions/custom-extensions)，请在扩展配置中添加 `addJsonSchemaAwareness` 选项。这样，AI 模型就能理解并准确生成相应的自定义节点或标记。
 
-For example, if you have a custom node called `'alert'`, configure it like this:
+例如，如果你有一个名为 `'alert'` 的自定义节点，可以这样配置：
 
 ```ts
 import { Node } from '@tiptap/core'
@@ -108,20 +100,17 @@ It can contain inline content like text and formatting marks.`,
 })
 ```
 
-The `addJsonSchemaAwareness` function should return an object with:
+`addJsonSchemaAwareness` 函数应返回一个包含以下属性的对象：
 
-- `name` (`string`): The human-readable name of the element in English
-- `description?` (`string`): Explanation of the element in English for the AI model
-- `attributes?` (`Record<string, z.ZodTypeAny>`): Possible attributes of the element, defined as Zod schemas that will be converted to JSON schemas
+- `name`（`string`）：元素易于理解的英文名称
+- `description?`（`string`）：面向 AI 模型、用英文编写的元素说明
+- `attributes?`（`Record<string, z.ZodTypeAny>`）：元素可能具有的属性，以 Zod 架构定义，并将转换为 JSON 架构
 
-<Callout title="What about official Tiptap extensions?" variant="info">
-  Editor context for official Tiptap extensions is automatically supported by the Server AI Toolkit.
-  They do not need to be configured. You can still override the default editor context information
-  for official Tiptap extensions by extending the extension and adding the `addJsonSchemaAwareness`
-  option.
+<Callout title="官方 Tiptap 扩展怎么办？" variant="info">
+  Server AI Toolkit 会自动支持官方 Tiptap 扩展的编辑器上下文，无需进行配置。你仍然可以通过扩展官方扩展并添加 `addJsonSchemaAwareness` 选项，覆盖其默认的编辑器上下文信息。
 </Callout>
 
-## Next steps
+## 后续步骤
 
-- [Editor context API reference](/ai/ai-toolkit/api-reference/editor-context)
-- [REST API reference](/ai/ai-toolkit/api-reference/rest-api)
+- [编辑器上下文 API 参考](/ai/ai-toolkit/api-reference/editor-context)
+- [REST API 参考](/ai/ai-toolkit/api-reference/rest-api)
