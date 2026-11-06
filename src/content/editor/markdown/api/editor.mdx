@@ -1,38 +1,38 @@
 ---
-title: Editor
+title: 编辑器
 tags:
   - type: beta
 meta:
-  title: Markdown Editor API | Tiptap Editor Docs
-  description: Learn about the `content` and `contentType` options in Tiptap's Editor API for handling HTML, Markdown, and Tiptap JSON content.
-  category: Editor
+  title: Markdown 编辑器 API | Tiptap 编辑器文档
+  description: 了解 Tiptap Editor API 中的 `content` 和 `contentType` 选项，掌握如何处理 HTML、Markdown 和 Tiptap JSON 内容。
+  category: 编辑器
 ---
 
-The Markdown package does not export a new Editor class but extends the existing Tiptap Editor class. This means you can use all the standard methods and options of Tiptap's Editor, along with the additional functionality provided by the Markdown package.
+Markdown 包不会导出新的 Editor 类，而是扩展现有的 Tiptap Editor 类。这意味着你可以使用 Tiptap Editor 的所有标准方法和选项，以及 Markdown 包提供的附加功能。
 
-## Methods
+## 方法
 
 ### `Editor.getMarkdown()`
 
-Get the current content of the editor as Markdown.
+以 Markdown 格式获取编辑器的当前内容。
 
-- **returns**: `string`
+- **返回值**：`string`
 
 ```js
 const markdown = editor.getMarkdown()
 ```
 
-## Properties
+## 属性
 
 ### `Editor.markdown`
 
-Access the MarkdownManager instance.
+访问 MarkdownManager 实例。
 
 ```typescript
 editor.markdown: MarkdownManager
 ```
 
-#### Example
+#### 示例
 
 ```typescript
 // Parse Markdown to JSON
@@ -45,17 +45,17 @@ const markdown = editor.markdown.serialize(json)
 const marked = editor.markdown.instance
 ```
 
-## Options
+## 选项
 
 ### `Editor.content`
 
-Editor content supports **HTML**, **Markdown** or **Tiptap JSON** as a value.
+编辑器内容支持 **HTML**、**Markdown** 或 **Tiptap JSON** 格式。
 
-> **Note**: Set `contentType: 'markdown'` when the initial `content` value is Markdown.
+> **注意**：如果初始 `content` 值为 Markdown，请设置 `contentType: 'markdown'`。
 
-- **type**: `string | object`
-- **default**: `''`
-- **required**: `false`
+- **类型**：`string | object`
+- **默认值**：`''`
+- **必填**：`false`
 
 ```js
 const editor = new Editor({
@@ -80,12 +80,12 @@ const editor = new Editor({
 
 ### `Editor.contentType`
 
-Defines what type of content is passed to the editor. Defaults to `json`. When an invalid combination is set - for example content that is a JSON object, but the contentType is set to `markdown`, the editor will automatically fall back to `json` and vice versa.
+定义传入编辑器的内容类型。默认值为 `json`。如果设置了无效的组合（例如，内容是 JSON 对象，但 `contentType` 设置为 `markdown`），编辑器会自动回退到 `json`，反之亦然。
 
-- **type**: `string`
-- **default**: `json`
-- **required**: `false`
-- **options**: `json`, `html`, `markdown`
+- **类型**：`string`
+- **默认值**：`json`
+- **必填**：`false`
+- **可选值**：`json`、`html`、`markdown`
 
 ```js
 const editor = new Editor({
@@ -94,11 +94,11 @@ const editor = new Editor({
 })
 ```
 
-## Command Options
+## 命令选项
 
 ### `setContent(content, options)`
 
-Set editor content from Markdown.
+使用 Markdown 设置编辑器内容。
 
 ```typescript
 editor.commands.setContent(
@@ -111,18 +111,18 @@ editor.commands.setContent(
 ): boolean
 ```
 
-#### Parameters
+#### 参数
 
-- **`content`**: The Markdown string to set
-- **`options.contentType`**: The type of content inserted, can be `json`, `html` or `markdown`. Autodetects if formats don't match (default: `json`)
-- **`options.emitUpdate`**: Whether to emit an update event (default: `true`)
-- **`options.parseOptions`**: Additional parse options
+- **`content`**：要设置的 Markdown 字符串
+- **`options.contentType`**：插入内容的类型，可以是 `json`、`html` 或 `markdown`。如果格式不匹配，则自动检测（默认值：`json`）
+- **`options.emitUpdate`**：是否触发更新事件（默认值：`true`）
+- **`options.parseOptions`**：其他解析选项
 
-#### Returns
+#### 返回值
 
-`boolean` - Whether the command succeeded
+`boolean` - 命令是否成功
 
-#### Example
+#### 示例
 
 ```typescript
 editor.commands.setContent('# New Content\n\nThis is **bold**.', { contentType: 'markdown' })
@@ -132,7 +132,7 @@ editor.commands.setContent('# New Content\n\nThis is **bold**.', { contentType: 
 
 ### `insertContent(value, options)`
 
-Insert Markdown content at the current selection.
+在当前选区插入 Markdown 内容。
 
 ```typescript
 editor.commands.insertContent(
@@ -145,18 +145,18 @@ editor.commands.insertContent(
 ): boolean
 ```
 
-#### Parameters
+#### 参数
 
-- **`value`**: The Markdown string to insert
-- **`options.contentType`**: The type of content inserted, can be `json`, `html` or `markdown`. Autodetects if formats don't match (default: `json`)
-- **`options.updateSelection`**: Whether to update selection after insert
-- **`options.parseOptions`**: Additional parse options
+- **`value`**：要插入的 Markdown 字符串
+- **`options.contentType`**：插入内容的类型，可以是 `json`、`html` 或 `markdown`。如果格式不匹配，则自动检测（默认值：`json`）
+- **`options.updateSelection`**：插入后是否更新选区
+- **`options.parseOptions`**：其他解析选项
 
-#### Returns
+#### 返回值
 
-`boolean` - Whether the command succeeded
+`boolean` - 命令是否成功
 
-#### Example
+#### 示例
 
 ```typescript
 editor.commands.insertContent('**Bold text** at cursor', { contentType: 'markdown' })
@@ -166,7 +166,7 @@ editor.commands.insertContent('**Bold text** at cursor', { contentType: 'markdow
 
 ### `insertContentAt(position, value, options)`
 
-Insert Markdown content at a specific position.
+在指定位置插入 Markdown 内容。
 
 ```typescript
 editor.commands.insertContentAt(
@@ -180,19 +180,19 @@ editor.commands.insertContentAt(
 ): boolean
 ```
 
-#### Parameters
+#### 参数
 
-- **`position`**: Position (number) or range (`{ from, to }`)
-- **`value`**: The Markdown string to insert
-- **`options.contentType`**: The type of content inserted, can be `json`, `html` or `markdown`. Autodetects if formats don't match (default: `json`)
-- **`options.updateSelection`**: Whether to update selection after insert
-- **`options.parseOptions`**: Additional parse options
+- **`position`**：位置（数字）或范围（`{ from, to }`）
+- **`value`**：要插入的 Markdown 字符串
+- **`options.contentType`**：插入内容的类型，可以是 `json`、`html` 或 `markdown`。如果格式不匹配，则自动检测（默认值：`json`）
+- **`options.updateSelection`**：插入后是否更新选区
+- **`options.parseOptions`**：其他解析选项
 
-#### Returns
+#### 返回值
 
-`boolean` - Whether the command succeeded
+`boolean` - 命令是否成功
 
-#### Example
+#### 示例
 
 ```typescript
 // Insert at position
@@ -204,17 +204,17 @@ editor.commands.insertContentAt({ from: 10, to: 20 }, '**replacement**', { conte
 
 ---
 
-## Extension Spec
+## 扩展规范
 
-The extension spec also gets extended with the following options:
+扩展规范还会添加以下选项：
 
 ### `markdownTokenName`
 
-The name of the token used for Markdown parsing.
+用于 Markdown 解析的 token 名称。
 
-- **type**: `string`
-- **default**: `undefined`
-- **required**: `false`
+- **类型**：`string`
+- **默认值**：`undefined`
+- **必填**：`false`
 
 ```typescript
 const CustomNode = Node.create({
@@ -226,11 +226,11 @@ const CustomNode = Node.create({
 
 ### `parseMarkdown`
 
-A function to customize how Markdown tokens are parsed from Markdown token into ProseMirror nodes.
+用于自定义将 Markdown token 解析为 ProseMirror 节点的函数。
 
-- **type**: `(token: MarkdownToken, helpers: MarkdownParseHelpers) => ProseMirrorNode[] | null`
-- **default**: `undefined`
-- **required**: `false`
+- **类型**：`(token: MarkdownToken, helpers: MarkdownParseHelpers) => ProseMirrorNode[] | null`
+- **默认值**：`undefined`
+- **必填**：`false`
 
 ```typescript
 const CustomNode = Node.create({
@@ -248,11 +248,11 @@ const CustomNode = Node.create({
 
 ### `renderMarkdown`
 
-A function to customize how ProseMirror nodes are rendered to Markdown tokens.
+用于自定义将 ProseMirror 节点渲染为 Markdown token 的函数。
 
-- **type**: `(node: JSONContent, helpers: MarkdownRenderHelpers, context: RenderContext) => string | null`
-- **default**: `undefined`
-- **required**: `false`
+- **类型**：`(node: JSONContent, helpers: MarkdownRenderHelpers, context: RenderContext) => string | null`
+- **默认值**：`undefined`
+- **必填**：`false`
 
 ```typescript
 const CustomNode = Node.create({
@@ -268,11 +268,11 @@ const CustomNode = Node.create({
 
 ### `markdownTokenizer`
 
-A tokenizer configuration object that creates a custom tokenizer to turn Markdown string into tokens.
+用于创建自定义分词器的配置对象，可将 Markdown 字符串转换为 token。
 
-- **type**: `object`
-- **default**: `undefined`
-- **required**: `false`
+- **类型**：`object`
+- **默认值**：`undefined`
+- **必填**：`false`
 
 ```typescript
 const CustomNode = Node.create({
@@ -300,11 +300,11 @@ const CustomNode = Node.create({
 
 ### `markdownOptions`
 
-A optional object to pass additional options to the Markdown parser and serializer.
+用于向 Markdown 解析器和序列化器传递其他选项的可选对象。
 
-- **type**: `object`
-- **default**: `undefined`
-- **required**: `false`
+- **类型**：`object`
+- **默认值**：`undefined`
+- **必填**：`false`
 
 ```typescript
 const CustomNode = Node.create({
