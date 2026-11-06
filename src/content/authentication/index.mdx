@@ -1,53 +1,53 @@
 ---
-title: Authentication
+title: 身份验证
 meta:
-  title: Authentication | Tiptap Docs
-  description: Authenticate Tiptap services (AI, Convert, Documents) with JWTs. Reference for claims, signing keys, permissions, and security best practices.
-  category: Authentication
+  title: 身份验证 | Tiptap 文档
+  description: 使用 JWT 对 Tiptap 服务（AI、Convert、Documents）进行身份验证。本文介绍声明、签名密钥、权限和安全最佳实践。
+  category: 身份验证
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Tiptap services use JWTs (JSON Web Tokens) for authentication and authorization. You generate and sign tokens on your server, then pass them to Tiptap services. Each token identifies your environment, names the services it can access, and the actions it's authorized to perform on your resources.
+Tiptap 服务使用 JWT（JSON Web Token）进行身份验证和授权。你可以在自己的服务器上生成并签署令牌，然后将其传递给 Tiptap 服务。每个令牌都会标识你的环境、列出它可以访问的服务，以及它获准对你的资源执行的操作。
 
-<Callout title="Still using App IDs and per-service secrets?" variant="hint">
-  If you authenticate with App IDs and per-service secrets, see [Migrate to the new authentication](/authentication/migrate). The previous setup is documented under [Legacy authentication](/authentication/legacy) and keeps working.
+<Callout title="仍在使用 App ID 和各服务独立密钥？" variant="hint">
+  如果你使用 App ID 和各服务独立密钥进行身份验证，请参阅[迁移到新的身份验证方式](/authentication/migrate)。旧配置记录在[旧版身份验证](/authentication/legacy)中，并且仍可继续使用。
 </Callout>
 
-## How it works
+## 工作原理
 
-1. You create an asymmetric secret key pair in your Tiptap dashboard.
-2. Your server signs a JWT using the private key.
-3. Your client passes the JWT when connecting to a Tiptap service (AI, Convert, Documents).
-4. Tiptap verifies the token's signature with the public key and checks your subscription.
+1. 在 Tiptap 控制面板中创建一对非对称密钥。
+2. 服务器使用私钥签署 JWT。
+3. 客户端连接 Tiptap 服务（AI、Convert、Documents）时传递 JWT。
+4. Tiptap 使用公钥验证令牌签名，并检查你的订阅。
 
-## What a token controls
+## 令牌控制的内容
 
-A single JWT carries everything a request needs: which services it can reach, what it's allowed to do, and on which resources.
+单个 JWT 包含请求所需的一切信息：它可以访问哪些服务、获准执行哪些操作，以及这些操作针对哪些资源。
 
-- **One token, many services.** A single JWT authorizes any combination of AI, Convert, and Documents through the `aud` claim.
-- **Cross-service workflows.** The AI service can act on your documents under the same token, with no service-to-service plumbing.
-- **Permissions inside the token.** Declare exactly what's allowed via `action`, `resource`, and optional constraints.
-- **Zero-downtime key rotation.** Run multiple active key pairs per environment and retire old keys without a switchover window.
+- **一个令牌，多个服务。** 单个 JWT 可通过 `aud` 声明授权访问 AI、Convert 和 Documents 的任意组合。
+- **跨服务工作流。** AI 服务可以在同一个令牌下操作你的文档，无需进行服务间的额外配置。
+- **令牌中包含权限。** 通过 `action`、`resource` 和可选约束，明确声明允许执行的操作。
+- **轮换密钥时零停机。** 每个环境可以同时启用多个密钥对，并在无需切换窗口的情况下停用旧密钥。
 
-## Claims reference
+## 声明参考
 
-Every JWT must include these registered claims:
+每个 JWT 都必须包含以下注册声明：
 
-| Claim | Type | Required | Description |
+| 声明 | 类型 | 必需 | 说明 |
 |-------|------|----------|-------------|
-| `iss` | `string` | Yes | Your environment hash ID (from the Tiptap dashboard) |
-| `aud` | `string \| string[]` | Yes | Which services this token can access: `"AI"`, `"Convert"`, `"Documents"` |
-| `iat` | `number` | No | Issued-at timestamp (epoch seconds) |
-| `exp` | `number` | Yes | Expiration timestamp (epoch seconds) |
-| `sub` | `string` | No | User identifier (for audit trails and tracing) |
-| `permissions` | `Permission[]` | No | What this token is allowed to do. Omitting grants no specific actions. |
+| `iss` | `string` | 是 | 你的环境哈希 ID（来自 Tiptap 控制面板） |
+| `aud` | `string \| string[]` | 是 | 此令牌可访问的服务：`"AI"`、`"Convert"`、`"Documents"` |
+| `iat` | `number` | 否 | 签发时间戳（纪元秒数） |
+| `exp` | `number` | 是 | 过期时间戳（纪元秒数） |
+| `sub` | `string` | 否 | 用户标识符（用于审计日志和跟踪） |
+| `permissions` | `Permission[]` | 否 | 此令牌获准执行的操作。省略此项表示不授予任何特定操作权限。 |
 
-## Signing the token
+## 签署令牌
 
-### Asymmetric key pair (ES256) — default
+### 非对称密钥对 (ES256) — 默认方式
 
-When you create a secret in the dashboard, you receive an ECDSA private key (P-256). You sign tokens with your private key. Tiptap only stores the public key and uses it to verify tokens. Your private key never leaves your server.
+在控制面板中创建密钥后，你会获得一个 ECDSA 私钥（P-256）。使用私钥签署令牌。Tiptap 只存储公钥，并用它来验证令牌。私钥始终保留在你的服务器上。
 
 ```typescript
 import { SignJWT, importPKCS8 } from 'jose'
@@ -67,11 +67,11 @@ const jwt = await new SignJWT({
   .sign(privateKey)
 ```
 
-### Other languages
+### 其他语言
 
-The JWT is a standard [RFC 7519](https://datatracker.ietf.org/doc/html/rfc7519) token. Any JWT library that supports ES256 can sign tokens. The payload structure is the same regardless of language.
+JWT 是一种标准的 [RFC 7519](https://datatracker.ietf.org/doc/html/rfc7519) 令牌。任何支持 ES256 的 JWT 库都可以签署令牌。无论使用哪种语言，负载结构都相同。
 
-**Python** (PyJWT, requires `pyjwt[crypto]` for ES256):
+**Python**（PyJWT；使用 ES256 时需要 `pyjwt[crypto]`）：
 
 ```python
 import jwt, time
@@ -92,7 +92,7 @@ payload = {
 token = jwt.encode(payload, private_key, algorithm="ES256")
 ```
 
-**PHP** (firebase/php-jwt):
+**PHP**（firebase/php-jwt）：
 
 ```php
 use Firebase\JWT\JWT;
@@ -112,11 +112,11 @@ $payload = [
 $token = JWT::encode($payload, $privateKey, 'ES256');
 ```
 
-## Permissions
+## 权限
 
-Permissions define what a token is allowed to do. While they are optional, a token without permissions authenticates the request but grants no specific actions.
+权限定义令牌获准执行的操作。权限是可选的，但不含权限的令牌只能验证请求身份，不会授予任何特定操作权限。
 
-Each permission has an **action** and a **resource** (both required), plus optional **constraints**:
+每项权限都包含 **action** 和 **resource**（两者均为必填项），以及可选的 **constraints**：
 
 ```json
 {
@@ -130,45 +130,45 @@ Each permission has an **action** and a **resource** (both required), plus optio
 }
 ```
 
-### Actions
+### 操作
 
-Actions follow the format `Service:Operation`. Each Tiptap service defines its own actions:
+操作采用 `Service:Operation` 格式。每个 Tiptap 服务都有自己的操作：
 
-| Service | Actions |
+| 服务 | 操作 |
 |---------|---------|
-| Documents | `Documents:Read`, `Documents:Write`, `Documents:Comment` |
-| Documents REST API | `Documents:Api:All` grants full access to the Document Server's REST API.|
-| Convert | `Convert:Import:Docx`, `Convert:Export:Docx`, `Convert:Import:Markdown`, `Convert:Export:Markdown`, `Convert:Export:Doc`, `Convert:Export:Odt`, `Convert:Export:Epub`, `Convert:Export:Pdf`, `Convert:Fonts` |
-| AI | `AI:Generation`, `AI:Toolkit` |
+| Documents | `Documents:Read`、`Documents:Write`、`Documents:Comment` |
+| Documents REST API | `Documents:Api:All` 授予对 Document Server REST API 的完整访问权限。|
+| Convert | `Convert:Import:Docx`、`Convert:Export:Docx`、`Convert:Import:Markdown`、`Convert:Export:Markdown`、`Convert:Export:Doc`、`Convert:Export:Odt`、`Convert:Export:Epub`、`Convert:Export:Pdf`、`Convert:Fonts` |
+| AI | `AI:Generation`、`AI:Toolkit` |
 
-`Documents:Write` implies `Documents:Read` and `Documents:Comment` — granting write access automatically grants the other two, so you don't need to list them separately.
+`Documents:Write` 隐含 `Documents:Read` 和 `Documents:Comment` 的权限——授予写入权限时会自动授予另外两项，因此无需单独列出。
 
-`Documents:Api:All` grants access to every Document Server API endpoint, including managed settings. It's separate from the other `Documents:*` actions, which authorize document operations over the collaboration connection. Treat a token carrying it like an admin credential. Keep it server-side, scope its lifetime tightly, and never share it with clients.
+`Documents:Api:All` 授予对 Document Server 所有 API 端点的访问权限，包括托管设置。此权限与其他 `Documents:*` 操作不同；后者用于通过协作连接授权文档操作。请将携带此权限的令牌视为管理员凭据。将其保留在服务器端，严格限制有效期，切勿与客户端共享。
 
-`Convert:*` actions are scoped by file format **and** operation (`Import` vs. `Export`). A token only needs the actions for what it actually does — e.g. a token that only exports PDF needs `Convert:Export:Pdf`. Today only DOCX and Markdown support both directions; Doc, ODT, EPUB, and PDF are export-only. `Convert:Fonts` is unscoped and applies to the `/fonts/*` routes.
+`Convert:*` 操作按文件格式 **和** 操作类型（`Import` 或 `Export`）限定范围。令牌只需包含实际执行操作所需的权限——例如，仅导出 PDF 的令牌需要 `Convert:Export:Pdf`。目前只有 DOCX 和 Markdown 支持导入和导出；Doc、ODT、EPUB 和 PDF 仅支持导出。`Convert:Fonts` 不限定范围，适用于 `/fonts/*` 路由。
 
-`AI:Generation` covers the text generation, suggestions and agent endpoints. `AI:Toolkit` covers the toolkit endpoints. Neither action implies the other. AI actions are not scoped by resource today, so use `"resource": "*"` on AI permissions.
+`AI:Generation` 涵盖文本生成、建议和智能体端点。`AI:Toolkit` 涵盖工具包端点。两项权限互不隐含。目前 AI 操作不按资源限定范围，因此 AI 权限请使用 `"resource": "*"`。
 
-Actions are case-insensitive — `"Documents:Read"` and `"documents:read"` are equivalent. Resources and constraint values (`prefix`, `suffix`, `in`) remain case-sensitive because they can reference externally meaningful identifiers. Pick a consistent casing for your own code.
+操作名称不区分大小写——`"Documents:Read"` 和 `"documents:read"` 等效。资源和约束值（`prefix`、`suffix`、`in`）区分大小写，因为它们可能引用具有外部意义的标识符。请在自己的代码中统一大小写格式。
 
-### Resources
+### 资源
 
-The `resource` field is **required** on every permission. It controls which resources the permission applies to:
+每项权限都必须包含 `resource` 字段。该字段控制权限适用的资源：
 
-| Value | Meaning | Example |
+| 值 | 含义 | 示例 |
 |-------|---------|---------|
-| `"*"` | **Wildcard** — matches everything | `{ "action": "Documents:Read", "resource": "*" }` |
-| `"*"` + constraints | **Filtered wildcard** — matches resources that pass the constraints | `{ "action": "Documents:Read", "resource": "*", "constraints": { "prefix": "team_" } }` |
-| `"doc_42"` | **Specific** — matches only this exact resource | `{ "action": "Documents:Write", "resource": "doc_42" }` |
+| `"*"` | **通配符** — 匹配所有内容 | `{ "action": "Documents:Read", "resource": "*" }` |
+| `"*"` + 约束 | **筛选通配符** — 匹配符合约束的资源 | `{ "action": "Documents:Read", "resource": "*", "constraints": { "prefix": "team_" } }` |
+| `"doc_42"` | **指定资源** — 仅匹配此精确资源 | `{ "action": "Documents:Write", "resource": "doc_42" }` |
 
-Key rules:
+关键规则：
 
-- Use `"*"` for wildcard access. A wildcard without constraints matches **everything**.
-- A specific resource matches only that exact resource.
+- 使用 `"*"` 表示通配访问。不带约束的通配符会匹配 **所有内容**。
+- 指定资源只匹配该精确资源。
 
-### Constraints
+### 约束
 
-Constraints add fine-grained filtering on top of resource matching. They're useful when you want to allow access to a category of resources rather than listing each one.
+约束可以在资源匹配的基础上添加细粒度筛选。如果你想允许访问某一类资源，而不是逐一列出每项资源，约束会很有用。
 
 ```json
 {
@@ -178,25 +178,25 @@ Constraints add fine-grained filtering on top of resource matching. They're usef
 }
 ```
 
-This grants read access to any document whose name starts with `"team1_"`.
+这会授予对名称以 `"team1_"` 开头的所有文档的读取权限。
 
-**Available constraint fields:**
+**可用的约束字段：**
 
-| Field | Type | Description |
+| 字段 | 类型 | 说明 |
 |-------|------|-------------|
-| `prefix` | `string` | Resource name must start with this value |
-| `suffix` | `string` | Resource name must end with this value |
-| `in` | `string[]` | Resource name must be one of these exact values |
+| `prefix` | `string` | 资源名称必须以此值开头 |
+| `suffix` | `string` | 资源名称必须以此值结尾 |
+| `in` | `string[]` | 资源名称必须是这些精确值之一 |
 
-**Combining fields within a single constraint** uses AND logic (all must pass):
+**单个约束中的字段组合**采用 AND 逻辑（必须全部满足）：
 
 ```json
 { "prefix": "team1_", "suffix": "_published" }
 ```
 
-Matches `"team1_report_published"` but not `"team1_report_draft"`.
+匹配 `"team1_report_published"`，但不匹配 `"team1_report_draft"`。
 
-**An array of constraints** uses OR logic (any one passing is enough):
+**约束数组**采用 OR 逻辑（满足其中一项即可）：
 
 ```json
 [
@@ -205,20 +205,20 @@ Matches `"team1_report_published"` but not `"team1_report_draft"`.
 ]
 ```
 
-Matches `"team1_doc"` or `"team2_doc"`.
+匹配 `"team1_doc"` 或 `"team2_doc"`。
 
-**Rules:**
+**规则：**
 
-- The `constraints` field can't be empty. Each constraint must declare at least one of `prefix`, `suffix`, or `in`, and an array of constraints must contain at least one entry. Omit the field entirely for "no filtering".
-- `in` cannot be combined with `prefix` or `suffix` in the same constraint object. Use separate constraints in an array instead.
-- `prefix` and `suffix` must be non-empty strings.
-- `in` must be a non-empty array of strings.
+- `constraints` 字段不能为空。每项约束必须至少声明 `prefix`、`suffix` 或 `in` 中的一项；约束数组也必须至少包含一项。如果不需要筛选，请完全省略此字段。
+- `in` 不能与同一约束对象中的 `prefix` 或 `suffix` 组合使用。请改为在数组中使用不同的约束。
+- `prefix` 和 `suffix` 必须是非空字符串。
+- `in` 必须是非空字符串数组。
 
-## Cross-service actions
+## 跨服务操作
 
-Some actions cross service boundaries. The Document Server stores your documents, and other services act on it. For example, importing a DOCX through the Convert service writes the document and its comments to the Document Server. When an action reads or writes a document this way, the token needs both the originating action and the matching `Documents` action.
+某些操作会跨越服务边界。Document Server 存储你的文档，其他服务则对文档执行操作。例如，通过 Convert 服务导入 DOCX 时，文档及其评论会写入 Document Server。当操作以这种方式读取或写入文档时，令牌需要同时包含发起操作的权限和相应的 `Documents` 操作权限。
 
-A token that imports a commented DOCX into a stored document needs both:
+将带评论的 DOCX 导入并存储为文档的令牌需要同时包含以下权限：
 
 ```json
 {
@@ -229,11 +229,11 @@ A token that imports a commented DOCX into a stored document needs both:
 }
 ```
 
-The `resource` is yours to define. Each service page calls out which cross-service actions it performs and the permissions they require.
+`resource` 由你自行定义。每个服务的文档都会说明该服务执行哪些跨服务操作，以及这些操作需要哪些权限。
 
-## Examples
+## 示例
 
-### Full access to all services
+### 访问所有服务的完整权限
 
 ```json
 {
@@ -258,9 +258,9 @@ The `resource` is yours to define. Each service page calls out which cross-servi
 }
 ```
 
-`Documents:Write` covers read and comment by implication, so only one Documents entry is needed.
+`Documents:Write` 隐含读取和评论权限，因此只需一项 Documents 权限。
 
-### Read-only access to specific documents
+### 对特定文档的只读访问权限
 
 ```json
 {
@@ -276,9 +276,9 @@ The `resource` is yours to define. Each service page calls out which cross-servi
 }
 ```
 
-### AI access only
+### 仅访问 AI
 
-Grant the AI features the token needs. The example below allows both generation and toolkit endpoints:
+授予令牌所需的 AI 功能。以下示例允许访问生成和工具包端点：
 
 ```json
 {
@@ -290,9 +290,9 @@ Grant the AI features the token needs. The example below allows both generation 
 }
 ```
 
-### Document conversion
+### 文档转换
 
-Grant only the format/direction pairs the token actually uses. The example below imports DOCX and exports PDF:
+仅授予令牌实际使用的格式和操作方向权限。以下示例导入 DOCX 并导出 PDF：
 
 ```json
 {
@@ -304,9 +304,9 @@ Grant only the format/direction pairs the token actually uses. The example below
 }
 ```
 
-### Scoped by document prefix
+### 按文档前缀限定范围
 
-Allow reading and commenting on documents that belong to a specific team:
+允许读取和评论属于特定团队的文档：
 
 ```json
 {
@@ -325,7 +325,7 @@ Allow reading and commenting on documents that belong to a specific team:
 }
 ```
 
-### Write access to a single document
+### 对单个文档的写入权限
 
 ```json
 {
@@ -335,10 +335,10 @@ Allow reading and commenting on documents that belong to a specific team:
 }
 ```
 
-## Security best practices
+## 安全最佳实践
 
-- **Keep tokens short-lived.** Set `exp` to 30 minutes or less. Generate a fresh token for each session or connection.
-- **Use the least privilege.** Only include the permissions and audiences the token actually needs. A token used only for Convert exports shouldn't include `"Documents"` or `"AI"` in its audience.
-- **Never expose your private key client-side.** Token generation must happen on your server. Send the signed JWT to your client, never the signing key.
-- **Rotate keys periodically.** Create a new key pair, update your server to sign with the new key, then retire the old one. Tiptap supports multiple active key pairs per environment to allow zero-downtime rotation.
-- **Set `sub` for auditability.** Including a user identifier in `sub` helps trace actions back to specific users in logs and audit trails.
+- **缩短令牌有效期。** 将 `exp` 设置为 30 分钟或更短。为每个会话或连接生成新的令牌。
+- **遵循最小权限原则。** 只包含令牌实际需要的权限和受众。仅用于 Convert 导出的令牌不应在受众中包含 `"Documents"` 或 `"AI"`。
+- **切勿在客户端暴露私钥。** 必须在服务器上生成令牌。将签署后的 JWT 发送给客户端，绝不要发送签名密钥。
+- **定期轮换密钥。** 创建新的密钥对，更新服务器以使用新密钥签署令牌，然后停用旧密钥。Tiptap 支持每个环境同时启用多个密钥对，以便在轮换密钥时实现零停机。
+- **设置 `sub` 以便审计。** 在 `sub` 中包含用户标识符，有助于在日志和审计记录中追踪操作对应的用户。
