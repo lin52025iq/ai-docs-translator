@@ -1,12 +1,12 @@
 ---
-title: Color Highlight Button
+title: 彩色高亮按钮
 meta:
-  title: Color Highlight Button | Tiptap UI Components
-  description: Apply color highlights to text in Tiptap editors with predefined colors, keyboard shortcuts, and full accessibility support.
-  category: UI Components
+  title: 彩色高亮按钮 | Tiptap UI 组件
+  description: 使用预定义颜色、键盘快捷键和完善的无障碍支持，为 Tiptap 编辑器中的文本添加彩色高亮。
+  category: UI 组件
 component:
-  name: Color Highlight Button
-  description: Add a button that applies color highlights to selected text in Tiptap editors.
+  name: 彩色高亮按钮
+  description: 添加一个按钮，为 Tiptap 编辑器中选中的文本应用彩色高亮。
   type: component
   isFree: true
   isCloud: false
@@ -19,25 +19,25 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A fully accessible and customizable color highlight button for Tiptap editors. Apply background colors to selected text using keyboard shortcuts or UI, with support for dynamic color sets, custom rendering, and accessibility.
+适用于 Tiptap 编辑器的彩色高亮按钮，兼具完善的无障碍支持和可自定义性。可通过键盘快捷键或界面为选中的文本添加背景色，并支持动态颜色集、自定义渲染和无障碍功能。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui/color-highlight-button" />
 
-## Installation
+## 安装
 
-Add the component via the Tiptap CLI:
+通过 Tiptap CLI 添加该组件：
 
 ```bash
 npx @tiptap/cli@latest add color-highlight-button
 ```
 
-## Components
+## 组件
 
 ### `<ColorHighlightButton />`
 
-A ready-to-use React button for applying color highlights to selected text in a Tiptap editor.
+可直接使用的 React 按钮，用于为 Tiptap 编辑器中选中的文本应用彩色高亮。
 
-#### Usage
+#### 用法
 
 ```tsx
 import { EditorContent, EditorContext, useEditor } from '@tiptap/react'
@@ -90,24 +90,24 @@ export default function MyEditor() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type                         | Default     | Description                                       |
-| --------------------- | ---------------------------- | ----------- | ------------------------------------------------- |
-| `editor`              | `Editor \| null`             | `undefined` | The Tiptap editor instance                        |
-| `highlightColor`      | `string`                     | `required`  | The highlight color to apply (CSS color value)    |
-| `text`                | `string`                     | `undefined` | Optional text label for the button                |
-| `hideWhenUnavailable` | `boolean`                    | `false`     | Hides the button when highlight is not applicable |
-| `onApplied`           | `({ color, label }) => void` | `undefined` | Callback fired after applying a highlight         |
-| `showShortcut`        | `boolean`                    | `false`     | Shows a keyboard shortcut badge (if available)    |
+| 名称                  | 类型                         | 默认值      | 说明                                           |
+| --------------------- | ---------------------------- | ----------- | ---------------------------------------------- |
+| `editor`              | `Editor \| null`             | `undefined` | Tiptap 编辑器实例                              |
+| `highlightColor`      | `string`                     | `required`  | 要应用的高亮颜色（CSS 颜色值）                 |
+| `text`                | `string`                     | `undefined` | 按钮的可选文本标签                             |
+| `hideWhenUnavailable` | `boolean`                    | `false`     | 高亮不可用时隐藏按钮                           |
+| `onApplied`           | `({ color, label }) => void` | `undefined` | 应用高亮后的回调                               |
+| `showShortcut`        | `boolean`                    | `false`     | 显示键盘快捷键徽标（如果可用）                 |
 
 ## Hooks
 
 ### `useColorHighlight(config)`
 
-A powerful hook to build your own custom color highlight button with full control over behavior and rendering.
+功能强大的 Hook，可用于构建自定义彩色高亮按钮，并全面控制其行为和渲染方式。
 
-#### Usage
+#### 用法
 
 ```tsx
 import { useColorHighlight } from '@/components/tiptap-ui/color-highlight-button'
@@ -141,49 +141,49 @@ function MyColorHighlightButton() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type                               | Default     | Description                                     |
-| --------------------- | ---------------------------------- | ----------- | ----------------------------------------------- |
-| `editor`              | `Editor \| null`                   | `undefined` | The Tiptap editor instance                      |
-| `highlightColor`      | `string`                           | `required`  | The highlight color to apply                    |
-| `label`               | `string`                           | `optional`  | Accessible label for the button                 |
-| `hideWhenUnavailable` | `boolean`                          | `false`     | Hides the button if highlight cannot be applied |
-| `mode`                | `"mark" \| "node"`                 | `"mark"`    | Highlighting mode (mark or node background)     |
-| `onApplied`           | `({ color, label, mode }) => void` | `undefined` | Callback fired after applying highlight         |
+| 名称                  | 类型                               | 默认值      | 说明                                         |
+| --------------------- | ---------------------------------- | ----------- | -------------------------------------------- |
+| `editor`              | `Editor \| null`                   | `undefined` | Tiptap 编辑器实例                            |
+| `highlightColor`      | `string`                           | `required`  | 要应用的高亮颜色                             |
+| `label`               | `string`                           | `optional`  | 按钮的无障碍标签                             |
+| `hideWhenUnavailable` | `boolean`                          | `false`     | 无法应用高亮时隐藏按钮                       |
+| `mode`                | `"mark" \| "node"`                 | `"mark"`    | 高亮模式（标记或节点背景）                   |
+| `onApplied`           | `({ color, label, mode }) => void` | `undefined` | 应用高亮后的回调                             |
 
-#### Return Values
+#### 返回值
 
-| Name                    | Type               | Description                              |
-| ----------------------- | ------------------ | ---------------------------------------- |
-| `isVisible`             | `boolean`          | Whether the button should be rendered    |
-| `isActive`              | `boolean`          | If the highlight is currently active     |
-| `canColorHighlight`     | `boolean`          | If the highlight can be applied          |
-| `handleColorHighlight`  | `() => boolean`    | Function to apply the color highlight    |
-| `handleRemoveHighlight` | `() => boolean`    | Function to remove the highlight         |
-| `label`                 | `string`           | Accessible label text for the button     |
-| `shortcutKeys`          | `string`           | Keyboard shortcut (Cmd/Ctrl + Shift + H) |
-| `Icon`                  | `React.FC`         | Icon component used (HighlighterIcon)    |
-| `mode`                  | `"mark" \| "node"` | The highlighting mode being used         |
+| 名称                    | 类型               | 说明                                   |
+| ----------------------- | ------------------ | -------------------------------------- |
+| `isVisible`             | `boolean`          | 是否应渲染该按钮                       |
+| `isActive`              | `boolean`          | 当前高亮是否处于激活状态               |
+| `canColorHighlight`     | `boolean`          | 是否可以应用高亮                       |
+| `handleColorHighlight`  | `() => boolean`    | 应用彩色高亮的函数                     |
+| `handleRemoveHighlight` | `() => boolean`    | 移除高亮的函数                         |
+| `label`                 | `string`           | 按钮的无障碍标签文本                   |
+| `shortcutKeys`          | `string`           | 键盘快捷键（Cmd/Ctrl + Shift + H）     |
+| `Icon`                  | `React.FC`         | 使用的图标组件（HighlighterIcon）      |
+| `mode`                  | `"mark" \| "node"` | 当前使用的高亮模式                     |
 
-## Utilities
+## 工具函数
 
 ### `canColorHighlight(editor, mode?)`
 
-Checks if color highlight can be applied in the current editor state.
+检查当前编辑器状态下是否可以应用彩色高亮。
 
-#### Parameters
+#### 参数
 
-| Parameter | Type               | Default  | Description                                 |
-| --------- | ------------------ | -------- | ------------------------------------------- |
-| `editor`  | `Editor \| null`   | Required | The Tiptap editor instance                  |
-| `mode`    | `"mark" \| "node"` | `"mark"` | Highlighting mode (mark or node background) |
+| 参数     | 类型               | 默认值   | 说明                                     |
+| -------- | ------------------ | -------- | ---------------------------------------- |
+| `editor` | `Editor \| null`   | 必填     | Tiptap 编辑器实例                        |
+| `mode`   | `"mark" \| "node"` | `"mark"` | 高亮模式（标记或节点背景）               |
 
-#### Returns
+#### 返回值
 
-`boolean` - Whether highlight can be applied
+`boolean` - 是否可以应用高亮
 
-#### Usage
+#### 用法
 
 ```tsx
 import { canColorHighlight } from '@/components/tiptap-ui/color-highlight-button'
@@ -194,21 +194,21 @@ const canApplyNode = canColorHighlight(editor, 'node')
 
 ### `isColorHighlightActive(editor, highlightColor?, mode?)`
 
-Checks if a color highlight is currently active in the selection.
+检查当前选区中是否已应用彩色高亮。
 
-#### Parameters
+#### 参数
 
-| Parameter        | Type               | Default     | Description                                 |
-| ---------------- | ------------------ | ----------- | ------------------------------------------- |
-| `editor`         | `Editor \| null`   | Required    | The Tiptap editor instance                  |
-| `highlightColor` | `string`           | `undefined` | The specific color to check for             |
-| `mode`           | `"mark" \| "node"` | `"mark"`    | Highlighting mode (mark or node background) |
+| 参数             | 类型               | 默认值      | 说明                                     |
+| ---------------- | ------------------ | ----------- | ---------------------------------------- |
+| `editor`         | `Editor \| null`   | 必填        | Tiptap 编辑器实例                        |
+| `highlightColor` | `string`           | `undefined` | 要检查的特定颜色                         |
+| `mode`           | `"mark" \| "node"` | `"mark"`    | 高亮模式（标记或节点背景）               |
 
-#### Returns
+#### 返回值
 
-`boolean` - Whether the highlight is active
+`boolean` - 高亮是否处于激活状态
 
-#### Usage
+#### 用法
 
 ```tsx
 import { isColorHighlightActive } from '@/components/tiptap-ui/color-highlight-button'
@@ -220,20 +220,20 @@ const isNodeHighlight = isColorHighlightActive(editor, 'var(--tt-color-highlight
 
 ### `removeHighlight(editor, mode?)`
 
-Removes the current highlight from the selection.
+移除当前选区中的高亮。
 
-#### Parameters
+#### 参数
 
-| Parameter | Type               | Default  | Description                                 |
-| --------- | ------------------ | -------- | ------------------------------------------- |
-| `editor`  | `Editor \| null`   | Required | The Tiptap editor instance                  |
-| `mode`    | `"mark" \| "node"` | `"mark"` | Highlighting mode (mark or node background) |
+| 参数     | 类型               | 默认值   | 说明                                     |
+| -------- | ------------------ | -------- | ---------------------------------------- |
+| `editor` | `Editor \| null`   | 必填     | Tiptap 编辑器实例                        |
+| `mode`   | `"mark" \| "node"` | `"mark"` | 高亮模式（标记或节点背景）               |
 
-#### Returns
+#### 返回值
 
-`boolean` - Whether the highlight was successfully removed
+`boolean` - 是否成功移除高亮
 
-#### Usage
+#### 用法
 
 ```tsx
 import { removeHighlight } from '@/components/tiptap-ui/color-highlight-button'
@@ -244,19 +244,19 @@ const successNode = removeHighlight(editor, 'node')
 
 ### `pickHighlightColorsByValue(values)`
 
-Filters the default highlight colors by their values.
+根据颜色值筛选默认高亮颜色。
 
-#### Parameters
+#### 参数
 
-| Parameter | Type       | Description                        |
-| --------- | ---------- | ---------------------------------- |
-| `values`  | `string[]` | Array of color values to filter by |
+| 参数     | 类型       | 说明                 |
+| -------- | ---------- | -------------------- |
+| `values` | `string[]` | 用于筛选的颜色值数组 |
 
-#### Returns
+#### 返回值
 
-`HighlightColor[]` - Array of matching highlight color objects
+`HighlightColor[]` - 匹配的高亮颜色对象数组
 
-#### Usage
+#### 用法
 
 ```tsx
 import { pickHighlightColorsByValue } from '@/components/tiptap-ui/color-highlight-button'
@@ -268,26 +268,26 @@ const colors = pickHighlightColorsByValue([
 // Returns the full color objects with label, value, and border properties
 ```
 
-## Keyboard Shortcuts
+## 键盘快捷键
 
-The color highlight button supports the following keyboard shortcut:
+彩色高亮按钮支持以下键盘快捷键：
 
-- **Cmd/Ctrl + Shift + H**: Apply color highlight
+- **Cmd/Ctrl + Shift + H**：应用彩色高亮
 
-This shortcut is automatically registered when using the `ColorHighlightButton` or `useColorHighlight()` hook, and applies the configured highlight color to the current selection.
+使用 `ColorHighlightButton` 或 `useColorHighlight()` Hook 时会自动注册此快捷键，并将配置的高亮颜色应用到当前选区。
 
-## Requirements
+## 要求
 
-### Dependencies
+### 依赖项
 
-- `@tiptap/react` - Core Tiptap React integration
-- `@tiptap/extension-highlight` - Highlight extension for text highlighting
-- `react-hotkeys-hook` - Keyboard shortcut management
+- `@tiptap/react` - Tiptap React 核心集成
+- `@tiptap/extension-highlight` - 用于文本高亮的 Highlight 扩展
+- `react-hotkeys-hook` - 键盘快捷键管理
 
-### Referenced Components
+### 引用的组件
 
-- `use-tiptap-editor` (hook)
-- `button` (primitive)
-- `badge` (primitive)
-- `tiptap-utils` (lib)
-- `highlighter-icon` (icon)
+- `use-tiptap-editor`（Hook）
+- `button`（基础组件）
+- `badge`（基础组件）
+- `tiptap-utils`（库）
+- `highlighter-icon`（图标）
