@@ -1,30 +1,30 @@
 ---
-title: List commands
+title: 列表命令
 meta:
-  title: List commands | Tiptap Editor Docs
-  description: Manage lists in Tiptap with Editor commands like liftListItem, sinkListItem, splitListItem, toggleList, and wrapInList.
-  category: Editor
+  title: 列表命令 | Tiptap 编辑器文档
+  description: 使用 Tiptap 编辑器命令管理列表，例如 liftListItem、sinkListItem、splitListItem、toggleList 和 wrapInList。
+  category: 编辑器
 ---
 
-Lists are a crucial part of structuring content in your Tiptap editor. Tiptap provides commands to manipulate list structures easily. Here’s an overview of the essential commands that help you create, update, and manage your lists.
+列表是组织 Tiptap 编辑器内容的重要组成部分。Tiptap 提供了便捷的命令来操作列表结构。下面介绍一些可用于创建、更新和管理列表的核心命令。
 
-## Use Cases
+## 使用场景
 
-- **Creating and Toggling Lists:** Create or switch between list types using [`toggleList`](/editor/api/commands/lists/toggle-list).
-- **Nesting and Unnesting List Items:** Lift or sink list items using commands like [`liftListItem`](/editor/api/commands/lists/lift-list-item) and [`sinkListItem`](/editor/api/commands/lists/sink-list-item).
-- **Splitting and Wrapping List Items:** Split or wrap list items efficiently with [`splitListItem`](/editor/api/commands/lists/split-list-item) and [`wrapInList`](/editor/api/commands/lists/wrap-in-list).
-- **Improving List Keyboard Behavior:** Use the [`List Keymap`](/editor/extensions/functionality/listkeymap) extension to refine list behavior with additional keymap handlers.
+- **创建和切换列表：** 使用 [`toggleList`](/editor/api/commands/lists/toggle-list) 创建列表或切换列表类型。
+- **嵌套和取消嵌套列表项：** 使用 [`liftListItem`](/editor/api/commands/lists/lift-list-item) 和 [`sinkListItem`](/editor/api/commands/lists/sink-list-item) 等命令提升或下沉列表项。
+- **拆分和包装列表项：** 使用 [`splitListItem`](/editor/api/commands/lists/split-list-item) 和 [`wrapInList`](/editor/api/commands/lists/wrap-in-list) 高效地拆分或包装列表项。
+- **优化列表的键盘操作：** 使用 [`List Keymap`](/editor/extensions/functionality/listkeymap) 扩展，通过额外的键位映射处理器改进列表行为。
 
-## List Keymap Extension
+## List Keymap 扩展
 
-You might also want to include the [`List Keymap`](/editor/extensions/functionality/listkeymap) extension, which adds extra keymap handlers to change the default backspace and delete behavior for lists. It modifies the default behavior so that pressing backspace at the start of a list item lifts the content into the list item above.
+你也可以添加 [`List Keymap`](/editor/extensions/functionality/listkeymap) 扩展，它会增加额外的键位映射处理器，以更改列表默认的退格键和删除键行为。它会修改默认行为：在列表项开头按退格键时，将该项内容提升到上方的列表项中。
 
-## Here’s a list of… list commands
+## 列表命令一览
 
-| Command         | Description                                                                                 |
-| --------------- | ------------------------------------------------------------------------------------------- |
-| `liftListItem`  | Attempts to lift the list item around the current selection up into a wrapping parent list. |
-| `sinkListItem`  | Sinks the list item around the current selection down into a wrapping child list.           |
-| `splitListItem` | Splits one list item into two separate list items.                                          |
-| `toggleList`    | Toggles between different types of lists.                                                   |
-| `wrapInList`    | Wraps a node in the current selection in a list.                                            |
+| 命令            | 说明                                                       |
+| --------------- | ---------------------------------------------------------- |
+| `liftListItem`  | 尝试将当前选区所在的列表项提升到其外层父列表中。           |
+| `sinkListItem`  | 尝试将当前选区所在的列表项下沉到其内层子列表中。           |
+| `splitListItem` | 将一个列表项拆分为两个独立的列表项。                       |
+| `toggleList`    | 在不同类型的列表之间切换。                                 |
+| `wrapInList`    | 将当前选区中的节点包装在列表中。                           |
