@@ -14,8 +14,8 @@ translation:
     model: gpt-6-luna
     scope:
         include:
-            - "**/*.md"
-            - "**/*.mdx"
+            - "src/content/index.mdx"
+            - "src/content/editor/getting-started/*.mdx"
         exclude: []
     glossary: glossary.yml
     prompts:
