@@ -1,52 +1,52 @@
 ---
-title: Listen to events
+title: 监听事件
 meta:
-  title: Listen to events | Tiptap Content AI
-  description: Learn how to listen to events from the AI agent in Tiptap.
-  category: Content AI
+  title: 监听事件 | Tiptap Content AI
+  description: 了解如何在 Tiptap 中监听 AI 代理发出的事件。
+  category: 内容 AI
 ---
 
-The AI agent provider emits events that you can subscribe to in order to respond to changes in the agent's state. These events allow you to build reactive UIs and implement custom logic.
+AI 代理提供程序会发出事件，你可以订阅这些事件，以响应代理状态的变化。这些事件有助于构建响应式 UI 并实现自定义逻辑。
 
-## Available events
+## 可用事件
 
-| Event            | Description                                   | Parameters                           |
-| ---------------- | --------------------------------------------- | ------------------------------------ |
-| `stateChange`    | Triggered when the provider state changes     | `(newState, previousState, context)` |
-| `loadingError`   | Triggered when an error occurs during loading | `(error, context)`                   |
-| `beforeToolCall` | Triggered before a tool call is executed      | `(toolCall, context)`                |
-| `afterToolCall`  | Triggered after a tool call is executed       | `(toolCall, context)`                |
-| `stopRunning`    | Triggered when an AI agent run is completed   | `(context)`                          |
+| 事件             | 描述                           | 参数                                  |
+| ---------------- | ------------------------------ | ------------------------------------- |
+| `stateChange`    | 提供程序状态发生变化时触发     | `(newState, previousState, context)` |
+| `loadingError`   | 加载过程中发生错误时触发       | `(error, context)`                   |
+| `beforeToolCall` | 工具调用执行前触发             | `(toolCall, context)`                |
+| `afterToolCall`  | 工具调用执行后触发             | `(toolCall, context)`                |
+| `stopRunning`    | AI 代理运行完成时触发          | `(context)`                          |
 
-## Subscribing to events
+## 订阅事件
 
-There are two ways to subscribe to events. When you initialize the provider, you can pass event handlers as options.
+订阅事件有两种方式。初始化提供程序时，可以将事件处理程序作为选项传入。
 
 ```tsx
 const provider = new AiAgentProvider({
   onStateChange: (newState, previousState, context) => {
     console.log('State changed:', newState)
-    // Update UI based on new state
+    // 根据新状态更新 UI
   },
   onLoadingError: (error, context) => {
     console.error('Loading error:', error)
-    // Show error message to the user
+    // 向用户显示错误消息
   },
 })
 ```
 
-Or you can subscribe to events using the `on` method and unsubscribe using the `off` method.
+也可以使用 `on` 方法订阅事件，并使用 `off` 方法取消订阅。
 
 ```tsx
-// Define event handlers
+// 定义事件处理程序
 const handleStateChange = (newState, previousState, context) => {
   console.log('State changed:', newState)
-  // Update UI based on new state
+  // 根据新状态更新 UI
 }
 
-// Subscribe to events
+// 订阅事件
 provider.on('stateChange', handleStateChange)
 
-// Later, unsubscribe when no longer needed
+// 不再需要时，取消订阅
 provider.off('stateChange', handleStateChange)
 ```
