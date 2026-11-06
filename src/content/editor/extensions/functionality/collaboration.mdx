@@ -1,22 +1,22 @@
 ---
-title: Collaboration extension
+title: 协作扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-collaboration?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-collaboration
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-collaboration.svg
     url: https://npmcharts.com/compare/@tiptap/extension-collaboration?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  category: Editor
-  title: Collaboration extension | Tiptap Editor Docs
-  description: Learn how to set up and use collaborative editing with the Collaboration extension in Tiptap.
+  category: 编辑器
+  title: 协作扩展 | Tiptap 编辑器文档
+  description: 了解如何在 Tiptap 中使用 Collaboration 扩展设置和使用协同编辑。
 extension:
   name: Collaboration
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-collaboration
-  description: Collaborative text editing can be fricking complex, but it doesn’t have to be that way.
+  description: 协作文本编辑可能相当复杂，但其实不必如此。
   type: extension
   icon: Radio
 ---
@@ -28,29 +28,28 @@ import { Button } from '@/components/ui/Button'
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-This small guide quickly shows how to integrate basic collaboration functionality into your editor. For a proper collaboration integration, review the documentation of [Tiptap Collaboration](/collaboration/getting-started/overview), which is a cloud and on-premises collaboration server solution.
+本指南将快速介绍如何在编辑器中集成基本的协作功能。如需完整的协作集成，请参阅 [Tiptap Collaboration](/collaboration/getting-started/overview) 文档。它是一套云端和本地部署的协作服务器解决方案。
 
 <CodeDemo path="/Demos/CollaborationSplitPane" />
 
-## Install
+## 安装
 
-<Callout title="More details" variant="hint">
-  For more detailed information on how to integrate, install, and configure the Collaboration
-  extension with the Tiptap Collaboration product, please visit our [feature
-  page](/collaboration/getting-started/overview).
+<Callout title="了解更多" variant="hint">
+  如需了解如何将 Collaboration 扩展与 Tiptap Collaboration 产品集成、安装和配置的详细信息，
+  请访问我们的[功能介绍页](/collaboration/getting-started/overview)。
 </Callout>
 
 ```bash
 npm install @tiptap/extension-collaboration @tiptap/y-tiptap yjs y-websocket
 ```
 
-## Settings
+## 设置
 
 ### document
 
-An initialized Y.js document.
+已初始化的 Y.js 文档。
 
-Default: `null`
+默认值：`null`
 
 ```js
 Collaboration.configure({
@@ -60,9 +59,9 @@ Collaboration.configure({
 
 ### field
 
-Name of a Y.js fragment, can be changed to sync multiple fields with one Y.js document.
+Y.js 片段的名称，可更改此项以使用一个 Y.js 文档同步多个字段。
 
-Default: `'default'`
+默认值：`'default'`
 
 ```js
 Collaboration.configure({
@@ -73,9 +72,9 @@ Collaboration.configure({
 
 ### fragment
 
-A raw Y.js fragment, can be used instead of `document` and `field`.
+原始 Y.js 片段，可替代 `document` 和 `field` 使用。
 
-Default: `null`
+默认值：`null`
 
 ```js
 Collaboration.configure({
@@ -83,13 +82,13 @@ Collaboration.configure({
 })
 ```
 
-## Commands
+## 命令
 
-The `Collaboration` extension comes with its own history extension. Make sure to disable the `UndoRedo` extension, if you’re working with the `StarterKit`.
+`Collaboration` 扩展自带历史记录扩展。如果你使用 `StarterKit`，请务必禁用 `UndoRedo` 扩展。
 
 ### undo()
 
-Undo the last change.
+撤销上一次更改。
 
 ```js
 editor.commands.undo()
@@ -97,54 +96,54 @@ editor.commands.undo()
 
 ### redo()
 
-Redo the last change.
+重做上一次更改。
 
 ```js
 editor.commands.redo()
 ```
 
-## Keyboard shortcuts
+## 键盘快捷键
 
-| Command | Windows/Linux                                                                             | macOS                                                                             |
+| 命令 | Windows/Linux                                                                             | macOS                                                                             |
 | ------- | ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
 | undo()  | <kbd>Control</kbd> + <kbd>Z</kbd>                                                         | <kbd>Cmd</kbd> + <kbd>Z</kbd>                                                     |
-| redo()  | <kbd>Shift</kbd> + <kbd>Control</kbd> + <kbd>Z</kbd> or <kbd>Control</kbd> + <kbd>Y</kbd> | <kbd>Shift</kbd> + <kbd>Cmd</kbd> + <kbd>Z</kbd> or <kbd>Cmd</kbd> + <kbd>Y</kbd> |
+| redo()  | <kbd>Shift</kbd> + <kbd>Control</kbd> + <kbd>Z</kbd> 或 <kbd>Control</kbd> + <kbd>Y</kbd> | <kbd>Shift</kbd> + <kbd>Cmd</kbd> + <kbd>Z</kbd> 或 <kbd>Cmd</kbd> + <kbd>Y</kbd> |
 
-## Content that doesn't fit the schema
+## 不符合 Schema 的内容
 
-A shared document can contain content that your editor's schema can't display, for example a node from an extension you didn't register. The extension handles it in one of two ways:
+共享文档可能包含编辑器 Schema 无法显示的内容，例如来自未注册扩展的节点。该扩展有以下两种处理方式：
 
-- By default, the editor removes that content and fills in missing required nodes. These changes are synced, so other users lose that content too.
-- With the editor option `enableContentCheck: true`, the editor keeps that content in the shared document. It shows what it can, pauses editing and sends no changes. It emits the `contentError` event and resumes when the content fits the schema again. Handle that event with `onContentError`, because the default handler throws the error. This needs `@tiptap/extension-collaboration` 3.33.0 and `@tiptap/y-tiptap` 3.2.0 or later.
+- 默认情况下，编辑器会移除此类内容，并补全缺失的必需节点。这些更改会同步，因此其他用户也会丢失这些内容。
+- 将编辑器选项 `enableContentCheck: true` 启用后，编辑器会在共享文档中保留这些内容。它会尽可能显示内容、暂停编辑且不发送任何更改。编辑器会触发 `contentError` 事件，并在内容再次符合 Schema 后恢复。请通过 `onContentError` 处理该事件，因为默认处理程序会抛出错误。此功能需要 `@tiptap/extension-collaboration` 3.33.0 和 `@tiptap/y-tiptap` 3.2.0 或更高版本。
 
-Read more in [Invalid schema handling](/guides/invalid-schema#for-collaborative-editing).
+更多信息请参阅[无效 Schema 的处理](/guides/invalid-schema#for-collaborative-editing)。
 
-## Usage with UniqueID
+## 与 UniqueID 搭配使用
 
-If you are using the [UniqueID extension](/editor/extensions/functionality/uniqueid) together with Collaboration, make sure to mount the editor only after the collaboration provider has synced. Incorrect initialization order can cause persistent empty paragraphs in the document. See [UniqueID: Usage with Collaboration](/editor/extensions/functionality/uniqueid#usage-with-collaboration) for details.
+如果你将 [UniqueID 扩展](/editor/extensions/functionality/uniqueid) 与 Collaboration 一起使用，请确保仅在协作提供程序完成同步后挂载编辑器。初始化顺序不正确可能导致文档中持续出现空段落。详情请参阅 [UniqueID：与 Collaboration 搭配使用](/editor/extensions/functionality/uniqueid#usage-with-collaboration)。
 
-## Source code
+## 源代码
 
 [packages/extension-collaboration/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-collaboration/)
 
-## You Did It!
+## 搞定！
 
-Your editor is now collaborative! Invite your friends and start typing together 🙌🏻 If you want to continue building out your collaborative editing features, make sure to check out the [Tiptap Collaboration Docs](/collaboration/getting-started/overview) for a fully hosted on on-premises collaboration server solution.
+你的编辑器现在支持协作了！邀请朋友，一起开始编辑吧 🙌🏻 如果你想继续扩展协同编辑功能，请务必查看 [Tiptap Collaboration 文档](/collaboration/getting-started/overview)，了解完整托管或本地部署的协作服务器解决方案。
 
 <CtaBox.Wrapper>
-  <CtaBox.Title>Collaboration</CtaBox.Title>
+  <CtaBox.Title>协作</CtaBox.Title>
   <CtaBox.Description>
-    Fasten your seatbelts! Make your rich text editor collaborative with Tiptap Collaboration.
+    系好安全带！使用 Tiptap Collaboration，让你的富文本编辑器支持协作。
   </CtaBox.Description>
   <CtaBox.List>
-    <CtaBox.ListItem>Real-time everything</CtaBox.ListItem>
-    <CtaBox.ListItem>Offline-first & conflict free</CtaBox.ListItem>
-    <CtaBox.ListItem>Managed and hosted by us or on your premises</CtaBox.ListItem>
+    <CtaBox.ListItem>实时协作，无所不包</CtaBox.ListItem>
+    <CtaBox.ListItem>离线优先，无冲突</CtaBox.ListItem>
+    <CtaBox.ListItem>由我们托管，或部署在你自己的环境中</CtaBox.ListItem>
   </CtaBox.List>
   <CtaBox.Actions className="-mx-3">
     <Button className="text-white/80 hover:text-white/100" variant="tertiary" asChild>
       <Link href="/collaboration/getting-started/overview">
-        Learn more
+        了解更多
         <ArrowRightIcon className="w-4 h-4" />
       </Link>
     </Button>
