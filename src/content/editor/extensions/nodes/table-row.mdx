@@ -1,41 +1,41 @@
 ---
-title: TableRow extension
+title: TableRow 扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-table?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-table
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-table.svg
     url: https://npmcharts.com/compare/@tiptap/extension-table?minimal=true
-    label: Downloads
+    label: 下载量
 extension:
-  name: Table Row
+  name: 表格行
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-table
-  description: 'The perfect middle ground between a table and a table cell.'
+  description: '在表格与表格单元格之间恰到好处的一层。'
   type: node
   icon: Table
 meta:
-  title: TableRow extension | Tiptap Editor Docs
-  description: Use the Table Row extension in Tiptap to add rows to your tables for a better table structure. Learn more in our docs!
-  category: Editor
+  title: TableRow 扩展 | Tiptap 编辑器文档
+  description: 使用 Tiptap 的 Table Row 扩展为表格添加行，打造更完善的表格结构。了解更多，请查看我们的文档！
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-What’s a table without rows? Add this extension to make your tables usable.
+没有行的表格还算表格吗？添加此扩展，让表格真正可用。
 
 <CodeDemo path="/Nodes/Table" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-table
 ```
 
-This extension requires the [`Table`](/editor/extensions/nodes/table) extension to be installed.
+使用此扩展前，需要先安装 [`Table`](/editor/extensions/nodes/table) 扩展。
 
-This extension is installed by default with the `TableKit` extension, so you don’t need to install it separately.
+此扩展默认随 `TableKit` 扩展一起安装，因此无需单独安装。
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -46,11 +46,11 @@ new Editor({
 })
 ```
 
-## Source code
+## 源代码
 
 [packages/extension-table/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-table/src/row)
 
-## Minimal Install
+## 最简安装
 
 ```js
 import { Editor } from '@tiptap/core'
