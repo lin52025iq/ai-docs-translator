@@ -1,16 +1,16 @@
 ---
-title: Simple whiteboard
+title: 简单白板
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Simple whiteboard example | Tiptap Editor Docs
-  description: A whiteboard in React and Vue with buttons for the tools, undo, redo, zoom, files and images, on a board with sticky notes, shapes, arrows and a pen line.
-  category: Editor
+  title: 简单白板示例 | Tiptap 编辑器文档
+  description: 使用 React 和 Vue 构建的白板，提供工具、撤销、重做、缩放、文件和图像按钮，白板上包含便利贴、图形、箭头和一条画笔线。
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A whiteboard in React and Vue, with buttons for the tools, undo and redo, the zoom and fitting all shapes into view. The color buttons color the selected shapes and the shapes you add next, and the arrow buttons change the lines, dashes and heads of the selected arrows and the arrows you add next. The demo adds `pink` to the board's colors. Export saves the board to a JSON file, and Import opens one, in place of the board or added to it. PNG and SVG save the selected shapes, or the whole board, as an image, and Copy copies them as a PNG. Image adds image files, which you can also paste or drop on the board. The demo has no server, so it keeps them in the board as data URLs. The board starts with sticky notes, shapes, arrows and a pen line. Press the key of a tool, like <kbd>N</kbd> for a note, to choose it.
+这是一个使用 React 和 Vue 构建的白板，提供工具、撤销和重做、缩放以及将所有图形调整到视图范围内的按钮。颜色按钮可为选中的图形以及接下来添加的图形着色；箭头按钮可更改选中箭头以及接下来添加的箭头的线条、虚线样式和箭头端点。此示例在白板的颜色中添加了 `pink`。导出会将白板保存为 JSON 文件；导入会打开 JSON 文件，可替换白板内容，也可将内容添加到白板中。PNG 和 SVG 可将选中的图形或整个白板保存为图像；复制则会将其复制为 PNG。图像工具可添加图像文件，你也可以将图像粘贴或拖放到白板上。此示例没有服务器，因此图像会以数据 URL 的形式保存在白板中。白板初始包含便利贴、图形、箭头和一条画笔线。按下某个工具对应的按键（例如按 <kbd>N</kbd> 选择便利贴工具），即可选中该工具。
 
 <CodeDemo isPro path="/Extensions/Whiteboard" />
