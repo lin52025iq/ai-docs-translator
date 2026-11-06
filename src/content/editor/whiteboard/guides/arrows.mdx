@@ -1,34 +1,34 @@
 ---
-title: Whiteboard arrows
+title: 白板箭头
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Whiteboard arrows | Tiptap Editor Docs
-  description: Connect shapes on a whiteboard with arrows, and give the arrows labels, curved or bent lines, dashes and other heads.
+  title: 白板箭头 | Tiptap 编辑器文档
+  description: 在白板上用箭头连接形状，并为箭头添加标签、曲线或折线、虚线和不同的箭头端点。
   category: Editor
 ---
 
-An arrow connects two shapes, or runs between free points on the board. An end that connects a shape follows the shape when it moves or changes its size.
+箭头可以连接两个形状，也可以连接画板上的两个自由点。连接到形状的一端会随形状移动或调整大小。
 
-## Connect shapes
+## 连接形状
 
-With the `arrow` tool, users draw an arrow with a drag. Each end connects the shape under it, except a pen line, or stays free on the board. A connected end aims at the spot of the shape where the drag started or ended, and stops on the shape's edge. Near the middle of the shape, it aims at the middle. The end handles of a selected arrow move its ends the same way. While an end is dragged, the shape that it would connect has `data-arrow-target`, for your CSS.
+使用 `arrow` 工具，用户可以通过拖动来绘制箭头。箭头的每一端都会连接到其下方的形状（笔画除外），也可以保持为画板上的自由点。连接到形状的一端会指向拖动开始或结束时所在的位置，并停在形状的边缘。若拖动位置靠近形状中心，则会指向形状中心。选中箭头后，拖动端点手柄也会以相同方式移动端点。拖动端点时，箭头将要连接的形状会带有 `data-arrow-target` 属性，供 CSS 使用。
 
-`insertShape` adds an arrow between shapes, between points, or from a shape to a point:
+`insertShape` 可以在形状之间、点之间，或形状与点之间添加箭头：
 
 ```js
 editor.commands.insertShape({ type: 'arrow', fromId: 'idea', toId: 'plan' })
 editor.commands.insertShape({ type: 'arrow', fromId: 'idea', toX: 400, toY: 300 })
 ```
 
-An end with the id of a shape on the board sits on the edge of that shape, where the line meets it on its way to the end's anchor: `fromAnchorX` and `fromAnchorY`, or `toAnchorX` and `toAnchorY`, from 0 to 1 in the shape's box. The default, 0.5, aims at the middle. An end without a shape sits at its point, `fromX` and `fromY` or `toX` and `toY`. When a connected shape is deleted, the end stays where it touched the shape. See [`ArrowEndAttributes`](/editor/whiteboard/api-reference/types#arrowendattributes).
+如果端点指定了画板上某个形状的 ID，它会位于该形状的边缘，即线条通往端点锚点时与形状相交的位置。锚点由 `fromAnchorX` 和 `fromAnchorY`，或 `toAnchorX` 和 `toAnchorY` 指定，取值范围为 0 到 1，表示其在形状框中的位置。默认值为 0.5，即指向中心。如果端点未指定形状，则位于对应坐标点，即 `fromX` 和 `fromY` 或 `toX` 和 `toY`。删除已连接的形状后，端点会停留在原先与该形状接触的位置。参见 [`ArrowEndAttributes`](/editor/whiteboard/api-reference/types#arrowendattributes)。
 
-## Labels
+## 标签
 
-The paragraphs of an arrow are its label, which sits in the middle of its line. The line leaves a gap around the label. A double click on an arrow, or <kbd>Enter</kbd> while it is the only selected shape, edits the label. An arrow without text shows no label.
+箭头中的段落就是它的标签，显示在线条中间。线条会在标签周围留出空隙。双击箭头，或在箭头是唯一选中形状时按 <kbd>Enter</kbd>，即可编辑标签。没有文本的箭头不会显示标签。
 
-To start a board with a label, give the arrow a paragraph:
+要创建带标签的画板，请为箭头添加一个段落：
 
 ```js
 import { boardContent, stickyNoteContent } from '@tiptap-pro/extension-whiteboard'
@@ -46,31 +46,31 @@ const content = boardContent([
 editor.commands.setContent(content)
 ```
 
-Like the text of other shapes, a label has a `fontSize` and a `font`.
+和其他形状的文本一样，标签也有 `fontSize` 和 `font` 属性。
 
-## Lines and heads
+## 线条和箭头端点
 
-These styles change how an arrow looks:
+以下样式会改变箭头的外观：
 
-| Style           | Values                                          | Default    |
+| 样式            | 可选值                                            | 默认值     |
 | --------------- | ----------------------------------------------- | ---------- |
-| `arrowKind`     | `straight`, `curved` and `elbow`                | `straight` |
-| `dash`          | `solid`, `dashed` and `dotted`                  | `solid`    |
-| `arrowheads`    | `none`, `end` and `both`                        | `end`      |
-| `arrowheadKind` | `triangle`, `arrow`, `dot`, `diamond` and `bar` | `triangle` |
+| `arrowKind`     | `straight`、`curved` 和 `elbow`                 | `straight` |
+| `dash`          | `solid`、`dashed` 和 `dotted`                   | `solid`    |
+| `arrowheads`    | `none`、`end` 和 `both`                         | `end`      |
+| `arrowheadKind` | `triangle`、`arrow`、`dot`、`diamond` 和 `bar` | `triangle` |
 
-Set them like other styles, for the selected arrows and the arrows added later, or as attributes of one arrow:
+可以像设置其他样式一样设置这些样式：应用于选中的箭头和之后添加的箭头，或作为单个箭头的属性：
 
 ```js
 editor.commands.setShapeStyle({ name: 'arrowKind', value: 'elbow' })
 editor.commands.insertShape({ type: 'arrow', fromId: 'idea', toId: 'plan', dash: 'dashed' })
 ```
 
-A curved or elbow arrow leaves and enters each shape through the side nearest to the spot where its end was dropped, and goes around the shapes when it has to. An end dropped near the middle of its shape takes the side that makes the line simplest. With both ends there, the arrow runs between the sides that face each other. An elbow turns at right angles, and a curve bends smoothly along the same way. When the shapes are too close for that, the arrow is straight. `arrowheads` decides which ends have a head, and `arrowheadKind` how the heads look.
+曲线箭头或折线箭头会从离端点放置位置最近的一侧离开并进入各个形状，并在必要时绕开形状。若端点放置在形状中心附近，则会选择能使线条最简洁的一侧。如果两端都位于形状中心附近，箭头会连接彼此相对的两侧。折线会以直角转向，曲线则会沿相同路径平滑弯曲。如果形状之间距离太近，箭头就会变成直线。`arrowheads` 决定哪些端点带有箭头，`arrowheadKind` 决定箭头的外观。
 
-Arrows draw their lines and heads in the current color, so your CSS sets their `color`. See [Styling](/editor/whiteboard/api-reference/styling#parts-of-shapes) for the label and the other parts of an arrow.
+箭头的线条和箭头端点使用当前颜色绘制，因此可以通过 CSS 设置其 `color`。有关标签和箭头其他部分的样式，请参阅[样式设置](/editor/whiteboard/api-reference/styling#parts-of-shapes)。
 
-## Next steps
+## 后续步骤
 
-- Choose the styles of new shapes with [`setShapeStyle`](/editor/whiteboard/guides/shapes-and-tools#styles-for-new-shapes)
-- See all [commands](/editor/whiteboard/api-reference/commands)
+- 使用 [`setShapeStyle`](/editor/whiteboard/guides/shapes-and-tools#styles-for-new-shapes) 选择新形状的样式
+- 查看全部[命令](/editor/whiteboard/api-reference/commands)
