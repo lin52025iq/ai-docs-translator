@@ -3,33 +3,33 @@ import { SidebarConfig } from '@/types'
 export const sidebarConfig: SidebarConfig = {
   id: 'all-docs',
   rootHref: '/',
-  title: 'Home',
+  title: '首页',
   items: [
     {
       type: 'group',
-      title: 'Getting started',
+      title: '入门',
       href: '/getting-started',
       children: [
         {
           href: '/',
-          title: 'Overview',
+          title: '概览',
         },
         {
           href: '/resources/whats-new',
-          title: "What's new in 3.0",
+          title: '3.0 新功能',
         },
         {
           href: '/authentication',
-          title: 'Authentication',
-          tags: ['New'],
+          title: '身份验证',
+          tags: ['新'],
           children: [
             {
               href: '/authentication/migrate',
-              title: 'Migrate from legacy',
+              title: '从旧版迁移',
             },
             {
               href: '/authentication/legacy',
-              title: 'Legacy authentication',
+              title: '旧版身份验证',
             },
           ],
         },
@@ -37,87 +37,87 @@ export const sidebarConfig: SidebarConfig = {
     },
     {
       type: 'group',
-      title: 'Browse by feature',
+      title: '按功能浏览',
       href: '/suite-docs',
       children: [
         {
           href: '/editor/getting-started/overview',
-          title: 'Editor',
+          title: '编辑器',
         },
         {
           href: '/ai/ai-toolkit/overview',
-          title: 'AI Toolkit',
+          title: 'AI 工具包',
         },
         {
           href: '/collaboration/getting-started/overview',
-          title: 'Collaboration',
+          title: '协作',
         },
         {
           href: '/comments/getting-started/overview',
-          title: 'Comments',
+          title: '评论',
         },
         {
           href: '/compare/getting-started/overview',
-          title: 'Compare',
+          title: '比较',
         },
         {
           href: '/composable-docs/slots/getting-started/overview',
-          title: 'Composable Docs',
+          title: '可组合文档',
         },
         {
           href: '/conversion/getting-started/overview',
-          title: 'Conversion',
+          title: '转换',
         },
         {
           href: '/pages/getting-started/overview',
-          title: 'Pages',
+          title: '页面',
         },
         {
           href: '/collaboration/documents/snapshot',
-          title: 'Snapshots',
+          title: '快照',
         },
         {
           href: '/tracked-changes/getting-started/overview',
-          title: 'Tracked Changes',
+          title: '修订',
         },
       ],
     },
     {
       type: 'group',
-      title: 'Resources',
+      title: '资源',
       href: '/',
       children: [
         {
           href: '/guides',
-          title: 'Guides',
+          title: '指南',
         },
         {
           href: '/examples',
-          title: 'Examples',
+          title: '示例',
         },
         {
           href: '/resources/agent-skill',
-          title: 'Agent skill',
+          title: '智能体技能',
         },
         {
           href: '/resources/tiptap-trial',
-          title: 'Tiptap trial',
+          title: 'Tiptap 试用',
         },
         {
           href: '/resources/contributing',
-          title: 'Contributing',
+          title: '参与贡献',
         },
         {
           href: '/resources/changelog',
-          title: 'Editor changelog',
+          title: '编辑器更新日志',
         },
         {
           href: '/resources/incidents',
-          title: 'Incidents',
+          title: '故障事件',
         },
         {
           href: 'https://tiptap.dev/pro-license',
-          title: 'Pro license',
+          title: '专业版许可证',
         },
       ],
     },
