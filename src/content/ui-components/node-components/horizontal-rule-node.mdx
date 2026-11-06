@@ -1,12 +1,12 @@
 ---
-title: Horizontal Rule Node
+title: 水平分隔线节点
 meta:
-  title: Horizontal Rule Node | Tiptap UI Components
-  description: Integrate a node component displaying horizontal rules in your Tiptap Editor. More in our docs!
-  category: UI Components
+  title: 水平分隔线节点 | Tiptap UI 组件
+  description: 在 Tiptap 编辑器中集成用于显示水平分隔线的节点组件。更多信息请参阅我们的文档！
+  category: UI 组件
 component:
-  name: Horizontal Rule UI node
-  description: Add a horizontal rule node component to your editor.
+  name: 水平分隔线 UI 节点
+  description: 将水平分隔线节点组件添加到编辑器中。
   type: node-component
   isFree: true
   isCloud: false
@@ -17,21 +17,21 @@ component:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A styled horizontal rule node for displaying formatted horizontal rules in the editor.
+用于在编辑器中显示格式化水平分隔线的样式化节点。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-node/horizontal-rule-node" />
 
-## Installation
+## 安装
 
-You can add the node component via Tiptap CLI
+你可以通过 Tiptap CLI 添加此节点组件：
 
 ```bash
 npx @tiptap/cli@latest add horizontal-rule-node
 ```
 
-## Usage
+## 用法
 
-The HorizontalRuleNode is primarily a styling component that enhances the appearance of horizontal rules in the editor. To use it, simply include it in your project and ensure you're using the HorizontalRule extension from Tiptap.
+HorizontalRuleNode 主要是一个样式组件，可改善编辑器中水平分隔线的外观。要使用它，只需将其添加到项目中，并确保使用 Tiptap 的 HorizontalRule 扩展。
 
 ```tsx
 import { useEditor, EditorContent } from '@tiptap/react'
@@ -56,9 +56,9 @@ export default function EditorWithHorizontalRule() {
 }
 ```
 
-## Features
+## 功能
 
-- Syntax highlighting styles for horizontal rules
-- Dark mode support
-- Proper spacing and margins
-- Enhanced readability with monospace font
+- 水平分隔线的语法高亮样式
+- 支持深色模式
+- 合理的间距和边距
+- 使用等宽字体提升可读性
