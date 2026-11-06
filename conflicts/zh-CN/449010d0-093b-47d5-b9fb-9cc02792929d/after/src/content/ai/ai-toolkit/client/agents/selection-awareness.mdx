@@ -1,0 +1,123 @@
+---
+title: 选区感知
+meta:
+  title: 选区感知 | Tiptap AI Toolkit
+  description: 让 AI 感知编辑器中选中的内容。
+  category: AI Toolkit
+---
+
+import { Callout } from '@/components/ui/Callout'
+import { CodeDemo } from '@/components/CodeDemo'
+
+配置 AI，使其能够读取和编辑编辑器中选中的内容。
+
+<Callout title="接续 AI 智能体聊天机器人指南" variant="info">
+  本指南接续 [AI 智能体聊天机器人指南](/ai/ai-toolkit/client/agents/ai-agent-chatbot)。
+  请先阅读该指南。
+</Callout>
+
+<CodeDemo
+  isLarge
+  path=""
+  isScrollable
+  src="https://ai-toolkit-demos.vercel.app/selection-awareness"
+/>
+
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
+
+## `tiptapReadSelection` 工具
+
+` tiptapReadSelection` 工具允许 AI 智能体读取编辑器中选中的内容。
+
+它默认包含在传递给 AI 模型的工具定义列表中。
+
+```ts
+// Server-side code
+import { toolDefinitions } from '@tiptap-pro/client-ai-toolkit-ai-sdk'
+
+const definitions = toolDefinitions({
+  // Enable the tiptapReadSelection tool.
+  // The tiptapReadSelection tool is enabled by default.
+  tiptapReadSelection: true,
+})
+```
+
+然后可以在客户端使用 `executeTool` 方法执行该工具。它不需要任何参数。
+
+```ts
+// Client-side code
+const toolkit = getAiToolkit(editor)
+const result = await toolkit.executeTool({
+  toolName: 'tiptapReadSelection',
+})
+```
+
+该工具的输出包含以下信息：
+
+- 选区的内容
+- 选区的位置
+
+这些信息可让 AI 知道选中了哪些内容，以及这些内容在文档中的位置，以便之后进行编辑。
+
+如果你的应用不需要读取和写入选区，可以在工具定义的 `tiptapReadSelection` 选项中传入 `false` 来禁用该工具。
+
+```ts
+// Server-side code
+import { toolDefinitions } from '@tiptap-pro/client-ai-toolkit-ai-sdk'
+
+const definitions = toolDefinitions({
+  // Disable the tiptapReadSelection tool.
+  tiptapReadSelection: false,
+})
+```
+
+## 保留选区
+
+有时，AI 工作期间，用户会更改编辑器中的选区。这会让 AI 感到困惑：当它决定好要执行的操作后，并不知道选区已经改变，因此会读取错误的选区内容。
+
+为避免这种情况，可以在用户向 AI 发送消息时保存选区，这样在 AI 思考期间选区就不会改变（即使用户之后更改了选区）。
+
+首先，在用户向 AI 发送消息时，使用当前选区调用 `setActiveSelection` 方法。
+
+```ts
+const toolkit = getAiToolkit(editor)
+// Call this method just before the AI starts working.
+toolkit.setActiveSelection(editor.state.selection)
+```
+
+然后，在 AI 完成工作后，调用 `setActiveSelection` 方法并传入 `null`，以取消设置活动选区。
+
+```ts
+toolkit.setActiveSelection(null)
+```
+
+你也可以将文档中的任意位置设为活动选区。
+
+```ts
+toolkit.setActiveSelection({ from: 10, to: 20 })
+```
+
+## 推荐的模型和推理力度配置
+
+`readSelection` 工具会向 AI 提供选中内容的信息，但不会强制 AI 只能编辑选区。因此，AI 模型可能会编辑周围的段落，而不是仅编辑选中的内容。
+
+根据我们的测试，在启用推理的模型中（例如将推理力度设为 `low` 的 `gpt-5.6-luna`），如果明确要求模型仅在选区范围内编辑，它们能更好地遵循这一要求。
+
+另一种做法是实现[插入内容工作流](/ai/ai-toolkit/client/workflows/insert-content)。该工作流可以限制可编辑区域，从而严格确保 AI 只能改写选区。
+
+## 最终效果
+
+添加额外的 CSS 样式后，就可以得到一个简洁精致的 AI 聊天机器人，并能编辑选中的内容：
+
+<CodeDemo
+  isLarge
+  path=""
+  isScrollable
+  src="https://ai-toolkit-demos.vercel.app/selection-awareness"
+/>
+
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
+
+## 后续步骤
+
+- 在 [API 参考](/ai/ai-toolkit/client/api-reference/execute-tool#setactiveselection)中进一步了解 `getActiveSelection` 和 `setActiveSelection` 方法。
