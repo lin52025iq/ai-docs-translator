@@ -1,45 +1,45 @@
 ---
-title: InvisibleCharacters extensions
+title: InvisibleCharacters 扩展
 extension:
-  name: Invisible Characters
+  name: 不可见字符
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-invisible-characters
-  description: 'Allow your users to see invisible characters like spaces, hard breaks, and paragraphs.'
+  description: '让用户能够查看空格、硬换行和段落等不可见字符。'
   type: extension
   icon: Asterisk
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-invisible-characters.svg?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-invisible-characters
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-invisible-characters.svg
     url: https://npmcharts.com/compare/@tiptap/extension-invisible-characters?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  title: InvisibleCharacters extension | Tiptap Editor Docs
-  description: Allow your users to see invisible characters like spaces, hard breaks, and paragraphs. More in the docs!
-  category: Editor
+  title: InvisibleCharacters 扩展 | Tiptap 编辑器文档
+  description: 让用户能够查看空格、硬换行和段落等不可见字符。更多内容请查看文档！
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-This extension adds decorators to show non-printable characters and help you increase accessibility.
+此扩展会添加装饰标记来显示不可打印字符，从而提高无障碍性。
 
 <CodeDemo path="/Extensions/InvisibleCharacters" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-invisible-characters
 ```
 
-## Settings
+## 设置
 
 ### visible
 
-Define default visibility.
+定义默认可见性。
 
-Default: `true`
+默认值：`true`
 
 ```js
 InvisibleCharacters.configure({
@@ -49,9 +49,9 @@ InvisibleCharacters.configure({
 
 ### builders
 
-An array of invisible characters – by default it contains: spaces, hard breaks and paragraphs.
+不可见字符构建器数组，默认包含空格、硬换行和段落。
 
-Default: `[new SpaceCharacter(), new HardBreakNode(), new ParagraphNode()]`
+默认值：`[new SpaceCharacter(), new HardBreakNode(), new ParagraphNode()]`
 
 ```js
 import InvisibleCharacters, { SpaceCharacter } from '@tiptap/extension-invisible-characters'
@@ -65,9 +65,9 @@ InvisibleCharacters.configure({
 
 ### injectCSS
 
-By default, the extension injects some CSS. With `injectCSS` you can disable that.
+此扩展默认会注入一些 CSS。你可以通过 `injectCSS` 禁用此功能。
 
-Default: `true`
+默认值：`true`
 
 ```js
 InvisibleCharacters.configure({
@@ -77,9 +77,9 @@ InvisibleCharacters.configure({
 
 ### injectNonce
 
-When you use a [Content-Security-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy) with `nonce`, you can specify a `nonce` to be added to dynamically created elements. Here is an example:
+如果你使用带有 `nonce` 的 [内容安全策略（Content-Security-Policy）](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy)，可以指定一个 `nonce`，将其添加到动态创建的元素中。示例如下：
 
-Default: `undefined`
+默认值：`undefined`
 
 ```js
 InvisibleCharacters.configure({
@@ -88,21 +88,21 @@ InvisibleCharacters.configure({
 })
 ```
 
-## Storage
+## 存储
 
 ### visibility()
 
-Find out whether the visibility of invisible characters is active or not.
+查看不可见字符当前是否处于可见状态。
 
 ```js
 editor.storage.invisibleCharacters.visibility()
 ```
 
-## Commands
+## 命令
 
 ### showInvisibleCharacters()
 
-Show invisible characters. You can also pass `false` to use the same command to hide them.
+显示不可见字符。你也可以传入 `false`，使用同一命令将其隐藏。
 
 ```js
 editor.commands.showInvisibleCharacters()
@@ -110,7 +110,7 @@ editor.commands.showInvisibleCharacters()
 
 ### hideInvisibleCharacters()
 
-Hide invisible characters.
+隐藏不可见字符。
 
 ```js
 editor.commands.hideInvisibleCharacters()
@@ -118,15 +118,15 @@ editor.commands.hideInvisibleCharacters()
 
 ### toggleInvisibleCharacters()
 
-Toggle visibility of invisible characters.
+切换不可见字符的可见状态。
 
 ```js
 editor.commands.toggleInvisibleCharacters()
 ```
 
-## Custom invisible characters
+## 自定义不可见字符
 
-To create a custom invisible characters, you can extend the classes provided by the package.
+要创建自定义不可见字符，可以扩展此软件包提供的类。
 
 ### InvisibleCharacter
 
@@ -142,13 +142,13 @@ class MyInvisibleCharacter extends InvisibleCharacter {
   }
 }
 
-// … use it like this
+// … 像这样使用
 new Editor({
   extensions: [InvisibleCharacters.configure({ builders: [new MyInvisibleCharacter()] })],
 })
 ```
 
-To select the decoration within CSS, we can use the following selector:
+要在 CSS 中选中此装饰标记，可以使用以下选择器：
 
 ```css
 .Tiptap-invisible-character.Tiptap-invisible-character--my-invisible-character {
@@ -170,13 +170,13 @@ class MyInvisibleNode extends InvisibleNode {
   }
 }
 
-// … use it like this
+// … 像这样使用
 new Editor({
   extensions: [InvisibleCharacters.configure({ builders: [new MyInvisibleNode()] })],
 })
 ```
 
-To select the decoration within CSS, we can use the following selector:
+要在 CSS 中选中此装饰标记，可以使用以下选择器：
 
 ```css
 .Tiptap-invisible-character.Tiptap-invisible-character--my-invisible-node {
