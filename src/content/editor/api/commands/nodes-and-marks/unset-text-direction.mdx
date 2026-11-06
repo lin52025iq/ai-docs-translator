@@ -1,26 +1,26 @@
 ---
-title: unsetTextDirection command
+title: unsetTextDirection 命令
 meta:
-  title: unsetTextDirection command | Tiptap Editor Docs
-  description: Remove text direction attributes from nodes with the unsetTextDirection command. Learn more in our docs!
-  category: Editor
+  title: unsetTextDirection 命令 | Tiptap 编辑器文档
+  description: 使用 unsetTextDirection 命令移除节点的文本方向属性。了解更多信息，请参阅我们的文档！
+  category: 编辑器
 ---
 
-The `unsetTextDirection` command removes the text direction attribute from nodes at the current selection or at a specified position. This allows nodes to inherit the direction from the editor's global `textDirection` setting or to have no direction attribute at all.
+`unsetTextDirection` 命令会移除当前选区或指定位置处节点的文本方向属性。这样，节点便可以继承编辑器的全局 `textDirection` 设置，或者完全不带方向属性。
 
-See also: [setTextDirection](/editor/api/commands/nodes-and-marks/set-text-direction)
+另请参阅：[setTextDirection](/editor/api/commands/nodes-and-marks/set-text-direction)
 
-## Parameters
+## 参数
 
 ### position
 
-Optional. The position or range where the direction should be removed. If not provided, the command will use the current selection.
+可选。要移除方向属性的位置或范围。如果未提供，则使用当前选区。
 
-Can be:
-- A number representing a specific position
-- An object with `from` and `to` properties representing a range
+可以是：
+- 表示特定位置的数字
+- 包含 `from` 和 `to` 属性、表示范围的对象
 
-## Examples
+## 示例
 
 ```js
 // Remove direction from current selection
