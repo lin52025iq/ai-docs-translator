@@ -1,5 +1,5 @@
 ---
-title: 'PagesTableKit: tables for the Pages extension'
+title: 'PagesTableKit：适用于 Pages 扩展的表格'
 tags:
   - type: start
   - type: experiment
@@ -7,7 +7,7 @@ tags:
     label: v0.2.11
 meta:
   title: PagesTableKit | Tiptap Pages
-  description: Table extensions tailored for the Pages pagination extension. Works for any Pages setup; pairs with DOCX import for faithful Word-document rendering. Experimental feature; the API may change.
+  description: 专为 Pages 分页扩展打造的表格扩展。适用于任何 Pages 配置；与 DOCX 导入配合使用，可忠实呈现 Word 文档。此功能为实验性功能，API 可能会发生变化。
   category: Pages
 ---
 
@@ -18,39 +18,34 @@ import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 
 <EnterpriseCalloutAuto variant="docx" renderMode="sidebar" disableWaitlist />
 
-<Callout variant="warning" title="Experimental feature">
-  PagesTableKit is built specifically for the Pages extension. APIs and rendering behaviour may
-  change without notice. Pin exact package versions if you depend on it. Read the **What won't
-  work** section before adopting it.
+<Callout variant="warning" title="实验性功能">
+  PagesTableKit 专为 Pages 扩展打造。API 和渲染行为可能会在不另行通知的情况下发生变化。如果依赖此功能，请固定使用确切的包版本。采用前请阅读**不支持的功能**部分。
 </Callout>
 
 <Requirements>
-  <RequirementItem label="1. Activate trial or subscribe">
-    Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start
-    plan](https://cloud.tiptap.dev/v2/billing) in your account.
+  <RequirementItem label="1. 激活试用或订阅">
+    在您的账户中开始[免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start
+    计划](https://cloud.tiptap.dev/v2/billing)。
   </RequirementItem>
-  <RequirementItem label="2. Install from private registry">
-    Authenticate to Tiptap's private npm registry by following the [setup
-    guide](/guides/pro-extensions).
+  <RequirementItem label="2. 从私有注册表安装">
+    按照[设置指南](/guides/pro-extensions)向 Tiptap 的私有 npm 注册表进行身份验证。
   </RequirementItem>
 </Requirements>
 
-## Which setup applies to me?
+## 哪种配置适合我？
 
-<Callout title="Two scenarios, one editor stack" variant="info">
-  PagesTableKit is useful in two scenarios that differ in how the table content gets there, not in
-  how you wire up the editor. The base extensions are the same; the second scenario adds the Import
-  extension on top.
+<Callout title="两种场景，一套编辑器扩展" variant="info">
+  PagesTableKit 适用于两种场景，它们的区别在于表格内容的来源，而不在于编辑器的接入方式。两种场景使用相同的基础扩展；第二种场景会额外添加 Import 扩展。
 </Callout>
 
-- **Pages-only workflow.** You are building a paginated editor (print-ready layouts, letter-style documents, reports) and you need tables that paginate correctly. Content is hand-authored.
-- **Pages + DOCX import workflow.** You are importing `.docx` files and rendering them in a paginated editor. You need tables that paginate **and** faithfully reflect the authored DOCX formatting (declared widths, row heights, indentation).
+- **仅使用 Pages 的工作流。** 您正在构建分页编辑器（适用于打印的版式、信函类文档、报告），需要能够正确分页的表格。内容由用户手动编写。
+- **Pages + DOCX 导入工作流。** 您正在导入 `.docx` 文件，并在分页编辑器中呈现。您需要表格既能分页，**又**能忠实保留 DOCX 中设定的格式（声明的宽度、行高、缩进）。
 
-Both scenarios use the same editor stack: `ConvertKit` (for the schema) + `TableKit` (for pagination-safe tables) + `Pages` (for the layout). Scenario B adds `ImportDocx`. Each section below flags which scenario it applies to.
+两种场景都使用同一套编辑器扩展：`ConvertKit`（提供 schema）+ `TableKit`（提供适合分页的表格）+ `Pages`（提供布局）。场景 B 还会添加 `ImportDocx`。下文每个部分都会标明适用的场景。
 
 <CodeDemo isPro path="/Extensions/ImportDocxCssStylesPages" />
 
-## Install
+## 安装
 
 ```bash
 npm i @tiptap-pro/extension-convert-kit \
@@ -58,19 +53,19 @@ npm i @tiptap-pro/extension-convert-kit \
       @tiptap-pro/extension-pages
 ```
 
-For Scenario B, also install:
+场景 B 还需要安装：
 
 ```bash
 npm i @tiptap-pro/extension-import-docx
 ```
 
-## How to set it up
+## 如何设置
 
-PagesTableKit ships a single `TableKit` extension that bundles the Table, TableRow, TableCell, and TableHeader extensions. Register it once instead of wiring up the four extensions individually.
+PagesTableKit 提供一个 `TableKit` 扩展，其中打包了 Table、TableRow、TableCell 和 TableHeader 扩展。只需注册一次，无需分别接入这四个扩展。
 
-### Scenario A: Pages-only (no DOCX import)
+### 场景 A：仅使用 Pages（不导入 DOCX）
 
-Register `ConvertKit` (with its built-in table stack disabled), `TableKit` from PagesTableKit, and `Pages`.
+注册 `ConvertKit`（禁用其内置的表格扩展）、PagesTableKit 提供的 `TableKit`，以及 `Pages`。
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -89,11 +84,11 @@ const editor = new Editor({
 })
 ```
 
-ConvertKit supplies the document's node and mark schema; PagesTableKit's `TableKit` supplies the pagination-safe tables. ConvertKit's built-in `ConvertTableKit` is **not** pagination-safe, which is why we disable it here.
+ConvertKit 提供文档的节点和标记 schema；PagesTableKit 的 `TableKit` 提供适合分页的表格。ConvertKit 内置的 `ConvertTableKit` **不适合分页**，因此这里要将其禁用。
 
-### Scenario B: Pages + DOCX import
+### 场景 B：Pages + DOCX 导入
 
-Add the [ImportDocx extension](/conversion/import/docx/editor-extension) on top of the same stack. ConvertKit's tables stay disabled; PagesTableKit's `TableKit` accepts the same DOCX cell attributes that ConvertKit's tables would, so imported tables render correctly with pagination.
+在相同的扩展组合上添加 [ImportDocx 扩展](/conversion/import/docx/editor-extension)。ConvertKit 的表格仍保持禁用；PagesTableKit 的 `TableKit` 接受与 ConvertKit 表格相同的 DOCX 单元格属性，因此导入的表格可以正确分页呈现。
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -116,117 +111,116 @@ const editor = new Editor({
 })
 ```
 
-## What works
+## 支持的功能
 
-### Universal behaviour (both scenarios)
+### 通用行为（两种场景均适用）
 
-- **Pagination-safe table rendering.** Tables sit inside the page content area and never horizontally overflow it.
-- **Column proportions preserved.** When every cell carries a `colwidth`, columns shrink proportionally to fit the page. A 10 % / 40 % / 50 % column split renders as 10 / 40 / 50 at any page width.
-- **Row height behaviour.**
-  - `heightRule: "exact"`: the row renders at the declared height. Content and cell borders that don't fit are clipped.
-  - `heightRule: "atLeast"` (or unset): the row grows vertically when content or narrower columns would otherwise force clipping.
-- **Merged cells.** Every cell stays in its own column, also in the rows below a merged cell. A cell merged down keeps its borders and background in every row it covers, also when they come from your own CSS. See [Styling merged cells](#styling-merged-cells).
-- **Very narrow columns.** When a column is narrower than a cell's left and right padding, both sides shrink by the same ratio, so the cell and its borders stay inside the column. The document and the DOCX export keep the original padding. With ConvertKit, tables in page headers and footers cap each cell margin at a quarter of the cell's width instead.
-- **Live updates.** Edits that add, remove, or reorder cells re-lay the row out immediately.
+- **适合分页的表格渲染。** 表格位于页面内容区域内，不会发生水平溢出。
+- **保留列宽比例。** 当每个单元格都带有 `colwidth` 时，列会按比例缩小以适应页面。无论页面宽度如何，10% / 40% / 50% 的列宽比例都会按 10 / 40 / 50 的比例呈现。
+- **行高行为。**
+  - `heightRule: "exact"`：行按声明的高度呈现。超出单元格范围的内容和边框会被裁切。
+  - `heightRule: "atLeast"`（或未设置）：如果内容或较窄的列原本会导致裁切，行就会纵向增高。
+- **合并单元格。** 每个单元格都会保持在自己的列中，合并单元格下方的行也一样。向下合并的单元格会在其覆盖的每一行中保留边框和背景，即使这些样式来自您自己的 CSS 也是如此。请参阅[设置合并单元格的样式](#styling-merged-cells)。
+- **极窄列。** 如果列宽小于单元格左右内边距之和，两侧内边距会按相同比例缩小，使单元格及其边框保持在列内。文档和 DOCX 导出仍保留原始内边距。使用 ConvertKit 时，页眉和页脚中的表格会将每个单元格的边距限制为该单元格宽度的四分之一。
+- **实时更新。** 添加、删除或重新排序单元格的编辑操作会立即触发行布局更新。
 
-### DOCX-specific behaviour (Scenario B)
+### DOCX 专属行为（场景 B）
 
-These extras activate automatically when your document content was produced by the DOCX importer. You don't configure them separately; if the converter emitted the attribute, PagesTableKit honours it.
+如果文档内容由 DOCX 导入器生成，这些附加行为会自动启用，无需单独配置；只要转换器输出了相应属性，PagesTableKit 就会使用它。
 
-- **Declared DOCX widths respected.** A DOCX table authored wider than the page shrinks proportionally into the content area instead of overflowing.
-- **DOCX row heights.** `w:trHeight` with `w:hRule="exact"` clips; `w:hRule="atLeast"` (or missing) grows.
-- **Narrow spacer columns preserved.** DOCX spacer columns (1–15 px) don't get inflated to a visible width.
-- **Negative DOCX indents.** Negative `w:tblInd` values (which Word renders into the paper gutter) are preserved in `attrs.indent` but clamped to 0 visually so tables don't push past the page edge.
-- **Cell background, vertical alignment, per-side borders.** Flow through from the DOCX import without extra work.
+- **遵循 DOCX 声明的宽度。** 如果 DOCX 表格的宽度大于页面，表格会按比例缩小到内容区域内，而不会溢出。
+- **DOCX 行高。** `w:trHeight` 配合 `w:hRule="exact"` 时会裁切；配合 `w:hRule="atLeast"`（或未设置）时会增高。
+- **保留窄间隔列。** DOCX 中 1–15 px 宽的间隔列不会被放大到明显可见的宽度。
+- **DOCX 负缩进。** 负的 `w:tblInd` 值（Word 会将其渲染到纸张边距区域）会保留在 `attrs.indent` 中，但视觉上会限制为 0，避免表格超出页面边缘。
+- **单元格背景、垂直对齐和各边边框。** 这些样式会直接从 DOCX 导入，无需额外处理。
 
-## Styling merged cells
+## 设置合并单元格的样式
 
-In the rows below its first row, a merged cell is drawn by a `.tiptap-merged-cell-continuation` element. This element copies the background and side borders the cell shows, whether they come from the cell's attributes, for example from a DOCX import, or from your own CSS. It draws the cell's bottom border in the last row the cell covers. PagesTableKit hides the bottom border of the merged cell itself.
+在合并单元格首行之后的各行中，合并单元格由 `.tiptap-merged-cell-continuation` 元素绘制。该元素会复制单元格所显示的背景和侧边框，无论这些样式来自单元格属性（例如 DOCX 导入的属性）还是来自您自己的 CSS。它会在单元格所覆盖的最后一行绘制底边框。PagesTableKit 会隐藏合并单元格本身的底边框。
 
-The element reads the cell's style again when:
+在以下情况下，该元素会重新读取单元格样式：
 
-- its table changes.
-- a `<style>` or `<link>` element is added to or removed from the document head, the text of a `<style>` element there changes, or the `href`, `media` or `disabled` attribute of one of them changes.
-- a linked stylesheet finishes loading.
-- the `class` or `style` attribute of the editor or one of its ancestors changes.
-- the window is resized.
-- an edit elsewhere in the document changes the cell's background or borders. PagesTableKit checks this once typing pauses. A rule that changes only the bottom border width, based on content outside the table, shows after the next edit in that table.
+- 所属表格发生变化。
+- 向文档 head 中添加或移除 `<style>` 或 `<link>` 元素、其中 `<style>` 元素的文本发生变化，或其中某个元素的 `href`、`media` 或 `disabled` 属性发生变化。
+- 链接的样式表加载完成。
+- 编辑器或其任一祖先元素的 `class` 或 `style` 属性发生变化。
+- 窗口大小发生变化。
+- 文档其他位置的编辑更改了该单元格的背景或边框。PagesTableKit 会在停止输入后检查一次。如果某条规则根据表格外的内容只更改底边框宽度，则要等到表格中发生下一次编辑后才会显示更改。
 
-A stylesheet changed through the CSSOM, for example with `insertRule` or `deleteRule`, changes no element and fires no event, so PagesTableKit does not see it. Call `refreshTableStyles()` after such a change:
+通过 CSSOM 更改样式表（例如使用 `insertRule` 或 `deleteRule`）不会更改任何元素，也不会触发事件，因此 PagesTableKit 无法检测到这种变化。发生此类更改后，请调用 `refreshTableStyles()`：
 
 ```ts
 document.styleSheets[0].insertRule('td { border: 2px solid red }')
 editor.commands.refreshTableStyles()
 ```
 
-The copied background and borders are inline styles on the element. To style it in other ways, use its attributes:
+复制的背景和边框会以内联样式的形式应用到该元素。若要以其他方式设置其样式，请使用以下属性：
 
-- `data-merged-cell` is the merged cell's node type: `tableCell` or `tableHeader`.
-- `data-merged-cell-end` is set in the last row the cell covers.
+- `data-merged-cell` 是合并单元格的节点类型：`tableCell` 或 `tableHeader`。
+- 在单元格所覆盖的最后一行中会设置 `data-merged-cell-end`。
 
-## What won't work
+## 不支持的功能
 
-<Callout variant="warning" title="These are intentional limits">
-  These are not bugs. They are explicit, documented boundaries of the feature. If your workflow
-  depends on any of the items below, this feature is not the right tool.
+<Callout variant="warning" title="这些限制是有意设定的">
+  这些不是错误，而是此功能明确记录的边界。如果您的工作流依赖以下任何功能，这个工具就不适合您。
 </Callout>
 
-### Universal limits (both scenarios)
+### 通用限制（两种场景均适用）
 
-- **Editors without the Pages extension.** PagesTableKit is designed for Pages' paginated layout; it relies on Pages to constrain rows within the page. In a standard editor rows won't render correctly and over-wide tables will overflow horizontally. Use a regular table extension instead.
-- **Hand-authored rows with mixed `colwidth` / no `colwidth`.** The proportional-shrink behaviour kicks in when **every** cell carries a column width. In rows where some cells do and some don't, columns may render with different proportions than you'd expect.
-- **Column resize handles.** Drag-to-resize from `@tiptap/extension-table` is supported, but the final rendered widths may be proportional rather than the exact pixel values you dragged to, especially when every cell already carries a column width.
-- **Tall merged cells.** The first row of a cell merged across rows grows to fit all of the cell's content, so the table can be taller than in Word.
+- **未使用 Pages 扩展的编辑器。** PagesTableKit 是为 Pages 的分页布局设计的；它依赖 Pages 将行限制在页面内。在标准编辑器中，行的呈现会不正确，超宽表格也会发生水平溢出。请改用常规表格扩展。
+- **手动编写且 `colwidth` 设置不一致的行。** 只有在**每个**单元格都带有列宽时，才会按比例缩小。在部分单元格带有列宽、部分没有的行中，列的呈现比例可能与预期不同。
+- **列宽调整控件。** 支持使用 `@tiptap/extension-table` 提供的拖动调整功能，但最终呈现的宽度可能会按比例缩放，而不是严格等于您拖动设置的像素值；如果每个单元格原本就带有列宽，这种情况尤其明显。
+- **较高的合并单元格。** 跨行合并单元格的首行会增高以容纳单元格的全部内容，因此表格可能比在 Word 中更高。
 
-### DOCX-specific limits (Scenario B)
+### DOCX 专属限制（场景 B）
 
-- **Floating tables.** DOCX `w:tblpPr` (tables positioned relative to an anchor with text wrap) is not converted by the importer; floats render as regular stacked tables.
-- **Pixel-perfect parity with Microsoft Word's table layout.** Word uses a proprietary layout algorithm that blends fixed and proportional sizing with content measurement. Expect small differences on tables authored with Word's "AutoFit to contents" setting.
+- **浮动表格。** 导入器不会转换 DOCX `w:tblpPr`（相对于锚点定位并带有文字环绕的表格）；浮动表格会按普通的堆叠表格呈现。
+- **与 Microsoft Word 表格布局完全像素级一致。** Word 使用专有布局算法，综合了固定和按比例调整的尺寸以及内容测量。对于使用 Word“根据内容自动调整”设置创建的表格，请预期会有细微差异。
 
-## Known issues
+## 已知问题
 
-### Rows must fit on a single page
+### 行必须完整放在同一页
 
-By default, a table row that does not fit on the current page moves to the next page as a whole. This differs from Microsoft Word, which splits a tall row across pages.
+默认情况下，如果表格行无法放入当前页面，就会将整行移到下一页。这与 Microsoft Word 不同，后者会将较高的行拆分到多个页面。
 
-If a row is taller than the page content area, moving it to the next page doesn't help: it won't fit there either, and the editor will keep trying to move it forward indefinitely. The result is an infinite pagination loop and a broken editor.
+如果行高超过页面内容区域，将其移到下一页也无济于事：它在下一页仍然放不下，编辑器会不断尝试将其向后移动。结果会导致分页无限循环，编辑器无法正常工作。
 
-**How to avoid it.** Keep row heights below the page content area. Be especially careful with:
+**如何避免。** 确保行高小于页面内容区域。以下情况尤其需要注意：
 
-- `heightRule: "atLeast"` rows whose content can grow unbounded.
-- DOCX imports that carry very tall exact-height rows authored for larger paper than your target page format.
-- Nested tables inside cells, which can force the outer row taller than the page.
+- 内容可能无限增长的 `heightRule: "atLeast"` 行。
+- 导入的 DOCX 中包含为大于目标页面尺寸的纸张格式设计的超高固定行。
+- 单元格内的嵌套表格可能会使外层行高超过页面高度。
 
-To split tall rows across pages, including rows with merged cells or nested tables, turn on [row fragmentation](/pages/guides/row-fragmentation).
+若要让较高的行跨页拆分（包括含合并单元格或嵌套表格的行），请启用[行拆分](/pages/guides/row-fragmentation)。
 
-## What to expect
+## 使用预期
 
-### Universal (both scenarios)
+### 通用（两种场景均适用）
 
-- Tables sit inside the page content area; exact-height rows clip, `atLeast` rows grow.
-- Updates land on every transaction; adding or removing cells re-lays the row immediately.
-- Very large tables (thousands of rows) may have a noticeable layout cost on edits. If you hit this, consider paginating large tables manually or splitting them across multiple documents.
+- 表格位于页面内容区域内；固定高度行会裁切，`atLeast` 行会增高。
+- 每次事务都会应用更新；添加或删除单元格会立即触发行布局更新。
+- 对于非常大的表格（数千行），编辑时可能会明显增加布局开销。如果遇到这种情况，可以考虑手动对大表格分页，或将其拆分到多个文档中。
 
-### DOCX-specific (Scenario B)
+### DOCX 专属（场景 B）
 
-- DOCX tables retain their declared widths, row heights, indentation, background colours, and per-side borders on import.
-- Over-wide DOCX tables (common in templates drawn full-width in Word) visually shrink to fit the page instead of overflowing.
-- You do not need to post-process imported DOCX JSON before rendering; the extensions read the attributes the importer produces.
+- 导入时，DOCX 表格会保留其声明的宽度、行高、缩进、背景色和各边边框。
+- 超宽 DOCX 表格（常见于 Word 中使用全宽布局的模板）会在视觉上缩小以适应页面，而不会溢出。
+- 渲染前无需对导入的 DOCX JSON 进行后处理；这些扩展会读取导入器生成的属性。
 
-## What not to expect
+## 不要期待
 
-### Universal (both scenarios)
+### 通用（两种场景均适用）
 
-- **A replacement for Pages.** PagesTableKit only handles tables. Pagination, page containers, headers, and footers are Pages' responsibility.
-- **Column-width mutation from your own DOM code.** Column widths flow from the ProseMirror document. Change them via `@tiptap/extension-table`'s commands (or your own transactions), not by writing directly to `dom.style`.
+- **替代 Pages。** PagesTableKit 只负责表格。分页、页面容器、页眉和页脚仍由 Pages 负责。
+- **通过自定义 DOM 代码修改列宽。** 列宽来自 ProseMirror 文档。请通过 `@tiptap/extension-table` 的命令（或您自己的事务）修改，而不要直接写入 `dom.style`。
 
-### DOCX-specific (Scenario B)
+### DOCX 专属（场景 B）
 
-- **Round-trip identity.** Importing then exporting a DOCX through the Convert pipeline is not guaranteed to be byte-identical. Unsupported DOCX features (floats, certain table styles) are dropped on import.
+- **往返转换后完全一致。** 通过 Convert 流程导入再导出 DOCX，无法保证字节级一致。导入时会丢弃不受支持的 DOCX 功能（浮动对象、某些表格样式）。
 
-## Configuration reference
+## 配置参考
 
-PagesTableKit exports a single `TableKit` extension that bundles Table, TableRow, TableCell, and TableHeader.
+PagesTableKit 导出一个 `TableKit` 扩展，其中打包了 Table、TableRow、TableCell 和 TableHeader。
 
 ```ts
 import { TableKit } from '@tiptap-pro/extension-pages-tablekit'
@@ -235,7 +229,7 @@ import { TableKit } from '@tiptap-pro/extension-pages-tablekit'
 TableKit,
 ```
 
-Each bundled extension can be configured (or disabled with `false`) through `TableKit.configure()`:
+可以通过 `TableKit.configure()` 配置各个打包的扩展（或使用 `false` 禁用）：
 
 ```ts
 TableKit.configure({
@@ -250,9 +244,9 @@ TableKit.configure({
 })
 ```
 
-Each of those keys forwards to the underlying extension's standard options.
+这些键都会转发给底层扩展的标准选项。
 
-PagesTableKit adds one option of its own:
+PagesTableKit 还添加了一个自有选项：
 
 ```ts
 TableKit.configure({
@@ -262,21 +256,21 @@ TableKit.configure({
 })
 ```
 
-See [Rows that span a page break](/pages/guides/row-fragmentation) for what it does and which rows it applies to.
+请参阅[跨越分页符的行](/pages/guides/row-fragmentation)，了解其作用以及适用的行类型。
 
-It also adds one command:
+它还添加了一个命令：
 
 ```ts
 editor.commands.refreshTableStyles()
 ```
 
-`refreshTableStyles()` reads table CSS again after a change that causes no DOM mutation, such as a rule added with `insertRule`. Merged cells and cell padding then follow the new styles. The command does not change the document and adds no undo step.
+在通过 `insertRule` 添加规则等不会导致 DOM 变更的操作之后，`refreshTableStyles()` 会重新读取表格 CSS。合并单元格和单元格内边距随后会采用新样式。该命令不会更改文档，也不会添加撤销步骤。
 
-## Related
+## 相关内容
 
-- [Pages overview](/pages/getting-started/overview): the pagination extension PagesTableKit requires.
-- [Rows that span a page break](/pages/guides/row-fragmentation): let a tall row continue on the next page.
-- [Pages with tables](/pages/guides/table-with-pages): general guide for authoring tables inside Pages.
-- [ConvertKit](/conversion/import/docx/convertkit): DOCX-aware editor kit; use it for Scenario B.
-- [Editor extension (import DOCX)](/conversion/import/docx/editor-extension): how the `ImportDocx` extension pulls Word content into your editor.
-- [CSS injection (import)](/conversion/import/docx/css-injection): extract the DOCX style catalog as CSS for consistent typography across paginated content.
+- [Pages 概览](/pages/getting-started/overview)：PagesTableKit 所依赖的分页扩展。
+- [跨越分页符的行](/pages/guides/row-fragmentation)：让较高的行延续到下一页。
+- [Pages 中的表格](/pages/guides/table-with-pages)：介绍如何在 Pages 中编写表格。
+- [ConvertKit](/conversion/import/docx/convertkit)：支持 DOCX 的编辑器工具包；场景 B 请使用它。
+- [编辑器扩展（导入 DOCX）](/conversion/import/docx/editor-extension)：了解 `ImportDocx` 扩展如何将 Word 内容导入编辑器。
+- [CSS 注入（导入）](/conversion/import/docx/css-injection)：将 DOCX 样式目录提取为 CSS，以便在分页内容中保持一致的排版。
