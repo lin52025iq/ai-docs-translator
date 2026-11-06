@@ -1,48 +1,48 @@
 ---
-title: Suggestion utility
+title: Suggestion 工具
 meta:
-  title: Suggestion utility | Tiptap Editor Docs
-  description: Customize autocomplete suggestions using nodes like Mention and Emoji. Explore settings and configurations in our docs.
-  category: Editor
+  title: Suggestion 工具 | Tiptap 编辑器文档
+  description: 使用 Mention 和 Emoji 等节点自定义自动补全建议。请在文档中了解相关设置和配置。
+  category: 编辑器
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/suggestion?label=version
     url: https://www.npmjs.com/package/@tiptap/suggestion
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/suggestion?label=version
     url: https://npmcharts.com/compare/@tiptap/suggestion
-    label: Downloads
+    label: 下载量
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-This utility helps with all kinds of suggestions in the editor. Have a look at the [`Mention`](/editor/extensions/nodes/mention) or [`Emoji`](/editor/extensions/nodes/emoji) node to see it in action.
+此工具可帮助你在编辑器中实现各种建议功能。请查看 [`Mention`](/editor/extensions/nodes/mention) 或 [`Emoji`](/editor/extensions/nodes/emoji) 节点，了解其实际效果。
 
-## Settings
+## 设置
 
 ### char
 
-The character that triggers the autocomplete popup.
+触发自动补全弹出层的字符。
 
-Default: `'@'`
+默认值：`'@'`
 
 ### pluginKey
 
-A ProseMirror PluginKey.
+一个 ProseMirror PluginKey。
 
-Default: `SuggestionPluginKey`
+默认值：`SuggestionPluginKey`
 
 ### allow
 
-A function that returns a boolean to indicate if the suggestion should be active.
+一个返回布尔值的函数，用于指示建议功能是否应处于激活状态。
 
-Default: `(props: { editor: Editor; state: EditorState; range: Range, isActive?: boolean }) => true`
+默认值：`(props: { editor: Editor; state: EditorState; range: Range, isActive?: boolean }) => true`
 
 ### shouldShow
 
-A function that returns a boolean to indicate if the suggestion should be active. This is useful to prevent suggestions from opening for remote users in collaborative environments.
+一个返回布尔值的函数，用于指示建议功能是否应处于激活状态。在协作环境中，这可用于防止远程用户触发建议。
 
 ```js
 shouldShow: ({ editor, range, query, text, transaction }) => {
@@ -50,17 +50,17 @@ shouldShow: ({ editor, range, query, text, transaction }) => {
 }
 ```
 
-Default: `null`
+默认值：`null`
 
 ### shouldResetDismissed
 
-Controls when a dismissed suggestion becomes active again after the user closes it with Escape or `exitSuggestion()`.
+控制用户按 Escape 或调用 `exitSuggestion()` 关闭建议后，何时重新激活已关闭的建议。
 
-By default, the utility keeps the dismissed suggestion closed while the user stays in the same trigger context. With `allowSpaces: true`, that dismissed context can span spaces until the cursor leaves it.
+默认情况下，只要用户仍处于同一触发上下文中，此工具就会保持建议关闭状态。设置 `allowSpaces: true` 后，该关闭状态的上下文可以跨越空格，直到光标离开为止。
 
-Use `shouldResetDismissed` if you need to decide yourself when that dismissed context should be cleared.
+如果需要自行决定何时清除该关闭状态上下文，请使用 `shouldResetDismissed`。
 
-The callback is not called for every transaction. It is only evaluated on transactions where the suggestion plugin finds a valid match, the match passes `allow` and `shouldShow`, and there is a dismissed suggestion state to potentially clear.
+此回调不会针对每个 transaction 调用。只有在建议插件找到有效匹配项、匹配项通过 `allow` 和 `shouldShow` 检查，并且存在可能需要清除的已关闭建议状态时，才会进行计算。
 
 ```js
 Suggestion({
@@ -75,41 +75,41 @@ Suggestion({
 })
 ```
 
-Return `true` to clear the dismissed state for the current transaction and allow the suggestion to open again.
+返回 `true` 可清除此 transaction 对应的关闭状态，并允许建议再次打开。
 
-Default: `null`
+默认值：`null`
 
 ### allowSpaces
 
-Allows or disallows spaces in suggested items. Not compatible with `allowToIncludeChar` — if `allowToIncludeChar` is `true`, this option is disabled.
+允许或禁止建议项中包含空格。此选项与 `allowToIncludeChar` 不兼容——如果 `allowToIncludeChar` 为 `true`，则此选项会被禁用。
 
-Default: `false`
+默认值：`false`
 
 ### allowToIncludeChar
 
-Allows the trigger character itself to be included in the suggestion query. Not compatible with `allowSpaces`.
+允许在建议查询中包含触发字符本身。此选项与 `allowSpaces` 不兼容。
 
-Default: `false`
+默认值：`false`
 
 ### allowedPrefixes
 
-The prefix characters that are allowed to trigger a suggestion. Set to `null` to allow any prefix character.
+允许触发建议的前缀字符。设为 `null` 可允许任意前缀字符。
 
-Default: `[' ']`
+默认值：`[' ']`
 
 ### startOfLine
 
-Trigger the autocomplete popup at the start of a line only.
+仅在行首触发自动补全弹出层。
 
-Default: `false`
+默认值：`false`
 
 ### minQueryLength
 
-The minimum number of characters the user must type after the trigger character before the `items()` function is called.
+调用 `items()` 函数之前，用户在触发字符后必须输入的最少字符数。
 
-Useful when fetching suggestions from an API — it prevents unnecessary network requests when the query is too short to be meaningful.
+从 API 获取建议时，此选项很有用：当查询过短、没有实际意义时，可避免不必要的网络请求。
 
-Default: `0`
+默认值：`0`
 
 ```js
 Suggestion({
@@ -124,11 +124,11 @@ Suggestion({
 
 ### debounce
 
-The number of milliseconds to wait after the user stops typing before calling `items()`. This prevents expensive operations (like API requests) from being triggered on every keystroke.
+用户停止输入后，调用 `items()` 前等待的毫秒数。这样可以避免每次按键都触发开销较大的操作（例如 API 请求）。
 
-The debounce timer resets on each keystroke, so the `items()` function is only called once the user pauses typing for the specified duration.
+每次按键都会重置防抖计时器，因此只有用户暂停输入达到指定时长后，才会调用 `items()` 函数。
 
-Default: `0` (no debounce)
+默认值：`0`（不防抖）
 
 ```js
 Suggestion({
@@ -142,9 +142,9 @@ Suggestion({
 
 ### initialItems
 
-An array of items shown immediately when the suggestion popup opens, before the async `items()` call resolves. After `items()` completes, its result replaces the initial items.
+建议弹出层打开时立即显示的项目数组，在异步 `items()` 调用完成之前展示。`items()` 执行完成后，其结果会替换初始项目。
 
-Useful for showing recent or popular items while the real results are loading.
+在实际结果加载时显示最近使用或热门项目，此选项很有用。
 
 ```js
 Suggestion({
@@ -156,39 +156,39 @@ Suggestion({
 })
 ```
 
-Default: `undefined`
+默认值：`undefined`
 
 ### decorationTag
 
-The HTML tag that should be rendered for the suggestion.
+建议装饰使用的 HTML 标签。
 
-Default: `'span'`
+默认值：`'span'`
 
 ### decorationClass
 
-A CSS class that should be added to the suggestion.
+要添加到建议项的 CSS 类。
 
-Default: `'suggestion'`
+默认值：`'suggestion'`
 
 ### decorationContent
 
-The content that should be rendered in the suggestion decoration.
+要在建议装饰中渲染的内容。
 
-Default: `''`
+默认值：`''`
 
 ### decorationEmptyClass
 
-A CSS class that should be added to the suggestion when it is empty.
+建议项为空时要添加的 CSS 类。
 
-Default: `'is-empty'`
+默认值：`'is-empty'`
 
 ### placement
 
-The preferred placement of the suggestion popup relative to the cursor or trigger decoration. Uses [Floating UI placement values](https://floating-ui.com/docs/computePosition#placement).
+建议弹出层相对于光标或触发装饰的首选位置。使用 [Floating UI 的 placement 值](https://floating-ui.com/docs/computePosition#placement)。
 
-The resolved placement is forwarded to `SuggestionProps.floatingUi.placement`, which you can read in your render callbacks.
+解析后的 placement 会传递给 `SuggestionProps.floatingUi.placement`，你可以在渲染回调中读取它。
 
-Default: `'bottom-start'`
+默认值：`'bottom-start'`
 
 ```js
 Suggestion({
@@ -198,9 +198,9 @@ Suggestion({
 
 ### offset
 
-Offsets the suggestion popup from its anchor by the specified number of pixels on each axis. These values are forwarded to the Floating UI [`offset` middleware](https://floating-ui.com/docs/offset).
+将建议弹出层沿每个轴偏移指定像素，使其与锚点保持距离。这些值会传递给 Floating UI 的 [`offset` 中间件](https://floating-ui.com/docs/offset)。
 
-Default: `{ mainAxis: 4, crossAxis: 0 }`
+默认值：`{ mainAxis: 4, crossAxis: 0 }`
 
 ```js
 Suggestion({
@@ -210,9 +210,9 @@ Suggestion({
 
 ### flip
 
-When enabled, the popup automatically flips to the opposite side when there isn't enough space in the preferred direction. This toggles the Floating UI [`flip` middleware](https://floating-ui.com/docs/flip).
+启用后，如果首选方向上的空间不足，弹出层会自动翻转到相反方向。此选项用于切换 Floating UI 的 [`flip` 中间件](https://floating-ui.com/docs/flip)。
 
-Default: `true`
+默认值：`true`
 
 ```js
 Suggestion({
@@ -223,9 +223,9 @@ Suggestion({
 
 ### container
 
-A CSS selector string or an `HTMLElement` that defines the container for the suggestion popup. Setting this can help with scroll containment or z-index stacking contexts.
+用于指定建议弹出层容器的 CSS 选择器字符串或 `HTMLElement`。设置此选项有助于控制滚动区域或 z-index 堆叠上下文。
 
-Default: `undefined`
+默认值：`undefined`
 
 ```js
 Suggestion({
@@ -235,9 +235,9 @@ Suggestion({
 
 ### floatingUi
 
-Advanced Floating UI configuration for cases where the top-level options don't offer enough control. The plugin keeps ownership of the anchor and placement — set the side with the top-level [`placement`](#placement) option — while `floatingUi` lets you switch the positioning `strategy` and append extra `middleware`.
+当顶层选项无法满足需求时，可使用此选项进行高级 Floating UI 配置。插件负责管理锚点和位置——使用顶层 [`placement`](#placement) 选项设置方位；`floatingUi` 则用于切换定位 `strategy` 并添加额外的 `middleware`。
 
-Any middleware you pass is appended _after_ the `offset` and `flip` middleware the plugin builds from your top-level `offset` and `flip` options, so the two compose rather than replace each other.
+传入的任何中间件都会追加在插件根据顶层 `offset` 和 `flip` 选项创建的中间件之后，因此它们会组合使用，而不是相互替换。
 
 ```js
 import { shift, size } from '@floating-ui/dom'
@@ -251,7 +251,7 @@ Suggestion({
 })
 ```
 
-All properties are optional. The full type is:
+所有属性均为可选。完整类型如下：
 
 ```ts
 type SuggestionFloatingUiOptions = {
@@ -260,23 +260,23 @@ type SuggestionFloatingUiOptions = {
 }
 ```
 
-Default: `undefined`
+默认值：`undefined`
 
 ### dismissOnOutsideClick
 
-When `true`, a pointer interaction outside both the popup and the editor dismisses the active suggestion. This only applies when you render the popup with [managed positioning](#managed-positioning-with-propsmount) (`props.mount`), because the plugin needs to know which element is the popup to decide what counts as "outside".
+设为 `true` 时，在弹出层和编辑器之外发生指针交互，会关闭当前激活的建议。此选项仅适用于使用[托管定位](#managed-positioning-with-propsmount)（`props.mount`）渲染弹出层的情况，因为插件需要知道哪个元素是弹出层，才能判断哪些位置属于“外部”。
 
-Default: `true`
+默认值：`true`
 
 ### command
 
-Executed when a suggestion is selected.
+选中建议时执行的函数。
 
-Default: `() => {}`
+默认值：`() => {}`
 
 ### items
 
-A function or async function that returns filtered suggestions based on user input. The function receives an `AbortSignal` (`signal`) which is aborted when the user continues typing (e.g., a new keystroke makes the current request stale). Use this to cancel in-progress fetch requests.
+根据用户输入返回筛选后建议项的函数或异步函数。函数会接收一个 `AbortSignal`（`signal`）；当用户继续输入时（例如新按键使当前请求失效），该信号会中止。可用此信号取消正在进行的 fetch 请求。
 
 ```js
 items: async ({ editor, query, signal }) => {
@@ -285,13 +285,13 @@ items: async ({ editor, query, signal }) => {
 }
 ```
 
-Default: `({ editor, query, signal }) => []`
+默认值：`({ editor, query, signal }) => []`
 
 ### render
 
-A render function for the autocomplete popup. Returns an object with lifecycle hooks (`onStart`, `onBeforeStart`, `onUpdate`, `onBeforeUpdate`, `onExit`, `onKeyDown`) that receive a `SuggestionProps` object.
+用于渲染自动补全弹出层的函数。它会返回一个包含生命周期钩子（`onStart`、`onBeforeStart`、`onUpdate`、`onBeforeUpdate`、`onExit`、`onKeyDown`）的对象，这些钩子会接收一个 `SuggestionProps` 对象。
 
-The `SuggestionProps` object passed to each hook includes the following properties in addition to the existing `editor`, `range`, `query`, `text`, `items`, `command`, `decorationNode`, and `clientRect`:
+传递给每个钩子的 `SuggestionProps` 对象，除了现有的 `editor`、`range`、`query`、`text`、`items`、`command`、`decorationNode` 和 `clientRect` 属性外，还包含以下属性：
 
 ```ts
 {
@@ -322,28 +322,26 @@ The `SuggestionProps` object passed to each hook includes the following properti
 }
 ```
 
-Default: `() => ({})`
+默认值：`() => ({})`
 
 ### findSuggestionMatch
 
-Optional param to replace the built-in regex matching of editor content that triggers a suggestion.
-See [the
-source](https://github.com/ueberdosis/tiptap/blob/main/packages/suggestion/src/findSuggestionMatch.ts#L18)
-for more detail.
+可选参数，用于替换内置的正则表达式匹配逻辑，以匹配编辑器内容中触发建议的文本。
+详情请参阅[源代码](https://github.com/ueberdosis/tiptap/blob/main/packages/suggestion/src/findSuggestionMatch.ts#L18)。
 
-Default: `findSuggestionMatch(config: Trigger): SuggestionMatch`
+默认值：`findSuggestionMatch(config: Trigger): SuggestionMatch`
 
-## Async behavior
+## 异步行为
 
-When your `items()` function returns a `Promise`, the suggestion plugin handles the async lifecycle automatically:
+当你的 `items()` 函数返回 `Promise` 时，建议插件会自动处理异步生命周期：
 
-1. **Initial state:** The popup opens and `loading` is `true`. If `initialItems` was provided, those items are shown immediately.
-2. **Fetching:** The `items()` function is called with an `AbortSignal`. If the user keeps typing, the previous request's signal is aborted and a new one starts after the `debounce` delay.
-3. **Resolution:** Once the promise resolves, the returned items replace the current items and `loading` becomes `false`. The `onUpdate` callback is triggered with the new `SuggestionProps`.
-4. **Empty state:** If no `items()` function is provided or it returns an empty array, the popup shows an empty state. The `loading` property remains `false` unless a fetch is in progress.
-5. **Dismissal:** When the popup closes (e.g., user presses Escape), any in-flight request is aborted automatically.
+1. **初始状态：** 弹出层打开，`loading` 为 `true`。如果提供了 `initialItems`，这些项目会立即显示。
+2. **获取数据：** 使用 `AbortSignal` 调用 `items()` 函数。如果用户继续输入，先前请求的 signal 会中止，并在 `debounce` 延迟后启动新请求。
+3. **解析完成：** Promise 解析后，返回的项目会替换当前项目，且 `loading` 变为 `false`。此时会使用新的 `SuggestionProps` 触发 `onUpdate` 回调。
+4. **空状态：** 如果未提供 `items()` 函数，或该函数返回空数组，弹出层会显示空状态。除非正在获取数据，否则 `loading` 属性保持为 `false`。
+5. **关闭：** 弹出层关闭时（例如用户按下 Escape），任何正在进行的请求都会自动中止。
 
-Here's a complete example:
+下面是一个完整示例：
 
 ```js
 Suggestion({
@@ -383,23 +381,23 @@ Suggestion({
 })
 ```
 
-## Positioning
+## 定位
 
-The suggestion utility integrates with [Floating UI](https://floating-ui.com/) for popup positioning. There are two ways to position your popup:
+Suggestion 工具集成了 [Floating UI](https://floating-ui.com/)，用于定位弹出层。定位弹出层有两种方式：
 
-- **Managed positioning with `props.mount`** — the recommended default. The plugin mounts the element, anchors it to the cursor, and keeps it positioned for you.
-- **Manual positioning** — the escape hatch. You mount the element yourself and run your own positioning loop using `props.floatingUi` and `props.clientRect`.
+- **使用 `props.mount` 托管定位**——推荐的默认方式。插件会挂载元素，将其锚定到光标，并自动保持其位置。
+- **手动定位**——供需要完全控制时使用。你需要自行挂载元素，并使用 `props.floatingUi` 和 `props.clientRect` 实现定位循环。
 
-### Managed positioning with `props.mount`
+### 使用 `props.mount` 托管定位
 
-Inside your `render` callbacks, call `props.mount(element)` with the popup element you rendered (for example, the `element` of a `ReactRenderer` or `VueRenderer`). The plugin then:
+在 `render` 回调中，使用渲染出的弹出层元素调用 `props.mount(element)`（例如 `ReactRenderer` 或 `VueRenderer` 的 `element`）。之后插件会：
 
-- appends the element into the configured [`container`](#container) (default `document.body`),
-- anchors it to the suggestion's cursor rect using your [`placement`](#placement), [`offset`](#offset), [`flip`](#flip), and [`floatingUi`](#floatingui) options,
-- automatically repositions it on scroll, resize, and layout shifts via Floating UI's [`autoUpdate`](https://floating-ui.com/docs/autoUpdate) — no manual listeners required, and
-- dismisses it on outside clicks when [`dismissOnOutsideClick`](#dismissonoutsideclick) is enabled.
+- 将元素添加到配置的 [`container`](#container) 中（默认为 `document.body`）；
+- 根据你的 [`placement`](#placement)、[`offset`](#offset)、[`flip`](#flip) 和 [`floatingUi`](#floatingui) 选项，将元素锚定到建议对应的光标矩形；
+- 通过 Floating UI 的 [`autoUpdate`](https://floating-ui.com/docs/autoUpdate)，在滚动、调整大小和布局偏移时自动重新定位——无需手动添加监听器；
+- 启用 [`dismissOnOutsideClick`](#dismissonoutsideclick) 时，在点击外部区域后关闭弹出层。
 
-`mount()` returns an `unmount` function. **You must call it in `onExit`** to tear down the auto-update loop and outside-click listener (and to remove the element, if the plugin added it). Forgetting this leaks listeners and leaves orphaned popups in the DOM.
+`mount()` 会返回一个 `unmount` 函数。**必须在 `onExit` 中调用它**，以清理自动更新循环和外部点击监听器（如果元素由插件添加，也会将其移除）。如果忘记调用，监听器会泄漏，DOM 中也会留下孤立的弹出层。
 
 ```js
 import { ReactRenderer } from '@tiptap/react'
@@ -443,15 +441,13 @@ Suggestion({
 })
 ```
 
-<Callout title="Note" variant="info">
-  If the element you pass is already attached to the DOM, the plugin will not move or remove it — it
-  only positions it. In that case you remain responsible for mounting and unmounting the element
-  yourself. Pass a detached element if you want the plugin to manage the DOM for you.
+<Callout title="注意" variant="info">
+  如果传入的元素已经挂载到 DOM，插件不会移动或移除它——只会对其进行定位。在这种情况下，你需要自行负责挂载和卸载元素。如果希望插件管理 DOM，请传入一个尚未挂载的元素。
 </Callout>
 
-### Configuring placement, offset, and flip
+### 配置 placement、offset 和 flip
 
-Use the top-level [`placement`](#placement), [`offset`](#offset), and [`flip`](#flip) options to control where the managed popup appears:
+使用顶层的 [`placement`](#placement)、[`offset`](#offset) 和 [`flip`](#flip) 选项，控制托管弹出层的显示位置：
 
 ```js
 Suggestion({
@@ -461,7 +457,7 @@ Suggestion({
 })
 ```
 
-For a positioning `strategy` change or custom middleware (for example `shift` or `size`), add the [`floatingUi`](#floatingui) option. Its `middleware` is appended after the plugin's own `offset` and `flip` middleware:
+如果需要更改定位 `strategy` 或使用自定义中间件（例如 `shift` 或 `size`），请添加 [`floatingUi`](#floatingui) 选项。其中的 `middleware` 会追加在插件自身的 `offset` 和 `flip` 中间件之后：
 
 ```js
 import { shift, size } from '@floating-ui/dom'
@@ -485,11 +481,11 @@ Suggestion({
 })
 ```
 
-### Customizing how the position is applied
+### 自定义位置的应用方式
 
-By default, the managed popup's position is applied by writing `position`, `left`, and `top` to the element's style (and the element is hidden until the first measurement resolves, to avoid a flash at the wrong coordinates).
+默认情况下，托管弹出层的位置通过将 `position`、`left` 和 `top` 写入元素的样式来应用（在首次测量完成前会隐藏元素，避免其短暂出现在错误的位置）。
 
-If you need to apply the position differently — a CSS transform, an animation, or writing into a framework ref — pass an `onPosition` callback in the mount options. When you do, the plugin stops writing styles itself and hands you the computed coordinates instead:
+如果需要使用不同方式应用位置——例如 CSS transform、动画，或写入框架 ref——请在挂载选项中传入 `onPosition` 回调。此时插件会停止自行写入样式，并将计算出的位置坐标交给你：
 
 ```js
 onStart(props) {
@@ -506,14 +502,13 @@ onStart(props) {
 }
 ```
 
-<Callout title="Note" variant="info">
-  When you provide `onPosition`, the plugin no longer hides the element before the first
-  measurement, so apply the initial position yourself to avoid a flash.
+<Callout title="注意" variant="info">
+  提供 `onPosition` 后，插件不会再于首次测量前隐藏元素，因此你需要自行设置初始位置，以避免元素短暂闪现。
 </Callout>
 
-### Following animated or transformed anchors
+### 跟随动画或变换后的锚点
 
-`autoUpdate` already reacts to scroll, resize, and layout shifts. For anchors that move continuously — inside a transformed or animated container, for instance — opt into frame-by-frame updates by forwarding [`autoUpdate` options](https://floating-ui.com/docs/autoUpdate#options):
+`autoUpdate` 已能响应滚动、调整大小和布局偏移。对于持续移动的锚点（例如位于经过变换或动画处理的容器中），可传递 [`autoUpdate` 选项](https://floating-ui.com/docs/autoUpdate#options)，启用逐帧更新：
 
 ```js
 unmount = props.mount(component.element, {
@@ -521,9 +516,9 @@ unmount = props.mount(component.element, {
 })
 ```
 
-### Mounting into a container
+### 挂载到容器中
 
-To render the popup inside a specific stacking or scroll context — a modal or dialog, for example — set the [`container`](#container) option. The managed popup is appended there instead of `document.body`:
+如果要在特定的堆叠或滚动上下文中渲染弹出层（例如模态框或对话框），请设置 [`container`](#container) 选项。托管弹出层会添加到指定容器，而非 `document.body`：
 
 ```js
 Suggestion({
@@ -531,11 +526,11 @@ Suggestion({
 })
 ```
 
-A string is treated as a CSS selector; you can also pass an `HTMLElement` directly. If the selector matches nothing (or is invalid), the plugin falls back to `document.body`.
+字符串会被视为 CSS 选择器；你也可以直接传入 `HTMLElement`。如果选择器没有匹配到元素（或选择器无效），插件会回退到 `document.body`。
 
-### Manual positioning (escape hatch)
+### 手动定位（高级用法）
 
-If you need full control over mounting and positioning, skip `props.mount` entirely. Mount the element yourself, then run your own Floating UI loop using the resolved `props.floatingUi` config together with `props.clientRect`. Because you own the DOM here, you are also responsible for repositioning on `onUpdate` and cleaning up in `onExit`:
+如果需要完全控制挂载和定位，请完全跳过 `props.mount`。自行挂载元素，然后结合解析后的 `props.floatingUi` 配置和 `props.clientRect`，运行自己的 Floating UI 定位循环。由于此时 DOM 由你管理，因此也需要自行在 `onUpdate` 中重新定位，并在 `onExit` 中进行清理：
 
 ```js
 import { computePosition, shift } from '@floating-ui/dom'
@@ -590,18 +585,16 @@ Suggestion({
 })
 ```
 
-<Callout title="Note" variant="warning">
-  With manual positioning you only reposition on `onUpdate`, so the popup will not follow scroll,
-  resize, or layout shifts unless you wire up your own listeners (or Floating UI's `autoUpdate`).
-  `props.mount` handles all of that for you, which is why it is the recommended approach.
+<Callout title="注意" variant="warning">
+  使用手动定位时，只会在 `onUpdate` 时重新定位，因此除非你自行添加监听器（或使用 Floating UI 的 `autoUpdate`），弹出层不会跟随滚动、调整大小或布局偏移。`props.mount` 会为你处理这些情况，因此推荐使用该方式。
 </Callout>
 
 <CodeDemo path="/Examples/SuggestionPositioning" />
 
-## Exiting open suggestions
+## 关闭已打开的建议
 
-Sometimes you want your users to be able to exit an open suggestion without selecting an item. To achieve this, users can press Escape to close the open suggestion.
-If you want to manually trigger the closing of the suggestion, you can use the `exitSuggestion` utility function to close existing suggestions on your view.
+有时，你可能希望用户在不选择项目的情况下关闭已打开的建议。用户可以按 Escape 关闭建议。
+如果要手动关闭建议，可以使用 `exitSuggestion` 工具函数，关闭当前视图中已打开的建议。
 
 ```js
 import { exitSuggestion } from '@tiptap/suggestion'
@@ -615,11 +608,11 @@ exitSuggestion(editor.view, MySuggestionPluginKey)
 // exitSuggestion(editor.view, 'suggestion')
 ```
 
-## Collaboration
+## 协作
 
-When using Tiptap in a collaborative environment, you might notice that suggestions (like mentions) pop open for all users when one user triggers them. This happens because the document change is synced to all clients, and each client's suggestion plugin reacts to the change.
+在协作环境中使用 Tiptap 时，你可能会发现一位用户触发建议（例如提及）后，所有用户都会看到建议弹出。这是因为文档更改会同步到所有客户端，而每个客户端的建议插件都会对更改作出响应。
 
-To prevent this, use the `shouldShow` option combined with the `isChangeOrigin` helper from `@tiptap/extension-collaboration`.
+要避免这种情况，请将 `shouldShow` 选项与 `@tiptap/extension-collaboration` 中的 `isChangeOrigin` 辅助函数结合使用。
 
 ```js
 import { isChangeOrigin } from '@tiptap/extension-collaboration'
@@ -632,8 +625,8 @@ Suggestion({
 })
 ```
 
-By returning `!isChangeOrigin(props.transaction)`, the suggestion will only be activated if the current user initiated the change.
+通过返回 `!isChangeOrigin(props.transaction)`，只有当前用户发起更改时才会激活建议。
 
-## Source code
+## 源代码
 
 [packages/suggestion/](https://github.com/ueberdosis/tiptap/blob/main/packages/suggestion/)
