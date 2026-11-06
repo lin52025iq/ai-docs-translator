@@ -1,29 +1,28 @@
 ---
-title: Creating an editor with Tracked Changes
+title: 使用 Tracked Changes 创建编辑器
 tags:
   - type: addon
 meta:
-  title: Creating an editor with Tracked Changes | Tiptap Tracked Changes Docs
-  description: Step-by-step guide to setting up a Tiptap editor with the Tracked Changes extension in React.
-  category: Tracked Changes
+  title: 使用 Tracked Changes 创建编辑器 | Tiptap Tracked Changes 文档
+  description: 分步指南：在 React 中使用 Tracked Changes 扩展设置 Tiptap 编辑器。
+  category: 追踪更改
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Learn how to create a fully functional editor with tracked changes, including a toolbar to toggle tracking and accept or reject suggestions.
+了解如何创建功能齐全的追踪更改编辑器，包括用于切换追踪状态以及接受或拒绝建议的工具栏。
 
-<Callout title="Framework note" variant="hint">
-  This guide uses React, but the same concepts apply to Vue and any other framework supported by
-  Tiptap.
+<Callout title="框架说明" variant="hint">
+  本指南使用 React，但相同的概念也适用于 Vue 以及 Tiptap 支持的其他框架。
 </Callout>
 
-## Prerequisites
+## 前提条件
 
-Make sure you have the Tracked Changes extension installed. See the [installation guide](/tracked-changes/getting-started/install) for details.
+请确保已安装 Tracked Changes 扩展。详情请参阅[安装指南](/tracked-changes/getting-started/install)。
 
-## Set up the editor
+## 设置编辑器
 
-Start by creating an editor instance with the `TrackedChanges` extension. You'll want to pass in the current user's ID and metadata so suggestions are attributed correctly.
+首先，使用 `TrackedChanges` 扩展创建一个编辑器实例。你需要传入当前用户的 ID 和元数据，以便正确标记建议的作者。
 
 ```jsx
 import { useEditor, EditorContent } from '@tiptap/react'
@@ -42,7 +41,7 @@ function Editor() {
         },
       }),
     ],
-    content: '<p>Start editing to see tracked changes in action.</p>',
+    content: '<p>开始编辑，查看追踪更改的实际效果。</p>',
   })
 
   if (!editor) {
@@ -53,11 +52,11 @@ function Editor() {
 }
 ```
 
-At this point, every edit the user makes is tracked as a suggestion. Insertions appear as `add` suggestions and deletions as `delete` suggestions.
+现在，用户所做的每项编辑都会作为建议进行追踪。插入内容会显示为 `add` 建议，删除内容会显示为 `delete` 建议。
 
-## Add a toolbar
+## 添加工具栏
 
-Next, add controls to toggle tracking and accept or reject suggestions. The extension provides editor commands for all of these operations.
+接下来，添加用于切换追踪状态以及接受或拒绝建议的控件。该扩展为这些操作都提供了编辑器命令。
 
 ```jsx
 import { useCallback, useState } from 'react'
@@ -77,7 +76,7 @@ function Editor() {
         userMetadata: { name: 'John Doe' },
       }),
     ],
-    content: '<p>Start editing to see tracked changes in action.</p>',
+    content: '<p>开始编辑，查看追踪更改的实际效果。</p>',
   })
 
   const toggleTrackedChanges = useCallback(() => {
@@ -94,13 +93,13 @@ function Editor() {
     <div>
       <div className="toolbar">
         <button onClick={toggleTrackedChanges}>
-          {isEnabled ? 'Disable' : 'Enable'} Track Changes
+          {isEnabled ? '禁用' : '启用'}追踪更改
         </button>
         <button onClick={() => editor.commands.acceptAllSuggestions()}>
-          Accept All
+          全部接受
         </button>
         <button onClick={() => editor.commands.rejectAllSuggestions()}>
-          Reject All
+          全部拒绝
         </button>
       </div>
       <EditorContent editor={editor} />
@@ -109,54 +108,54 @@ function Editor() {
 }
 ```
 
-## Add suggestion styles
+## 添加建议样式
 
-Suggestions render as `<span>` elements with data attributes. Add CSS to visually distinguish insertions from deletions.
+建议会渲染为带有 data 属性的 `<span>` 元素。添加 CSS，以便通过视觉样式区分插入和删除。
 
 ```css
-/* Insertions — green highlight */
+/* 插入内容 — 绿色高亮 */
 [data-suggestion-type="add"] {
   background-color: rgba(0, 255, 0, 0.15);
   text-decoration: underline;
 }
 
-/* Deletions — red strikethrough */
+/* 删除内容 — 红色删除线 */
 [data-suggestion-type="delete"] {
   background-color: rgba(255, 0, 0, 0.15);
   text-decoration: line-through;
 }
 
-/* Replacement deletions */
+/* 替换内容中的删除部分 */
 [data-suggestion-type="replaceDeletion"] {
   background-color: rgba(255, 0, 0, 0.15);
   text-decoration: line-through;
 }
 
-/* Replacement insertions */
+/* 替换内容中的插入部分 */
 [data-suggestion-type="replaceInsertion"] {
   background-color: rgba(0, 255, 0, 0.15);
   text-decoration: underline;
 }
 ```
 
-See the [Styling reference](/tracked-changes/api-reference/styling) for all available data attributes.
+如需查看所有可用的 data 属性，请参阅[样式参考](/tracked-changes/api-reference/styling)。
 
-## Accept and reject at the cursor
+## 接受或拒绝光标处的建议
 
-You can also accept or reject the suggestion at the current cursor position without passing an ID:
+你也可以接受或拒绝当前光标位置处的建议，而无需传入 ID：
 
 ```jsx
 <button onClick={() => editor.commands.acceptSuggestion()}>
-  Accept at cursor
+  接受光标处的建议
 </button>
 <button onClick={() => editor.commands.rejectSuggestion()}>
-  Reject at cursor
+  拒绝光标处的建议
 </button>
 ```
 
-## Accept and reject in a selection
+## 接受或拒绝选区中的建议
 
-To accept or reject all suggestions within the current text selection:
+若要接受或拒绝当前文本选区中的所有建议：
 
 ```jsx
 const acceptInSelection = useCallback(() => {
@@ -172,9 +171,9 @@ const rejectInSelection = useCallback(() => {
 }, [editor])
 ```
 
-## Switch users
+## 切换用户
 
-In a multi-user application, you'll switch the tracked changes user when the active user changes. Use the `setTrackedChangesUser` command:
+在多用户应用中，活动用户发生变化时，你需要切换追踪更改的用户。请使用 `setTrackedChangesUser` 命令：
 
 ```jsx
 editor.commands.setTrackedChangesUser({
@@ -183,9 +182,9 @@ editor.commands.setTrackedChangesUser({
 })
 ```
 
-## Enable code block tracking
+## 启用代码块追踪
 
-By default, code blocks don't support marks. The extension provides a helper to patch any code block extension for tracked changes support:
+默认情况下，代码块不支持标记。该扩展提供了一个辅助函数，可为任意代码块扩展添加对追踪更改的支持：
 
 ```jsx
 import CodeBlock from '@tiptap/extension-code-block'
@@ -202,8 +201,8 @@ const editor = useEditor({
 })
 ```
 
-## Next steps
+## 后续步骤
 
-- [Build a suggestion list sidebar](/tracked-changes/guides/suggestion-list) to display all suggestions
-- Learn about [suggestion grouping and advanced behaviors](/tracked-changes/usage/advanced-usage)
-- Explore the full [commands API](/tracked-changes/api-reference/commands)
+- [构建建议列表侧边栏](/tracked-changes/guides/suggestion-list)，以显示所有建议
+- 了解[建议分组和高级行为](/tracked-changes/usage/advanced-usage)
+- 查看完整的[命令 API](/tracked-changes/api-reference/commands)
