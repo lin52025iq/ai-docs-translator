@@ -1,36 +1,36 @@
 ---
-title: Available methods
+title: 可用方法
 meta:
-  title: Available methods | Tiptap Content AI
-  description: Learn about the available methods in the AI agent provider.
-  category: Content AI
+  title: 可用方法 | Tiptap Content AI
+  description: 了解 AI 代理提供程序中的可用方法。
+  category: 内容 AI
 ---
 
-The AI agent provider exposes several methods.
+AI 代理提供程序提供了多种方法。
 
-## Core methods
+## 核心方法
 
-| Method                          | Description                                                                          | Parameters                       |
-| ------------------------------- | ------------------------------------------------------------------------------------ | -------------------------------- |
-| `run()`                         | Starts a new AI agent [lifecycle](/ai/deprecated/agent/features/lifecycle) | None                             |
-| `stop()`                        | Stops the current AI agent lifecycle                                                 | None                             |
-| `reset(chatMessages?)`          | Resets the AI agent provider to its initial state                                    | `chatMessages?`: `ChatMessage[]` |
-| `setSystemPrompt(systemPrompt)` | Sets the [system prompt](/ai/deprecated/agent/configure/system-prompt)     | `systemPrompt`: `string \| null` |
+| 方法                            | 说明                                                                  | 参数                             |
+| ------------------------------- | --------------------------------------------------------------------- | -------------------------------- |
+| `run()`                         | 启动新的 AI 代理[生命周期](/ai/deprecated/agent/features/lifecycle) | 无                               |
+| `stop()`                        | 停止当前 AI 代理生命周期                                              | 无                               |
+| `reset(chatMessages?)`          | 将 AI 代理提供程序重置为初始状态                                      | `chatMessages?`: `ChatMessage[]` |
+| `setSystemPrompt(systemPrompt)` | 设置[系统提示词](/ai/deprecated/agent/configure/system-prompt)       | `systemPrompt`: `string \| null` |
 
-## Conversation management
+## 对话管理
 
-| Method                              | Description                                                                                                 | Parameters                                               |
-| ----------------------------------- | ----------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| `addUserMessage(message, options?)` | Adds a user message to the conversation                                                                     | `message`: `string`, `options?`: `AddUserMessageOptions` |
-| `addChatMessages(messages)`         | Adds multiple chat messages to the conversation                                                             | `messages`: `ChatMessage[]`                              |
-| `setChatMessages(messages)`         | Replaces all messages in the conversation                                                                   | `messages`: `ChatMessage[]`                              |
-| `setAutoAccept(autoAccept)`         | Changes the [auto-accept](/ai/deprecated/agent/review#auto-accept-configuration) setting | `autoAccept`: `"always" \| "never" \| "onlyRead"`        |
-| `setCheckpoint()`                   | Saves the current state as a [checkpoint](/ai/deprecated/agent/features/checkpoints)              | None                                                     |
-| `restoreCheckpoint(checkpoint)`     | Restores a previously saved checkpoint                                                                      | `checkpoint`: `Checkpoint`                               |
+| 方法                                | 说明                                                                                                      | 参数                                                    |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| `addUserMessage(message, options?)` | 向对话中添加用户消息                                                                                      | `message`: `string`，`options?`: `AddUserMessageOptions` |
+| `addChatMessages(messages)`         | 向对话中添加多条聊天消息                                                                                  | `messages`: `ChatMessage[]`                             |
+| `setChatMessages(messages)`         | 替换对话中的所有消息                                                                                      | `messages`: `ChatMessage[]`                             |
+| `setAutoAccept(autoAccept)`         | 更改[自动接受](/ai/deprecated/agent/review#auto-accept-configuration)设置                               | `autoAccept`: `"always" \| "never" \| "onlyRead"` |
+| `setCheckpoint()`                   | 将当前状态保存为[检查点](/ai/deprecated/agent/features/checkpoints)                                     | 无                                                      |
+| `restoreCheckpoint(checkpoint)`     | 恢复先前保存的检查点                                                                                      | `checkpoint`: `Checkpoint`                              |
 
-## Tool call review
+## 工具调用审核
 
-| Method             | Description                   | Parameters |
-| ------------------ | ----------------------------- | ---------- |
-| `acceptToolCall()` | Accepts the pending tool call | None       |
-| `rejectToolCall()` | Rejects the pending tool call | None       |
+| 方法               | 说明             | 参数 |
+| ------------------ | ---------------- | ---- |
+| `acceptToolCall()` | 接受待处理的工具调用 | 无   |
+| `rejectToolCall()` | 拒绝待处理的工具调用 | 无   |
