@@ -1,45 +1,45 @@
 ---
-title: Nodes and marks commands
+title: 节点和标记命令
 meta:
-  title: Nodes and Marks commands | Tiptap Editor Docs
-  description: Easy-to-use commands for managing nodes and marks. Learn to manipulate paragraphs, headings, and inline styles in our docs.
-  category: Editor
+  title: 节点和标记命令 | Tiptap 编辑器文档
+  description: 使用简单易用的命令管理节点和标记。在文档中了解如何操作段落、标题和行内样式。
+  category: 编辑器
 ---
 
-Tiptap provides commands to manipulate nodes and marks easily.
+Tiptap 提供了便捷的命令来操作节点和标记。
 
-Nodes and marks are the building blocks of your Tiptap editor. Nodes represent content elements like paragraphs, headings, or images, while marks provide inline formatting, such as bold, italic, or links.
+节点和标记是 Tiptap 编辑器的构成基础。节点表示段落、标题或图像等内容元素，而标记则提供粗体、斜体或链接等行内格式。
 
-## Use Cases
+## 使用场景
 
-- **Creating New Nodes:** Use [`createParagraphNear`](/editor/api/commands/nodes-and-marks/create-paragraph-near) or [`splitBlock`](/editor/api/commands/nodes-and-marks/split-block) to add new nodes near the selection.
-- **Managing Node Structures:** Update, replace, or lift nodes using commands like [`setNode`](/editor/api/commands/nodes-and-marks/set-node), [`lift`](/editor/api/commands/nodes-and-marks/lift), or [`toggleNode`](/editor/api/commands/nodes-and-marks/toggle-node).
-- **Mark Manipulation:** Toggle, set, or unset marks using commands like [`toggleMark`](/editor/api/commands/nodes-and-marks/toggle-mark), [`setMark`](/editor/api/commands/nodes-and-marks/set-mark), or [`unsetMark`](/editor/api/commands/nodes-and-marks/unset-mark).
-- **Content Cleanup:** Remove unwanted marks or nodes using [`clearNodes`](/editor/api/commands/nodes-and-marks/clear-nodes), [`unsetAllMarks`](/editor/api/commands/nodes-and-marks/unset-all-marks), or [`resetAttributes`](/editor/api/commands/nodes-and-marks/reset-attributes).
+- **创建新节点：** 使用 [`createParagraphNear`](/editor/api/commands/nodes-and-marks/create-paragraph-near) 或 [`splitBlock`](/editor/api/commands/nodes-and-marks/split-block)，在选区附近添加新节点。
+- **管理节点结构：** 使用 [`setNode`](/editor/api/commands/nodes-and-marks/set-node)、[`lift`](/editor/api/commands/nodes-and-marks/lift) 或 [`toggleNode`](/editor/api/commands/nodes-and-marks/toggle-node) 等命令更新、替换或提升节点。
+- **操作标记：** 使用 [`toggleMark`](/editor/api/commands/nodes-and-marks/toggle-mark)、[`setMark`](/editor/api/commands/nodes-and-marks/set-mark) 或 [`unsetMark`](/editor/api/commands/nodes-and-marks/unset-mark) 等命令切换、设置或取消设置标记。
+- **清理内容：** 使用 [`clearNodes`](/editor/api/commands/nodes-and-marks/clear-nodes)、[`unsetAllMarks`](/editor/api/commands/nodes-and-marks/unset-all-marks) 或 [`resetAttributes`](/editor/api/commands/nodes-and-marks/reset-attributes) 移除不需要的标记或节点。
 
-## List of nodes and marks commands
+## 节点和标记命令列表
 
-| Command               | Description                                                                |
-| --------------------- | -------------------------------------------------------------------------- |
-| `clearNodes`          | Clears all nodes while adhering to the editor's schema.                    |
-| `createParagraphNear` | Creates a new paragraph node near the current selection.                   |
-| `deleteNode`          | Deletes the selected node.                                                 |
-| `extendMarkRange`     | Expands the current selection to encompass the specified mark.             |
-| `exitCode`            | Exits the current code block and continues editing in a new default block. |
-| `insertDefaultBlock`  | Inserts the schema's default block type at a given position.               |
-| `joinBackward`        | Joins two nodes backwards from the current selection.                      |
-| `joinForward`         | Joins two nodes forwards from the current selection.                       |
-| `lift`                | Lifts a node up into its parent node.                                      |
-| `liftEmptyBlock`      | Lifts the currently selected empty textblock.                              |
-| `newlineInCode`       | Inserts a new line in the current code block.                              |
-| `resetAttributes`     | Resets specified attributes of a node to its default values.               |
-| `setMark`             | Adds a new mark at the current selection.                                  |
-| `setNode`             | Replaces a given range with a specified node.                              |
-| `splitBlock`          | Splits the current node into two nodes at the current selection.           |
-| `toggleMark`          | Toggles a specific mark on and off at the current selection.               |
-| `toggleNode`          | Toggles a node with another node.                                          |
-| `toggleWrap`          | Wraps the current node with a new node or removes a wrapping node.         |
-| `undoInputRule`       | Undoes the most recent input rule that was triggered.                      |
-| `unsetAllMarks`       | Removes all marks from the current selection.                              |
-| `unsetMark`           | Removes a specific mark from the current selection.                        |
-| `updateAttributes`    | Sets attributes of a node or mark to new values.                           |
+| 命令                  | 说明                                       |
+| --------------------- | ------------------------------------------ |
+| `clearNodes`          | 清除所有节点，同时遵循编辑器的 schema。     |
+| `createParagraphNear` | 在当前选区附近创建一个新的段落节点。        |
+| `deleteNode`          | 删除选中的节点。                           |
+| `extendMarkRange`     | 扩展当前选区，使其包含指定标记。            |
+| `exitCode`            | 退出当前代码块，并在新的默认块中继续编辑。  |
+| `insertDefaultBlock`  | 在指定位置插入 schema 中的默认块类型。     |
+| `joinBackward`        | 从当前选区向后合并两个节点。               |
+| `joinForward`         | 从当前选区向前合并两个节点。               |
+| `lift`                | 将节点提升至其父节点中。                   |
+| `liftEmptyBlock`      | 提升当前选中的空文本块。                   |
+| `newlineInCode`       | 在当前代码块中插入新行。                   |
+| `resetAttributes`     | 将节点的指定属性重置为默认值。             |
+| `setMark`             | 在当前选区添加新标记。                     |
+| `setNode`             | 使用指定节点替换给定范围。                 |
+| `splitBlock`          | 在当前选区处将当前节点拆分为两个节点。     |
+| `toggleMark`          | 在当前选区切换指定标记的启用和禁用状态。   |
+| `toggleNode`          | 将一个节点切换为另一个节点。               |
+| `toggleWrap`          | 使用新节点包裹当前节点，或移除包裹节点。   |
+| `undoInputRule`       | 撤销最近触发的输入规则。                   |
+| `unsetAllMarks`       | 移除当前选区中的所有标记。                 |
+| `unsetMark`           | 移除当前选区中的指定标记。                 |
+| `updateAttributes`    | 将节点或标记的属性设为新值。               |
