@@ -1,0 +1,259 @@
+---
+title: 安装 Collaboration
+meta:
+  title: 安装 Collaboration | Tiptap Collaboration 文档
+  description: 按照本安装指南，在 Tiptap Editor 中设置协同编辑。欢迎查阅我们的文档了解更多信息！
+  category: Collaboration
+---
+
+import { CodeDemo } from '@/components/CodeDemo'
+import { Callout } from '@/components/ui/Callout'
+import { Requirements, RequirementItem } from '@/components/Requirements'
+
+本指南将帮助你开始在 Tiptap Editor 中使用协同编辑。如果你已经在使用 Tiptap Editor，可以直接跳转到[准备编辑器](#准备编辑器)部分。
+
+<Requirements>
+    <RequirementItem label="1. 激活试用或订阅">
+        在你的账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 计划](https://cloud.tiptap.dev/v2/billing)。
+    </RequirementItem>
+    <RequirementItem label="2. 启动 Document server">
+        在控制面板中[添加环境](https://cloud.tiptap.dev/v2/configuration/document-server)，并配置你的 [Document server](https://cloud.tiptap.dev/v2/configuration/document-server)。
+    </RequirementItem>
+</Requirements>
+
+### 安装 Tiptap Editor
+
+如果尚未安装 Tiptap Editor，请在 React 项目的命令行界面中运行以下命令，为此示例安装基础编辑器和必需的扩展：
+
+```bash
+npm install @tiptap/extension-document @tiptap/extension-paragraph @tiptap/extension-text @tiptap/react
+```
+
+安装完成后，通过以下基础配置即可启动 Tiptap Editor。只需将下面的代码片段添加到项目中：
+
+<CodeDemo path="/Examples/Minimal" />
+
+## 准备编辑器
+
+若要在 Tiptap Editor 中加入团队协作功能，请在前端集成 Yjs 库和 Editor Collaboration 扩展。此配置使用 Y.Doc 这一共享文档模型，而不仅仅是处理纯文本。
+接下来，我们会将 Y.Doc 连接到 TiptapCollabProvider，以同步用户操作。
+
+### 集成 Yjs 和 Collaboration 扩展
+
+在前端添加 Editor Collaboration 扩展和 Yjs 库：
+
+```bash
+npm install @tiptap/extension-collaboration @tiptap/y-tiptap yjs y-protocols
+```
+
+然后，更新 index.jsx，加入以下导入语句：
+
+```tsx
+import './styles.scss'
+
+import Document from '@tiptap/extension-document'
+import Paragraph from '@tiptap/extension-paragraph'
+import Text from '@tiptap/extension-text'
+import { EditorContent, useEditor } from '@tiptap/react'
+import React from 'react'
+
+import Collaboration from '@tiptap/extension-collaboration'
+import * as Y from 'yjs'
+
+const doc = new Y.Doc() // Initialize Y.Doc for shared editing
+
+export default () => {
+  const editor = useEditor({
+    extensions: [
+      Document,
+      Paragraph,
+      Text,
+      Collaboration.configure({
+        document: doc, // Configure Y.Doc for collaboration
+      }),
+    ],
+    content: `
+      <p>
+        This is a radically reduced version of Tiptap. It has support for a document, with paragraphs and text. That’s it. It’s probably too much for real minimalists though.
+      </p>
+      <p>
+        The paragraph extension is not really required, but you need at least one node. Sure, that node can be something different.
+      </p>
+    `,
+  })
+
+  return <EditorContent editor={editor} />
+}
+```
+
+现在，你的编辑器已经基本准备好进行协同编辑了！
+
+## 启动 Document server
+
+1. **激活计划：**开始[免费试用或选择订阅计划](https://cloud.tiptap.dev/v2/billing)。
+2. **添加环境。**在[控制面板](https://cloud.tiptap.dev/)中，点击 `Add environment` 按钮，输入名称，并选择离用户最近的区域。
+3. **检查配置。**保存环境后，Document server 将立即启动。前往[配置页面](https://cloud.tiptap.dev/v2/configuration/document-server)，复制 Document server ID、API 密钥及其他连接信息。
+
+### 连接到 Document server
+
+要使用协同功能，请安装 `@tiptap-pro/provider` 软件包：
+
+<Callout title="设置私有注册表" variant="hint">
+请注意，你需要按照[此处](https://cloud.tiptap.dev/pro-extensions)的说明设置私有注册表访问权限。
+</Callout>
+
+```bash
+npm install @tiptap-pro/provider
+```
+
+接下来，在 index.jsx 文件中使用服务器详细信息配置 provider：
+
+- **name**：用作同步时的文档标识符。
+- **appID**：你的 Document server ID，可在 [Cloud 控制面板](https://cloud.tiptap.dev/v2/configuration/document-server)中找到，标签为“Document server ID”。对于本地部署，请将 `appID` 替换为 `baseUrl`。
+- **token**：测试时请使用 [Cloud 界面](https://cloud.tiptap.dev/v2/configuration/document-server)中的 JWT；生产环境请自行生成 JWT。
+
+<Callout title="添加初始内容" variant="hint">
+  在非协作场景中集成 Editor 时，完全可以使用这里展示的方法设置
+  内容。不过，如果切换到协作环境，则需要按照下一节所示修改添加初始内容的方式。
+</Callout>
+
+加入以下代码即可完成设置：
+
+```tsx
+import './styles.scss'
+
+import Document from '@tiptap/extension-document'
+import Paragraph from '@tiptap/extension-paragraph'
+import Text from '@tiptap/extension-text'
+import { EditorContent, useEditor } from '@tiptap/react'
+import React from 'react'
+
+import Collaboration from '@tiptap/extension-collaboration'
+import * as Y from 'yjs'
+
+// Importing the provider and useEffect
+import { useEffect } from 'react'
+import { TiptapCollabProvider } from '@tiptap-pro/provider'
+
+const doc = new Y.Doc()
+
+export default () => {
+  const editor = useEditor({
+    extensions: [
+      Document,
+      Paragraph,
+      Text,
+      Collaboration.configure({
+        document: doc,
+      }),
+    ],
+    content: `
+      <p>
+        This is a radically reduced version of Tiptap. It has support for a document, with paragraphs and text. That’s it. It’s probably too much for real minimalists though.
+      </p>
+      <p>
+        The paragraph extension is not really required, but you need at least one node. Sure, that node can be something different.
+      </p>
+    `,
+  })
+
+  // Connect to your Collaboration server
+  useEffect(() => {
+    const provider = new TiptapCollabProvider({
+      name: 'document.name', // Unique document identifier for syncing. This is your document name.
+      appId: '7j9y6m10', // Your document server ID from the Cloud dashboard, or use `baseURL` for on-premises
+      token: 'notoken', // Your JWT
+      document: doc,
+    })
+  }, [])
+
+  return <EditorContent editor={editor} />
+}
+```
+
+完成这些步骤后，你就可以在两个不同的浏览器中，通过各自独立的 WebSocket 连接同时连接到同一文档。
+
+为了清楚地测试协作功能，建议使用两个不同的浏览器，以确保 WebSocket 连接各不相同。
+
+### 正确初始化内容
+
+在 Tiptap Editor 中实现协作功能后，你可能会注意到，每次编辑器加载时都会重复添加初始内容。为避免这种情况，请使用 `.setContent()` 方法，仅设置一次初始内容。
+
+```tsx
+import './styles.scss'
+
+import Document from '@tiptap/extension-document'
+import Paragraph from '@tiptap/extension-paragraph'
+import Text from '@tiptap/extension-text'
+import { EditorContent, useEditor } from '@tiptap/react'
+import React from 'react'
+
+import * as Y from 'yjs'
+import Collaboration from '@tiptap/extension-collaboration'
+import { useEffect } from 'react'
+
+import { TiptapCollabProvider } from '@tiptap-pro/provider'
+
+const doc = new Y.Doc()
+
+export default () => {
+  const editor = useEditor({
+    extensions: [
+      Document,
+      Paragraph,
+      Text,
+      Collaboration.configure({
+        document: doc,
+      }),
+    ],
+    // Remove the automatic content addition on editor initialization.
+  })
+
+  useEffect(() => {
+    const provider = new TiptapCollabProvider({
+      name: 'document.name', // Unique document identifier for syncing. This is your document name.
+      appId: '7j9y6m10', // Your document server ID from the Cloud dashboard, or use `baseURL` for on-premises
+      token: 'notoken', // Your JWT
+      document: doc,
+
+      // The onSynced callback ensures initial content is set only once using editor.setContent(), preventing repetitive content loading on editor syncs.
+      onSynced() {
+        if (!doc.getMap('config').get('initialContentLoaded') && editor) {
+          doc.getMap('config').set('initialContentLoaded', true)
+
+          editor.commands.setContent(`
+          <p>This is a radically reduced version of Tiptap. It has support for a document, with paragraphs and text. That’s it. It’s probably too much for real minimalists though.</p>
+          <p>The paragraph extension is not really required, but you need at least one node. Sure, that node can be something different.</p>
+          `)
+        }
+      },
+    })
+  }, [])
+
+  return <EditorContent editor={editor} />
+}
+```
+
+这样可以确保初始内容只设置一次。若要使用新的初始内容进行测试，请更改 `name` 参数来创建新文档（例如，从 `document.name` 改为 `document.name2`）。
+
+## 禁用默认撤销/重做
+
+如果你要在**本示例所用编辑器以外的编辑器**中集成协作功能，可能需要禁用编辑器默认的撤销/重做功能。这是为了避免与协同历史记录管理发生冲突：你肯定不希望撤销其他人的更改。
+
+仅当项目中包含 Tiptap [StarterKit](/editor/extensions/functionality/starterkit) 或 [Undo/Redo](/editor/extensions/functionality/undo-redo) 扩展时，才需要执行此操作。
+
+```ts
+const editor = useEditor({
+  extensions: [
+    StarterKit.configure({
+      undoRedo: false, // Disables default Undo/Redo extension to use Collaboration's history management
+    }),
+  ],
+})
+```
+
+按照本指南操作后，你将拥有一个基础但功能完整的协同 Tiptap Editor，可通过 Collaboration Cloud 或本地部署后端进行同步。
+
+## 对用户进行身份验证
+
+了解如何使用 JSON Web Token（JWT）保护协同 Tiptap 编辑器。下一篇指南将分步骤介绍如何创建和管理测试及生产环境所用的 JWT，并通过详细示例确保访问受到控制。了解更多[身份验证](/collaboration/getting-started/authenticate)相关信息。
