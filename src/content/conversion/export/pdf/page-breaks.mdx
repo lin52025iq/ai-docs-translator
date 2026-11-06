@@ -1,12 +1,12 @@
 ---
-title: Page breaks in PDF export
+title: PDF 导出中的分页符
 tags:
   - type: start
   - type: beta
 meta:
-  title: Page breaks in PDF export | Tiptap Conversion
-  description: Learn about page break support when exporting Tiptap editor content to PDF files.
-  category: Conversion
+  title: PDF 导出中的分页符 | Tiptap 转换
+  description: 了解将 Tiptap 编辑器内容导出为 PDF 文件时对分页符的支持。
+  category: 转换
 ---
 
 import { Requirements, RequirementItem } from '@/components/Requirements'
@@ -15,23 +15,23 @@ import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 <EnterpriseCalloutAuto variant="pdf" renderMode="sidebar" disableWaitlist />
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 激活试用或订阅">
+        在账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 方案](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Install from private registry">
-        To install this frontend extensions, authenticate to Tiptap's private npm registry by following the [setup guide](/guides/pro-extensions).
+    <RequirementItem label="2. 从私有注册表安装">
+        要安装这些前端扩展，请按照[设置指南](/guides/pro-extensions)的说明，通过身份验证访问 Tiptap 的私有 npm 注册表。
     </RequirementItem>
 </Requirements>
 
-The [PageBreak extension](/pages/core-concepts/page-break-node) lets users insert explicit page breaks in the editor. When combined with the PDF export extension, these page breaks are included in the exported document.
+[PageBreak 扩展](/pages/core-concepts/page-break-node)允许用户在编辑器中插入明确的分页符。与 PDF 导出扩展结合使用时，这些分页符也会包含在导出的文档中。
 
-## How it works
+## 工作原理
 
-Page breaks are fully supported in PDF export. The PDF export uses DOCX conversion under the hood, where `pageBreak` nodes are converted to `<w:br w:type="page"/>`, producing standard page breaks in the resulting PDF.
+PDF 导出完全支持分页符。PDF 导出底层使用 DOCX 转换，会将 `pageBreak` 节点转换为 `<w:br w:type="page"/>`，从而在生成的 PDF 中创建标准分页符。
 
-## Setting up PageBreak with PDF export
+## 将 PageBreak 与 PDF 导出搭配使用
 
-Register the PageBreak extension alongside the PDF export extension. Page breaks in your editor content will be automatically converted when exporting.
+将 PageBreak 扩展与 PDF 导出扩展一同注册。导出时，编辑器内容中的分页符会自动转换。
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -59,8 +59,8 @@ const editor = new Editor({
 })
 ```
 
-## Learn more
+## 了解更多
 
-- [PageBreak extension reference](/pages/core-concepts/page-break-node) for full options, commands, and keyboard shortcuts
-- [Page breaks in DOCX import](/conversion/import/docx/page-breaks) for import support
-- [PDF export guide](/conversion/export/pdf/editor-extension) for general export setup
+- [PageBreak 扩展参考](/pages/core-concepts/page-break-node)：查看完整选项、命令和键盘快捷键
+- [DOCX 导入中的分页符](/conversion/import/docx/page-breaks)：了解导入支持
+- [PDF 导出指南](/conversion/export/pdf/editor-extension)：了解常规导出设置
