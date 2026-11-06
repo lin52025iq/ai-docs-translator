@@ -1,0 +1,97 @@
+---
+title: 安装 AI Agent 扩展
+meta:
+  title: 安装 AI Agent 扩展 | Tiptap Content AI
+  description: 了解如何为 Tiptap 安装和设置 AI Agent 扩展。
+  category: Content AI
+tags:
+  - type: beta
+  - type: deprecated
+---
+
+import { Callout } from '@/components/ui/Callout'
+import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
+
+<Callout title="已弃用" variant="warning">
+  此扩展正逐步淘汰，取而代之的是功能更强、API 更现代化的 AI Toolkit。虽然你仍可继续使用此扩展，但我们建议在新的实现中探索使用 AI
+  Toolkit。
+</Callout>
+
+<EnterpriseCalloutAuto variant="deprecated" renderMode="sidebar" />
+
+## 安装软件包
+
+AI Agent 扩展发布在 Tiptap 的私有 npm 注册表中。请按照[私有注册表指南](/guides/pro-extensions)集成此扩展。
+
+## 设置提供程序
+
+提供程序对象负责管理 AI Agent 扩展的状态。开始使用 AI Agent 扩展最简单的方法是使用 Tiptap Cloud 提供程序：
+
+```tsx
+import { AiAgentProvider } from '@tiptap-pro/extension-ai-agent'
+
+const provider = new AiAgentProvider({
+  // Configure Tiptap Cloud (see next section)
+  token: 'TOKEN_HERE',
+})
+```
+
+AI Agent 扩展可开箱即用地将 [Tiptap Cloud](/ai/deprecated/agent/use-with-content-ai-cloud) 用作后端。
+
+要为运行在你后端的自定义 AI 代理添加文本编辑功能，请阅读[集成指南](/ai/deprecated/agent/custom-llms/overview)。
+
+## 在编辑器中导入扩展
+
+将 `AiAgent` 添加到扩展列表中，并使用提供程序对其进行配置。
+
+```tsx
+import { Editor } from '@tiptap/core'
+import StarterKit from '@tiptap/starter-kit'
+import AiAgent from '@tiptap-pro/extension-ai-agent'
+
+const editor = new Editor({
+  extensions: [
+    StarterKit,
+    AiAgent.configure({
+      provider,
+      // … other options
+    }),
+    // … more extensions
+  ],
+})
+```
+
+## 调用 AI Agent 扩展
+
+调用提供程序的方法即可与 AI Agent 扩展交互。
+
+```tsx
+provider.addUserMessage(
+  'Correct the spelling and grammar mistakes. Then, find the key phrases in the text and format them in bold.',
+)
+provider.run()
+```
+
+## 显示聊天对话
+
+你可以访问 AI Agent 扩展的状态（包括聊天对话），并在 UI 中显示：
+
+```tsx
+provider.state.messages
+```
+
+你还可以订阅事件，并在事件触发时更新 UI：
+
+```tsx
+// Subscribe to state changes
+provider.on('stateChange', (newState, previousState, context) => {
+  console.log('State changed:', newState)
+  // Update your UI based on the new state
+})
+
+// Subscribe to loading errors
+provider.on('loadingError', (error, context) => {
+  console.error('Error occurred:', error)
+  // Show error message to the user
+})
+```
