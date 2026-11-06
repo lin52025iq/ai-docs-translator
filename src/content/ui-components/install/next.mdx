@@ -2,44 +2,44 @@
 title: Next.js
 meta:
   title: Next.js | Tiptap UI Components
-  description: Install and configure Tiptap UI Components in your Next.js project.
-  category: UI Components
+  description: 在 Next.js 项目中安装和配置 Tiptap UI Components。
+  category: UI 组件
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Run the `init` command to create a new Next.js project or to setup an existing one:
+运行 `init` 命令，创建新的 Next.js 项目或设置现有项目：
 
 ```bash
 npx @tiptap/cli@latest init
 ```
 
-Choose between a `Next.js` project or a `Monorepo`.
+选择 `Next.js` 项目或 `Monorepo`。
 
-When prompted with:
+出现以下提示时：
 
 ```bash
 Would you like to add a template or UI components to your project?
 ```
 
-Select **UI Components** if you want to include reusable Tiptap UI components.
-Alternatively, select **Template** to scaffold a full example project.
+如果要添加可复用的 Tiptap UI 组件，请选择 **UI Components**。
+或者，选择 **Template** 以搭建完整的示例项目。
 
-<Callout title="Only add styles" variant="info">
-  If you added a template or UI components during setup, you can skip this section and proceed
-  directly to **Add Styles**.
+<Callout title="仅添加样式" variant="info">
+  如果你在设置过程中添加了模板或 UI 组件，可以跳过本节，直接前往
+  **添加样式**。
 </Callout>
 
-<Callout title="A new project still shows the default Next.js page" variant="warning">
-  `init` scaffolds a standard Next.js app and copies the components you chose into your
-  `components/` folder as source — but it does **not** modify `app/page.tsx`. Until you render a
-  Tiptap component there yourself, `npm run dev` shows Next.js's default starter page. This is
-  expected, not a broken install.
+<Callout title="新项目仍显示 Next.js 默认页面" variant="warning">
+  `init` 会搭建一个标准的 Next.js 应用，并将你选择的组件以源文件形式复制到
+  `components/` 文件夹中，但**不会**修改 `app/page.tsx`。在你自行于该文件中渲染
+  Tiptap 组件之前，运行 `npm run dev` 时显示的仍是 Next.js 默认起始页。这是正常情况，
+  并不代表安装失败。
 </Callout>
 
-## Render the editor
+## 渲染编辑器
 
-Open `app/page.tsx` and render the template or component you installed. For example, if you added the **Simple Editor** template during `init`:
+打开 `app/page.tsx`，渲染已安装的模板或组件。例如，如果你在运行 `init` 时添加了 **Simple Editor** 模板：
 
 ```tsx
 import { SimpleEditor } from '@/components/tiptap-templates/simple/components/simple-editor'
@@ -49,21 +49,21 @@ export default function Page() {
 }
 ```
 
-Start the dev server and open the page to see your editor:
+启动开发服务器并打开页面，即可查看编辑器：
 
 ```bash
 npm run dev
 ```
 
-## Add Tiptap components
+## 添加 Tiptap 组件
 
-Install Tiptap UI components using the CLI. For example, to add the `HeadingButton` component:
+使用 CLI 安装 Tiptap UI 组件。例如，添加 `HeadingButton` 组件：
 
 ```bash
 npx @tiptap/cli@latest add heading-button
 ```
 
-The command above will install the `HeadingButton` component and its dependencies. You can then import and use it in your **Tiptap** project:
+上述命令会安装 `HeadingButton` 组件及其依赖项。之后，你便可以在 **Tiptap** 项目中导入并使用它：
 
 ```tsx
 import { HeadingButton } from '@/components/ui/heading-button'
@@ -81,30 +81,32 @@ export default function App() {
 }
 ```
 
-## Add Styles
+## 添加样式
 
-<Callout title="Styles are added automatically" variant="info">
-  When you install your first Tiptap UI Component, the CLI automatically adds the required{' '}
-  <code>.scss</code> imports to your main stylesheet. In most cases, **no manual setup is needed**.
+<Callout title="样式会自动添加" variant="info">
+  安装第一个 Tiptap UI 组件时，CLI 会自动将所需的{' '}
+  <code>.scss</code> 导入语句添加到主样式表中。大多数情况下，**无需手动设置**。
 </Callout>
 
-Before proceeding, ensure your project includes a CSS reset.
-If you are using Tailwind CSS, you already have one.
+继续之前，请确保项目包含 CSS 重置样式。
+如果你使用 Tailwind CSS，则已经包含了 CSS 重置样式。
 
-#### Where styles are imported
+#### 样式的导入位置
 
-The CLI automatically injects style imports into your global stylesheet, such as:
+CLI 会自动将样式导入语句注入全局样式表，例如：
 
 - `app/globals.css`
 - `src/app/globals.css`
 
-If you’ve customized your entry file, make sure this is present:
+如果你自定义了入口文件，请确保其中包含以下内容：
 
-**File:** `app/globals.css` or `src/app/globals.css` (depending on your project)
+**文件：** `app/globals.css` 或 `src/app/globals.css`（取决于你的项目）
 
 ```css
 @import '<path-to-styles>/_variables.scss';
 @import '<path-to-styles>/_keyframe-animations.scss';
 ```
 
-Learn more about configuring styles in the [style setup guide](/ui-components/getting-started/style).
+如需详细了解样式配置，请参阅[样式设置指南](/ui-components/getting-started/style)。
+
+</source_content_b74556c1da654245ade9bcdba33c643e>
