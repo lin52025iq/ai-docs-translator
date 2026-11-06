@@ -1,14 +1,14 @@
 ---
-title: Export custom styles to DOC
+title: 将自定义样式导出为 DOC
 tags:
   - type: start
   - type: beta
   - type: version
     label: v0.6.2
 meta:
-    title: Export styles to DOC | Tiptap Conversion
-    description: Learn how to export custom styles from Tiptap JSON to DOC using the Export DOC extension.
-    category: Conversion
+    title: 将样式导出为 DOC | Tiptap Conversion
+    description: 了解如何使用 Export DOC 扩展将 Tiptap JSON 中的自定义样式导出为 DOC。
+    category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
@@ -19,22 +19,23 @@ import ExportStylesGuide from '../_shared/_export-styles-guide.mdx'
 <EnterpriseCalloutAuto variant="doc" renderMode="sidebar" disableWaitlist />
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 开通试用或订阅">
+        在账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 套餐](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Install from private registry">
-        To install this frontend extension, authenticate to Tiptap's private npm registry by following the [setup guide](/guides/pro-extensions).
+    <RequirementItem label="2. 从私有注册表安装">
+        要安装此前端扩展，请按照[设置指南](/guides/pro-extensions)进行操作，以通过身份验证访问 Tiptap 的私有 npm 注册表。
     </RequirementItem>
 </Requirements>
 
-<Callout title="Consider using DOCX instead" variant="info">
-    The DOC format is a legacy format from Microsoft Word 97-2003. For modern use, we recommend exporting to [DOCX](/conversion/export/docx/styles) instead. Use DOC only when compatibility with older systems requires it.
+<Callout title="建议改用 DOCX" variant="info">
+    DOC 格式是 Microsoft Word 97-2003 使用的旧格式。对于现代应用场景，我们建议改为导出为 [DOCX](/conversion/export/docx/styles)。仅当需要兼容旧系统时，才使用 DOC。
 </Callout>
 
-When exporting to DOC, you can define custom styles that will be applied to the exported document. This is useful when you want to have a consistent look and feel across your documents.
+导出为 DOC 时，你可以定义自定义样式，这些样式会应用于导出的文档。如果你希望文档保持统一的外观和风格，这会很有用。
 
-<Callout title="Requires Export DOCX extension" variant="warning">
-  Style overrides for DOC export require the `@tiptap-pro/extension-export-docx` extension to be installed and configured in your editor. The DOC export uses DOCX generation under the hood before converting to DOC. Without it, the `styleOverrides` and element override options will have no effect.
+<Callout title="需要 Export DOCX 扩展" variant="warning">
+  DOC 导出的样式覆盖功能要求在编辑器中安装并配置 `@tiptap-pro/extension-export-docx` 扩展。DOC 导出会在底层先生成 DOCX，然后再将其转换为 DOC。如果未安装该扩展，`styleOverrides` 和元素覆盖选项都不会生效。
 </Callout>
 
 <ExportStylesGuide />
+
