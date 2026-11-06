@@ -1,32 +1,31 @@
 ---
-title: Integrate your custom backend and LLMs
+title: 集成自定义后端和 LLM
 meta:
-  title: Custom LLM | Tiptap AI Suggestion
-  description: Integrate your own backend and LLMs with the AI Suggestion extension for custom suggestions.
+  title: 自定义 LLM | Tiptap AI Suggestion
+  description: 将自有后端和 LLM 与 AI Suggestion 扩展集成，以生成自定义建议。
   category: Content AI
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-By default, the AI Suggestion extension uses the Tiptap Content AI Cloud to generate suggestions for your content. This lets you use its capabilities with minimal setup. However, you can integrate your own backend and LLMs to generate suggestions.
+默认情况下，AI Suggestion 扩展使用 Tiptap Content AI Cloud 为内容生成建议。这样只需进行少量设置，即可使用其功能。不过，你也可以集成自己的后端和 LLM 来生成建议。
 
-<Callout title="Custom LLM demo" variant="info">
-  We provide our Growth and Enterprise customers with a detailed Custom LLM demo. It includes the
-  client and server code, and instructions on how to run and deploy it. See [plans and
-  pricing](https://tiptap.dev/pricing).
+<Callout title="自定义 LLM 演示" variant="info">
+  我们为 Growth 和 Enterprise 客户提供详细的自定义 LLM 演示，其中包含客户端和服务器端代码，以及运行和部署说明。请参阅[套餐和
+  定价](https://tiptap.dev/pricing)。
 </Callout>
 
-The AI Suggestion extension supports different degrees of customization. You can:
+AI Suggestion 扩展支持不同程度的自定义。你可以：
 
-1. Use the Tiptap Content AI Cloud, but customize the OpenAI model.
-2. Replace the API endpoint to get the suggestions data with your own LLM and backend, but let the extension handle how suggestions are displayed and applied. This is the recommended approach for most use cases, as we handle most of the complexity for you: comparing the old and new editor content, displaying the diff in a pleasant way, and handling conflicts.
-3. Implement your own resolver function entirely. This gives you total flexibility to decide how suggestions are displayed in the editor. It is only recommended in advanced scenarios.
+1. 使用 Tiptap Content AI Cloud，同时自定义 OpenAI 模型。
+2. 将获取建议数据的 API 端点替换为自己的 LLM 和后端，同时让扩展负责显示和应用建议。这是大多数使用场景的推荐做法，因为我们会为你处理大部分复杂工作：比较编辑器的新旧内容、以清晰易读的方式显示差异，以及处理冲突。
+3. 完全自行实现 resolver 函数。这样你就能完全自主决定如何在编辑器中显示建议。仅建议在高级场景中使用此方式。
 
-## Customize the OpenAI Model in Tiptap Cloud
+## 在 Tiptap Cloud 中自定义 OpenAI 模型
 
-You can configure the OpenAI model to use for generating suggestions with the `model` option. The default model is `gpt-4o-mini`. It provides a good balance between speed, cost and accuracy.
+你可以通过 `model` 选项配置用于生成建议的 OpenAI 模型。默认模型为 `gpt-4o-mini`，在速度、成本和准确性之间取得了良好平衡。
 
-If you want to improve the suggestions' quality, you can use a larger model like `gpt-4o`. Bear in mind that larger models tend to be more expensive, slower, and have a higher latency.
+如果想提高建议质量，可以使用 `gpt-4o` 等更大型的模型。请注意，大型模型通常成本更高、速度更慢，延迟也更高。
 
 ```ts
 AiSuggestion.configure({
@@ -35,9 +34,9 @@ AiSuggestion.configure({
 })
 ```
 
-## Replace the API Endpoint (Recommended)
+## 替换 API 端点（推荐）
 
-If you want to use your own backend and LLMs to generate suggestions, you can provide a custom `apiResolver` function. This function should call your backend and return an array of suggestions based on the editor's content and rules.
+如果想使用自己的后端和 LLM 生成建议，可以提供自定义的 `apiResolver` 函数。此函数应调用你的后端，并根据编辑器内容和规则返回建议数组。
 
 ```tsx
 AiSuggestion.configure({
@@ -58,28 +57,28 @@ AiSuggestion.configure({
 })
 ```
 
-To provide maximum flexibility, the `apiResolver` accepts the response in two formats:
+为了提供最大的灵活性，`apiResolver` 支持两种响应格式：
 
-### `replacements` Format (recommended)
+### `replacements` 格式（推荐）
 
-The response is an array of replacements that will be applied to the editor's content. It is useful when the suggestions modify specific parts of the document. It is the format used internally in our Tiptap Content AI Cloud, which has given us the best results so far.
-It contains the following properties:
+响应是一个替换项数组，这些替换项将应用于编辑器内容。当建议只修改文档的特定部分时，这种格式很有用。Tiptap Content AI Cloud 内部也使用此格式，目前为止效果最好。
+响应包含以下属性：
 
-- `items`: A list of suggestions. Each suggestion has the following properties:
-  - `ruleId`: The ID of the rule that generated the suggestion.
-  - `deleteHtml`: The HTML content to be deleted from the editor.
-  - `insertHtml`: The HTML content to be inserted into the editor.
-  - `chunkId`: The ID of the chunk where the suggestion should be applied.
-- `htmlChunks`: A list of all the chunks of HTML code in the editor content. Each chunk has these properties:
-  - `id`: A unique identifier for the chunk.
-  - `html`: The HTML content of the chunk.
-  - `generateSuggestions`: Whether the AI model did generate suggestions for this chunk. Otherwise, if set to `false`, the suggestions will be fetched from the extension's internal cache.
+- `items`：建议列表。每条建议包含以下属性：
+  - `ruleId`：生成此建议的规则 ID。
+  - `deleteHtml`：要从编辑器中删除的 HTML 内容。
+  - `insertHtml`：要插入编辑器的 HTML 内容。
+  - `chunkId`：要应用此建议的分块 ID。
+- `htmlChunks`：编辑器内容中所有 HTML 代码块的列表。每个代码块包含以下属性：
+  - `id`：代码块的唯一标识符。
+  - `html`：代码块的 HTML 内容。
+  - `generateSuggestions`：AI 模型是否为此代码块生成了建议。如果设为 `false`，则会从扩展的内部缓存中获取建议。
 
-Make sure the `htmlChunks` property contains all the chunks of HTML code in the editor content, otherwise the caching mechanism will not work properly.
+请确保 `htmlChunks` 属性包含编辑器内容中的所有 HTML 代码块，否则缓存机制将无法正常工作。
 
-You can easily get the value of the `htmlChunks` property by reading the `htmlChunks` argument of the `apiResolver` function.
+你可以通过读取 `apiResolver` 函数的 `htmlChunks` 参数，轻松获取 `htmlChunks` 属性的值。
 
-Here is an example response in the `replacements` format.
+以下是 `replacements` 格式的响应示例。
 
 ```json
 {
@@ -133,9 +132,9 @@ Here is an example response in the `replacements` format.
 }
 ```
 
-### `fullHtml` Format
+### `fullHtml` 格式
 
-The response is a full HTML string that will replace the editor's content. This is useful when you want to replace the entire content with the suggestions. We've found this format to perform very well when there is only one rule to apply, but less so when there are multiple rules. This format does not support chunking and caching.
+响应是一个完整的 HTML 字符串，用于替换编辑器内容。当你想用建议替换整个内容时，这种格式很有用。我们发现，当只需应用一条规则时，此格式效果很好；但规则较多时，效果不那么理想。此格式不支持分块和缓存。
 
 ```json
 {
@@ -155,16 +154,16 @@ The response is a full HTML string that will replace the editor's content. This 
 }
 ```
 
-### Improving Accuracy
+### 提高准确性
 
-LLMs can make mistakes, making it difficult to ensure that their responses follow the desired format. To improve the accuracy of your custom models, we recommend following these best practices and prompt engineering techniques.
+LLM 可能会出错，因此很难确保其响应符合所需格式。为了提高自定义模型的准确性，我们建议采用以下最佳实践和提示词工程技巧。
 
-- Before implementing improvements, evaluate your custom endpoint's responses and measure their performance and accuracy. Use an evaluation framework like [Evalite](https://www.evalite.dev/). This helps you refine and compare prompts for better performance.
-- If you use the `replacements` format, take advantage of [OpenAI structured outputs](https://platform.openai.com/docs/guides/structured-outputs) (or the equivalent feature in other LLM providers) to ensure that responses are JSON objects that comply with a specific schema.
-- If you use the `fullHtml` format, leverage [OpenAI predicted outputs](https://platform.openai.com/docs/guides/predicted-outputs) (or the equivalent feature in other LLM providers) to ensure that responses do not deviate excessively from the original editor content.
-- Adjust the `temperature` or `top_p` [parameters](https://platform.openai.com/docs/api-reference/completions/create) to control the randomness of the model's output.
-- LLM providers have official guides on [best practices](https://platform.openai.com/docs/guides/prompt-engineering), optimizing [latency](https://platform.openai.com/docs/guides/latency-optimization), and improving [accuracy](https://platform.openai.com/docs/guides/optimizing-llm-accuracy).
-- Different proofreading rules work best with different prompting approaches and response formats. You do not need to choose between the `replacements` or the `fullHtml` format—you can use both! Define an API endpoint that returns the suggestions in the `replacements` format, and another that generates them in the `fullHtml` format. Here is an example:
+- 在实施改进之前，评估自定义端点的响应，并衡量其性能和准确性。可以使用 [Evalite](https://www.evalite.dev/) 等评估框架。这有助于你优化并比较提示词，从而获得更好的效果。
+- 如果使用 `replacements` 格式，可以利用 [OpenAI 结构化输出](https://platform.openai.com/docs/guides/structured-outputs)（或其他 LLM 提供商的同类功能），确保响应是符合特定架构的 JSON 对象。
+- 如果使用 `fullHtml` 格式，可以利用 [OpenAI 预测输出](https://platform.openai.com/docs/guides/predicted-outputs)（或其他 LLM 提供商的同类功能），确保响应不会与编辑器的原始内容偏离太多。
+- 调整 `temperature` 或 `top_p` [参数](https://platform.openai.com/docs/api-reference/completions/create)，以控制模型输出的随机性。
+- LLM 提供商提供了关于[最佳实践](https://platform.openai.com/docs/guides/prompt-engineering)、优化[延迟](https://platform.openai.com/docs/guides/latency-optimization)和提高[准确性](https://platform.openai.com/docs/guides/optimizing-llm-accuracy)的官方指南。
+- 不同的校对规则适合不同的提示方式和响应格式。你不必在 `replacements` 和 `fullHtml` 格式之间二选一，可以同时使用！定义一个以 `replacements` 格式返回建议的 API 端点，再定义另一个以 `fullHtml` 格式生成建议的端点。示例如下：
 
   ```tsx
   AiSuggestion.configure({
@@ -200,24 +199,24 @@ LLMs can make mistakes, making it difficult to ensure that their responses follo
     },
   ```
 
-### Improving Performance
+### 提高性能
 
-To enhance the performance of your API and custom LLM models when generating suggestions, consider the following strategies:
+要提升 API 和自定义 LLM 模型生成建议时的性能，可以考虑以下策略：
 
-- Choose a model that balances accuracy with speed and low latency. Use leaderboards like [Artificial Analysis](https://artificialanalysis.ai/#intelligence-vs-output-speed) to compare models across different metrics.
-- Before implementing performance improvements, measure your API's response times. If your pipeline includes multiple steps or model calls, analyze each step to identify bottlenecks. Use an evaluation framework like [Evalite](https://www.evalite.dev/) to iterate on prompts and compare their effectiveness.
-- Leverage [OpenAI predicted outputs](https://platform.openai.com/docs/guides/predicted-outputs) (or the equivalent feature in other LLM providers) to improve latency and processing speed.
-- Chunk editor content into sub-sections and process them in parallel to reduce overall processing time, especially for large documents. Take advantage of the built-in chunking and caching mechanism of the extension, and only reload the suggestions of the chunks that have changed.
-- Structure your prompt to take advantage of full or [partial caching](https://platform.openai.com/docs/guides/prompt-caching). Note that different LLM providers offer varying caching implementations, and some may not support it. If necessary, implement your own caching mechanism to reuse LLM responses for identical or similar prompts.
-- Streaming responses can improve the perceived performance of your API, particularly for large documents, by allowing suggestions to be displayed before the entire response is generated. While our AI Suggestion extension currently does not support streaming, we are considering adding this feature in future versions. If you believe your application would benefit from it, reach out to us at humans@tiptap.dev.
+- 选择在准确性、速度和低延迟之间取得平衡的模型。可以使用 [Artificial Analysis](https://artificialanalysis.ai/#intelligence-vs-output-speed) 等排行榜，从不同指标比较模型。
+- 在实施性能改进之前，先测量 API 的响应时间。如果处理流程包含多个步骤或模型调用，请分析每个步骤以找出瓶颈。可以使用 [Evalite](https://www.evalite.dev/) 等评估框架来迭代提示词并比较效果。
+- 利用 [OpenAI 预测输出](https://platform.openai.com/docs/guides/predicted-outputs)（或其他 LLM 提供商的同类功能）来降低延迟并提升处理速度。
+- 将编辑器内容分成多个小节并行处理，以缩短整体处理时间，尤其是处理大型文档时。利用扩展内置的分块和缓存机制，只重新加载有变化的内容块的建议。
+- 设计提示词时，利用完整或[部分缓存](https://platform.openai.com/docs/guides/prompt-caching)。请注意，不同 LLM 提供商的缓存实现各不相同，有些可能不支持缓存。如有需要，可以自行实现缓存机制，以便重复利用相同或相似提示词对应的 LLM 响应。
+- 流式响应可以提升用户对 API 性能的感知，尤其是在处理大型文档时，因为这样可以在完整响应生成之前显示建议。AI Suggestion 扩展目前尚不支持流式响应，但我们正在考虑在未来版本中添加此功能。如果你认为应用会因此受益，请通过 humans@tiptap.dev 联系我们。
 
-## Replace the Resolver Function Entirely (Advanced)
+## 完全替换 Resolver 函数（高级）
 
-If you want to have total control over how the editor suggestions are generated, including their exact position in the document, you can do so by providing a custom `resolver` function. This function should return an array of suggestions based on the editor's content and rules.
+如果你想完全控制编辑器建议的生成方式（包括其在文档中的确切位置），可以提供自定义的 `resolver` 函数。此函数应根据编辑器内容和规则返回建议数组。
 
-To generate valid suggestion objects, your code needs to compute [their positions in the editor](https://prosemirror.net/docs/guide/#doc.indexing). This will most likely involve comparing the editor's current content with the content that has been generated by the LLM. To see an example on how to do this, you can check the default resolver function in the extension's source code.
+为了生成有效的建议对象，代码需要计算[建议在编辑器中的位置](https://prosemirror.net/docs/guide/#doc.indexing)。这通常需要比较编辑器当前内容与 LLM 生成的内容。有关如何实现的示例，请查看扩展源代码中的默认 resolver 函数。
 
-To learn more about the data that each suggestion object should contain, check the [API reference](/ai/deprecated/suggestion/api-reference#proofreading-suggestions).
+如需了解每个建议对象应包含的数据，请参阅 [API 参考](/ai/deprecated/suggestion/api-reference#proofreading-suggestions)。
 
 ```tsx
 AiSuggestion.configure({
@@ -228,11 +227,11 @@ AiSuggestion.configure({
 })
 ```
 
-Overall, the approach of implementing your custom resolver will take more work to implement, but it will give you more flexibility. We only recommend it for advanced use cases.
+总体而言，实现自定义 resolver 需要更多工作，但能带来更大的灵活性。我们只建议在高级使用场景中采用此方式。
 
-## Combine the Tiptap Content AI Cloud With Your Own Backend
+## 将 Tiptap Content AI Cloud 与自有后端结合使用
 
-You do not have to choose between using the Tiptap Content AI Cloud or your own backend. You can combine the two, and get the best of both worlds.
+你不必在 Tiptap Content AI Cloud 和自有后端之间二选一。你可以将两者结合起来，兼得两者的优势。
 
 ```tsx
 AiSuggestion.configure({
@@ -257,9 +256,9 @@ AiSuggestion.configure({
 })
 ```
 
-## Generate Proofreading Suggestions Without AI
+## 不使用 AI 生成校对建议
 
-You don’t need to use AI to generate proofreading suggestions. You can combine AI models with classic proofreading techniques. For example, you can check for certain words and replace them. Here is an example of a resolver that generates suggestions that replace the word “hello” with “goodbye”.
+生成校对建议不一定要使用 AI。你可以将 AI 模型与传统校对技术结合起来。例如，可以检查特定词语并将其替换。以下示例展示了一个 resolver，它会生成将单词 “hello” 替换为 “goodbye” 的建议。
 
 ```tsx
 AiSuggestion.configure({
