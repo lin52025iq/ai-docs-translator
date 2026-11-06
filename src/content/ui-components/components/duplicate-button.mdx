@@ -1,12 +1,12 @@
 ---
-title: Duplicate Button
+title: 复制按钮
 meta:
-  title: Duplicate Button | Tiptap UI Components
-  description: Duplicate selected nodes and blocks in Tiptap editors with intelligent node detection, keyboard shortcuts, and accessibility support.
-  category: UI Components
+  title: 复制按钮 | Tiptap UI 组件
+  description: 在 Tiptap 编辑器中复制选定节点和块，支持智能节点检测、键盘快捷键和无障碍功能。
+  category: UI 组件
 component:
-  name: Duplicate Button
-  description: A prebuilt React component that duplicates nodes in the editor.
+  name: 复制按钮
+  description: 一个预构建的 React 组件，可复制编辑器中的节点。
   type: component
   isFree: false
   isCloud: false
@@ -19,25 +19,25 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A fully accessible duplicate button for Tiptap editors. Clone selected nodes or blocks in the editor with keyboard shortcut support and intelligent content copying.
+这是一款完全支持无障碍访问的 Tiptap 编辑器复制按钮。可在编辑器中克隆选定节点或块，并支持键盘快捷键和智能内容复制。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui/duplicate-button" />
 
-## Installation
+## 安装
 
-Add the component via the Tiptap CLI:
+使用 Tiptap CLI 添加此组件：
 
 ```bash
 npx @tiptap/cli@latest add duplicate-button
 ```
 
-## Components
+## 组件
 
 ### `<DuplicateButton />`
 
-A prebuilt React component that duplicates nodes in the editor.
+一个预构建的 React 组件，可复制编辑器中的节点。
 
-#### Usage
+#### 用法
 
 ```tsx
 export default function MyEditor() {
@@ -53,23 +53,23 @@ export default function MyEditor() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type             | Default     | Description                                        |
-| --------------------- | ---------------- | ----------- | -------------------------------------------------- |
-| `editor`              | `Editor \| null` | `undefined` | The Tiptap editor instance                         |
-| `text`                | `string`         | `undefined` | Optional text label for the button                 |
-| `hideWhenUnavailable` | `boolean`        | `false`     | Hides the button when duplication is not available |
-| `onDuplicated`        | `() => void`     | `undefined` | Callback fired after a successful duplication      |
-| `showShortcut`        | `boolean`        | `false`     | Shows a keyboard shortcut badge (if available)     |
+| 名称                  | 类型             | 默认值      | 说明                                     |
+| --------------------- | ---------------- | ----------- | ---------------------------------------- |
+| `editor`              | `Editor \| null` | `undefined` | Tiptap 编辑器实例                        |
+| `text`                | `string`         | `undefined` | 按钮的可选文本标签                       |
+| `hideWhenUnavailable` | `boolean`        | `false`     | 无法执行复制操作时隐藏按钮               |
+| `onDuplicated`        | `() => void`     | `undefined` | 成功复制后触发的回调                     |
+| `showShortcut`        | `boolean`        | `false`     | 显示键盘快捷键徽标（如果可用）           |
 
 ## Hooks
 
 ### `useDuplicate()`
 
-A custom hook to build your own duplicate button with full control over rendering and behavior.
+自定义 Hook，可完全掌控渲染和行为，用于构建自己的复制按钮。
 
-#### Usage
+#### 用法
 
 ```tsx
 function MyDuplicateButton() {
@@ -91,30 +91,30 @@ function MyDuplicateButton() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type             | Default     | Description                                         |
-| --------------------- | ---------------- | ----------- | --------------------------------------------------- |
-| `editor`              | `Editor \| null` | `undefined` | The Tiptap editor instance                          |
-| `hideWhenUnavailable` | `boolean`        | `false`     | Hides the button if duplication cannot be performed |
-| `onDuplicated`        | `() => void`     | `undefined` | Callback fired after successful duplication         |
+| 名称                  | 类型             | 默认值      | 说明                                      |
+| --------------------- | ---------------- | ----------- | ----------------------------------------- |
+| `editor`              | `Editor \| null` | `undefined` | Tiptap 编辑器实例                         |
+| `hideWhenUnavailable` | `boolean`        | `false`     | 无法执行复制操作时隐藏按钮                |
+| `onDuplicated`        | `() => void`     | `undefined` | 成功复制后触发的回调                      |
 
-#### Return Values
+#### 返回值
 
-| Name              | Type            | Description                                        |
-| ----------------- | --------------- | -------------------------------------------------- |
-| `isVisible`       | `boolean`       | Whether the button should be rendered              |
-| `canDuplicate`    | `boolean`       | If a node can be duplicated                        |
-| `handleDuplicate` | `() => boolean` | Function to duplicate the selected node            |
-| `label`           | `string`        | Accessible label text for the button               |
-| `shortcutKeys`    | `string`        | Keyboard shortcut (Cmd/Ctrl + D)                   |
-| `Icon`            | `React.FC`      | Icon component for the duplicate button (CopyIcon) |
+| 名称              | 类型            | 说明                               |
+| ----------------- | --------------- | ---------------------------------- |
+| `isVisible`       | `boolean`       | 是否应渲染按钮                     |
+| `canDuplicate`    | `boolean`       | 是否可以复制节点                   |
+| `handleDuplicate` | `() => boolean` | 复制选定节点的函数                 |
+| `label`           | `string`        | 按钮的无障碍标签文本               |
+| `shortcutKeys`    | `string`        | 键盘快捷键（Cmd/Ctrl + D）         |
+| `Icon`            | `React.FC`      | 复制按钮的图标组件（CopyIcon）     |
 
-## Utilities
+## 工具函数
 
 ### `canDuplicateNode(editor)`
 
-Checks if a node can be duplicated in the current editor state.
+检查当前编辑器状态下是否可以复制节点。
 
 ```tsx
 import { canDuplicateNode } from '@/components/tiptap-ui/duplicate-button'
@@ -124,7 +124,7 @@ const canDuplicate = canDuplicateNode(editor)
 
 ### `duplicateNode(editor)`
 
-Programmatically duplicates the selected node or block.
+以编程方式复制选定的节点或块。
 
 ```tsx
 import { duplicateNode } from '@/components/tiptap-ui/duplicate-button'
@@ -135,25 +135,25 @@ if (success) {
 }
 ```
 
-## Keyboard Shortcuts
+## 键盘快捷键
 
-The duplicate button supports the following keyboard shortcut:
+复制按钮支持以下键盘快捷键：
 
-- **Cmd/Ctrl + D**: Duplicate the selected node or block
+- **Cmd/Ctrl + D**：复制选定的节点或块
 
-The shortcut is automatically registered when using either the `<DuplicateButton />` component or the `useDuplicate()` hook. Note that this overrides the browser's default bookmark behavior when the editor is focused.
+使用 `<DuplicateButton />` 组件或 `useDuplicate()` Hook 时，系统会自动注册此快捷键。请注意，当编辑器获得焦点时，此快捷键会覆盖浏览器默认的添加书签功能。
 
-## Requirements
+## 要求
 
-### Dependencies
+### 依赖项
 
-- `@tiptap/react` - Core Tiptap React integration
-- `react-hotkeys-hook` - Keyboard shortcut management
+- `@tiptap/react` - Tiptap React 核心集成
+- `react-hotkeys-hook` - 键盘快捷键管理
 
-### Referenced Components
+### 引用的组件
 
-- `use-tiptap-editor` (hook)
-- `button` (primitive)
-- `badge` (primitive)
-- `tiptap-utils` (lib)
-- `copy-icon` (icon)
+- `use-tiptap-editor`（Hook）
+- `button`（基础组件）
+- `badge`（基础组件）
+- `tiptap-utils`（库）
+- `copy-icon`（图标）
