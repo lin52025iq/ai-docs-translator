@@ -4,11 +4,11 @@ tags:
   - type: team
 meta:
   category: Editor
-  title: Paste Handler extension | Tiptap Editor Docs
-  description: Automatically clean and normalize pasted content from Microsoft Excel, Word, and Google Docs in your Tiptap editor.
+  title: Paste Handler 扩展 | Tiptap 编辑器文档
+  description: 在 Tiptap 编辑器中自动清理和规范化从 Microsoft Excel、Word 和 Google Docs 粘贴的内容。
 extension:
   name: Paste Handler
-  description: Automatically clean and normalize pasted content from external sources like Microsoft Excel, Word, and Google Docs.
+  description: 自动清理和规范化从 Microsoft Excel、Word 和 Google Docs 等外部来源粘贴的内容。
   type: extension
   icon: ClipboardPaste
 ---
@@ -16,29 +16,29 @@ extension:
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-The `PasteHandler` extension intelligently transforms pasted HTML to ensure compatibility with content from external sources. It runs a series of transformations on pasted content to clean up source-specific formatting artifacts while preserving user intent.
+`PasteHandler` 扩展会智能转换粘贴的 HTML，确保其与外部来源的内容兼容。它会对粘贴内容执行一系列转换，清理来源特有的格式问题，同时保留用户的原意。
 
 <CodeDemo isPro path="/Extensions/PasteHandler" />
 
-## Supported sources
+## 支持的来源
 
-| Source | macOS Desktop | Windows Desktop | Web (Browser) |
+| 来源 | macOS 桌面版 | Windows 桌面版 | Web（浏览器） |
 | --- | :---: | :---: | :---: |
-| Microsoft Excel | ✓ | ✓ | ✓ (SharePoint) |
-| Microsoft Word | ✓ | ✓ | ✓ (SharePoint) |
-| Microsoft Outlook | ✓ | ✓ | ✓ (Outlook Web) |
+| Microsoft Excel | ✓ | ✓ | ✓（SharePoint） |
+| Microsoft Word | ✓ | ✓ | ✓（SharePoint） |
+| Microsoft Outlook | ✓ | ✓ | ✓（Outlook Web） |
 | Google Docs | — | — | ✓ |
 | Google Sheets | — | — | ✓ |
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap-pro/extension-paste-handler
 ```
 
-## Usage
+## 用法
 
-The extension requires no configuration. Just add it to your editor and it works automatically.
+此扩展无需配置，只需将它添加到编辑器中，即可自动生效。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -53,34 +53,32 @@ const editor = new Editor({
 })
 ```
 
-## What it handles
+## 处理内容
 
-The extension applies a series of transformations to pasted HTML, executed in a specific order:
+此扩展会按特定顺序对粘贴的 HTML 执行一系列转换：
 
-| Transformation | Description |
+| 转换 | 说明 |
 | --- | --- |
-| CSS class resolution | Resolves class-based CSS formatting (e.g. from Excel) to inline styles |
-| Office markup cleanup | Removes Microsoft Office-specific elements and properties like `<o:p>` tags and `mso-*` styles |
-| Bookmark removal | Strips Word bookmark markers and empty bookmark anchors |
-| Table cell text styles | Ensures text formatting in table cells is properly recognized by the editor |
-| Background color conversion | Converts `background-color` styles to highlight marks for the Highlight extension |
-| ARIA heading conversion | Transforms ARIA heading elements (from SharePoint Word) to semantic HTML headings |
-| Horizontal rule detection | Detects text-based horizontal rules (e.g. from Google Docs) and converts them to `<hr>` elements |
-| Soft line break merging | Merges consecutive zero-margin paragraphs (from Google Docs) into proper line breaks |
-| Nested list reconstruction | Rebuilds flat list structures (from SharePoint) into properly nested lists |
-| Ordered list normalization | Removes inline `list-style-type` to let your editor's CSS control list styling |
-| Orphan break cleanup | Removes stray `<br>` tags between block elements that cause unwanted spacing |
+| CSS 类解析 | 将基于类的 CSS 格式（例如来自 Excel 的格式）解析为内联样式 |
+| Office 标记清理 | 移除 Microsoft Office 特有的元素和属性，例如 `<o:p>` 标签和 `mso-*` 样式 |
+| 移除书签 | 清除 Word 书签标记和空书签锚点 |
+| 表格单元格文本样式 | 确保编辑器能够正确识别表格单元格中的文本格式 |
+| 背景颜色转换 | 将 `background-color` 样式转换为 Highlight 扩展的高亮标记 |
+| ARIA 标题转换 | 将 ARIA 标题元素（来自 SharePoint Word）转换为语义化 HTML 标题 |
+| 水平线检测 | 检测基于文本的水平线（例如来自 Google Docs 的水平线），并将其转换为 `<hr>` 元素 |
+| 合并软换行 | 将连续的零边距段落（来自 Google Docs）合并为正确的换行 |
+| 重建嵌套列表 | 将扁平列表结构（来自 SharePoint）重建为正确嵌套的列表 |
+| 有序列表规范化 | 移除内联 `list-style-type`，使编辑器的 CSS 控制列表样式 |
+| 清理多余换行 | 移除块级元素之间导致意外间距的多余 `<br>` 标签 |
 
-<Callout title="Error handling" variant="info">
-  If any transformation fails, the extension gracefully falls back to the original pasted HTML to
-  ensure paste functionality is never broken.
+<Callout title="错误处理" variant="info">
+  如果任何转换失败，扩展会平稳地回退到原始粘贴 HTML，确保粘贴功能始终可用。
 </Callout>
 
-## Known limitations
+## 已知限制
 
-### Safari clipboard strips table cell styling
+### Safari 剪贴板会剥除表格单元格样式
 
-When copying table cells from SharePoint Excel (or similar sources) in Safari and pasting into the editor, in-cell formatting like bold, italic, colors, and links is lost. Safari writes a stripped-down HTML payload to the clipboard that contains only the table structure and cell text — the styling information is removed before it reaches the editor.
+在 Safari 中从 SharePoint Excel（或类似来源）复制表格单元格并粘贴到编辑器时，单元格内的加粗、斜体、颜色和链接等格式会丢失。Safari 会将精简后的 HTML 数据写入剪贴板，其中只包含表格结构和单元格文本；样式信息在内容到达编辑器之前就已被移除。
 
-This is a WebKit-level behavior and cannot be recovered by the paste handler. The same result occurs when pasting into other editors in Safari (e.g. SharePoint Word). Copies made from Chromium-based browsers or Firefox are not affected.
-
+这是 WebKit 层面的行为，Paste Handler 无法恢复这些信息。在 Safari 中粘贴到其他编辑器（例如 SharePoint Word）时也会出现相同情况。从基于 Chromium 的浏览器或 Firefox 复制则不受影响。
