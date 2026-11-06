@@ -1,52 +1,52 @@
 ---
-title: Configure Hocuspocus Provider
+title: 配置 Hocuspocus Provider
 meta:
-  title: Configure Hocuspocus Provider | Tiptap Collaboration Docs
+  title: 配置 Hocuspocus Provider | Tiptap 协作文档
   description:
   category: Hocuspocus
 ---
 
-## Settings
+## 设置
 
 ### HocuspocusProvider
 
-| Setting             | Description                                                                                                       | Default Value                       |
+| 设置 | 描述 | 默认值 |
 |---------------------|-------------------------------------------------------------------------------------------------------------------|-------------------------------------|
-| `url`               | The URL of the Hocuspocus/WebSocket server.                                                                       | `''`                                |
-| `websocketProvider` | An instance of HocuspocusProviderWebsocket, if you want to share a socket between multiple providers              | `new HocuspocusProviderWebsocket()` |
-| `name`              | The name of the document.                                                                                         | `''`                                |
-| `document`          | The actual Y.js document. Optional, by default a new document is created and be access through provider.document. | `new Y.Doc()`                       |
-| `token`             | An authentication token that will be passed to the server (works with strings, functions and Promises).           | `''`                                |
-| `awareness`         | Awareness object, by default attached to the passed Y.js document.                                                | `new Awareness()`                   |
-| `forceSyncInterval` | Ask the server every x ms for updates.                                                                            | `false`                             |
-| `sessionAwareness`  | Embed a unique `sessionId` in the document name of every message, allowing multiple providers with the same document name on one WebSocket. Keep `false` when connecting to a v3 server. Requires a v4 server. | `false`                             |
-| `flushDelay`        | Batch outgoing document and awareness updates over a short window (in ms) instead of sending one message per change. Reduces websocket traffic during heavy editing. The added latency is capped at `flushDelay`, so keep it small (e.g. `500`). Set to `false` to send every change immediately. See [Batching outgoing updates](#batching-outgoing-updates). | `false`                             |
+| `url` | Hocuspocus/WebSocket 服务器的 URL。 | `''` |
+| `websocketProvider` | HocuspocusProviderWebsocket 实例，可用于在多个 provider 之间共享一个 socket。 | `new HocuspocusProviderWebsocket()` |
+| `name` | 文档的名称。 | `''` |
+| `document` | 实际的 Y.js 文档。此项为可选；默认会创建一个新文档，并可通过 provider.document 访问。 | `new Y.Doc()` |
+| `token` | 将传递给服务器的身份验证令牌（支持字符串、函数和 Promise）。 | `''` |
+| `awareness` | Awareness 对象，默认附加到传入的 Y.js 文档。 | `new Awareness()` |
+| `forceSyncInterval` | 每隔 x 毫秒向服务器请求更新。 | `false` |
+| `sessionAwareness` | 在每条消息的文档名称中嵌入唯一的 `sessionId`，以便多个文档名称相同的 provider 共用一个 WebSocket。连接到 v3 服务器时请保持为 `false`。此选项需要 v4 服务器。 | `false` |
+| `flushDelay` | 在一个短时间窗口内批量发送文档和 awareness 更新（单位：毫秒），而不是每次更改都发送一条消息。在大量编辑时可减少 WebSocket 流量。增加的延迟最多为 `flushDelay`，因此请将其设为较小的值（例如 `500`）。设为 `false` 可立即发送每次更改。参见[批量发送更新](#batching-outgoing-updates)。 | `false` |
 
 ### HocuspocusProviderWebsocket
 
-| Setting                   | Description                                                                                                                                                                         | Default Value     |
+| 设置 | 描述 | 默认值 |
 |---------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|
-| `url`                     | The URL of the Hocuspocus/WebSocket server.                                                                                                                                         | `''`              |
-| `WebSocketPolyfill`       | Running in Node.js: Pass a WebSocket polyfill, for example ws.                                                                                                                      | `WebSocket`       |
-| `timeout`                 | A timeout in milliseconds. If timeout is non-zero then a timer is set using setTimeout. If the timeout is triggered then future attempts will be aborted.                           | `0`               |
-| `factor`                  | The factor option is used to grow the delay exponentially.                                                                                                                          | `2`               |
-| `maxAttempts`             | The maximum number of attempts or 0 if there is no limit on number of attempts.                                                                                                     | `0`               |
-| `minDelay`                | minDelay is used to set a lower bound of delay when jitter is enabled. This property has no effect if jitter is disabled.                                                           | `1000`            |
-| `maxDelay`                | The maxDelay option is used to set an upper bound for the delay when factor is enabled. A value of 0 can be provided if there should be no upper bound when calculating delay.      | `30000`           |
-| `jitter`                  | If jitter is true then the calculated delay will be a random integer value between minDelay and the calculated delay for the current iteration.                                     | `true`            |
-| `messageReconnectTimeout` | Closes the connection when after the configured messageReconnectTimeout no message was received.                                                                                    | `30000`           |
-| `delay`                   | The delay between each attempt in milliseconds. You can provide a factor to have the delay grow exponentially.                                                                      | `1000`            |
-| `initialDelay`            | The initialDelay is the amount of time to wait before making the first attempt. This option should typically be 0 since you typically want the first attempt to happen immediately. | `0`               |
-| `onMaxAttemptsFailed`     | Called with `{ error }` once every one of the `maxAttempts` reconnect attempts has failed and the provider stops retrying. Never fires with the default `maxAttempts: 0`, because the provider then retries forever. See [Reacting to failed reconnects](#reacting-to-failed-reconnects). | `() => null`      |
+| `url` | Hocuspocus/WebSocket 服务器的 URL。 | `''` |
+| `WebSocketPolyfill` | 在 Node.js 中运行时：传入一个 WebSocket polyfill，例如 ws。 | `WebSocket` |
+| `timeout` | 超时时间，单位为毫秒。如果 timeout 非零，则会使用 setTimeout 设置计时器。超时触发后，后续尝试将被中止。 | `0` |
+| `factor` | 用于让延迟按指数增长的系数。 | `2` |
+| `maxAttempts` | 最大尝试次数；设为 0 表示尝试次数不受限制。 | `0` |
+| `minDelay` | 启用 jitter 时，minDelay 用于设置延迟下限。禁用 jitter 时，此属性无效。 | `1000` |
+| `maxDelay` | 启用 factor 时，maxDelay 用于设置延迟上限。如果计算延迟时不需要上限，可将其设为 0。 | `30000` |
+| `jitter` | 如果 jitter 为 true，则计算出的延迟将是一个随机整数，范围为 minDelay 到当前轮次计算出的延迟。 | `true` |
+| `messageReconnectTimeout` | 配置的 messageReconnectTimeout 时间内未收到消息时关闭连接。 | `30000` |
+| `delay` | 每次尝试之间的延迟，单位为毫秒。可提供一个系数，让延迟按指数增长。 | `1000` |
+| `initialDelay` | initialDelay 是首次尝试前的等待时间。此选项通常应设为 0，因为一般希望立即进行首次尝试。 | `0` |
+| `onMaxAttemptsFailed` | 当 `maxAttempts` 指定的所有重连尝试均失败且 provider 停止重试时，调用此回调并传入 `{ error }`。默认 `maxAttempts: 0` 时不会触发，因为 provider 会无限重试。参见[处理重连失败](#reacting-to-failed-reconnects)。 | `() => null` |
 
 
-## Usage
+## 用法
 
-There is not much required to set up the provider, a simple example can be found in [Getting started](/hocuspocus/provider/install)
+设置 provider 无需太多操作，简单示例请参见[入门指南](/hocuspocus/provider/install)
 
-## Batching outgoing updates
+## 批量发送更新
 
-By default the provider sends one websocket message per change. During heavy editing — fast typing, large pastes, or rapid cursor movement — this can produce a lot of small messages. Set `flushDelay` to a number of milliseconds to batch outgoing document and awareness updates over a short window:
+默认情况下，provider 每次更改都会发送一条 WebSocket 消息。在大量编辑时——例如快速输入、大段粘贴或光标快速移动——可能会产生许多小消息。将 `flushDelay` 设为毫秒数，即可在一个短时间窗口内批量发送文档和 awareness 更新：
 
 ```js
 import { HocuspocusProvider } from '@hocuspocus/provider'
@@ -58,13 +58,13 @@ const provider = new HocuspocusProvider({
 })
 ```
 
-Within each window, buffered Yjs updates are merged with `Y.mergeUpdates` into a single message, and awareness collapses to the latest state of each changed client. The window is a fixed batch rather than a resetting debounce, so the added latency is capped at `flushDelay` even while the user keeps typing — keep it small (e.g. `500`) to avoid delaying what other clients see.
+在每个窗口内，缓冲的 Yjs 更新会通过 `Y.mergeUpdates` 合并为一条消息，而 awareness 则会合并为每个发生变化的客户端的最新状态。该窗口采用固定批处理，而不是会重置的防抖，因此即使用户持续输入，增加的延迟也不会超过 `flushDelay`。请将其设为较小的值（例如 `500`），以免其他客户端看到更新的时间延后。
 
-You can force everything buffered for the current window to be sent immediately by calling `provider.flushPendingUpdates()`.
+调用 `provider.flushPendingUpdates()` 可以强制立即发送当前窗口中所有缓冲的内容。
 
-## Reacting to failed reconnects
+## 处理重连失败
 
-With the default `maxAttempts: 0` the provider reconnects forever, so a connection failure is never final. If you set `maxAttempts` to a number, the provider gives up once those attempts are used up — and tells you so through `onMaxAttemptsFailed`, which is a good place to show a “you’re offline” state or a “try again” button:
+默认情况下，`maxAttempts: 0` 会让 provider 无限重连，因此连接失败不会成为最终状态。如果将 `maxAttempts` 设为一个数字，provider 会在用尽这些尝试次数后停止重试，并通过 `onMaxAttemptsFailed` 通知你。你可以在此处显示“你已离线”状态或“重试”按钮：
 
 ```js
 import { HocuspocusProvider } from '@hocuspocus/provider'
@@ -79,9 +79,9 @@ const provider = new HocuspocusProvider({
 })
 ```
 
-`error` is whatever made the last attempt fail: the WebSocket error, or — when the socket closed without ever emitting an error — an `Error` carrying the close code and reason.
+`error` 表示导致最后一次尝试失败的原因：可能是 WebSocket 错误；如果 socket 关闭前从未触发错误，则会是一个包含关闭代码和原因的 `Error`。
 
-This is a `HocuspocusProviderWebsocket` event, and it is deliberately not forwarded to `HocuspocusProvider`, because a single socket can be shared by many documents. Passing `onMaxAttemptsFailed` to `HocuspocusProvider` works (the option is handed to the socket it creates for you), but binding a listener later has to happen on the socket:
+这是 `HocuspocusProviderWebsocket` 的事件，特意不会转发给 `HocuspocusProvider`，因为一个 socket 可能由多个文档共享。将 `onMaxAttemptsFailed` 传给 `HocuspocusProvider` 是可行的（该选项会传递给它为你创建的 socket），但如果之后再绑定监听器，则必须在 socket 上进行：
 
 ```js
 import { HocuspocusProvider, HocuspocusProviderWebsocket } from '@hocuspocus/provider'
@@ -101,7 +101,7 @@ const provider = new HocuspocusProvider({
 })
 ```
 
-Giving up is not permanent. Call `connect()` on the websocket provider to start a fresh round of attempts, for example from a “try again” button:
+停止重试并非永久状态。调用 websocket provider 的 `connect()` 即可重新开始一轮尝试，例如可在“重试”按钮的处理逻辑中调用：
 
 ```js
 provider.configuration.websocketProvider.connect()
