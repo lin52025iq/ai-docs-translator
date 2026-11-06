@@ -1,12 +1,12 @@
 ---
-title: Delete Node Button
+title: 删除节点按钮
 meta:
-  title: Delete Node Button | Tiptap UI Components
-  description: Delete selected nodes and blocks in Tiptap editors with keyboard shortcuts, intelligent selection handling, and accessibility support.
-  category: UI Components
+  title: 删除节点按钮 | Tiptap UI 组件
+  description: 在 Tiptap 编辑器中删除选中的节点和块，支持键盘快捷键、智能选择处理和无障碍功能。
+  category: UI 组件
 component:
-  name: Delete Node Button
-  description: A prebuilt React component that deletes nodes from the editor.
+  name: 删除节点按钮
+  description: 一个预构建的 React 组件，用于从编辑器中删除节点。
   type: component
   isFree: false
   isCloud: false
@@ -19,25 +19,25 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A fully accessible delete node button for Tiptap editors. Remove selected nodes or blocks from the editor with keyboard shortcut support and smart selection handling.
+这是一款完全支持无障碍访问的 Tiptap 编辑器删除节点按钮。支持键盘快捷键和智能选择处理，可从编辑器中移除选中的节点或块。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui/delete-node-button" />
 
-## Installation
+## 安装
 
-Add the component via the Tiptap CLI:
+使用 Tiptap CLI 添加此组件：
 
 ```bash
 npx @tiptap/cli@latest add delete-node-button
 ```
 
-## Components
+## 组件
 
 ### `<DeleteNodeButton />`
 
-A prebuilt React component that deletes nodes from the editor.
+一个预构建的 React 组件，用于从编辑器中删除节点。
 
-#### Usage
+#### 用法
 
 ```tsx
 export default function MyEditor() {
@@ -53,23 +53,23 @@ export default function MyEditor() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type             | Default     | Description                                     |
-| --------------------- | ---------------- | ----------- | ----------------------------------------------- |
-| `editor`              | `Editor \| null` | `undefined` | The Tiptap editor instance                      |
-| `text`                | `string`         | `undefined` | Optional text label for the button              |
-| `hideWhenUnavailable` | `boolean`        | `false`     | Hides the button when deletion is not available |
-| `onDeleted`           | `() => void`     | `undefined` | Callback fired after a successful deletion      |
-| `showShortcut`        | `boolean`        | `false`     | Shows a keyboard shortcut badge (if available)  |
+| 名称                  | 类型             | 默认值      | 说明                                     |
+| --------------------- | ---------------- | ----------- | ---------------------------------------- |
+| `editor`              | `Editor \| null` | `undefined` | Tiptap 编辑器实例                        |
+| `text`                | `string`         | `undefined` | 按钮的可选文本标签                       |
+| `hideWhenUnavailable` | `boolean`        | `false`     | 无法删除时隐藏按钮                       |
+| `onDeleted`           | `() => void`     | `undefined` | 成功删除后触发的回调                     |
+| `showShortcut`        | `boolean`        | `false`     | 显示键盘快捷键徽标（如果有）             |
 
 ## Hooks
 
 ### `useDeleteNode()`
 
-A custom hook to build your own delete node button with full control over rendering and behavior.
+自定义 Hook，可用于构建自己的删除节点按钮，并完全控制其渲染方式和行为。
 
-#### Usage
+#### 用法
 
 ```tsx
 function MyDeleteNodeButton() {
@@ -91,30 +91,30 @@ function MyDeleteNodeButton() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type             | Default     | Description                                      |
-| --------------------- | ---------------- | ----------- | ------------------------------------------------ |
-| `editor`              | `Editor \| null` | `undefined` | The Tiptap editor instance                       |
-| `hideWhenUnavailable` | `boolean`        | `false`     | Hides the button if deletion cannot be performed |
-| `onDeleted`           | `() => void`     | `undefined` | Callback fired after successful deletion         |
+| 名称                  | 类型             | 默认值      | 说明                                      |
+| --------------------- | ---------------- | ----------- | ----------------------------------------- |
+| `editor`              | `Editor \| null` | `undefined` | Tiptap 编辑器实例                         |
+| `hideWhenUnavailable` | `boolean`        | `false`     | 无法执行删除操作时隐藏按钮                |
+| `onDeleted`           | `() => void`     | `undefined` | 成功删除后触发的回调                      |
 
-#### Return Values
+#### 返回值
 
-| Name               | Type            | Description                                      |
-| ------------------ | --------------- | ------------------------------------------------ |
-| `isVisible`        | `boolean`       | Whether the button should be rendered            |
-| `canDeleteNode`    | `boolean`       | If a node can be deleted                         |
-| `handleDeleteNode` | `() => boolean` | Function to delete the selected node             |
-| `label`            | `string`        | Accessible label text for the button             |
-| `shortcutKeys`     | `string`        | Keyboard shortcut (Backspace)                    |
-| `Icon`             | `React.FC`      | Icon component for the delete button (TrashIcon) |
+| 名称               | 类型            | 说明                                      |
+| ------------------ | --------------- | ----------------------------------------- |
+| `isVisible`        | `boolean`       | 是否应渲染此按钮                          |
+| `canDeleteNode`    | `boolean`       | 是否可以删除节点                          |
+| `handleDeleteNode` | `() => boolean` | 删除所选节点的函数                        |
+| `label`            | `string`        | 按钮的无障碍标签文本                      |
+| `shortcutKeys`     | `string`        | 键盘快捷键（Backspace）                   |
+| `Icon`             | `React.FC`      | 删除按钮的图标组件（TrashIcon）           |
 
-## Utilities
+## 工具函数
 
 ### `canDeleteNode(editor)`
 
-Checks if a node can be deleted in the current editor state.
+检查当前编辑器状态下是否可以删除节点。
 
 ```tsx
 import { canDeleteNode } from '@/components/tiptap-ui/delete-node-button'
@@ -124,7 +124,7 @@ const canDelete = canDeleteNode(editor)
 
 ### `deleteNode(editor)`
 
-Programmatically deletes the selected node or block.
+以编程方式删除选中的节点或块。
 
 ```tsx
 import { deleteNode } from '@/components/tiptap-ui/delete-node-button'
@@ -137,7 +137,7 @@ if (success) {
 
 ### `deleteNodeAtPosition(editor, pos, nodeSize)`
 
-Low-level utility to delete a node at a specific position.
+底层工具函数，用于删除指定位置的节点。
 
 ```tsx
 import { deleteNodeAtPosition } from '@/components/tiptap-ui/delete-node-button'
@@ -145,32 +145,29 @@ import { deleteNodeAtPosition } from '@/components/tiptap-ui/delete-node-button'
 const success = deleteNodeAtPosition(editor, position, nodeSize)
 ```
 
-## Keyboard Shortcuts
+## 键盘快捷键
 
-The delete node button supports the following keyboard shortcut:
+删除节点按钮支持以下键盘快捷键：
 
-- **Backspace**: Delete the selected node or block
+- **Backspace**：删除选中的节点或块
 
-The shortcut is automatically registered when using either the `<DeleteNodeButton />` component or
-the `useDeleteNode()` hook. Editor extensions keep ownership of Backspace events they already handled;
-the shared delete shortcut runs only for an unhandled event and prevents the browser default only
-after a successful deletion. A successful positional deletion starts a separate undo step.
+使用 `<DeleteNodeButton />` 组件或 `useDeleteNode()` Hook 时，系统会自动注册此快捷键。编辑器扩展仍会处理其已接管的 Backspace 事件；共享删除快捷键只会在事件尚未处理时运行，并且仅在成功删除后才会阻止浏览器的默认行为。成功的位置删除会创建一个单独的撤销步骤。
 
-## Requirements
+## 要求
 
-### Dependencies
+### 依赖项
 
-- `@tiptap/react` - Core Tiptap React integration
-- `@tiptap/pm` - ProseMirror selection and history utilities
-- `@tiptap/starter-kit` - Core editor extensions and keymaps
-- `react-hotkeys-hook` - Keyboard shortcut management
+- `@tiptap/react` - Tiptap React 核心集成
+- `@tiptap/pm` - ProseMirror 选择和历史记录工具
+- `@tiptap/starter-kit` - 核心编辑器扩展和键位映射
+- `react-hotkeys-hook` - 键盘快捷键管理
 
-### Referenced Components
+### 引用的组件
 
-- `use-tiptap-editor` (hook)
-- `use-is-breakpoint` (hook)
-- `button` (primitive)
-- `badge` (primitive)
-- `tiptap-utils` (lib)
-- `trash-icon` (icon)
-- `styles` (shared styles)
+- `use-tiptap-editor`（Hook）
+- `use-is-breakpoint`（Hook）
+- `button`（基础组件）
+- `badge`（基础组件）
+- `tiptap-utils`（库）
+- `trash-icon`（图标）
+- `styles`（共享样式）
