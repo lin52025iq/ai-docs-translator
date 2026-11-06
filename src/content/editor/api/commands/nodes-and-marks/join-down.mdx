@@ -1,14 +1,14 @@
 ---
-title: joinDown command
+title: joinDown 命令
 meta:
-  title: joinDown command | Tiptap Editor Docs
-  description: Use the joinDown command in Tiptap to join the selected block with the sibling below it. Learn more in our docs!
-  category: Editor
+  title: joinDown 命令 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 joinDown 命令，将选中的块与其下方的同级块合并。了解更多信息，请参阅文档！
+  category: 编辑器
 ---
 
-The `joinDown` command joins the selected block, or if there is a text selection, the closest ancestor block of the selection that can be joined, with the sibling below it. [See also](https://prosemirror.net/docs/ref/#commands.joinDown)
+`joinDown` 命令会将选中的块与其下方的同级块合并。如果当前选中的是文本，则会将包含该选区且可合并的最近祖先块与其下方的同级块合并。[另请参阅](https://prosemirror.net/docs/ref/#commands.joinDown)
 
-## Use the joinDown command
+## 使用 joinDown 命令
 
 ```js
 editor.commands.joinDown()
