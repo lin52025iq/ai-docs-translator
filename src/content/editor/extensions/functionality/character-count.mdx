@@ -1,39 +1,39 @@
 ---
-title: CharacterCount extension
+title: CharacterCount 扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extensions?label=version
     url: https://www.npmjs.com/package/@tiptap/extensions
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extensions.svg
     url: https://npmcharts.com/compare/@tiptap/extensions?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  title: CharacterCount extension | Tiptap Editor Docs
-  description: Count and limit the number of characters in your editor with the Character Count extension. Learn more in our docs!
-  category: Editor
+  title: CharacterCount 扩展 | Tiptap 编辑器文档
+  description: 使用 Character Count 扩展统计并限制编辑器中的字符数。了解更多，请参阅我们的文档！
+  category: 编辑器
 extension:
-  name: Character Count
+  name: 字符计数
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extensions
-  description: Limit the number of characters in your editor, or at least count them.
+  description: 限制编辑器中的字符数，或者至少统计字符数。
   type: extension
   icon: Calculator
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-The `CharacterCount` extension limits the number of allowed characters to a specific length and is able to return the number of characters and words. That’s it, that’s all.
+`CharacterCount` 扩展可以将允许输入的字符数限制在指定长度，并返回字符数和单词数。就是这样，没别的了。
 
 <CodeDemo path="/Extensions/CharacterCount" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extensions
 ```
 
-## Usage
+## 用法
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -44,13 +44,13 @@ new Editor({
 })
 ```
 
-## Settings
+## 设置
 
 ### limit
 
-The maximum number of characters that should be allowed.
+允许的最大字符数。
 
-Default: `null`
+默认值：`null`
 
 ```js
 CharacterCount.configure({
@@ -60,9 +60,9 @@ CharacterCount.configure({
 
 ### autoTrim
 
-Sets whether the content will be automatically trimmed when programmatically setting content over the limit. If set to `false`, the content will not be trimmed automatically, allowing you to handle the excess content manually.
+设置通过编程方式设置的内容超过限制时，是否自动截断内容。如果设为 `false`，则不会自动截断内容，你可以手动处理超出的部分。
 
-Default: `true`
+默认值：`true`
 
 ```js
 CharacterCount.configure({
@@ -73,9 +73,9 @@ CharacterCount.configure({
 
 ### mode
 
-The mode by which the size is calculated.
+用于计算长度的模式。
 
-Default: `'textSize'`
+默认值：`'textSize'`
 
 ```js
 CharacterCount.configure({
@@ -85,9 +85,9 @@ CharacterCount.configure({
 
 ### autoTrim
 
-Controls whether the initial content is automatically trimmed when it exceeds the configured limit. When set to `false`, initial content over the limit is preserved. While the document remains over the limit, transactions that increase the content size are blocked.
+控制初始内容超出配置的限制时是否自动截断。设为 `false` 时，会保留超出限制的初始内容。当文档仍超出限制时，会阻止增加内容大小的事务。
 
-Default: `true`
+默认值：`true`
 
 ```js
 CharacterCount.configure({
@@ -98,9 +98,9 @@ CharacterCount.configure({
 
 ### textCounter
 
-The text counter function to use. Defaults to a simple character count.
+要使用的文本计数函数。默认情况下，只进行简单的字符计数。
 
-Default: `(text) => text.length`
+默认值：`(text) => text.length`
 
 ```js
 CharacterCount.configure({
@@ -110,9 +110,9 @@ CharacterCount.configure({
 
 ### wordCounter
 
-The word counter function to use. Defaults to a simple word count.
+要使用的单词计数函数。默认情况下，只进行简单的单词计数。
 
-Default: `(text) => text.split(' ').filter((word) => word !== '').length`
+默认值：`(text) => text.split(' ').filter((word) => word !== '').length`
 
 ```js
 CharacterCount.configure({
@@ -120,11 +120,11 @@ CharacterCount.configure({
 })
 ```
 
-## Storage
+## 存储
 
 ### characters()
 
-Get the number of characters for the current document.
+获取当前文档的字符数。
 
 ```js
 editor.storage.characterCount.characters()
@@ -138,7 +138,7 @@ editor.storage.characterCount.characters({ mode: 'nodeSize' })
 
 ### words()
 
-Get the number of words for the current document.
+获取当前文档的单词数。
 
 ```js
 editor.storage.characterCount.words()
@@ -147,11 +147,11 @@ editor.storage.characterCount.words()
 editor.storage.characterCount.words({ node: someCustomNode })
 ```
 
-## Source code
+## 源代码
 
 [packages/extensions/src/character-count/](https://github.com/ueberdosis/tiptap/blob/main/packages/extensions/src/character-count/)
 
-## Minimal Install
+## 最小化安装
 
 ```js
 import { Editor } from '@tiptap/core'
