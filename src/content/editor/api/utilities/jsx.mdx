@@ -2,25 +2,25 @@
 title: JSX
 meta:
   title: JSX | Tiptap Editor Docs
-  description: Use JSX to control the way your extensions render to HTML.
+  description: 使用 JSX 控制扩展渲染为 HTML 的方式。
   category: Editor
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-When creating custom extensions, you often have to define how they should be rendered to HTML. Usually, this is done by defining a `renderHTML` function that returns Prosemirror render array including the tag name, attributes and content holes.
+创建自定义扩展时，通常需要定义其渲染为 HTML 的方式。一般来说，可以定义一个 `renderHTML` 函数，返回一个 ProseMirror 渲染数组，其中包含标签名称、属性和内容占位符。
 
-With the Tiptap JSX renderer, you can use JSX to define how your extensions should be rendered.
+使用 Tiptap JSX 渲染器，可以通过 JSX 定义扩展的渲染方式。
 
 <CodeDemo path="/Examples/JSX" />
 
-## Using JSX in your extension
+## 在扩展中使用 JSX
 
-To use JSX in your extension, you will need a bundler that can handle **JSX** or **TSX** files like Vite or Webpack. Most frameworks like Next.js, Remix or Nuxt already should be able to handle this.
+要在扩展中使用 JSX，需要使用能够处理 **JSX** 或 **TSX** 文件的打包工具，例如 Vite 或 Webpack。大多数框架（如 Next.js、Remix 或 Nuxt）应该都能直接处理这些文件。
 
-By default, the JSX runtime of React is used if not configured otherwise. This will cause issues if you are trying to use JSX in a non-React environment like a Tiptap extension.
+默认情况下，除非另行配置，否则会使用 React 的 JSX 运行时。如果尝试在非 React 环境（例如 Tiptap 扩展）中使用 JSX，就会导致问题。
 
-To handle this, you can add a comment to the top of your file to specify which JSX runtime the bundler should use. Tiptap comes with it's own bundler from `@tiptap/core`.
+为了解决这个问题，可以在文件顶部添加注释，指定打包工具应使用哪个 JSX 运行时。Tiptap 在 `@tiptap/core` 中内置了自己的运行时。
 
 ```jsx
 /** @jsxImportSource @tiptap/core */
@@ -28,9 +28,9 @@ To handle this, you can add a comment to the top of your file to specify which J
 // your code here
 ```
 
-## Writing JSX in the `renderHTML` function
+## 在 `renderHTML` 函数中编写 JSX
 
-Now that the bundler should be able to handle JSX for Tiptap, you can use JSX in your `renderHTML` function.
+现在，打包工具应该能够为 Tiptap 处理 JSX 了，你可以在 `renderHTML` 函数中使用 JSX。
 
 ```jsx
 /** @jsxImportSource @tiptap/core */
@@ -51,6 +51,6 @@ const MyNode = Node.create({
 })
 ```
 
-The `<slot />` tag is used to define a content hole for Prosemirror via JSX. This is the position your editable content will be rendered into.
+`<slot />` 标签用于通过 JSX 为 ProseMirror 定义内容占位符。这是可编辑内容将被渲染到的位置。
 
-**Note** that this is not using any component library like React or Vue under the hood and won't support hooks, states or other library specific features.
+**注意：** 底层并未使用 React 或 Vue 等组件库，因此不支持钩子、状态或其他特定于这些库的功能。
