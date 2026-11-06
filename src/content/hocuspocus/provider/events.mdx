@@ -1,17 +1,17 @@
 ---
-title: Hocuspocus Provider Events
+title: Hocuspocus Provider 事件
 meta:
-  title: Events | Tiptap Collaboration Docs
+  title: 事件 | Tiptap 协作文档
   description:
   category: Hocuspocus
 ---
 
-## Introduction
+## 简介
 
-Events are a great way to react to different states, for example when the provider has successfully connected. You can choose to bind event listeners on initialization or later, that’s up to you.
+事件是响应不同状态的好方法，例如 Provider 成功连接时。你可以选择在初始化时或之后绑定事件监听器，由你决定。
 
-## Option 1: Configuration
-Passing event listeners to the constructor ensures they are registered during initialization.
+## 方式 1：配置
+将事件监听器传递给构造函数，可确保它们在初始化期间注册。
 
 ```js
 const provider = new HocuspocusProvider({
@@ -69,10 +69,10 @@ const provider = new HocuspocusProvider({
 });
 ```
 
-## Option 2: Binding
-Sometimes you want to register an event listener after the initialization, even if it’s right after. Also, that’s a great way to bind and unbind event listeners.
+## 方式 2：绑定
+有时你可能想在初始化后注册事件监听器，即使只是在初始化后立即注册。绑定和解绑事件监听器也很方便。
 
-### Bind event listeners
+### 绑定事件监听器
 
 ```js
 const provider = new HocuspocusProvider({
@@ -84,7 +84,7 @@ provider.on("synced", () => {
 });
 ```
 
-### Unbind event listeners
+### 解绑事件监听器
 
 ```js
 const onMessage = () => {
@@ -98,34 +98,34 @@ provider.on("onMessage", onMessage);
 provider.off("onMessage", onMessage);
 ```
 
-## List of events
+## 事件列表
 
 | Name                 | Description                                                               |
 | -------------------- | ------------------------------------------------------------------------- |
-| open                 | When the WebSocket connection is created.                                 |
-| connect              | When the provider has successfully connected to the server.               |
-| authenticated        | When the client has successfully authenticated.                           |
-| authenticationFailed | When the client authentication was not successful.                        |
-| status               | When the connections status changes.                                      |
-| message              | When a message is incoming.                                               |
-| outgoingMessage      | When a message will be sent.                                              |
-| synced               | When the Y.js document is successfully synced (initially).                |
-| close                | When the WebSocket connection is closed.                                  |
-| disconnect           | When the provider disconnects.                                            |
-| destroy              | When the provider will be destroyed.                                      |
-| awarenessUpdate      | When the awareness updates (see https://docs.yjs.dev/api/about-awareness) |
-| awarenessChange      | When the awareness changes (see https://docs.yjs.dev/api/about-awareness) |
-| stateless            | When the stateless message was received.                                  |
+| open                 | 创建 WebSocket 连接时触发。                                                |
+| connect              | Provider 成功连接到服务器时触发。                                           |
+| authenticated        | 客户端成功通过身份验证时触发。                                               |
+| authenticationFailed | 客户端身份验证失败时触发。                                                  |
+| status               | 连接状态发生变化时触发。                                                    |
+| message              | 收到消息时触发。                                                          |
+| outgoingMessage      | 即将发送消息时触发。                                                       |
+| synced               | Y.js 文档完成初始同步时触发。                                               |
+| close                | WebSocket 连接关闭时触发。                                                 |
+| disconnect           | Provider 断开连接时触发。                                                  |
+| destroy              | 即将销毁 Provider 时触发。                                                 |
+| awarenessUpdate      | Awareness 更新时触发（参见 https://docs.yjs.dev/api/about-awareness）      |
+| awarenessChange      | Awareness 发生变化时触发（参见 https://docs.yjs.dev/api/about-awareness）  |
+| stateless            | 收到无状态消息时触发。                                                     |
 
-## HocuspocusProviderWebsocket events
+## HocuspocusProviderWebsocket 事件
 
-The events above belong to the `HocuspocusProvider`, which represents a single document. The WebSocket connection underneath it — a `HocuspocusProviderWebsocket`, potentially shared by several documents — has one event of its own:
+上面的事件属于表示单个文档的 `HocuspocusProvider`。其底层的 WebSocket 连接（即 `HocuspocusProviderWebsocket`）可能由多个文档共享，并且有一个自己的事件：
 
 | Name              | Description                                                                              |
 | ----------------- | ------------------------------------------------------------------------------------------ |
-| maxAttemptsFailed | When all `maxAttempts` reconnect attempts have failed and the provider stops retrying.   |
+| maxAttemptsFailed | 所有 `maxAttempts` 次重连尝试均失败且 Provider 停止重试时触发。                          |
 
-It is not forwarded to the document providers, so bind it on the socket:
+此事件不会转发给文档 Provider，因此请在 socket 上绑定监听器：
 
 ```js
 provider.configuration.websocketProvider.on("maxAttemptsFailed", ({ error }) => {
@@ -133,4 +133,4 @@ provider.configuration.websocketProvider.on("maxAttemptsFailed", ({ error }) => 
 });
 ```
 
-Passing `onMaxAttemptsFailed` to the `HocuspocusProvider` constructor works as well, as long as you let the provider create its own socket. See [Reacting to failed reconnects](/hocuspocus/provider/configuration#reacting-to-failed-reconnects).
+只要让 Provider 创建自己的 socket，也可以将 `onMaxAttemptsFailed` 传递给 `HocuspocusProvider` 构造函数。请参阅[如何响应重连失败](/hocuspocus/provider/configuration#reacting-to-failed-reconnects)。
