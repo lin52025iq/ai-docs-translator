@@ -1,6 +1,6 @@
 ---
-title: 'Pasting'
-intro: 'When you paste Mermaid, draw.io XML or BPMN XML into the document, the extension turns the text into a chart or a diagram. Rows pasted onto a selected chart become its new data. The <a href="/docs/diagrams/data/quick-input">Quick Input</a> reads typed text with the same rules, and also makes a chart from rows.'
+title: '粘贴'
+intro: '将 Mermaid、draw.io XML 或 BPMN XML 粘贴到文档中时，此扩展会将文本转换为图表或图示。将行粘贴到选中的图表中时，这些行会成为图表的新数据。<a href="/docs/diagrams/data/quick-input">快速输入</a>也会按照相同规则读取输入的文本，并且还可以根据行创建图表。'
 headerDemo:
   path: '/Extensions/DiagramsPasteDetection'
   isPro: true
@@ -8,45 +8,41 @@ tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Pasting | Tiptap Diagrams Docs'
-  description: 'When you paste Mermaid, draw.io XML or BPMN XML into the document, the extension turns the text into a chart or a diagram.'
-  category: Diagrams
+  title: '粘贴 | Tiptap Diagrams 文档'
+  description: '将 Mermaid、draw.io XML 或 BPMN XML 粘贴到文档中时，此扩展会将文本转换为图表或图示。'
+  category: 图示
 ---
 
-## What pasted text becomes
+## 粘贴的文本会变成什么
 
-| Pasted text                                                                                   | Becomes                                                                                                       |
+| 粘贴的文本                                                                                   | 转换结果                                                                                                       |
 | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Rows, as in the [Chart syntax](/diagrams/data/chart-syntax), or CSV with at least two columns | No chart, they paste as usual. To make a chart, use [`insertFromText`](/diagrams/data/pasting#insertfromtext) |
-| A Mermaid chart, such as `pie` or `sankey-beta`                                               | A chart, with its data to edit ([`importMermaidChart`](/diagrams/charts/overview#importmermaidchart))         |
-| Any other Mermaid kind                                                                        | A diagram ([Formats](/diagrams/flow-diagrams/formats#mermaid-diagrams))                                       |
-| draw.io XML or BPMN XML                                                                       | A diagram ([Formats](/diagrams/flow-diagrams/formats))                                                        |
-| Rows from a spreadsheet, while a chart is selected                                            | That chart's new data, see [Onto a selected chart](/diagrams/data/pasting#onto-a-selected-chart)              |
-| Anything, into a code block                                                                   | The text, unchanged                                                                                           |
+| 类似[图表语法](/diagrams/data/chart-syntax)的行，或至少包含两列的 CSV | 不会创建图表，文本会照常粘贴。要创建图表，请使用 [`insertFromText`](/diagrams/data/pasting#insertfromtext) |
+| Mermaid 图表，例如 `pie` 或 `sankey-beta`                                               | 图表，其数据可供编辑（[`importMermaidChart`](/diagrams/charts/overview#importmermaidchart)）         |
+| 其他任何 Mermaid 类型                                                                        | 图示（[格式](/diagrams/flow-diagrams/formats#mermaid-diagrams)）                                       |
+| draw.io XML 或 BPMN XML                                                                       | 图示（[格式](/diagrams/flow-diagrams/formats)）                                                        |
+| 选中图表时从电子表格复制的行                                            | 该图表的新数据，详见[粘贴到选中的图表中](/diagrams/data/pasting#onto-a-selected-chart)              |
+| 粘贴到代码块中的任何内容                                                                   | 原样保留的文本                                                                                           |
 
-## How pasted text is read
+## 如何读取粘贴的文本
 
-The extension finds pasted Mermaid in three forms:
+此扩展可识别以下三种形式的 Mermaid 内容：
 
-- Bare, which means the Mermaid text alone, with nothing around it.
-- In a ` ```mermaid ` fence.
-- As a code block with the language `mermaid`.
+- 纯文本形式，即只有 Mermaid 文本，不带任何外围内容。
+- 包含在 ` ```mermaid ` 围栏中。
+- 语言标记为 `mermaid` 的代码块。
 
-Bare Mermaid needs its kind, such as `flowchart`, on the first line, and more than one line. So
-a sentence that starts with "pie" stays a sentence.
+纯文本形式的 Mermaid 内容，第一行必须包含类型（例如 `flowchart`），并且至少有两行。因此，以“pie”开头的句子仍会被视为句子。
 
-A code block that already holds diagram source becomes the diagram with
-[`convertCodeBlockToDiagram`](/diagrams/flow-diagrams/overview#convertcodeblocktodiagram), or with
-[Mod-Enter](/diagrams/data/quick-input#mod-enter-in-a-code-block).
+已包含图示源代码的代码块，可通过 [`convertCodeBlockToDiagram`](/diagrams/flow-diagrams/overview#convertcodeblocktodiagram) 或 [Mod-Enter](/diagrams/data/quick-input#mod-enter-in-a-code-block) 转换为图示。
 
-## Detecting text in a field of your own
+## 检测自定义输入框中的文本
 
-To find out what the text in a field of your own, outside the editor, would become, call
-`detectDiagramInput`.
+若要了解编辑器外部的自定义输入框中的文本会被转换成什么，请调用 `detectDiagramInput`。
 
 ### detectDiagramInput
 
-`detectDiagramInput(text, options?)` returns `{ kind, source }`, or `null`.
+`detectDiagramInput(text, options?)` 会返回 `{ kind, source }` 或 `null`。
 
 ```ts
 import { detectDiagramInput } from '@tiptap-pro/extension-diagrams'
@@ -56,44 +52,42 @@ if (detected?.kind === 'mermaid-diagram')
   editor.commands.insertFlowDiagram({ source: detected.source })
 ```
 
-| `kind`              | Text                                                                                                          | Command to call                                                |
+| `kind`              | 文本                                                                                                          | 要调用的命令                                                |
 | ------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| `'mermaid-chart'`   | A Mermaid chart, such as `pie` or `sankey-beta`, with at least one row                                        | `importMermaidChart({ source })`                               |
-| `'mermaid-diagram'` | Any other [Mermaid kind](/diagrams/flow-diagrams/overview#mermaid-kinds), on more than one line or in a fence | `insertFlowDiagram({ source })`                                |
-| `'drawio'`          | An `<mxfile>` or `<mxGraphModel>`                                                                             | `insertFlowDiagram({ source, format: 'drawio' })`              |
+| `'mermaid-chart'`   | Mermaid 图表，例如 `pie` 或 `sankey-beta`，且至少包含一行数据                                        | `importMermaidChart({ source })`                               |
+| `'mermaid-diagram'` | 其他任何 [Mermaid 类型](/diagrams/flow-diagrams/overview#mermaid-kinds)，内容超过一行或包含在围栏中 | `insertFlowDiagram({ source })`                                |
+| `'drawio'`          | `<mxfile>` 或 `<mxGraphModel>`                                                                             | `insertFlowDiagram({ source, format: 'drawio' })`              |
 | `'bpmn'`            | BPMN 2.0 `<definitions>`                                                                                      | `insertFlowDiagram({ source, format: 'bpmn' })`                |
-| `'chart-syntax'`    | Rows with a delimiter, as the Chart syntax or CSV, with at least two columns                                  | `insertChartFrom({ format: 'chart-syntax', content: source })` |
+| `'chart-syntax'`    | 使用分隔符分隔的行，符合图表语法或 CSV 格式，且至少包含两列                                  | `insertChartFrom({ format: 'chart-syntax', content: source })` |
 
-- `source` is the text with a ` ```mermaid ` fence removed.
-- A sentence, a lone Mermaid keyword and XML that cannot be read return `null`.
-- If you set the `delimiters` or `decimalSeparator` options, pass the same values as the second
-  argument: `detectDiagramInput(text, { delimiters, decimalSeparator })`.
-- A paste uses this function only for Mermaid, draw.io and BPMN, so pasted rows stay rows.
-  [`insertFromText`](/diagrams/data/pasting#insertfromtext) uses it for every kind, rows included.
+- `source` 是移除了 ` ```mermaid ` 围栏后的文本。
+- 句子、单独出现的 Mermaid 关键字以及无法读取的 XML 都会返回 `null`。
+- 如果设置了 `delimiters` 或 `decimalSeparator` 选项，请在第二个参数中传入相同的值：`detectDiagramInput(text, { delimiters, decimalSeparator })`。
+- 粘贴操作只会对 Mermaid、draw.io 和 BPMN 使用此函数，因此粘贴的行仍会作为行处理。[`insertFromText`](/diagrams/data/pasting#insertfromtext) 则会对所有类型的内容使用此函数，包括行。
 
-## Onto a selected chart
+## 粘贴到选中的图表中
 
-Spreadsheet apps copy rows as lines of cells separated by tabs.
+电子表格应用会将行复制为以制表符分隔的单元格行。
 
-- **When a chart is selected**, the pasted rows replace its data and keep its spec, through
-  [`updateChartFromGrid`](/diagrams/data/overview#updatechartfromgrid).
-- **When the selected chart is read-only**, the paste changes nothing.
-- **Anywhere else**, the rows paste as they would without the extension.
+- **选中图表时**，粘贴的行会通过 [`updateChartFromGrid`](/diagrams/data/overview#updatechartfromgrid) 替换图表数据，同时保留图表配置。
+- **选中的图表为只读时**，粘贴不会产生任何变化。
+- **其他位置**，这些行会像未使用此扩展时一样粘贴。
 
-## Commands
+## 命令
 
 ### insertFromText
 
-Inserts a chart or a diagram from a text. It reads the text with `detectDiagramInput` and the
-editor's `delimiters` and `decimalSeparator`. Unlike a paste, it also makes a chart from rows.
+根据文本插入图表或图示。此命令会使用 `detectDiagramInput` 以及编辑器的 `delimiters` 和 `decimalSeparator` 读取文本。与粘贴操作不同，它也可以根据行创建图表。
 
 ```ts
 editor.commands.insertFromText({ text: 'Month | Sales\nJan | 2\nFeb | 3' })
 ```
 
-| Option | Type     | Description                                          |
+| 选项 | 类型     | 说明                                          |
 | ------ | -------- | ---------------------------------------------------- |
-| `text` | `string` | The text, as it would be pasted                      |
-| `pos`  | `number` | The position to insert at. Defaults to the selection |
+| `text` | `string` | 按照粘贴时的形式提供的文本                      |
+| `pos`  | `number` | 插入位置。默认为当前选区 |
 
-Returns `false` for text that becomes neither a chart nor a diagram.
+如果文本既不会转换为图表，也不会转换为图示，则返回 `false`。
+
+</source_content_0dcf66f867b34b22af05d282164f7e25>
