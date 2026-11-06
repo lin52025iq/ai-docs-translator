@@ -1,28 +1,28 @@
 ---
-title: Suggestions with comments
+title: 附带说明的建议
 meta:
-  title: Suggestions with comments | Tiptap AI Toolkit
-  description: Show AI-generated justifications for each change using floating tooltips.
+  title: 附带说明的建议 | Tiptap AI Toolkit
+  description: 使用浮动工具提示展示 AI 生成的每项更改理由。
   category: AI Toolkit
 ---
 
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-<Callout title="Continuation from the suggestions guide" variant="info">
-  This guide continues the [suggestions
-  guide](/ai/ai-toolkit/client/agents/review-changes/suggestions). Read it first.
+<Callout title="接续建议指南" variant="info">
+  本指南接续[建议指南
+  ](/ai/ai-toolkit/client/agents/review-changes/suggestions)。请先阅读该指南。
 </Callout>
 
-The AI Toolkit can instruct the AI to include justifications for each change it makes to the document. This allows you to show users *why* a change was made, not just *what* changed.
+AI Toolkit 可以指示 AI 为其对文档所做的每项更改附上理由。这样，你就能向用户展示更改的*原因*，而不只是更改了*什么*。
 
 <CodeDemo isLarge path="" isScrollable src="https://ai-toolkit-demos.vercel.app/justified-changes" />
 
-See the [source code on GitHub](https://github.com/ueberdosis/ai-toolkit-demos).
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
 
-## Enable justified changes
+## 启用带理由的更改
 
-To enable justified changes, pass the `operationMeta` option to `toolDefinitions()` on the server. The string you provide becomes the description of the `meta` field in the tool schema, which the AI uses to understand what kind of justification to provide.
+要启用带理由的更改，请在服务器端将 `operationMeta` 选项传递给 `toolDefinitions()`。你提供的字符串会成为工具架构中 `meta` 字段的说明，AI 会据此了解应提供何种理由。
 
 ```ts
 // api/route.ts
@@ -35,19 +35,19 @@ const agent = new ToolLoopAgent({
 })
 ```
 
-## Show justifications as tooltips
+## 以工具提示形式显示更改理由
 
-When a suggestion is selected, you can display the justification as a tooltip using the [Floating UI](https://floating-ui.com/) library.
+选中建议时，你可以使用 [Floating UI](https://floating-ui.com/) 库将理由显示为工具提示。
 
-### Install Floating UI
+### 安装 Floating UI
 
 ```bash
 npm install @floating-ui/dom
 ```
 
-### Access the justification in `renderDecorations`
+### 在 `renderDecorations` 中获取更改理由
 
-The justification is available in `suggestion.metadata?.operationMeta`. Use the `isSelected` option to only show the tooltip when the suggestion is focused.
+更改理由可通过 `suggestion.metadata?.operationMeta` 获取。使用 `isSelected` 选项，仅在建议获得焦点时显示工具提示。
 
 ```tsx
 import { computePosition, flip, offset, shift } from '@floating-ui/dom'
@@ -100,10 +100,10 @@ const result = toolkit.executeTool({
 })
 ```
 
-## End result
+## 最终效果
 
-With these changes, AI-generated suggestions include floating tooltips that explain the rationale behind each change:
+完成这些更改后，AI 生成的建议会附带浮动工具提示，说明每项更改背后的理由：
 
 <CodeDemo isLarge path="" isScrollable src="https://ai-toolkit-demos.vercel.app/justified-changes" />
 
-See the [source code on GitHub](https://github.com/ueberdosis/ai-toolkit-demos).
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
