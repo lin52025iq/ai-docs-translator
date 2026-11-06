@@ -1,13 +1,13 @@
 ---
-title: Export custom styles to ODT
+title: 将自定义样式导出到 ODT
 tags:
   - type: start
   - type: beta
   - type: version
     label: v0.6.2
 meta:
-    title: Export styles to ODT | Tiptap Conversion
-    description: Learn how to export custom styles from Tiptap JSON to ODT using the Export ODT extension.
+    title: 将样式导出到 ODT | Tiptap Conversion
+    description: 了解如何使用 Export ODT 扩展将自定义样式从 Tiptap JSON 导出到 ODT。
     category: Conversion
 ---
 
@@ -19,18 +19,18 @@ import ExportStylesGuide from '../_shared/_export-styles-guide.mdx'
 <EnterpriseCalloutAuto variant="odt" renderMode="sidebar" disableWaitlist />
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 激活试用或订阅">
+        在你的账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 计划](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Install from private registry">
-        To install this frontend extension, authenticate to Tiptap's private npm registry by following the [setup guide](/guides/pro-extensions).
+    <RequirementItem label="2. 从私有注册表安装">
+        若要安装此前端扩展，请按照[设置指南](/guides/pro-extensions)进行身份验证，以访问 Tiptap 的私有 npm 注册表。
     </RequirementItem>
 </Requirements>
 
-When exporting to ODT, you can define custom styles that will be applied to the exported document. This is useful when you want to have a consistent look and feel across your documents.
+导出为 ODT 时，你可以定义要应用于导出文档的自定义样式。这样有助于让所有文档的外观保持一致。
 
-<Callout title="Requires Export DOCX extension" variant="warning">
-  Style overrides for ODT export require the `@tiptap-pro/extension-export-docx` extension to be installed and configured in your editor. The ODT export uses DOCX generation under the hood before converting to ODT. Without it, the `styleOverrides` and element override options will have no effect.
+<Callout title="需要 Export DOCX 扩展" variant="warning">
+  要覆盖 ODT 导出的样式，必须在编辑器中安装并配置 `@tiptap-pro/extension-export-docx` 扩展。ODT 导出会先在底层生成 DOCX，然后再将其转换为 ODT。若未安装该扩展，`styleOverrides` 和元素覆盖选项都不会生效。
 </Callout>
 
 <ExportStylesGuide />
