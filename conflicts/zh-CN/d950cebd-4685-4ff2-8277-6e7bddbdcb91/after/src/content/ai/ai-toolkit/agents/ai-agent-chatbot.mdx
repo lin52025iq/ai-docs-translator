@@ -1,0 +1,468 @@
+---
+title: AI 智能体聊天机器人
+meta:
+  title: AI 智能体聊天机器人 | Tiptap AI Toolkit
+  description: 使用 Server AI Toolkit API 构建能够读取和编辑 Tiptap 文档的 AI 智能体。
+  category: AI 工具包
+---
+
+import { CodeDemo } from '@/components/CodeDemo'
+import { Callout } from '@/components/ui/Callout'
+import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
+
+<EnterpriseCalloutAuto variant="server-ai-toolkit" renderMode="sidebar" />
+
+构建一个简单的 AI 智能体聊天机器人，用于读取和编辑 Tiptap 文档。
+
+<CodeDemo
+  isLarge
+  path=""
+  isScrollable
+  src="https://ai-toolkit-demos.vercel.app/server-ai-agent-chatbot"
+/>
+
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
+
+## 技术栈
+
+- 客户端 [React](https://react.dev/) 应用
+- 服务端应用
+- 类似 [Vercel AI SDK](https://ai-sdk.dev/) 的 AI 智能体框架
+- [OpenAI](https://openai.com/) 模型
+- Server AI Toolkit
+
+Server AI Toolkit 适用于任何 AI 智能体框架和 AI 模型。你可以将它与任意前端框架和后端编程语言搭配使用。本指南使用一个简单的 Node.js 服务端端点，接收 [Request](https://developer.mozilla.org/en-US/docs/Web/API/Request) 对象并返回 [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response)。
+
+继续之前，请按照[安装指南](/ai/ai-toolkit/install)设置 Server AI Toolkit。
+
+## 设置演示应用
+
+```bash
+npx create-next-app@latest server-ai-agent-chatbot
+```
+
+安装 Tiptap 核心包、协作扩展，以及用于 OpenAI 的 [Vercel AI SDK](https://ai-sdk.dev/)：
+
+```bash
+npm install @tiptap/react @tiptap/starter-kit @tiptap/extension-collaboration @tiptap-pro/provider ai @ai-sdk/react @ai-sdk/openai zod uuid yjs jose
+```
+
+安装 Server AI Toolkit 包：
+
+```bash
+npm install @tiptap/ai-toolkit
+```
+
+## 服务端 API 端点
+
+创建一个 API 端点，使用 [Vercel AI SDK](https://ai-sdk.dev/) 调用 OpenAI 模型。通过 Server AI Toolkit API 获取工具定义，并通过该 API 执行工具。
+
+<details>
+  <summary>安装依赖</summary>
+
+在服务端应用中安装以下依赖：
+
+```bash
+npm install ai @ai-sdk/openai jose zod
+```
+
+</details>
+
+### 环境变量
+
+<Callout title="请先设置授权" variant="info">
+  创建辅助函数之前，请按照[授权指南](/ai/ai-toolkit/install#set-up-authorization)设置环境变量和身份验证辅助函数
+  （`createJwtToken` 和 `getAuthHeaders`）。
+</Callout>
+
+你还需要一个 OpenAI API 密钥；如果使用 Tiptap Cloud 协作功能，还需要设置包含 Document Server ID 的 `TIPTAP_CLOUD_DOCUMENT_SERVER_ID`。将这些变量与[授权指南](/ai/ai-toolkit/install#set-up-authorization)中的变量一起添加到 `.env` 文件中：
+
+```sh
+# .env (in addition to the Server AI Toolkit variables)
+TIPTAP_CLOUD_DOCUMENT_SERVER_ID=document-server-id
+OPENAI_API_KEY=your-openai-key # The AI SDK will pick this up automatically
+```
+
+### 辅助函数
+
+创建几个辅助函数，为端点提供支持并与 Server AI Toolkit 交互：
+
+#### 获取工具定义
+
+此函数从 Server AI Toolkit API 获取提示词和可用的工具定义。
+
+```ts
+// lib/server-ai-toolkit/get-tool-definitions.ts
+import type z from 'zod'
+import { getAuthHeaders } from './get-auth-headers'
+
+/**
+ * Gets tool definitions from the Server AI Toolkit API
+ */
+export async function getToolDefinitions(editorContext: unknown): Promise<{
+  prompt: string
+  tools: {
+    name: string
+    description: string
+    inputSchema: z.core.JSONSchema.JSONSchema
+  }[]
+}> {
+  const apiBaseUrl = process.env.TIPTAP_CLOUD_AI_API_URL || 'https://api.tiptap.dev'
+
+  const response = await fetch(`${apiBaseUrl}/v4/ai/toolkit/fetch-tools`, {
+    method: 'POST',
+    headers: await getAuthHeaders(),
+    body: JSON.stringify({
+      editorContext,
+      tools: {
+        tiptapRead: true,
+        tiptapEdit: true,
+      },
+    }),
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch tools: ${response.statusText}`)
+  }
+  const responseData = await response.json()
+
+  return {
+    prompt: responseData.systemPrompt,
+    tools: responseData.tools,
+  }
+}
+```
+
+<Callout title="使用自定义节点？" variant="info">
+  如果编辑器包含自定义节点或标记，请使用 `addJsonSchemaAwareness` 进行配置。请参阅[自定义节点指南](/ai/ai-toolkit/advanced-guides/custom-nodes)。
+</Callout>
+
+#### 执行工具
+
+此函数通过 Server AI Toolkit API 执行工具。它会将工具名称、输入参数、文档 ID 和编辑器上下文数据发送到 API。如果 JWT 包含对该文档的 `Documents:Write` 权限，服务器会自动获取并保存 Tiptap Cloud 文档。
+
+```ts
+// lib/server-ai-toolkit/execute-tool.ts
+import { getAuthHeaders } from './get-auth-headers'
+
+/**
+ * Executes a tool via the Server AI Toolkit API
+ */
+export async function executeTool(
+  toolName: string,
+  input: unknown,
+  documentId: string,
+  editorContext: unknown,
+): Promise<{
+  tool: { name: string; output: unknown }
+  docChanged: boolean
+  document: object | null
+}> {
+  const apiBaseUrl = process.env.TIPTAP_CLOUD_AI_API_URL || 'https://api.tiptap.dev'
+
+  const response = await fetch(`${apiBaseUrl}/v4/ai/toolkit/execute-tool`, {
+    method: 'POST',
+    headers: await getAuthHeaders(documentId),
+    body: JSON.stringify({
+      editorContext,
+      document: {
+        type: 'cloud',
+        id: documentId,
+      },
+      user: 'ai-assistant',
+      tool: {
+        name: toolName,
+        input,
+      },
+    }),
+  })
+
+  if (!response.ok) {
+    throw new Error(`Tool execution failed: ${response.statusText}`)
+  }
+
+  return response.json()
+}
+```
+
+创建 `POST /api/server-ai-agent-chatbot` 端点：
+
+```ts
+// server/server-ai-agent-chatbot.ts
+import { openai } from '@ai-sdk/openai'
+import { createAgentUIStreamResponse, ToolLoopAgent, tool } from 'ai'
+import z from 'zod'
+import { executeTool } from '@/lib/server-ai-toolkit/execute-tool'
+import { getToolDefinitions } from '@/lib/server-ai-toolkit/get-tool-definitions'
+
+export async function handleChatRequest(request: Request): Promise<Response> {
+  const {
+    messages,
+    editorContext,
+    documentId,
+  }: {
+    messages: unknown[]
+    editorContext: unknown
+    documentId: string
+  } = await request.json()
+
+  // Get prompt and tool definitions from the Server AI Toolkit API
+  const { prompt, tools: toolDefinitions } = await getToolDefinitions(editorContext)
+
+  // Convert API tool definitions to AI SDK tool format
+  const tools = Object.fromEntries(
+    toolDefinitions.map((toolDef) => [
+      toolDef.name,
+      tool({
+        description: toolDef.description,
+        inputSchema: z.fromJSONSchema(toolDef.inputSchema),
+        // Set `strict: false` to disable the AI provider's
+        // Structured Outputs option. In some AI providers,
+        // the Structured Outputs feature does not allow
+        // the AI to generate Tiptap JSON content.
+        strict: false,
+        execute: async (input) => {
+          try {
+            const result = await executeTool(toolDef.name, input, documentId, editorContext)
+            return result.tool.output
+          } catch (error) {
+            console.error(`Failed to execute tool ${toolDef.name}:`, error)
+            return {
+              error: error instanceof Error ? error.message : 'Unknown error',
+            }
+          }
+        },
+      }),
+    ]),
+  )
+
+  const agent = new ToolLoopAgent({
+    model: openai('gpt-5.6-luna'),
+    instructions: `You are an assistant that can edit rich text documents.
+In your responses, be concise and to the point. However, the content you generate in the document does not need to be concise and to the point: instead, it should follow the user's request as closely as possible.
+Before calling any tools, summarize you're going to do (in a sentence or less), as a high-level view of the task, as a human writer would describe it.
+Rule: In your responses, do not provide any details of the tool calls.
+Rule: In your responses, do not provide any details of the HTML content of the document.
+
+${prompt}`,
+    tools,
+  })
+
+  return createAgentUIStreamResponse({
+    agent,
+    uiMessages: messages,
+  })
+}
+```
+
+## 客户端设置
+
+<details>
+  <summary>安装依赖</summary>
+
+在客户端应用中安装以下依赖：
+
+```bash
+npm install @ai-sdk/react @tiptap/extension-collaboration @tiptap/react @tiptap/starter-kit @tiptap-pro/provider @tiptap/ai-toolkit ai uuid yjs
+```
+
+</details>
+
+创建一个客户端 React 组件，用于渲染支持协作功能的 Tiptap 编辑器和简单的聊天界面。此组件使用 Vercel AI SDK 的 [useChat hook](https://ai-sdk.dev/docs/reference/ai-sdk-ui/use-chat) 调用 API 端点并管理聊天对话。
+
+首先，创建一个 API 端点，为 Tiptap Cloud 协作生成 JWT。此端点会授权客户端访问 Tiptap Cloud 协作服务中的特定文档。
+
+创建 `POST /api/collaboration-token` 端点。
+
+```ts
+// server/collaboration-token.ts
+import { SignJWT, importPKCS8 } from 'jose'
+
+const TIPTAP_PRIVATE_KEY = process.env.TIPTAP_PRIVATE_KEY
+const TIPTAP_ENVIRONMENT_ID = process.env.TIPTAP_ENVIRONMENT_ID
+const TIPTAP_CLOUD_DOCUMENT_SERVER_ID = process.env.TIPTAP_CLOUD_DOCUMENT_SERVER_ID
+
+export async function handleCollaborationTokenRequest(request: Request): Promise<Response> {
+  const { documentId, userId } = await request.json()
+  const privateKey = await importPKCS8(TIPTAP_PRIVATE_KEY, 'ES256')
+
+  const token = await new SignJWT({
+    permissions: [{ action: 'Documents:Write', resource: documentId }],
+  })
+    .setProtectedHeader({ alg: 'ES256' })
+    .setIssuer(TIPTAP_ENVIRONMENT_ID)
+    .setSubject(userId)
+    .setAudience(['Documents'])
+    .setExpirationTime('1h')
+    .sign(privateKey)
+
+  return Response.json({ token, appId: TIPTAP_CLOUD_DOCUMENT_SERVER_ID })
+}
+```
+
+现在创建主页面组件：
+
+```tsx
+// components/AiChatbot.tsx
+import { useChat } from '@ai-sdk/react'
+import { Collaboration } from '@tiptap/extension-collaboration'
+import { EditorContent, useEditor } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+import { TiptapCollabProvider } from '@tiptap-pro/provider'
+import { ServerAiToolkit, getEditorContext } from '@tiptap/ai-toolkit'
+import { DefaultChatTransport } from 'ai'
+import { useEffect, useState } from 'react'
+import { v4 as uuid } from 'uuid'
+import * as Y from 'yjs'
+
+export function Page() {
+  const [doc] = useState(() => new Y.Doc())
+  const [documentId] = useState(() => `server-ai-agent-chatbot/${uuid()}`)
+
+  const editor = useEditor({
+    immediatelyRender: false,
+    extensions: [StarterKit, Collaboration.configure({ document: doc }), ServerAiToolkit],
+  })
+
+  useEffect(() => {
+    let provider: TiptapCollabProvider | undefined
+
+    const connect = async () => {
+      const response = await fetch('/api/collaboration-token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ documentId, userId }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to get collaboration credentials')
+      }
+
+      const { appId, token } = await response.json()
+      provider = new TiptapCollabProvider({
+        appId,
+        name: documentId,
+        token,
+        document: doc,
+        user: 'user-1',
+      })
+    }
+
+    void connect().catch(console.error)
+
+    return () => provider?.destroy()
+  }, [doc, documentId, userId])
+
+  const editorContext = editor ? getEditorContext(editor) : null
+
+  const { messages, sendMessage } = useChat({
+    transport: new DefaultChatTransport({
+      api: '/api/server-ai-agent-chatbot',
+      body: { documentId },
+    }),
+  })
+
+  const [input, setInput] = useState('Replace the last paragraph with a short story about Tiptap')
+
+  if (!editor) return null
+
+  return (
+    <div>
+      <EditorContent editor={editor} />
+      {messages?.map((message) => (
+        <div key={message.id} style={{ whiteSpace: 'pre-wrap' }}>
+          <strong>{message.role}</strong>
+          <br />
+          <div className="mt-2 whitespace-pre-wrap">
+            {message.parts
+              .filter((p) => p.type === 'text')
+              .map((p) => p.text)
+              .join('\n') || 'Loading...'}
+          </div>
+        </div>
+      ))}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault()
+          if (input.trim()) {
+            sendMessage({ text: input }, { body: { editorContext } })
+            setInput('')
+          }
+        }}
+      >
+        <input value={input} onChange={(e) => setInput(e.target.value)} />
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  )
+}
+```
+
+<Callout title="文档状态管理" variant="info">
+  此实现传入 `document: { type: 'cloud', id: documentId }`，因此 Server AI Toolkit 会自动从 Tiptap Cloud 获取并保存文档。客户端使用 Tiptap Collaboration 实时同步更改。
+</Callout>
+
+## 最终效果
+
+添加一些 CSS 样式后，就能得到一个简洁精致的 AI 聊天机器人应用，它使用 Server AI Toolkit 编辑文档：
+
+<CodeDemo
+  isLarge
+  path=""
+  isScrollable
+  src="https://ai-toolkit-demos.vercel.app/server-ai-agent-chatbot"
+/>
+
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
+
+## 替代方案：直接提供文档
+
+你也可以不使用 Tiptap Cloud 文档，而是通过在 execute-tool 请求正文中传入内联 `document` 字段，自行提供和管理文档。
+
+采用这种方式时，你需要在每次执行工具前获取文档，并在 `docChanged` 为 `true` 时保存更新后的文档。
+
+```ts
+import { loadDocument, saveDocument } from './db'
+
+const document = await loadDocument()
+const response = await fetch(`${apiBaseUrl}/v4/ai/toolkit/execute-tool`, {
+  method: 'POST',
+  headers: await getAuthHeaders(),
+  body: JSON.stringify({
+    editorContext,
+    document: {
+      type: 'inline',
+      content: document,
+    },
+    tool: {
+      name: toolName,
+      input,
+    },
+  }),
+})
+
+if (!response.ok) {
+  throw new Error(`Tool execution failed: ${response.statusText}`)
+}
+
+const body = await response.json()
+
+// Store the document if the tool execution modified the document
+if (body.docChanged && body.document) {
+  await saveDocument(body.document)
+}
+```
+
+<Callout title="tiptapRead 工具可能会修改文档" variant="info">
+  `tiptapRead` 工具可能会编辑文档，为后续读取操作做准备。因此，如果 `docChanged` 属性为 `true`，则应在执行 `tiptapRead` 工具后更新文档。
+</Callout>
+
+在 `document` 字段中内联提供文档有一些限制。首先，不支持 [Tiptap 评论](/comments/getting-started/overview)，因为评论存储在 Tiptap Cloud 文档中。此外，更改无法关联到特定用户，也没有内置的[版本历史](/collaboration/documents/snapshot)集成。
+
+有关 `document` 字段的更多信息，请参阅 [REST API 参考](/ai/ai-toolkit/api-reference/rest-api)。
+
+## 后续步骤
+
+- 通过[自定义节点指南](/ai/ai-toolkit/advanced-guides/custom-nodes)，让 AI 生成自定义元素
+- 在 [Agents 章节](/ai/ai-toolkit/agents)中了解更多可用工具
+- 查看 [REST API 参考](/ai/ai-toolkit/api-reference/rest-api)，了解完整的端点文档
