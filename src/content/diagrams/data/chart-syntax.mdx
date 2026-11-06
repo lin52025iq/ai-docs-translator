@@ -1,13 +1,13 @@
 ---
-title: 'Chart syntax'
-intro: 'The Chart syntax is a short way to write a chart as text. You write one row per line and separate the cells with a comma, a semicolon, a pipe or a tab. An optional first line names the chart type. You type it into the <a href="/docs/diagrams/data/quick-input">Quick Input</a>, and its format id is <code>chart-syntax</code>.'
+title: '图表语法'
+intro: '图表语法是一种以文本形式编写图表的简便方式。每行写一行数据，并用逗号、分号、竖线或制表符分隔单元格。第一行可以选择性地指定图表类型。在 <a href="/docs/diagrams/data/quick-input">快速输入</a>中输入文本，其格式 ID 为 <code>chart-syntax</code>。'
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Chart syntax | Tiptap Diagrams Docs'
-  description: 'The Chart syntax is a short way to write a chart as text.'
-  category: Diagrams
+  title: '图表语法 | Tiptap 图表文档'
+  description: '图表语法是一种以文本形式编写图表的简便方式。'
+  category: 图表
 ---
 
 ```txt
@@ -17,67 +17,57 @@ Jan   | 42     | 30
 Feb   | 48     | 28
 ```
 
-## The type line
+## 类型行
 
-A first line that holds only a chart type, such as `bar`, `pie` or a type registered with
-`chartTypes`, is the type line. Case and spaces around it do not matter.
+仅包含图表类型（例如 `bar`、`pie`，或通过 `chartTypes` 注册的类型）的第一行称为类型行。大小写和前后空格都不影响识别。
 
-- **Without a type line**, the chart takes the type you pass to the command, such as the `type`
-  option of `insertChartFrom`. Without one, it takes `chart.defaultType`.
-- **The type line wins** over the `type` option, so the text alone says what the chart becomes.
-- **The type line stays in the text.** `editChartAsText` writes it back as the first line, and
-  `setDiagramInputType` rewrites it.
+- **没有类型行时**，图表采用传给命令的类型，例如 `insertChartFrom` 的 `type` 选项。如果没有指定，则采用 `chart.defaultType`。
+- **类型行优先于** `type` 选项，因此仅凭文本就能确定图表类型。
+- **类型行会保留在文本中。** `editChartAsText` 会将其写回为第一行，而 `setDiagramInputType` 会重写该行。
 
-## How the rows are read
+## 如何读取各行
 
-| Rule          | How it reads                                                                                |
-| ------------- | ------------------------------------------------------------------------------------------- |
-| Delimiters    | Comma, semicolon, pipe and tab, set with the `chart.delimiters` option                      |
-| Header        | The first row is the header when it holds no number outside the first column                |
-| `{H}`         | In front of a cell, marks it as a header cell                                               |
-| Labels        | The first column holds the labels                                                           |
-| `{L}`         | In front of a cell, marks it as a label                                                     |
-| Empty cell    | A missing value                                                                             |
-| Not a number  | A cell that is not a number is kept as text                                                 |
-| Quotes        | A cell in double quotes may contain the delimiter                                           |
-| Lists         | A leading bullet or number (`•`, `-`, `*`, `1.`) is ignored, so a pasted list reads as rows |
-| Single column | Lines without any delimiter are one series of values, labeled 1, 2, 3 and so on             |
+| 规则       | 读取方式                                                                                 |
+| ---------- | ---------------------------------------------------------------------------------------- |
+| 分隔符     | 逗号、分号、竖线和制表符，通过 `chart.delimiters` 选项设置                                 |
+| 表头       | 如果第一行除第一列外不包含数字，则将其视为表头                                           |
+| `{H}`      | 放在单元格前，将该单元格标记为表头单元格                                                 |
+| 标签       | 第一列包含标签                                                                           |
+| `{L}`      | 放在单元格前，将该单元格标记为标签                                                       |
+| 空单元格   | 表示缺失值                                                                               |
+| 非数字     | 非数字单元格会保留为文本                                                                 |
+| 引号       | 用双引号括起来的单元格可以包含分隔符                                                     |
+| 列表       | 开头的项目符号或数字（`•`、`-`、`*`、`1.`）会被忽略，因此粘贴的列表会按行读取             |
+| 单列数据   | 不含任何分隔符的行会被视为一个值序列，并依次标记为 1、2、3 等                             |
 
-So `Month | Sales` is a header and `Jan | 2` is a data row. For a header that holds numbers,
-such as `Region | 2025 | 2026`, put `{H}` in front of its cells.
+因此，`Month | Sales` 会被视为表头，而 `Jan | 2` 会被视为数据行。对于包含数字的表头，例如 `Region | 2025 | 2026`，请在各单元格前加上 `{H}`。
 
-### Which delimiter splits
+### 由哪个分隔符拆分
 
-The first line that contains an allowed delimiter decides the delimiter for the whole text. On a
-line with several delimiters, a tab, a pipe or a semicolon wins over a comma. So `Jan ; 1,5`
-splits at the semicolon and reads `1,5` as a number.
+包含有效分隔符的第一行决定整个文本使用的分隔符。如果某行包含多个分隔符，制表符、竖线或分号的优先级高于逗号。因此，`Jan ; 1,5` 会按分号拆分，并将 `1,5` 读取为数字。
 
-### Numbers
+### 数字
 
-- With `decimalSeparator: 'auto'`, `1.5` is read as 1.5, and so is `1,5` when the delimiter is
-  not a comma.
-- Set `decimalSeparator` to `'.'` or `','` to fix the decimal separator.
-- Thousands separators are not read.
+- 当 `decimalSeparator: 'auto'` 时，`1.5` 会被读取为 1.5；如果分隔符不是逗号，`1,5` 也会被读取为 1.5。
+- 将 `decimalSeparator` 设为 `'.'` 或 `','`，即可指定小数分隔符。
+- 不会识别千位分隔符。
 
-### Errors
+### 错误
 
-A quote that is opened and never closed is an error on its line, for example
-`Line 3: A quote is opened and never closed.`
+引号打开后未闭合会导致所在行报错，例如：`第 3 行：引号已打开但未闭合。`
 
-## In code
+## 在代码中
 
-`insertChartFrom`, `updateChartFrom` and the [tools for an AI model](/diagrams/guides/ai) take the same
-text:
+`insertChartFrom`、`updateChartFrom` 和[面向 AI 模型的工具](/diagrams/guides/ai)都使用相同的文本：
 
 ```ts
 editor.commands.insertChartFrom({ format: 'chart-syntax', content: 'bar\nJan | 42\nFeb | 48' })
 ```
 
-`editor.storage.diagrams.read({ format: 'chart-syntax' })` writes a chart's data in the Chart
-syntax, with the delimiter it was typed with:
+`editor.storage.diagrams.read({ format: 'chart-syntax' })` 会使用输入时采用的分隔符，以图表语法写出图表数据：
 
-| Delimiter | Written as                  |
-| --------- | --------------------------- |
-| Pipe      | `\|`                        |
-| Tab       | A bare tab                  |
-| Any other | The delimiter, then a space |
+| 分隔符   | 写出形式          |
+| -------- | ----------------- |
+| 竖线     | `\|`              |
+| 制表符   | 裸制表符           |
+| 其他分隔符 | 分隔符后加一个空格 |
