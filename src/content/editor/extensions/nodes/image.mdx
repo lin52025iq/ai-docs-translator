@@ -1,54 +1,54 @@
 ---
-title: Image extension
+title: 图像扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-image?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-image
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-image.svg
     url: https://npmcharts.com/compare/@tiptap/extension-image?minimal=true
-    label: Downloads
+    label: 下载量
 extension:
-  name: Image
+  name: 图像
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-image
-  description: Add an image (ideally a beautiful one), when words aren’t enough.
+  description: 当文字不足以表达时，添加一张图像（最好是一张漂亮的图像）。
   type: node
   icon: Image
 meta:
-  title: Image extension | Tiptap Editor Docs
-  description: Use the Image extension in Tiptap to render the <img> HTML tag for adding images to your documents. Learn more in our docs!
-  category: Editor
+  title: 图像扩展 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用图像扩展渲染用于向文档添加图像的 <img> HTML 标签。了解更多信息，请参阅我们的文档！
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-Use this extension to render `<img>` HTML tags. By default, those images are blocks. If you want to render images in line with text set the `inline` option to `true`.
+使用此扩展渲染 `<img>` HTML 标签。默认情况下，图像是块级元素。如果要让图像与文本同行显示，请将 `inline` 选项设为 `true`。
 
-<Callout title="No Server Functionality" variant="info">
-  This extension is only responsible for displaying images. It doesn’t upload images to your server,
-  for that you can integrate the [FileHandler
-  extension](/editor/extensions/functionality/filehandler)
+<Callout title="不提供服务器功能" variant="info">
+  此扩展仅负责显示图像，不会将图像上传到服务器。
+  如需上传，可以集成 [FileHandler
+  扩展](/editor/extensions/functionality/filehandler)
 </Callout>
 
 <CodeDemo path="/Nodes/Image" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-image
 ```
 
-## Settings
+## 设置
 
 ### inline
 
-Renders the image node inline, for example in a paragraph tag: `<p><img src="spacer.gif"></p>`. By default images are on the same level as paragraphs.
+将图像节点以内联方式渲染，例如渲染在段落标签中：`<p><img src="spacer.gif"></p>`。默认情况下，图像与段落处于同一层级。
 
-It totally depends on what kind of editing experience you’d like to have, but can be useful if you (for example) migrate from Quill to Tiptap.
+具体取决于你想要怎样的编辑体验，但如果你要从 Quill 迁移到 Tiptap 等场景，这种方式可能会很有用。
 
-Default: `false`
+默认值：`false`
 
 ```js
 Image.configure({
@@ -58,9 +58,9 @@ Image.configure({
 
 ### resize
 
-Options for resizable images. If defined the node will be wrapped in a [resizable node view](/editor/api/resizable-nodeviews) making it possible to resize the image via resize handles.
+可调整图像大小的选项。如果定义了此选项，节点将由[可调整大小的节点视图](/editor/api/resizable-nodeviews)包裹，从而可以通过调整大小控件来调整图像大小。
 
-Default: `undefined`
+默认值：`undefined`
 
 ```js
 Image.configure({
@@ -76,9 +76,9 @@ Image.configure({
 
 ### allowBase64
 
-Allow images to be parsed as base64 strings `<img src="data:image/jpg;base64...">`.
+允许将图像解析为 base64 字符串，例如 `<img src="data:image/jpg;base64...">`。
 
-Default: `false`
+默认值：`false`
 
 ```js
 Image.configure({
@@ -88,7 +88,7 @@ Image.configure({
 
 ### HTMLAttributes
 
-Custom HTML attributes that should be added to the rendered HTML tag.
+要添加到渲染后 HTML 标签的自定义 HTML 属性。
 
 ```js
 Image.configure({
@@ -98,11 +98,11 @@ Image.configure({
 })
 ```
 
-## Commands
+## 命令
 
 ### setImage()
 
-Makes the current node an image.
+将当前节点设为图像。
 
 ```js
 editor.commands.setImage({ src: 'https://example.com/foobar.png' })
@@ -113,12 +113,12 @@ editor.commands.setImage({
 })
 ```
 
-## Examples
+## 示例
 
-### Resizable Images
+### 可调整大小的图像
 
 <CodeDemo path="/Examples/ResizableImages" />
 
-## Source code
+## 源代码
 
 [packages/extension-image/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-image/)
