@@ -1,37 +1,37 @@
 ---
-title: Drag Handle React extension
+title: React 拖动手柄扩展
 extension:
   name: Drag Handle React
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-drag-handle-react
-  description: Have you ever wanted to drag nodes around your react-based editor? Well, we did too.
+  description: 你是否曾想过在基于 React 的编辑器中拖动节点？我们也有过这个想法。
   type: extension
   icon: GripVertical
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-drag-handle-react.svg?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-drag-handle-react
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-drag-handle-react.svg
     url: https://npmcharts.com/compare/@tiptap/extension-drag-handle-react?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  category: Editor
-  title: Drag Handle React | Tiptap Editor Docs
-  description: Enable dragging nodes around your React-based Tiptap Editor with the Drag Handle React Extension. Learn how to set it up here in the Docs!
+  category: 编辑器
+  title: React 拖动手柄 | Tiptap 编辑器文档
+  description: 使用 React 拖动手柄扩展，在基于 React 的 Tiptap 编辑器中拖动节点。请在此文档中了解如何进行设置！
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-Have you ever wanted to drag nodes around your react-based editor? Well, we did too—so here's an extension for that.
+你是否曾想过在基于 React 的编辑器中拖动节点？我们也有过这个想法，因此推出了这个扩展。
 
-The `DragHandleReact` component allows you to easily handle dragging nodes around in the editor. You can define custom render functions, placement, and more.
-It essentially wraps the [DragHandle](/editor/extensions/functionality/drag-handle) extension in a React component that will automatically register/unregister the extension with the editor.
+`DragHandleReact` 组件让你可以轻松处理在编辑器中拖动节点的操作。你可以定义自定义渲染函数、位置等。
+它本质上是将 [DragHandle](/editor/extensions/functionality/drag-handle) 扩展封装在 React 组件中，并自动在编辑器中注册或注销该扩展。
 
 <CodeDemo path="/Extensions/DragHandle/" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-drag-handle-react @tiptap/extension-drag-handle @tiptap/extension-node-range @tiptap/extension-collaboration @tiptap/y-tiptap yjs y-protocols
@@ -39,11 +39,11 @@ npm install @tiptap/extension-drag-handle-react @tiptap/extension-drag-handle @t
 
 ## Props
 
-All props follow the same structure as the [DragHandle](/editor/extensions/functionality/drag-handle) extension.
+所有 props 的结构都与 [DragHandle](/editor/extensions/functionality/drag-handle) 扩展相同。
 
 ### children
 
-The content that should be displayed inside of the drag handle.
+要显示在拖动手柄内部的内容。
 
 ```jsx
 <DragHandle>
@@ -53,9 +53,9 @@ The content that should be displayed inside of the drag handle.
 
 ### computePositionConfig
 
-Configuration for position computation of the drag handle using the floating-ui/dom package. You can pass any options that are available in the [floating-ui documentation](https://floating-ui.com/docs/computePosition).
+使用 floating-ui/dom 包配置拖动手柄的位置计算。你可以传入 [floating-ui 文档](https://floating-ui.com/docs/computePosition)中提供的任意选项。
 
-Default: `{ placement: 'left-start', strategy: 'absolute' }`
+默认值：`{ placement: 'left-start', strategy: 'absolute' }`
 
 ```jsx
 <DragHandle
@@ -70,9 +70,9 @@ Default: `{ placement: 'left-start', strategy: 'absolute' }`
 
 ### onNodeChange
 
-Returns a node or null when a node is hovered over. This can be used to highlight the node that is currently hovered over.
+当鼠标悬停在某个节点上时，返回该节点或 null。你可以用它突出显示当前悬停的节点。
 
-Default: `undefined`
+默认值：`undefined`
 
 ```jsx
 function Component() {
@@ -93,9 +93,9 @@ function Component() {
 
 ### getReferencedVirtualElement
 
-A function that returns the virtual element for the drag handle. This is useful when the menu needs to be positioned relative to a specific DOM element.
+用于返回拖动手柄虚拟元素的函数。当菜单需要相对于特定 DOM 元素定位时，这很有用。
 
-Default: `undefined`
+默认值：`undefined`
 
 ```jsx
 <DragHandle
@@ -110,9 +110,9 @@ Default: `undefined`
 
 ### locked
 
-Locks the draghandle in place and visibility. If the drag handle was visible, it will remain visible until unlocked. If it was hidden, it will remain hidden until unlocked.
+锁定拖动手柄的位置和可见状态。如果拖动手柄当前可见，则在解除锁定前会一直显示；如果当前隐藏，则在解除锁定前会一直隐藏。
 
-Default: `false`
+默认值：`false`
 
 ```jsx
 <DragHandle locked={true}>
@@ -122,9 +122,9 @@ Default: `false`
 
 ### pluginKey
 
-The key that should be used to store the plugin in the editor. This is useful if you have multiple drag handles in the same editor.
+用于在编辑器中存储插件的键。如果同一个编辑器中有多个拖动手柄，这个选项会很有用。
 
-Default: `undefined`
+默认值：`undefined`
 
 ```jsx
 <DragHandle pluginKey="myCustomDragHandle">
@@ -134,7 +134,7 @@ Default: `undefined`
 
 ### onElementDragStart
 
-A function that is called when the element starts to be dragged. This can be used to add custom logic when dragging starts.
+元素开始拖动时调用的函数。你可以用它在拖动开始时添加自定义逻辑。
 
 ```jsx
 <DragHandle
@@ -148,7 +148,7 @@ A function that is called when the element starts to be dragged. This can be use
 
 ### onElementDragEnd
 
-A function that is called when the element stops being dragged. This can be used to add custom logic when dragging ends.
+元素停止拖动时调用的函数。你可以用它在拖动结束时添加自定义逻辑。
 
 ```jsx
 <DragHandle
@@ -162,11 +162,11 @@ A function that is called when the element stops being dragged. This can be used
 
 ### nested
 
-Enable drag handles for nested content such as list items, blockquotes, and other nested structures.
+为列表项、引用块及其他嵌套结构等嵌套内容启用拖动手柄。
 
-When enabled, the drag handle will appear for nested blocks, not just top-level blocks. A rule-based scoring system determines which node to target based on cursor position and configured rules.
+启用后，拖动手柄会显示在嵌套区块上，而不仅限于顶层区块。系统会根据光标位置和已配置的规则，使用基于规则的评分机制来确定目标节点。
 
-Default: `false`
+默认值：`false`
 
 ```jsx
 // Enable with defaults
@@ -180,7 +180,7 @@ Default: `false`
 </DragHandle>
 ```
 
-#### Full Example with Nested Support
+#### 嵌套支持完整示例
 
 ```jsx
 import DragHandle from '@tiptap/extension-drag-handle-react'
@@ -212,12 +212,12 @@ export default function Editor() {
 }
 ```
 
-<Callout title="Performance Tip" variant="info">
-  When using React state to toggle the `nested` prop, define your configuration object as a constant outside the component to avoid unnecessary re-renders.
+<Callout title="性能提示" variant="info">
+  使用 React 状态切换 `nested` prop 时，请在组件外将配置对象定义为常量，以避免不必要的重新渲染。
 </Callout>
 
-See the [DragHandle nested documentation](/editor/extensions/functionality/drag-handle#nested-drag-handle) for detailed configuration options including edge detection, custom rules, and allowed containers.
+有关边缘检测、自定义规则和允许的容器等详细配置选项，请参阅 [DragHandle 嵌套文档](/editor/extensions/functionality/drag-handle#nested-drag-handle)。
 
-### Commands
+### 命令
 
-See the [DragHandle](/editor/extensions/functionality/drag-handle) extension for available editor commands.
+有关可用的编辑器命令，请参阅 [DragHandle](/editor/extensions/functionality/drag-handle) 扩展。
