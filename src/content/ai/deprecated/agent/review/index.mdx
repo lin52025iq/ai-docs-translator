@@ -1,27 +1,27 @@
 ---
-title: Review AI-generated changes
+title: 审查 AI 生成的更改
 meta:
-  title: Review changes | Tiptap Content AI
-  description: Learn how to review AI-generated changes with the AI Agent extension
+  title: 审查更改 | Tiptap Content AI
+  description: 了解如何使用 AI Agent 扩展审查 AI 生成的更改
   category: Content AI
 ---
 
-Configure a review workflow to give users more control over AI-generated content. The AI Agent extension integrates with the [AI Changes](/ai/deprecated/changes/overview) and [AI Suggestion](/ai/deprecated/suggestion/overview) extensions to help users approve, reject, and modify AI-generated content.
+配置审查工作流，让用户更好地控制 AI 生成的内容。AI Agent 扩展与 [AI Changes](/ai/deprecated/changes/overview) 和 [AI Suggestion](/ai/deprecated/suggestion/overview) 扩展集成，帮助用户批准、拒绝和修改 AI 生成的内容。
 
-There are two ways of handling AI-generated changes:
+处理 AI 生成的更改有两种方式：
 
-- [**Review after applying**](/ai/deprecated/agent/review/ai-changes): Changes are applied to the document, and then reviewed with the **AI Changes** extension. Users can then accept or reject the changes. Rejecting a change will revert the document to its previous content. Follow [this guide](/ai/deprecated/agent/review/ai-changes) to configure.
-- [**Preview before applying**](/ai/deprecated/agent/review/ai-suggestion): Changes are sent to the **AI Suggestion** extension, where users can review and approve or reject them before they are applied to the document. Follow [this guide](/ai/deprecated/agent/review/ai-suggestion) to configure.
+- [**应用后审查**](/ai/deprecated/agent/review/ai-changes)：先将更改应用到文档，再使用 **AI Changes** 扩展进行审查。随后，用户可以接受或拒绝这些更改。拒绝某项更改会将文档还原为之前的内容。请按照[本指南](/ai/deprecated/agent/review/ai-changes)进行配置。
+- [**应用前预览**](/ai/deprecated/agent/review/ai-suggestion)：将更改发送到 **AI Suggestion** 扩展，用户可以在更改应用到文档之前进行审查并批准或拒绝。请按照[本指南](/ai/deprecated/agent/review/ai-suggestion)进行配置。
 
-## Auto-accept configuration
+## 自动接受配置
 
-When the AI agent calls a tool, you might want it to stop and wait for user review, or continue running without user interaction.
+AI 代理调用工具时，你可能希望它暂停并等待用户审查，也可能希望它在没有用户交互的情况下继续运行。
 
-You can configure this behaviour with the `autoAccept` option. It controls whether the AI agent should automatically accept any tool call and continue running, or whether it should stop and wait for user review.
+你可以通过 `autoAccept` 选项配置此行为。此选项用于控制 AI 代理是否自动接受所有工具调用并继续运行，还是暂停并等待用户审查。
 
-- `"always"`: All tools are automatically applied without review. The AI agent will run non-stop, until it completes its task.
-- `"never"`: All tools require user review and explicit acceptance
-- `"onlyRead"`: Only tools that modify the editor content require review; read operations are auto-accepted.
+- `"always"`：自动应用所有工具调用，无需审查。AI 代理会持续运行，直到完成任务。
+- `"never"`：所有工具调用都需要用户审查并明确接受。
+- `"onlyRead"`：只有会修改编辑器内容的工具调用需要审查；读取操作会自动接受。
 
 ```tsx
 // Configure auto-accept behavior
