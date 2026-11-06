@@ -1,24 +1,24 @@
 ---
 tags:
   - type: editor
-title: Migrate from Editor.js to Tiptap
+title: 从 Editor.js 迁移到 Tiptap
 meta:
-  title: Migrate from Editor.js | Tiptap Editor Docs
-  description: Learn how to migrate your existing Editor.js editor to Tiptap. Complete guide covering content migration, setup, and feature mapping.
-  category: Editor
+  title: 从 Editor.js 迁移 | Tiptap 编辑器文档
+  description: 了解如何将现有的 Editor.js 编辑器迁移到 Tiptap。本指南涵盖内容迁移、设置和功能映射。
+  category: 编辑器
 ---
 
 import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 
 <EnterpriseCalloutAuto variant="migration" renderMode="sidebar" disableWaitlist/>
 
-If you want to replace your Editor.js editor, Tiptap is a popular alternative.Migrating from Editor.js to Tiptap is straightforward. This guide will help you transition from Editor.js's block-based structure to Tiptap's document model.
+如果你想替换 Editor.js 编辑器，Tiptap 是一个热门选择。从 Editor.js 迁移到 Tiptap 非常简单。本指南将帮助你从 Editor.js 基于块的结构过渡到 Tiptap 的文档模型。
 
-## Content migration
+## 内容迁移
 
-### HTML content compatibility
+### HTML 内容兼容性
 
-Editor.js uses a block-based JSON structure that needs to be converted to HTML for Tiptap:
+Editor.js 使用基于块的 JSON 结构，需要先将其转换为 HTML，才能用于 Tiptap：
 
 ```ts
 // Convert Editor.js blocks to HTML
@@ -62,7 +62,7 @@ const editor = new Editor({
 })
 ```
 
-If you already have HTML output from Editor.js, you can use it directly:
+如果你已经有 Editor.js 生成的 HTML，可以直接使用：
 
 ```ts
 // Your existing Editor.js HTML content
@@ -75,23 +75,23 @@ const editor = new Editor({
 })
 ```
 
-While HTML works perfectly, we recommend converting it to Tiptap's JSON format for better performance and readability. For batch conversion of existing content, use the [HTML utility](/editor/api/utilities/html) to convert HTML to JSON programmatically.
+虽然 HTML 完全可用，但我们建议将其转换为 Tiptap 的 JSON 格式，以获得更好的性能和可读性。若要批量转换现有内容，可使用 [HTML 工具](/editor/api/utilities/html)以编程方式将 HTML 转换为 JSON。
 
-## Editor setup
+## 编辑器设置
 
-### Installation
+### 安装
 
-First, install Tiptap and its dependencies:
+首先，安装 Tiptap 及其依赖项：
 
 ```bash
 npm install @tiptap/core @tiptap/starter-kit
 ```
 
-Tiptap supports all modern frontend UI frameworks like React and Vue. Follow the framework-specific installation instructions in our [installation guides](/editor/getting-started/install).
+Tiptap 支持所有现代前端 UI 框架，例如 React 和 Vue。请参阅我们的[安装指南](/editor/getting-started/install)，了解各框架对应的安装说明。
 
-### Basic editor setup
+### 编辑器基本设置
 
-Replace your Editor.js initialization with Tiptap:
+将 Editor.js 初始化代码替换为 Tiptap：
 
 ```ts
 // Editor.js (before)
@@ -124,32 +124,32 @@ const editor = new Editor({
 })
 ```
 
-## Extensions
+## 扩展
 
-### Understanding Tiptap's extension system
+### 了解 Tiptap 的扩展系统
 
-Tiptap uses a modular extension system that differs from Editor.js's tool-based approach. Instead of discrete blocks, Tiptap uses a continuous document model with extensions providing formatting and functionality.
+Tiptap 使用模块化扩展系统，与 Editor.js 基于工具的方式有所不同。Tiptap 不使用彼此独立的块，而是采用连续的文档模型，并通过扩展提供格式和功能。
 
-The [StarterKit](/editor/extensions/functionality/starterkit) is a bundle of all the basic extensions, and you can add or remove other extensions as needed.
+[StarterKit](/editor/extensions/functionality/starterkit) 是一组基础扩展的集合，你可以根据需要添加或移除其他扩展。
 
-Explore all available extensions in our [extensions guide](/editor/extensions/overview), or [create your own](/editor/extensions/custom-extensions) to support custom functionality and HTML elements.
+请在[扩展指南](/editor/extensions/overview)中了解所有可用扩展，或[创建自己的扩展](/editor/extensions/custom-extensions)，以支持自定义功能和 HTML 元素。
 
-### Common Editor.js tool equivalents
+### 常见 Editor.js 工具对应项
 
-| Editor.js Tool        | Tiptap Extension                        | Notes                  |
-| --------------------- | --------------------------------------- | ---------------------- |
-| `@editorjs/paragraph` | `Paragraph`                             | Included in StarterKit |
-| `@editorjs/header`    | `Heading`                               | Included in StarterKit |
-| `@editorjs/list`      | `BulletList`, `OrderedList`, `ListItem` | Included in StarterKit |
-| `@editorjs/quote`     | `Blockquote`                            | Included in StarterKit |
-| `@editorjs/code`      | `CodeBlock`                             | Included in StarterKit |
-| `@editorjs/image`     | `Image`                                 | Available separately   |
-| `@editorjs/table`     | `Table`                                 | Available separately   |
-| `@editorjs/link`      | `Link`                                  | Included in StarterKit |
-| `@editorjs/marker`    | `Highlight`                             | Available separately   |
-| `@editorjs/delimiter` | `HorizontalRule`                        | Included in StarterKit |
+| Editor.js 工具       | Tiptap 扩展                              | 说明             |
+| -------------------- | ---------------------------------------- | ---------------- |
+| `@editorjs/paragraph` | `Paragraph`                             | 包含在 StarterKit 中 |
+| `@editorjs/header`    | `Heading`                               | 包含在 StarterKit 中 |
+| `@editorjs/list`      | `BulletList`, `OrderedList`, `ListItem` | 包含在 StarterKit 中 |
+| `@editorjs/quote`     | `Blockquote`                            | 包含在 StarterKit 中 |
+| `@editorjs/code`      | `CodeBlock`                             | 包含在 StarterKit 中 |
+| `@editorjs/image`     | `Image`                                 | 可单独使用       |
+| `@editorjs/table`     | `Table`                                 | 可单独使用       |
+| `@editorjs/link`      | `Link`                                  | 包含在 StarterKit 中 |
+| `@editorjs/marker`    | `Highlight`                             | 可单独使用       |
+| `@editorjs/delimiter` | `HorizontalRule`                        | 包含在 StarterKit 中 |
 
-### Extension configuration
+### 配置扩展
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -181,15 +181,15 @@ const editor = new Editor({
 })
 ```
 
-### Custom extensions
+### 自定义扩展
 
-For Editor.js custom tools, create custom Tiptap extensions. See our [custom extensions guide](/editor/extensions/custom-extensions) for detailed instructions.
+对于 Editor.js 自定义工具，可以创建 Tiptap 自定义扩展。详细说明请参阅我们的[自定义扩展指南](/editor/extensions/custom-extensions)。
 
-## UI implementation
+## UI 实现
 
-### Toolbar implementation
+### 实现工具栏
 
-Editor.js's inline toolbar can be replicated with Tiptap's toolbar components:
+可以使用 Tiptap 的工具栏组件复现 Editor.js 的行内工具栏：
 
 ```tsx
 // Tiptap toolbar (React example)
@@ -221,16 +221,16 @@ function Toolbar({ editor }) {
 }
 ```
 
-### Pre-built UI components
+### 预构建 UI 组件
 
-For faster development, use Tiptap's pre-built UI components:
+为了加快开发，可以使用 Tiptap 的预构建 UI 组件：
 
-- Explore our [UI components](/ui-components/getting-started/overview) for ready-to-use components
-- Check out practical examples in our [default text editor example](/examples/basics/default-text-editor)
+- 浏览我们的 [UI 组件](/ui-components/getting-started/overview)，使用开箱即用的组件
+- 查看[默认文本编辑器示例](/examples/basics/default-text-editor)中的实用示例
 
-### Inline toolbar (Editor.js style)
+### 行内工具栏（Editor.js 风格）
 
-Replicate Editor.js's inline toolbar using Tiptap's BubbleMenu:
+使用 Tiptap 的 BubbleMenu 复现 Editor.js 的行内工具栏：
 
 ```tsx
 import { BubbleMenu } from '@tiptap/react'
@@ -262,31 +262,31 @@ function MyEditor() {
 }
 ```
 
-### Block-based UI (alternative approach)
+### 基于块的 UI（替代方案）
 
-If you prefer Editor.js's block-based approach, use our [Block editor template](/ui-components/getting-started/overview) (coming soon) to achieve the UI of a Notion-like block-based text editor out of the box.
+如果你更喜欢 Editor.js 基于块的方式，可以使用我们的 [Block editor 模板](/ui-components/getting-started/overview)（即将推出），开箱即用地实现类似 Notion 的基于块的文本编辑器界面。
 
-## Migration checklist
+## 迁移检查清单
 
 <Checklist>
-  <CheckboxItem>Install Tiptap packages</CheckboxItem>
-  <CheckboxItem>Convert Editor.js JSON content to HTML</CheckboxItem>
-  <CheckboxItem>Replace Editor.js initialization with Tiptap setup</CheckboxItem>
-  <CheckboxItem>Map Editor.js tools to Tiptap extensions</CheckboxItem>
-  <CheckboxItem>Migrate custom tools to custom extensions or [Node Views](/editor/extensions/custom-extensions/node-views)</CheckboxItem>
-  <CheckboxItem>Implement toolbar UI components</CheckboxItem>
-  <CheckboxItem>Test content compatibility</CheckboxItem>
-  <CheckboxItem>Convert existing content to JSON format (recommended)</CheckboxItem>
-  <CheckboxItem>Implement custom extensions for any missing functionality</CheckboxItem>
-  <CheckboxItem>Update event handlers and API calls</CheckboxItem>
-  <CheckboxItem>Test inline toolbar functionality</CheckboxItem>
-  <CheckboxItem>Verify image upload and handling</CheckboxItem>
-  <CheckboxItem>Test block-specific features (quotes, code blocks, etc.)</CheckboxItem>
+  <CheckboxItem>安装 Tiptap 软件包</CheckboxItem>
+  <CheckboxItem>将 Editor.js JSON 内容转换为 HTML</CheckboxItem>
+  <CheckboxItem>将 Editor.js 初始化代码替换为 Tiptap 设置</CheckboxItem>
+  <CheckboxItem>将 Editor.js 工具映射到 Tiptap 扩展</CheckboxItem>
+  <CheckboxItem>将自定义工具迁移为自定义扩展或 [Node Views](/editor/extensions/custom-extensions/node-views)</CheckboxItem>
+  <CheckboxItem>实现工具栏 UI 组件</CheckboxItem>
+  <CheckboxItem>测试内容兼容性</CheckboxItem>
+  <CheckboxItem>将现有内容转换为 JSON 格式（推荐）</CheckboxItem>
+  <CheckboxItem>为缺少的功能实现自定义扩展</CheckboxItem>
+  <CheckboxItem>更新事件处理程序和 API 调用</CheckboxItem>
+  <CheckboxItem>测试行内工具栏功能</CheckboxItem>
+  <CheckboxItem>检查图片上传和处理</CheckboxItem>
+  <CheckboxItem>测试特定于块的功能（引用、代码块等）</CheckboxItem>
 </Checklist>
 
-## Next steps
+## 后续步骤
 
-- Explore the [extension overview](/editor/extensions/overview) to discover all available extensions
-- Learn about [custom extensions](/editor/extensions/custom-extensions) for advanced customization
-- Check out our [examples](/examples) for implementation inspiration
-- Review the [performance guide](/guides/performance) for optimization tips
+- 浏览[扩展概览](/editor/extensions/overview)，了解所有可用扩展
+- 了解用于高级自定义的[自定义扩展](/editor/extensions/custom-extensions)
+- 查看我们的[示例](/examples)，获取实现灵感
+- 阅读[性能指南](/guides/performance)，了解优化技巧
