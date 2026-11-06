@@ -1,0 +1,194 @@
+---
+title: Tiptap 中的事件
+meta:
+  title: Tiptap 中的事件 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用和处理各种事件，包括创建、更新、获得焦点、失去焦点和销毁。更多内容请参阅文档！
+  category: 编辑器
+---
+
+编辑器会触发几种不同的事件，你可以监听这些事件。先来看看所有可用的事件。
+
+## 可用事件列表
+
+| 事件名称          | 说明                                                                                                             |
+| ----------------- | ------------------------------------------------------------------------------------------------------------- |
+| `beforeCreate`    | 在创建编辑器视图之前触发。                                                                                    |
+| `create`          | 编辑器完全初始化并就绪时触发。                                                               |
+| `update`          | 内容发生变化时触发。                                                                        |
+| `selectionUpdate` | 编辑器中的选区发生变化时触发。                                                                 |
+| `transaction`     | 编辑器状态因任何操作而发生变化时触发。                                                           |
+| `focus`           | 编辑器获得焦点时触发。                                                                                  |
+| `blur`            | 编辑器失去焦点时触发。                                                                                  |
+| `destroy`         | 编辑器实例即将销毁时触发。                                                                  |
+| `paste`           | 内容粘贴到编辑器中时触发。                                                                       |
+| `drop`            | 内容拖放到编辑器中时触发。                                                                      |
+| `delete`          | 从编辑器中删除内容时触发。                                                                      |
+| `contentError`    | 内容与 schema 不匹配时触发。[了解更多](/editor/core-concepts/schema#invalid-schema-handling) |
+
+## 注册事件监听器
+
+有三种注册事件监听器的方式。
+
+### 方式 1：配置
+
+你可以在创建编辑器实例时立即定义事件监听器：
+
+```js
+const editor = new Editor({
+  onBeforeCreate({ editor }) {
+    // Before the view is created.
+  },
+  onCreate({ editor }) {
+    // The editor is ready.
+  },
+  onUpdate({ editor }) {
+    // The content has changed.
+  },
+  onSelectionUpdate({ editor }) {
+    // The selection has changed.
+  },
+  onTransaction({ editor, transaction }) {
+    // The editor state has changed.
+  },
+  onFocus({ editor, event }) {
+    // The editor is focused.
+  },
+  onBlur({ editor, event }) {
+    // The editor isn’t focused anymore.
+  },
+  onDestroy() {
+    // The editor is being destroyed.
+  },
+  onPaste(event: ClipboardEvent, slice: Slice) {
+    // The editor is being pasted into.
+  },
+  onDrop(event: DragEvent, slice: Slice, moved: boolean) {
+    // The editor is being pasted into.
+  },
+  onDelete({ type, deletedRange, newRange, partial, node, mark, from, to, newFrom, newTo }) {
+    // Content was deleted from the editor (either a node or mark).
+  },
+  onContentError({ editor, error, disableCollaboration }) {
+    // The editor content does not match the schema.
+  },
+})
+```
+
+### 方式 2：绑定
+
+你也可以在正在运行的编辑器实例上注册事件监听器：
+
+#### 绑定事件监听器
+
+```js
+editor.on('beforeCreate', ({ editor }) => {
+  // Before the view is created.
+})
+
+editor.on('create', ({ editor }) => {
+  // The editor is ready.
+})
+
+editor.on('update', ({ editor }) => {
+  // The content has changed.
+})
+
+editor.on('selectionUpdate', ({ editor }) => {
+  // The selection has changed.
+})
+
+editor.on('transaction', ({ editor, transaction }) => {
+  // The editor state has changed.
+})
+
+editor.on('focus', ({ editor, event }) => {
+  // The editor is focused.
+})
+
+editor.on('blur', ({ editor, event }) => {
+  // The editor isn’t focused anymore.
+})
+
+editor.on('destroy', () => {
+  // The editor is being destroyed.
+})
+
+editor.on('paste', ({ event, slice, editor }) => {
+  // The editor is being pasted into.
+})
+
+editor.on('drop', ({ editor, event, slice, moved }) => {
+  // The editor is being destroyed.
+})
+
+editor.on('delete', ({ type, deletedRange, newRange, partial, node, mark }) => {
+  // Content was deleted from the editor (either a node or mark).
+})
+
+editor.on('contentError', ({ editor, error, disableCollaboration }) => {
+  // The editor content does not match the schema.
+})
+```
+
+#### 解绑事件监听器
+
+如果之后需要解绑这些事件监听器，请使用 `.on()` 注册监听器，再使用 `.off()` 解绑。
+
+```js
+const onUpdate = () => {
+  // The content has changed.
+}
+
+// Bind …
+editor.on('update', onUpdate)
+
+// … and unbind.
+editor.off('update', onUpdate)
+```
+
+### 方式 3：扩展
+
+你也可以将事件监听器移到自定义扩展（或节点、标记）中。示例如下：
+
+```js
+import { Extension } from '@tiptap/core'
+
+const CustomExtension = Extension.create({
+  onBeforeCreate({ editor }) {
+    // Before the view is created.
+  },
+  onCreate({ editor }) {
+    // The editor is ready.
+  },
+  onUpdate({ editor }) {
+    // The content has changed.
+  },
+  onSelectionUpdate({ editor }) {
+    // The selection has changed.
+  },
+  onTransaction({ editor, transaction }) {
+    // The editor state has changed.
+  },
+  onFocus({ editor, event }) {
+    // The editor is focused.
+  },
+  onBlur({ editor, event }) {
+    // The editor isn’t focused anymore.
+  },
+  onDestroy() {
+    // The editor is being destroyed.
+  },
+  onPaste(event: ClipboardEvent, slice: Slice) {
+    // The editor is being pasted into.
+  },
+  onDrop(event: DragEvent, slice: Slice, moved: boolean) {
+    // The editor is being pasted into.
+  },
+  onDelete({ type, deletedRange, newRange, partial, node, mark }) {
+    // Content was deleted from the editor (either a node or mark).
+  },
+  onContentError({ editor, error, disableCollaboration }) {
+    // The editor content does not match the schema.
+  },
+})
+```
