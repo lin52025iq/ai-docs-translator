@@ -1,22 +1,22 @@
 ---
-title: Provide context to the LLM
+title: 向 LLM 提供上下文
 meta:
-  title: Provide LLM context | Tiptap AI Suggestion
-  description: How to provide extra context to the LLM to improve the results of the AI Suggestion extension.
-  category: Content AI
+  title: 提供 LLM 上下文 | Tiptap AI Suggestion
+  description: 了解如何向 LLM 提供额外上下文，以提升 AI Suggestion 扩展的结果。
+  category: 内容 AI
 ---
 
-When you [generate suggestions with Tiptap Content AI cloud](/ai/deprecated/suggestion/use-with-content-ai-cloud), the following information is sent to the LLM:
+使用 [Tiptap Content AI 云端服务生成建议](/ai/deprecated/suggestion/use-with-content-ai-cloud) 时，以下信息会发送给 LLM：
 
-- The editor's content.
-- The extension's [rules](/ai/deprecated/suggestion/features/define-rules).
-- The `context` option (if provided).
+- 编辑器内容。
+- 扩展的[规则](/ai/deprecated/suggestion/features/define-rules)。
+- `context` 选项（如果已提供）。
 
-The `context` option is an optional string property that can be used to provide extra information to the LLM. This information will be added to the prompt. It is global, so it will be used with all rules.
+`context` 选项是一个可选的字符串属性，可用于向 LLM 提供额外信息。这些信息会添加到提示词中。该选项是全局的，因此会应用于所有规则。
 
-## Configuring the Context's Initial Value
+## 配置上下文的初始值
 
-You can provide an intial value of the context in the extension's config.
+你可以在扩展的配置中设置上下文的初始值。
 
 ```ts
 AiSuggestion.configure({
@@ -24,30 +24,30 @@ AiSuggestion.configure({
 })
 ```
 
-## Updating the Context
+## 更新上下文
 
-You can update the value of the context at any time with the `setAiSuggestionContext` command. This is useful if you want to change the context based on user input or other application-specific logic.
+你可以随时使用 `setAiSuggestionContext` 命令更新上下文值。如果你想根据用户输入或其他特定于应用程序的逻辑更改上下文，这会很有用。
 
 ```ts
 const newContext = 'The tone should be informal and friendly.'
 editor.commands.setAiSuggestionContext(newContext)
 ```
 
-This command will not automatically reload the suggestions. You need to call the `loadAiSuggestions` command to update the suggestions based on the new context. A common pattern is to chain the two commands together.
+此命令不会自动重新加载建议。你需要调用 `loadAiSuggestions` 命令，根据新的上下文更新建议。常见做法是将这两个命令串联起来。
 
 ```ts
 editor.chain().setAiSuggestionContext(newContext).loadAiSuggestions().run()
 ```
 
-To clear the context, set it to `null`.
+要清除上下文，请将其设为 `null`。
 
 ```ts
 editor.commands.setAiSuggestionContext(null)
 ```
 
-## Reading the Current Context
+## 读取当前上下文
 
-You can access the current value of the context with the `context` storage property.
+你可以通过 `context` 存储属性访问当前上下文值。
 
 ```ts
 const currentContext = editor.extensionStorage.aiSuggestion.context
