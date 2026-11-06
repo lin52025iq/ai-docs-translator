@@ -1,20 +1,20 @@
 ---
-title: Create a new mark
+title: 创建新标记
 meta:
-  title: Create Mark | Tiptap Editor Docs
-  description: Create a new mark for your Tiptap editor and create a unique editor experience from scratch. Learn more in the docs!
+  title: 创建标记 | Tiptap 编辑器文档
+  description: 为 Tiptap 编辑器创建新标记，从零开始打造独特的编辑体验。了解更多信息，请查看文档！
   category: Editor
 ---
 
-# Creating a Mark Extension
+# 创建标记扩展
 
-Marks are used to add inline formatting to text in Tiptap. Common examples include bold, italic, and underline formatting. Let's learn how to create our own mark extension step by step.
+在 Tiptap 中，标记用于为文本添加行内格式。常见示例包括粗体、斜体和下划线。下面将逐步学习如何创建自己的标记扩展。
 
-The options available can be found in the [Mark API](/editor/extensions/custom-extensions/mark).
+可用选项请参阅 [Mark API](/editor/extensions/custom-extensions/mark)。
 
-## Basic Structure
+## 基本结构
 
-First, we need to create the basic structure of a mark extension:
+首先，我们需要创建标记扩展的基本结构：
 
 ```typescript
 // filepath: src/HighlightMark.ts
@@ -33,14 +33,14 @@ const HighlightMark = Mark.create({
 export default HighlightMark
 ```
 
-What we've done here is:
+这里我们完成了以下工作：
 
-- Created a new mark extension named `HighlightMark`
-- Added an `addOptions` method to define the mark's options which are configurable by the user
+- 创建了名为 `HighlightMark` 的新标记扩展
+- 添加了 `addOptions` 方法，用于定义可由用户配置的标记选项
 
-## Adding Styling
+## 添加样式
 
-Let's add styling capabilities by defining how our mark renders and parses HTML:
+接下来，通过定义标记如何渲染和解析 HTML，为其添加样式功能：
 
 ```typescript
 // filepath: src/HighlightMark.ts
@@ -61,9 +61,9 @@ const HighlightMark = Mark.create({
 })
 ```
 
-## Adding Attributes
+## 添加属性
 
-We can make our mark more flexible by adding customizable attributes:
+通过添加可自定义属性，我们可以让标记更加灵活：
 
 ```typescript
 // filepath: src/HighlightMark.ts
@@ -85,9 +85,9 @@ const HighlightMark = Mark.create({
 })
 ```
 
-## Adding Commands
+## 添加命令
 
-Make the mark interactive with commands:
+通过命令让标记具有交互功能：
 
 ```typescript
 // filepath: src/HighlightMark.ts
@@ -126,14 +126,14 @@ const HighlightMark = Mark.create({
 })
 ```
 
-This adds commands which are available on the editor instance like:
+添加后，就可以在编辑器实例上使用这些命令，例如：
 
-- `editor.commands.setHighlight({ color: 'pink' })` Using the commands API
-- `editor.chain().toggleHighlight().run()` Using the chaining API
+- `editor.commands.setHighlight({ color: 'pink' })` 使用命令 API
+- `editor.chain().toggleHighlight().run()` 使用链式 API
 
-## Adding Keyboard Shortcuts
+## 添加键盘快捷键
 
-Add keyboard shortcuts for quick formatting:
+添加键盘快捷键，快速应用格式：
 
 ```typescript
 // filepath: src/HighlightMark.ts
@@ -148,9 +148,9 @@ const HighlightMark = Mark.create({
 })
 ```
 
-## Adding Input Rules
+## 添加输入规则
 
-Support Markdown-style syntax:
+支持 Markdown 风格的语法：
 
 ```typescript
 // filepath: src/HighlightMark.ts
@@ -170,9 +170,9 @@ const HighlightMark = Mark.create({
 })
 ```
 
-## Using the Mark
+## 使用标记
 
-Here's how to use your new mark extension:
+下面介绍如何使用新创建的标记扩展：
 
 ```typescript
 // filepath: src/Editor.ts
@@ -187,20 +187,20 @@ new Editor({
 })
 ```
 
-Now you can:
+现在你可以：
 
-- Use `==text==` to highlight text (input rule)
-- Press Cmd+H (Ctrl+H on Windows) to toggle highlighting
-- Programmatically control highlighting:
+- 使用 `==text==` 高亮文本（输入规则）
+- 按 Cmd+H（Windows 上按 Ctrl+H）切换高亮
+- 通过编程方式控制高亮：
   ```js
   editor.commands.setHighlight({ color: 'pink' })
   editor.commands.toggleHighlight()
   editor.commands.unsetHighlight()
   ```
 
-## Testing
+## 测试
 
-Create tests to ensure your mark works as expected:
+创建测试，确保标记按预期工作：
 
 ```typescript
 // filepath: src/HighlightMark.test.ts
@@ -227,4 +227,4 @@ describe('HighlightMark', () => {
 })
 ```
 
-This mark extension provides a foundation that you can build upon for your specific use case. You can extend it further by adding more attributes, commands, or changing how it renders in the editor.
+这个标记扩展提供了一个基础，你可以根据具体用例在此基础上进行扩展，例如添加更多属性或命令，或者更改它在编辑器中的渲染方式。
