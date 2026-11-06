@@ -1,0 +1,268 @@
+---
+title: UniqueID 扩展
+extension:
+  name: UniqueID
+  link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-unique-id
+  description: 为每个节点添加唯一 ID 并进行跟踪。
+  type: extension
+  icon: Hash
+tags:
+  - type: image
+    src: https://img.shields.io/npm/v/@tiptap/extension-unique-id.svg?label=version
+    url: https://www.npmjs.com/package/@tiptap/extension-unique-id
+    label: 版本
+  - type: image
+    src: https://img.shields.io/npm/dm/@tiptap/extension-unique-id.svg
+    url: https://npmcharts.com/compare/@tiptap/extension-unique-id?minimal=true
+    label: 下载量
+meta:
+  title: UniqueID 扩展 | Tiptap 编辑器文档
+  description: 使用 UniqueID 扩展为每个节点添加唯一 ID 并进行跟踪。更多内容请参阅文档！
+  category: 编辑器
+---
+
+import { CodeDemo } from '@/components/CodeDemo'
+import { Callout } from '@/components/ui/Callout'
+
+`UniqueID` 扩展会为你配置的节点类型添加唯一 ID。
+该扩展会持续跟踪节点，即使节点被拆分、合并，或在更改后执行撤销/重做、裁剪内容、粘贴内容等操作，也能正常工作。
+此外，你可以配置哪些节点类型需要唯一 ID，也可以自定义 ID 的生成方式。
+
+<CodeDemo path="/Extensions/UniqueID" />
+
+## 安装
+
+```bash
+npm install @tiptap/extension-unique-id
+```
+
+## 设置
+
+### attributeName
+
+附加到 HTML 标签上的属性名称（会添加 `data-` 前缀）。
+
+默认值：`'id'`
+
+```js
+UniqueID.configure({
+  attributeName: 'uid',
+})
+```
+
+### types
+
+需要添加唯一 ID 的所有节点类型，例如 `['heading', 'paragraph']`。
+你也可以传入 `'all'`，为文档中的所有节点类型添加 ID，但 `doc` 和 `text` 除外。
+
+默认值：`[]`
+
+```js
+UniqueID.configure({
+  types: ['heading', 'paragraph'],
+})
+```
+
+```js
+UniqueID.configure({
+  types: 'all',
+})
+```
+
+### generateID
+
+用于生成并返回唯一 ID 的函数。它会接收一个上下文对象（例如 `{ node, pos }`），因此你可以根据节点类型或节点位置自定义 ID 的生成方式。
+
+默认值：`({ node, pos }) => uuidv4()`
+
+```js
+UniqueID.configure({
+  generateID: ({ node }) => `${node.type.name}-${uuidv4()}`,
+})
+```
+
+### filterTransaction
+
+忽略某些更改，例如通过协作插件应用的其他用户所做的更改。
+
+默认值：`null`
+
+```js
+import { isChangeOrigin } from '@tiptap/extension-collaboration'
+
+// Adds support for collaborative editing
+UniqueID.configure({
+  filterTransaction: (transaction) => !isChangeOrigin(transaction),
+})
+```
+
+### updateDocument
+
+是否通过为节点添加唯一 ID 来更新文档。如果文档处于 `readonly` 模式、不可变，或你不希望修改文档，请将此属性设为 `false`。
+
+默认值：`true`
+
+```js
+UniqueID.configure({
+  updateDocument: false,
+})
+```
+
+## 与协作功能搭配使用
+
+<Callout title="重要" variant="warning">
+将 UniqueID 扩展与[协作扩展](/editor/extensions/functionality/collaboration)搭配使用时，请确保协作提供程序完成同步后再挂载编辑器。在尚未同步的 `Y.Doc` 上挂载编辑器，可能会导致文档状态异常（例如持续存在的空段落），而 UniqueID 扩展会保留这些状态。
+</Callout>
+
+### 错误的设置方式
+
+在此示例中，编辑器会在协作提供程序完成同步前，立即与协作扩展一起挂载。这会导致编辑器基于空的 `Y.Doc` 初始化，从而引发非预期的文档更改。
+
+```tsx
+import Collaboration from '@tiptap/extension-collaboration'
+import { isChangeOrigin } from '@tiptap/extension-collaboration'
+import { EditorContent, useEditor } from '@tiptap/react'
+import { TiptapCollabProvider } from '@tiptap-pro/provider'
+import { useEffect } from 'react'
+import * as Y from 'yjs'
+
+const doc = new Y.Doc()
+
+export default () => {
+  // ❌ Editor is mounted before the provider has synced
+  const editor = useEditor({
+    extensions: [
+      // ...other extensions
+      UniqueID.configure({
+        types: ['paragraph', 'heading'],
+        filterTransaction: (transaction) => !isChangeOrigin(transaction),
+      }),
+      Collaboration.configure({
+        document: doc,
+      }),
+    ],
+    content: '<p>Initial content</p>', // This will be duplicated on every sync
+  })
+
+  useEffect(() => {
+    // Provider connects and syncs after the editor is already mounted
+    const provider = new TiptapCollabProvider({
+      name: 'your-document-name',
+      appId: 'YOUR_APP_ID',
+      token: 'YOUR_JWT',
+      document: doc,
+    })
+  }, [])
+
+  return <EditorContent editor={editor} />
+}
+```
+
+### 正确的设置方式
+
+为避免此问题，请按以下顺序初始化：
+
+1. 初始化 `Y.Doc`
+2. 启动协作提供程序
+3. 等待 `synced` 事件
+4. 检查协作文档是否为空
+5. 使用正确的内容挂载编辑器
+
+```tsx
+import Collaboration from '@tiptap/extension-collaboration'
+import { isChangeOrigin } from '@tiptap/extension-collaboration'
+import { EditorContent, useEditor } from '@tiptap/react'
+import { TiptapCollabProvider } from '@tiptap-pro/provider'
+import { useEffect } from 'react'
+import * as Y from 'yjs'
+
+const doc = new Y.Doc()
+
+export default () => {
+  const editor = useEditor({
+    extensions: [
+      // ...other extensions
+      UniqueID.configure({
+        types: ['paragraph', 'heading'],
+        filterTransaction: (transaction) => !isChangeOrigin(transaction),
+      }),
+      Collaboration.configure({
+        document: doc,
+      }),
+    ],
+    // Do not set content here — wait for sync
+  })
+
+  useEffect(() => {
+    const provider = new TiptapCollabProvider({
+      name: 'your-document-name',
+      appId: 'YOUR_APP_ID',
+      token: 'YOUR_JWT',
+      document: doc,
+
+      onSynced() {
+        // Only seed content if the collaborative document is empty
+        const isEmpty = doc.getXmlFragment('default').length === 0
+
+        if (isEmpty && editor) {
+          editor.commands.setContent(yourInitialContent)
+        }
+      },
+    })
+  }, [])
+
+  return <EditorContent editor={editor} />
+}
+```
+
+### 要点
+
+- **不要在同步完成前初始化编辑器内容。** 使用协作功能时，不要依赖编辑器的默认状态。
+- **使用 `filterTransaction`** 忽略来自协作功能的更改。请参阅 [`filterTransaction` 设置](#filtertransaction)。
+- **开发期间避免重复使用已损坏的文档名称。** 如果错误状态已持久化，请使用新的文档名称重新开始。
+
+完整的协作设置指南请参阅[安装协作功能](/collaboration/getting-started/install)文档。
+
+## 服务端唯一 ID 工具
+
+`generateUniqueIds` 函数可以在服务端为 Tiptap 文档添加唯一 ID，而无需创建 `Editor` 实例。处理服务端文档或需要为现有内容添加 ID 时，此函数非常实用。
+
+### 参数
+
+- **`doc`**（`JSONContent`）：要添加唯一 ID 的 Tiptap JSON 文档
+- **`extensions`**（`Extensions`）：要使用的扩展。必须包含 `UniqueID` 扩展。若要自定义 ID 的生成方式，可以向 `UniqueID` 扩展传入选项。
+
+### 返回类型
+
+返回一个新的 Tiptap 文档（`JSONContent` 对象），其中的节点已添加唯一 ID。
+
+### 示例
+
+```js
+import { generateUniqueIds, UniqueID } from '@tiptap/extension-unique-id'
+import { StarterKit } from '@tiptap/starter-kit'
+
+const doc = {
+  type: 'doc',
+  content: [
+    { type: 'paragraph', content: [{ type: 'text', text: 'Hello, world!' }] },
+    { type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: 'My Heading' }] },
+  ],
+}
+
+const newDoc = generateUniqueIds(doc, [
+  StarterKit,
+  UniqueID.configure({ types: ['paragraph', 'heading'] }),
+])
+
+// Result:
+// {
+//   type: 'doc',
+//   content: [
+//     { type: 'paragraph', content: [{ type: 'text', text: 'Hello, world!' }], attrs: { id: 'd4590f81-52e8-45ec-b317-2e9a805b03e3' } },
+//     { type: 'heading', content: [{ type: 'text', text: 'My Heading' }], attrs: { level: 1, id: 'c88f9b5f-7b91-442f-b4d9-ee0d04104827' } }
+//   ]
+// }
+```
+
+此函数会自动读取 `UniqueID` 扩展的配置，包括 `types`、`attributeName` 和 `generateID` 等选项。
