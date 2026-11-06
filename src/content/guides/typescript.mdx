@@ -1,26 +1,26 @@
 ---
 tags:
   - type: editor
-title: Working with TypeScript
+title: 使用 TypeScript
 meta:
-  title: TypeScript | Tiptap Editor Docs
-  description: Use TypeScript to develop your Tiptap Editor. Learn more in our documentation
-  category: Editor
+  title: TypeScript | Tiptap 编辑器文档
+  description: 使用 TypeScript 开发 Tiptap 编辑器。了解更多信息，请参阅我们的文档。
+  category: 编辑器
 ---
 
-The whole Tiptap codebase is written in TypeScript. If you haven’t heard of it or never used it, no worries. You don’t have to.
+整个 Tiptap 代码库都是用 TypeScript 编写的。如果你没听说过它，或从未使用过，也不用担心，你不一定非要用它。
 
-TypeScript extends JavaScript by adding types (hence the name). It adds new syntax, which doesn’t exist in Vanilla JavaScript. It’s actually removed before running in the browser, but this step – the compilation – is important to find bugs early. It checks if you pass the right types of data to functions. For a big and complex project, that’s very valuable. It means we’ll get notified of lots of bugs, before shipping code to you.
+TypeScript 通过添加类型来扩展 JavaScript（因此得名）。它引入了原生 JavaScript 中不存在的新语法。这些语法会在代码运行于浏览器之前被移除，但编译这一步有助于尽早发现错误。它会检查你传递给函数的数据类型是否正确。对于大型复杂项目来说，这非常有价值。这意味着在把代码交付给你之前，我们就能发现许多错误。
 
-**Anyway, if you don’t use TypeScript in your project, that’s fine.** You will still be able to use Tiptap and nevertheless get a nice autocomplete for the Tiptap API (if your editor supports it, but most do).
+**不过，如果你的项目没有使用 TypeScript，也完全没问题。**你仍然可以使用 Tiptap，并且依然能获得 Tiptap API 的自动补全功能（前提是你的编辑器支持，不过大多数编辑器都支持）。
 
-If you are using TypeScript in your project and want to extend Tiptap, there are two types that are good to know about.
+如果你的项目使用了 TypeScript，并且想要扩展 Tiptap，有两种类型值得了解。
 
-## Types
+## 类型
 
-### Options types
+### 选项类型
 
-To extend or create default options for an extension, you’ll need to define a custom type, here is an example:
+要扩展扩展的默认选项或创建默认选项，你需要定义一个自定义类型，示例如下：
 
 ```ts
 import { Extension } from '@tiptap/core'
@@ -38,9 +38,9 @@ const CustomExtension = Extension.create<CustomExtensionOptions>({
 })
 ```
 
-### Storage types
+### 存储类型
 
-To add types for your extension storage, you’ll have to both pass that as a second type parameter and define the storage type, here is an example:
+要为扩展的存储添加类型，你需要将其作为第二个类型参数传入，并定义存储类型，示例如下：
 
 ```ts
 import { Extension } from '@tiptap/core'
@@ -69,16 +69,16 @@ const CustomExtension = Extension.create<{}, CustomExtensionStorage>({
 })
 ```
 
-Now, using storage outside of the extension will be type-safe:
+现在，在扩展之外使用存储时也能获得类型安全：
 
 ```ts
 const customStorage = editor.storage.customExtension
 customStorage.awesomeness = 200 // ✅
 ```
 
-### Command type
+### 命令类型
 
-The core package also exports a `Command` type, which needs to be added to all commands that you specify in your code. Here is an example:
+core 包还导出了一个 `Command` 类型，你需要将它添加到代码中定义的所有命令上。示例如下：
 
 ```ts
 import { Extension } from '@tiptap/core'
@@ -107,4 +107,4 @@ const CustomExtension = Extension.create({
 })
 ```
 
-That’s basically it. We’re doing all the rest automatically.
+基本上就是这样。其余部分我们都会自动处理。
