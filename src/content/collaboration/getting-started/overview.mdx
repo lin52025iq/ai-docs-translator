@@ -1,9 +1,9 @@
 ---
-title: Make your editor collaborative
+title: 让编辑器支持协作
 meta:
-  title: Collaboration | Tiptap Collaboration Docs
-  description: Make your editor collaborative with Tiptap Collaboration on your premises or in our cloud. Learn more in our docs!
-  category: Collaboration
+  title: 协作 | Tiptap Collaboration 文档
+  description: 使用 Tiptap Collaboration，在本地部署或云端为编辑器添加协作功能。了解详情，请参阅我们的文档！
+  category: 协作
 ---
 
 import { ArrowRightIcon } from 'lucide-react'
@@ -11,39 +11,39 @@ import Link from '@/components/Link'
 import * as CtaBox from '@/components/CtaBox'
 import { Button } from '@/components/ui/Button'
 
-Collaboration adds real-time collaborative editing to your editor. Presence indicators show who’s active, awareness highlights each user’s cursor and selection, and built-in [version history](/collaboration/documents/snapshot) and [Comments](/comments/getting-started/overview) track every change.
+Collaboration 为编辑器添加实时协作编辑功能。在线状态指示器会显示当前活跃的用户，感知功能会突出显示每位用户的光标和选区，内置的[版本历史](/collaboration/documents/snapshot)和[评论](/comments/getting-started/overview)则会记录每一项更改。
 
-It runs on our open source [Hocuspocus](https://github.com/ueberdosis/hocuspocus) backend, syncs content with the Yjs CRDT, and scales from a single demo to thousands of concurrent connections.
+它基于我们的开源后端 [Hocuspocus](https://github.com/ueberdosis/hocuspocus) 运行，使用 Yjs CRDT 同步内容，既能满足单个演示项目的需求，也能扩展到数千个并发连接。
 
-## Maintain documents
-Every change is stored as a Yjs update. Use the [REST API](/collaboration/documents/rest-api) to fetch JSON or push programmatic edits. Add [webhooks](/collaboration/core-concepts/webhooks) for instant notifications and to retrieve all your documents.
+## 管理文档
+每项更改都会存储为 Yjs 更新。使用 [REST API](/collaboration/documents/rest-api) 获取 JSON 或以编程方式推送编辑内容。添加 [webhook](/collaboration/core-concepts/webhooks)，即可即时接收通知并获取所有文档。
 
-Create your own backups of all documents and associated information using our [document management API](/collaboration/documents/rest-api).
+使用我们的[文档管理 API](/collaboration/documents/rest-api)为所有文档及相关信息创建自己的备份。
 
-## Enable advanced features
-- [Version history](/collaboration/documents/snapshot) – install the Collaboration Snapshot extension and let users restore any previous state.
-- [Snapshot compare](/collaboration/documents/snapshot-compare) – highlight differences between versions with Snapshot Compare.
+## 启用高级功能
+- [版本历史](/collaboration/documents/snapshot) – 安装 Collaboration Snapshot 扩展，让用户恢复到任意先前状态。
+- [快照比较](/collaboration/documents/snapshot-compare) – 使用 Snapshot Compare 突出显示不同版本之间的差异。
 
 <CtaBox.Wrapper className="mt-12">
-    <CtaBox.Title>Enterprise on-premises solution</CtaBox.Title>
+    <CtaBox.Title>企业级本地部署方案</CtaBox.Title>
     <CtaBox.Description>
-        Integrate Collaboration and all other Tiptap features into your infrastructure.
+        将 Collaboration 和所有其他 Tiptap 功能集成到您的基础设施中。
     </CtaBox.Description>
     <CtaBox.List>
-        <CtaBox.ListItem title="On-premises: ">
-            Deploy our docker images in your own stack
+        <CtaBox.ListItem title="本地部署： ">
+            在您自己的技术栈中部署我们的 Docker 镜像
         </CtaBox.ListItem>
-        <CtaBox.ListItem title="High availability cluster: ">
-            Scale confidently to millions of users
+        <CtaBox.ListItem title="高可用集群： ">
+            从容扩展，支持数百万用户
         </CtaBox.ListItem>
-        <CtaBox.ListItem title="Dedicated support: ">
-            Custom development and integration support in Chat
+        <CtaBox.ListItem title="专属支持： ">
+            在聊天中获取定制开发和集成支持
         </CtaBox.ListItem>
     </CtaBox.List>
     <CtaBox.Actions className="-mx-3">
         <Button className="text-white/80 hover:text-white/100" variant="tertiary" asChild>
             <Link href="https://tiptap.dev/contact-sales">
-                Let's talk
+                联系我们
                 <ArrowRightIcon className="w-4 h-4" />
             </Link>
         </Button>
@@ -51,20 +51,20 @@ Create your own backups of all documents and associated information using our [d
 </CtaBox.Wrapper>
 
 
-## Migrate from Hocuspocus or Collaboration Cloud
+## 从 Hocuspocus 或 Collaboration Cloud 迁移
 
-Migrating your application from Hocuspocus to either an on-premises solution or the Tiptap Collaboration Cloud involves a simple switch from the `HocuspocusProvider` to the `TiptapCollabProvider`, or the other way around.
+将应用从 Hocuspocus 迁移到本地部署方案或 Tiptap Collaboration Cloud，只需将 `HocuspocusProvider` 切换为 `TiptapCollabProvider`，反之亦然。
 
-This doesn't require any other updates to your setup, and the way you interact with the API won't change as well. The `TiptapCollabProvider` acts as a go-between, managing how your application connects to the server and handles login details.
+无需对现有设置进行其他更改，与 API 交互的方式也不会改变。`TiptapCollabProvider` 充当中间层，负责管理应用连接服务器的方式以及登录信息。
 
-This migration approach is also applicable when migrating from the Tiptap Collaboration Cloud to an on-premises configuration.
+从 Tiptap Collaboration Cloud 迁移到本地部署配置时，同样适用这种迁移方式。
 
-Review the [Batch Import endpoint](/collaboration/documents/rest-api#batch-import-documents) to migrate your documents.
+查看 [Batch Import 端点](/collaboration/documents/rest-api#batch-import-documents)，了解如何迁移文档。
 
-## Schema management
+## Schema 管理
 
-Tiptap enforces strict schema adherence, discarding any elements not defined in the active schema. This can cause issues when clients using different schema versions concurrently edit a document.
+Tiptap 会严格执行 Schema 规则，并丢弃当前 Schema 中未定义的任何元素。当使用不同 Schema 版本的客户端同时编辑同一文档时，这可能会引发问题。
 
-For instance, imagine adding a task list feature in an update. Users on the previous schema won't see these task lists, and any added by a user on the new schema will disappear from their view due to schema discrepancies. This occurs because Tiptap synchronizes changes across clients, removing unrecognized elements based on the older schema.
+例如，假设某次更新添加了任务列表功能。使用旧版 Schema 的用户看不到这些任务列表，而新版 Schema 用户添加的任务列表也会因 Schema 不一致而从他们的视图中消失。这是因为 Tiptap 会在客户端之间同步更改，并根据旧版 Schema 移除无法识别的元素。
 
-To mitigate these issues, consider implementing [Invalid Schema Handling](/editor/core-concepts/schema#invalid-schema-handling) as outlined in the Tiptap Editor docs.
+为减少这些问题，请考虑按照 Tiptap Editor 文档中的说明实现[无效 Schema 处理](/editor/core-concepts/schema#invalid-schema-handling)。
