@@ -1,18 +1,18 @@
 ---
-title: Commands
+title: 命令
 tags:
   - type: addon
 meta:
-  title: Commands | Tiptap Tracked Changes Docs
-  description: All editor commands available in the Tiptap Tracked Changes extension.
-  category: Tracked Changes
+  title: 命令 | Tiptap 跟踪更改文档
+  description: Tiptap 跟踪更改扩展提供的所有编辑器命令。
+  category: 跟踪更改
 ---
 
-All editor commands provided by the Tracked Changes extension.
+跟踪更改扩展提供的所有编辑器命令。
 
 ## enableTrackedChanges()
 
-Enable track changes mode. All subsequent edits will become suggestions.
+启用跟踪更改模式。之后的所有编辑都会成为建议。
 
 ```js
 editor.commands.enableTrackedChanges()
@@ -20,7 +20,7 @@ editor.commands.enableTrackedChanges()
 
 ## disableTrackedChanges()
 
-Disable track changes mode. Edits will be applied directly to the document.
+禁用跟踪更改模式。编辑将直接应用到文档中。
 
 ```js
 editor.commands.disableTrackedChanges()
@@ -28,7 +28,7 @@ editor.commands.disableTrackedChanges()
 
 ## toggleTrackedChanges()
 
-Toggle track changes mode on or off.
+切换跟踪更改模式的启用或禁用状态。
 
 ```js
 editor.commands.toggleTrackedChanges()
@@ -36,12 +36,12 @@ editor.commands.toggleTrackedChanges()
 
 ## setTrackedChangesUser()
 
-Change the current user for new suggestions.
+更改新建议所使用的当前用户。
 
-| Argument       | Type                              | Description                                |
-| -------------- | --------------------------------- | ------------------------------------------ |
-| `userId`       | `string`                          | The new user ID                            |
-| `userMetadata` | `Record<string, unknown> \| null` | Optional arbitrary metadata about the user |
+| 参数            | 类型                              | 说明                   |
+| --------------- | --------------------------------- | ---------------------- |
+| `userId`        | `string`                          | 新用户 ID              |
+| `userMetadata`  | `Record<string, unknown> \| null` | 关于用户的可选任意元数据 |
 
 ```js
 editor.commands.setTrackedChangesUser({
@@ -52,11 +52,11 @@ editor.commands.setTrackedChangesUser({
 
 ## acceptSuggestion()
 
-Accept a suggestion, applying the proposed change. For insertions, the suggestion mark is removed and text is kept. For deletions, the marked text is removed. For replacements, the old text is removed and the new text is kept.
+接受一条建议并应用其提出的更改。对于插入操作，会移除建议标记并保留文本。对于删除操作，会移除带标记的文本。对于替换操作，会移除旧文本并保留新文本。
 
-| Argument | Type     | Description                                                                       |
-| -------- | -------- | --------------------------------------------------------------------------------- |
-| `id`     | `string` | Optional suggestion ID. If omitted, uses the suggestion at the current selection. |
+| 参数 | 类型     | 说明                                       |
+| ---- | -------- | ------------------------------------------ |
+| `id` | `string` | 可选的建议 ID。若省略，则使用当前选区中的建议。 |
 
 ```js
 // Accept suggestion at selection
@@ -68,11 +68,11 @@ editor.commands.acceptSuggestion({ id: 'suggestion-123' })
 
 ## rejectSuggestion()
 
-Reject a suggestion, reverting the proposed change. For insertions, the marked text is removed. For deletions, the suggestion mark is removed and text is kept. For replacements, the new text is removed and the old text is kept.
+拒绝一条建议并撤销其提出的更改。对于插入操作，会移除带标记的文本。对于删除操作，会移除建议标记并保留文本。对于替换操作，会移除新文本并保留旧文本。
 
-| Argument | Type     | Description                                                                       |
-| -------- | -------- | --------------------------------------------------------------------------------- |
-| `id`     | `string` | Optional suggestion ID. If omitted, uses the suggestion at the current selection. |
+| 参数 | 类型     | 说明                                       |
+| ---- | -------- | ------------------------------------------ |
+| `id` | `string` | 可选的建议 ID。若省略，则使用当前选区中的建议。 |
 
 ```js
 // Reject suggestion at selection
@@ -84,7 +84,7 @@ editor.commands.rejectSuggestion({ id: 'suggestion-123' })
 
 ## acceptAllSuggestions()
 
-Accept all suggestions in the document.
+接受文档中的所有建议。
 
 ```js
 editor.commands.acceptAllSuggestions()
@@ -92,7 +92,7 @@ editor.commands.acceptAllSuggestions()
 
 ## rejectAllSuggestions()
 
-Reject all suggestions in the document.
+拒绝文档中的所有建议。
 
 ```js
 editor.commands.rejectAllSuggestions()
@@ -100,12 +100,12 @@ editor.commands.rejectAllSuggestions()
 
 ## acceptSuggestionsInRange()
 
-Accept all suggestions within a specific document position range.
+接受指定文档位置范围内的所有建议。
 
-| Argument | Type     | Description                 |
-| -------- | -------- | --------------------------- |
-| `from`   | `number` | Start position of the range |
-| `to`     | `number` | End position of the range   |
+| 参数   | 类型     | 说明         |
+| ------ | -------- | ------------ |
+| `from` | `number` | 范围的起始位置 |
+| `to`   | `number` | 范围的结束位置 |
 
 ```js
 editor.commands.acceptSuggestionsInRange({ from: 0, to: 100 })
@@ -113,12 +113,12 @@ editor.commands.acceptSuggestionsInRange({ from: 0, to: 100 })
 
 ## rejectSuggestionsInRange()
 
-Reject all suggestions within a specific document position range.
+拒绝指定文档位置范围内的所有建议。
 
-| Argument | Type     | Description                 |
-| -------- | -------- | --------------------------- |
-| `from`   | `number` | Start position of the range |
-| `to`     | `number` | End position of the range   |
+| 参数   | 类型     | 说明         |
+| ------ | -------- | ------------ |
+| `from` | `number` | 范围的起始位置 |
+| `to`   | `number` | 范围的结束位置 |
 
 ```js
 editor.commands.rejectSuggestionsInRange({ from: 0, to: 100 })
@@ -126,11 +126,11 @@ editor.commands.rejectSuggestionsInRange({ from: 0, to: 100 })
 
 ## acceptSuggestionsByUser()
 
-Accept all suggestions created by a specific user.
+接受特定用户创建的所有建议。
 
-| Argument | Type     | Description                             |
-| -------- | -------- | --------------------------------------- |
-| `userId` | `string` | The user ID whose suggestions to accept |
+| 参数     | 类型     | 说明               |
+| -------- | -------- | ------------------ |
+| `userId` | `string` | 要接受其建议的用户 ID |
 
 ```js
 editor.commands.acceptSuggestionsByUser({ userId: 'user-123' })
@@ -138,11 +138,11 @@ editor.commands.acceptSuggestionsByUser({ userId: 'user-123' })
 
 ## rejectSuggestionsByUser()
 
-Reject all suggestions created by a specific user.
+拒绝特定用户创建的所有建议。
 
-| Argument | Type     | Description                             |
-| -------- | -------- | --------------------------------------- |
-| `userId` | `string` | The user ID whose suggestions to reject |
+| 参数     | 类型     | 说明               |
+| -------- | -------- | ------------------ |
+| `userId` | `string` | 要拒绝其建议的用户 ID |
 
 ```js
 editor.commands.rejectSuggestionsByUser({ userId: 'user-123' })
@@ -150,14 +150,14 @@ editor.commands.rejectSuggestionsByUser({ userId: 'user-123' })
 
 ## addTrackedInsertion()
 
-Insert content as a tracked suggestion without enabling tracked changes mode for the whole editor. This is useful when you need to create suggestions programmatically and want the result to match a normal tracked typing transaction. The `content` argument accepts any Tiptap `Content` value, including text, HTML, or JSON node content such as an image node. When `skipTrailingNode` is `true`, the emitted transaction also sets `skipTrailingNode: true`, which is useful with the [TrailingNode](/editor/extensions/functionality/trailing-node) extension.
+将内容作为跟踪建议插入，而不为整个编辑器启用跟踪更改模式。当你需要以编程方式创建建议，并希望结果与正常的跟踪输入事务一致时，此命令很有用。`content` 参数接受任何 Tiptap `Content` 值，包括文本、HTML 或 JSON 节点内容（例如图像节点）。当 `skipTrailingNode` 为 `true` 时，发出的事务也会设置 `skipTrailingNode: true`；此选项与 [TrailingNode](/editor/extensions/functionality/trailing-node) 扩展配合使用时很有用。
 
-| Argument           | Type      | Description                                                                           |
-| ------------------ | --------- | ------------------------------------------------------------------------------------- |
-| `from`             | `number`  | Document position where the tracked insertion should be added                         |
-| `content`          | `Content` | The content to insert as a suggestion                                                 |
-| `reason`           | `string`  | Optional description included in the `trackedChanges:suggestionCreated` event payload |
-| `skipTrailingNode` | `boolean` | Optional flag that sets `skipTrailingNode: true` on the emitted tracked transaction   |
+| 参数               | 类型      | 说明                                                                      |
+| ------------------ | --------- | ------------------------------------------------------------------------- |
+| `from`             | `number`  | 添加跟踪插入内容的文档位置                                                |
+| `content`          | `Content` | 作为建议插入的内容                                                        |
+| `reason`           | `string`  | 可选说明，会包含在 `trackedChanges:suggestionCreated` 事件载荷中           |
+| `skipTrailingNode` | `boolean` | 可选标志，用于在发出的跟踪事务中设置 `skipTrailingNode: true`              |
 
 ```js
 editor.commands.addTrackedInsertion({
@@ -184,13 +184,13 @@ editor.commands.addTrackedInsertion({
 
 ## addTrackedDeletion()
 
-Convert an existing document range into a tracked deletion suggestion. This mirrors what happens when a user deletes content while tracked changes mode is enabled.
+将现有文档范围转换为跟踪删除建议。这与启用跟踪更改模式时用户删除内容的效果相同。
 
-| Argument | Type     | Description                                                                           |
-| -------- | -------- | ------------------------------------------------------------------------------------- |
-| `from`   | `number` | Start position of the range to mark as deleted                                        |
-| `to`     | `number` | End position of the range to mark as deleted                                          |
-| `reason` | `string` | Optional description included in the `trackedChanges:suggestionCreated` event payload |
+| 参数     | 类型     | 说明                                           |
+| -------- | -------- | ---------------------------------------------- |
+| `from`   | `number` | 要标记为已删除范围的起始位置                   |
+| `to`     | `number` | 要标记为已删除范围的结束位置                   |
+| `reason` | `string` | 可选说明，会包含在 `trackedChanges:suggestionCreated` 事件载荷中 |
 
 ```js
 editor.commands.addTrackedDeletion({
@@ -202,15 +202,15 @@ editor.commands.addTrackedDeletion({
 
 ## addTrackedReplacement()
 
-Replace an existing range with a tracked replacement suggestion. The replaced content becomes the deletion part of the suggestion, and the new content becomes the insertion part. The `content` argument accepts any Tiptap `Content` value, so you can replace text with a different node by passing JSON content. When `skipTrailingNode` is `true`, the emitted transaction also sets `skipTrailingNode: true`, which is useful with the [TrailingNode](/editor/extensions/functionality/trailing-node) extension.
+将现有范围替换为跟踪替换建议。被替换的内容会成为建议中的删除部分，新内容则成为插入部分。`content` 参数接受任何 Tiptap `Content` 值，因此你可以传入 JSON 内容，以不同节点替换文本。当 `skipTrailingNode` 为 `true` 时，发出的事务也会设置 `skipTrailingNode: true`；此选项与 [TrailingNode](/editor/extensions/functionality/trailing-node) 扩展配合使用时很有用。
 
-| Argument           | Type      | Description                                                                           |
-| ------------------ | --------- | ------------------------------------------------------------------------------------- |
-| `from`             | `number`  | Start position of the range to replace                                                |
-| `to`               | `number`  | End position of the range to replace                                                  |
-| `content`          | `Content` | Replacement content to insert as a tracked suggestion                                 |
-| `reason`           | `string`  | Optional description included in the `trackedChanges:suggestionCreated` event payload |
-| `skipTrailingNode` | `boolean` | Optional flag that sets `skipTrailingNode: true` on the emitted tracked transaction   |
+| 参数               | 类型      | 说明                                                                      |
+| ------------------ | --------- | ------------------------------------------------------------------------- |
+| `from`             | `number`  | 要替换范围的起始位置                                                      |
+| `to`               | `number`  | 要替换范围的结束位置                                                      |
+| `content`          | `Content` | 作为跟踪建议插入的替换内容                                                |
+| `reason`           | `string`  | 可选说明，会包含在 `trackedChanges:suggestionCreated` 事件载荷中           |
+| `skipTrailingNode` | `boolean` | 可选标志，用于在发出的跟踪事务中设置 `skipTrailingNode: true`              |
 
 ```js
 editor.commands.addTrackedReplacement({
@@ -239,15 +239,15 @@ editor.commands.addTrackedReplacement({
 
 ## addTrackedMark()
 
-Apply a mark to an existing range as a tracked `markChange` suggestion. Use this when you want to suggest formatting or another mark-level change programmatically without enabling tracked changes mode globally.
+将标记应用到现有范围，并将其作为跟踪的 `markChange` 建议。如果你想以编程方式建议格式更改或其他标记级别的更改，而不全局启用跟踪更改模式，请使用此命令。
 
-| Argument    | Type                              | Description                                                                           |
-| ----------- | --------------------------------- | ------------------------------------------------------------------------------------- |
-| `from`      | `number`                          | Start position of the range to mark                                                   |
-| `to`        | `number`                          | End position of the range to mark                                                     |
-| `markName`  | `string`                          | Name of the schema mark to add                                                        |
-| `markAttrs` | `Record<string, unknown> \| null` | Optional attributes for the mark being tracked                                         |
-| `reason`    | `string`                          | Optional description included in the `trackedChanges:suggestionCreated` event payload |
+| 参数        | 类型                              | 说明                                           |
+| ----------- | --------------------------------- | ---------------------------------------------- |
+| `from`      | `number`                          | 要添加标记的范围起始位置                       |
+| `to`        | `number`                          | 要添加标记的范围结束位置                       |
+| `markName`  | `string`                          | 要添加的 schema 标记名称                       |
+| `markAttrs` | `Record<string, unknown> \| null` | 要跟踪标记的可选属性                           |
+| `reason`    | `string`                          | 可选说明，会包含在 `trackedChanges:suggestionCreated` 事件载荷中 |
 
 ```js
 editor.commands.addTrackedMark({
@@ -273,15 +273,15 @@ editor.commands.addTrackedMark({
 
 ## removeTrackedMark()
 
-Remove a mark from an existing range as a tracked `markChange` suggestion. This mirrors what happens when a user removes formatting while tracked changes mode is enabled.
+从现有范围移除标记，并将其作为跟踪的 `markChange` 建议。这与启用跟踪更改模式时用户移除格式的效果相同。
 
-| Argument    | Type                              | Description                                                                           |
-| ----------- | --------------------------------- | ------------------------------------------------------------------------------------- |
-| `from`      | `number`                          | Start position of the range to unmark                                                 |
-| `to`        | `number`                          | End position of the range to unmark                                                   |
-| `markName`  | `string`                          | Name of the schema mark to remove                                                     |
-| `markAttrs` | `Record<string, unknown> \| null` | Optional attributes used to identify the mark variant                                 |
-| `reason`    | `string`                          | Optional description included in the `trackedChanges:suggestionCreated` event payload |
+| 参数        | 类型                              | 说明                                           |
+| ----------- | --------------------------------- | ---------------------------------------------- |
+| `from`      | `number`                          | 要移除标记范围的起始位置                       |
+| `to`        | `number`                          | 要移除标记范围的结束位置                       |
+| `markName`  | `string`                          | 要移除的 schema 标记名称                       |
+| `markAttrs` | `Record<string, unknown> \| null` | 用于识别标记变体的可选属性                     |
+| `reason`    | `string`                          | 可选说明，会包含在 `trackedChanges:suggestionCreated` 事件载荷中 |
 
 ```js
 editor.commands.removeTrackedMark({
@@ -294,15 +294,15 @@ editor.commands.removeTrackedMark({
 
 ## toggleTrackedMark()
 
-Toggle a mark on an existing range with tracked mark suggestions. On mixed selections, marked segments become tracked removals and unmarked segments become tracked additions inside one command.
+通过跟踪标记建议切换现有范围上的标记。对于混合选区，带标记的片段会成为跟踪移除项，未带标记的片段则会成为跟踪添加项；这些操作在同一命令中完成。
 
-| Argument    | Type                              | Description                                                                           |
-| ----------- | --------------------------------- | ------------------------------------------------------------------------------------- |
-| `from`      | `number`                          | Start position of the range to toggle                                                 |
-| `to`        | `number`                          | End position of the range to toggle                                                   |
-| `markName`  | `string`                          | Name of the schema mark to toggle                                                     |
-| `markAttrs` | `Record<string, unknown> \| null` | Optional attributes used to identify or create the mark variant                       |
-| `reason`    | `string`                          | Optional description included in the `trackedChanges:suggestionCreated` event payload |
+| 参数        | 类型                              | 说明                                           |
+| ----------- | --------------------------------- | ---------------------------------------------- |
+| `from`      | `number`                          | 要切换标记的范围起始位置                       |
+| `to`        | `number`                          | 要切换标记的范围结束位置                       |
+| `markName`  | `string`                          | 要切换的 schema 标记名称                       |
+| `markAttrs` | `Record<string, unknown> \| null` | 用于识别或创建标记变体的可选属性               |
+| `reason`    | `string`                          | 可选说明，会包含在 `trackedChanges:suggestionCreated` 事件载荷中 |
 
 ```js
 editor.commands.toggleTrackedMark({
