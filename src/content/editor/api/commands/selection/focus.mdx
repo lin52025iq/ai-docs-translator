@@ -1,42 +1,42 @@
 ---
-title: focus command
+title: focus 命令
 meta:
-  title: focus command | Tiptap Editor Docs
-  description: Use the focus command in Tiptap to set the focus back to the editor at a specific position. Learn more in our docs!
-  category: Editor
+  title: focus 命令 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 focus 命令，将焦点设回编辑器中的特定位置。了解详情，请参阅我们的文档！
+  category: 编辑器
 ---
 
-This command sets the focus back to the editor.
+此命令会将焦点设回编辑器。
 
-When a user clicks on a button outside the editor, the browser sets the focus to that button. In most scenarios you want to focus the editor then again. That’s why you’ll see that in basically every demo here.
+用户点击编辑器外部的按钮时，浏览器会将焦点设到该按钮上。在大多数情况下，你会希望随后再次将焦点设回编辑器。这就是为什么你几乎会在这里的每个演示中看到这个命令。
 
-See also: [setTextSelection](/editor/api/commands/selection/set-text-selection), [blur](/editor/api/commands/selection/blur)
+另请参阅：[setTextSelection](/editor/api/commands/selection/set-text-selection)、[blur](/editor/api/commands/selection/blur)
 
-## Parameters
+## 参数
 
 `position: 'start' | 'end' | 'all' | number | boolean | null (null)`
 
-When `position` is `null` (the default), it restores the cursor position and text selection. Pass a position to move the cursor. Pass `false` to skip focusing.
+当 `position` 为 `null`（默认值）时，会恢复光标位置和文本选区。传入一个位置可移动光标。传入 `false` 可跳过设置焦点。
 
 `options: { scrollIntoView: boolean }`
 
-Defines whether to scroll to the cursor when focusing. Defaults to `true`.
+定义设置焦点时是否滚动到光标位置。默认为 `true`。
 
-## Use the focus command
+## 使用 focus 命令
 
 ```js
-// Set the focus to the editor
+// 将焦点设到编辑器
 editor.commands.focus()
 
-// Set the cursor to the first position
+// 将光标设到第一个位置
 editor.commands.focus('start')
 
-// Set the cursor to the last position
+// 将光标设到最后一个位置
 editor.commands.focus('end')
 
-// Selects the whole document
+// 选中整个文档
 editor.commands.focus('all')
 
-// Set the cursor to position 10
+// 将光标设到位置 10
 editor.commands.focus(10)
 ```
