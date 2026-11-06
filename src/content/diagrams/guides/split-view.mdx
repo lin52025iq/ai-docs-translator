@@ -1,6 +1,6 @@
 ---
-title: 'Text beside the picture'
-intro: 'You can show the text of a chart or a diagram in a text field of your own, next to the document. A change in either one updates the other. The package reads and writes the text. You build the text field and the layout.'
+title: '图表旁的文本'
+intro: '你可以在文档旁边的自定义文本框中显示图表或示意图的文本。任一方发生更改，另一方都会随之更新。此扩展负责读取和写入文本，而文本框和布局由你构建。'
 headerDemo:
   path: '/Extensions/DiagramsSplitView'
   isPro: true
@@ -8,63 +8,51 @@ tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Text beside the picture | Tiptap Diagrams Docs'
-  description: 'You can show the text of a chart or a diagram in a text field of your own, next to the document.'
-  category: Diagrams
+  title: '图表旁的文本 | Tiptap Diagrams 文档'
+  description: '你可以在文档旁边的自定义文本框中显示图表或示意图的文本。'
+  category: 图表
 ---
 
-## Functions
+## 功能
 
-| Function                                                                                | What it does                                                                                |
-| --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| [`readText({ pos? })`](/diagrams/api-reference/storage#reading-a-charts-data)           | Returns the text of a chart or a diagram, with its format                                   |
-| [`updateFromText({ text, pos? })`](/diagrams/guides/split-view#updatefromtext)          | Changes the chart or diagram from that text                                                 |
-| [`highlightSource(text, format)`](/diagrams/api-reference/selectors#highlighted-source) | Returns the text as HTML with its parts colored, from `@tiptap-pro/extension-diagrams/core` |
+| 函数                                                                                   | 作用                                                                                     |
+| -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| [`readText({ pos? })`](/diagrams/api-reference/storage#reading-a-charts-data)          | 返回图表或示意图的文本及其格式                                                           |
+| [`updateFromText({ text, pos? })`](/diagrams/guides/split-view#updatefromtext)         | 根据文本更改图表或示意图                                                                 |
+| [`highlightSource(text, format)`](/diagrams/api-reference/selectors#highlighted-source) | 将文本作为 HTML 返回，并为各部分着色；该函数来自 `@tiptap-pro/extension-diagrams/core` |
 
-## Reading the text
+## 读取文本
 
 ```ts
 const current = editor.storage.diagrams.readText({ pos })
 // { format: 'chart-syntax', text: 'bar\nMonth | Revenue\nJan | 120' }
 ```
 
-For a chart, `readText` returns its type line and its rows in the
-[Chart syntax](/diagrams/data/chart-syntax), split at its delimiter, as the Quick Input shows them. The
-format is `'chart-syntax'`. For a diagram, it returns the source, in the diagram's own format:
-`'mermaid'`, `'drawio'` or `'bpmn'`. Without a chart or a diagram at `pos`, or selected, it returns
-`null`.
+对于图表，`readText` 会返回其类型行以及[图表语法](/diagrams/data/chart-syntax)中的各行，并按分隔符拆分，格式与快速输入中显示的一致。格式为 `'chart-syntax'`。对于示意图，它会按示意图自身的格式返回源文本：`'mermaid'`、`'drawio'` 或 `'bpmn'`。如果 `pos` 处没有图表或示意图，且当前也未选中图表或示意图，则返回 `null`。
 
-## Writing it back
+## 写回文本
 
 ### updateFromText
 
-Changes a chart or a diagram from its text, the same text that `readText` returns.
+根据文本更改图表或示意图；该文本与 `readText` 返回的文本相同。
 
 ```ts
 editor.commands.updateFromText({ pos, text: 'pie\nDogs, 3\nCats, 2' })
 ```
 
-| Option | Type     | Description                                                        |
-| ------ | -------- | ------------------------------------------------------------------ |
-| `text` | `string` | The text                                                           |
-| `pos`  | `number` | The position of the chart or diagram. Defaults to the selected one |
+| 选项   | 类型     | 说明                       |
+| ------ | -------- | -------------------------- |
+| `text` | `string` | 文本                       |
+| `pos`  | `number` | 图表或示意图的位置。默认为当前选中的图表或示意图 |
 
-- **A chart** reads the text as the Quick Input does: rows in the Chart syntax below an optional
-  type line, or a [Mermaid chart](/diagrams/charts/overview#importmermaidchart). The chart's data and type
-  change. A Mermaid chart also sets what its source names, such as the title or the axes. The
-  rest of the Chart Spec, such as its colors, stays.
-- **A diagram** takes the text as its new source, as `updateFlowDiagram` does.
-- **Text the command cannot read**, such as an unclosed quote, changes nothing, and the command
-  returns `false`. Keep the text in your text field and mark it as invalid, so nothing the user
-  typed is lost.
-- **A chart whose data is read-only**, because it comes from a linked Data Source, returns
-  `false` for new data.
+- **图表**会像快速输入一样读取文本：文本可以是可选类型行下方的图表语法各行，也可以是 [Mermaid 图表](/diagrams/charts/overview#importmermaidchart)。图表的数据和类型会随之更改。对于 Mermaid 图表，文本还会设置源文本中指定的内容，例如标题或坐标轴。图表规范的其余部分（例如颜色）保持不变。
+- **示意图**会将文本作为新的源文本，就像 `updateFlowDiagram` 一样。
+- **命令无法读取的文本**（例如未闭合的引号）不会产生任何更改，命令会返回 `false`。请将文本保留在文本框中并标记为无效，以免丢失用户输入的内容。
+- **数据只读的图表**（例如来自关联数据源的图表）无法写入新数据，命令会返回 `false`。
 
-## Following the selection
+## 跟踪选区
 
-Read the text again when the selection moves to another chart or diagram, or when the chart
-changes elsewhere. Skip the update that your own text field caused, so the text stays as the
-user typed it.
+当选区移至另一个图表或示意图，或图表在其他位置发生更改时，请重新读取文本。跳过由文本框自身引起的更新，以保留用户输入的文本。
 
 ```ts
 const textField = document.createElement('textarea')
@@ -93,11 +81,9 @@ textField.addEventListener('input', () => {
 })
 ```
 
-## Coloring the text
+## 为文本着色
 
-`highlightSource` returns the text as HTML. Each part sits in a `<span>` with a class such as
-`tiptap-diagram-source-keyword`. It colors the Chart syntax and Mermaid. Leave draw.io and BPMN
-XML as plain text.
+`highlightSource` 会将文本作为 HTML 返回。每个部分都位于一个 `<span>` 中，其类名类似于 `tiptap-diagram-source-keyword`。该函数会为图表语法和 Mermaid 着色。draw.io 和 BPMN XML 应保留为纯文本。
 
 ```ts
 import { highlightSource } from '@tiptap-pro/extension-diagrams/core'
@@ -109,11 +95,6 @@ code.innerHTML = highlightSource(text, 'chart-syntax', {
 })
 ```
 
-Put the class `tiptap-diagram-source` on the element around the HTML. The
-[Highlighted source](/diagrams/api-reference/selectors#highlighted-source) colors of the Quick Input then apply
-there too, in light and dark. For a text field the user can edit, lay a transparent `<textarea>`
-over a `<pre>` that holds the HTML, with the same font, padding and line height. The demo works
-that way.
+将 `tiptap-diagram-source` 类添加到包裹 HTML 的元素上。这样，[快速输入](/diagrams/api-reference/selectors#highlighted-source)中的源文本着色也会应用于此处，并适用于浅色和深色模式。对于用户可以编辑的文本框，可以在包含 HTML 的 `<pre>` 上方覆盖一个透明的 `<textarea>`，并使两者使用相同的字体、内边距和行高。演示示例就是这样实现的。
 
-The [`sourceHighlighting`](/diagrams/api-reference/options#sourcehighlighting) option turns the colors off only in the
-Quick Input and in a diagram's code view, not in your own text field.
+[`sourceHighlighting`](/diagrams/api-reference/options#sourcehighlighting) 选项只会关闭快速输入和示意图代码视图中的着色，不会关闭自定义文本框中的着色。
