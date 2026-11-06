@@ -1,78 +1,78 @@
 ---
-title: Styling converted content
+title: 设置转换后内容的样式
 tags:
   - type: beta
 meta:
-  title: Styling Converted Content | Tiptap Conversion
-  description: Why imported documents look different in the editor, and how to control the visual appearance of converted content with CSS, extension configuration, and custom attributes.
+  title: 设置转换后内容的样式 | Tiptap Conversion
+  description: 了解导入的文档为何在编辑器中显示不同，以及如何通过 CSS、扩展配置和自定义属性控制转换后内容的视觉效果。
   category: Conversion
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-When you import a DOCX file into the editor, the structure of the document is preserved but the visual appearance changes. This guide explains why, what styling information is available to you, and how to control it.
+将 DOCX 文件导入编辑器时，文档结构会保留，但视觉呈现会发生变化。本指南将说明原因、可用的样式信息，以及如何控制这些样式。
 
-For a quick overview of which features are supported at each stage, see the [Supported features](/conversion/getting-started/feature-support-matrix) matrix. For per-feature details including what attributes are extracted and what extensions are needed, see the [Content reference](/conversion/content-types/overview) pages.
+如需快速了解各阶段支持哪些功能，请参阅[支持的功能](/conversion/getting-started/feature-support-matrix)矩阵。如需了解各项功能的详细信息，包括提取的属性和所需扩展，请参阅[内容参考](/conversion/content-types/overview)页面。
 
-## Why Word styling does not transfer
+## 为什么 Word 样式不会随文档转换
 
-Tiptap is headless. It converts document structure (nodes, marks, attributes) but does not apply Word's visual theme. Word documents use a layered styling system: document themes, named style definitions (like "Heading 2"), and direct formatting overrides on individual runs. The conversion service translates the structural meaning ("this is a Heading 2") but not the visual presentation ("Heading 2 is Aptos Light 13pt blue").
+Tiptap 是无头编辑器。它会转换文档结构（节点、标记、属性），但不会应用 Word 的视觉主题。Word 文档使用分层样式系统：文档主题、命名样式定义（例如“标题 2”）以及针对单个文本片段的直接格式覆盖。转换服务会转换结构含义（“这是一个标题 2”），但不会转换视觉呈现（“标题 2 使用 Aptos Light、13pt、蓝色”）。
 
-Your editor renders content using your CSS. An `<h2>` in the editor looks however your stylesheet defines `h2`, not however Word defined "Heading 2."
+编辑器使用你的 CSS 渲染内容。编辑器中的 `<h2>` 会按样式表对 `h2` 的定义显示，而不是按 Word 对“标题 2”的定义显示。
 
-## What styling is preserved
+## 保留哪些样式
 
-The conversion service extracts two categories of styling information from the DOCX:
+转换服务会从 DOCX 中提取两类样式信息：
 
-### Inline formatting (marks on text nodes)
+### 行内格式（文本节点上的标记）
 
-These are stored as marks on individual text nodes and are **automatically rendered** by standard Tiptap extensions as inline `style` attributes on `<span>` elements:
+这些信息以标记的形式存储在各个文本节点上，标准 Tiptap 扩展会自动将其渲染为 `<span>` 元素上的行内 `style` 属性：
 
-| Styling | Mark attribute | Extension needed | HTML output |
+| 样式 | 标记属性 | 所需扩展 | HTML 输出 |
 | --- | --- | --- | --- |
-| Text color | `textStyle.color` | Color | `style="color: #FF0000"` |
-| Font family | `textStyle.fontFamily` | FontFamily | `style="font-family: Courier New"` |
-| Font size | `textStyle.fontSize` | FontSize | `style="font-size: 14px"` |
-| Background color | `textStyle.backgroundColor` | BackgroundColor | `style="background-color: #FFFF00"` |
-| Highlight | `highlight.color` | Highlight (`multicolor: true`) | `<mark style="background-color: yellow">` |
-| Letter spacing | `textStyle.letterSpacing` | [Requires extending TextStyle](#extending-extensions-for-unsupported-attributes) | `style="letter-spacing: 2px"` |
-| Bold, italic, underline, strike | Separate marks | ConvertKit (bundled) | `<strong>`, `<em>`, `<u>`, `<s>` |
+| 文本颜色 | `textStyle.color` | Color | `style="color: #FF0000"` |
+| 字体系列 | `textStyle.fontFamily` | FontFamily | `style="font-family: Courier New"` |
+| 字号 | `textStyle.fontSize` | FontSize | `style="font-size: 14px"` |
+| 背景颜色 | `textStyle.backgroundColor` | BackgroundColor | `style="background-color: #FFFF00"` |
+| 突出显示 | `highlight.color` | Highlight (`multicolor: true`) | `<mark style="background-color: yellow">` |
+| 字符间距 | `textStyle.letterSpacing` | [需要扩展 TextStyle](#扩展扩展以支持未支持的属性) | `style="letter-spacing: 2px"` |
+| 粗体、斜体、下划线、删除线 | 单独的标记 | ConvertKit（内置） | `<strong>`、`<em>`、`<u>`、`<s>` |
 
-Line height is not in this table because Word stores line spacing on paragraphs, not on text runs. The importer always emits it as a paragraph node attribute; see the block-level formatting section below.
+行高未列在此表中，因为 Word 将行距存储在段落上，而不是文本片段上。导入器始终会将其作为段落节点属性输出；请参阅下文的块级格式部分。
 
-If you have these extensions installed (see [ConvertKit](/conversion/import/docx/convertkit) for the recommended set), inline formatting renders automatically with no additional CSS required.
+如果安装了这些扩展（推荐的扩展组合请参阅 [ConvertKit](/conversion/import/docx/convertkit)），行内格式会自动渲染，无需额外 CSS。
 
-### Block-level formatting (attributes on paragraph and heading nodes)
+### 块级格式（段落和标题节点上的属性）
 
-These are stored as attributes on `paragraph` and `heading` nodes. Whether they render depends on which extensions you have installed.
+这些信息以属性的形式存储在 `paragraph` 和 `heading` 节点上。它们是否会渲染，取决于你安装了哪些扩展。
 
-| Styling | Node attribute | Format | With standard extensions | With [ConvertKit](/conversion/import/docx/convertkit) |
+| 样式 | 节点属性 | 格式 | 使用标准扩展时 | 使用 [ConvertKit](/conversion/import/docx/convertkit) 时 |
 | --- | --- | --- | --- | --- |
-| Text alignment | `textAlign` | `"left"`, `"center"`, `"right"`, `"justify"` | Requires `TextAlign` | Rendered (TextAlign included) |
-| Spacing before | `spacingBefore` | Number (pixels) | Not rendered | `margin-top: Npx` |
-| Spacing after | `spacingAfter` | Number (pixels) | Not rendered | `margin-bottom: Npx` |
-| Left indent | `indent` | Number (pixels) | Not rendered | `padding-left: Npx` |
-| Right indent | `indentRight` | Number (pixels) | Not rendered | `padding-right: Npx` |
-| First line indent | `firstLineIndent` | Number (pixels) | Not rendered | `text-indent: Npx` (a negative value is a hanging indent) |
-| Line height | `lineHeight` | String (e.g. `"1.5"`, `"24px"`) | Not rendered | `line-height: <value>` |
-| Font size (paragraph mark) | `fontSize` | String (e.g. `"11pt"`) | Not rendered (the mark-level `textStyle.fontSize` is rendered by `FontSize`) | `font-size: <value>` (used by spacer paragraphs) |
-| Contextual spacing | `contextualSpacing` | Boolean | Not rendered | `data-contextual-spacing="true"` + injected CSS rule that suppresses margin between adjacent contextual-spacing paragraphs |
-| Keep with next | `keepNext` | Boolean | Not rendered | Kept in the JSON for export, no CSS output |
-| Keep lines together | `keepLines` | Boolean | Not rendered | Kept in the JSON for export, no CSS output |
+| 文本对齐 | `textAlign` | `"left"`、`"center"`、`"right"`、`"justify"` | 需要 `TextAlign` | 已渲染（包含 TextAlign） |
+| 段前间距 | `spacingBefore` | 数值（像素） | 不渲染 | `margin-top: Npx` |
+| 段后间距 | `spacingAfter` | 数值（像素） | 不渲染 | `margin-bottom: Npx` |
+| 左缩进 | `indent` | 数值（像素） | 不渲染 | `padding-left: Npx` |
+| 右缩进 | `indentRight` | 数值（像素） | 不渲染 | `padding-right: Npx` |
+| 首行缩进 | `firstLineIndent` | 数值（像素） | 不渲染 | `text-indent: Npx`（负值表示悬挂缩进） |
+| 行高 | `lineHeight` | 字符串（例如 `"1.5"`、`"24px"`） | 不渲染 | `line-height: <value>` |
+| 字号（段落标记） | `fontSize` | 字符串（例如 `"11pt"`） | 不渲染（标记级的 `textStyle.fontSize` 会由 `FontSize` 渲染） | `font-size: <value>`（用于间隔段落） |
+| 上下文间距 | `contextualSpacing` | 布尔值 | 不渲染 | `data-contextual-spacing="true"` + 注入的 CSS 规则，用于取消相邻上下文间距段落之间的边距 |
+| 与下段同页 | `keepNext` | 布尔值 | 不渲染 | 保留在 JSON 中以供导出，不输出 CSS |
+| 段中各行同页 | `keepLines` | 布尔值 | 不渲染 | 保留在 JSON 中以供导出，不输出 CSS |
 
-`indent` and `firstLineIndent` are read differently on a paragraph inside a list item. When the list names a numbering format registered with the editor, the two position the whole list item, marker and text together, rather than padding the paragraph inside it. A list with no registered format renders them as `padding-left` and `text-indent` on the paragraph, as the table describes. See [Indents on a single item](/conversion/export/docx/ordered-list-numbering#indents-on-a-single-item).
+列表项中的段落，其 `indent` 和 `firstLineIndent` 的读取方式有所不同。如果列表指定了编辑器中已注册的编号格式，这两个属性会定位整个列表项（包括标记和文本），而不是为列表项中的段落添加内边距。如果列表没有已注册的格式，则会像表格所述，将它们渲染为段落上的 `padding-left` 和 `text-indent`。请参阅[单个列表项的缩进](/conversion/export/docx/ordered-list-numbering#indents-on-a-single-item)。
 
-<Callout variant="warning" title="Schema validation strips unrecognized attributes">
-  When you call `setEditorContent()`, ProseMirror validates the content against your editor's schema. Attributes not defined in the node spec are removed. The raw JSON in `context.content` still contains all attributes, but they are lost once the content is loaded into the editor. To preserve them, install [ConvertKit](/conversion/import/docx/convertkit) (which extends the schema for all the attributes above) or extend the node schema yourself.
+<Callout variant="warning" title="架构验证会移除无法识别的属性">
+  调用 `setEditorContent()` 时，ProseMirror 会根据编辑器的架构验证内容。节点规范中未定义的属性会被移除。`context.content` 中的原始 JSON 仍包含所有属性，但内容载入编辑器后，这些属性就会丢失。若要保留这些属性，请安装 [ConvertKit](/conversion/import/docx/convertkit)（它会扩展架构以支持上述所有属性），或自行扩展节点架构。
 </Callout>
 
-## Styling your editor to approximate Word
+## 设置编辑器样式以近似 Word 的效果
 
-Even without preserving every paragraph attribute, you can get close to Word's appearance through CSS.
+即使没有保留所有段落属性，也可以通过 CSS 让编辑器的外观接近 Word。
 
-### Base heading styles
+### 基本标题样式
 
-Word's default heading styles use specific fonts, sizes, and colors. You can approximate them in your editor:
+Word 的默认标题样式使用特定字体、字号和颜色。你可以在编辑器中近似这些样式：
 
 ```css
 .tiptap h1 {
@@ -106,9 +106,9 @@ Word's default heading styles use specific fonts, sizes, and colors. You can app
 }
 ```
 
-### Body text
+### 正文
 
-Word's default "Normal" style uses Aptos 11pt with 10pt after-paragraph spacing and 1.15 line height:
+Word 默认的“正文”样式使用 Aptos 11pt 字体、段后间距 10pt 和 1.15 倍行高：
 
 ```css
 .tiptap p {
@@ -120,9 +120,9 @@ Word's default "Normal" style uses Aptos 11pt with 10pt after-paragraph spacing 
 }
 ```
 
-### Tables
+### 表格
 
-Word tables typically have thin borders and no cell padding. The editor's default table styling may differ:
+Word 表格通常使用细边框且没有单元格内边距。编辑器的默认表格样式可能有所不同：
 
 ```css
 .tiptap table {
@@ -143,9 +143,9 @@ Word tables typically have thin borders and no cell padding. The editor's defaul
 }
 ```
 
-### Lists
+### 列表
 
-Word uses specific indentation for nested lists. Matching this in CSS:
+Word 对嵌套列表使用特定的缩进。可以通过以下 CSS 进行匹配：
 
 ```css
 .tiptap ul,
@@ -166,9 +166,9 @@ Word uses specific indentation for nested lists. Matching this in CSS:
 }
 ```
 
-## Matching export styles with editor styles
+## 让导出样式与编辑器样式保持一致
 
-The export extension applies its own default styles when writing DOCX files. These defaults (Aptos 11pt for Normal, specific heading sizes and colors) may not match what the user sees in the editor. To keep the appearance consistent across import, editing, and export, align your editor CSS with the export's `styleOverrides`:
+导出扩展在写入 DOCX 文件时会应用自己的默认样式。这些默认样式（正文使用 Aptos 11pt，标题使用特定字号和颜色）可能与用户在编辑器中看到的样式不一致。为确保导入、编辑和导出时的外观一致，请让编辑器 CSS 与导出的 `styleOverrides` 保持一致：
 
 ```ts
 ExportDocx.configure({
@@ -197,19 +197,16 @@ ExportDocx.configure({
 })
 ```
 
-If you use different fonts or sizes in your editor CSS, update the export `styleOverrides` to match so the exported DOCX reflects what the user saw while editing.
+如果编辑器 CSS 使用了不同字体或字号，请相应更新导出的 `styleOverrides`，使导出的 DOCX 与用户编辑时看到的效果一致。
 
-## Extending extensions for unsupported attributes
+## 扩展扩展以支持未支持的属性
 
-[ConvertKit](/conversion/import/docx/convertkit) already extends `Paragraph`, `Heading`, `Image`, and the table stack with the DOCX-specific attributes the Convert API produces. If you use ConvertKit, the paragraph and heading attributes in the table above render automatically; you do not need to write the extension yourself.
+[ConvertKit](/conversion/import/docx/convertkit) 已为 `Paragraph`、`Heading`、`Image` 和表格扩展组扩展了 Convert API 生成的 DOCX 专用属性。如果使用 ConvertKit，上表中的段落和标题属性会自动渲染；你无需自行编写扩展。
 
-The pattern below is for attributes ConvertKit does not cover (the canonical case is `textStyle.letterSpacing`, which the Convert API extracts but no bundled extension renders) or for editors that opt out of ConvertKit and need to roll their own.
+以下模式适用于 ConvertKit 未涵盖的属性（典型例子是 `textStyle.letterSpacing`，Convert API 会提取该属性，但没有内置扩展会渲染它），也适用于不使用 ConvertKit、需要自行实现的编辑器。
 
-<Callout title="Roadmap" variant="hint">
-  Bringing the remaining text-style attributes (starting with `letterSpacing`) into ConvertKit's
-  bundled `TextStyleKit` is on the roadmap, so you'll get them out of the box in a future
-  release. Until then, extending `TextStyle` yourself (as shown below) gives you the same
-  rendering today without waiting for the upstream change.
+<Callout title="路线图" variant="hint">
+  将剩余的文本样式属性（从 `letterSpacing` 开始）加入 ConvertKit 内置的 `TextStyleKit` 已列入路线图，未来版本将开箱即用。在此之前，你可以自行扩展 `TextStyle`（如下所示），无需等待上游改动，即可立即实现相同的渲染效果。
 </Callout>
 
 ```ts
@@ -232,7 +229,7 @@ const TextStyleWithLetterSpacing = TextStyle.extend({
 })
 ```
 
-Then disable the bundled `TextStyle` and add your extended one alongside ConvertKit:
+然后禁用内置的 `TextStyle`，并将扩展后的版本与 ConvertKit 一起添加：
 
 ```ts
 ConvertKit.configure({
@@ -241,11 +238,11 @@ ConvertKit.configure({
 TextStyleWithLetterSpacing,
 ```
 
-The same pattern works for any other attribute the converter emits but no extension renders. See the [custom extensions guide](/editor/extensions/custom-extensions/extend-existing) for the full mechanics of extending existing extensions.
+同样的模式适用于转换器会输出、但没有扩展负责渲染的其他属性。有关扩展现有扩展的完整机制，请参阅[自定义扩展指南](/editor/extensions/custom-extensions/extend-existing)。
 
-## Intercepting content before loading
+## 加载前拦截内容
 
-If you want to transform or extract styling data before it enters the editor, use the `onImport` callback instead of the automatic `setEditorContent()`:
+如果你想在内容进入编辑器前转换或提取样式数据，请使用 `onImport` 回调，而不是自动调用 `setEditorContent()`：
 
 ```ts
 editor.chain().importDocx({
@@ -277,10 +274,10 @@ editor.chain().importDocx({
 }).run()
 ```
 
-## Automatic style import
+## 自动导入样式
 
-If you would rather not hand-author CSS to approximate Word's look, the experimental [CSS injection](/conversion/import/docx/css-injection) feature extracts the imported document's named-style catalog (`Heading1`, `Normal`, `Quote`, etc.) and either returns it as a CSS object or injects it as a scoped `<style>` tag into the page. The result is closer to how the source document looked in Word, without manual CSS authoring per document.
+如果你不想手动编写 CSS 来近似 Word 的外观，可以使用实验性的 [CSS 注入](/conversion/import/docx/css-injection)功能。该功能会提取导入文档的命名样式目录（`Heading1`、`Normal`、`Quote` 等），并将其作为 CSS 对象返回，或以带作用域的 `<style>` 标签注入页面。无需为每个文档手动编写 CSS，效果也会更接近源文档在 Word 中的呈现。
 
-CSS injection covers 16 selectors (block-level: `p`, `h1`–`h6`, `blockquote`, `ul li`, `ol li`; inline: `strong`, `em`, `u`, `s`, `a`, `code`) and 11 typography properties (`fontSize`, `color`, `fontFamily`, `fontWeight`, `fontStyle`, `textDecoration`, `backgroundColor`, `textAlign`, `marginTop`, `marginBottom`, `lineHeight`). Inline overrides on individual runs and arbitrary selectors are intentionally out of scope; see the page for the full list of caveats.
+CSS 注入涵盖 16 个选择器（块级：`p`、`h1`–`h6`、`blockquote`、`ul li`、`ol li`；行内：`strong`、`em`、`u`、`s`、`a`、`code`）和 11 种排版属性（`fontSize`、`color`、`fontFamily`、`fontWeight`、`fontStyle`、`textDecoration`、`backgroundColor`、`textAlign`、`marginTop`、`marginBottom`、`lineHeight`）。单个文本片段上的行内覆盖和任意选择器不在支持范围内；完整的注意事项列表请参阅该页面。
 
-The two features combine: ConvertKit ensures imported node attributes survive the editor's schema and render correctly, and CSS injection brings the document's typography catalog through as cascading CSS. The hand-written CSS approaches earlier in this guide remain useful when neither feature covers what you need.
+这两项功能可以结合使用：ConvertKit 可确保导入的节点属性通过编辑器架构验证并正确渲染，CSS 注入则将文档的排版样式目录作为层叠 CSS 引入。在这两项功能都无法满足需求时，本指南前面介绍的手写 CSS 方法仍然适用。
