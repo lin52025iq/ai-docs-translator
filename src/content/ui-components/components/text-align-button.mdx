@@ -1,12 +1,12 @@
 ---
-title: Text align button
+title: 文本对齐按钮
 meta:
-  title: Text align button | Tiptap UI Components
-  description: Change the text alignment in your Tiptap editor with this button UI component. More in the docs!
-  category: UI Components
+  title: 文本对齐按钮 | Tiptap UI Components
+  description: 使用此按钮 UI 组件更改 Tiptap 编辑器中的文本对齐方式。更多内容请参阅文档！
+  category: UI 组件
 component:
-  name: Text align button
-  description: Switch through text alignment options with a button
+  name: 文本对齐按钮
+  description: 使用按钮切换文本对齐方式
   type: component
   isFree: true
   isCloud: false
@@ -19,25 +19,25 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A fully accessible text align button for Tiptap editors. Easily set text alignment to left, center, right, or justify with keyboard shortcut support and flexible customization options.
+适用于 Tiptap 编辑器的无障碍文本对齐按钮。轻松将文本设置为左对齐、居中对齐、右对齐或两端对齐，并支持键盘快捷键和灵活的自定义选项。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui/text-align-button" />
 
-## Installation
+## 安装
 
-Add the component via the Tiptap CLI:
+通过 Tiptap CLI 添加此组件：
 
 ```bash
 npx @tiptap/cli@latest add text-align-button
 ```
 
-## Components
+## 组件
 
 ### `<TextAlignButton />`
 
-A prebuilt React component that sets text alignment for a specific alignment type.
+预构建的 React 组件，可将文本设置为指定的对齐方式。
 
-#### Usage
+#### 用法
 
 ```tsx
 import { EditorContent, EditorContext, useEditor } from '@tiptap/react'
@@ -80,24 +80,24 @@ export default function MyEditor() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type             | Default     | Description                                                       |
-| --------------------- | ---------------- | ----------- | ----------------------------------------------------------------- |
-| `editor`              | `Editor \| null` | `undefined` | The Tiptap editor instance                                        |
-| `align`               | `TextAlign`      | `required`  | The alignment type (`"left"`, `"center"`, `"right"`, `"justify"`) |
-| `text`                | `string`         | `undefined` | Optional text label for the button                                |
-| `hideWhenUnavailable` | `boolean`        | `false`     | Hides the button when alignment is not available                  |
-| `onAligned`           | `() => void`     | `undefined` | Callback fired after a successful alignment change                |
-| `showShortcut`        | `boolean`        | `false`     | Shows a keyboard shortcut badge (if available)                    |
+| 名称                  | 类型             | 默认值      | 说明                                                        |
+| --------------------- | ---------------- | ----------- | ----------------------------------------------------------- |
+| `editor`              | `Editor \| null` | `undefined` | Tiptap 编辑器实例                                           |
+| `align`               | `TextAlign`      | `required`  | 对齐方式（`"left"`、`"center"`、`"right"`、`"justify"`） |
+| `text`                | `string`         | `undefined` | 按钮的可选文本标签                                          |
+| `hideWhenUnavailable` | `boolean`        | `false`     | 对齐功能不可用时隐藏按钮                                    |
+| `onAligned`           | `() => void`     | `undefined` | 成功更改对齐方式后触发的回调                                |
+| `showShortcut`        | `boolean`        | `false`     | 显示键盘快捷键徽标（如果有）                                |
 
 ## Hooks
 
 ### `useTextAlign()`
 
-A custom hook to build your own text align button with full control over rendering and behavior.
+自定义 Hook，可完全控制渲染和行为，构建自己的文本对齐按钮。
 
-#### Usage
+#### 用法
 
 ```tsx
 function MyTextAlignButton() {
@@ -126,32 +126,32 @@ function MyTextAlignButton() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type             | Default     | Description                                        |
-| --------------------- | ---------------- | ----------- | -------------------------------------------------- |
-| `editor`              | `Editor \| null` | `undefined` | The Tiptap editor instance                         |
-| `align`               | `TextAlign`      | `required`  | The alignment type to apply                        |
-| `hideWhenUnavailable` | `boolean`        | `false`     | Hides the button if alignment is not available     |
-| `onAligned`           | `() => void`     | `undefined` | Callback fired after a successful alignment change |
+| 名称                  | 类型             | 默认值      | 说明                                  |
+| --------------------- | ---------------- | ----------- | ------------------------------------- |
+| `editor`              | `Editor \| null` | `undefined` | Tiptap 编辑器实例                     |
+| `align`               | `TextAlign`      | `required`  | 要应用的对齐方式                      |
+| `hideWhenUnavailable` | `boolean`        | `false`     | 对齐功能不可用时隐藏按钮              |
+| `onAligned`           | `() => void`     | `undefined` | 成功更改对齐方式后触发的回调          |
 
-#### Return Values
+#### 返回值
 
-| Name              | Type            | Description                                   |
-| ----------------- | --------------- | --------------------------------------------- |
-| `isVisible`       | `boolean`       | Whether the button should be rendered         |
-| `isActive`        | `boolean`       | If the specific alignment is currently active |
-| `canAlign`        | `boolean`       | If text alignment is currently allowed        |
-| `handleTextAlign` | `() => boolean` | Function to set text alignment                |
-| `label`           | `string`        | Accessible label text for the button          |
-| `shortcutKeys`    | `string`        | Keyboard shortcut for the specific alignment  |
-| `Icon`            | `React.FC`      | Icon component for the text align button      |
+| 名称              | 类型            | 说明                                  |
+| ----------------- | --------------- | ------------------------------------- |
+| `isVisible`       | `boolean`       | 是否应渲染此按钮                      |
+| `isActive`        | `boolean`       | 当前是否已启用指定对齐方式            |
+| `canAlign`        | `boolean`       | 当前是否允许文本对齐                  |
+| `handleTextAlign` | `() => boolean` | 设置文本对齐方式的函数                |
+| `label`           | `string`        | 按钮的无障碍标签文本                  |
+| `shortcutKeys`    | `string`        | 此对齐方式对应的键盘快捷键            |
+| `Icon`            | `React.FC`      | 文本对齐按钮的图标组件                |
 
-## Utilities
+## 实用工具
 
 ### `canSetTextAlign(editor, align)`
 
-Checks if a specific text alignment can be set in the current editor state.
+检查当前编辑器状态下是否可以设置指定的文本对齐方式。
 
 ```tsx
 import { canSetTextAlign } from '@/components/tiptap-ui/text-align-button'
@@ -161,7 +161,7 @@ const canAlign = canSetTextAlign(editor, 'center') // Check if center alignment 
 
 ### `setTextAlign(editor, align)`
 
-Programmatically sets text alignment for the specified type.
+以编程方式将文本设置为指定类型的对齐方式。
 
 ```tsx
 import { setTextAlign } from '@/components/tiptap-ui/text-align-button'
@@ -174,7 +174,7 @@ if (success) {
 
 ### `isTextAlignActive(editor, align)`
 
-Checks if a specific text alignment is currently active.
+检查指定的文本对齐方式当前是否已启用。
 
 ```tsx
 import { isTextAlignActive } from '@/components/tiptap-ui/text-align-button'
@@ -182,32 +182,32 @@ import { isTextAlignActive } from '@/components/tiptap-ui/text-align-button'
 const active = isTextAlignActive(editor, 'justify')
 ```
 
-## Keyboard Shortcuts
+## 键盘快捷键
 
-Each alignment type has its own keyboard shortcut:
+每种对齐方式都有各自的键盘快捷键：
 
-- **Cmd/Ctrl + Shift + L**: Align left
-- **Cmd/Ctrl + Shift + E**: Align center
-- **Cmd/Ctrl + Shift + R**: Align right
-- **Cmd/Ctrl + Shift + J**: Align justify
+- **Cmd/Ctrl + Shift + L**：左对齐
+- **Cmd/Ctrl + Shift + E**：居中对齐
+- **Cmd/Ctrl + Shift + R**：右对齐
+- **Cmd/Ctrl + Shift + J**：两端对齐
 
-The shortcuts are automatically registered when using either the `<TextAlignButton />` component or the `useTextAlign()` hook.
+使用 `<TextAlignButton />` 组件或 `useTextAlign()` Hook 时，都会自动注册这些快捷键。
 
-## Requirements
+## 要求
 
-### Dependencies
+### 依赖项
 
-- `@tiptap/react` - Core Tiptap React integration
-- `@tiptap/extension-text-align` - Text alignment extension
-- `react-hotkeys-hook` - Keyboard shortcut management
+- `@tiptap/react` - Tiptap React 核心集成
+- `@tiptap/extension-text-align` - 文本对齐扩展
+- `react-hotkeys-hook` - 键盘快捷键管理
 
-### Referenced Components
+### 引用的组件
 
-- `use-tiptap-editor` (hook)
-- `button` (primitive)
-- `badge` (primitive)
-- `tiptap-utils` (lib)
-- `align-left-icon` (icon)
-- `align-center-icon` (icon)
-- `align-right-icon` (icon)
-- `align-justify-icon` (icon)
+- `use-tiptap-editor`（Hook）
+- `button`（基础组件）
+- `badge`（基础组件）
+- `tiptap-utils`（库）
+- `align-left-icon`（图标）
+- `align-center-icon`（图标）
+- `align-right-icon`（图标）
+- `align-justify-icon`（图标）
