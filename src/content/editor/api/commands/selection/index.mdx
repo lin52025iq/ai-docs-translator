@@ -1,33 +1,33 @@
 ---
-title: Selection commands
+title: 选区命令
 meta:
-  title: Selection commands | Tiptap Editor Docs
-  description: Manage selections in your Tiptap Editor with editor commands like blur, focus, deleteSelection, etc. More in our docs!
+  title: 选区命令 | Tiptap 编辑器文档
+  description: 使用 blur、focus、deleteSelection 等编辑器命令管理 Tiptap 编辑器中的选区。更多内容请参阅文档！
   category: Editor
 ---
 
-The Tiptap editor provides editor commands for managing selection and focus within your documents. Here’s an overview of the essential selection commands that help you manage cursor movement, selections, and focus behavior.
+Tiptap 编辑器提供了用于管理文档中选区和焦点的编辑器命令。下面概述了一些重要的选区命令，可帮助你管理光标移动、选区和焦点行为。
 
-## Use Cases
+## 使用场景
 
-- **Managing Focus and Blur:** Control focus behavior using [`focus`](/editor/api/commands/selection/focus) and [`blur`](/editor/api/commands/selection/blur).
-- **Deleting and Selecting Content:** Use commands like [`deleteSelection`](/editor/api/commands/selection/delete-selection) and [`selectAll`](/editor/api/commands/selection/select-all) to efficiently manage content.
-- **Navigating the Document:** Scroll to a specific position or node using [`scrollIntoView`](/editor/api/commands/selection/scroll-into-view) and select specific nodes with [`selectNodeBackward`](/editor/api/commands/selection/select-node-backward), [`selectNodeForward`](/editor/api/commands/selection/select-node-forward), or [`selectParentNode`](/editor/api/commands/selection/select-parent-node).
+- **管理焦点和失焦：** 使用 [`focus`](/editor/api/commands/selection/focus) 和 [`blur`](/editor/api/commands/selection/blur) 控制焦点行为。
+- **删除和选择内容：** 使用 [`deleteSelection`](/editor/api/commands/selection/delete-selection) 和 [`selectAll`](/editor/api/commands/selection/select-all) 等命令，高效管理内容。
+- **浏览文档：** 使用 [`scrollIntoView`](/editor/api/commands/selection/scroll-into-view) 滚动到指定位置或节点，并使用 [`selectNodeBackward`](/editor/api/commands/selection/select-node-backward)、[`selectNodeForward`](/editor/api/commands/selection/select-node-forward) 或 [`selectParentNode`](/editor/api/commands/selection/select-parent-node) 选择特定节点。
 
-## List of selection commands
+## 选区命令列表
 
-| Command              | Description                                                                                 |
+| 命令                 | 说明                                                                                 |
 | -------------------- | ------------------------------------------------------------------------------------------- |
-| `blur`               | Removes focus from the editor.                                                              |
-| `deleteRange`        | Deletes everything in a range.                                                              |
-| `deleteSelection`    | Deletes the current selection or cursor position.                                           |
-| `enter`              | Simulates an Enter key press, creating a new line.                                          |
-| `focus`              | Sets focus back to the editor and moves the cursor to a specified position.                 |
-| `keyboardShortcut`   | Triggers a ShortcutEvent with a given name.                                                 |
-| `scrollIntoView`     | Scrolls the view to the current selection or cursor position.                               |
-| `selectAll`          | Selects the entire document.                                                                |
-| `selectNodeBackward` | Selects the node before the current textblock if the cursor is at the start of a textblock. |
-| `selectNodeForward`  | Selects the node after the current textblock if the cursor is at the end of a textblock.    |
-| `selectParentNode`   | Moves the selection to the parent node of the currently selected node.                      |
-| `setNodeSelection`   | Creates a new NodeSelection at a given position.                                            |
-| `setTextSelection`   | Controls the text selection by setting it to a specified range or position.                 |
+| `blur`               | 移除编辑器的焦点。                                                              |
+| `deleteRange`        | 删除指定范围内的所有内容。                                                              |
+| `deleteSelection`    | 删除当前选区或光标位置处的内容。                                           |
+| `enter`              | 模拟按下 Enter 键，创建新行。                                          |
+| `focus`              | 重新聚焦编辑器，并将光标移至指定位置。                 |
+| `keyboardShortcut`   | 触发具有指定名称的 ShortcutEvent。                                                 |
+| `scrollIntoView`     | 将视图滚动到当前选区或光标位置。                               |
+| `selectAll`          | 选中整个文档。                                                                |
+| `selectNodeBackward` | 如果光标位于文本块开头，则选择当前文本块之前的节点。 |
+| `selectNodeForward`  | 如果光标位于文本块末尾，则选择当前文本块之后的节点。    |
+| `selectParentNode`   | 将选区移至当前所选节点的父节点。                      |
+| `setNodeSelection`   | 在指定位置创建新的 NodeSelection。                                            |
+| `setTextSelection`   | 通过将文本选区设为指定范围或位置来控制文本选区。                 |
