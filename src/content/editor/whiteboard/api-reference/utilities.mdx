@@ -1,24 +1,24 @@
 ---
-title: Whiteboard utilities
+title: 白板实用工具
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Whiteboard utilities | Tiptap Editor Docs
-  description: Utility functions and constants of the Tiptap Whiteboard extension, for the stage and camera, content, state, shapes, transactions, board files and images.
+  title: 白板实用工具 | Tiptap 编辑器文档
+  description: Tiptap 白板扩展的实用函数和常量，涵盖舞台与摄像机、内容、状态、形状、事务、白板文件和图像。
   category: Editor
 ---
 
-Import these functions and constants from `@tiptap-pro/extension-whiteboard`.
+从 `@tiptap-pro/extension-whiteboard` 导入这些函数和常量。
 
-- Positions and sizes on the board are in board units, and positions on the stage in screen pixels.
-- `insertShapesInFront`, `removeShapes`, `restackShapes` and `keepShapeHeights` are for code that builds its own transaction, like an AI tool.
+- 白板上的位置和尺寸使用白板单位，舞台上的位置使用屏幕像素。
+- `insertShapesInFront`、`removeShapes`、`restackShapes` 和 `keepShapeHeights` 适用于自行构建事务的代码，例如 AI 工具。
 
-`Attribute`, `Attributes`, `Editor`, `JSONContent`, `NodeViewRenderer` and `NodeWithPos` come from `@tiptap/core`. `Node` comes from `@tiptap/pm/model`, `EditorState` and `Transaction` from `@tiptap/pm/state`, and `EditorView` from `@tiptap/pm/view`.
+`Attribute`、`Attributes`、`Editor`、`JSONContent`、`NodeViewRenderer` 和 `NodeWithPos` 来自 `@tiptap/core`。`Node` 来自 `@tiptap/pm/model`，`EditorState` 和 `Transaction` 来自 `@tiptap/pm/state`，`EditorView` 来自 `@tiptap/pm/view`。
 
 ## `attachStage`
 
-Lets the user work with the board of `editor` in `stage`: pan and zoom, the zoom shortcuts, drawing with the shape tools and the selection box. A pan, with <kbd>Space</kbd> held, the middle button or the hand tool, wins over drawing and selecting. On touch screens, one finger on the empty board pans while the select tool is active, and two fingers pan and zoom. With the board's [`images`](/editor/whiteboard/guides/images), image files that the user drops land where they are dropped, and pasted ones in the middle of the stage.
+允许用户在 `stage` 中操作 `editor` 的白板：平移和缩放、使用缩放快捷键、通过形状工具绘图，以及使用选择框。按住 <kbd>Space</kbd>、使用鼠标中键或手形工具进行平移时，平移操作优先于绘图和选择。在触摸屏上，选择工具启用时，单指在空白白板上滑动可平移，双指可平移和缩放。使用白板的 [`images`](/editor/whiteboard/guides/images) 时，用户拖放的图像文件会放置在放下的位置，粘贴的图像则会放置在舞台中央。
 
 ```js
 import { attachStage } from '@tiptap-pro/extension-whiteboard'
@@ -26,22 +26,22 @@ import { attachStage } from '@tiptap-pro/extension-whiteboard'
 const detach = attachStage({ stage, editor, updateCamera: setCamera })
 ```
 
-### Parameters (`StageOptions`)
+### 参数（`StageOptions`）
 
-- `stage` (`HTMLElement`): The element around the board, which takes its pointer and wheel events.
-- `editor` (`Editor`): The editor of the board.
-- `updateCamera` (`UpdateCamera`): Moves the camera when the user pans, zooms or uses a zoom shortcut.
-- `fitInsets?` (`() => number | Insets`): Returns the room to keep free around the shapes that <kbd>Shift</kbd> + <kbd>1</kbd> fits into view, like under panels. Default: 64 screen pixels at each edge.
+- `stage`（`HTMLElement`）：白板外围元素，用于接收指针和滚轮事件。
+- `editor`（`Editor`）：白板的编辑器。
+- `updateCamera`（`UpdateCamera`）：用户平移、缩放或使用缩放快捷键时移动摄像机。
+- `fitInsets?`（`() => number | Insets`）：返回适应视图时，形状周围需要保留的空白区域（例如面板下方）。按 <kbd>Shift</kbd> + <kbd>1</kbd> 时会使用此设置。默认值：每条边保留 64 屏幕像素。
 
-### Returns (`() => void`)
+### 返回值（`() => void`）
 
-A function that detaches everything again.
+用于解除所有绑定的函数。
 
-The stage needs `position: relative`, `overflow: clip` and `touch-action: none`. The viewport, the element that holds the editor, sits in its top left corner, with `position: absolute`, `top: 0`, `left: 0` and `transform-origin: 0 0`. Move it with [`toCssTransform(camera)`](#tocsstransform), and set `--zoom` on it to the zoom.
+舞台需要设置 `position: relative`、`overflow: clip` 和 `touch-action: none`。视口（容纳编辑器的元素）位于舞台左上角，并设置 `position: absolute`、`top: 0`、`left: 0` 和 `transform-origin: 0 0`。使用 [`toCssTransform(camera)`](#tocsstransform) 移动视口，并在其上将 `--zoom` 设置为缩放比例。
 
 ## `toCssTransform`
 
-Returns the CSS transform that shows the board with the camera. The viewport, which the transform moves, needs `transform-origin: 0 0`.
+返回用于根据摄像机显示白板的 CSS 变换。被变换移动的视口需要设置 `transform-origin: 0 0`。
 
 ```js
 import { toCssTransform } from '@tiptap-pro/extension-whiteboard'
@@ -49,17 +49,17 @@ import { toCssTransform } from '@tiptap-pro/extension-whiteboard'
 toCssTransform({ x: 100, y: 50, zoom: 2 }) // 'translate(100px, 50px) scale(2)'
 ```
 
-### Parameters
+### 参数
 
-- `camera` (`Camera`): The camera of the board.
+- `camera`（`Camera`）：白板的摄像机。
 
-### Returns (`string`)
+### 返回值（`string`）
 
-The value for the viewport's `transform`.
+视口的 `transform` 值。
 
 ## `zoomAtStageCenter`
 
-Changes the zoom around the middle of the stage, so the board stays put there.
+围绕舞台中心调整缩放，使白板在该位置保持不动。
 
 ```js
 import { zoomAtStageCenter } from '@tiptap-pro/extension-whiteboard'
@@ -69,15 +69,15 @@ resetZoomButton.addEventListener('click', () => {
 })
 ```
 
-### Parameters (`ZoomAtStageCenterOptions`)
+### 参数（`ZoomAtStageCenterOptions`）
 
-- `stage` (`HTMLElement`): The element around the board.
-- `updateCamera` (`UpdateCamera`): Moves the camera.
-- `nextZoom` (`(zoom: number) => number`): Returns the new zoom for the zoom now.
+- `stage`（`HTMLElement`）：白板外围元素。
+- `updateCamera`（`UpdateCamera`）：移动摄像机。
+- `nextZoom`（`(zoom: number) => number`）：根据当前缩放比例返回新的缩放比例。
 
 ## `stepZoom`
 
-Returns the next zoom step in a direction, like for the zoom buttons of an app. A zoom between steps goes to the next step in that direction. The steps go from 10% to 400%.
+返回指定方向上的下一个缩放档位，适用于应用中的缩放按钮。当前缩放比例处于两个档位之间时，会切换到该方向上的下一个档位。缩放档位范围为 10% 到 400%。
 
 ```js
 import { stepZoom } from '@tiptap-pro/extension-whiteboard'
@@ -86,18 +86,18 @@ stepZoom({ zoom: 1, direction: 1 }) // 1.25
 stepZoom({ zoom: 0.8, direction: -1 }) // 0.75
 ```
 
-### Parameters (`StepZoomOptions`)
+### 参数（`StepZoomOptions`）
 
-- `zoom` (`number`): The zoom now, where 1 is 100%.
-- `direction` (`1 | -1`): `1` to zoom in, `-1` to zoom out.
+- `zoom`（`number`）：当前缩放比例，1 表示 100%。
+- `direction`（`1 | -1`）：`1` 表示放大，`-1` 表示缩小。
 
-### Returns (`number`)
+### 返回值（`number`）
 
-The next zoom.
+下一个缩放比例。
 
 ## `zoomToFitShapes`
 
-Moves and zooms the camera so every shape is in the stage. It never zooms in beyond 100%, or out beyond [`minZoom`](#minzoom), and does nothing on an empty board.
+移动并缩放摄像机，使所有形状都显示在舞台中。缩放比例不会超过 100%，也不会低于 [`minZoom`](#minzoom)；白板为空时不执行任何操作。
 
 ```js
 import { zoomToFitShapes } from '@tiptap-pro/extension-whiteboard'
@@ -105,16 +105,16 @@ import { zoomToFitShapes } from '@tiptap-pro/extension-whiteboard'
 zoomToFitShapes({ stage, editor, updateCamera: setCamera })
 ```
 
-### Parameters (`ZoomToFitShapesOptions`)
+### 参数（`ZoomToFitShapesOptions`）
 
-- `stage` (`HTMLElement`): The element around the board.
-- `editor` (`Editor`): The editor of the board.
-- `updateCamera` (`UpdateCamera`): Moves the camera.
-- `insets?` (`number | Insets`): Room to keep free at the edges, in screen pixels, the same at each edge or one for each, like to keep shapes out from under floating controls. Default: `64`.
+- `stage`（`HTMLElement`）：白板外围元素。
+- `editor`（`Editor`）：白板的编辑器。
+- `updateCamera`（`UpdateCamera`）：移动摄像机。
+- `insets?`（`number | Insets`）：边缘需要保留的空白区域，单位为屏幕像素；可以为所有边设置相同值，也可以分别设置各边的值。例如，可避免形状被浮动控件遮挡。默认值：`64`。
 
 ## `scrollShapesIntoView`
 
-Moves the camera as little as it can, so the shapes with the given ids are in the stage. It zooms out only when they don't fit, and does nothing when none of them are on the board.
+尽可能少地移动摄像机，使具有指定 id 的形状显示在舞台中。只有这些形状无法全部容纳时才会缩小；如果白板上不存在这些形状，则不执行任何操作。
 
 ```js
 import { scrollShapesIntoView } from '@tiptap-pro/extension-whiteboard'
@@ -122,17 +122,17 @@ import { scrollShapesIntoView } from '@tiptap-pro/extension-whiteboard'
 scrollShapesIntoView({ stage, editor, ids: ['note-1'], updateCamera: setCamera })
 ```
 
-### Parameters (`ScrollShapesIntoViewOptions`)
+### 参数（`ScrollShapesIntoViewOptions`）
 
-- `stage` (`HTMLElement`): The element around the board.
-- `editor` (`Editor`): The editor of the board.
-- `ids` (`readonly string[]`): The ids of the shapes to show.
-- `updateCamera` (`UpdateCamera`): Moves the camera.
-- `insets?` (`number | Insets`): Room to keep free at the edges, in screen pixels, the same at each edge or one for each. Default: `64`.
+- `stage`（`HTMLElement`）：白板外围元素。
+- `editor`（`Editor`）：白板的编辑器。
+- `ids`（`readonly string[]`）：要显示的形状的 id。
+- `updateCamera`（`UpdateCamera`）：移动摄像机。
+- `insets?`（`number | Insets`）：边缘需要保留的空白区域，单位为屏幕像素；可以为所有边设置相同值，也可以分别设置各边的值。默认值：`64`。
 
 ## `fitCameraToRect`
 
-Returns the camera that shows a part of the board in the middle of the stage, inside `insets`. It zooms out until the part fits, but never in beyond `largestZoom`, and keeps to the zoom limits [`minZoom`](#minzoom) and [`maxZoom`](#maxzoom). So a part that needs less than `minZoom` doesn't fit.
+返回一个摄像机设置，使白板的一部分显示在舞台中央，并位于 `insets` 留出的区域内。它会持续缩小，直到该区域能够完整显示，但放大不会超过 `largestZoom`，且缩放比例始终受 [`minZoom`](#minzoom) 和 [`maxZoom`](#maxzoom) 限制。因此，如果某个区域需要低于 `minZoom` 的缩放比例才能完整显示，就无法适配。
 
 ```js
 import { fitCameraToRect } from '@tiptap-pro/extension-whiteboard'
@@ -141,20 +141,20 @@ const rect = { x: 0, y: 0, width: 1200, height: 800 }
 const camera = fitCameraToRect({ rect, viewport: { width: 1000, height: 800 } })
 ```
 
-### Parameters (`FitCameraToRectOptions`)
+### 参数（`FitCameraToRectOptions`）
 
-- `rect` (`Rect`): The part of the board to show, in board units.
-- `viewport` (`Size`): The size of the stage, in screen pixels.
-- `insets?` (`number | Insets`): Room to keep free at the edges, in screen pixels, the same at each edge or one for each. Default: `64`.
-- `largestZoom?` (`number`): How far it may zoom in. Default: `1`, which is 100%.
+- `rect`（`Rect`）：要显示的白板区域，单位为白板单位。
+- `viewport`（`Size`）：舞台的尺寸，单位为屏幕像素。
+- `insets?`（`number | Insets`）：边缘需要保留的空白区域，单位为屏幕像素；可以为所有边设置相同值，也可以分别设置各边的值。默认值：`64`。
+- `largestZoom?`（`number`）：允许放大的最大比例。默认值：`1`，即 100%。
 
-### Returns (`Camera`)
+### 返回值（`Camera`）
 
-The camera that shows the part.
+用于显示该区域的摄像机设置。
 
 ## `visibleBoardRect`
 
-Returns the part of the board that the stage shows.
+返回舞台当前显示的白板区域。
 
 ```js
 import { visibleBoardRect } from '@tiptap-pro/extension-whiteboard'
@@ -162,18 +162,18 @@ import { visibleBoardRect } from '@tiptap-pro/extension-whiteboard'
 const seen = visibleBoardRect({ camera, viewport: { width: 1000, height: 800 } })
 ```
 
-### Parameters (`VisibleBoardRectOptions`)
+### 参数（`VisibleBoardRectOptions`）
 
-- `camera` (`Camera`): The camera of the board.
-- `viewport` (`Size`): The size of the stage, in screen pixels.
+- `camera`（`Camera`）：白板的摄像机。
+- `viewport`（`Size`）：舞台的尺寸，单位为屏幕像素。
 
-### Returns (`Rect`)
+### 返回值（`Rect`）
 
-The part of the board, in board units.
+白板上的可见区域，单位为白板单位。
 
 ## `clientToBoard`
 
-Converts a point in window coordinates to board units, with the camera that the board shows.
+根据白板当前显示的摄像机设置，将窗口坐标中的点转换为白板单位。
 
 ```js
 import { clientToBoard } from '@tiptap-pro/extension-whiteboard'
@@ -187,30 +187,30 @@ stage.addEventListener('pointermove', (event) => {
 })
 ```
 
-### Parameters (`ClientToBoardOptions`)
+### 参数（`ClientToBoardOptions`）
 
-- `editor` (`Editor`): The editor of the board.
-- `point` (`Point`): A point in window coordinates, like the `clientX` and `clientY` of a pointer event.
+- `editor`（`Editor`）：白板的编辑器。
+- `point`（`Point`）：窗口坐标中的点，例如指针事件的 `clientX` 和 `clientY`。
 
-### Returns (`Point | null`)
+### 返回值（`Point | null`）
 
-The point in board units, or `null` while the board isn't on the page, like before `useEditor`'s editor is mounted, or once the editor is destroyed.
+白板单位中的点；如果白板尚未显示在页面上（例如 `useEditor` 的编辑器尚未挂载）或编辑器已销毁，则返回 `null`。
 
 ## `minZoom`
 
-The smallest zoom, 10%. The camera helpers never zoom out further.
+最小缩放比例，为 10%。摄像机辅助函数不会继续缩小。
 
-Value: `0.1`.
+值：`0.1`。
 
 ## `maxZoom`
 
-The largest zoom, 400%. The camera helpers never zoom in further.
+最大缩放比例，为 400%。摄像机辅助函数不会继续放大。
 
-Value: `4`.
+值：`4`。
 
 ## `boardContent`
 
-Builds the JSON of a board's document with the given shapes, for the content of an editor.
+使用给定形状构建白板文档的 JSON，供编辑器作为内容使用。
 
 ```js
 import { boardContent, stickyNoteContent } from '@tiptap-pro/extension-whiteboard'
@@ -218,17 +218,17 @@ import { boardContent, stickyNoteContent } from '@tiptap-pro/extension-whiteboar
 editor.commands.setContent(boardContent([stickyNoteContent({ id: 'note', x: 0, y: 0 })]))
 ```
 
-### Parameters
+### 参数
 
-- `shapes` (`JSONContent[]`): The JSON of the shapes, like from [`stickyNoteContent()`](#stickynotecontent).
+- `shapes`（`JSONContent[]`）：形状的 JSON，例如 [`stickyNoteContent()`](#stickynotecontent) 返回的内容。
 
-### Returns (`JSONContent`)
+### 返回值（`JSONContent`）
 
-The JSON of the document.
+文档的 JSON。
 
 ## `stickyNoteContent`
 
-Builds the JSON of a sticky note with one paragraph of text, for the content of a board. It takes the options of [`textShapeContent()`](#textshapecontent), without `type` and `kind`.
+为白板内容构建便签的 JSON，其中包含一个文本段落。它接受 [`textShapeContent()`](#textshapecontent) 的选项，但不包括 `type` 和 `kind`。
 
 ```js
 import { stickyNoteContent } from '@tiptap-pro/extension-whiteboard'
@@ -236,25 +236,25 @@ import { stickyNoteContent } from '@tiptap-pro/extension-whiteboard'
 const note = stickyNoteContent({ id: 'note', x: 0, y: 0, text: 'Hello' })
 ```
 
-### Parameters (`StickyNoteContentOptions`)
+### 参数（`StickyNoteContentOptions`）
 
-- `id` (`string`): The id of the note, unique on the board.
-- `x`, `y` (`number`): Where the note goes, in board units.
-- `width?`, `height?` (`number`): The size of the note, in board units. Default: [`stickyNoteSize`](#stickynotesize).
-- `zIndex?` (`string`): The stacking order, as a fractional index. Shapes with a higher one are in front.
-- `color?` (`ShapeColor`): The color of the note, like `blue`. See [`shapeColors`](#shapecolors).
-- `fontSize?` (`ShapeStyleValue<'fontSize'>`): The size of the text, like `s`, `m`, `l` or `xl`.
-- `textAlign?` (`ShapeStyleValue<'textAlign'>`): How the text aligns: `start`, `center` or `end`.
-- `font?` (`ShapeStyleValue<'font'>`): The font of the text, like `sans`, `serif` or `mono`.
-- `text?` (`string`): The text of the note, in one paragraph.
+- `id`（`string`）：便签的 id，在白板上必须唯一。
+- `x`、`y`（`number`）：便签的位置，单位为白板单位。
+- `width?`、`height?`（`number`）：便签的尺寸，单位为白板单位。默认值：[`stickyNoteSize`](#stickynotesize)。
+- `zIndex?`（`string`）：堆叠顺序，使用分数索引。值较大的形状位于前方。
+- `color?`（`ShapeColor`）：便签的颜色，例如 `blue`。参见 [`shapeColors`](#shapecolors)。
+- `fontSize?`（`ShapeStyleValue<'fontSize'>`）：文本大小，例如 `s`、`m`、`l` 或 `xl`。
+- `textAlign?`（`ShapeStyleValue<'textAlign'>`）：文本对齐方式：`start`、`center` 或 `end`。
+- `font?`（`ShapeStyleValue<'font'>`）：文本字体，例如 `sans`、`serif` 或 `mono`。
+- `text?`（`string`）：便签文本，放在一个段落中。
 
-### Returns (`JSONContent`)
+### 返回值（`JSONContent`）
 
-The JSON of the note.
+便签的 JSON。
 
 ## `textShapeContent`
 
-Builds the JSON of a shape with text, for the content of a board.
+为白板内容构建带文本形状的 JSON。
 
 ```js
 import { boardContent, textShapeContent } from '@tiptap-pro/extension-whiteboard'
@@ -264,27 +264,27 @@ const shape = textShapeContent({ type: 'geo', id: 'box', x: 0, y: 0, text: 'Hi' 
 editor.commands.setContent(boardContent([shape]))
 ```
 
-### Parameters (`TextShapeContentOptions`)
+### 参数（`TextShapeContentOptions`）
 
-- `type` (`string`): The node type of the shape, like `stickyNote`, `geo` or `freeText`.
-- `id` (`string`): The id of the shape, unique on the board.
-- `x`, `y` (`number`): Where the shape goes, in board units.
-- `width?`, `height?` (`number`): The size of the shape, in board units.
-- `zIndex?` (`string`): The stacking order, as a fractional index. Shapes with a higher one are in front.
-- `color?` (`ShapeColor`): The color of the shape, like `blue`. See [`shapeColors`](#shapecolors).
-- `fontSize?` (`ShapeStyleValue<'fontSize'>`): The size of the text, like `s`, `m`, `l` or `xl`.
-- `textAlign?` (`ShapeStyleValue<'textAlign'>`): How the text aligns: `start`, `center` or `end`.
-- `font?` (`ShapeStyleValue<'font'>`): The font of the text, like `sans`, `serif` or `mono`.
-- `kind?` (`GeoKind`): The kind of a geometric shape, a name from [`geoKinds`](#geokinds).
-- `text?` (`string`): The text of the shape, in one paragraph.
+- `type`（`string`）：形状的节点类型，例如 `stickyNote`、`geo` 或 `freeText`。
+- `id`（`string`）：形状的 id，在白板上必须唯一。
+- `x`、`y`（`number`）：形状的位置，单位为白板单位。
+- `width?`、`height?`（`number`）：形状的尺寸，单位为白板单位。
+- `zIndex?`（`string`）：堆叠顺序，使用分数索引。值较大的形状位于前方。
+- `color?`（`ShapeColor`）：形状的颜色，例如 `blue`。参见 [`shapeColors`](#shapecolors)。
+- `fontSize?`（`ShapeStyleValue<'fontSize'>`）：文本大小，例如 `s`、`m`、`l` 或 `xl`。
+- `textAlign?`（`ShapeStyleValue<'textAlign'>`）：文本对齐方式：`start`、`center` 或 `end`。
+- `font?`（`ShapeStyleValue<'font'>`）：文本字体，例如 `sans`、`serif` 或 `mono`。
+- `kind?`（`GeoKind`）：几何形状的类型，取自 [`geoKinds`](#geokinds) 中的名称。
+- `text?`（`string`）：形状文本，放在一个段落中。
 
-### Returns (`JSONContent`)
+### 返回值（`JSONContent`）
 
-The JSON of the shape.
+形状的 JSON。
 
 ## `freehandFromPoints`
 
-Turns a line drawn in board units into the geometry of a pen line. The box leaves room for the stroke width, and the points are relative to its corner.
+将用白板单位绘制的线条转换为画笔线条的几何数据。边界框会为描边宽度留出空间，点的位置则相对于边界框的角点。
 
 ```js
 import { freehandFromPoints } from '@tiptap-pro/extension-whiteboard'
@@ -299,18 +299,18 @@ const line = freehandFromPoints({
 const content = { type: 'freehand', attrs: { id: 'line', ...line, strokeWidth: 3 } }
 ```
 
-### Parameters (`FreehandFromPointsOptions`)
+### 参数（`FreehandFromPointsOptions`）
 
-- `points` (`readonly Point[]`): The points of the line, in board units. It needs at least one.
-- `strokeWidth` (`number`): The width of the line, in board units.
+- `points`（`readonly Point[]`）：线条上的点，单位为白板单位。至少需要一个点。
+- `strokeWidth`（`number`）：线条的宽度，单位为白板单位。
 
-### Returns (`FreehandShape`)
+### 返回值（`FreehandShape`）
 
-The box and the points of the pen line.
+画笔线条的边界框和点。
 
 ## `createShapeId`
 
-Returns a new random version 4 UUID, for the id of a shape. Works off secure origins too, which have no `crypto.randomUUID`.
+为形状 id 生成一个随机的版本 4 UUID。即使在不支持 `crypto.randomUUID` 的安全来源环境中也能使用。
 
 ```js
 import { createShapeId, stickyNoteContent } from '@tiptap-pro/extension-whiteboard'
@@ -318,17 +318,17 @@ import { createShapeId, stickyNoteContent } from '@tiptap-pro/extension-whiteboa
 const note = stickyNoteContent({ id: createShapeId(), x: 0, y: 0 })
 ```
 
-### Parameters
+### 参数
 
-None.
+无。
 
-### Returns (`string`)
+### 返回值（`string`）
 
-The new id.
+新 id。
 
 ## `getSelectedShapeIds`
 
-Returns the ids of the selected shapes.
+返回已选形状的 id。
 
 ```js
 import { getSelectedShapeIds } from '@tiptap-pro/extension-whiteboard'
@@ -336,74 +336,74 @@ import { getSelectedShapeIds } from '@tiptap-pro/extension-whiteboard'
 editor.commands.bringToFront(getSelectedShapeIds(editor.state))
 ```
 
-### Parameters
+### 参数
 
-- `state` (`EditorState`): The state of the board's editor, like `editor.state`.
+- `state`（`EditorState`）：白板编辑器的状态，例如 `editor.state`。
 
-### Returns (`readonly string[]`)
+### 返回值（`readonly string[]`）
 
-The ids, in the order the shapes were selected.
+形状的 id，顺序与选择顺序一致。
 
 ## `isBoardEditable`
 
-Tells whether users may change the board, which `editor.setEditable(false)` turns off. Use it instead of `editor.isEditable`, which is `false` whenever the board has the keyboard. See [Custom shapes](/editor/whiteboard/guides/custom-shapes#read-only-boards).
+判断用户是否可以修改白板。调用 `editor.setEditable(false)` 会禁止修改。请使用此函数，而不要使用 `editor.isEditable`：只要白板拥有键盘焦点，后者就会返回 `false`。参见[自定义形状](/editor/whiteboard/guides/custom-shapes#read-only-boards)。
 
 ```js
 import { isBoardEditable } from '@tiptap-pro/extension-whiteboard'
 
-// Commands also change a read-only board, so check before a button in your shape runs one
+// 命令也可以修改只读白板，因此形状中的按钮执行命令前要先检查
 if (isBoardEditable(editor)) {
   editor.commands.updateShape({ id, attributes: { votes: votes + 1 } })
 }
 ```
 
-### Parameters
+### 参数
 
-- `editor` (`Editor`): The board's editor.
+- `editor`（`Editor`）：白板的编辑器。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-Whether users may change the board.
+用户是否可以修改白板。
 
 ## `isEditingText`
 
-Tells whether the text of a shape is edited, so keys type into it. Otherwise keys act on the board and the selected shapes. It is `false` while a doc frame's document is edited, see [`getEditedDocEditor()`](#getediteddoceditor).
+判断是否正在编辑形状文本；如果是，按键会输入到该文本中。否则，按键会作用于白板和已选形状。编辑文档框的文档时，此函数返回 `false`；参见 [`getEditedDocEditor()`](#getediteddoceditor)。
 
 ```js
 import { isEditingText } from '@tiptap-pro/extension-whiteboard'
 
-isEditingText(editor.state) // false while keys act on the board
+isEditingText(editor.state) // 按键作用于白板时返回 false
 ```
 
-### Parameters
+### 参数
 
-- `state` (`EditorState`): The state of the board's editor, like `editor.state`.
+- `state`（`EditorState`）：白板编辑器的状态，例如 `editor.state`。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-Whether the text of a shape is edited.
+是否正在编辑形状文本。
 
 ## `getEditedShapeId`
 
-Returns the id of the shape whose text is edited. For the document of a doc frame, see [`getEditedDocEditor()`](#getediteddoceditor).
+返回正在编辑文本的形状的 id。对于文档框中的文档，请参见 [`getEditedDocEditor()`](#getediteddoceditor)。
 
 ```js
 import { getEditedShapeId } from '@tiptap-pro/extension-whiteboard'
 
-getEditedShapeId(editor.state) // 'note' while its text is edited
+getEditedShapeId(editor.state) // 正在编辑便签文本时返回 'note'
 ```
 
-### Parameters
+### 参数
 
-- `state` (`EditorState`): The state of the board's editor, like `editor.state`.
+- `state`（`EditorState`）：白板编辑器的状态，例如 `editor.state`。
 
-### Returns (`string | null`)
+### 返回值（`string | null`）
 
-The id, or `null` while keys act on the board or a doc frame's document is edited.
+形状的 id；如果按键作用于白板，或正在编辑文档框中的文档，则返回 `null`。
 
 ## `getActiveTool`
 
-Returns the tool that a press on the board uses.
+返回在白板上按下时会使用的工具。
 
 ```js
 import { getActiveTool } from '@tiptap-pro/extension-whiteboard'
@@ -411,35 +411,35 @@ import { getActiveTool } from '@tiptap-pro/extension-whiteboard'
 getActiveTool(editor.state) // 'select'
 ```
 
-### Parameters
+### 参数
 
-- `state` (`EditorState`): The state of the board's editor, like `editor.state`.
+- `state`（`EditorState`）：白板编辑器的状态，例如 `editor.state`。
 
-### Returns (`Tool`)
+### 返回值（`Tool`）
 
-The tool, `select` unless [`setTool`](/editor/whiteboard/api-reference/commands#settool) chose another one.
+当前工具。如果未通过 [`setTool`](/editor/whiteboard/api-reference/commands#settool) 选择其他工具，则为 `select`。
 
 ## `getNextShapeStyles`
 
-Returns the styles for new shapes. A style that is not set keeps the default of each kind of shape.
+返回新形状将使用的样式。未设置的样式会使用各类形状的默认值。
 
 ```js
 import { getNextShapeStyles } from '@tiptap-pro/extension-whiteboard'
 
-getNextShapeStyles(editor.state).color // undefined until `setShapeStyle` chooses one
+getNextShapeStyles(editor.state).color // 在 `setShapeStyle` 选择颜色之前为 undefined
 ```
 
-### Parameters
+### 参数
 
-- `state` (`EditorState`): The state of the board's editor, like `editor.state`.
+- `state`（`EditorState`）：白板编辑器的状态，例如 `editor.state`。
 
-### Returns (`Partial<ShapeStyles>`)
+### 返回值（`Partial<ShapeStyles>`）
 
-The styles that [`setShapeStyle`](/editor/whiteboard/api-reference/commands#setshapestyle) chose.
+由 [`setShapeStyle`](/editor/whiteboard/api-reference/commands#setshapestyle) 选择的样式。
 
 ## `getToolShapeType`
 
-Returns the node type of the shapes that a tool adds.
+返回工具所添加形状的节点类型。
 
 ```js
 import { getToolShapeType } from '@tiptap-pro/extension-whiteboard'
@@ -448,51 +448,51 @@ getToolShapeType('note') // 'stickyNote'
 getToolShapeType('hand') // null
 ```
 
-### Parameters
+### 参数
 
-- `tool` (`Tool`): The tool, like `note` or `hand`.
+- `tool`（`Tool`）：工具，例如 `note` 或 `hand`。
 
-### Returns (`string | null`)
+### 返回值（`string | null`）
 
-The node type, or `null` for a tool that adds none.
+节点类型；如果该工具不会添加形状，则返回 `null`。
 
 ## `isTypingTarget`
 
-Tells whether keys pressed on a target type text: in a field, or in editable content like the edited text of a shape or the editor of a doc frame.
+判断按键是否会在目标位置输入文本：例如输入框，或可编辑内容（如正在编辑的形状文本或文档框编辑器）。
 
 ```js
 import { isTypingTarget } from '@tiptap-pro/extension-whiteboard'
 
-// In a keydown listener for the app's own shortcuts
+// 在应用自身快捷键的 keydown 监听器中
 if (event.key === '?' && !isTypingTarget(event.target)) showShortcuts()
 ```
 
-### Parameters
+### 参数
 
-- `target` (`EventTarget | null`): The target of a keyboard event, like `event.target`.
+- `target`（`EventTarget | null`）：键盘事件的目标，例如 `event.target`。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-Whether keys pressed on the target type text.
+按键是否会在目标位置输入文本。
 
 ## `focusBoard`
 
-Focuses the board right away, or the text while it is edited, for code outside a chain, like a toolbar button's click handler. Unlike ProseMirror's `focus`, it also works while the text is read-only. In a chain, use the [`focusBoard()` command](/editor/whiteboard/api-reference/commands#focusboard) instead, which focuses after the chain's transaction.
+立即聚焦白板；如果正在编辑文本，则聚焦文本。适用于命令链之外的代码，例如工具栏按钮的点击处理程序。与 ProseMirror 的 `focus` 不同，即使文本为只读，此函数也能正常工作。在命令链中，应改用 [`focusBoard()` 命令](/editor/whiteboard/api-reference/commands#focusboard)，它会在命令链的事务完成后聚焦。
 
 ```js
 import { focusBoard } from '@tiptap-pro/extension-whiteboard'
 
-// In the click handler of a toolbar button
+// 在工具栏按钮的点击处理程序中
 focusBoard(editor.view)
 ```
 
-### Parameters
+### 参数
 
-- `view` (`EditorView`): The view of the board's editor, like `editor.view`.
+- `view`（`EditorView`）：白板编辑器的视图，例如 `editor.view`。
 
 ## `findShapes`
 
-Finds the shapes with the given ids.
+查找具有指定 id 的形状。
 
 ```js
 import { findShapes } from '@tiptap-pro/extension-whiteboard'
@@ -500,18 +500,18 @@ import { findShapes } from '@tiptap-pro/extension-whiteboard'
 const [note] = findShapes({ doc: editor.state.doc, ids: ['note-1'] })
 ```
 
-### Parameters (`FindShapesOptions`)
+### 参数（`FindShapesOptions`）
 
-- `doc` (`Node`): The document of the board, like `editor.state.doc`.
-- `ids` (`readonly string[]`): The ids of the shapes.
+- `doc`（`Node`）：白板文档，例如 `editor.state.doc`。
+- `ids`（`readonly string[]`）：形状的 id。
 
-### Returns (`NodeWithPos[]`)
+### 返回值（`NodeWithPos[]`）
 
-The shapes with their positions, in document order. Unknown ids are skipped.
+形状及其位置，按文档顺序排列。找不到的 id 会被跳过。
 
 ## `hasBoxGeometry`
 
-Tells whether a shape has a box from `x`, `y`, `width` and `height`. Arrows don't.
+判断形状是否具有由 `x`、`y`、`width` 和 `height` 定义的边界框。箭头没有边界框。
 
 ```js
 import { findShapes, hasBoxGeometry } from '@tiptap-pro/extension-whiteboard'
@@ -520,17 +520,17 @@ const shapes = findShapes({ doc: editor.state.doc, ids })
 const boxes = shapes.filter(({ node }) => hasBoxGeometry(node))
 ```
 
-### Parameters
+### 参数
 
-- `shape` (`Node`): The node of the shape.
+- `shape`（`Node`）：形状的节点。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-Whether the shape has a box.
+形状是否具有边界框。
 
 ## `docIdOf`
 
-Returns the id of the document that a doc frame shows, from its node or the node's JSON. Frames without one use their shape id, so they still get a document of their own.
+根据文档框的节点或节点 JSON，返回该文档框所显示文档的 id。没有文档 id 的文档框会使用自身形状的 id，因此仍会拥有专属文档。
 
 ```js
 import { docIdOf, findShapes } from '@tiptap-pro/extension-whiteboard'
@@ -539,83 +539,83 @@ const [frame] = findShapes({ doc: editor.state.doc, ids: ['frame'] })
 const docId = frame && docIdOf(frame.node)
 ```
 
-### Parameters
+### 参数
 
-- `frame` (`Node | JSONContent`): The node of the frame, or its JSON.
+- `frame`（`Node | JSONContent`）：文档框的节点或其 JSON。
 
-### Returns (`string`)
+### 返回值（`string`）
 
-The id of the document.
+文档的 id。
 
 ## `shapeAttributes`
 
-Returns the attributes that every shape needs, for a [custom shape](/editor/whiteboard/guides/custom-shapes): its id, position, size, z-index and frame. They keep numbers as numbers in HTML, also when users copy and paste the shape.
+返回[自定义形状](/editor/whiteboard/guides/custom-shapes)所需的通用属性：id、位置、尺寸、z-index 和框架。这些属性会确保 HTML 中的数字仍以数字形式保存，即使用户复制并粘贴形状也一样。
 
 ```js
 import { shapeAttributes } from '@tiptap-pro/extension-whiteboard'
 
-// In the node of the shape
+// 在形状的节点中
 addAttributes: () => ({
   ...shapeAttributes({ width: 320, height: 200 }),
   title: { default: '' },
 }),
 ```
 
-### Parameters
+### 参数
 
-- `size?` (`Size`): The size of a new shape, in board units. Default: 200 by 200.
+- `size?`（`Size`）：新形状的尺寸，单位为白板单位。默认值：200 × 200。
 
-### Returns (`Attributes`)
+### 返回值（`Attributes`）
 
-The attributes, for the `addAttributes` of the shape's node.
+供形状节点的 `addAttributes` 使用的属性。
 
 ## `dataAttribute`
 
-Returns an attribute of a [custom shape](/editor/whiteboard/guides/custom-shapes) that HTML keeps as a data attribute, so it stays when users copy and paste the shape. A missing value, or one that doesn't parse, falls back to the default.
+返回[自定义形状](/editor/whiteboard/guides/custom-shapes)的属性，该属性会由 HTML 保存为 data 属性，因此用户复制并粘贴形状时也会保留。值缺失或无法解析时，会回退到默认值。
 
 ```js
 import { dataAttribute, shapeAttributes } from '@tiptap-pro/extension-whiteboard'
 
-// In the node of the shape
+// 在形状的节点中
 addAttributes: () => ({
   ...shapeAttributes(),
   votes: dataAttribute({ name: 'votes', default: 0 }),
 }),
 ```
 
-### Parameters (`DataAttributeOptions`)
+### 参数（`DataAttributeOptions`）
 
-- `name` (`string`): The name of the attribute, like `votes`. HTML keeps it as `data-votes`, and `chartData` as `data-chart-data`.
-- `default` (`string | number | boolean | null | readonly unknown[] | Record<string, unknown>`): The value of a new shape. Its type decides how HTML keeps the value: a string, a number, a boolean, or JSON for `null`, objects and arrays.
+- `name`（`string`）：属性名称，例如 `votes`。HTML 会将其保存为 `data-votes`，将 `chartData` 保存为 `data-chart-data`。
+- `default`（`string | number | boolean | null | readonly unknown[] | Record<string, unknown>`）：新形状的属性值。其类型决定 HTML 如何保存该值：字符串、数字、布尔值，或用于 `null`、对象和数组的 JSON。
 
-### Returns (`Attribute`)
+### 返回值（`Attribute`）
 
-The attribute, for the `addAttributes` of the shape's node.
+供形状节点的 `addAttributes` 使用的属性。
 
 ## `shapeNodeView`
 
-Turns the node view of a component, like a React component of your app, into a [custom shape](/editor/whiteboard/guides/custom-shapes) without text. The board places, selects, moves and resizes the shape like its own shapes, and the node view draws the component. Presses on links, buttons, fields and editable content in the component go to them, and so do presses inside elements with `data-shape-interactive`. They do on a read-only board too, so the component checks [`isBoardEditable()`](#isboardeditable) before it changes the board.
+将组件的节点视图（例如应用中的 React 组件）转换为不含文本的[自定义形状](/editor/whiteboard/guides/custom-shapes)。白板会像处理自身形状一样放置、选择、移动和调整该形状的大小，而节点视图负责绘制组件。用户点击组件中的链接、按钮、输入框和可编辑内容时，交互会传递给这些元素；点击带有 `data-shape-interactive` 的元素时也一样。只读白板上同样如此，因此组件在修改白板前应检查 [`isBoardEditable()`](#isboardeditable)。
 
 ```js
 import { ReactNodeViewRenderer } from '@tiptap/react'
 import { shapeNodeView } from '@tiptap-pro/extension-whiteboard'
 
-// In the node of the shape
+// 在形状的节点中
 addNodeView: () => shapeNodeView({ dataType: 'poll', view: ReactNodeViewRenderer(PollView) }),
 ```
 
-### Parameters (`ShapeNodeViewOptions`)
+### 参数（`ShapeNodeViewOptions`）
 
-- `dataType` (`string`): The `data-type` of the shape's element, like the one that the node's `renderHTML` sets.
-- `view` (`NodeViewRenderer`): The node view of the component in the shape, like `ReactNodeViewRenderer(Component)` from `@tiptap/react`. Its element fills the shape.
+- `dataType`（`string`）：形状元素的 `data-type`，例如由节点的 `renderHTML` 设置的值。
+- `view`（`NodeViewRenderer`）：形状中组件的节点视图，例如来自 `@tiptap/react` 的 `ReactNodeViewRenderer(Component)`。其元素会填满形状。
 
-### Returns (`NodeViewRenderer`)
+### 返回值（`NodeViewRenderer`）
 
-The node view of the shape, for the `addNodeView` of its node.
+供该节点的 `addNodeView` 使用的形状节点视图。
 
 ## `insertShapesInFront`
 
-Adds shapes in front of all others, from back to front in the order of `shapes`, unless their z-indexes order them otherwise. Throws a `RangeError` when a shape has no id, or an id that the board or another of the shapes has.
+将形状添加到所有其他形状前方。除非 z-index 另有排序，否则 `shapes` 中的形状按从后到前的顺序排列。如果形状没有 id，或其 id 与白板上已有形状或列表中的其他形状重复，则会抛出 `RangeError`。
 
 ```js
 import {
@@ -631,20 +631,20 @@ insertShapesInFront({ tr, shapes: [schema.nodeFromJSON(note)] })
 editor.view.dispatch(tr)
 ```
 
-### Parameters (`InsertShapesInFrontOptions`)
+### 参数（`InsertShapesInFrontOptions`）
 
-- `tr` (`Transaction`): The transaction to add the shapes in, like `editor.state.tr`.
-- `shapes` (`readonly Node[]`): The nodes of the shapes to add.
+- `tr`（`Transaction`）：用于添加形状的事务，例如 `editor.state.tr`。
+- `shapes`（`readonly Node[]`）：要添加的形状节点。
 
-### Returns (`number | null`)
+### 返回值（`number | null`）
 
-The position of the first shape, or `null` when it added none.
+第一个形状的位置；如果没有添加任何形状，则返回 `null`。
 
-It leaves dispatching the transaction to you. With `UndoRedo`, it makes the transaction its own undo step. With collaboration, Yjs joins changes that come quickly after each other into one step.
+事务的派发由你负责。使用 `UndoRedo` 时，该事务会成为单独的撤销步骤。协作时，Yjs 会将短时间内连续发生的更改合并为一个步骤。
 
 ## `removeShapes`
 
-Deletes the shapes with the given ids, and the shapes in the frames among them. Arrows that connect a deleted shape stay, with a free end where they touched it.
+删除具有指定 id 的形状，以及这些形状中框架里的形状。连接到已删除形状的箭头会保留，其连接到该形状的一端会变为自由端。
 
 ```js
 import { removeShapes } from '@tiptap-pro/extension-whiteboard'
@@ -654,20 +654,20 @@ removeShapes({ tr, ids: ['note-1'] })
 editor.view.dispatch(tr)
 ```
 
-### Parameters (`RemoveShapesOptions`)
+### 参数（`RemoveShapesOptions`）
 
-- `tr` (`Transaction`): The transaction to delete the shapes in, like `editor.state.tr`.
-- `ids` (`readonly string[]`): The ids of the shapes.
+- `tr`（`Transaction`）：用于删除形状的事务，例如 `editor.state.tr`。
+- `ids`（`readonly string[]`）：形状的 id。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-Whether any of the shapes were on the board.
+白板上是否存在这些形状中的任意一个。
 
-It leaves dispatching the transaction to you. With `UndoRedo`, it makes the transaction its own undo step. With collaboration, Yjs joins changes that come quickly after each other into one step.
+事务的派发由你负责。使用 `UndoRedo` 时，该事务会成为单独的撤销步骤。协作时，Yjs 会将短时间内连续发生的更改合并为一个步骤。
 
 ## `restackShapes`
 
-Moves the shapes with the given ids in front of or behind all other shapes, and keeps their order among each other. Only the moved shapes get new z-indexes, unless missing or invalid ones leave no room.
+将具有指定 id 的形状移到所有其他形状的前方或后方，同时保持它们彼此之间的顺序。通常只有移动的形状会获得新的 z-index；如果缺少或无效的 z-index 导致没有可用空间，则可能需要调整其他形状。
 
 ```js
 import { restackShapes } from '@tiptap-pro/extension-whiteboard'
@@ -677,43 +677,43 @@ restackShapes({ tr, ids: ['note-1'], place: 'back' })
 editor.view.dispatch(tr)
 ```
 
-### Parameters (`RestackShapesOptions`)
+### 参数（`RestackShapesOptions`）
 
-- `tr` (`Transaction`): The transaction to move the shapes in, like `editor.state.tr`.
-- `ids` (`readonly string[]`): The ids of the shapes.
-- `place` (`StackPlace`): Where the shapes go: `front`, in front of all others, or `back`, behind them.
+- `tr`（`Transaction`）：用于移动形状的事务，例如 `editor.state.tr`。
+- `ids`（`readonly string[]`）：形状的 id。
+- `place`（`StackPlace`）：形状的目标位置：`front` 表示移到所有其他形状前方，`back` 表示移到它们后方。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-Whether any of the shapes are on the board.
+白板上是否存在这些形状中的任意一个。
 
-It leaves dispatching the transaction to you. With `UndoRedo`, it makes the transaction its own undo step. With collaboration, Yjs joins changes that come quickly after each other into one step.
+事务的派发由你负责。使用 `UndoRedo` 时，该事务会成为单独的撤销步骤。协作时，Yjs 会将短时间内连续发生的更改合并为一个步骤。
 
 ## `keepShapeHeights`
 
-Keeps the heights that a transaction gives its shapes, for content that arrives later, like the document of a doc frame that an AI writes after it adds the frame. Without it, the board makes free text and doc frames as tall as their content.
+保留事务为形状设置的高度，供稍后到达的内容使用，例如 AI 添加文档框后再写入其文档。不使用此函数时，白板会根据内容高度调整自由文本和文档框的高度。
 
 ```js
 import { keepShapeHeights } from '@tiptap-pro/extension-whiteboard'
 
 const { tr } = editor.state
-// … add a doc frame whose document arrives later
+// … 添加文档稍后才会到达的文档框
 editor.view.dispatch(keepShapeHeights(tr))
 ```
 
-### Parameters
+### 参数
 
-- `tr` (`Transaction`): The transaction, like `editor.state.tr`.
+- `tr`（`Transaction`）：事务，例如 `editor.state.tr`。
 
-### Returns (`Transaction`)
+### 返回值（`Transaction`）
 
-The same transaction.
+同一个事务。
 
-It only marks the transaction and makes no undo step.
+此函数只会为事务添加标记，不会创建撤销步骤。
 
 ## `getDocEditors`
 
-Returns the editors of the documents that the doc frames on the board show.
+返回白板上文档框所显示文档的编辑器。
 
 ```js
 import { getDocEditors } from '@tiptap-pro/extension-whiteboard'
@@ -721,37 +721,37 @@ import { getDocEditors } from '@tiptap-pro/extension-whiteboard'
 const documents = getDocEditors(editor).map((docEditor) => docEditor.getJSON())
 ```
 
-### Parameters
+### 参数
 
-- `editor` (`Editor`): The board's editor.
+- `editor`（`Editor`）：白板的编辑器。
 
-### Returns (`Editor[]`)
+### 返回值（`Editor[]`）
 
-The editors of the documents, and none once the board's editor is destroyed.
+文档的编辑器；白板编辑器销毁后，返回空数组。
 
 ## `getEditedDocEditor`
 
-Returns the editor of the document that a doc frame edits.
+返回文档框当前正在编辑的文档的编辑器。
 
 ```js
 import { getEditedDocEditor } from '@tiptap-pro/extension-whiteboard'
 
-// A bold button that works in documents too
+// 同样适用于文档的加粗按钮
 const textEditor = getEditedDocEditor(editor) ?? editor
 textEditor.commands.toggleBold()
 ```
 
-### Parameters
+### 参数
 
-- `editor` (`Editor`): The board's editor.
+- `editor`（`Editor`）：白板的编辑器。
 
-### Returns (`Editor | null`)
+### 返回值（`Editor | null`）
 
-The editor of the document, or `null` while none is edited, like once the board's editor is destroyed.
+文档的编辑器；如果当前没有正在编辑的文档（例如白板编辑器已销毁），则返回 `null`。
 
 ## `addImageFiles`
 
-Uploads image files with the board's [`images`](/editor/whiteboard/api-reference/types#boardimages), then adds an image shape for each, in front of all other shapes and in one step of the board's history, and selects them. The images keep their proportions, fit into half of the stage, and stand side by side around `point`. Files that `images` doesn't allow, and files whose upload fails, go to its `onError`. Does nothing on a read-only board. See [Images](/editor/whiteboard/guides/images).
+使用白板的 [`images`](/editor/whiteboard/api-reference/types#boardimages) 上传图像文件，然后为每个文件添加一个图像形状，将它们置于所有其他形状前方，并作为白板历史记录中的一个步骤，同时选中这些形状。图像会保持原有比例，缩放到舞台的一半范围内，并围绕 `point` 并排放置。`images` 不允许的文件，以及上传失败的文件，会传递给其 `onError`。只读白板上不执行任何操作。参见[图像](/editor/whiteboard/guides/images)。
 
 ```js
 import { addImageFiles } from '@tiptap-pro/extension-whiteboard'
@@ -759,20 +759,20 @@ import { addImageFiles } from '@tiptap-pro/extension-whiteboard'
 input.addEventListener('change', () => addImageFiles({ stage, editor, files: input.files ?? [] }))
 ```
 
-### Parameters (`AddImageFilesOptions`)
+### 参数（`AddImageFilesOptions`）
 
-- `stage` (`HTMLElement`): The element around the board.
-- `editor` (`Editor`): The board's editor.
-- `files` (`Iterable<File>`): The files to add, like the files of a file input.
-- `point?` (`Point`): The middle of the images, in board units. Default: the middle of the stage.
+- `stage`（`HTMLElement`）：白板外围元素。
+- `editor`（`Editor`）：白板的编辑器。
+- `files`（`Iterable<File>`）：要添加的文件，例如文件输入框中的文件。
+- `point?`（`Point`）：图像的中心位置，单位为白板单位。默认值：舞台中心。
 
-### Returns (`Promise<string[]>`)
+### 返回值（`Promise<string[]>`）
 
-The ids of the added image shapes. None without `images`, on a read-only board, or when the editor is destroyed before the uploads end.
+已添加图像形状的 id。如果没有配置 `images`、白板为只读，或上传完成前编辑器已销毁，则返回空数组。
 
 ## `createRemoteCursors`
 
-Shows the cursors of other users on the board of `editor`, with their names. Each cursor sits where its user points, keeps its size at every zoom, and moves smoothly through the points that its user shares, a little late. The shapes that a user drags move along with their cursor, but the document doesn't change: the other user's drop changes it. See [Show the cursors of others](/editor/whiteboard/guides/collaboration#show-the-cursors-of-others).
+在 `editor` 的白板上显示其他用户的光标及其名称。每个光标都位于对应用户指向的位置，在任何缩放比例下都保持相同大小，并会略微延迟地平滑移动到用户共享的位置。用户拖动的形状会跟随其光标移动，但文档不会因此发生更改；只有其他用户放下形状时，文档才会更新。参见[显示其他用户的光标](/editor/whiteboard/guides/collaboration#show-the-cursors-of-others)。
 
 ```js
 import { createRemoteCursors } from '@tiptap-pro/extension-whiteboard'
@@ -781,20 +781,20 @@ const cursors = createRemoteCursors(editor)
 cursors.update([{ owner: clientId, point: { x: 120, y: 80 }, name: 'Ada', color: '#be185d' }])
 ```
 
-### Parameters
+### 参数
 
-- `editor` (`Editor`): The board's editor.
+- `editor`（`Editor`）：白板的编辑器。
 
-### Returns (`RemoteCursors`)
+### 返回值（`RemoteCursors`）
 
-The cursors, with two functions:
+光标对象，包含两个函数：
 
-- `update(cursors)` shows these [cursors](/editor/whiteboard/api-reference/types#remotecursor) and the shapes that they drag, and fades out the other cursors. A cursor without a valid point, or a drag without shape ids and a delta, is left out, because other users can share anything.
-- `destroy()` removes every cursor right away, and shows dragged shapes where the document has them. Destroying the editor does that too.
+- `update(cursors)`：显示这些[光标](/editor/whiteboard/api-reference/types#remotecursor)及其拖动的形状，并淡出其他光标。如果光标没有有效位置，或者拖动信息没有形状 id 和位移，则会忽略该条目，因为其他用户共享的内容可能不可靠。
+- `destroy()`：立即移除所有光标，并将拖动中的形状显示在文档记录的位置。销毁编辑器时也会执行此操作。
 
 ## `createRemoteMoves`
 
-Shows the drags of other users on the board of `editor`. Their shapes and the arrows that connect them move, but the document doesn't change: the other user's drop changes it.
+在 `editor` 的白板上显示其他用户的拖动操作。其形状和连接这些形状的箭头会一起移动，但文档不会因此发生更改；只有其他用户放下形状时，文档才会更新。
 
 ```js
 import { createRemoteMoves } from '@tiptap-pro/extension-whiteboard'
@@ -804,20 +804,20 @@ moves.show({ owner: clientId, ids: ['note'], delta: { x: 40, y: 0 } })
 moves.end(clientId)
 ```
 
-### Parameters
+### 参数
 
-- `editor` (`Editor`): The board's editor.
+- `editor`（`Editor`）：白板的编辑器。
 
-### Returns (`RemoteMoves`)
+### 返回值（`RemoteMoves`）
 
-The moves, with two functions:
+移动操作对象，包含两个函数：
 
-- `show({ owner, ids, delta })` shows the shapes of `owner`'s drag, moved by `delta`. `owner` is whose drag it is, like the client id of another user, and `delta` how far the drag has moved the shapes since it began, in board units.
-- `end(owner)` ends the drag of `owner`. Its shapes show as the document has them.
+- `show({ owner, ids, delta })`：显示 `owner` 正在拖动的形状，并按 `delta` 移动。`owner` 表示拖动者，例如其他用户的客户端 id；`delta` 表示从拖动开始到现在形状移动的距离，单位为白板单位。
+- `end(owner)`：结束 `owner` 的拖动。其形状会显示在文档记录的位置。
 
 ## `exportBoard`
 
-Saves the board as a board file: its JSON, and the documents that its doc frames show. See [Export and import](/editor/whiteboard/guides/export-and-import).
+将白板保存为白板文件，其中包含白板 JSON 和文档框所显示的文档。参见[导出和导入](/editor/whiteboard/guides/export-and-import)。
 
 ```js
 import { exportBoard } from '@tiptap-pro/extension-whiteboard'
@@ -825,17 +825,17 @@ import { exportBoard } from '@tiptap-pro/extension-whiteboard'
 const json = JSON.stringify(exportBoard({ editor }))
 ```
 
-### Parameters (`ExportBoardOptions`)
+### 参数（`ExportBoardOptions`）
 
-- `editor` (`Editor`): The board's editor.
+- `editor`（`Editor`）：白板的编辑器。
 
-### Returns (`BoardFile`)
+### 返回值（`BoardFile`）
 
-The board file, to write with `JSON.stringify`. See [`BoardFile`](/editor/whiteboard/api-reference/types#boardfile).
+白板文件，可使用 `JSON.stringify` 写入。参见 [`BoardFile`](/editor/whiteboard/api-reference/types#boardfile)。
 
 ## `importBoard`
 
-Opens a board file from `exportBoard`, in one step of the board's history. Each doc frame shows a new document, which [`BoardDocs.load`](/editor/whiteboard/api-reference/types#boarddocs) fills from the file, so other boards keep their documents. Also opens the files that Excalidraw and tldraw save, see [Open Excalidraw and tldraw files](/editor/whiteboard/guides/export-and-import#open-excalidraw-and-tldraw-files). Throws a [`BoardFileError`](/editor/whiteboard/api-reference/types#boardfileerror) when the JSON is none of these files, or when a newer version wrote it.
+打开由 `exportBoard` 导出的白板文件，并将此操作作为白板历史记录中的一个步骤。每个文档框都会显示一个新文档，文件中的内容由 [`BoardDocs.load`](/editor/whiteboard/api-reference/types#boarddocs) 填充，因此其他白板可以保留其文档。此函数也可以打开 Excalidraw 和 tldraw 保存的文件；参见[打开 Excalidraw 和 tldraw 文件](/editor/whiteboard/guides/export-and-import#open-excalidraw-and-tldraw-files)。如果 JSON 不属于上述文件类型，或由更新版本写入，则会抛出 [`BoardFileError`](/editor/whiteboard/api-reference/types#boardfileerror)。
 
 ```js
 import { importBoard } from '@tiptap-pro/extension-whiteboard'
@@ -843,19 +843,19 @@ import { importBoard } from '@tiptap-pro/extension-whiteboard'
 importBoard({ editor, file: JSON.parse(await file.text()) })
 ```
 
-### Parameters (`ImportBoardOptions`)
+### 参数（`ImportBoardOptions`）
 
-- `editor` (`Editor`): The board's editor.
-- `file` (`unknown`): The parsed JSON of a board file, like `exportBoard` returns it, or of a file that Excalidraw or tldraw saved.
-- `mode?` (`'replace' | 'insert'`): `replace` shows the board of the file instead of the current one. `insert` adds copies of its shapes in front of the current ones, like a paste, and selects them. Default: `'replace'`.
+- `editor`（`Editor`）：白板的编辑器。
+- `file`（`unknown`）：解析后的白板文件 JSON，例如 `exportBoard` 返回的内容，或 Excalidraw、tldraw 保存的文件。
+- `mode?`（`'replace' | 'insert'`）：`replace` 会用文件中的白板替换当前白板；`insert` 会像粘贴一样，将文件中的形状副本添加到当前形状前方并选中它们。默认值：`'replace'`。
 
-### Returns (`ImportBoardResult`)
+### 返回值（`ImportBoardResult`）
 
-The ids of the added shapes, and the shapes of the file that the editor can't show. See [`ImportBoardResult`](/editor/whiteboard/api-reference/types#importboardresult).
+已添加形状的 id，以及编辑器无法显示的文件形状。参见 [`ImportBoardResult`](/editor/whiteboard/api-reference/types#importboardresult)。
 
 ## `exportBoardSvg`
 
-Draws shapes of the board as an SVG image, as the page shows them: with the app's styles, and with the fonts and images that they use. Selections, handles and carets stay out. Text is HTML in a `foreignObject`, which browsers show, but some vector editors don't.
+将白板形状绘制为 SVG 图像，呈现效果与页面上的显示一致：使用应用的样式以及形状所用的字体和图像。选择框、控制柄和光标不会包含在图像中。文本会以 `foreignObject` 中的 HTML 形式保存，浏览器可以显示，但部分矢量编辑器无法显示。
 
 ```js
 import { exportBoardSvg } from '@tiptap-pro/extension-whiteboard'
@@ -863,20 +863,20 @@ import { exportBoardSvg } from '@tiptap-pro/extension-whiteboard'
 const image = await exportBoardSvg({ editor, background: '#fff' })
 ```
 
-### Parameters (`ExportBoardSvgOptions`)
+### 参数（`ExportBoardSvgOptions`）
 
-- `editor` (`Editor`): The board's editor. Its board must be in the page, or the function throws.
-- `ids?` (`readonly string[]`): The ids of the shapes to draw. A frame among them brings its shapes. Default: all shapes.
-- `padding?` (`number`): The space around the shapes, in board units. Default: `16`.
-- `background?` (`string`): A CSS color behind the shapes. Without it, the image is transparent there.
+- `editor`（`Editor`）：白板的编辑器。白板必须位于页面中，否则函数会抛出错误。
+- `ids?`（`readonly string[]`）：要绘制的形状的 id。指定的形状中如果包含框架，也会绘制其内部形状。默认值：所有形状。
+- `padding?`（`number`）：形状周围的留白，单位为白板单位。默认值：`16`。
+- `background?`（`string`）：形状后方的 CSS 颜色。不设置时，图像背景为透明。
 
-### Returns (`Promise<BoardSvg | null>`)
+### 返回值（`Promise<BoardSvg | null>`）
 
-The SVG and its size, or `null` when there are no shapes to draw. See [`BoardSvg`](/editor/whiteboard/api-reference/types#boardsvg).
+SVG 及其尺寸；如果没有可绘制的形状，则返回 `null`。参见 [`BoardSvg`](/editor/whiteboard/api-reference/types#boardsvg)。
 
 ## `exportBoardImage`
 
-Draws shapes of the board as a PNG or JPEG image, like [`exportBoardSvg`](#exportboardsvg) draws them. A JPEG gets a white background, unless `background` sets one. In Safari, the image has no box shadows.
+将白板形状绘制为 PNG 或 JPEG 图像，绘制方式与 [`exportBoardSvg`](#exportboardsvg) 相同。JPEG 图像的背景默认为白色，除非通过 `background` 指定其他背景。在 Safari 中，图像不包含盒阴影。
 
 ```js
 import { exportBoardImage } from '@tiptap-pro/extension-whiteboard'
@@ -884,56 +884,56 @@ import { exportBoardImage } from '@tiptap-pro/extension-whiteboard'
 const png = await exportBoardImage({ editor, background: '#fff' })
 ```
 
-### Parameters (`ExportBoardImageOptions`)
+### 参数（`ExportBoardImageOptions`）
 
-The options of [`exportBoardSvg`](#exportboardsvg), and:
+除 [`exportBoardSvg`](#exportboardsvg) 的选项外，还包括：
 
-- `format?` (`'png' | 'jpeg'`): The file type. Default: `'png'`.
-- `pixelRatio?` (`number`): The pixels per board unit. It is lower when a canvas can't be that large. Default: `2`.
-- `quality?` (`number`): The quality of a JPEG, from 0 to 1.
+- `format?`（`'png' | 'jpeg'`）：文件类型。默认值：`'png'`。
+- `pixelRatio?`（`number`）：每个白板单位对应的像素数。画布尺寸过大时，此值会降低。默认值：`2`。
+- `quality?`（`number`）：JPEG 图像的质量，范围为 0 到 1。
 
-### Returns (`Promise<Blob | null>`)
+### 返回值（`Promise<Blob | null>`）
 
-The image file, or `null` when there are no shapes to draw.
+图像文件；如果没有可绘制的形状，则返回 `null`。
 
 ## `geoKinds`
 
-The kinds of geometric shapes, the names for their `kind`.
+几何形状的类型，即其 `kind` 的名称。
 
-Value: `['rectangle', 'ellipse', 'diamond', 'triangle']`.
+值：`['rectangle', 'ellipse', 'diamond', 'triangle']`。
 
 ## `shapeColors`
 
-The default colors of shapes, like for the swatches of a color menu. Shapes store the name, and your CSS decides how it looks. Add colors of your own with the `colors` option of `WhiteboardKit`, see [Colors](/editor/whiteboard/api-reference/styling#colors).
+形状的默认颜色，例如颜色菜单中的色块颜色。形状只保存颜色名称，具体显示效果由 CSS 决定。使用 `WhiteboardKit` 的 `colors` 选项添加自定义颜色；参见[颜色](/editor/whiteboard/api-reference/styling#colors)。
 
-Value: `['black', 'gray', 'red', 'orange', 'yellow', 'green', 'blue', 'violet']`.
+值：`['black', 'gray', 'red', 'orange', 'yellow', 'green', 'blue', 'violet']`。
 
 ## `shapeStyles`
 
-The styles of shapes, with the names of their default values. See [Shapes and tools](/editor/whiteboard/guides/shapes-and-tools#styles-for-new-shapes).
+形状样式及其默认值名称。参见[形状和工具](/editor/whiteboard/guides/shapes-and-tools#styles-for-new-shapes)。
 
-Value: `{ color: shapeColors, fontSize: ['s', 'm', 'l', 'xl'], textAlign: ['start', 'center', 'end'], font: ['sans', 'serif', 'mono'], arrowheads: ['none', 'end', 'both'], arrowheadKind: ['triangle', 'arrow', 'dot', 'diamond', 'bar'], arrowKind: ['straight', 'curved', 'elbow'], dash: ['solid', 'dashed', 'dotted'] }`.
+值：`{ color: shapeColors, fontSize: ['s', 'm', 'l', 'xl'], textAlign: ['start', 'center', 'end'], font: ['sans', 'serif', 'mono'], arrowheads: ['none', 'end', 'both'], arrowheadKind: ['triangle', 'arrow', 'dot', 'diamond', 'bar'], arrowKind: ['straight', 'curved', 'elbow'], dash: ['solid', 'dashed', 'dotted'] }`。
 
 ## `stickyNoteSize`
 
-The size of a sticky note that is given none, in board units.
+未指定尺寸时便签使用的大小，单位为白板单位。
 
-Value: `{ width: 220, height: 160 }`.
+值：`{ width: 220, height: 160 }`。
 
 ## `toolKeys`
 
-The default key that chooses each tool while no text is edited, like for the tooltips of a toolbar. Change them with the `toolKeys` option of [`WhiteboardKit`](/editor/whiteboard/api-reference/extensions#whiteboardkit).
+未编辑文本时，用于选择各工具的默认按键，例如显示在工具栏提示中的按键。使用 [`WhiteboardKit`](/editor/whiteboard/api-reference/extensions#whiteboardkit) 的 `toolKeys` 选项修改这些按键。
 
-Value: `{ select: 'v', hand: 'h', note: 'n', text: 't', doc: 'w', rectangle: 'r', ellipse: 'o', diamond: 'd', pen: 'p', arrow: 'a', frame: 'f', eraser: 'e' }`.
+值：`{ select: 'v', hand: 'h', note: 'n', text: 't', doc: 'w', rectangle: 'r', ellipse: 'o', diamond: 'd', pen: 'p', arrow: 'a', frame: 'f', eraser: 'e' }`。
 
 ## `defaultFrameName`
 
-The name that a [frame](/editor/whiteboard/guides/frames) without one shows, like for a list of the frames on the board.
+未命名[框架](/editor/whiteboard/guides/frames)的显示名称，例如白板框架列表中的名称。
 
-Value: `'Frame'`.
+值：`'Frame'`。
 
 ## `boardStyles`
 
-The CSS that the board needs. The board adds it to the page itself, unless its editor has `injectCSS: false`. See [Styling](/editor/whiteboard/api-reference/styling#the-boards-css).
+白板所需的 CSS。除非编辑器设置了 `injectCSS: false`，否则白板会自行将这些样式添加到页面中。参见[样式设置](/editor/whiteboard/api-reference/styling#the-boards-css)。
 
-Type: `string`.
+类型：`string`。
