@@ -1,6 +1,6 @@
 ---
-title: 'Export'
-intro: 'You can export a chart or a diagram as an SVG, PNG, WebP or JPEG file, and put charts and diagrams into a Word document. You can also replace a chart with an image of it. Exporting reads the document and changes nothing. Only the <a href="/docs/diagrams/export#commands">commands</a> change the document.'
+title: '导出'
+intro: '你可以将图表或示意图导出为 SVG、PNG、WebP 或 JPEG 文件，也可以将图表和示意图放入 Word 文档。还可以将图表替换为其图像。导出只会读取文档，不会进行任何更改。只有这些<a href="/docs/diagrams/export#commands">命令</a>会更改文档。'
 headerDemo:
   path: '/Extensions/DiagramsExport'
   isPro: true
@@ -8,12 +8,12 @@ tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Export | Tiptap Diagrams Docs'
-  description: 'You can export a chart or a diagram as an SVG, PNG, WebP or JPEG file, and put charts and diagrams into a Word document.'
-  category: Diagrams
+  title: '导出 | Tiptap 图表示意图文档'
+  description: '你可以将图表或示意图导出为 SVG、PNG、WebP 或 JPEG 文件，也可以将图表和示意图放入 Word 文档。'
+  category: 图表
 ---
 
-## Files
+## 文件
 
 ```ts
 import { downloadBlob } from '@tiptap-pro/extension-diagrams/export'
@@ -25,67 +25,62 @@ const { blob, svg, width, height, alt } = await editor.storage.diagrams.export(
 downloadBlob(blob, 'chart.png')
 ```
 
-### What to export
+### 导出内容
 
-The first argument, `target`, is one of:
+第一个参数 `target` 可以是以下其中一种：
 
-| Target                      | Exports                              |
-| --------------------------- | ------------------------------------ |
-| `{ pos? }`                  | A chart or a diagram in the document |
-| `{ data, spec, renderer? }` | Chart data that is in no document    |
+| 目标                        | 导出内容                 |
+| --------------------------- | ------------------------ |
+| `{ pos? }`                  | 文档中的图表或示意图     |
+| `{ data, spec, renderer? }` | 不在任何文档中的图表数据 |
 
-A diagram is drawn by its Diagram Renderer. The `renderer` and `size` options do not apply to a
-diagram. A diagram's colors come from the `--tt-flow-diagram-*` custom properties.
+示意图由其示意图渲染器绘制。`renderer` 和 `size` 选项不适用于示意图。示意图的颜色来自 `--tt-flow-diagram-*` 自定义属性。
 
-### Options
+### 选项
 
-| Option       | Type                                 | Default                                                               | Description                                                 |
-| ------------ | ------------------------------------ | --------------------------------------------------------------------- | ----------------------------------------------------------- |
-| `format`     | `'svg' \| 'png' \| 'webp' \| 'jpeg'` | `'svg'`                                                               | The file format                                             |
-| `scale`      | `number`                             | `2`                                                                   | Pixels per SVG unit for an image                            |
-| `background` | `string \| null`                     | `null`                                                                | A fill behind the chart                                     |
-| `renderer`   | `string`                             | The chart's                                                           | Draw with another Renderer                                  |
-| `theme`      | `ChartTheme`                         | The page's                                                            | A `ChartTheme` instead of the custom properties on the page |
-| `size`       | `{ width: number; height: number }`  | `{ width: 800, height: 450 }`, or 800 wide at the chart's own `ratio` | The size to draw at                                         |
-| `scheme`     | `'light' \| 'dark'`                  | `'light'`                                                             | The color scheme to draw in, whatever the page shows        |
+| 选项         | 类型                                 | 默认值                                                                  | 说明                                 |
+| ------------ | ------------------------------------ | ----------------------------------------------------------------------- | ------------------------------------ |
+| `format`     | `'svg' \| 'png' \| 'webp' \| 'jpeg'` | `'svg'`                                                                 | 文件格式                             |
+| `scale`      | `number`                             | `2`                                                                     | 图像中每个 SVG 单位对应的像素数      |
+| `background` | `string \| null`                     | `null`                                                                  | 图表后方的填充色                     |
+| `renderer`   | `string`                             | 图表使用的渲染器                                                        | 使用其他渲染器进行绘制               |
+| `theme`      | `ChartTheme`                         | 页面主题                                                                | 使用 `ChartTheme`，而非页面自定义属性 |
+| `size`       | `{ width: number; height: number }`  | `{ width: 800, height: 450 }`；或宽度为 800、高度按图表自身的 `ratio` 确定 | 绘制尺寸                             |
+| `scheme`     | `'light' \| 'dark'`                  | `'light'`                                                               | 绘制所用的配色方案，不受页面显示效果影响 |
 
-### What comes back
+### 返回内容
 
-| Field             | Content                                           |
-| ----------------- | ------------------------------------------------- |
-| `blob`            | The file                                          |
-| `svg`             | The SVG                                           |
-| `width`, `height` | The size of the drawing                           |
-| `alt`             | The title and description, for an `alt` attribute |
-| `renderer`        | The Renderer it was drawn with                    |
-| `raster`          | `true` when the Renderer drew pixels              |
+| 字段              | 内容                     |
+| ----------------- | ------------------------ |
+| `blob`            | 文件                     |
+| `svg`             | SVG                      |
+| `width`, `height` | 绘图尺寸                 |
+| `alt`             | 用于 `alt` 属性的标题和说明 |
+| `renderer`        | 绘制时使用的渲染器       |
+| `raster`          | 渲染器绘制像素时为 `true` |
 
-- **The SVG has concrete colors**, not `var(…)`, so it looks the same outside your page.
-- **A Renderer that draws pixels**, such as one that draws on a canvas, can be exported too. Its
-  SVG holds an image instead of shapes, so it does not scale without loss. See
-  [Your own Renderer](/diagrams/renderers/custom#members).
-- **PNG, WebP and JPEG files** need a browser.
-- **The SVG of ECharts and D3 charts** can be made on a server.
+- **SVG 使用具体颜色值**，而非 `var(…)`，因此在页面之外显示时效果也相同。
+- **绘制像素的渲染器**（例如在 canvas 上绘制的渲染器）也可以导出。其 SVG 中包含的是图像而非形状，因此缩放时会失真。参见[自定义渲染器](/diagrams/renderers/custom#members)。（原文：Your own Renderer）
+- **PNG、WebP 和 JPEG 文件**需要浏览器。
+- **ECharts 和 D3 图表的 SVG**可以在服务器上生成。
 
-`@tiptap-pro/extension-diagrams/export` also has `svgToBlob`, `svgToImage`, `toDataUrl`,
-`readSvgSize`, `inlineSvgStyles` and `rasterToSvg`.
+`@tiptap-pro/extension-diagrams/export` 还提供 `svgToBlob`、`svgToImage`、`toDataUrl`、`readSvgSize`、`inlineSvgStyles` 和 `rasterToSvg`。
 
 ## Word
 
-There are three ways to get charts into a Word document:
+有三种方式可以将图表放入 Word 文档：
 
-| Way                                                                                                        | What the Word file holds                                                                                                                        |
-| ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `editor.storage.diagrams.exportDocx()`                                                                     | Only the charts and diagrams, without the rest of the document. Charts are native Word charts where Word can draw them, and diagrams are images |
-| [`toPortableContent`](/diagrams/export#a-whole-document) with `ExportDocx`                                 | The whole document. Each chart is an image, a table or both, and each diagram is an image or its source                                         |
-| [`toPortableContent` with `charts: 'native'`, then `addNativeCharts`](/diagrams/export#native-word-charts) | The whole document, with native Word charts                                                                                                     |
+| 方式                                                                                                         | Word 文件包含的内容                                                                 |
+| ------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| `editor.storage.diagrams.exportDocx()`                                                                       | 仅包含图表和示意图，不含文档其余内容。Word 能绘制的图表会作为原生 Word 图表，示意图则作为图像 |
+| [`toPortableContent`](/diagrams/export#a-whole-document) 与 `ExportDocx`                                     | 整个文档。每个图表可以是图像、表格或两者兼有；每个示意图可以是图像或其源内容             |
+| [将 `toPortableContent` 与 `charts: 'native'` 配合使用，再调用 `addNativeCharts`](/diagrams/export#native-word-charts) | 整个文档，包含原生 Word 图表                                                         |
 
-A native Word chart is a chart that Word draws itself. You can restyle it in Word, and "Edit
-data" opens its data in Excel.
+原生 Word 图表是由 Word 自行绘制的图表。你可以在 Word 中重新设置其样式；点击“编辑数据”会在 Excel 中打开图表数据。
 
-### Charts and diagrams only
+### 仅导出图表和示意图
 
-`exportDocx` writes a new Word file that holds only the charts and diagrams:
+`exportDocx` 会创建一个新的 Word 文件，其中仅包含图表和示意图：
 
 ```ts
 const { blob, notes } = await editor.storage.diagrams.exportDocx({
@@ -96,85 +91,74 @@ downloadBlob(blob, 'charts.docx')
 for (const note of notes) console.info(note.title ?? 'All charts', note.message)
 ```
 
-| Option         | Type                 | Description                                                                              |
-| -------------- | -------------------- | ---------------------------------------------------------------------------------------- |
-| `targets`      | `ChartTarget[]`      | The charts and diagrams to write, in order                                               |
-| `title`        | `string`             | A heading above the charts                                                               |
-| `fallbackFont` | `string`             | The font Word uses when it lacks the page's font. Default `'Arial'`                      |
-| `images`       | `'auto' \| 'always'` | When a chart becomes an image, see [Charts as images](/diagrams/export#charts-as-images) |
+| 选项           | 类型                 | 说明                                                         |
+| -------------- | -------------------- | ------------------------------------------------------------ |
+| `targets`      | `ChartTarget[]`      | 要写入的图表和示意图，按指定顺序排列                         |
+| `title`        | `string`             | 图表上方的标题                                               |
+| `fallbackFont` | `string`             | 页面字体不可用时 Word 使用的字体。默认值为 `'Arial'`         |
+| `images`       | `'auto' \| 'always'` | 图表何时转换为图像，参见[将图表作为图像](/diagrams/export#charts-as-images) |
 
-### What the file holds
+### 文件包含的内容
 
-- **Each target**, in order, becomes a native Word chart with its data in an embedded workbook,
-  a Word table, or an image, as described below.
-- **A diagram** becomes a PNG image, scaled to the page width, with its title as caption.
-- **Without `targets`**, the file holds every chart that has data and is not hidden behind its
-  table, and every diagram that has source, in document order.
-- **When there is nothing to write**, or nothing could be written, the promise rejects.
-- **A chart with `caption`** is followed by its description in Word's Caption style.
-- **Every chart and image** has its title and description as alt text.
-- **A `matrix`** becomes a Word table with shaded cells.
-- **Series colors and the font** come from the page. See [Styling](/diagrams/guides/styling).
+- **每个目标**按顺序转换为原生 Word 图表（数据保存在嵌入的工作簿中）、Word 表格或图像，具体如下所述。
+- **示意图**会转换为 PNG 图像，缩放至页面宽度，并以其标题作为题注。
+- **未指定 `targets` 时**，文件会按文档顺序包含所有有数据且未隐藏在其表格后方的图表，以及所有有源内容的示意图。
+- **没有内容可写入或无法写入任何内容时**，Promise 会被拒绝。
+- **带有 `caption` 的图表**后面会跟随其说明，样式为 Word 的“题注”样式。
+- **每个图表和图像**的替代文本都包含其标题和说明。
+- **`matrix`** 会转换为带底色的 Word 表格。
+- **系列颜色和字体**取自页面。参见[样式设置](/diagrams/guides/styling)。（原文：Styling）
 
-### Charts as images
+### 将图表作为图像
 
-`images` decides when a chart becomes a PNG image instead of a native Word chart:
+`images` 用于决定何时将图表转换为 PNG 图像，而非原生 Word 图表：
 
-| `images`   | What a chart becomes                                                                                                      |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `'always'` | A PNG image, drawn by its Renderer, at the chart's size                                                                   |
-| `'auto'`   | A Word chart or a Word table when Word has a form for the type. An image for every other type, and in the two cases below |
-| Left out   | The [`docxImages`](/diagrams/api-reference/options#docximages) option decides                                             |
+| `images`   | 图表的转换方式                                                                                         |
+| ---------- | ------------------------------------------------------------------------------------------------------ |
+| `'always'` | 由其渲染器按图表尺寸绘制为 PNG 图像                                                                   |
+| `'auto'`   | 如果 Word 支持该类型，则转换为 Word 图表或 Word 表格；其他类型以及下述两种情况则转换为图像            |
+| 未设置     | 由 [`docxImages`](/diagrams/api-reference/options#docximages) 选项决定                                  |
 
-With `'auto'`, a chart also becomes an image when a Word chart would show something different:
+使用 `'auto'` 时，如果 Word 图表的显示效果与编辑器不同，图表也会转换为图像：
 
-- a scatter chart with numbers on its x axis, because Word would space the x values evenly,
-- a chart with reference lines, because Word charts have none.
+- x 轴为数值的散点图，因为 Word 会让 x 值间距相等；
+- 带有参考线的图表，因为 Word 图表不支持参考线。
 
-When no image can be drawn, for example because no Renderer can draw the chart, a chart whose
-type has a Word form becomes a Word chart, with a note. A chart of any other type is left out,
-with a note.
+如果无法绘制图像（例如没有渲染器能够绘制该图表），而图表类型受 Word 支持，则会将图表转换为 Word 图表，并附带一条说明。其他类型的图表则会被省略，并附带一条说明。
 
-### Notes
+### 说明
 
-`notes` lists what Word shows differently from the editor, one sentence each. The extension works
-the notes out from the chart's data and Chart Spec, so you get them without opening the file. A
-note has `pos`, `title` and `message`. Notes cover:
+`notes` 会逐条列出 Word 中的显示效果与编辑器不同之处，每条说明各占一句。扩展会根据图表数据和 Chart Spec 生成这些说明，因此无需打开文件就能查看。每条说明包含 `pos`、`title` 和 `message`。说明涵盖以下情况：
 
-- a font Word lacks (`pos: null`),
-- a pie or doughnut chart with more than one series, which Word shows with the first series only,
-- the range of the x axis, which Word ignores,
-- a background, series or axis color that is not a hex value,
-- grid lines or labels at only some categories, which Word puts at every category,
-- a value grid line where the category axis line is left out,
-- the edges of an area chart with series styles, which Word draws in its own line style,
-- options only one Renderer understands,
-- that a linked chart holds a snapshot of its data in Word,
-- a `matrix`, which is a Word table,
-- a chart written as an image, and why when its type has a Word form,
-- a chart left out, or written as a Word chart, because no image could be drawn,
-- a diagram, which is an image in Word, or was left out because it could not be drawn.
+- Word 不支持的字体（`pos: null`）；
+- 包含多个系列的饼图或圆环图，Word 只显示第一个系列；
+- Word 忽略 x 轴范围；
+- 背景色、系列颜色或坐标轴颜色不是十六进制值；
+- 仅在部分类别显示的网格线或标签，在 Word 中会显示在每个类别上；
+- 类别轴线被省略时的值网格线；
+- 带有系列样式的面积图边缘，Word 会按其自身的线条样式绘制；
+- 仅有一个渲染器支持的选项；
+- 链接图表在 Word 中保存的是数据快照；
+- `matrix` 会作为 Word 表格处理；
+- 图表被写入为图像，以及当其类型受 Word 支持时转换为图像的原因；
+- 因无法绘制图像而被省略或写入为 Word 图表的图表；
+- 示意图在 Word 中作为图像处理，或因无法绘制而被省略。
 
-### Without exporting
+### 不执行导出
 
-These functions from `@tiptap-pro/extension-diagrams/core` tell you what Word gets, without
-writing a file:
+`@tiptap-pro/extension-diagrams/core` 中的这些函数可以在不写入文件的情况下，告知你 Word 会如何处理内容：
 
-| Function                                                   | Returns                                                   |
-| ---------------------------------------------------------- | --------------------------------------------------------- |
-| `wordForm(type, images?)`                                  | What a type becomes: `'chart'`, `'table'` or `'image'`    |
-| `wordChartForm(data, spec, images?)`                       | What one chart becomes: `'chart'`, `'table'` or `'image'` |
-| `wordLimitations(data, spec, { theme, source?, images? })` | The same list as `notes`, for one chart                   |
+| 函数                                                       | 返回值                                                   |
+| ---------------------------------------------------------- | -------------------------------------------------------- |
+| `wordForm(type, images?)`                                  | 某种类型会转换成什么：`'chart'`、`'table'` 或 `'image'`    |
+| `wordChartForm(data, spec, images?)`                       | 单个图表会转换成什么：`'chart'`、`'table'` 或 `'image'`   |
+| `wordLimitations(data, spec, { theme, source?, images? })` | 单个图表对应的说明列表，与 `notes` 相同                   |
 
-## A whole document
+## 整个文档
 
-A converter that does not know the `chart` and `flowDiagram` nodes leaves them out.
-`toPortableContent` from `@tiptap-pro/extension-diagrams/core` returns a copy of the document in
-which charts and diagrams are made of nodes every converter knows, such as tables, images and
-paragraphs. Export that copy instead.
+不识别 `chart` 和 `flowDiagram` 节点的转换器会将它们省略。`@tiptap-pro/extension-diagrams/core` 中的 `toPortableContent` 会返回文档副本，其中的图表和示意图均由各种转换器都能识别的节点构成，例如表格、图像和段落。应导出这个副本。
 
-This example exports the copy with `@tiptap-pro/extension-export-docx`, which sends it to
-Tiptap's Convert service:
+以下示例使用 `@tiptap-pro/extension-export-docx` 导出副本，并通过 Tiptap 的 Convert 服务进行处理：
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -195,44 +179,37 @@ const file = await new Promise((resolve, reject) => {
 })
 ```
 
-`toPortableContent` needs no browser, so it runs on a server too. `CONVERT_TOKEN` is your Convert
-API token. See the export-docx docs for its options.
+`toPortableContent` 无需浏览器，因此也可以在服务器上运行。`CONVERT_TOKEN` 是你的 Convert API 令牌。有关其选项，请参阅 export-docx 文档。
 
-### What the copy holds
+### 副本包含的内容
 
-| In the document                            | In the copy                                                                                                                                                  |
-| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| A chart                                    | Its image, when there is one, and its data as a table. Its title above a table without an image. Its description below, when the chart shows it as a caption |
-| A chart hidden behind the table it follows | Nothing, because the table is already there                                                                                                                  |
-| A diagram                                  | Its image, when `imageFor` gives one. Otherwise its title and its source as code-formatted lines                                                             |
-| An open Quick Input                        | Its text as code-formatted lines                                                                                                                             |
+| 文档中的内容                   | 副本中的内容                                                                                                                                    |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| 图表                           | 若有图像，则包含图像；同时将图表数据作为表格。没有图像时，标题位于表格上方。图表将说明显示为题注时，说明位于下方 |
+| 隐藏在其后表格下方的图表       | 无，因为表格已经存在                                                                                                                            |
+| 示意图                         | 如果 `imageFor` 返回图像，则包含该图像；否则包含标题及以代码格式呈现的源内容行                                                                   |
+| 已打开的 Quick Input           | 以代码格式呈现的文本行                                                                                                                          |
 
-A chart has an image only when your app uploads one with `uploadImage`, which sets `previewUrl`.
-Without it, the copy holds the chart's data as a table.
+只有当应用通过 `uploadImage` 上传图表图像时，图表才会有图像；`uploadImage` 会设置 `previewUrl`。否则，副本会将图表数据作为表格保存。
 
-A `matrix` cell's color is its `background` attribute, and its text color is a `textStyle` mark.
-A converter that reads them keeps the colors.
+`matrix` 单元格的颜色由其 `background` 属性决定，文本颜色则由 `textStyle` 标记决定。能读取这些属性的转换器会保留颜色。
 
-### Options
+### 选项
 
-| Option             | Value                                                                                                                                                     | Default                                      |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
-| `charts`           | `'both'`, `'image'` (the image, or the table when there is none), `'table'` or `'native'` (see [Native Word charts](/diagrams/export#native-word-charts)) | `'both'`                                     |
-| `imageFor`         | `(figure) => url \| null`, the image of a chart or a diagram. `figure` is `{ kind, attrs }`                                                               | A chart's `previewUrl`                       |
-| `sources`          | `'paragraphs'`, one code-formatted paragraph per line, or `'codeBlock'`                                                                                   | `'paragraphs'`                               |
-| `names`            | Your node names for `table`, `tableRow`, `tableHeader`, `tableCell`, `paragraph`, `image`, `codeBlock`                                                    | StarterKit's and `@tiptap/extension-table`'s |
-| `decimalSeparator` | `'.'` or `','` for numbers in a table                                                                                                                     | `'.'`                                        |
-| `theme`            | The `ChartTheme` for the colors of a `matrix` chart's cells                                                                                               | `defaultChartTheme`                          |
+| 选项               | 值                                                                                                                                                         | 默认值                                       |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| `charts`           | `'both'`、`'image'`（图像；没有图像时为表格）、`'table'` 或 `'native'`（参见[原生 Word 图表](/diagrams/export#native-word-charts)） | `'both'`                                     |
+| `imageFor`         | `(figure) => url \| null`，返回图表或示意图的图像。`figure` 的结构为 `{ kind, attrs }`                                                                      | 图表的 `previewUrl`                          |
+| `sources`          | `'paragraphs'`（每行一个以代码格式呈现的段落）或 `'codeBlock'`                                                                                             | `'paragraphs'`                               |
+| `names`            | 你为 `table`、`tableRow`、`tableHeader`、`tableCell`、`paragraph`、`image`、`codeBlock` 指定的节点名称                                                     | StarterKit 和 `@tiptap/extension-table` 中的名称 |
+| `decimalSeparator` | 表格数字使用 `'.'` 或 `','` 作为小数分隔符                                                                                                                 | `'.'`                                        |
+| `theme`            | 用于设置 `matrix` 图表单元格颜色的 `ChartTheme`                                                                                                            | `defaultChartTheme`                          |
 
-`'paragraphs'` keeps a diagram's source in a converter that leaves out code blocks. Choose
-`'codeBlock'` for a converter that writes them, such as one to Markdown or HTML.
+`'paragraphs'` 可在会省略代码块的转换器中保留示意图源内容。对于会写入代码块的转换器（例如 Markdown 或 HTML 转换器），请使用 `'codeBlock'`。
 
-### Native Word charts
+### 原生 Word 图表
 
-With `charts: 'native'`, a chart of a type Word draws itself becomes a marker line instead of an
-image and a table. These types are bar, line, area, scatter, pie, doughnut, radar and combo. Any
-converter can then write the Word file. After that, `addNativeCharts` replaces each marker with a
-native Word chart.
+使用 `charts: 'native'` 时，对于 Word 能自行绘制的图表类型，会以标记行代替图像和表格。这些类型包括条形图、折线图、面积图、散点图、饼图、圆环图、雷达图和组合图。随后，任何转换器都可以写入 Word 文件。之后，`addNativeCharts` 会将每个标记替换为原生 Word 图表。
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -260,38 +237,33 @@ const exported = await new Promise((resolve, reject) => {
 const docx = addNativeCharts({ docx: exported, doc })
 ```
 
-- **Other types** are written as with `'both'`.
-- **Pass `addNativeCharts` the same document** that you passed to `toPortableContent`. It finds
-  the charts in the same order.
-- **`addNativeCharts` also takes `theme` and `fallbackFont`.** `theme` sets the colors and the
-  font of the charts and defaults to `defaultChartTheme`. `fallbackFont` is the font Word uses
-  when it lacks the theme's font, `'Arial'` by default, as for `exportDocx`.
-- **A marker that a converter split or changed** is left as text.
+- **其他类型**的处理方式与 `'both'` 相同。
+- **传给 `addNativeCharts` 的文档**必须与传给 `toPortableContent` 的文档相同。它会按相同顺序查找图表。
+- **`addNativeCharts` 还接受 `theme` 和 `fallbackFont`。**`theme` 用于设置图表的颜色和字体，默认值为 `defaultChartTheme`。`fallbackFont` 是 Word 无法使用主题字体时采用的字体，默认值为 `'Arial'`，与 `exportDocx` 相同。
+- **转换器拆分或更改的标记**会保留为文本。
 
-## Commands
+## 命令
 
 ### convertChartToImage
 
-Replaces a chart with an image of it. The image is a node of the type named by the
-`imageNodeName` option.
+将图表替换为其图像。该图像是一个节点，其类型由 `imageNodeName` 选项指定。
 
 ```ts
 editor.commands.convertChartToImage({ format: 'svg', keepData: true })
 ```
 
-| Option     | Type                                 | Description                                                                                                                     |
-| ---------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
-| `format`   | `'svg' \| 'png' \| 'webp' \| 'jpeg'` | The image format. Default `'png'`                                                                                               |
-| `keepData` | `boolean`                            | The image keeps the chart, so [`convertImageToChart`](/diagrams/export#convertimagetochart) brings it back. Kept unless `false` |
-| `pos`      | `number`                             | The chart's position. Defaults to the selected chart                                                                            |
+| 选项       | 类型                                 | 说明                                                                                                                               |
+| ---------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `format`   | `'svg' \| 'png' \| 'webp' \| 'jpeg'` | 图像格式。默认值为 `'png'`                                                                                                         |
+| `keepData` | `boolean`                            | 图像会保留图表数据，因此可通过 [`convertImageToChart`](/diagrams/export#convertimagetochart) 还原图表。除非设为 `false`，否则会保留数据 |
+| `pos`      | `number`                             | 图表位置。默认使用当前选中的图表                                                                                                   |
 
-- **The image is uploaded** with `uploadImage`, or embedded as a data URL without it.
-- **The chart is replaced** once the image is ready, unless the chart changed in the meantime.
-- **The image is exported at twice its size**, so it stays sharp on high-density screens.
-- **When the image node has a `width` attribute**, as `@tiptap/extension-image` does, the
-  command sets it to the chart's width, and the image shows at that size.
+- **图像会通过 `uploadImage` 上传**；如果未提供该函数，则会以内嵌数据 URL 的形式保存。
+- **图表会在图像准备就绪后被替换**，除非期间图表已发生变化。
+- **图像会按两倍尺寸导出**，从而在高像素密度屏幕上保持清晰。
+- **当图像节点具有 `width` 属性时**（如 `@tiptap/extension-image`），该命令会将其设置为图表宽度，图像也会按此尺寸显示。
 
-Give images `max-width: 100%` so they shrink on a narrow screen:
+为图像设置 `max-width: 100%`，使其在窄屏上缩小：
 
 ```css
 .tiptap img {
@@ -302,32 +274,30 @@ Give images `max-width: 100%` so they shrink on a narrow screen:
 
 ### convertImageToChart
 
-Turns an image made with `keepData` back into the chart.
+将通过 `keepData` 创建的图像还原为图表。
 
 ```ts
 editor.commands.convertImageToChart()
 ```
 
-| Option | Type     | Description                                          |
-| ------ | -------- | ---------------------------------------------------- |
-| `pos`  | `number` | The image's position. Defaults to the selected image |
+| 选项  | 类型     | 说明                         |
+| ----- | -------- | ---------------------------- |
+| `pos` | `number` | 图像位置。默认使用当前选中的图像 |
 
 ### redrawChartImage
 
-Draws an image made with `keepData` again from the chart it keeps, with the current styles,
-Renderers and color scheme.
+根据图像保留的图表，使用当前样式、渲染器和配色方案重新绘制通过 `keepData` 创建的图像。
 
 ```ts
 editor.commands.redrawChartImage({ pos })
 ```
 
-| Option   | Type                                 | Description                                          |
-| -------- | ------------------------------------ | ---------------------------------------------------- |
-| `format` | `'svg' \| 'png' \| 'webp' \| 'jpeg'` | The image format. Default `'png'`                    |
-| `pos`    | `number`                             | The image's position. Defaults to the selected image |
+| 选项     | 类型                                 | 说明                         |
+| -------- | ------------------------------------ | ---------------------------- |
+| `format` | `'svg' \| 'png' \| 'webp' \| 'jpeg'` | 图像格式。默认值为 `'png'`   |
+| `pos`    | `number`                             | 图像位置。默认使用当前选中的图像 |
 
-- **The image keeps** its other attributes and the chart it keeps.
-- **Only its file, text and width change**, once the new file is ready, unless the image changed
-  in the meantime.
+- **图像会保留**其其他属性以及其中保存的图表。
+- **新文件准备就绪后，只会更改图像文件、文本和宽度**，除非期间图像已发生变化。
 
-Returns `false` for an image that keeps no chart, and when no Renderer draws its type.
+如果图像未保留任何图表，或没有渲染器能绘制该类型，则返回 `false`。
