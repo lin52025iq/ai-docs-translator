@@ -1,0 +1,288 @@
+---
+title: 表情符号菜单
+meta:
+  title: 表情符号菜单 | Tiptap UI 组件
+  description: 为 Tiptap 编辑器提供支持搜索功能的交互式表情符号选择菜单。更多内容请参阅文档。
+  category: UI 组件
+component:
+  name: 表情符号菜单
+  description: 添加支持搜索和键盘导航的交互式表情符号选择菜单。
+  type: component
+  isFree: false
+  isCloud: false
+  isOpen: false
+  isNew: false
+  icon: Smile
+tags:
+  - type: start
+---
+
+import { CodeDemo } from '@/components/CodeDemo'
+
+为 Tiptap 编辑器提供完全无障碍的表情符号选择菜单。支持浏览和搜索表情符号、使用键盘导航、显示备用图片，以及自定义筛选选项。
+
+<CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui/emoji-menu" />
+
+## 安装
+
+通过 Tiptap CLI 添加此组件：
+
+```bash
+npx @tiptap/cli@latest add emoji-menu
+```
+
+## 组件
+
+### `<EmojiMenu />`
+
+功能全面的表情符号选择菜单，支持搜索和导航。
+
+#### 用法
+
+```tsx
+import { EmojiMenu } from '@/components/tiptap-ui/emoji-menu'
+import { gitHubEmojis } from '@tiptap/extension-emoji'
+import type { EmojiItem } from '@tiptap/extension-emoji'
+
+export default function MyEmojiPicker() {
+  const [selectedEmoji, setSelectedEmoji] = useState<EmojiItem | null>(null)
+
+  const handleEmojiSelect = (emoji: EmojiItem) => {
+    setSelectedEmoji(emoji)
+    console.log('Selected emoji:', emoji.name, emoji.emoji)
+  }
+
+  const handleClose = () => {
+    console.log('Emoji menu closed')
+  }
+
+  return (
+    <EmojiMenu
+      emojis={gitHubEmojis}
+      onSelect={handleEmojiSelect}
+      onClose={handleClose}
+      showSearch={true}
+      selector=".my-emoji-menu"
+    />
+  )
+}
+```
+
+#### 属性
+
+| 名称         | 类型                    | 默认值               | 说明                                  |
+| ------------ | ----------------------- | -------------------- | ------------------------------------- |
+| `emojis`     | `T[] extends EmojiItem` | `undefined`          | 要显示的表情符号项目数组              |
+| `onSelect`   | `(emoji: T) => void`    | `undefined`          | 选择表情符号时调用的回调              |
+| `onClose`    | `() => void`            | `undefined`          | 菜单关闭时调用的回调                  |
+| `showSearch` | `boolean`               | `false`              | 是否显示搜索输入框                    |
+| `selector`   | `string`                | `".emoji-menu-list"` | 可滚动菜单容器的 CSS 选择器           |
+
+### `<EmojiMenuItem />`
+
+在表情符号菜单中使用的单个表情符号项目组件。
+
+#### 用法
+
+```tsx
+import { EmojiMenuItem } from '@/components/tiptap-ui/emoji-menu'
+import type { EmojiItem } from '@tiptap/extension-emoji'
+
+function CustomEmojiList({ emojis, onSelect, selectedIndex }) {
+  return (
+    <div>
+      {emojis.map((emoji, index) => (
+        <EmojiMenuItem
+          key={emoji.name}
+          emoji={emoji}
+          index={index}
+          isSelected={index === selectedIndex}
+          onSelect={onSelect}
+          selector=".custom-emoji-list"
+        />
+      ))}
+    </div>
+  )
+}
+```
+
+#### 属性
+
+| 名称         | 类型                  | 默认值      | 说明                               |
+| ------------ | --------------------- | ----------- | ---------------------------------- |
+| `emoji`      | `T extends EmojiItem` | `undefined` | 要渲染的表情符号项目               |
+| `index`      | `number`              | `undefined` | 表情符号在列表中的索引             |
+| `isSelected` | `boolean`             | `undefined` | 此表情符号项目当前是否处于选中状态 |
+| `onSelect`   | `(emoji: T) => void`  | `undefined` | 选择此表情符号时调用的回调         |
+| `selector`   | `string`              | `undefined` | 滚动容器的 CSS 选择器              |
+
+## 工具函数
+
+### `getFilteredEmojis(props)`
+
+根据搜索查询筛选并排序表情符号数据。
+
+```tsx
+import { getFilteredEmojis } from '@/components/tiptap-ui/emoji-menu'
+import { gitHubEmojis } from '@tiptap/extension-emoji'
+
+const filteredEmojis = getFilteredEmojis({
+  query: 'smile',
+  emojis: gitHubEmojis,
+})
+
+console.log('Filtered emojis:', filteredEmojis.length)
+```
+
+#### 参数
+
+| 名称           | 类型                    | 说明                   |
+| -------------- | ----------------------- | ---------------------- |
+| `props.query`  | `string`                | 用于筛选表情符号的搜索查询 |
+| `props.emojis` | `T[] extends EmojiItem` | 要筛选的表情符号项目数组 |
+
+#### 返回值
+
+`T[]` - 筛选并排序后的表情符号项目数组（最多 100 个结果）。
+
+### `searchEmojiData(query, emojiData)`
+
+检查表情符号是否与搜索查询匹配。
+
+```tsx
+import { searchEmojiData } from '@/components/tiptap-ui/emoji-menu'
+
+const emoji = {
+  name: 'grinning',
+  shortcodes: ['grinning', 'grinning_face'],
+  tags: ['face', 'smile'],
+  emoji: '😀',
+}
+
+const matches = searchEmojiData('smile', emoji) // true
+```
+
+#### 参数
+
+| 名称        | 类型                  | 说明                       |
+| ----------- | --------------------- | -------------------------- |
+| `query`     | `string`              | 搜索查询字符串             |
+| `emojiData` | `T extends EmojiItem` | 要与查询进行匹配测试的表情符号项目 |
+
+#### 返回值
+
+`boolean` - 表情符号是否与搜索查询匹配。
+
+## 搜索功能
+
+表情符号菜单支持针对多个表情符号属性进行智能搜索：
+
+### 搜索字段
+
+- **名称**：表情符号的主要名称（例如 "grinning"）
+- **短代码**：其他名称（例如 "grinning_face"）
+- **标签**：描述性标签（例如 "face"、"smile"）
+
+### 搜索特性
+
+- **不区分大小写**：无论字母大小写如何，都可以搜索
+- **部分匹配**：查找包含搜索词的表情符号
+- **多字段搜索**：搜索名称、短代码和标签
+- **结果数量限制**：为保证性能，最多返回 100 个结果
+- **按字母顺序排序**：结果按表情符号名称排序
+
+### 搜索查询示例
+
+```tsx
+// Search by name
+getFilteredEmojis({ query: 'heart', emojis }) // ❤️, 💖, 💕, etc.
+
+// Search by tag
+getFilteredEmojis({ query: 'face', emojis }) // 😀, 😃, 😄, etc.
+
+// Search by shortcode
+getFilteredEmojis({ query: 'grinning', emojis }) // 😀, 😃, etc.
+
+// Empty query returns first 100 emojis
+getFilteredEmojis({ query: '', emojis }) // First 100 emojis
+```
+
+## 键盘导航
+
+表情符号菜单支持完整的键盘导航：
+
+- **方向键**：在表情符号列表中上下移动
+- **Enter**：选择当前高亮的表情符号
+- **Escape**：关闭菜单
+- **输入文字进行搜索**：自动聚焦搜索输入框并筛选结果
+
+导航由 `useMenuNavigation` 钩子提供，并包含以下功能：
+
+- **智能滚动**：自动将选中项目滚动到可视区域
+- **溢出处理**：防止滚动超出菜单边界
+- **焦点管理**：导航过程中保持焦点状态
+
+### 自定义表情符号数据
+
+```tsx
+const customEmojis = [
+  {
+    emoji: '🎉',
+    name: 'party',
+    shortcodes: ['party', 'celebration'],
+    tags: ['celebrate', 'fun'],
+    group: 'activities',
+    emoticons: [],
+    version: 1,
+    fallbackImage: 'https://example.com/party-emoji.png',
+  },
+  // ... more custom emojis
+]
+
+function CustomEmojiPicker() {
+  return (
+    <EmojiMenu
+      emojis={customEmojis}
+      onSelect={(emoji) => console.log('Custom emoji:', emoji)}
+      showSearch={true}
+    />
+  )
+}
+```
+
+## 表情符号项目接口
+
+`@tiptap/extension-emoji` 中的 `EmojiItem` 接口：
+
+```tsx
+interface EmojiItem {
+  emoji: string // The actual emoji character: "😀"
+  name: string // Primary name: "grinning"
+  shortcodes: string[] // Alternative names: ["grinning", "grinning_face"]
+  tags: string[] // Descriptive tags: ["face", "smile"]
+  group: string // Category group: "smileys-emotion"
+  emoticons: string[] // Text representations: [":D"]
+  version: number // Unicode version: 1.0
+  fallbackImage?: string // Optional fallback image URL
+}
+```
+
+## 要求
+
+### 依赖项
+
+- `@tiptap/react` - Tiptap React 核心集成
+- `@tiptap/extension-emoji` - 表情符号扩展和类型
+
+### 可选依赖项
+
+- `sass` - 提供 SCSS 样式支持
+- `sass-embedded` - 增强 Sass 处理能力
+
+### 引用的组件
+
+- `use-menu-navigation`（钩子）
+- `button`、`button-group`（基础组件）
+- `input`（基础组件）
+- `card`、`card-body`、`card-header`（基础组件）
+- `tiptap-collab-utils`（库）
