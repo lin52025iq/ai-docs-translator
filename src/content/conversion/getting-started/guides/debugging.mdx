@@ -1,22 +1,20 @@
 ---
-title: Debugging & inspecting conversion output
+title: 调试和检查转换输出
 tags:
   - type: beta
 meta:
-  title: Debugging Conversion Output | Tiptap Conversion
-  description: How to read conversion warnings, inspect intermediate JSON, and diagnose why imported content isn't rendering in your editor.
-  category: Conversion
+  title: 调试转换输出 | Tiptap 转换
+  description: 了解如何阅读转换警告、检查中间 JSON，以及诊断导入的内容为何未在编辑器中呈现。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-This guide covers the tools and patterns we use ourselves when something is off: failed imports, content that didn't render the way you expected, HTTP errors from the Conversion service, or a paginated editor that suddenly stops responding. It's organised by what you'd actually search for when stuck.
+本指南介绍当遇到问题时我们自己会使用的工具和方法：导入失败、内容未按预期呈现、Conversion 服务返回 HTTP 错误，或者分页编辑器突然停止响应。指南按你遇到问题时可能会搜索的内容进行组织。
 
-## Conversion warnings and errors
+## 转换警告和错误
 
-Every import returns a `logs` object next to the content, holding `warn` and `error` arrays. A
-warning means content did not make it into the document, which is the first thing to check when a
-document arrives with something missing.
+每次导入都会在内容旁返回一个 `logs` 对象，其中包含 `warn` 和 `error` 数组。警告表示有内容未能写入文档；当文档中缺少内容时，这是首先要检查的地方。
 
 ```json
 {
@@ -43,8 +41,7 @@ document arrives with something missing.
 }
 ```
 
-The logs reach the `onImport` callback on `context`, so you can log them or show them to whoever
-uploaded the file:
+这些日志会通过 `context` 传递到 `onImport` 回调中，因此你可以记录日志，或将其展示给上传文件的用户：
 
 ```ts
 editor
@@ -62,9 +59,9 @@ editor
   .run()
 ```
 
-## Inspecting the converted content before insertion
+## 插入前检查转换后的内容
 
-The fastest way to understand what the converter actually produced is to log `context.content` from the `onImport` callback:
+要了解转换器实际生成了什么，最快的方法是在 `onImport` 回调中记录 `context.content`：
 
 ```ts
 editor
@@ -79,54 +76,52 @@ editor
   .run()
 ```
 
-Every node in `context.content` includes its type and attributes. If a feature renders unexpectedly, look at the corresponding node here first. It tells you whether the converter dropped the feature, mapped it to a different node, or passed through an attribute your editor schema doesn't render.
+`context.content` 中的每个节点都包含其类型和属性。如果某项功能的呈现结果不符合预期，首先查看这里对应的节点。它可以告诉你转换器是丢弃了该功能、将其映射为其他节点，还是传递了编辑器架构无法呈现的属性。
 
-## Confirming your editor's extensions
+## 确认编辑器扩展
 
-When imported content doesn't render, the most common cause is an extension missing from your editor's schema. Read the registered extensions at runtime:
+导入的内容无法呈现时，最常见的原因是编辑器架构中缺少某个扩展。可以在运行时查看已注册的扩展：
 
 ```ts
 console.log(editor.extensionManager.extensions.map((e) => e.name))
 ```
 
-If you're using `ConvertKit`, you should see paragraph, heading, image, table extensions, and the standard marks. If something is missing, check that you actually registered ConvertKit and didn't accidentally pass `false` for the slot you needed in `ConvertKit.configure({…})`.
+如果使用 `ConvertKit`，你应该能看到段落、标题、图像、表格扩展以及标准标记。如果缺少某项，请检查是否确实注册了 ConvertKit，以及是否误将 `ConvertKit.configure({…})` 中所需的位置设为 `false`。
 
-## Common HTTP responses
+## 常见 HTTP 响应
 
-Conversion requests that go to the service return one of a small set of responses. Each has a clear cause and a clear action.
+发送到服务的转换请求会返回少数几种响应。每种响应都有明确的原因和相应的处理方式。
 
-| Status | What it means                                                                                                                        | What to do                                                                                                                                           |
+| 状态 | 含义 | 处理方式 |
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `401`  | Missing or invalid JWT.                                                                                                              | Regenerate the token server-side.                                                                                                                    |
-| `403`  | The operation isn't permitted for your app. Most often: a format your plan doesn't include, or `customFonts` against the cloud plan. | Check the [pricing page](https://tiptap.dev/pricing) for plan format coverage. Custom fonts in PDF require an Enterprise plan or on-prem deployment. |
-| `5xx`  | Transient server-side error.                                                                                                         | Retry with exponential backoff. Open a support ticket if it persists.                                                                                |
+| `401`  | 缺少 JWT 或 JWT 无效。 | 在服务器端重新生成令牌。 |
+| `403`  | 你的应用无权执行此操作。最常见的情况是：所用格式不在当前套餐范围内，或在云端套餐中使用了 `customFonts`。 | 查看[定价页面](https://tiptap.dev/pricing)，了解各套餐支持的格式。PDF 中使用自定义字体需要企业版套餐或本地部署。 |
+| `5xx`  | 暂时性的服务器端错误。 | 使用指数退避策略重试。如果问题持续存在，请提交支持工单。 |
 
-Frame your error handling around these three; you don't need granular case-by-case logic.
+围绕这三种情况设计错误处理即可；无需针对每种情况编写细致的分支逻辑。
 
-## The Pages infinite-loop scenario
+## Pages 无限循环情形
 
-This is the **first thing to check** when a Pages editor stops responding. The editor goes unresponsive, scrolling stops working, CPU spikes, and a console warning from Pages appears repeatedly.
+当 Pages 编辑器停止响应时，**首先要检查这一点**。编辑器会变得无响应，滚动停止，CPU 占用飙升，并且控制台会反复出现 Pages 警告。
 
-**Cause.** A non-splittable block (table row, figure, positioned container, most BFC elements) is taller than the page. Pages cannot place it anywhere (it can't fit on the current page, and it won't fit on the next one either), so the layout keeps moving it forward and never stabilises.
+**原因。** 不可拆分的块（表格行、图形、定位容器以及大多数 BFC 元素）比页面还高。Pages 无法将它放置在任何页面上（当前页放不下，下一页也一样），因此布局会不断将其向后移动，始终无法稳定下来。
 
-**Fix on the content side, not in extension config:**
+**请从内容入手修复，而不是修改扩展配置：**
 
-1. Cap heights with `max-height: var(--page-max-height)` on the offending block.
-2. Split the tall content into smaller adjacent blocks (long table → several smaller tables; tall figure → smaller figures).
-3. For DOCX-imported tables, switch `heightRule: "atLeast"` to `"exact"` where the row's content is bounded.
-4. Pick a larger page format if your content was authored on bigger paper than your target.
+1. 在问题块上使用 `max-height: var(--page-max-height)` 限制高度。
+2. 将过高的内容拆分成相邻的小块（长表格 → 多个较小的表格；高图形 → 多个较小的图形）。
+3. 对于从 DOCX 导入的表格，如果行内容高度有上限，请将 `heightRule: "atLeast"` 改为 `"exact"`。
+4. 如果内容原本是按大于目标页面的纸张尺寸制作的，请选择更大的页面格式。
 
-See the [Limitations page](/pages/core-concepts/limitations#oversized-non-splittable-blocks-cause-an-infinite-layout-loop) for the deep-dive, and [PagesTableKit Known issues](/pages/guides/pages-tablekit#known-issues) for the table-specific treatment.
+有关详细说明，请参阅[限制]( /pages/core-concepts/limitations#oversized-non-splittable-blocks-cause-an-infinite-layout-loop)；有关表格的具体处理方式，请参阅 [PagesTableKit 已知问题](/pages/guides/pages-tablekit#known-issues)。
 
-<Callout title="Treat the warning as a signal" variant="warning">
-  Production code that imports user-supplied DOCX should handle the Pages warning explicitly: reject
-  the document and tell the user, or programmatically split tall rows before insertion. Don't rely
-  on the warning alone to keep the editor usable.
+<Callout title="将警告视为信号" variant="warning">
+  导入用户提供的 DOCX 的生产代码应明确处理 Pages 警告：拒绝该文档并告知用户，或在插入前以编程方式拆分过高的行。不要仅依赖警告来保证编辑器仍可使用。
 </Callout>
 
-## Confirming Pages auto-applied imported headers and footers
+## 确认 Pages 是否自动应用了导入的页眉和页脚
 
-When you import a DOCX into an editor that has the Pages extension registered, the header and footer content from the Word document is applied automatically. To confirm this happened, read the published storage:
+将 DOCX 导入已注册 Pages 扩展的编辑器时，Word 文档中的页眉和页脚内容会自动应用。要确认这一点，请读取已发布的存储：
 
 ```ts
 const { pages } = editor.storage
@@ -138,24 +133,24 @@ console.log({
 })
 ```
 
-The corresponding `footer*HTML` properties exist for footers. Each is `null` until either the importer fills it or the user opens the inline editor and edits content.
+页脚也有对应的 `footer*HTML` 属性。在导入器填充内容或用户打开内联编辑器并编辑内容之前，每个属性的值都是 `null`。
 
-If the values are `null` after a DOCX import that you know contained headers and footers, two likely causes:
+如果你确认 DOCX 中包含页眉和页脚，但导入后这些值仍为 `null`，可能有以下两个原因：
 
-- **Pages extension isn't registered.** ImportDocx auto-applies only if Pages is present.
-- **The DOCX didn't actually carry headers and footers.** Word can store templates and not commit them. Check the logs (above) to see what the converter extracted.
+- **未注册 Pages 扩展。** 只有在存在 Pages 扩展时，ImportDocx 才会自动应用这些内容。
+- **DOCX 实际上并未包含页眉和页脚。** Word 可能存储了模板，但并未将其写入文档。请检查上面的日志，确认转换器提取到了哪些内容。
 
-## Schema mismatch warnings
+## 架构不匹配警告
 
-When the imported content uses a node type your editor doesn't render, ProseMirror warns about an unknown node and falls back to dropping or rewriting it. Two paths forward:
+当导入内容使用了编辑器无法呈现的节点类型时，ProseMirror 会对未知节点发出警告，并回退为丢弃或改写该节点。可以通过以下两种方式解决：
 
-1. **Add the missing extension.** ConvertKit covers most cases; if you've disabled a slot or are running a custom kit, add the extension back.
-2. **Map the unsupported node to one you do support.** ImportDocx accepts `prosemirrorNodes` and `prosemirrorMarks` options for rewriting node types during import. See [Custom node mapping](/conversion/import/docx/custom-node-mapping) and [Custom mark mapping](/conversion/import/docx/custom-mark-mapping).
+1. **添加缺少的扩展。** ConvertKit 涵盖了大多数情况；如果你禁用了某个扩展，或使用自定义 kit，请重新添加该扩展。
+2. **将不受支持的节点映射为受支持的节点。** ImportDocx 接受 `prosemirrorNodes` 和 `prosemirrorMarks` 选项，可在导入期间重写节点类型。请参阅[自定义节点映射](/conversion/import/docx/custom-node-mapping)和[自定义标记映射](/conversion/import/docx/custom-mark-mapping)。
 
-For nodes that have no equivalent in your schema (e.g. footnote references), see the [custom extensions guide](/conversion/getting-started/guides/custom-extensions).
+对于架构中没有对应类型的节点（例如脚注引用），请参阅[自定义扩展指南](/conversion/getting-started/guides/custom-extensions)。
 
-## Next steps
+## 后续步骤
 
-- [End-to-end walkthrough](/conversion/getting-started/guides/end-to-end-walkthrough): start-to-finish DOCX round-trip
-- [Custom extensions](/conversion/getting-started/guides/custom-extensions): render imported attributes that aren't covered by ConvertKit
-- [Feature support matrix](/conversion/getting-started/feature-support-matrix): what round-trips and what doesn't, per feature
+- [端到端演练](/conversion/getting-started/guides/end-to-end-walkthrough)：从头到尾完成 DOCX 往返转换
+- [自定义扩展](/conversion/getting-started/guides/custom-extensions)：呈现 ConvertKit 未涵盖的导入属性
+- [功能支持矩阵](/conversion/getting-started/feature-support-matrix)：了解各项功能是否支持往返转换
