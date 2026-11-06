@@ -1,37 +1,37 @@
 ---
-title: Integrate Comments into your editor
+title: 将 Comments 集成到编辑器中
 tags:
   - type: start
 meta:
     category: Editor
 extension:
     name: Comments
-    description: Enable discussions in your collaborative documents—the way you want them.
+    description: 按照你的需求，在协作文档中启用讨论功能。
     type: extension
     icon: MessageCircleMore
 ---
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-Integrate and manage comments within your editor using the Tiptap Comments extension. Create threads and comments in your editor or via REST API.
+使用 Tiptap Comments 扩展，在编辑器中集成和管理评论。你可以在编辑器中或通过 REST API 创建讨论串和评论。
 
-<Callout title="More details" variant="hint">
-    For more detailed information on how to integrate, install, and configure the Tiptap Comments extension, please visit our [feature page](/comments/getting-started/overview).
+<Callout title="了解更多" variant="hint">
+    如需详细了解如何集成、安装和配置 Tiptap Comments 扩展，请访问我们的[功能介绍页](/comments/getting-started/overview)。
 </Callout>
 
 <CodeDemo isPro path="/Extensions/Comments" />
 
-To add comments to inline code or code blocks, follow the [comments on code guide](/comments/integrate/code) to allow comment anchors in the code extensions' schemas.
+如需为行内代码或代码块添加评论，请参阅[代码评论指南](/comments/integrate/code)，以便在代码扩展的 schema 中启用评论锚点。
 
-## Events
+## 事件
 
-The Comments extension emits events you can listen to with `editor.on()`. These events are useful for building custom UIs, syncing state, and integrating with other extensions like [Tracked Changes](/editor/extensions/functionality/tracked-changes).
+Comments 扩展会发出事件，你可以通过 `editor.on()` 监听这些事件。这些事件有助于构建自定义 UI、同步状态，以及与[修订跟踪](/editor/extensions/functionality/tracked-changes)等其他扩展集成。
 
-### Thread Events
+### 讨论串事件
 
 #### comments:threadCreated
 
-Fired when a new comment thread is created.
+创建新的评论讨论串时触发。
 
 ```js
 editor.on('comments:threadCreated', ({ threadId, thread, initialComment, position, threadType }) => {
@@ -42,7 +42,7 @@ editor.on('comments:threadCreated', ({ threadId, thread, initialComment, positio
 
 #### comments:threadUpdated
 
-Fired when a thread's data or metadata changes.
+讨论串的数据或元数据发生变化时触发。
 
 ```js
 editor.on('comments:threadUpdated', ({ threadId, thread, changes, updatedBy }) => {
@@ -52,7 +52,7 @@ editor.on('comments:threadUpdated', ({ threadId, thread, changes, updatedBy }) =
 
 #### comments:threadResolved
 
-Fired when a thread is resolved.
+讨论串被标记为已解决时触发。
 
 ```js
 editor.on('comments:threadResolved', ({ threadId, thread, resolvedBy, resolvedAt }) => {
@@ -62,7 +62,7 @@ editor.on('comments:threadResolved', ({ threadId, thread, resolvedBy, resolvedAt
 
 #### comments:threadUnresolved
 
-Fired when a previously resolved thread is reopened.
+之前已解决的讨论串重新打开时触发。
 
 ```js
 editor.on('comments:threadUnresolved', ({ threadId, thread, unresolvedBy }) => {
@@ -72,7 +72,7 @@ editor.on('comments:threadUnresolved', ({ threadId, thread, unresolvedBy }) => {
 
 #### comments:threadDeleted
 
-Fired when a thread is deleted.
+讨论串被删除时触发。
 
 ```js
 editor.on('comments:threadDeleted', ({ threadId, thread, deletedBy, soft }) => {
@@ -83,7 +83,7 @@ editor.on('comments:threadDeleted', ({ threadId, thread, deletedBy, soft }) => {
 
 #### comments:threadRemovedFromDocument
 
-Fired when a thread's mark is removed from the document (e.g., the annotated text was deleted or the thread was archived).
+讨论串的标记从文档中移除时触发（例如，批注文本被删除或讨论串已归档）。
 
 ```js
 editor.on('comments:threadRemovedFromDocument', ({ threadId, thread, removedBy, canRestore }) => {
@@ -92,11 +92,11 @@ editor.on('comments:threadRemovedFromDocument', ({ threadId, thread, removedBy, 
 })
 ```
 
-### Comment Events
+### 评论事件
 
 #### comments:commentCreated
 
-Fired when a new comment is added to a thread.
+向讨论串添加新评论时触发。
 
 ```js
 editor.on('comments:commentCreated', ({ threadId, commentId, comment, thread }) => {
@@ -106,7 +106,7 @@ editor.on('comments:commentCreated', ({ threadId, commentId, comment, thread }) 
 
 #### comments:commentUpdated
 
-Fired when a comment's content is edited.
+评论内容被编辑时触发。
 
 ```js
 editor.on('comments:commentUpdated', ({ threadId, commentId, comment, oldContent, newContent }) => {
@@ -116,7 +116,7 @@ editor.on('comments:commentUpdated', ({ threadId, commentId, comment, oldContent
 
 #### comments:commentDeleted
 
-Fired when a comment is deleted from a thread.
+评论从讨论串中删除时触发。
 
 ```js
 editor.on('comments:commentDeleted', ({ threadId, commentId, comment, deletedBy }) => {
@@ -124,11 +124,11 @@ editor.on('comments:commentDeleted', ({ threadId, commentId, comment, deletedBy 
 })
 ```
 
-### Selection & Hover Events
+### 选择与悬停事件
 
 #### comments:threadSelected
 
-Fired when a thread is selected (e.g., user clicks on a comment annotation).
+讨论串被选中时触发（例如，用户点击评论批注）。
 
 ```js
 editor.on('comments:threadSelected', ({ threadId, thread }) => {
@@ -139,7 +139,7 @@ editor.on('comments:threadSelected', ({ threadId, thread }) => {
 
 #### comments:threadUnselected
 
-Fired when a thread is deselected.
+讨论串取消选中时触发。
 
 ```js
 editor.on('comments:threadUnselected', ({ threadId }) => {
@@ -149,7 +149,7 @@ editor.on('comments:threadUnselected', ({ threadId }) => {
 
 #### comments:threadHovered
 
-Fired when the user hovers over a thread annotation in the document.
+用户将鼠标悬停在文档中的讨论串批注上时触发。
 
 ```js
 editor.on('comments:threadHovered', ({ threadIds, threads }) => {
@@ -159,7 +159,7 @@ editor.on('comments:threadHovered', ({ threadIds, threads }) => {
 
 #### comments:threadUnhovered
 
-Fired when the user stops hovering over a thread annotation.
+用户将鼠标移出讨论串批注时触发。
 
 ```js
 editor.on('comments:threadUnhovered', ({ threadIds }) => {
