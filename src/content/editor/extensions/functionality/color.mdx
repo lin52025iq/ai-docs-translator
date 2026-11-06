@@ -1,39 +1,39 @@
 ---
-title: Color extension
+title: 颜色扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-text-style?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-text-style
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-text-style.svg
     url: https://npmcharts.com/compare/@tiptap/extension-text-style?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  title: Color extension | Tiptap Editor Docs
-  description: Add text color support to your Tiptap editor with the Color extension. Learn more in our documentation.
-  category: Editor
+  title: 颜色扩展 | Tiptap 编辑器文档
+  description: 使用 Color 扩展为 Tiptap 编辑器添加文本颜色支持。了解更多信息，请参阅我们的文档。
+  category: 编辑器
 extension:
   name: Color
   link:
-  description: Add text color support to your editor (comes with unlimited colors).
+  description: 为编辑器添加文本颜色支持（颜色数量不限）。
   type: extension
   icon: Palette
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-This extension enables you to set the font color in the editor. It uses the [`TextStyle`](/editor/extensions/marks/text-style) mark, which renders a `<span>` tag (and only that). The font color is applied as inline style then, for example `<span style="color: #958DF1">`.
+此扩展支持在编辑器中设置字体颜色。它使用 [`TextStyle`](/editor/extensions/marks/text-style) 标记，该标记会渲染为 `<span>` 标签（且仅渲染为该标签）。字体颜色随后会以内联样式应用，例如 `<span style="color: #958DF1">`。
 
 <CodeDemo path="/Extensions/Color" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-text-style
 ```
 
-This extension requires the [`TextStyle`](/editor/extensions/marks/text-style) mark.
+此扩展需要 [`TextStyle`](/editor/extensions/marks/text-style) 标记。
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -44,7 +44,7 @@ new Editor({
 })
 ```
 
-This extension is installed by default with the `TextStyleKit` extension, so you don’t need to install it separately.
+此扩展默认随 `TextStyleKit` 扩展一起安装，因此无需单独安装。
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -55,13 +55,13 @@ new Editor({
 })
 ```
 
-## Settings
+## 设置
 
 ### types
 
-A list of marks to which the color attribute should be applied to.
+需要应用颜色属性的标记列表。
 
-Default: `['textStyle']`
+默认值：`['textStyle']`
 
 ```js
 Color.configure({
@@ -69,11 +69,11 @@ Color.configure({
 })
 ```
 
-## Commands
+## 命令
 
 ### setColor()
 
-Applies the given font color as inline style.
+将指定的字体颜色以内联样式应用。
 
 ```js
 editor.commands.setColor('#ff0000')
@@ -81,17 +81,17 @@ editor.commands.setColor('#ff0000')
 
 ### unsetColor()
 
-Removes any font color.
+移除字体颜色。
 
 ```js
 editor.commands.unsetColor()
 ```
 
-## Source code
+## 源代码
 
 [packages/extension-text-style/src/color/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-text-style/src/color/)
 
-## Minimal Install
+## 最小安装
 
 ```js
 import { Editor } from '@tiptap/core'
