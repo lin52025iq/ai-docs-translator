@@ -1,11 +1,11 @@
 ---
-title: Install the Comments extension
+title: 安装 Comments 扩展
 tags:
   - type: beginStart
-    tooltip: Comments work on the Start plan. Webhooks and REST API require the Team plan.
+    tooltip: Comments 可在 Start 套餐中使用。Webhook 和 REST API 需要 Team 套餐。
 meta:
-  title: Install comments | Tiptap Comments Docs
-  description: Install the comments extension in Tiptap to add threaded discussions to your editor and app. Learn more in the docs!
+  title: 安装 Comments | Tiptap Comments 文档
+  description: 在 Tiptap 中安装 Comments 扩展，为编辑器和应用添加串联讨论。欢迎在文档中了解更多！
   category: Comments
 ---
 
@@ -13,33 +13,33 @@ import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 import { Requirements, RequirementItem } from '@/components/Requirements'
 
-Install and configure the comments extension by following this guide. Take a look at the Comments example application at the bottom of this page for a whole integration.
+按照本指南安装并配置 Comments 扩展。查看本页底部的 Comments 示例应用，了解完整的集成方式。
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 激活试用或订阅">
+        在你的账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 套餐](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Start Document server">
-        To store Comments [Add an Environment](https://cloud.tiptap.dev/v2/configuration/document-server) in your dashboard and configure your [Document server](https://cloud.tiptap.dev/v2/configuration/document-server).
+    <RequirementItem label="2. 启动 Document server">
+        若要存储 Comments，请在控制面板中[添加环境](https://cloud.tiptap.dev/v2/configuration/document-server)，并配置你的[文档服务器](https://cloud.tiptap.dev/v2/configuration/document-server)。
     </RequirementItem>
-    <RequirementItem label="3. Install from private registry">
-        To install this extension, authenticate to Tiptap’s private npm registry by following the [setup guide](/guides/pro-extensions).
+    <RequirementItem label="3. 从私有仓库安装">
+        要安装此扩展，请按照[设置指南](/guides/pro-extensions)进行身份验证，以访问 Tiptap 的私有 npm 仓库。
     </RequirementItem>
 </Requirements>
 
-## Access the private registry
-The Comments extension is published in Tiptap’s private npm registry. Integrate the extension by following the [private registry guide](/guides/pro-extensions).
+## 访问私有仓库
+Comments 扩展发布在 Tiptap 的私有 npm 仓库中。请按照[私有仓库指南](/guides/pro-extensions)集成此扩展。
 
 
 ```bash
 npm install @tiptap-pro/extension-comments
 ```
 
-## Integrating the Comments extension
+## 集成 Comments 扩展
 
-After installing the `comments` extension via npm or any other package manager, you can use it in your editor by registering the extension in the `extensions` property of your editor instance.
+通过 npm 或其他包管理器安装 `comments` 扩展后，可将其注册到编辑器实例的 `extensions` 属性中，以便在编辑器中使用。
 
-The Comments extension consists of multiple components, including nodes and plugins. To include all the required features, use the `CommentsKit` extension.
+Comments 扩展由多个组件组成，包括节点和插件。要启用所有必需功能，请使用 `CommentsKit` 扩展。
 
 ```js
 import { CommentsKit } from '@tiptap-pro/extension-comments'
@@ -53,7 +53,7 @@ const editor = new Editor({
 })
 ```
 
-This will add all required extensions to your editor. Since Threads are a **cloud** or **on premises** feature you will need to also pass through a `TiptapCollabProvider` instance to your comments extension.
+这会将所有必需的扩展添加到编辑器中。由于 Threads 是**云端**或**本地部署**功能，你还需要向 Comments 扩展传入一个 `TiptapCollabProvider` 实例。
 
 ```js
 const collabProvider = new TiptapCollabProvider({
@@ -71,10 +71,10 @@ const editor = new Editor({
 })
 ```
 
-Your editor is now ready to support threads.
+现在，编辑器已准备好支持 Threads。
 
 <hr />
 
-See a full example of how to use the Comments extension in the following example:
+以下示例展示了如何使用 Comments 扩展：
 
 <CodeDemo isPro path="/Extensions/Comments?inline=false&hideSource=false" />
