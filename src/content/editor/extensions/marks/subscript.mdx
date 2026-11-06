@@ -1,48 +1,48 @@
 ---
-title: Subscript extension
+title: 下标扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-subscript?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-subscript
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-subscript.svg
     url: https://npmcharts.com/compare/@tiptap/extension-subscript?minimal=true
-    label: Downloads
+    label: 下载量
 extension:
-  name: Subscript
+  name: 下标
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-subscript
-  description: Write slightly below the normal line to make a statement.
+  description: 将文字显示在基线下方，彰显独特风格。
   type: mark
   icon: Subscript
 meta:
-  title: Subscript extension | Tiptap Editor Docs
-  description: Learn how to use the Subscript extension in Tiptap to write slightly below the normal line and show your unique style.
-  category: Editor
+  title: 下标扩展 | Tiptap 编辑器文档
+  description: 了解如何在 Tiptap 中使用下标扩展，将文字显示在基线下方，展现独特风格。
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-Use this extension to render text in <sub>subscript</sub>. If you pass `<sub>` or text with `vertical-align: sub` as inline style in the editor’s initial content, both will be rendered accordingly.
+使用此扩展可将文本渲染为 <sub>下标</sub>。如果在编辑器的初始内容中传入 `<sub>`，或传入带有 `vertical-align: sub` 行内样式的文本，两者都会相应地渲染。
 
-<Callout title="Restrictions" variant="default">
-    The extension will generate the corresponding `<sub>` HTML tags when reading contents of the `Editor` instance. All text in subscript, regardless of the method will be normalized to `<sub>` HTML tags.
+<Callout title="限制" variant="default">
+    读取 `Editor` 实例的内容时，此扩展会生成对应的 `<sub>` HTML 标签。无论使用哪种方式，所有下标文本都会统一转换为 `<sub>` HTML 标签。
 </Callout>
 
 <CodeDemo path="/Marks/Subscript" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-subscript
 ```
 
-## Settings
+## 设置
 
 ### HTMLAttributes
 
-Custom HTML attributes that should be added to the rendered HTML tag.
+要添加到渲染后 HTML 标签上的自定义 HTML 属性。
 
 ```js
 Subscript.configure({
@@ -52,11 +52,11 @@ Subscript.configure({
 })
 ```
 
-## Commands
+## 命令
 
 ### setSubscript()
 
-Mark text as subscript.
+将文本标记为下标。
 
 ```js
 editor.commands.setSubscript()
@@ -64,7 +64,7 @@ editor.commands.setSubscript()
 
 ### toggleSubscript()
 
-Toggle subscript mark.
+切换下标标记。
 
 ```js
 editor.commands.toggleSubscript()
@@ -72,18 +72,18 @@ editor.commands.toggleSubscript()
 
 ### unsetSubscript()
 
-Remove subscript mark.
+移除下标标记。
 
 ```js
 editor.commands.unsetSubscript()
 ```
 
-## Keyboard shortcuts
+## 键盘快捷键
 
-| Command           | Windows/Linux                     | macOS                         |
+| 命令              | Windows/Linux                     | macOS                         |
 | ----------------- | --------------------------------- | ----------------------------- |
 | toggleSubscript() | <kbd>Control</kbd> + <kbd>,</kbd> | <kbd>Cmd</kbd> + <kbd>,</kbd> |
 
-## Source code
+## 源代码
 
 [packages/extension-subscript/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-subscript/)
