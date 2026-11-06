@@ -1,26 +1,22 @@
 ---
-title: Multi subdocuments
+title: 多个子文档
 meta:
-    title: Multi subdocuments | Hocuspocus Docs
+    title: 多个子文档 | Hocuspocus 文档
     category: Hocuspocus
 ---
 
 
-## Documents & room-names
+## 文档与房间名称
 
-Most Yjs connection providers (including the `y-websocket` provider) use a concept called
-room-names. The client will pass a room-name parameter to Hocuspocus which will then be used to
-identify the document which is currently being edited. We will call room-name throughout this
-documentation document name.
+大多数 Yjs 连接提供程序（包括 `y-websocket` 提供程序）都使用一种称为房间名称的概念。客户端会向 Hocuspocus 传递一个房间名称参数，Hocuspocus 随后会使用它来标识当前正在编辑的文档。在本文档中，我们将房间名称称作文档名称。
 
-In a real-world app you would probably use the name of your entity and a unique ID. Here is how that
-could look like for a CMS:
+在实际应用中，你通常会使用实体名称和唯一 ID。下面是一个 CMS 中的示例：
 
 ```js
 const documentName = "page.140";
 ```
 
-Now you can easily split this to get all desired information separately:
+现在，你可以轻松拆分这个名称，分别获取所需的信息：
 
 ```js
 const [entityType, entityID] = documentName.split(".");
@@ -29,17 +25,15 @@ console.log(entityType); // prints "page"
 console.log(entityID); // prints "140
 ```
 
-This is a recommendation, of course you can name your documents whatever you want!
+当然，这只是一项建议，你可以随意命名文档！
 
-## Nested documents
+## 嵌套文档
 
-### Introduction
+### 简介
 
-We're currently evaluating feedback for subdocuments, but haven't implemented support yet.
+我们目前正在收集有关子文档的反馈，但尚未实现对它们的支持。
 
-In a lot of cases, instead of subdocuments, you can use different `fragments` of Yjs, so
-if you're thinking about a blog post with `title`/`content`, you can create a single yDoc and use
-different editors (or anything else) that are each binding to a different fragment, like this:
+在很多情况下，你可以使用 Yjs 的不同 `fragments`，而不是子文档。例如，如果你正在考虑创建一篇包含 `title`/`content` 的博客文章，可以创建一个 yDoc，并使用不同的编辑器（或其他对象），让它们分别绑定到不同的片段，如下所示：
 
 ```js
 const ydoc = new Y.Doc();
@@ -63,7 +57,7 @@ const bodyEditor = new Editor({
 })
 ```
 
-When using multiple fields you can simply merge different documents into the given document:
+使用多个字段时，你只需将不同的文档合并到指定文档中：
 
 ```ts
 import { readFileSync } from "fs";
