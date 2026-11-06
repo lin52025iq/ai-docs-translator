@@ -1,25 +1,25 @@
 ---
-title: Node views with JavaScript
+title: 使用 JavaScript 创建节点视图
 meta:
-  title: JavaScript node views | Tiptap Editor Docs
-  description: Use Vanilla JavaScript to build custom node views in Tiptap. Direct manipulation of node properties and interactive content.
-  category: Editor
+  title: JavaScript 节点视图 | Tiptap 编辑器文档
+  description: 使用原生 JavaScript 在 Tiptap 中构建自定义节点视图。直接操作节点属性并创建交互式内容。
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-Using frameworks like Vue or React can feel too complex, if you’re used to work without those two. Good news: You can use Vanilla JavaScript in your node views. There is just a little bit you need to know, but let’s go through this one by one.
+如果你习惯于不使用 Vue 或 React，那么使用这些框架可能会让你觉得过于复杂。好消息是，你可以在节点视图中使用原生 JavaScript。需要了解的内容并不多，我们来逐一看看。
 
-## Render a node view with JavaScript
+## 使用 JavaScript 渲染节点视图
 
-Here is what you need to do to render a node view inside your editor:
+要在编辑器中渲染节点视图，需要执行以下操作：
 
-1. [Create a node extension](/editor/extensions/custom-extensions/create-new/node)
-2. Register a new node view with `addNodeView()`
-3. Write your render function
-4. [Configure Tiptap to use your new node extension](/editor/getting-started/configure)
+1. [创建节点扩展](/editor/extensions/custom-extensions/create-new/node)
+2. 使用 `addNodeView()` 注册一个新的节点视图
+3. 编写渲染函数
+4. [配置 Tiptap 使用你的新节点扩展](/editor/getting-started/configure)
 
-This is how your node extension could look like:
+你的节点扩展可以像这样：
 
 ```js
 import { Node } from '@tiptap/core'
@@ -41,15 +41,15 @@ export default Node.create({
 })
 ```
 
-Got it? Let’s see it in action. Feel free to copy the below example to get started.
+明白了吗？来看看实际效果吧。你可以复制下面的示例作为起点。
 
 <CodeDemo path="/GuideNodeViews/JavaScript" />
 
-That node view even interacts with the editor. Time to see how that is wired up.
+这个节点视图甚至可以与编辑器交互。下面来看看如何实现。
 
-## Access node attributes
+## 访问节点属性
 
-The editor passes a few helpful things to your render function. One of them is the `node` prop. This one enables you to access node attributes in your node view. Let’s say you have [added an attribute](/editor/extensions/custom-extensions/extend-existing#attributes) named `count` to your node extension. You could access the attribute like this:
+编辑器会向渲染函数传入一些有用的信息，其中之一就是 `node` 属性。借助它，你可以在节点视图中访问节点属性。假设你已为节点扩展[添加了一个名为 `count` 的属性](/editor/extensions/custom-extensions/extend-existing#attributes)，可以这样访问它：
 
 ```js
 addNodeView() {
@@ -61,9 +61,9 @@ addNodeView() {
 }
 ```
 
-## Update node attributes
+## 更新节点属性
 
-You can even update node attributes from your node view, with the help of the `getPos` prop passed to your render function. Dispatch a new transaction with an object of the updated attributes:
+借助传递给渲染函数的 `getPos` 属性，你甚至可以从节点视图中更新节点属性。使用包含已更新属性的对象分发一个新事务：
 
 ```js
 addNodeView() {
@@ -92,11 +92,11 @@ addNodeView() {
 }
 ```
 
-Does seem a little bit too complex? Consider using [React](/editor/extensions/custom-extensions/node-views/react) or [Vue](/editor/extensions/custom-extensions/node-views/vue), if you have one of those in your project anyway. It get’s a little bit easier with those two.
+觉得这有点复杂？如果你的项目中已经使用了 [React](/editor/extensions/custom-extensions/node-views/react) 或 [Vue](/editor/extensions/custom-extensions/node-views/vue)，不妨考虑使用它们。借助这两个框架，事情会简单一些。
 
-## Adding a content editable
+## 添加可编辑内容
 
-To add editable content to your node view, you need to pass a `contentDOM`, a container element for the content. Here is a simplified version of a node view with non-editable and editable text content:
+要在节点视图中添加可编辑内容，需要传入一个 `contentDOM`，也就是内容的容器元素。下面是一个简化示例，展示了包含不可编辑和可编辑文本内容的节点视图：
 
 ```js
 // Create a container for the node view
@@ -121,8 +121,8 @@ return {
 }
 ```
 
-Got it? You’re free to do anything you like, as long as you return a container for the node view and another one for the content. Here is the above example in action:
+明白了吗？只要返回一个节点视图容器和另一个内容容器，你就可以自由发挥。下面可以查看上述示例的实际效果：
 
 <CodeDemo path="/GuideNodeViews/JavaScriptContent" />
 
-Keep in mind that this content is rendered by Tiptap. That means you need to tell what kind of content is allowed, for example with `content: 'inline*'` in your node extension (that’s what we use in the above example).
+请记住，这些内容由 Tiptap 渲染。这意味着你需要指定允许的内容类型，例如在节点扩展中设置 `content: 'inline*'`（上面的示例就是这样设置的）。
