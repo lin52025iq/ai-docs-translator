@@ -1,0 +1,397 @@
+---
+title: 尾注
+meta:
+  title: 尾注 | Tiptap Pages 文档
+  description: 为 Tiptap Pages 添加类似 Word 的尾注，在文档末尾集中显示，使用小写罗马数字编号，支持原位编辑和 DOCX 往返转换。
+  category: Pages
+sidebars:
+  hideSecondary: true
+---
+
+import { Callout } from '@/components/ui/Callout'
+import { CodeDemo } from '@/components/CodeDemo'
+
+尾注可让读者为文本添加编号注释，并将它们汇总到**文档末尾**的同一列表中，与 Microsoft Word 完全相同。每条尾注都锚定在正文中的上标引用标记上，汇总列表使用小写罗马数字（`i, ii, iii…`）编号，这是 Word 默认的尾注格式。
+
+脚注位于包含其标记的页面底部，而尾注则作为普通内容，接在最后一个正文块之后。列表会自然分页：如果内容较长，就会延续到后续页面，并沿用文档其他部分的页眉、页脚和页面间距。
+
+<Callout title="尾注不是脚注" variant="hint">
+  尾注汇总在文档末尾；[脚注](/pages/core-concepts/footnotes)位于各页面底部。这两项功能彼此独立，可以在同一文档中同时使用。
+</Callout>
+
+<Callout title="从 DOCX 导入" variant="hint">
+  使用 [DOCX 导入扩展](/conversion/import/docx/editor-extension#footnotes--endnotes)导入 `.docx` 文件时，文档中的尾注会自动应用到 Pages：包括引用、内容和编号。无需额外配置。
+</Callout>
+
+<CodeDemo isPro path="/Extensions/PagesEndnotesImportExportDocx" />
+
+## 启用尾注
+
+尾注默认处于禁用状态。通过 `endnotes` 选项组启用：
+
+```js
+import { Pages } from '@tiptap-pro/extension-pages'
+
+Pages.configure({
+  pageFormat: 'A4',
+  footer: 'Page {page} of {total}',
+  endnotes: {
+    enabled: true,
+  },
+})
+```
+
+这样就可以了：尾注引用节点会自动注册；只要文档中包含尾注，文档末尾的尾注列表就会随即呈现。
+
+## 尾注的行为
+
+其工作方式与 Microsoft Word 一致：
+
+- **一个标记对应一条尾注。** 正文中的每条尾注都以罗马数字上标显示，并与文档末尾列表中的编号条目相对应。
+- **尾注位于文档末尾。** 列表显示在最后一个正文块之后，上方带有一条短分隔线。
+- **列表会随文档自然延续。** 尾注是普通内容，因此较长的列表会延续到后续页面，并保留页面页眉、页脚和间距。无需手动管理位置。
+- **编号自动连续。** 尾注按文档顺序使用 `i, ii, iii…` 编号。在两条现有尾注之间插入一条尾注后，后续编号会全部更新；删除尾注后，编号间的空缺会自动补齐。编号是动态计算的，不会存储，因此始终正确。
+
+## 插入尾注
+
+调用 `insertEndnote()`，即可在当前选区插入尾注：
+
+```js
+editor.commands.insertEndnote()
+```
+
+引用标记会插入在选区**之后**（保留选中的文本，与 Word 一样），同时创建一条空尾注并打开尾注编辑器，光标会置于新尾注中，用户可以立即输入内容。
+
+```jsx
+<button onClick={() => editor.commands.insertEndnote()}>插入尾注</button>
+```
+
+## 编辑尾注
+
+用户可以在文档末尾双击尾注列表，直接编辑尾注。列表上会就地打开功能完整的 Tiptap 编辑器，并显示横跨页面宽度的编辑栏。每条尾注都可以像普通富文本一样编辑；双击某条尾注会将光标置于其中。
+
+按 <kbd>Escape</kbd>、点击关闭按钮或双击编辑器外部即可关闭编辑器。尾注编辑器打开时，主文档编辑器会暂时变为不可编辑，这与页眉、页脚和脚注编辑器的行为相同。
+
+### 自定义扩展
+
+尾注编辑器默认使用 `ConvertKit`。将自己的扩展集通过 `endnotes.extensions` 传入，可使其架构与主编辑器保持一致：
+
+```ts
+import { ConvertKit } from '@tiptap-pro/extension-convert-kit'
+
+Pages.configure({
+  endnotes: {
+    enabled: true,
+    extensions: [ConvertKit.configure({ table: false })],
+  },
+})
+```
+
+<Callout title="协作功能需使用回调形式" variant="info">
+  `endnotes.extensions` 还接受 `(ctx) => Extensions` 回调，其中会传入尾注编辑器应绑定的 Y 字段名和 Y.Doc。配置协作功能时请使用此形式。请参阅下文的[尾注与协作](#endnotes-and-collaboration)。
+</Callout>
+
+### 活动编辑器状态
+
+尾注编辑器打开时，扩展会通过 storage 暴露该编辑器，方式与页眉、页脚和脚注相同，因此统一工具栏可以适用于所有这些编辑器：
+
+- `activeEditor` – 已打开的尾注编辑器对应的 Tiptap Editor 实例（或 `null`）
+- `activeEditorType` – 编辑尾注时为 `'endnotes'`（现有的 `'header'` / `'footer'` / `'footnotes'` / `null` 值仍可用）
+- `endnotesEditorOn` / `endnotesEditorOff` – 订阅或取消订阅尾注编辑器事件
+
+```tsx
+useEffect(() => {
+  if (!editor) return
+
+  const syncActiveEditorState = () => {
+    const { activeEditor, activeEditorType } = editor.storage.pages
+    // activeEditorType === 'endnotes' while the endnotes editor is open
+  }
+
+  editor.on('update', syncActiveEditorState)
+  return () => {
+    editor.off('update', syncActiveEditorState)
+  }
+}, [editor])
+```
+
+如需查看一个会跟随当前焦点编辑器的完整自定义工具栏示例，请参阅[页面页眉和页脚 → 构建自定义工具栏](/pages/core-concepts/page-header-footer#building-a-custom-toolbar)。只需处理 `activeEditorType` 新增的 `'endnotes'` 值，即可为其添加尾注支持。
+
+尾注覆盖层的标签和关闭按钮可通过 `overlayLabels` 翻译。请参阅[翻译覆盖层标签](/pages/core-concepts/page-header-footer#translating-overlay-labels)。
+
+### 锁定尾注
+
+将 `endnotes.editable` 设为 `false`，即可隐藏尾注的双击编辑功能；也可以在运行时切换：
+
+```js
+Pages.configure({
+  endnotes: { enabled: true, editable: false },
+})
+
+// Runtime
+editor.commands.setEndnotesEditable(false) // lock
+editor.commands.setEndnotesEditable(true) // unlock
+```
+
+锁定后，尾注仍会正常显示，只是无法编辑。`openEndnoteEditor` 会返回 `false`，双击不会触发任何操作，已打开的尾注编辑器也会关闭。
+
+### 防止双击时关闭
+
+与页眉、页脚和脚注一样，可以设置用户在编辑器外部双击时仍保持尾注编辑器打开。这在自定义工具栏位于编辑器外部时很有用：
+
+```js
+Pages.configure({
+  endnotes: { enabled: true },
+  onDblClickEndnotesPreventClose: (event) => {
+    const toolbar = document.querySelector('.my-toolbar')
+    return toolbar?.contains(event.target)
+  },
+})
+```
+
+如果未提供尾注专用回调，则通用回调 `onDblClickHeaderFooterPreventClose` 会作为后备。
+
+### 通过编程方式打开和关闭
+
+```js
+// Open the endnotes editor
+editor.commands.openEndnoteEditor()
+
+// Open it with the caret placed in a specific endnote
+editor.commands.openEndnoteEditor({ focusNoteId: '3' })
+
+// Close it
+editor.commands.closeEndnoteEditor()
+```
+
+尾注被禁用或锁定，或文档中尚无尾注时，`openEndnoteEditor` 会返回 `false`。
+
+## 删除尾注和清理
+
+删除正文中的引用标记后，对应尾注会立即从列表中移除，其余尾注会重新编号。尾注的**内容会在后台保留**，因此只需执行普通撤销操作，就能连同文本一起恢复标记。这是为了确保撤销安全而有意采用的做法，与会立即删除内容的 Word 不同。
+
+如果要永久丢弃已没有引用的内容，请调用：
+
+```js
+editor.commands.cleanupOrphanEndnotes()
+```
+
+至少移除了一条孤立尾注时，该命令会返回 `true`。
+
+## 复制和粘贴
+
+复制包含尾注标记的文本并粘贴到其他位置时，尾注会像在 Word 中一样复制：粘贴后的标记会获得一条新的尾注，其内容是原尾注的副本，并且整个文档中的编号都会更新。从此以后，这两条尾注互相独立。
+
+## 没有内容的引用
+
+即使某条引用暂时没有对应内容，也始终会显示一条尾注（例如，使用 `setContent()` 设置了包含引用标记的文档，但尚未提供尾注内容）。这类尾注会以空的编号条目呈现；打开尾注编辑器后即可立即编辑。
+
+## 从标记导航
+
+点击正文中的尾注标记，文档会滚动到对应尾注所在位置，这在较长的文档中很方便。
+
+## 屏幕阅读器名称
+
+Pages 会为正文中的每个尾注标记提供屏幕阅读器名称，例如“尾注 3”。名称使用数字，而不是页面上显示的罗马数字，因为屏幕阅读器不一定会将每个罗马数字读作数字。设置 `noteReferenceLabel` 可以更改名称，例如将其翻译：
+
+```ts
+Pages.configure({
+  endnotes: { enabled: true },
+  noteReferenceLabel: ({ type, number }) =>
+    type === 'footnote' ? `Fußnote ${number}` : `Endnote ${number}`,
+})
+```
+
+同一选项也用于命名脚注标记。有关函数接收的值，请参阅脚注页面中的[屏幕阅读器名称](/pages/core-concepts/footnotes#screen-reader-names)。如果想在名称中使用罗马数字，请使用 `marker`。
+
+如果你自己的 CSS 替换了 `.tiptap-endnote-ref::after` 的 `content`，请使用 `content: attr(data-endnote-number) / attr(data-endnote-label)` 保留名称。
+
+## 配置
+
+所有尾注设置都位于 `endnotes` 选项组中：
+
+```ts
+Pages.configure({
+  endnotes: {
+    enabled: true, // master switch (default: false)
+    extensions: [ConvertKit], // editor extensions (or a collab-aware callback)
+    initialContent: undefined, // seed content, keyed by note id
+    separator: true, // the short rule above the list (default: true)
+    editable: true, // double-click editing (default: true)
+    accentColor: '#6366f1', // endnotes editor accent (defaults to accentColor)
+  },
+})
+```
+
+### 预置初始内容
+
+`initialContent` 接受以尾注 ID 为键的尾注内容；每个 ID 都应与文档内容中 `endnoteReference` 节点的 `noteId` 属性匹配。值为 Tiptap `JSONContent` 文档：
+
+```js
+Pages.configure({
+  endnotes: {
+    enabled: true,
+    initialContent: {
+      1: {
+        type: 'doc',
+        content: [
+          {
+            type: 'paragraph',
+            content: [{ type: 'text', text: 'The first endnote.' }],
+          },
+        ],
+      },
+    },
+  },
+})
+```
+
+这与 [DOCX 导入 REST API](/conversion/import/docx/rest-api) 在 `endnotes` 字段中返回的数据结构完全相同，因此可以直接用服务器导入的文档预置内容。
+
+<Callout title="协作" variant="info">
+  `initialContent` 仅在**未启用**协作时生效。在协作文档中，尾注内容由共享文档管理。若要将尾注作为明确的用户操作载入协作文档（例如 DOCX 导入后），请改用 `setEndnotes` 命令。
+</Callout>
+
+### 分隔线
+
+Word 会在正文和尾注之间绘制一条短水平线。默认启用；设置 `separator: false` 可将其禁用。
+
+### 强调色
+
+尾注编辑器默认使用共享的 `accentColor`；可通过 `endnotes.accentColor` 覆盖，也可以在运行时设置：
+
+```js
+editor.commands.setEndnotesAccentColor('#10b981')
+```
+
+强调色会影响正文中的标记颜色、光标以及编辑器的编辑栏。
+
+## 访问尾注内容
+
+尾注内容可通过 `editor.storage.pages` 访问，并以尾注 ID 为键：
+
+```js
+// Tiptap JSON per endnote, use this for persistence and DOCX export
+const endnotesJSON = editor.storage.pages.endnotesJSON
+// { '1': { type: 'doc', content: [...] }, 'en-abc123': { ... } }
+
+// Rendered HTML per endnote, matches what the document shows
+const endnotesHTML = editor.storage.pages.endnotesHTML
+
+// Current numbering (note id → 1-based number)
+const numbers = editor.storage.pages.endnoteNumbers
+```
+
+### 保存和恢复
+
+与页眉、页脚和脚注一样，尾注内容需要由你负责持久化。请将 `endnotesJSON` 与文档一同保存，并在加载内容后通过 `setEndnotes` 命令恢复：
+
+```js
+// Save
+await saveDocument({
+  content: editor.getJSON(),
+  endnotes: editor.storage.pages.endnotesJSON,
+})
+
+// Restore
+editor.commands.setContent(savedDocument.content)
+editor.commands.setEndnotes(savedDocument.endnotes)
+```
+
+`setEndnotes` 会根据 ID → 文档的映射替换所有尾注内容。正文中的引用会继续生效，因为它们是通过 ID 匹配的。
+
+## DOCX 导入和导出
+
+尾注开箱即用，支持与 Word 文档往返转换：
+
+- **导入**：使用 [DOCX 导入编辑器扩展](/conversion/import/docx/editor-extension#footnotes--endnotes)时，导入文件中的尾注会自动应用：标记会出现在正文中，内容会放入文档末尾列表，编号与源文档一致。导入上下文也会提供原始的 `footnotes` / `endnotes` 数据，供你自行处理。
+- **导出**：使用 [DOCX 导出编辑器扩展](/conversion/export/docx/editor-extension)时，尾注内容会从 Pages 自动提取，并以 Word 原生尾注的形式写入：标记会变为有效的尾注引用，由 Word 原生呈现并重新编号。
+
+导入和导出两端都无需配置。将相应扩展与 Pages 一起安装，即可包含尾注。
+
+## 尾注与协作
+
+尾注与主文档一起参与协作：并发用户可以实时看到彼此对尾注所做的编辑；跨客户端插入或删除尾注时，最终状态会保持一致，编号也一样。
+
+如需启用此功能，请将 `endnotes.extensions` 设为一个**回调**，为尾注编辑器附加 `Collaboration` 扩展。页眉、页脚和脚注也使用相同的模式：
+
+```ts
+Pages.configure({
+  endnotes: {
+    enabled: true,
+    extensions: (ctx) => {
+      const base = [ConvertKit.configure({ undoRedo: false })]
+      if (!ctx.isCollaborative || !ctx.ydoc) {
+        return base
+      }
+      return [...base, Collaboration.configure({ document: ctx.ydoc, field: ctx.field })]
+    },
+  },
+})
+```
+
+回调会接收预先计算的 Y 字段名（`ctx.field`）和父编辑器的 Y.Doc（`ctx.ydoc`）。有关完整的协作配置（包括页眉和页脚的对应设置），请参阅[为 Pages 添加协作功能](/pages/guides/collaboration-with-pages)。
+
+## 预期功能
+
+- 类似 Word 的位置：尾注集中显示在文档末尾，列表上方带有分隔线，并可跨页面延续，同时保留完整的页面样式（页眉、页脚和间距）。
+- 使用小写罗马数字（`i, ii, iii…`）编号，这是 Word 默认的尾注格式；编号自动连续，并会在每次插入、删除、粘贴和重新排版时更新。
+- 双击列表即可原位编辑，编辑栏横跨页面宽度。
+- 尾注支持富文本内容，并可使用你配置的扩展。
+- 无需额外配置即可与 DOCX 往返转换。
+
+## 暂不支持的功能
+
+- **跨分页符编辑时会显示为同一连续区域。** 尾注足够长、跨越页面边界时，呈现的列表会正确分页，但打开原位编辑器后，尾注会显示为一个连续区域，中间不会显示分页符。关闭编辑器后，分页会重新出现。
+- **仅支持小写罗马数字编号。** 尾注会在整个文档中使用 `i, ii, iii…` 连续编号。其他格式（十进制数字、字母、符号）以及 Word 的分节重新编号选项目前尚不可用。
+- **仅支持放在文档末尾。** 尾注始终汇总在文档末尾，不支持 Word 的“节末”位置。
+- **尾注中的表格不会导出。** 表格会在编辑器中呈现，但 Word 尾注格式只接受段落，因此导出 DOCX 时会丢弃表格。
+
+<Callout title="帮助我们确定优先级" variant="info">
+  如果这些限制妨碍了你的使用场景，请告诉我们。你的反馈将帮助我们规划后续路线。
+  <a href="https://tiptap-suite.notion.site/1b601ffa3ebc80a281a8ea0b03b19bdd">
+    向 Tiptap 分享你的使用场景
+  </a>
+</Callout>
+
+## 完整选项参考
+
+除非另有说明，所有尾注设置都位于 `Pages.configure()` 的 `endnotes` 键下。
+
+| 选项                             | 类型                                                | 默认值                | 说明                                               |
+| -------------------------------- | --------------------------------------------------- | --------------------- | -------------------------------------------------- |
+| `enabled`                        | `boolean`                                           | `false`               | 尾注功能的总开关                                   |
+| `extensions`                     | `Extensions \| (ctx) => Extensions`                 | `ConvertKit`          | 尾注编辑器使用的扩展。协作功能请使用回调形式。     |
+| `initialContent`                 | `Record<string, JSONContent>`                       | `undefined`           | 按尾注 ID 预置尾注内容（仅适用于非协作文档）       |
+| `separator`                      | `boolean`                                           | `true`                | 是否在列表上方呈现 Word 风格的分隔线               |
+| `editable`                       | `boolean`                                           | `true`                | 双击列表时是否打开尾注编辑器                       |
+| `accentColor`                    | `string`                                            | `accentColor` 的值    | 标记和尾注编辑器的强调色                           |
+| `onDblClickEndnotesPreventClose` | `(event: MouseEvent) => boolean`（顶层选项）        | `undefined`           | 双击编辑器外部时，阻止尾注编辑器关闭               |
+| `noteReferenceLabel`             | `NoteReferenceLabel`（顶层选项）                    | `undefined`           | 每个脚注和尾注标记的屏幕阅读器名称                 |
+
+## 命令参考
+
+| 命令                     | 参数                                      | 说明                                          |
+| ------------------------ | ----------------------------------------- | --------------------------------------------- |
+| `insertEndnote`          | 无                                        | 在选区插入尾注并打开编辑器                    |
+| `setEndnotes`            | `endnotes: Record<string, JSONContent>`   | 根据 ID → 文档的映射替换所有尾注内容          |
+| `openEndnoteEditor`      | `{ focusNoteId?: string }`（可选）        | 打开尾注编辑器，可选择聚焦特定尾注             |
+| `closeEndnoteEditor`     | 无                                        | 关闭已打开的尾注编辑器                        |
+| `setEndnotesEditable`    | `enabled: boolean`                        | 锁定或解锁尾注编辑                            |
+| `cleanupOrphanEndnotes`  | 无                                        | 永久移除其引用已不存在的尾注内容              |
+| `setEndnotesAccentColor` | `color: string`                           | 设置尾注强调色                                |
+
+## Storage 参考
+
+从 `editor.storage.pages` 读取以下属性：
+
+| 属性                 | 类型                                                        | 说明                                           |
+| -------------------- | ----------------------------------------------------------- | ---------------------------------------------- |
+| `endnotesJSON`       | `Record<string, JSONContent>`                               | 每个尾注 ID 对应的尾注内容；用于持久化和 DOCX 导出 |
+| `endnotesHTML`       | `Record<string, string>`                                    | 每个尾注 ID 对应的呈现后 HTML，与文档显示一致   |
+| `endnoteNumbers`     | `Record<string, number>`                                    | 当前编号（尾注 ID → 从 1 开始的编号）           |
+| `endnotesEnabled`    | `boolean`                                                   | 是否已启用尾注                                 |
+| `editableEndnotes`   | `boolean`                                                   | 是否已解锁编辑（只读；请使用 `setEndnotesEditable`） |
+| `activeEditorType`   | `'header' \| 'footer' \| 'footnotes' \| 'endnotes' \| null` | 尾注编辑器打开时为 `'endnotes'`                  |
+| `endnotesEditorOn`   | `Editor['on'] \| null`                                      | 已绑定尾注编辑器事件的订阅函数                 |
+| `endnotesEditorOff`  | `Editor['off'] \| null`                                     | 已绑定尾注编辑器事件的取消订阅函数             |
