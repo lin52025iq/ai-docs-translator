@@ -1,63 +1,63 @@
 ---
-title: Basic AI Generation privacy
+title: 基础 AI 生成隐私
 meta:
-  title: Privacy | Tiptap Basic AI Generation
-  description: Learn how Tiptap Basic AI Generation protects your data with encrypted storage, secure proxying, and optional on-premise deployment for full control.
-  category: Basic AI Generation
+  title: 隐私 | Tiptap 基础 AI 生成
+  description: 了解 Tiptap 基础 AI 生成如何通过加密存储、安全代理以及可选的本地部署来保护您的数据，让您全面掌控数据。
+  category: 基础 AI 生成
 ---
 
-At Tiptap we value your privacy. So when using Tiptap Basic AI Generation that topic may raise some questions which we like to address in detail below.
+Tiptap 重视您的隐私。因此，在使用 Tiptap 基础 AI 生成时，您可能会有一些疑问，下面我们将详细解答。
 
-## Cloud integration
+## 云端集成
 
-The Tiptap AI Server **acts as a proxy** between your client (the Tiptap Editor) and OpenAI. This is done to protect your OpenAI secret from the client, as it is an anti-pattern to share secrets publicly and user-facing.
+Tiptap AI Server 在您的客户端（Tiptap Editor）与 OpenAI 之间**充当代理**。这样可以保护您的 OpenAI 密钥不被客户端获取，因为公开分享面向用户的密钥是一种反模式。
 
-When using our cloud service, you’ll need to enter your OpenAI secret in your AI settings page. This key is then encrypted and stored in our database. We use this key to perform requests against the OpenAI API on your behalf.
+使用我们的云服务时，您需要在 AI 设置页面中输入 OpenAI 密钥。该密钥会经过加密并存储在我们的数据库中。我们会使用此密钥代表您向 OpenAI API 发送请求。
 
-### Data Flow
+### 数据流
 
-The general flow of data looks like this:
+数据的一般流转过程如下：
 
-1. Your client (the Editor) performs an AI command like `translate`
-2. The AI extension sends a request to our backend service
-3. The backend verifies the signed token and its permissions, then continues the request or aborts with an error code
-4. After the authorization process the backend builds a prompt based on the desired command and uses your OpenAI API key to send the request to the OpenAI API
-5. Once the request is processed, the response is send back to the client
+1. 您的客户端（编辑器）执行 AI 命令，例如 `translate`
+2. AI 扩展向我们的后端服务发送请求
+3. 后端验证签名令牌及其权限，然后继续处理请求，或返回错误代码并中止请求
+4. 授权完成后，后端会根据所需命令构建提示词，并使用您的 OpenAI API 密钥向 OpenAI API 发送请求
+5. 请求处理完成后，响应会发送回客户端
 
-### What we record
+### 我们记录哪些信息
 
-During the process described above, we record the following data on a regular basis to ensure that our services works correctly and reliable:
+在上述过程中，我们会定期记录以下数据，以确保服务正常、可靠地运行：
 
-- HTTP logs including timestamps, a correlation ID, the referrer, user agent and IP including the relevant request headers and portion of the request body in order to ensure that the service is operational and prevent any abuse
-- Performed operation mapped to your team including the timestamp, the correlation ID, the command (e.g. “translate”) and a timestamp in order to track the usage of your plan limits
+- HTTP 日志，包括时间戳、关联 ID、引荐来源、用户代理和 IP，以及相关请求标头和部分请求正文，以确保服务正常运行并防止滥用
+- 与您的团队关联的已执行操作，包括时间戳、关联 ID、命令（例如“translate”）和时间戳，以跟踪套餐限额的使用情况
 
-To be able to help you in case there’s something off, we implemented a mechanism called “enhanced logging”.
+为了在出现异常时为您提供帮助，我们实现了一种称为“增强日志记录”的机制。
 
-**Only when asked to do so (e.g. for debugging) and with your permission** we may enable enhanced logging. To be clear: This is NOT the default. However, this leads to the following additional fields recorded:
+**只有在您提出要求（例如，为了调试）并征得您的许可后**，我们才可能启用增强日志记录。请注意：这并非默认设置。不过，启用后会额外记录以下字段：
 
-- Input text and options, the built prompt of our backend and the response of OpenAI
+- 输入文本和选项、后端构建的提示词以及 OpenAI 的响应
 
-Those data points help us to trace errors on each side and help you sort out any issues you may experience. After debugging is complete, we immediately disable the enhanced logging.
+这些数据有助于我们追踪双方的错误，并协助您解决可能遇到的问题。调试完成后，我们会立即停用增强日志记录。
 
-### Encryption
+### 加密
 
-As mentioned above, we’re storing the following values encrypted in our database:
+如上所述，我们会在数据库中加密存储以下信息：
 
-- Your OpenAI API Key
-- Your JWT secret (for integrations still using the previous authentication)
+- 您的 OpenAI API 密钥
+- 您的 JWT 密钥（适用于仍在使用旧版身份验证的集成）
 
-Those secrets are only decrypted when needed to authorize or fulfill a request.
+只有在授权或处理请求时，才会解密这些密钥。
 
-All traffic between the client, the backend and OpenAI is encrypted using the latest SSL standards.
+客户端、后端和 OpenAI 之间的所有流量均使用最新的 SSL 标准进行加密。
 
-## On your premises
+## 本地部署
 
-The on-premise version works technically the same as the cloud version. It acts as a proxy between the client and OpenAI, too.
+本地部署版本在技术上与云端版本的工作方式相同，同样充当客户端与 OpenAI 之间的代理。
 
-Some things are different for obvious reasons:
+出于显而易见的原因，两者也有一些不同之处：
 
-- The OpenAI API key is stored in your desired location and is never sent to us
-- We do **not** get any usage information on the performed requests
-- The logs are sent to stdout and you’re able to use them as you’d need and like
+- OpenAI API 密钥存储在您指定的位置，绝不会发送给我们
+- 我们**不会**获取已执行请求的任何使用信息
+- 日志会发送到 stdout，您可以按自己的需要和偏好使用这些日志
 
-Therefore, the on-prem version gives you full control over the gathered data and metrics.
+因此，本地部署版本让您能够全面掌控所收集的数据和指标。
