@@ -3,27 +3,27 @@ import { SidebarConfig } from '@/types'
 export const sidebarConfig: SidebarConfig = {
   id: 'conversion',
   rootHref: '/conversion/getting-started/overview',
-  title: 'Conversion',
+  title: '转换',
   items: [
     {
       type: 'group',
       href: '/conversion/getting-started',
-      title: 'Get started',
+      title: '快速入门',
       children: [
         {
-          title: 'Overview',
+          title: '概述',
           href: '/conversion/getting-started/overview',
         },
         {
-          title: 'Install',
+          title: '安装',
           href: '/conversion/getting-started/install',
         },
         {
-          title: 'Live demo',
+          title: '在线演示',
           href: '/conversion/getting-started/demo',
         },
         {
-          title: 'Supported features',
+          title: '支持的功能',
           href: '/conversion/getting-started/feature-support-matrix',
         },
       ],
@@ -31,14 +31,14 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/conversion/import',
-      title: 'Import',
+      title: '导入',
       children: [
         {
           title: 'DOCX',
           href: '/conversion/import/docx/editor-extension',
           children: [
             {
-              title: 'Editor extension',
+              title: '编辑器扩展',
               href: '/conversion/import/docx/editor-extension',
             },
             {
@@ -47,7 +47,7 @@ export const sidebarConfig: SidebarConfig = {
               tags: ['Beta'],
             },
             {
-              title: 'CSS injection',
+              title: 'CSS 注入',
               href: '/conversion/import/docx/css-injection',
               tags: ['Beta'],
             },
@@ -56,27 +56,27 @@ export const sidebarConfig: SidebarConfig = {
               href: '/conversion/import/docx/rest-api',
             },
             {
-              title: 'Customize',
+              title: '自定义',
               href: '/conversion/import/docx/custom-node-mapping',
               children: [
                 {
-                  title: 'Node mapping',
+                  title: '节点映射',
                   href: '/conversion/import/docx/custom-node-mapping',
                 },
                 {
-                  title: 'Mark mapping',
+                  title: '标记映射',
                   href: '/conversion/import/docx/custom-mark-mapping',
                 },
                 {
-                  title: 'Image handling',
+                  title: '图像处理',
                   href: '/conversion/import/docx/image-handling',
                 },
                 {
-                  title: 'Tracked changes',
+                  title: '修订',
                   href: '/conversion/import/docx/tracked-changes',
                 },
                 {
-                  title: 'Page breaks',
+                  title: '分页符',
                   href: '/conversion/import/docx/page-breaks',
                 },
               ],
@@ -98,18 +98,18 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/conversion/export',
-      title: 'Export',
+      title: '导出',
       children: [
         {
           title: 'DOCX',
           href: '/conversion/export/docx/editor-extension',
           children: [
             {
-              title: 'Editor extension',
+              title: '编辑器扩展',
               href: '/conversion/export/docx/editor-extension',
             },
             {
-              title: 'CSS to DOCX',
+              title: 'CSS 转 DOCX',
               href: '/conversion/export/docx/css-to-docx',
               tags: ['Beta'],
             },
@@ -118,49 +118,49 @@ export const sidebarConfig: SidebarConfig = {
               href: '/conversion/export/docx/rest-api',
             },
             {
-              title: 'Customize',
+              title: '自定义',
               href: '/conversion/export/docx/custom-nodes',
               children: [
                 {
-                  title: 'Custom nodes',
+                  title: '自定义节点',
                   href: '/conversion/export/docx/custom-nodes',
                 },
                 {
-                  title: 'Custom nodes DSL',
+                  title: '自定义节点 DSL',
                   href: '/conversion/export/docx/custom-nodes-dsl',
                   tags: ['Beta'],
                 },
                 {
-                  title: 'Custom nodes DSL builder',
+                  title: '自定义节点 DSL 构建器',
                   href: '/conversion/export/docx/custom-nodes-dsl-builder',
                   tags: ['Beta'],
                 },
                 {
-                  title: 'Styles',
+                  title: '样式',
                   href: '/conversion/export/docx/styles',
                 },
                 {
-                  title: 'Fonts',
+                  title: '字体',
                   href: '/conversion/export/docx/fonts',
                 },
                 {
-                  title: 'List numbering and bullets',
+                  title: '列表编号和项目符号',
                   href: '/conversion/export/docx/ordered-list-numbering',
                 },
                 {
-                  title: 'Tracked changes',
+                  title: '修订',
                   href: '/conversion/export/docx/tracked-changes',
                 },
                 {
-                  title: 'Headers & footers',
+                  title: '页眉和页脚',
                   href: '/conversion/export/docx/headers-footers',
                 },
                 {
-                  title: 'Page breaks',
+                  title: '分页符',
                   href: '/conversion/export/docx/page-breaks',
                 },
                 {
-                  title: 'Page layout',
+                  title: '页面布局',
                   href: '/conversion/export/docx/page-layout',
                 },
               ],
@@ -172,7 +172,7 @@ export const sidebarConfig: SidebarConfig = {
           href: '/conversion/export/pdf/editor-extension',
           children: [
             {
-              title: 'Editor extension',
+              title: '编辑器扩展',
               href: '/conversion/export/pdf/editor-extension',
             },
             {
@@ -186,7 +186,7 @@ export const sidebarConfig: SidebarConfig = {
           href: '/conversion/export/odt/editor-extension',
           children: [
             {
-              title: 'Editor extension',
+              title: '编辑器扩展',
               href: '/conversion/export/odt/editor-extension',
             },
             {
@@ -200,7 +200,7 @@ export const sidebarConfig: SidebarConfig = {
           href: '/conversion/export/epub/editor-extension',
           children: [
             {
-              title: 'Editor extension',
+              title: '编辑器扩展',
               href: '/conversion/export/epub/editor-extension',
             },
             {
@@ -214,7 +214,7 @@ export const sidebarConfig: SidebarConfig = {
           href: '/conversion/export/doc/editor-extension',
           children: [
             {
-              title: 'Editor extension',
+              title: '编辑器扩展',
               href: '/conversion/export/doc/editor-extension',
             },
             {
@@ -228,7 +228,7 @@ export const sidebarConfig: SidebarConfig = {
           href: '/conversion/export/markdown/editor-extension',
           children: [
             {
-              title: 'Editor extension',
+              title: '编辑器扩展',
               href: '/conversion/export/markdown/editor-extension',
             },
             {
@@ -242,110 +242,110 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/conversion/content-types/overview',
-      title: 'Content reference',
+      title: '内容参考',
       children: [
         {
-          title: 'Overview',
+          title: '概述',
           href: '/conversion/content-types/overview',
         },
         {
-          title: 'Text and formatting',
+          title: '文本与格式',
           href: '/conversion/content-types/text-and-formatting/paragraphs',
           children: [
             {
-              title: 'Paragraphs',
+              title: '段落',
               href: '/conversion/content-types/text-and-formatting/paragraphs',
             },
             {
-              title: 'Headings',
+              title: '标题',
               href: '/conversion/content-types/text-and-formatting/headings',
             },
             {
-              title: 'Text alignment',
+              title: '文本对齐',
               href: '/conversion/content-types/text-and-formatting/text-alignment',
             },
             {
-              title: 'Bold, italic, underline, strike',
+              title: '粗体、斜体、下划线和删除线',
               href: '/conversion/content-types/text-and-formatting/bold-italic-underline-strike',
             },
             {
-              title: 'Subscript and superscript',
+              title: '下标和上标',
               href: '/conversion/content-types/text-and-formatting/subscript-superscript',
             },
             {
-              title: 'Text color and highlight',
+              title: '文本颜色和高亮',
               href: '/conversion/content-types/text-and-formatting/text-color-highlight',
             },
             {
-              title: 'Font family and size',
+              title: '字体系列和字号',
               href: '/conversion/content-types/text-and-formatting/font-family-size',
             },
             {
-              title: 'Lists',
+              title: '列表',
               href: '/conversion/content-types/text-and-formatting/lists',
             },
             {
-              title: 'Task lists',
+              title: '任务列表',
               href: '/conversion/content-types/text-and-formatting/task-lists',
             },
             {
-              title: 'Tabs',
+              title: '制表符',
               href: '/conversion/content-types/text-and-formatting/tabs',
             },
           ],
         },
         {
-          title: 'Structures and media',
+          title: '结构与媒体',
           href: '/conversion/content-types/structures-and-media/tables',
           children: [
             {
-              title: 'Tables',
+              title: '表格',
               href: '/conversion/content-types/structures-and-media/tables',
             },
             {
-              title: 'Images',
+              title: '图像',
               href: '/conversion/content-types/structures-and-media/images',
             },
             {
-              title: 'Hyperlinks and bookmarks',
+              title: '超链接和书签',
               href: '/conversion/content-types/structures-and-media/hyperlinks-bookmarks',
             },
             {
-              title: 'Block elements',
+              title: '块级元素',
               href: '/conversion/content-types/structures-and-media/block-elements',
             },
             {
-              title: 'Math and equations',
+              title: '数学和公式',
               href: '/conversion/content-types/structures-and-media/math-equations',
             },
             {
-              title: 'Footnotes and endnotes',
+              title: '脚注和尾注',
               href: '/conversion/content-types/structures-and-media/footnotes-endnotes',
             },
             {
-              title: 'Comments',
+              title: '批注',
               href: '/conversion/content-types/structures-and-media/comments',
             },
             {
-              title: 'Word styles',
+              title: 'Word 样式',
               href: '/conversion/content-types/structures-and-media/word-styles',
             },
           ],
         },
         {
-          title: 'Page layout',
+          title: '页面布局',
           href: '/conversion/content-types/page-layout/headers-footers',
           children: [
             {
-              title: 'Headers and footers',
+              title: '页眉和页脚',
               href: '/conversion/content-types/page-layout/headers-footers',
             },
             {
-              title: 'Page breaks',
+              title: '分页符',
               href: '/conversion/content-types/page-layout/page-breaks',
             },
             {
-              title: 'Page structure',
+              title: '页面结构',
               href: '/conversion/content-types/page-layout/page-structure',
             },
           ],
@@ -355,22 +355,22 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/conversion/getting-started/guides',
-      title: 'Guides',
+      title: '指南',
       children: [
         {
-          title: 'End-to-end walkthrough',
+          title: '端到端操作指南',
           href: '/conversion/getting-started/guides/end-to-end-walkthrough',
         },
         {
-          title: 'Styling converted content',
+          title: '设置转换后内容的样式',
           href: '/conversion/getting-started/guides/styling-converted-content',
         },
         {
-          title: 'Custom extensions',
+          title: '自定义扩展',
           href: '/conversion/getting-started/guides/custom-extensions',
         },
         {
-          title: 'Debugging',
+          title: '调试',
           href: '/conversion/getting-started/guides/debugging',
         },
       ],
@@ -378,23 +378,23 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/conversion/legacy/overview',
-      title: 'Legacy',
+      title: '旧版',
       tags: ['Deprecated'],
       children: [
         {
-          title: 'Overview',
+          title: '概述',
           href: '/conversion/legacy/overview',
         },
         {
-          title: 'Migration guide',
+          title: '迁移指南',
           href: '/conversion/legacy/migration-guide',
         },
         {
-          title: 'Markdown (legacy)',
+          title: 'Markdown（旧版）',
           href: '/conversion/legacy/markdown/editor-extensions',
           children: [
             {
-              title: 'Editor extensions',
+              title: '编辑器扩展',
               href: '/conversion/legacy/markdown/editor-extensions',
             },
             {
@@ -404,11 +404,11 @@ export const sidebarConfig: SidebarConfig = {
           ],
         },
         {
-          title: 'ODT (legacy)',
+          title: 'ODT（旧版）',
           href: '/conversion/legacy/odt/editor-extensions',
           children: [
             {
-              title: 'Editor extensions',
+              title: '编辑器扩展',
               href: '/conversion/legacy/odt/editor-extensions',
             },
             {
