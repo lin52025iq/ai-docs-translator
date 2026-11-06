@@ -1,31 +1,30 @@
 schemaVersion: 1
 project:
-    id: tiptap-docs
+  id: tiptap-docs
 source:
-    repository: lin52025iq/tiptap-docs
-    ref: main
-    branch: tiptap-docs-source
-    language: en
+  repository: lin52025iq/tiptap-docs
+  ref: main
+  branch: tiptap-docs-source
+  language: en
 targets:
-    - locale: zh-CN
-      branch: tiptap-docs-zh-cn
-      enabled: true
+  - locale: zh-CN
+    branch: tiptap-docs-zh-cn
+    enabled: true
 translation:
+  model: gpt-6-luna
+  scope:
+    include:
+      - src/content/**
+    exclude: []
+  glossary: glossary.yml
+  prompts:
+    frameworkLanguage: zh-CN
+    frameworks: {}
+    common: prompts/common.md
+  review:
+    enabled: true
     model: gpt-6-luna
-    scope:
-        include:
-            - "src/content/index.mdx"
-            - "src/content/editor/getting-started/*.mdx"
-        exclude: []
-    glossary: glossary.yml
-    prompts:
-        frameworkLanguage: zh-CN
-        frameworks: {}
-        common: prompts/common.md
-    review:
-        enabled: true
-        model: gpt-6-luna
-        minimumProbability: 0.95
-        pushDraft: false
-        remote: origin
-    retranslateOnContextChange: false
+    minimumProbability: 0.95
+    pushDraft: false
+    remote: origin
+  retranslateOnContextChange: false
