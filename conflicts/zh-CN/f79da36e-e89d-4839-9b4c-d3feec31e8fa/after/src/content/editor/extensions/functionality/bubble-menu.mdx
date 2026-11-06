@@ -1,0 +1,311 @@
+---
+title: BubbleMenu 扩展
+tags:
+  - type: image
+    src: https://img.shields.io/npm/v/@tiptap/extension-bubble-menu?label=version
+    url: https://www.npmjs.com/package/@tiptap/extension-bubble-menu
+    label: 版本
+  - type: image
+    src: https://img.shields.io/npm/dm/@tiptap/extension-bubble-menu.svg
+    url: https://npmcharts.com/compare/@tiptap/extension-bubble-menu?minimal=true
+    label: 下载量
+meta:
+  title: BubbleMenu 扩展 | Tiptap 编辑器文档
+  description: 在 Tiptap 编辑器的文本上方弹出工具栏。了解更多信息，请参阅我们的文档！
+  category: 编辑器
+extension:
+  name: 气泡菜单
+  link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-bubble-menu
+  description: 添加一个在文本上方弹出的工具栏，非常适合应用行内格式。
+  type: extension
+  icon: MessageCircle
+---
+
+import { CodeDemo } from '@/components/CodeDemo'
+import { Callout } from '@/components/ui/Callout'
+
+此扩展会在文本选区附近显示上下文菜单。可使用它让用户为选中的文本应用 [标记](/editor/extensions/marks)。
+
+和往常一样，标记语言和样式完全由你决定。
+
+<CodeDemo path="/Extensions/BubbleMenu" />
+
+<Callout variant="warning">
+    如果你使用 React 或 Vue 等框架，请使用该框架专用的 `BubbleMenu` 组件，而不是此扩展。该组件提供了更便捷的 API，并会为你处理 DOM 元素。有关该组件的更多信息，请参阅下方的[框架用法](#usage-with-frameworks)部分。
+</Callout>
+
+## 安装
+
+```bash
+npm install @tiptap/extension-bubble-menu
+```
+
+## 设置
+
+### element
+
+包含菜单的 DOM 元素。
+
+类型：`HTMLElement`
+
+默认值：`null`
+
+在 React 版本的 `Bubble Menu` 中，可通过将 [ref](https://react.dev/learn/manipulating-the-dom-with-refs) 传递给 `BubbleMenu` 组件，并使用其 `ref` 属性访问 DOM 元素。
+
+### updateDelay
+
+`BubbleMenu` 会对 `update` 方法进行防抖，避免每次选区更新时都更新气泡菜单。你可以通过毫秒数控制延迟。
+`BubbleMenuPlugin` 的默认延迟为 250 毫秒。将延迟设为 `0` 即可停用防抖。
+
+类型：`Number`
+
+默认值：`undefined`
+
+### resizeDelay
+
+`BubbleMenu` 会对气泡菜单的位置计算进行防抖，避免每次触发调整大小事件时都更新菜单。你可以通过毫秒数控制延迟。
+
+类型：`Number`
+
+默认值：`100`
+
+### options
+
+`BubbleMenu` 底层使用 [Floating UI](https://floating-ui.com)。你可以通过这些选项控制浮动菜单的中间件和定位方式。
+
+类型：`Object`
+
+默认值：`{ strategy: 'absolute', placement: 'right' }`
+
+| 选项            | 类型                                   | 说明                                                                                                                                                   |
+| --------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `strategy`      | `string`                               | 定位策略。参见[此处](https://floating-ui.com/docs/computePosition#strategy)。                                                                         |
+| `placement`     | `string`                               | 菜单的位置。参见[此处](https://floating-ui.com/docs/computePosition#placement)。                                                                      |
+| `offset`        | `number`、`OffsetOptions` 或 `boolean` | [offset 中间件选项](https://floating-ui.com/docs/offset#options)。设为 `true` 时使用默认选项，设为 `false` 时停用该中间件。                             |
+| `flip`          | `FlipOptions` 或 `boolean`             | [flip 中间件选项](https://floating-ui.com/docs/flip#options)。设为 `true` 时使用默认选项，设为 `false` 时停用该中间件。                                 |
+| `shift`         | `ShiftOptions` 或 `boolean`            | [shift 中间件选项](https://floating-ui.com/docs/shift#options)。设为 `true` 时使用默认选项，设为 `false` 时停用该中间件。                               |
+| `arrow`         | `ArrowOptions` 或 `false`              | [arrow 中间件选项](https://floating-ui.com/docs/arrow#options)。设为 `false` 时停用该中间件。                                                          |
+| `size`          | `SizeOptions` 或 `boolean`             | [size 中间件选项](https://floating-ui.com/docs/size#options)。设为 `true` 时使用默认选项，设为 `false` 时停用该中间件。                                 |
+| `autoPlacement` | `AutoPlacementOptions` 或 `boolean`    | [autoPlacement 中间件选项](https://floating-ui.com/docs/autoPlacement#options)。设为 `true` 时使用默认选项，设为 `false` 时停用该中间件。               |
+| `hide`          | `HideOptions` 或 `boolean`             | [hide 中间件选项](https://floating-ui.com/docs/hide#options)。设为 `true` 时使用默认选项，设为 `false` 时停用该中间件。                                 |
+| `inline`        | `InlineOptions` 或 `boolean`           | [inline 中间件选项](https://floating-ui.com/docs/inline#options)。设为 `true` 时使用默认选项，设为 `false` 时停用该中间件。                              |
+| `onShow`        | `Function` 或 `undefined`              | 菜单显示时调用的回调。可用于在显示菜单时添加自定义逻辑或样式。                                                                                           |
+| `onHide`        | `Function` 或 `undefined`              | 菜单隐藏时调用的回调。可用于在隐藏菜单时添加自定义逻辑或样式。                                                                                           |
+| `onUpdate`      | `Function` 或 `undefined`              | 菜单更新时调用的回调。可用于在更新菜单时添加自定义逻辑或样式。                                                                                           |
+| `onDestroy`     | `Function` 或 `undefined`              | 菜单销毁时调用的回调。可用于在移除菜单时添加自定义逻辑或样式。                                                                                           |
+
+### pluginKey
+
+底层 ProseMirror 插件的键。如果添加多个实例，请确保使用不同的键。
+
+类型：`string | PluginKey`
+
+默认值：`'bubbleMenu'`
+
+### shouldShow
+
+用于控制是否显示菜单的回调。
+
+类型：`(props) => boolean`
+
+### appendTo
+
+指定气泡菜单在 DOM 中应附加到的元素。可以是 `HTMLElement`，也可以是返回 `HTMLElement` 的回调函数。
+
+类型：`HTMLElement | (() => HTMLElement) | undefined`
+
+默认值：`undefined`，菜单将附加到编辑器的父元素（`editor.view.dom.parentElement`）。
+
+### getReferencedVirtualElement
+
+用于提供菜单定位锚点坐标的回调。应返回符合 [Floating UI](https://floating-ui.com/) 预期的[虚拟元素](https://floating-ui.com/docs/virtual-elements)。
+
+类型：`() => VirtualElement | null`
+
+默认值：`null`，锚点由编辑器选区确定。
+
+## 源代码
+
+[packages/extension-bubble-menu/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-bubble-menu/)
+
+## 使用此扩展
+
+### JavaScript
+
+```js
+import { Editor } from '@tiptap/core'
+import BubbleMenu from '@tiptap/extension-bubble-menu'
+
+new Editor({
+  element: document.querySelector('#editor'),
+  extensions: [
+    StarterKit,
+    BubbleMenu.configure({
+      element: document.querySelector('#bubble-menu'),
+    }),
+  ],
+  content: '<p>Select some text to see the bubble menu.</p>',
+})
+```
+
+在 HTML 中添加菜单元素：
+
+```html
+<div id="bubble-menu" style="display: none; position: absolute;">
+  <button onclick="editor.chain().focus().toggleBold().run()">Bold</button>
+  <button onclick="editor.chain().focus().toggleItalic().run()">Italic</button>
+</div>
+<div id="editor"></div>
+```
+
+选中文本后，Tiptap 会自动显示菜单元素并为其定位。
+
+## 在框架中使用
+
+### React
+
+`@tiptap/react` 包提供了 `BubbleMenu` 组件，可从 `@tiptap/react/menus` 导入。它与此扩展功能相同，但 API 更适合 React。使用该组件时，无需在编辑器中添加 `BubbleMenu` 扩展。
+
+```jsx
+import { BubbleMenu } from '@tiptap/react/menus'
+
+function MyBubbleMenu({ editor }) {
+  return (
+    <BubbleMenu editor={editor}>
+      <button onClick={() => editor.chain().focus().toggleBold().run()}>
+        Bold
+      </button>
+      <button onClick={() => editor.chain().focus().toggleItalic().run()}>
+        Italic
+      </button>
+    </BubbleMenu>
+  )
+}
+```
+
+### Vue
+
+`@tiptap/vue-3` 包提供了 `BubbleMenu` 组件，可从 `@tiptap/vue-3/menus` 导入。它与此扩展功能相同，但 API 更适合 Vue。使用该组件时，无需在编辑器中添加 `BubbleMenu` 扩展。
+
+```vue
+<template>
+  <BubbleMenu :editor="editor">
+    <button @click="editor.chain().focus().toggleBold().run()">
+      Bold
+    </button>
+    <button @click="editor.chain().focus().toggleItalic().run()">
+      Italic
+    </button>
+  </BubbleMenu>
+</template>
+
+<script setup>
+  import { BubbleMenu } from '@tiptap/vue-3/menus'
+  
+  // make sure to pass the editor instance as a prop to the BubbleMenu component
+  const { editor } = defineProps({
+    editor: {
+      type: Object,
+      required: true,
+    },
+  })
+</script>
+```
+
+**注意**：Tiptap 的 Vue 2 版本也提供相同的菜单，可从 `@tiptap/vue-2/menus` 导入。
+
+### 自定义逻辑
+
+使用 `shouldShow` 选项自定义菜单的显示逻辑。对于组件，可以将 `shouldShow` 作为 prop 传入。
+
+```js
+BubbleMenu.configure({
+  shouldShow: ({ editor, view, state, oldState, from, to }) => {
+    // only show the bubble menu for images and links
+    return editor.isActive('image') || editor.isActive('link')
+  },
+})
+```
+
+### 多个菜单
+
+设置唯一的 `pluginKey`，即可使用多个菜单。
+
+```js
+import { Editor } from '@tiptap/core'
+import BubbleMenu from '@tiptap/extension-bubble-menu'
+
+new Editor({
+  extensions: [
+    BubbleMenu.configure({
+      pluginKey: 'bubbleMenuOne',
+      element: document.querySelector('.menu-one'),
+    }),
+    BubbleMenu.configure({
+      pluginKey: 'bubbleMenuTwo',
+      element: document.querySelector('.menu-two'),
+    }),
+  ],
+})
+```
+
+也可以传入 ProseMirror 的 `PluginKey`。
+
+```js
+import { Editor } from '@tiptap/core'
+import BubbleMenu from '@tiptap/extension-bubble-menu'
+import { PluginKey } from '@tiptap/pm/state'
+
+new Editor({
+  extensions: [
+    BubbleMenu.configure({
+      pluginKey: new PluginKey('bubbleMenuOne'),
+      element: document.querySelector('.menu-one'),
+    }),
+    BubbleMenu.configure({
+      pluginKey: new PluginKey('bubbleMenuTwo'),
+      element: document.querySelector('.menu-two'),
+    }),
+  ],
+})
+```
+
+### 强制更新气泡菜单的位置
+
+如果气泡菜单在初次渲染后尺寸发生变化，其位置不会自动调整。要解决此问题，可以为扩展设置 `pluginKey`，并使用该键触发 `'updatePosition'` 事件，从而强制更新位置。
+
+```ts
+BubbleMenu.configure({
+  pluginKey: 'myBubbleMenu',
+  element: document.querySelector('.menu'),
+})
+
+editor.commands.setMeta('myBubbleMenu', 'updatePosition')
+```
+
+若要指定某个气泡菜单，请改为传入该菜单的 `pluginKey`。
+
+```ts
+editor.commands.setMeta('bubbleMenuOne', 'updatePosition')
+```
+
+如果使用 React 或 Vue 的 `BubbleMenu` 组件，并希望从外部触发 `updatePosition`，请先为组件传入显式的 `pluginKey` prop。如果省略 `pluginKey`，组件会创建自己的 ProseMirror `PluginKey`，外部代码之后将无法可靠地引用它。
+
+### 以编程方式显示或隐藏气泡菜单
+
+你可以为扩展设置 `pluginKey`，并使用该键派发一个带有 `'show'` 或 `'hide'` 元值的事务，以编程方式显示或隐藏气泡菜单。
+
+```ts
+BubbleMenu.configure({
+  pluginKey: 'myBubbleMenu',
+  element: document.querySelector('.menu'),
+})
+
+// Show the bubble menu
+editor.commands.setMeta('myBubbleMenu', 'show')
+
+// Hide the bubble menu
+editor.commands.setMeta('myBubbleMenu', 'hide')
+```
+
+**注意：**派发 `'show'` 或 `'hide'` 会覆盖 `shouldShow` 中定义的行为。
