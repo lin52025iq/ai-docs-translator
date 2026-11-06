@@ -1,0 +1,498 @@
+---
+title: 数学扩展
+extension:
+  name: Mathematics
+  link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-mathematics
+  description: 此扩展允许用户通过 LaTeX 编写和查看数学公式。
+  type: extension
+  icon: SquareDivide
+tags:
+  - type: image
+    src: https://img.shields.io/npm/v/@tiptap/extension-mathematics.svg?label=version
+    url: https://www.npmjs.com/package/@tiptap/extension-mathematics
+    label: 版本
+  - type: image
+    src: https://img.shields.io/npm/dm/@tiptap/extension-mathematics.svg
+    url: https://npmcharts.com/compare/@tiptap/extension-mathematics?minimal=true
+    label: 下载量
+meta:
+  title: 数学扩展 | Tiptap 编辑器文档
+  description: 此扩展允许用户通过 LaTeX 编写和查看数学公式。请参阅文档，了解如何进行设置！
+  category: 编辑器
+---
+
+import { CodeDemo } from '@/components/CodeDemo'
+
+此扩展允许你在编辑器中插入数学公式。它使用 [KaTeX](https://katex.org/) 渲染以 LaTeX 编写的数学公式。
+
+<CodeDemo path="/Extensions/Mathematics" />
+
+## 安装
+
+```bash
+npm install @tiptap/extension-mathematics katex
+```
+
+## 用法
+
+```js
+import { Mathematics } from '@tiptap/extension-mathematics'
+
+const editor = new Editor({
+  extensions: [
+    Mathematics.configure({
+      inlineOptions: {
+        // optional options for the inline math node
+      },
+      blockOptions: {
+        // optional options for the block math node
+      },
+      katexOptions: {
+        // optional options for the KaTeX renderer
+      },
+    }),
+  ],
+})
+```
+
+## 其他设置
+
+### 设置 KaTeX 渲染样式
+
+你可以自由设置渲染元素和编辑器输入框的样式。
+
+**导入 KaTeX 样式（必需）。**
+
+```js
+import 'katex/dist/katex.min.css'
+```
+
+以下类可用于选择数学节点并设置其样式。示例请参见本页末尾的演示代码。
+
+```css
+/* The rendered math node */
+.tiptap-mathematics-render {
+  // …
+}
+
+/* This selector only selects editable math nodes */
+.tiptap-mathematics-render--editable {
+  // …
+}
+
+/** This selector only selects block math nodes */
+.tiptap-mathematics-render[data-type="block-math"] {
+  // …
+}
+
+/** This selector only selects inline math nodes */
+.tiptap-mathematics-render[data-type="inline-math"] {
+  // …
+}
+```
+
+### 配置扩展并更新数学节点
+
+此扩展提供了一些选项，可用于配置数学节点的行为。
+
+```js
+import Mathematics from '@tiptap/extension-mathematics'
+
+// [...]
+
+Mathematics.configure({
+  // Options for the inline math node
+  inlineOptions: {
+    onClick: (node, pos) => {
+      // you can do anything on click, e.g. open a dialog to edit the math node
+      // or just a prompt to edit the LaTeX code for a quick prototype
+      const katex = prompt('Enter new calculation:', node.attrs.latex)
+      if (katex) {
+        editor.chain().setNodeSelection(pos).updateInlineMath({ latex: katex }).focus().run()
+      }
+    },
+  },
+
+  // Options for the block math node
+  blockOptions: {
+    onClick: (node, pos) => {
+      // you can do anything on click, e.g. open a dialog to edit the math node
+      // or just a prompt to edit the LaTeX code for a quick prototype
+      const katex = prompt('Enter new calculation:', node.attrs.latex)
+      if (katex) {
+        editor.chain().setNodeSelection(pos).updateBlockMath({ latex: katex }).focus().run()
+      }
+    },
+  },
+
+  // Options for the KaTeX renderer. See here: https://katex.org/docs/options.html
+  katexOptions: {
+    throwOnError: false, // don't throw an error if the LaTeX code is invalid
+    macros: {
+      '\\R': '\\mathbb{R}', // add a macro for the real numbers
+      '\\N': '\\mathbb{N}', // add a macro for the natural numbers
+    },
+  },
+}
+```
+
+### 将现有数学装饰迁移为数学节点
+
+由于 Math 扩展过去是一个装饰扩展，你的编辑器中可能已有数学装饰。要将它们迁移为新的数学节点，可以使用此扩展提供的 `migrateMathStrings` 工具函数。
+
+```js
+import { migrateMathStrings } from '@tiptap/extension-mathematics'
+
+// The best way to do this is to run it in the `onCreate` hook of your editor
+// but you have to be cautious in collaborative environments to wait for the initial document to be loaded
+const editor = new Editor({
+  // [...]
+  onCreate: ({ editor: currentEditor }) => {
+    migrateMathStrings(currentEditor)
+  },
+})
+
+// or if you are running a collaborative environment with a provider
+const editor = new Editor({
+  // [...]
+  onCreate: ({ editor: currentEditor }) => {
+    provider.on('synced', () => {
+      migrateMathStrings(currentEditor)
+    })
+  },
+})
+```
+
+### 仅导入一种数学节点
+
+如果你只想使用一种数学节点（行内或块级），可以直接导入相应的扩展：
+
+```js
+import { InlineMath } from '@tiptap/extension-mathematics/inline'
+
+// [...]
+
+InlineMath.configure({
+  katexOptions: {
+    // optional options for the KaTeX renderer
+  },
+  onClick: (node, pos) => {
+    // you can do anything on click, e.g. open a dialog to edit the math node
+    // or just a prompt to edit the LaTeX code for a quick prototype
+    const katex = prompt('Enter new calculation:', node.attrs.latex)
+    if (katex) {
+      editor.chain().setNodeSelection(pos).updateInlineMath({ latex: katex }).focus().run()
+    }
+  },
+})
+```
+
+## 设置
+
+### `inlineOptions`
+
+此选项用于配置行内数学节点。你可以传入行内数学节点支持的任何选项，例如用于处理节点点击事件的 `onClick`。
+
+默认值：`undefined`
+
+```js
+import Mathematics from '@tiptap/extension-mathematics'
+
+// [...]
+
+Mathematics.configure({
+  inlineOptions: {
+    onClick: (node, pos) => {
+      // you can do anything on click, e.g. open a dialog to edit the math node
+      // or just a prompt to edit the LaTeX code for a quick prototype
+      const katex = prompt('Enter new calculation:', node.attrs.latex)
+      if (katex) {
+        editor.chain().setNodeSelection(pos).updateInlineMath({ latex: katex }).focus().run()
+      }
+    },
+  },
+})
+```
+
+### `blockOptions`
+
+此选项用于配置块级数学节点。你可以传入块级数学节点支持的任何选项，例如用于处理节点点击事件的 `onClick`。
+
+默认值：`undefined`
+
+```js
+import Mathematics from '@tiptap/extension-mathematics'
+
+// [...]
+
+Mathematics.configure({
+  blockOptions: {
+    onClick: (node) => {
+      // you can do anything on click, e.g. open a dialog to edit the math node
+      // or just a prompt to edit the LaTeX code for a quick prototype
+      const katex = prompt('Enter new calculation:', node.attrs.latex)
+      if (katex) {
+        editor.chain().setNodeSelection(pos).updateBlockMath({ latex: katex }).focus().run()
+      }
+    },
+  },
+})
+```
+
+### `katexOptions`
+
+此选项用于配置 KaTeX 渲染器。你可以在[此处](https://katex.org/docs/options.html)查看所有选项。
+
+默认值：`undefined`
+
+```js
+import Mathematics from '@tiptap/extension-mathematics'
+
+// [...]
+
+Mathematics.configure({
+  katexOptions: {
+    throwOnError: false, // don't throw an error if the LaTeX code is invalid
+    macros: {
+      '\\R': '\\mathbb{R}', // add a macro for the real numbers
+      '\\N': '\\mathbb{N}', // add a macro for the natural numbers
+    },
+  },
+})
+```
+
+## 设置：`InlineMath`
+
+### `onClick`
+
+此选项用于处理行内数学节点的点击事件。你可以使用它打开对话框来编辑数学节点，也可以使用提示框编辑 LaTeX 代码，以便快速制作原型。
+
+默认值：`undefined`
+
+```js
+import { InlineMath } from '@tiptap/extension-mathematics'
+
+// [...]
+
+InlineMath.configure({
+  onClick: (node) => {
+    // you can do anything on click, e.g. open a dialog to edit the math node
+    // or just a prompt to edit the LaTeX code for a quick prototype
+    const katex = prompt('Enter new calculation:', node.attrs.latex)
+    if (katex) {
+      editor.chain().setNodeSelection(pos).updateInlineMath({ latex: katex }).focus().run()
+    }
+  },
+})
+```
+
+### `katexOptions`
+
+此选项用于配置行内数学节点的 KaTeX 渲染器。你可以在[此处](https://katex.org/docs/options.html)查看所有选项。
+
+默认值：`undefined`
+
+```js
+import { InlineMath } from '@tiptap/extension-mathematics'
+
+// [...]
+
+InlineMath.configure({
+  katexOptions: {
+    throwOnError: false, // don't throw an error if the LaTeX code is invalid
+    macros: {
+      '\\R': '\\mathbb{R}', // add a macro for the real numbers
+      '\\N': '\\mathbb{N}', // add a macro for the natural numbers
+    },
+  },
+})
+```
+
+## 设置：`BlockMath`
+
+### `onClick`
+
+此选项用于处理块级数学节点的点击事件。你可以使用它打开对话框来编辑数学节点，也可以使用提示框编辑 LaTeX 代码，以便快速制作原型。
+
+默认值：`undefined`
+
+```js
+import { BlockMath } from '@tiptap/extension-mathematics'
+
+// [...]
+
+BlockMath.configure({
+  onClick: (node) => {
+    // you can do anything on click, e.g. open a dialog to edit the math node
+    // or just a prompt to edit the LaTeX code for a quick prototype
+    const katex = prompt('Enter new calculation:', node.attrs.latex)
+    if (katex) {
+      editor.chain().setNodeSelection(pos).updateBlockMath({ latex: katex }).focus().run()
+    }
+  },
+})
+```
+
+### `katexOptions`
+
+此选项用于配置块级数学节点的 KaTeX 渲染器。你可以在[此处](https://katex.org/docs/options.html)查看所有选项。
+
+默认值：`undefined`
+
+```js
+import { BlockMath } from '@tiptap/extension-mathematics'
+
+// [...]
+
+BlockMath.configure({
+  katexOptions: {
+    throwOnError: false, // don't throw an error if the LaTeX code is invalid
+    macros: {
+      '\\R': '\\mathbb{R}', // add a macro for the real numbers
+      '\\N': '\\mathbb{N}', // add a macro for the natural numbers
+    },
+  },
+})
+```
+
+## 命令：InlineMath
+
+### `insertInlineMath({ latex, pos })`
+
+在指定位置插入包含给定 LaTeX 代码的新行内数学节点。如果未提供 `pos`，则会在当前选区插入节点。
+
+```js
+// with a specified position
+editor.commands.insertInlineMath({
+  latex: '\\frac{a}{b}',
+  pos: 38,
+})
+
+// or without a position
+editor.commands.insertInlineMath({
+  latex: '\\frac{a}{b}',
+})
+```
+
+### `deleteInlineMath({ pos })`
+
+删除指定位置的行内数学节点。如果未提供 `pos`，则会删除当前选区中的节点。
+
+```js
+// with a specified position
+editor.commands.deleteInlineMath({
+  pos: 38,
+})
+
+// or without a position
+editor.commands.deleteInlineMath()
+```
+
+### `updateInlineMath({ latex, pos })`
+
+使用给定的 LaTeX 代码更新指定位置的行内数学节点。如果未提供 `pos`，则会更新当前选区中的节点。
+
+```js
+// with a specified position
+editor.commands.updateInlineMath({
+  latex: '\\frac{a}{b}',
+  pos: 38,
+})
+
+// or without a position
+editor.commands.updateInlineMath({
+  latex: '\\frac{a}{b}',
+})
+```
+
+## 命令：BlockMath
+
+### `insertBlockMath({ latex, pos })`
+
+在指定位置插入包含给定 LaTeX 代码的新块级数学节点。如果未提供 `pos`，则会在当前选区插入节点。
+
+```js
+// with a specified position
+editor.commands.insertBlockMath({
+  latex: '\\frac{a}{b}',
+  pos: 38,
+})
+
+// or without a position
+editor.commands.insertBlockMath({
+  latex: '\\frac{a}{b}',
+})
+```
+
+### `deleteBlockMath({ pos })`
+
+删除指定位置的块级数学节点。如果未提供 `pos`，则会删除当前选区中的节点。
+
+```js
+// with a specified position
+editor.commands.deleteBlockMath({
+  pos: 38,
+})
+
+// or without a position
+editor.commands.deleteBlockMath()
+```
+
+### `updateBlockMath({ latex, pos })`
+
+使用给定的 LaTeX 代码更新指定位置的块级数学节点。如果未提供 `pos`，则会更新当前选区中的节点。
+
+```js
+// with a specified position
+editor.commands.updateBlockMath({
+  latex: '\\frac{a}{b}',
+  pos: 38,
+})
+
+// or without a position
+editor.commands.updateBlockMath({
+  latex: '\\frac{a}{b}',
+})
+```
+
+## 工具与常量
+
+### `mathMigrationRegex`
+
+用于在编辑器中查找并迁移数学字符串的默认正则表达式。它会匹配由 `$` 符号包围的 LaTeX 表达式。
+
+```js
+import { mathMigrationRegex } from '@tiptap/extension-mathematics'
+```
+
+### `createMathMigrateTransaction(editor, transaction, regex)`
+
+创建一个 ProseMirror 事务，将编辑器文档中的数学字符串迁移为数学节点。它使用提供的正则表达式查找数学字符串。
+
+### 参数
+
+- `editor`：ProseMirror 编辑器实例。
+- `transaction`：要修改的 ProseMirror 事务。
+- `regex`（可选）：用于查找数学字符串的正则表达式。默认值为 `mathMigrationRegex`。
+
+```js
+import { createMathMigrateTransaction } from '@tiptap/extension-mathematics'
+
+const tr = createMathMigrateTransaction(editor, editor.state.tr, mathMigrationRegex)
+editor.view.dispatch(tr)
+```
+
+### `migrateMathStrings(editor, regex)`
+
+创建并运行迁移事务，将编辑器文档中的数学字符串转换为数学节点。它使用提供的正则表达式查找数学字符串。
+
+### 参数
+
+- `editor`：ProseMirror 编辑器实例。
+- `regex`（可选）：用于查找数学字符串的正则表达式。默认值为 `mathMigrationRegex`。
+
+```js
+import { migrateMathStrings } from '@tiptap/extension-mathematics'
+
+migrateMathStrings(editor, mathMigrationRegex)
+```
