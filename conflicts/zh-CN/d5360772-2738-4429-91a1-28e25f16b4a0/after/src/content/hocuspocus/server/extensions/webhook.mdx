@@ -1,0 +1,317 @@
+---
+title: Webhooks
+meta:
+  title: Webhooks | Hocuspocus Docs
+  category: Hocuspocus
+tags:
+  - type: image
+    src: https://img.shields.io/npm/v/@hocuspocus/extension-webhook.svg?label=version
+    url: https://www.npmjs.com/package/@hocuspocus/extension-webhook
+    label: Version
+  - type: image
+    src: https://img.shields.io/npm/dm/@hocuspocus/extension-webhook.svg
+    url: https://npmcharts.com/compare/@hocuspocus/extension-webhook?minimal=true
+    label: Downloads
+  - type: image
+    src: https://img.shields.io/npm/l/@hocuspocus/extension-webhook.svg
+    url: https://www.npmjs.com/package/@hocuspocus/extension-webhook
+    label: License
+  - type: image
+    src: https://img.shields.io/badge/chat-on%20discord-7289da.svg?sanitize=true
+    url: https://discord.gg/WtJ49jGshW
+    label: Chat
+---
+Webhook 扩展可以在特定事件发生时触发 Webhook，从而将 Hocuspocus 与现有应用连接起来。
+
+## 安装
+
+使用以下命令安装 Webhook 包：
+
+```bash
+npm install @hocuspocus/extension-webhook
+```
+
+## 配置
+
+```js
+import { Server } from "@hocuspocus/server";
+import { Webhook, Events } from "@hocuspocus/extension-webhook";
+import { TiptapTransformer } from "@hocuspocus/transformer";
+
+const server = new Server({
+  extensions: [
+    new Webhook({
+      // [required] url of your application
+      url: "https://example.com/api/hocuspocus",
+
+      // [required] a random string that will be used to verify the request signature
+      secret: "459824aaffa928e05f5b1caec411ae5f",
+
+      // [required] a transformer for your document
+      transformer: TiptapTransformer,
+
+      // [optional] array of events that will trigger a webhook
+      // defaults to [ Events.onChange ]
+      events: [Events.onConnect, Events.onCreate, Events.onChange, Events.onDisconnect],
+
+      // [optional] time in ms the change event should be debounced,
+      // defaults to 2000
+      debounce: 2000,
+
+      // [optional] time in ms after that the webhook will be sent
+      // regardless of the configured debouncing, defaults to 10000
+      debounceMaxWait: 10000,
+    }),
+  ],
+});
+
+server.listen();
+```
+
+## 工作原理
+
+Webhook 扩展最多会监听四个可配置的事件/钩子，并在触发时向配置的 URL 发送 POST 请求。
+
+### onConnect
+
+新用户连接到服务器时，onConnect Webhook 会触发，并发送以下负载：
+
+```json
+{
+  "event": "connect",
+  "payload": {
+    "documentName": "example-document",
+    "requestHeaders": {
+      "Example-Header": "Example"
+    },
+    "requestParameters": {
+      "example": "12345"
+    }
+  }
+}
+```
+
+你可以返回一个 JSON 负载，作为上下文供应用的其余部分使用。例如：
+
+```js
+// authorize the user by the request parameters or headers
+if (payload.requestParameters?.get("token") !== "secret-api-token") {
+  response.writeHead(403, "unauthorized");
+  return response.end();
+}
+
+// return context if authorized
+response.writeHead(200, { "Content-Type": "application/json" });
+response.end(
+  JSON.stringify({
+    user: {
+      id: 1,
+      name: "Jane Doe",
+    },
+  })
+);
+```
+
+### onCreate
+
+创建新文档时，onCreate Webhook 会触发，并发送以下负载：
+
+```json
+{
+  "event": "create",
+  "payload": {
+    "documentName": "example-document"
+  }
+}
+```
+
+你可以使用此功能将文档导入 Hocuspocus。Webhook 扩展会先从主存储加载文档，仅当文档尚不存在时才会导入。
+
+只需返回所有文档，并以各自的字段名作为键。例如：
+
+```js
+response.writeHead(200, { "Content-Type": "application/json" });
+response.end(
+  JSON.stringify({
+    // Document for the "secondary" field
+    secondary: {},
+    // Document for the "default" field
+    default: {
+      type: "doc",
+      content: [
+        {
+          type: "paragraph",
+          content: [
+            {
+              type: "text",
+              text: "What is love?",
+            },
+          ],
+        },
+      ],
+    },
+  })
+);
+```
+
+### onChange
+
+文档发生更改时，onChange Webhook 会触发，并发送以下负载，其中包含你此前设置的上下文：
+
+```json
+{
+  "event": "change",
+  "payload": {
+    "documentName": "example-document",
+    "document": {
+      "another-field-name": {},
+      "field-name": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "What is love?"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "context": {
+      "user_id": 1,
+      "name": "Jane Doe"
+    }
+  }
+}
+```
+
+由于每次按键都会触发此事件，每秒可能触发多次，因此默认情况下会对 Webhook 进行防抖处理。你可以通过 `debounce` 和 `debounceMaxWait` 配置选项调整防抖设置，也可以完全关闭防抖。
+
+### onDisconnect
+
+用户断开连接时，onDisconnect Webhook 会触发，并发送以下负载：
+
+```json
+{
+  "event": "disconnect",
+  "payload": {
+    "documentName": "example-document",
+    "context": {
+      "user_id": 1,
+      "name": "Jane Doe"
+    }
+  }
+}
+```
+
+### 转换
+
+必须将 Y-Doc 序列化为应用能够读取的格式；导入文档时，也必须将其转换为 Y-Doc。
+
+由于 Hocuspocus 不知道你的数据结构，因此你需要向 Webhook 扩展传入一个转换器。你可以使用 `@hocuspocus/transformer` 包中的任一转换器。请确保正确配置转换器。在此示例中，我们使用了 TiptapTransformer，它需要扩展列表：
+
+```js
+import { Server } from "@hocuspocus/server";
+import { Webhook } from "@hocuspocus/extension-webhook";
+import { TiptapTransformer } from "@hocuspocus/transformer";
+import Document from "@tiptap/extension-document";
+import Paragraph from "@tiptap/extension-paragraph";
+import Text from "@tiptap/extension-text";
+
+const server = new Server({
+  extensions: [
+    new Webhook({
+      url: "https://example.com/api/webhook",
+      secret: "459824aaffa928e05f5b1caec411ae5f",
+
+      transformer: TiptapTransformer.extensions([Document, Paragraph, Text]),
+    }),
+  ],
+});
+
+server.listen();
+```
+
+你也可以自行实现转换器，只需传入函数，分别将 Y-Doc 转换为你的表示形式，或将其反向转换：
+
+```js
+import { Server } from "@hocuspocus/server";
+import { Webhook } from "@hocuspocus/extension-webhook";
+import { Doc } from "yjs";
+
+const server = new Server({
+  extensions: [
+    new Webhook({
+      url: "https://example.com/api/webhook",
+      secret: "459824aaffa928e05f5b1caec411ae5f",
+
+      transformer: {
+        toYdoc(document: any, fieldName: string): Doc {
+          // convert the given document (from your api) to a ydoc using the provided fieldName
+          return new Doc();
+        },
+        fromYdoc(document: Doc): any {
+          // convert the ydoc to your representation
+          return document.toJSON();
+        },
+      },
+    }),
+  ],
+});
+
+server.listen();
+```
+
+### 验证请求签名
+
+你应在应用服务器上验证来自 Webhook 扩展的签名，以保护该路由。
+
+扩展会发送 POST 请求，签名存储在 `X-Hocuspocus-Signature-256` 标头中。签名是使用 sha256 创建的消息认证码。
+
+以下是使用不同语言进行验证的示例：
+
+**PHP**
+
+```php
+use Symfony\Component\HttpFoundation\Request;
+
+function verifySignature(Request $request) {
+  $secret = '459824aaffa928e05f5b1caec411ae5f';
+
+  if (($signature = $request->headers->get('X-Hocuspocus-Signature-256')) == null) {
+      throw new Exception('Header not set');
+  }
+
+  $parts = explode('=', $signature);
+
+  if (count($parts) != 2) {
+      throw new Exception('Invalid signature format');
+  }
+
+  $digest = hash_hmac('sha256', $request->getContent(), $secret);
+
+  return hash_equals($digest, $parts[1]);
+}
+
+```
+
+**JavaScript**
+
+```js
+import { IncomingMessage } from 'http'
+
+const secret = '459824aaffa928e05f5b1caec411ae5f'
+
+const verifySignature = (request: IncomingMessage): boolean => {
+  const signature = Buffer.from(request.headers['x-hocuspocus-signature-256'] as string)
+
+  const hmac = createHmac('sha256', secret)
+  const digest = Buffer.from(`sha256=${hmac.update(body).digest('hex')}`)
+
+  return signature.length !== digest.length || timingSafeEqual(digest, signature)
+}
+```
+
