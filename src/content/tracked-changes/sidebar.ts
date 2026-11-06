@@ -3,19 +3,19 @@ import { SidebarConfig } from '@/types'
 export const sidebarConfig: SidebarConfig = {
   id: 'tracked-changes',
   rootHref: '/tracked-changes/getting-started/overview',
-  title: 'Tracked Changes',
+  title: '修订',
   items: [
     {
       type: 'group',
       href: '/tracked-changes/getting-started',
-      title: 'Get started',
+      title: '入门',
       children: [
         {
-          title: 'Overview',
+          title: '概述',
           href: '/tracked-changes/getting-started/overview',
         },
         {
-          title: 'Install',
+          title: '安装',
           href: '/tracked-changes/getting-started/install',
         },
       ],
@@ -23,14 +23,14 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/tracked-changes/usage',
-      title: 'Usage',
+      title: '用法',
       children: [
         {
-          title: 'Basic usage',
+          title: '基本用法',
           href: '/tracked-changes/usage/basic-usage',
         },
         {
-          title: 'Advanced usage',
+          title: '高级用法',
           href: '/tracked-changes/usage/advanced-usage',
         },
       ],
@@ -38,22 +38,22 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/tracked-changes/guides',
-      title: 'Guides',
+      title: '指南',
       children: [
         {
-          title: 'Creating an editor',
+          title: '创建编辑器',
           href: '/tracked-changes/guides/editor-setup',
         },
         {
-          title: 'Build a suggestion list',
+          title: '构建建议列表',
           href: '/tracked-changes/guides/suggestion-list',
         },
         {
-          title: 'Tracked Changes with Comments',
+          title: '将修订与批注结合使用',
           href: '/tracked-changes/guides/comments-integration',
         },
         {
-          title: 'Using NodeViews',
+          title: '使用 NodeViews',
           href: '/tracked-changes/guides/nodeview-support',
         },
       ],
@@ -61,18 +61,18 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/tracked-changes/examples',
-      title: 'Examples',
+      title: '示例',
       children: [
         {
-          title: 'Simple Tracked Changes',
+          title: '简单修订',
           href: '/tracked-changes/examples/simple',
         },
         {
-          title: 'With Collaboration',
+          title: '协作',
           href: '/tracked-changes/examples/collaboration',
         },
         {
-          title: 'With Comments',
+          title: '批注',
           href: '/tracked-changes/examples/comments',
         },
       ],
@@ -80,14 +80,14 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/conversion',
-      title: 'DOCX conversion',
+      title: 'DOCX 转换',
       children: [
         {
-          title: 'Import tracked changes',
+          title: '导入修订',
           href: '/conversion/import/docx/tracked-changes',
         },
         {
-          title: 'Export tracked changes',
+          title: '导出修订',
           href: '/conversion/export/docx/tracked-changes',
         },
       ],
@@ -95,26 +95,26 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/tracked-changes/api-reference',
-      title: 'API Reference',
+      title: 'API 参考',
       children: [
         {
-          title: 'Commands',
+          title: '命令',
           href: '/tracked-changes/api-reference/commands',
         },
         {
-          title: 'Events',
+          title: '事件',
           href: '/tracked-changes/api-reference/events',
         },
         {
-          title: 'Utilities',
+          title: '实用工具',
           href: '/tracked-changes/api-reference/utilities',
         },
         {
-          title: 'Types',
+          title: '类型',
           href: '/tracked-changes/api-reference/types',
         },
         {
-          title: 'Styling',
+          title: '样式',
           href: '/tracked-changes/api-reference/styling',
         },
       ],
