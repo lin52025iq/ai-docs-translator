@@ -1,0 +1,452 @@
+---
+title: 模板工作流
+meta:
+  title: 使用 AI Toolkit 构建模板工作流 | Tiptap AI Toolkit
+  description: 使用 Tiptap AI Toolkit 将 AI 生成的内容填入结构化模板。
+  category: AI Toolkit
+---
+
+import { CodeDemo } from '@/components/CodeDemo'
+import { Callout } from '@/components/ui/Callout'
+
+<Callout title="已弃用" variant="warning">
+  如果你的使用场景涉及模板和槽位填充，请[发送邮件联系我们](mailto:humans@tiptap.dev)。
+</Callout>
+
+使用 AI 生成的内容填充结构化 Tiptap 模板，并将结果插入编辑器。
+
+<CodeDemo
+  isLarge
+  path=""
+  isScrollable
+  src="https://ai-toolkit-demos.vercel.app/template-workflow"
+/>
+
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
+
+## 模板的工作原理
+
+Tiptap 模板是带有特殊属性的 Tiptap JSON 结构，这些属性用于标记动态部分：
+
+- **`_templateSlot`**（字符串键）：整个节点会被 AI 生成的 HTML 内容替换。
+- **`_templateIf`**（字符串键）：根据布尔值决定是否包含该节点。
+- **`_templateAttributes`**（`{key, attribute}` 对象数组）：根据 AI 生成的值设置特定节点属性。
+
+以下是一个 Tiptap JSON 格式的模板示例：
+
+```json
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": { "level": 1 },
+      "content": [{ "type": "text", "text": "Non-Disclosure Agreement" }]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "_templateSlot": "parties" },
+      "content": [{ "type": "text", "text": "Party details will be generated here." }]
+    },
+    {
+      "type": "paragraph",
+      "attrs": { "_templateIf": "includeArbitration" },
+      "content": [{ "type": "text", "text": "Arbitration clause content..." }]
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 1,
+        "_templateAttributes": [{ "key": "sectionLevel", "attribute": "level" }]
+      },
+      "content": [{ "type": "text", "text": "Governing Law" }]
+    }
+  ]
+}
+```
+
+AI 会生成一个包含各键对应值的 JSON 对象：
+
+```json
+{
+  "parties": "<p>This agreement is between <strong>Acme Corp</strong> and <strong>Beta LLC</strong>.</p>",
+  "includeArbitration": true,
+  "sectionLevel": 2
+}
+```
+
+## 技术栈
+
+- [React](https://react.dev/) + [Next.js](https://nextjs.org/)
+- [Vercel AI SDK](https://ai-sdk.dev/) + [OpenAI](https://openai.com/) 模型
+- Tiptap AI Toolkit
+
+## 项目概览
+
+此示例使用 AI Toolkit 的模板工作流，通过 AI 生成的内容填充法律文档模板（保密协议）。模板包含预定义的章节、槽位、条件条款和动态属性。AI 会填充动态部分，同时保留固定的法律文本。
+
+## 安装
+
+创建一个 [Next.js](https://nextjs.org/) 项目：
+
+```bash
+npx create-next-app@latest template-workflow
+```
+
+安装 Tiptap 核心包和用于 OpenAI 的 [Vercel AI SDK](https://ai-sdk.dev/)：
+
+```bash
+npm install @tiptap/react @tiptap/starter-kit ai @ai-sdk/openai zod
+```
+
+安装 Tiptap AI Toolkit：
+
+<Callout title="Pro 套件" variant="hint">
+  AI Toolkit 是 Pro 套件。安装前，请按照[私有注册表指南](/guides/pro-extensions)配置私有 NPM 注册表的访问权限。
+</Callout>
+
+```bash
+npm install @tiptap-pro/client-ai-toolkit @tiptap-pro/client-ai-toolkit-tool-definitions
+```
+
+## 服务端设置
+
+创建一个 API 端点，使用 [Vercel AI SDK](https://ai-sdk.dev/) 调用 OpenAI 模型。
+
+如果你的后端使用 TypeScript 以外的编程语言，请参阅[本指南](/ai/ai-toolkit/client/advanced-guides/non-typescript-backends)。
+
+在 API 端点中，使用 `createTemplateWorkflow` 将 HTML 模板转换为工作流配置。该函数会自动从 HTML 中提取所有模板键、生成系统提示词并创建输出架构。
+
+```ts
+// app/api/template-workflow/route.ts
+import { openai } from '@ai-sdk/openai'
+import { createTemplateWorkflow } from '@tiptap-pro/client-ai-toolkit-tool-definitions'
+import { createTextStreamResponse, Output, streamText, toTextStream } from 'ai'
+
+export async function POST(req: Request) {
+  const { htmlTemplate, task } = await req.json()
+
+  // Create the workflow from the HTML template.
+  // It auto-extracts template keys and generates the prompt and schema.
+  const workflow = createTemplateWorkflow({ htmlTemplate })
+
+  const result = streamText({
+    model: openai('gpt-5.6-luna'),
+    instructions: workflow.systemPrompt,
+    prompt: JSON.stringify({
+      task,
+      context: 'Additional background information related to the task',
+    }),
+    output: Output.object({ schema: workflow.zodOutputSchema }),
+  })
+
+  return createTextStreamResponse({ stream: toTextStream({ stream: result.stream }) })
+}
+```
+
+## 客户端设置
+
+在客户端，将模板定义为 Tiptap JSON。使用 Vercel AI SDK 的 `useObject` Hook 从服务器流式传输部分值。传入宽松的 Zod 架构（`z.object({}).passthrough()`），以接受服务器返回的任意属性。
+
+收到部分值后，调用 `templateWorkflow`，并传入 `hasFinished` 和 `workflowId`，逐步填充模板。`workflowId` 会启用流式模式，在这种模式下，该方法会跟踪多次调用之间的插入范围并逐步替换内容。调用 API 前，使用 `createHtmlTemplate` 方法将模板转换为 HTML，以便服务器解析模板键。
+
+```tsx
+// app/template-workflow/page.tsx
+'use client'
+
+import { useObject } from '@ai-sdk/react'
+import { EditorContent, useEditor } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+import { AiToolkit, getAiToolkit } from '@tiptap-pro/client-ai-toolkit'
+import { useEffect, useState } from 'react'
+import { v4 as uuid } from 'uuid'
+import { z } from 'zod'
+
+// Define the template as Tiptap JSON
+const template = {
+  type: 'doc',
+  content: [
+    {
+      type: 'heading',
+      attrs: { level: 1 },
+      content: [{ type: 'text', text: 'Non-Disclosure Agreement' }],
+    },
+    {
+      type: 'paragraph',
+      attrs: { _templateSlot: 'parties' },
+      content: [{ type: 'text', text: 'Party details...' }],
+    },
+    // ... more template content
+  ],
+}
+
+// A permissive schema that accepts any properties from the server
+const templateSchema = z.object({}).passthrough()
+
+export default function Page() {
+  const editor = useEditor({
+    immediatelyRender: false,
+    extensions: [StarterKit, AiToolkit],
+    content: '<p>Click "Generate" to fill the template.</p>',
+  })
+
+  const [workflowId, setWorkflowId] = useState('')
+
+  const { submit, isLoading, object } = useObject({
+    api: '/api/template-workflow',
+    schema: templateSchema,
+  })
+
+  // Stream partial results as they arrive
+  useEffect(() => {
+    if (!editor || !object) return
+
+    const toolkit = getAiToolkit(editor)
+    toolkit.templateWorkflow({
+      template,
+      values: object as Record<string, unknown>,
+      hasFinished: !isLoading,
+      workflowId,
+    })
+  }, [object, workflowId, editor, isLoading])
+
+  const generate = () => {
+    if (!editor) return
+
+    const toolkit = getAiToolkit(editor)
+    const htmlTemplate = toolkit.createHtmlTemplate(template)
+
+    setWorkflowId(uuid())
+    submit({
+      htmlTemplate,
+      task: 'Generate an NDA between Acme Corp and Beta LLC',
+    })
+  }
+
+  if (!editor) return null
+
+  return (
+    <div>
+      <EditorContent editor={editor} />
+      <button onClick={generate} disabled={isLoading}>
+        {isLoading ? 'Generating...' : 'Generate'}
+      </button>
+    </div>
+  )
+}
+```
+
+## 最终效果
+
+添加 CSS 样式后，即可得到一个精美的模板工作流应用：
+
+<CodeDemo
+  isLarge
+  path=""
+  isScrollable
+  src="https://ai-toolkit-demos.vercel.app/template-workflow"
+/>
+
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
+
+## 将模板插入文档的指定部分
+
+若要将模板结果插入指定区域，而不是替换整个文档，请设置 `position` 选项。该选项接受一个位置或一个 [Range](/ai/ai-toolkit/client/advanced-guides/concepts#range)。
+
+```ts
+// Insert template result at a specific range
+toolkit.templateWorkflow({
+  template,
+  values: object,
+  position: { from: 10, to: 50 },
+  hasFinished: !isLoading,
+  workflowId,
+})
+```
+
+## 构建模板编辑器
+
+你可以构建一个系统，让用户在富文本编辑器中创建和编辑模板，并指定 AI 应填充哪些部分。使用 `_templateSlot` 属性将节点标记为模板字段。
+
+首先，在编辑器中注册 `TemplateField` 扩展。此扩展会将四个模板属性（`_templateSlot`、`_templateIf`、`_templateAttributes`、`_templateFieldMetadata`）作为全局属性添加到编辑器架构中的所有节点类型：
+
+```tsx
+import { TemplateField } from '@tiptap-pro/client-ai-toolkit'
+
+const editor = new Editor({
+  extensions: [StarterKit, TemplateField],
+})
+```
+
+<Callout title="TemplateField 与 AiToolkit" variant="hint">
+  你可以将 `TemplateField` 与 `AiToolkit` 扩展配合使用；如果只需要模板字段支持而不需要完整的 AI Toolkit 功能，也可以单独使用 `TemplateField`。
+</Callout>
+
+<CodeDemo isLarge path="/Extensions/AiToolkitTemplateEditor/" isScrollable />
+
+`TemplateField` 扩展提供了命令，用于设置或取消当前选区所在节点的模板属性：
+
+```tsx
+// Mark the selected node as a template slot
+editor.commands.setTemplateSlot('intro')
+
+// Remove the template slot
+editor.commands.unsetTemplateSlot()
+
+// Mark the selected node as conditionally included
+editor.commands.setTemplateIf('showDisclaimer')
+
+// Remove the conditional
+editor.commands.unsetTemplateIf()
+
+// Map template keys to node attributes
+editor.commands.setTemplateAttributes([{ key: 'sectionLevel', attribute: 'level' }])
+
+// Remove the attribute mappings
+editor.commands.unsetTemplateAttributes()
+```
+
+如果想在模板中直接存储字段的额外信息，可以使用 `_templateFieldMetadata`。元数据值是可选的，可以是任意 JSON 对象，帮助你的应用稍后解析字段：
+
+```json
+{
+  "type": "paragraph",
+  "attrs": {
+    "_templateSlot": "intro",
+    "_templateFieldMetadata": {
+      "label": "Introduction",
+      "group": "summary",
+      "analyticsKey": "template.intro"
+    }
+  },
+  "content": [{ "type": "text", "text": "Placeholder" }]
+}
+```
+
+你可以为槽位字段、条件字段和属性字段添加元数据。元数据不会影响模板的填充方式，仅供你自己的应用逻辑使用。
+
+使用 `[_templateslot]` CSS 属性选择器为模板槽位添加样式。`TemplateField` 扩展会在 DOM 中输出小写的模板属性：
+
+```css
+[_templateslot] {
+  border: 2px dashed #6a00f5;
+  border-radius: 4px;
+  padding: 4px 8px;
+  background-color: rgba(106, 0, 245, 0.05);
+  position: relative;
+}
+
+[_templateslot]::after {
+  content: attr(_templateslot);
+  position: absolute;
+  top: -10px;
+  right: 4px;
+  font-size: 10px;
+  background: #6a00f5;
+  color: white;
+  padding: 0 4px;
+  border-radius: 2px;
+}
+```
+
+## 填充后保留模板字段
+
+默认情况下，`templateWorkflow` 方法会在填充模板后移除所有 `_templateSlot` 属性。将 `preserveSlotAttr` 设为 `true`，即可在已填充的节点上保留这些属性：
+
+```tsx
+toolkit.templateWorkflow({
+  template,
+  values: object,
+  hasFinished: !isLoading,
+  workflowId,
+  preserveSlotAttr: true,
+})
+```
+
+启用 `preserveSlotAttr` 后，每个已填充的节点都会保留其 `_templateSlot` 属性。这样你可以：
+
+- **识别 AI 填充的内容**：查看文档中哪些部分由 AI 生成。
+- **重新填充模板字段**：将已填充的文档用作新模板，重新生成特定章节。
+- **保留字段元数据**：稍后从已填充的文档中读取 `_templateFieldMetadata`。
+
+## 重新填充模板字段
+
+当 `preserveSlotAttr` 为 `true` 时，已填充的文档仍包含 `_templateSlot` 属性。你可以提取文档 JSON，并将其传回 `templateWorkflow` 以重新填充特定字段：
+
+```tsx
+// Extract the current document as a template
+const currentDoc = editor.getJSON()
+
+// Re-fill with new values
+const toolkit = getAiToolkit(editor)
+toolkit.templateWorkflow({
+  template: currentDoc,
+  values: newValues,
+  preserveSlotAttr: true,
+})
+```
+
+这样便可以实现迭代式编辑工作流：用户可以要求 AI 重新生成单个章节，而不影响文档的其他部分。
+
+## 读取字段内容和元数据
+
+AI Toolkit 还导出了 `getTemplateFieldMatches()` 辅助函数。该函数会扫描 Tiptap JSON 文档，查找指定字段名，并按文档顺序返回所有匹配字段。
+
+在以下场景中，这会很有用：
+
+- 读取模板字段的当前内容
+- 访问你存储在该字段中的 `_templateFieldMetadata`
+- 支持重新生成、分析或自定义 UI 标签等工作流
+
+```ts
+import { getTemplateFieldMatches } from '@tiptap-pro/client-ai-toolkit'
+
+const matches = getTemplateFieldMatches({
+  document: editor.getJSON(),
+  fieldName: 'intro',
+})
+
+for (const match of matches) {
+  console.log(match.fieldType)
+  console.log(match.metadata)
+  console.log(match.content)
+}
+```
+
+每个结果都包含：
+
+- `fieldType`：匹配项来自 `_templateSlot`、`_templateIf` 还是 `_templateAttributes`
+- `metadata`：`_templateFieldMetadata` 对象，若无则为 `null`
+- `content`：匹配节点的 Tiptap JSON 内容；如果节点为空，则为 `null`
+
+## 控制哪些模板字段为必填项
+
+默认情况下，所有模板字段都是必填项，AI 必须填充每个字段。若要将特定字段设为可选，请在服务端使用 `requiredSlots`、`requiredConditions` 和 `requiredAttributes`。只有列出的字段是必填项；未列出的字段则为可选项：
+
+```ts
+// Server-side: only "intro" is required, other slots are optional
+const workflow = createTemplateWorkflow({
+  htmlTemplate,
+  requiredSlots: ['intro'],
+})
+```
+
+AI 会始终填充必填槽位，也可以根据任务上下文选择填充其他槽位。
+
+若要将某种类型的所有字段设为可选，请传入空数组：
+
+```ts
+// All slots are optional, but specific conditions and attributes are required
+const workflow = createTemplateWorkflow({
+  htmlTemplate,
+  requiredSlots: [],
+  requiredConditions: ['includeDisclaimer'],
+  requiredAttributes: ['headingLevel'],
+})
+```
+
+## 相关指南
+
+- `templateWorkflow` 方法的 [API 参考](/ai/ai-toolkit/client/api-reference/workflows#templateworkflow)
+- `createHtmlTemplate` 方法的 [API 参考](/ai/ai-toolkit/client/api-reference/workflows#createhtmltemplate)
+- `createTemplateWorkflow` 工具函数的 [API 参考](/ai/ai-toolkit/client/api-reference/workflows#createtemplateworkflow-server-side-utility)
