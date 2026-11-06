@@ -1,12 +1,12 @@
 ---
-title: Blockquote Button
+title: 引用块按钮
 meta:
-  title: Blockquote Button | Tiptap UI Components
-  description: Toggle through block-level nodes like blockquotes with the Blockquote Button. More in the docs.
-  category: UI Components
+  title: 引用块按钮 | Tiptap UI 组件
+  description: 使用引用块按钮，在引用块等块级节点之间切换。更多内容请参阅文档。
+  category: UI 组件
 component:
-  name: Blockquote Button
-  description: Add a button that toggles through block-level nodes like blockquotes.
+  name: 引用块按钮
+  description: 添加一个按钮，用于在引用块等块级节点之间切换。
   type: component
   isFree: true
   isCloud: false
@@ -19,25 +19,25 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A fully accessible blockquote button for Tiptap editors. Easily wrap selected content in a `<blockquote>` with keyboard shortcut support and flexible customization options.
+这是一款完全无障碍的 Tiptap 编辑器引用块按钮。轻松将所选内容包裹在 `<blockquote>` 中，并支持键盘快捷键和灵活的自定义选项。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui/blockquote-button" />
 
-## Installation
+## 安装
 
-Add the component via the Tiptap CLI:
+通过 Tiptap CLI 添加此组件：
 
 ```bash
 npx @tiptap/cli@latest add blockquote-button
 ```
 
-## Components
+## 组件
 
 ### `<BlockquoteButton />`
 
-A prebuilt React component that toggles blockquote formatting.
+一个预构建的 React 组件，可切换引用块格式。
 
-#### Usage
+#### 用法
 
 ```tsx
 import { EditorContent, EditorContext, useEditor } from '@tiptap/react'
@@ -73,23 +73,23 @@ export default function MyEditor() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type             | Default     | Description                                        |
-| --------------------- | ---------------- | ----------- | -------------------------------------------------- |
-| `editor`              | `Editor \| null` | `undefined` | The Tiptap editor instance                         |
-| `text`                | `string`         | `undefined` | Optional text label for the button                 |
-| `hideWhenUnavailable` | `boolean`        | `false`     | Hides the button when blockquote is not applicable |
-| `onToggled`           | `() => void`     | `undefined` | Callback fired after a successful toggle           |
-| `showShortcut`        | `boolean`        | `false`     | Shows a keyboard shortcut badge (if available)     |
+| 名称                  | 类型             | 默认值      | 说明                                              |
+| --------------------- | ---------------- | ----------- | ------------------------------------------------- |
+| `editor`              | `Editor \| null` | `undefined` | Tiptap 编辑器实例                                 |
+| `text`                | `string`         | `undefined` | 按钮的可选文本标签                                |
+| `hideWhenUnavailable` | `boolean`        | `false`     | 不适用引用块格式时隐藏按钮                        |
+| `onToggled`           | `() => void`     | `undefined` | 成功切换后触发的回调                              |
+| `showShortcut`        | `boolean`        | `false`     | 显示键盘快捷键徽标（如果有）                      |
 
 ## Hooks
 
 ### `useBlockquote()`
 
-A custom hook to build your own blockquote toggle button with full control over rendering and behavior.
+自定义 Hook，可用于构建自己的引用块切换按钮，并完全控制其渲染和行为。
 
-#### Usage
+#### 用法
 
 ```tsx
 function MyBlockquoteButton() {
@@ -113,31 +113,31 @@ function MyBlockquoteButton() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type             | Default     | Description                                      |
-| --------------------- | ---------------- | ----------- | ------------------------------------------------ |
-| `editor`              | `Editor \| null` | `undefined` | The Tiptap editor instance                       |
-| `hideWhenUnavailable` | `boolean`        | `false`     | Hides the button if blockquote cannot be applied |
-| `onToggled`           | `() => void`     | `undefined` | Callback fired after toggling blockquote         |
+| 名称                  | 类型             | 默认值      | 说明                                    |
+| --------------------- | ---------------- | ----------- | --------------------------------------- |
+| `editor`              | `Editor \| null` | `undefined` | Tiptap 编辑器实例                       |
+| `hideWhenUnavailable` | `boolean`        | `false`     | 无法应用引用块格式时隐藏按钮            |
+| `onToggled`           | `() => void`     | `undefined` | 切换引用块后触发的回调                  |
 
-#### Return Values
+#### 返回值
 
-| Name           | Type            | Description                                   |
-| -------------- | --------------- | --------------------------------------------- |
-| `isVisible`    | `boolean`       | Whether the button should be rendered         |
-| `isActive`     | `boolean`       | If the blockquote is currently active         |
-| `canToggle`    | `boolean`       | If the blockquote toggle is currently allowed |
-| `handleToggle` | `() => boolean` | Function to toggle blockquote formatting      |
-| `label`        | `string`        | Accessible label text for the button          |
-| `shortcutKeys` | `string`        | Keyboard shortcut (Cmd/Ctrl + Shift + B)      |
-| `Icon`         | `React.FC`      | Icon component for the blockquote button      |
+| 名称           | 类型            | 说明                                  |
+| -------------- | --------------- | ------------------------------------- |
+| `isVisible`    | `boolean`       | 是否应渲染按钮                        |
+| `isActive`     | `boolean`       | 当前是否已启用引用块格式              |
+| `canToggle`    | `boolean`       | 当前是否允许切换引用块格式            |
+| `handleToggle` | `() => boolean` | 用于切换引用块格式的函数              |
+| `label`        | `string`        | 按钮的无障碍标签文本                  |
+| `shortcutKeys` | `string`        | 键盘快捷键（Cmd/Ctrl + Shift + B）    |
+| `Icon`         | `React.FC`      | 引用块按钮的图标组件                  |
 
-## Utilities
+## 工具函数
 
 ### `canToggleBlockquote(editor, turnInto?)`
 
-Checks if blockquote can be toggled in the current editor state.
+检查当前编辑器状态下是否可以切换引用块格式。
 
 ```tsx
 import { canToggleBlockquote } from '@/components/tiptap-ui/blockquote-button'
@@ -148,7 +148,7 @@ const canTurnInto = canToggleBlockquote(editor, true) // Check if can turn into 
 
 ### `toggleBlockquote(editor)`
 
-Programmatically toggles blockquote formatting for the current selection.
+以编程方式为当前选区切换引用块格式。
 
 ```tsx
 import { toggleBlockquote } from '@/components/tiptap-ui/blockquote-button'
@@ -159,26 +159,26 @@ if (success) {
 }
 ```
 
-## Keyboard Shortcuts
+## 键盘快捷键
 
-The blockquote button supports the following keyboard shortcut:
+引用块按钮支持以下键盘快捷键：
 
-- **Cmd/Ctrl + Shift + B**: Toggle blockquote formatting
+- **Cmd/Ctrl + Shift + B**：切换引用块格式
 
-The shortcut is automatically registered when using either the `<BlockquoteButton />` component or the `useBlockquote()` hook.
+使用 `<BlockquoteButton />` 组件或 `useBlockquote()` Hook 时，系统会自动注册此快捷键。
 
-## Requirements
+## 要求
 
-### Dependencies
+### 依赖项
 
-- `@tiptap/react` - Core Tiptap React integration
-- `@tiptap/starter-kit` - Basic Tiptap extensions including blockquote support
-- `react-hotkeys-hook` - Keyboard shortcut management
+- `@tiptap/react` - Tiptap React 核心集成
+- `@tiptap/starter-kit` - Tiptap 基础扩展，包含引用块支持
+- `react-hotkeys-hook` - 键盘快捷键管理
 
-### Referenced Components
+### 引用的组件
 
-- `use-tiptap-editor` (hook)
-- `button` (primitive)
-- `badge` (primitive)
-- `tiptap-utils` (lib)
-- `block-quote-icon` (icon)
+- `use-tiptap-editor`（Hook）
+- `button`（基础组件）
+- `badge`（基础组件）
+- `tiptap-utils`（库）
+- `block-quote-icon`（图标）
