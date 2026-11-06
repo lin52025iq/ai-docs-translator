@@ -1,34 +1,34 @@
 ---
-title: Configure the AI Changes extension
+title: 配置 AI Changes 扩展
 meta:
-  title: Configure AI Changes | Tiptap Content AI
-  description: Configure the AI Changes extension. Customize how AI-generated content is displayed in your rich text editor.
+  title: 配置 AI Changes | Tiptap Content AI
+  description: 配置 AI Changes 扩展。自定义 AI 生成的内容在富文本编辑器中的显示方式。
   category: Content AI
 ---
 
-The AI Changes extension for Tiptap offers several configuration options to customize its appearance and behavior.
+Tiptap 的 AI Changes 扩展提供了多种配置选项，可自定义其外观和行为。
 
-## Custom styles
+## 自定义样式
 
-The `getCustomDecorations` function allows you to control the appearance of the changed text. Apply custom CSS classes to the text, and add custom elements before and after it. Useful for showing popovers, tooltips, or icons.
+`getCustomDecorations` 函数可用于控制更改文本的外观。你可以为文本应用自定义 CSS 类，并在文本前后添加自定义元素。这适用于显示弹出框、工具提示或图标。
 
-It receives these arguments:
+该函数接收以下参数：
 
-- `change`: The current change object containing information about what was modified
-- `changes`: A list of all detected changes in the document
-- `isSelected`: A boolean indicating if the current change is selected (cursor is positioned within it)
-- `getDefaultDecorations`: A function that returns the default decorations for the change. If the `getCustomDecorations` function is not provided, the default decorations will be used.
-- `editor`: The Tiptap Editor instance
-- `previousDoc`: The snapshot of the document before AI changes were made
-- `currentDoc`: The current document after the AI made changes
+- `change`：当前更改对象，包含已修改内容的信息
+- `changes`：文档中检测到的所有更改列表
+- `isSelected`：布尔值，表示当前更改是否处于选中状态（光标位于其中）
+- `getDefaultDecorations`：返回当前更改默认装饰的函数。如果未提供 `getCustomDecorations` 函数，则使用默认装饰。
+- `editor`：Tiptap Editor 实例
+- `previousDoc`：AI 更改之前的文档快照
+- `currentDoc`：AI 更改后的当前文档
 
 ```ts
 AiChanges.configure({
   getCustomDecorations({ change, isSelected, getDefaultDecorations }) {
-    // You can combine the default decorations of the AI Changes extension with your custom ones
+    // 你可以将 AI Changes 扩展的默认装饰与自定义装饰结合使用
     const decorations = getDefaultDecorations()
 
-    // Add a custom element after the inserted text when the change is selected
+    // 选中更改时，在插入的文本后添加自定义元素
     if (isSelected) {
       decorations.push(
         Decoration.widget(change.newRange.to, () => {
@@ -43,6 +43,6 @@ AiChanges.configure({
 })
 ```
 
-The custom styles and elements are implemented using the [Prosemirror Decorations API](https://prosemirror.net/docs/ref/#view.Decorations).
+自定义样式和元素通过 [Prosemirror Decorations API](https://prosemirror.net/docs/ref/#view.Decorations) 实现。
 
-To show a popover when you select a change, follow [this guide](/ai/deprecated/changes/features/display-changes#show-a-popover-when-a-change-is-selected).
+若要在选中更改时显示弹出框，请参阅[本指南](/ai/deprecated/changes/features/display-changes#show-a-popover-when-a-change-is-selected)。
