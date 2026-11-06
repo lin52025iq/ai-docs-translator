@@ -1,37 +1,37 @@
 ---
-title: Hyperlinks and bookmarks
+title: 超链接和书签
 tags:
   - type: beta
 meta:
-  title: Hyperlinks and Bookmarks | Tiptap Conversion
-  description: How hyperlinks, email links, and internal bookmarks are handled across the DOCX conversion pipeline.
-  category: Conversion
+  title: 超链接和书签 | Tiptap 转换
+  description: 了解超链接、电子邮件链接和内部书签在 DOCX 转换流程中的处理方式。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Hyperlinks convert between DOCX and Tiptap as `link` marks with an `href` attribute. External URLs and email links round-trip cleanly. Links that point somewhere else in the same document round-trip too, together with the bookmark targets they point at.
+DOCX 与 Tiptap 之间的超链接会转换为带有 `href` 属性的 `link` 标记。外部 URL 和电子邮件链接可以顺利往返转换。指向同一文档中其他位置的链接也可以往返转换，其指向的书签目标也会一并保留。
 
-## What you need
+## 所需条件
 
-- **Extensions:** [ConvertKit](/conversion/import/docx/convertkit), which registers both the `Link` mark for hyperlinks and the `Bookmark` node for anchor targets.
-- **Configuration:** none required.
+- **扩展：**[ConvertKit](/conversion/import/docx/convertkit)，它会注册用于超链接的 `Link` 标记，以及用于锚点目标的 `Bookmark` 节点。
+- **配置：**无需配置。
 
-## Support overview
+## 支持概览
 
-| | Import | Editor | Export |
+| | 导入 | 编辑器 | 导出 |
 | --- | --- | --- | --- |
-| External hyperlinks (http/https) | Supported | Supported | Supported |
-| Email links (mailto:) | Supported | Supported | Supported |
-| Internal anchor links | Supported | Supported | Supported |
-| Bookmark targets | Supported | Supported | Supported |
-| Inline formatting inside links | Supported | Supported | Supported |
+| 外部超链接 (http/https) | 支持 | 支持 | 支持 |
+| 电子邮件链接 (mailto:) | 支持 | 支持 | 支持 |
+| 内部锚点链接 | 支持 | 支持 | 支持 |
+| 书签目标 | 支持 | 支持 | 支持 |
+| 链接中的行内格式 | 支持 | 支持 | 支持 |
 
-## Import
+## 导入
 
-Import hyperlinks using the [editor extension](/conversion/import/docx/editor-extension) or the [REST API](/conversion/import/docx/rest-api). Both produce identical output.
+使用[编辑器扩展](/conversion/import/docx/editor-extension)或 [REST API](/conversion/import/docx/rest-api) 导入超链接。两者生成的输出完全相同。
 
-The conversion service detects `<w:hyperlink>` elements and produces text nodes with a `link` mark. External links are resolved through the document's relationship file.
+转换服务会检测 `<w:hyperlink>` 元素，并生成带有 `link` 标记的文本节点。外部链接通过文档的关系文件解析。
 
 ```json
 {
@@ -43,9 +43,9 @@ The conversion service detects `<w:hyperlink>` elements and produces text nodes 
 }
 ```
 
-### Links within the document
+### 文档内链接
 
-A link that jumps to another place in the same document, such as a table of contents entry or a "back to top" link, becomes a `link` mark whose `href` is a fragment:
+跳转到同一文档中其他位置的链接（例如目录条目或“返回顶部”链接）会转换为 `link` 标记，其 `href` 为片段标识符：
 
 ```json
 {
@@ -57,55 +57,55 @@ A link that jumps to another place in the same document, such as a table of cont
 }
 ```
 
-Word stores these links in more than one way, and all of them are imported:
+Word 以多种方式存储这类链接，且都会导入：
 
-- An anchor on the hyperlink element itself, which Word writes as `w:anchor`.
-- A `HYPERLINK` field with the `\l` switch, in both its simple and its complex form.
+- 超链接元素本身的锚点，Word 将其写作 `w:anchor`。
+- 带有 `\l` 开关的 `HYPERLINK` 域，包括简单形式和复杂形式。
 
-When a link carries both a web address and an anchor, the two are combined into a single href, such as `https://example.com#intro`.
+如果链接同时包含网址和锚点，两者会合并到同一个 href 中，例如 `https://example.com#intro`。
 
-### Bookmark targets
+### 书签目标
 
-The place a link jumps to is a Word bookmark. Each one is imported as a zero-width `bookmark` node holding the bookmark's name as its `id`:
+链接跳转到的位置由 Word 书签指定。每个书签都会作为一个零宽度的 `bookmark` 节点导入，并将书签名称存储在其 `id` 中：
 
 ```json
 { "type": "bookmark", "attrs": { "id": "intro" } }
 ```
 
-The node sits at the position the bookmark started, so the anchor keeps its place in the document. A link points at it by using `#` followed by the same id. Bookmarks that sit between paragraphs rather than inside one are attached to the start of the following paragraph.
+该节点位于书签的起始位置，因此锚点会保留在文档中的原有位置。链接通过在相同的 id 前加上 `#` 来指向该节点。位于段落之间而非段落内部的书签，会附加到后续段落的开头。
 
-<Callout variant="info" title="Word's own bookmarks are imported too">
-  Word adds bookmarks of its own, such as `_GoBack` for the last edit position and `_Toc` entries behind a table of contents. These are imported like any other bookmark, so you may see `bookmark` nodes whose ids you did not create. They are zero-width and do not render anything, and they keep a generated table of contents working after a round-trip.
+<Callout variant="info" title="Word 自带的书签也会导入">
+  Word 会添加自带书签，例如用于标记上次编辑位置的 `_GoBack`，以及目录项背后的 `_Toc`。这些书签会像其他书签一样导入，因此你可能会看到 id 并非由你创建的 `bookmark` 节点。它们是零宽度的，不会渲染任何内容，并能确保自动生成的目录在往返转换后继续正常工作。
 </Callout>
 
-<Callout variant="info" title="Inline formatting inside hyperlinks is preserved on import">
-  When a DOCX hyperlink contains multiple runs with different formatting (for example, a bold word followed by a regular word), the importer iterates over each `w:r` independently. Per-run formatting such as bold and italic is preserved alongside the link mark.
+<Callout variant="info" title="超链接中的行内格式会在导入时保留">
+  当 DOCX 超链接包含多个格式不同的文本片段（例如，先是一个粗体单词，后跟一个常规字体的单词）时，导入器会分别遍历每个 `w:r`。每个片段的格式（如粗体和斜体）都会与链接标记一并保留。
 </Callout>
 
-## Editor rendering
+## 在编辑器中渲染
 
-ConvertKit registers the [`Link`](/editor/extensions/marks/link) extension, so no separate installation is needed.
+ConvertKit 会注册 [`Link`](/editor/extensions/marks/link) 扩展，因此无需单独安装。
 
-It renders link marks as `<a>` tags with the `href` attribute.
+它会将链接标记渲染为带有 `href` 属性的 `<a>` 标签。
 
-The extension adds `target` (default `_blank`) and `rel` (default `noopener noreferrer nofollow`) attributes automatically. These are not carried over from the DOCX import and are not included in the DOCX export.
+该扩展会自动添加 `target`（默认值为 `_blank`）和 `rel`（默认值为 `noopener noreferrer nofollow`）属性。这些属性不会从 DOCX 导入，也不会包含在 DOCX 导出中。
 
-Bookmark targets need the `Bookmark` node, which ConvertKit registers by default. Without it the anchors are dropped when the imported content is loaded into the editor, and links pointing at them stop resolving. The node is an inline atom that renders as an empty `<span data-bookmark-id="...">`, so it takes no space and never clashes with the link's own `<a>` element. Pass `bookmark: false` to ConvertKit to leave it out.
+书签目标需要使用 `Bookmark` 节点，该节点由 ConvertKit 默认注册。如果没有该节点，导入的内容加载到编辑器时锚点会被丢弃，指向这些锚点的链接也就无法解析。该节点是一个行内原子节点，会渲染为空的 `<span data-bookmark-id="...">`，因此不占空间，也不会与链接自身的 `<a>` 元素冲突。向 ConvertKit 传入 `bookmark: false` 可将其禁用。
 
-## Export
+## 导出
 
-Export hyperlinks using the [editor extension](/conversion/export/docx/editor-extension) or the [REST API](/conversion/export/docx/rest-api). Both handle links identically.
+使用[编辑器扩展](/conversion/export/docx/editor-extension)或 [REST API](/conversion/export/docx/rest-api) 导出超链接。两者对链接的处理方式完全相同。
 
-Links to a web address, including `mailto:` addresses, are wrapped in a DOCX external hyperlink with the Hyperlink style applied, and the href becomes an external relationship in the DOCX package.
+指向网址的链接（包括 `mailto:` 地址）会被包装为 DOCX 外部超链接，并应用 Hyperlink 样式；其 href 会成为 DOCX 包中的外部关系。
 
-A link whose href starts with `#` is exported as a Word internal hyperlink pointing at the matching bookmark, so it navigates inside the document just as it does in the editor. `bookmark` nodes are exported back into Word bookmarks, which is what those links point at.
+href 以 `#` 开头的链接会导出为指向匹配书签的 Word 内部超链接，因此它在文档中的跳转方式与在编辑器中相同。`bookmark` 节点会重新导出为 Word 书签，供这些链接指向。
 
-A href of `#` on its own has no target to point at, so that text is exported without a link. A web address that merely contains a fragment, such as `https://example.com#intro`, is still an external link.
+单独的 `#` 没有可指向的目标，因此对应文本会以无链接的形式导出。仅包含片段标识符的网址（例如 `https://example.com#intro`）仍然是外部链接。
 
-### What round-trips
+### 往返转换时的保留内容
 
-An external hyperlink with plain link text survives the full import, edit, export cycle. The href and visible text are preserved. The exported link uses the DOCX Hyperlink style (typically blue underlined text).
+带有纯文本链接文字的外部超链接可以完整经历导入、编辑和导出流程。href 和可见文本都会保留。导出的链接使用 DOCX 的 Hyperlink 样式（通常显示为蓝色带下划线的文本）。
 
-In-document navigation also survives the full cycle: a link keeps pointing at the same target, and the target keeps its position.
+文档内导航也能完整经历这一流程：链接仍指向相同目标，目标也保留在原有位置。
 
-What changes: the `target` and `rel` attributes added by the editor are not carried into the DOCX.
+变化之处：编辑器添加的 `target` 和 `rel` 属性不会保留到 DOCX 中。
