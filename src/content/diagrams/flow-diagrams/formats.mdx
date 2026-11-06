@@ -1,64 +1,60 @@
 ---
-title: 'Formats'
-intro: 'Each diagram stores its source in one format, named by its <code>format</code> attribute. The format is Mermaid text, draw.io XML, BPMN XML, or a format that a Diagram Renderer of your own lists. What pasted text becomes is on <a href="/docs/diagrams/data/pasting">Pasting</a>.'
+title: '格式'
+intro: '每个图表都以一种格式存储其源内容，该格式由 <code>format</code> 属性指定。格式可以是 Mermaid 文本、draw.io XML、BPMN XML，或你自己的图表渲染器所支持的格式。粘贴的文本会转换成什么内容，请参阅<a href="/docs/diagrams/data/pasting">粘贴</a>。'
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Formats | Tiptap Diagrams Docs'
-  description: 'Each diagram stores its source in one format, named by its format attribute.'
-  category: Diagrams
+  title: '格式 | Tiptap 图表文档'
+  description: '每个图表都以一种格式存储其源内容，该格式由 format 属性指定。'
+  category: 图表
 ---
 
-## The formats
+## 格式
 
-| `format`    | Source                       | Drawn by                                                                                              |
+| `format`    | 源内容                       | 绘制方式                                                                                              |
 | ----------- | ---------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `'mermaid'` | Mermaid text                 | mermaid.js or Pele, see [Mermaid diagrams](/diagrams/flow-diagrams/formats#mermaid-diagrams)          |
-| `'drawio'`  | draw.io XML                  | The draw.io Diagram Renderer, see [draw.io diagrams](/diagrams/flow-diagrams/formats#drawio-diagrams) |
-| `'bpmn'`    | BPMN 2.0 XML with its layout | The BPMN Diagram Renderer, see [BPMN diagrams](/diagrams/flow-diagrams/formats#bpmn-diagrams)         |
-| Another id  | Stored as it is              | A Diagram Renderer that lists it, see [Other formats](/diagrams/flow-diagrams/formats#other-formats)  |
+| `'mermaid'` | Mermaid 文本                 | 由 mermaid.js 或 Pele 绘制，参见 [Mermaid 图表](/diagrams/flow-diagrams/formats#mermaid-diagrams)          |
+| `'drawio'`  | draw.io XML                  | 由 draw.io 图表渲染器绘制，参见 [draw.io 图表](/diagrams/flow-diagrams/formats#drawio-diagrams) |
+| `'bpmn'`    | 带布局的 BPMN 2.0 XML        | 由 BPMN 图表渲染器绘制，参见 [BPMN 图表](/diagrams/flow-diagrams/formats#bpmn-diagrams)         |
+| 其他 ID     | 按原样存储                   | 由支持该格式的图表渲染器绘制，参见[其他格式](/diagrams/flow-diagrams/formats#other-formats)  |
 
-## Mermaid diagrams
+## Mermaid 图表
 
-A diagram with `format: 'mermaid'` holds Mermaid text, stored as you typed it, but without
-`%%{…}%%` directives and frontmatter. See [Source is data](/diagrams/flow-diagrams/overview#source-is-data).
+`format: 'mermaid'` 的图表包含 Mermaid 文本，按你输入的内容存储，但不包含
+`%%{…}%%` 指令和 frontmatter。请参阅[源内容即数据](/diagrams/flow-diagrams/overview#source-is-data)。
 
 ```ts
 editor.commands.insertFlowDiagram({ source: 'flowchart LR\n  A --> B', title: 'Order process' })
 ```
 
-The source starts with a Mermaid kind, such as `flowchart` or `sequenceDiagram`.
-[Mermaid kinds](/diagrams/flow-diagrams/overview#mermaid-kinds) lists every kind a diagram can hold.
+源内容以 Mermaid 图表类型开头，例如 `flowchart` 或 `sequenceDiagram`。
+[Mermaid 图表类型](/diagrams/flow-diagrams/overview#mermaid-kinds)列出了图表可以包含的所有类型。
 
-Register one of two Diagram Renderers for it,
-[`mermaidDiagramRenderer`](/diagrams/renderers/mermaid#diagrams) or
-[`peleDiagramRenderer`](/diagrams/renderers/pele).
-[Next to mermaid.js](/diagrams/renderers/pele#next-to-mermaidjs) compares the two.
+为其注册以下两种图表渲染器之一：
+[`mermaidDiagramRenderer`](/diagrams/renderers/mermaid#diagrams) 或
+[`peleDiagramRenderer`](/diagrams/renderers/pele)。
+[与 mermaid.js 对比](/diagrams/renderers/pele#next-to-mermaidjs)介绍了两者的区别。
 
-## draw.io diagrams
+## draw.io 图表
 
-A diagram with `format: 'drawio'` holds draw.io XML. The
-[draw.io Diagram Renderer](/diagrams/renderers/drawio) draws it and also connects the draw.io
-editor, so you can change it. Its page has a demo and
-[the rules for the source](/diagrams/renderers/drawio#what-a-drawio-source-is).
+`format: 'drawio'` 的图表包含 draw.io XML。[draw.io 图表渲染器](/diagrams/renderers/drawio)会绘制该图表，并连接 draw.io
+编辑器，以便你对其进行修改。其页面提供了演示，以及[源内容的规则](/diagrams/renderers/drawio#what-a-drawio-source-is)。
 
 ```ts
 editor.commands.insertFlowDiagram({ source: drawioXml, format: 'drawio', title: 'Order process' })
 ```
 
-## BPMN diagrams
+## BPMN 图表
 
-A diagram with `format: 'bpmn'` holds BPMN 2.0 XML with its layout, stored as written. The
-[BPMN Diagram Renderer](/diagrams/renderers/bpmn) draws it and also connects the bpmn-js
-modeler, so you can change it. Its page has a demo and the rules for the source.
+`format: 'bpmn'` 的图表包含带布局的 BPMN 2.0 XML，并按原样存储。[BPMN 图表渲染器](/diagrams/renderers/bpmn)会绘制该图表，并连接 bpmn-js
+建模器，以便你对其进行修改。其页面提供了演示和源内容规则。
 
 ```ts
 editor.commands.insertFlowDiagram({ source: bpmnXml, format: 'bpmn', title: 'Payment check' })
 ```
 
-## Other formats
+## 其他格式
 
-A Diagram Renderer of your own can draw a format of its own. The id rules, the size limit and what
-happens when no Renderer draws it are on
-[A format of your own](/diagrams/renderers/custom-diagrams#a-format-of-your-own).
+你可以使用自己的图表渲染器来绘制自定义格式。关于 ID 规则、大小限制，以及没有渲染器绘制该格式时会发生什么，请参阅
+[自定义格式](/diagrams/renderers/custom-diagrams#a-format-of-your-own)。
