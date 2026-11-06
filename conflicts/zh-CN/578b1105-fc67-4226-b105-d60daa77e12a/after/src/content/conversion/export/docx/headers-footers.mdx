@@ -1,0 +1,623 @@
+---
+title: 使用页眉和页脚扩展 DOCX 导出
+ tags:
+  - type: start
+  - type: beta
+  - type: version
+    label: v0.26.1
+meta:
+    title: 使用页眉和页脚扩展 DOCX 导出 | Tiptap Conversion
+    description: 了解如何使用页眉和页脚扩展 DOCX 导出
+    category: Conversion
+---
+
+import { Callout } from '@/components/ui/Callout'
+import { CodeDemo } from '@/components/CodeDemo'
+import { Requirements, RequirementItem } from '@/components/Requirements'
+import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
+
+<EnterpriseCalloutAuto variant="docx" renderMode="sidebar" disableWaitlist />
+
+<Requirements>
+    <RequirementItem label="1. 激活试用或订阅">
+        在账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 计划](https://cloud.tiptap.dev/v2/billing)。
+    </RequirementItem>
+    <RequirementItem label="2. 从私有注册表安装">
+        要安装这些前端扩展，请按照[设置指南](/guides/pro-extensions)进行身份验证，以访问 Tiptap 的私有 npm 注册表。
+    </RequirementItem>
+</Requirements>
+
+`@tiptap-pro/extension-export-docx` 扩展内置了自定义导出文档页眉和页脚的支持。
+
+<CodeDemo isPro path="/Extensions/ExportDocxCustomHeaderFooter" />
+
+添加此扩展后，即可通过一些额外属性配置 `ExportDocx`：
+
+## 页眉配置
+
+`headers` 对象可用于自定义导出的 DOCX 文档页眉：
+
+| 属性 | 类型 | 描述 |
+| --- | --- | --- |
+| `evenAndOddHeaders` | `boolean` | 是否为奇数页和偶数页使用不同的页眉 |
+| `differentFirstPage` | `boolean` | 是否为第一页使用不同的页眉。设为 `true` 时，第一页使用 `first` 的值，而不是 `default`。 |
+| `default` | `Header \| (() => Promise<Header>)` | 每页的默认页眉；启用 `evenAndOddHeaders` 选项时，则为奇数页页眉。可以是 `Header` 对象，也可以是返回 `Header` 的异步函数。 |
+| `first` | `Header \| (() => Promise<Header>)` | 第一页的页眉。仅当 `differentFirstPage` 设为 `true` 时使用。可以是 `Header` 对象，也可以是返回 `Header` 的异步函数。 |
+| `even` | `Header \| (() => Promise<Header>)` | 启用 `evenAndOddHeaders` 选项时偶数页的页眉。可以是 `Header` 对象，也可以是返回 `Header` 的异步函数。 |
+
+## 页脚配置
+
+`footers` 对象可用于自定义导出的 DOCX 文档页脚：
+
+| 属性 | 类型 | 描述 |
+| --- | --- | --- |
+| `evenAndOddFooters` | `boolean` | 是否为奇数页和偶数页使用不同的页脚 |
+| `differentFirstPage` | `boolean` | 是否为第一页使用不同的页脚。设为 `true` 时，第一页使用 `first` 的值，而不是 `default`。 |
+| `default` | `Footer \| (() => Promise<Footer>)` | 每页的默认页脚；启用 `evenAndOddFooters` 选项时，则为奇数页页脚。可以是 `Footer` 对象，也可以是返回 `Footer` 的异步函数。 |
+| `first` | `Footer \| (() => Promise<Footer>)` | 第一页的页脚。仅当 `differentFirstPage` 设为 `true` 时使用。可以是 `Footer` 对象，也可以是返回 `Footer` 的异步函数。 |
+| `even` | `Footer \| (() => Promise<Footer>)` | 启用 `evenAndOddFooters` 选项时偶数页的页脚。可以是 `Footer` 对象，也可以是返回 `Footer` 的异步函数。 |
+
+# 使用示例
+
+## 配置扩展
+
+通过 `ExportDocx.configure()` 方法配置页眉和页脚。你可以直接使用 `Docx` 命名空间中的对象（如 `Docx.Header` 和 `Docx.Footer`），以便进行全面控制：
+
+<Callout title="关于页眉和页脚对象的说明" type="info">
+通过从 `@tiptap-pro/extension-export-docx` 导出的 `Docx` 命名空间访问 `Header`、`Footer`、`Paragraph` 和 `TextRun` 对象。你可以使用任何有效内容对其进行自定义，包括段落、文本运行，以及 DOCX 页眉或页脚标准元素中支持的其他内容。
+</Callout>
+
+```javascript
+import { ExportDocx, Docx } from '@tiptap-pro/extension-export-docx'
+
+const editor = new Editor({
+  extensions: [
+    // ... other extensions
+    ExportDocx.configure({
+      onCompleteExport: result => {
+        // Handle the export result
+        const blob = new Blob([result], {
+          type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = 'export.docx'
+        a.click()
+        URL.revokeObjectURL(url)
+      },
+      headers: {
+        evenAndOddHeaders: true,
+        default: new Docx.Header({
+          children: [
+            new Docx.Paragraph({
+              children: [
+                new Docx.TextRun({
+                  text: "Default Header",
+                  bold: true,
+                }),
+              ],
+            }),
+          ],
+        }),
+        first: new Docx.Header({
+          children: [
+            new Docx.Paragraph({
+              children: [
+                new Docx.TextRun({
+                  text: "First Page Header",
+                  size: 24,
+                  bold: true,
+                }),
+              ],
+            }),
+          ],
+        }),
+        even: new Docx.Header({
+          children: [
+            new Docx.Paragraph({
+              children: [
+                new Docx.TextRun({
+                  text: "Even Page Header",
+                }),
+              ],
+            }),
+          ],
+        }),
+      },
+      footers: {
+        default: new Docx.Footer({
+          children: [
+            new Docx.Paragraph({
+              children: [
+                new Docx.TextRun({
+                  text: "Default Footer",
+                }),
+              ],
+            }),
+          ],
+        }),
+      },
+    }),
+  ],
+})
+
+// Trigger export
+editor.commands.exportDocx()
+```
+
+### 使用辅助函数（替代方案）
+
+为了更轻松地处理 Tiptap 风格的内容，你可以使用 `convertHeader` 和 `convertFooter` 辅助函数。它们会自动处理标记转换、链接和其他 Tiptap 功能。
+
+```javascript
+import { ExportDocx } from '@tiptap-pro/extension-export-docx'
+
+const editor = new Editor({
+  extensions: [
+    // ... other extensions
+    ExportDocx.configure({
+      onCompleteExport: result => {
+        // Handle the export result
+        const blob = new Blob([result], {
+          type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = 'export.docx'
+        a.click()
+        URL.revokeObjectURL(url)
+      },
+      headers: {
+        evenAndOddHeaders: true,
+        default: async () =>
+          convertHeader({
+            node: {
+              type: 'paragraph',
+              content: [
+                {
+                  type: 'text',
+                  text: 'Header',
+                  marks: [{ type: 'textStyle', attrs: { color: 'red' } }],
+                },
+              ],
+            },
+          }),
+        first: async () =>
+          convertHeader({
+            node: {
+              type: 'paragraph',
+              content: [
+                {
+                  type: 'text',
+                  text: 'First Page Header',
+                  marks: [{ type: 'bold' }],
+                },
+              ],
+            },
+          }),
+        even: async () =>
+          convertHeader({
+            node: {
+              type: 'paragraph',
+              content: [
+                {
+                  type: 'text',
+                  text: 'Even Page Header',
+                  marks: [{ type: 'textStyle', attrs: { color: 'blue' } }],
+                },
+              ],
+            },
+          }),
+      },
+      footers: {
+        default: async () =>
+          convertFooter({
+            node: {
+              type: 'paragraph',
+              content: [
+                {
+                  type: 'text',
+                  text: 'Footer',
+                  marks: [{ type: 'textStyle', attrs: { color: 'red' } }],
+                },
+              ],
+            },
+          }),
+        first: async () =>
+          convertFooter({
+            node: {
+              type: 'paragraph',
+              content: [
+                {
+                  type: 'text',
+                  text: 'First Page Footer',
+                  marks: [{ type: 'bold' }],
+                },
+              ],
+            },
+          }),
+        even: async () =>
+          convertFooter({
+            node: {
+              type: 'paragraph',
+              content: [
+                {
+                  type: 'text',
+                  text: 'Even Page Footer',
+                  marks: [{ type: 'textStyle', attrs: { color: 'blue' } }],
+                },
+              ],
+            },
+          }),
+      },
+    }),
+  ],
+})
+
+// Trigger export
+editor.commands.exportDocx()
+```
+
+`convertHeader` 和 `convertFooter` 辅助函数接收一个 Tiptap 节点（此处为段落），并会自动处理：
+- 标记转换（粗体、斜体、颜色等）
+- 链接转换
+- 文本样式和格式
+- 复杂的 Tiptap 节点结构
+
+这样，你就可以使用熟悉的 Tiptap JSON 结构，更轻松地创建丰富的页眉和页脚。
+
+<Callout title="重要说明！">
+    请注意，如果使用 `convertHeader` 和 `convertFooter` 辅助函数，则需要将其放在异步箭头函数中调用。这是因为这些实用函数内部会调用 `convertParagraph` 辅助函数；由于我们通过图像解析实现来处理图片，`convertParagraph` 是一个异步函数。
+</Callout>
+
+## 高级示例
+
+### 使用异步函数动态生成页眉和页脚
+
+你也可以提供返回 `Header` 或 `Footer` 对象的异步函数。这适用于动态生成内容，例如获取用户数据、格式化当前日期或处理图片。
+
+<Callout title="异步函数的优势" type="tip">
+使用异步函数生成页眉和页脚，可以实现许多强大的用例，例如：从 API 获取用户信息、添加当前时间戳或动态日期、处理并嵌入图片、计算文档统计信息，以及从数据库或外部服务检索数据。
+</Callout>
+
+```javascript
+import { ExportDocx, Docx } from '@tiptap-pro/extension-export-docx'
+
+// Function to fetch user information
+async function getCurrentUser() {
+  // This could be an API call, database query, etc.
+  return {
+    name: 'John Doe',
+    department: 'Engineering',
+    email: 'john.doe@company.com'
+  }
+}
+
+const editor = new Editor({
+  extensions: [
+    // ... other extensions
+    ExportDocx.configure({
+      onCompleteExport: result => {
+        // Handle the export result
+        const blob = new Blob([result], {
+          type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = 'export.docx'
+        a.click()
+        URL.revokeObjectURL(url)
+      },
+      headers: {
+        default: async () => {
+          const user = await getCurrentUser()
+          const currentDate = new Date().toLocaleDateString()
+          
+          return new Docx.Header({
+            children: [
+              new Docx.Paragraph({
+                children: [
+                  new Docx.TextRun({
+                    text: `Document prepared by: ${user.name} (${user.department}) on ${currentDate}`,
+                    size: 20,
+                  }),
+                ],
+              }),
+            ],
+          })
+        },
+      },
+      footers: {
+        default: async () => {
+          const user = await getCurrentUser()
+          
+          return new Docx.Footer({
+            children: [
+              new Docx.Paragraph({
+                children: [
+                  new Docx.TextRun({
+                    text: `Contact: ${user.email} | Generated: ${new Date().toISOString()}`,
+                    size: 16,
+                    italics: true,
+                  }),
+                ],
+              }),
+            ],
+          })
+        },
+      },
+    }),
+  ],
+})
+
+// Trigger export
+editor.commands.exportDocx()
+```
+
+<Callout title="异步函数的生命周期">
+    提供的异步函数会在整个文档转换完成后、构建文档之前调用。
+</Callout>
+
+### 混合使用静态和动态页眉/页脚
+
+你可以为不同页面组合使用静态和动态页眉/页脚：
+
+```javascript
+import { ExportDocx, Docx } from '@tiptap-pro/extension-export-docx'
+
+const editor = new Editor({
+  extensions: [
+    // ... other extensions
+    ExportDocx.configure({
+      onCompleteExport: result => {
+        // Handle the export result
+        const blob = new Blob([result], {
+          type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = 'export.docx'
+        a.click()
+        URL.revokeObjectURL(url)
+      },
+      headers: {
+        // Static first page header
+        first: new Docx.Header({
+          children: [
+            new Docx.Paragraph({
+              children: [
+                new Docx.TextRun({
+                  text: "Company Confidential Report",
+                  size: 24,
+                  bold: true,
+                }),
+              ],
+            }),
+          ],
+        }),
+        // Dynamic default header for subsequent pages
+        default: async () => {
+          const reportData = await fetchReportMetadata()
+          
+          return new Docx.Header({
+            children: [
+              new Docx.Paragraph({
+                children: [
+                  new Docx.TextRun({
+                    text: `${reportData.title} - Generated ${reportData.timestamp}`,
+                    size: 18,
+                  }),
+                ],
+              }),
+            ],
+          })
+        },
+      },
+      footers: {
+        default: async () => {
+          const stats = await getDocumentStats()
+          
+          return new Docx.Footer({
+            children: [
+              new Docx.Paragraph({
+                children: [
+                  new Docx.TextRun({
+                    text: `Page Count: ${stats.pages} | Word Count: ${stats.words}`,
+                    size: 14,
+                  }),
+                ],
+              }),
+            ],
+          })
+        },
+      },
+    }),
+  ],
+})
+
+async function fetchReportMetadata() {
+  // Simulate API call
+  return {
+    title: 'Quarterly Business Report',
+    timestamp: new Date().toLocaleDateString()
+  }
+}
+
+async function getDocumentStats() {
+  // Simulate document analysis
+  return {
+    pages: 10,
+    words: 2500
+  }
+}
+```
+
+## 页码
+
+导出支持两种输出实时页码字段的方式：
+
+1. **纯文本页眉和页脚中的 `{page}` / `{total}` 令牌**：适用于从 [Pages 扩展](/pages/getting-started/overview)提取的内容，以及传入 `headers` / `footers` 的纯文本字符串。导出时会将每个令牌转换为实时的 `PAGE` / `NUMPAGES` 字段，因此 Word 会显示当前页码和总页数。
+2. **`Docx.PageNumber` API**：当你使用 `new Docx.Header()` / `new Docx.Footer()` 手动构建页眉/页脚内容，或需要在字段周围添加超出令牌本身的格式时，必须使用此 API。目前 `convertHeader` / `convertFooter` 辅助函数不会处理 `Docx.PageNumber` 引用，因此请直接传入 `Docx` 实例。
+
+### 通过 `{page}` / `{total}` 令牌设置页码
+
+任何纯文本页眉或页脚（包括通过 Pages 扩展自动提取的内容，例如 `editor.commands.setHeader('Page {page} of {total}')`）都会在导出的 DOCX 中显示为实时页码字段：
+
+```javascript
+import { ExportDocx } from '@tiptap-pro/extension-export-docx'
+
+const editor = new Editor({
+  extensions: [
+    // ... other extensions
+    ExportDocx.configure({
+      onCompleteExport: result => {
+        const blob = new Blob([result], {
+          type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = 'export.docx'
+        a.click()
+        URL.revokeObjectURL(url)
+      },
+      // Plain-text headers/footers: `{page}` and `{total}` are converted
+      // to live `PAGE` / `NUMPAGES` fields on export.
+      headers: {
+        default: 'Confidential | Page {page} of {total}',
+      },
+      footers: {
+        default: 'Page {page} of {total}',
+      },
+    }),
+  ],
+})
+
+// Trigger export
+editor.commands.exportDocx()
+```
+
+从 Pages 扩展自动提取页眉/页脚时，也会自动执行相同的转换。因此，通过 `editor.commands.setFooter('Page {page} of {total}')` 设置的页脚无需额外配置，导出后就会包含实时页码。
+
+### 自定义令牌名称
+
+如果编辑器通过 `Pages.configure({ placeholders: { total: 'pages' } })` 重命名了内置令牌（参见 [Pages → 重命名占位符](/pages/core-concepts/page-header-footer#renaming-or-disabling-placeholders)），导出时也会采用相同的令牌名称：`{pages}` 会转换为实时的 `NUMPAGES` 字段，而原来的 `{total}` 将不再被识别。`ExportDocx` 本身没有 `placeholders` 选项；在 Pages 中进行配置，可以确保编辑器预览和导出的 `.docx` 保持一致。
+
+直接调用 `convertHeader` / `convertFooter` 时（例如，在没有编辑器的服务器端代码中），可以显式传入 `placeholders`：
+
+```javascript
+import { convertFooter } from '@tiptap-pro/extension-export-docx'
+
+const footer = await convertFooter({
+  node: { type: 'paragraph', content: [{ type: 'text', text: 'Page {page} of {pages}' }] },
+  placeholders: { total: 'pages' },
+})
+```
+
+传入 `placeholders: false` 可禁用替换，并将令牌作为原样文本输出。直接调用 `convertHeader` / `convertFooter` 时，如果完全省略 `placeholders`，也会禁用替换；需要显式启用才会生效。
+
+### 基本页码
+
+```javascript
+import { ExportDocx, Docx } from '@tiptap-pro/extension-export-docx'
+
+const editor = new Editor({
+  extensions: [
+    // ... other extensions
+    ExportDocx.configure({
+      onCompleteExport: result => {
+        // Handle the export result
+        const blob = new Blob([result], {
+          type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = 'export.docx'
+        a.click()
+        URL.revokeObjectURL(url)
+      },
+      headers: {
+        default: new Docx.Header({
+          children: [
+            new Docx.Paragraph({
+              children: [
+                new Docx.TextRun({
+                  children: ['Page ', Docx.PageNumber.CURRENT],
+                }),
+              ],
+            }),
+          ],
+        }),
+      },
+      footers: {
+        default: new Docx.Footer({
+          children: [
+            new Docx.Paragraph({
+              children: [
+                new Docx.TextRun({
+                  children: ['Page ', Docx.PageNumber.CURRENT],
+                }),
+              ],
+            }),
+          ],
+        }),
+      },
+    }),
+  ],
+})
+
+// Trigger export
+editor.commands.exportDocx()
+```
+
+### 显示总页数的页码
+
+```javascript
+import { ExportDocx, Docx } from '@tiptap-pro/extension-export-docx'
+
+const editor = new Editor({
+  extensions: [
+    // ... other extensions
+    ExportDocx.configure({
+      onCompleteExport: result => {
+        // Handle the export result
+        const blob = new Blob([result], {
+          type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = 'export.docx'
+        a.click()
+        URL.revokeObjectURL(url)
+      },
+      footers: {
+        default: new Docx.Footer({
+          children: [
+            new Docx.Paragraph({
+              children: [
+                new Docx.TextRun({
+                  children: [
+                    'Page ',
+                    Docx.PageNumber.CURRENT,
+                    ' of ',
+                    Docx.PageNumber.TOTAL_PAGES,
+                  ],
+                }),
+              ],
+            }),
+          ],
+        }),
+      },
+    }),
+  ],
+})
+
+// Trigger export
+editor.commands.exportDocx()
+```
