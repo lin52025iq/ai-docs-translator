@@ -1,20 +1,20 @@
 ---
-title: Configure comments
+title: 配置评论
 meta:
-  title: Configure | Tiptap Comments Docs
-  description: Configure TiptapCollabProvider and customize thread classes in your Tiptap editor. More in the docs!
-  category: Comments
+  title: 配置 | Tiptap 评论文档
+  description: 在 Tiptap 编辑器中配置 TiptapCollabProvider 并自定义线程类。了解更多，请参阅文档！
+  category: 评论
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Comments are embedded within documents in the Collaboration Cloud. To enable comments, integrate the TiptapCollabProvider and configure your setup to support comment functionality.
+评论嵌入在 Collaboration Cloud 中的文档内。要启用评论，请集成 TiptapCollabProvider 并配置设置，以支持评论功能。
 
 ## Provider
 
-The `TiptapCollabProvider` instance
+`TiptapCollabProvider` 实例
 
-Default: `null`
+默认值：`null`
 
 ```js
 const tiptapCollabProvider = new TiptapCollabProvider({
@@ -28,9 +28,9 @@ Comments.configure({
 
 ## Classes
 
-The classes used for the threads.
+用于线程的类名。
 
-Default:
+默认值：
 
 ```js
 {
@@ -60,9 +60,9 @@ Comments.configure({
 
 ## onClickThread
 
-A callback that is called when a thread is clicked. If the thread is clicked, the thread ID is passed to the callback. If no thread is clicked, `null` is passed.
+点击线程时调用的回调。如果点击了线程，线程 ID 会传递给回调；如果没有点击线程，则传递 `null`。
 
-Default: `undefined`
+默认值：`undefined`
 
 ```js
 Comments.configure({
@@ -73,11 +73,11 @@ Comments.configure({
 
 ## deleteUnreferencedThreads
 
-A boolean option that controls whether to delete threads not referenced in the document. By default, threads are marked as deleted when they are not referenced in a document anymore. This is useful for cleaning up threads that are no longer needed.
+用于控制是否删除文档中没有引用的线程的布尔选项。默认情况下，当线程不再被文档引用时，会将其标记为已删除。这有助于清理不再需要的线程。
 
-However, if you want to keep the threads even if they are not referenced in the document, you can set this option to `false`.
+不过，如果希望即使线程未被文档引用也保留它们，可以将此选项设为 `false`。
 
-**Default:**: `true`
+**默认值：** `true`
 
 ```js
 Comments.configure({
@@ -86,17 +86,17 @@ Comments.configure({
 })
 ```
 
-If you configure `onThreadAnchorRemoved`, that option replaces automatic cleanup. Its `defaultHandler()` still respects `deleteUnreferencedThreads`.
+如果配置了 `onThreadAnchorRemoved`，该选项会取代自动清理。其 `defaultHandler()` 仍会遵循 `deleteUnreferencedThreads` 的设置。
 
 ## onThreadAnchorRemoved
 
-A callback that runs when a local edit removes a thread's last document anchor. An anchor is an inline thread mark or a block thread node. The callback runs after edits settle, before cleanup changes the thread data. It runs only on the editing client, not on clients receiving the change remotely.
+当本地编辑移除线程在文档中的最后一个锚点时运行的回调。锚点可以是行内线程标记或块级线程节点。编辑完成后、清理操作更改线程数据之前，会运行此回调。它只会在执行编辑的客户端上运行，不会在远程接收更改的客户端上运行。
 
-**Default:** `undefined`, which keeps automatic cleanup controlled by `deleteUnreferencedThreads`.
+**默认值：** `undefined`，此时自动清理由 `deleteUnreferencedThreads` 控制。
 
-Set this option to `false` to disable automatic cleanup when anchors disappear. A callback replaces cleanup unless it calls `defaultHandler()`. The default handler soft-deletes the unreferenced thread when `deleteUnreferencedThreads` is `true`.
+将此选项设为 `false` 可在锚点消失时禁用自动清理。除非回调调用 `defaultHandler()`，否则它会取代清理操作。当 `deleteUnreferencedThreads` 为 `true` 时，默认处理程序会软删除未被引用的线程。
 
-For example, resolve the thread and keep its comments when its anchor disappears:
+例如，当线程的锚点消失时，将线程标记为已解决并保留其评论：
 
 ```js
 CommentsKit.configure({
@@ -106,20 +106,20 @@ CommentsKit.configure({
 })
 ```
 
-The callback receives these arguments:
+回调会接收以下参数：
 
-| Argument         | Description                                              |
-| ---------------- | -------------------------------------------------------- |
-| `editor`         | The editor whose last anchor for the thread was removed. |
-| `threadId`       | The thread ID.                                           |
-| `thread`         | The current thread data, including its comments.         |
-| `field`          | The collaboration field containing the thread.           |
-| `removedBy`      | `'edit'`, `'command'`, or `'undoRedo'`.                  |
-| `defaultHandler` | Runs the configured default cleanup.                     |
+| 参数              | 说明                                                   |
+| ----------------- | ------------------------------------------------------ |
+| `editor`          | 线程的最后一个锚点被移除的编辑器。                     |
+| `threadId`        | 线程 ID。                                              |
+| `thread`          | 当前线程数据，包括其评论。                             |
+| `field`           | 包含该线程的协作字段。                                 |
+| `removedBy`       | `'edit'`、`'command'` 或 `'undoRedo'`。                |
+| `defaultHandler`  | 运行已配置的默认清理操作。                             |
 
-Explicit anchor removal with `removeThread({ id })` reports `'command'`. Calling `removeThread({ id, deleteThread: true })` deletes the thread directly and skips this callback. Threads created for Tracked Changes suggestions are handled by that integration and also skip this callback.
+使用 `removeThread({ id })` 显式移除锚点时，`removedBy` 的值为 `'command'`。调用 `removeThread({ id, deleteThread: true })` 会直接删除线程并跳过此回调。为修订建议创建的线程由该集成处理，也会跳过此回调。
 
-Call `defaultHandler()` synchronously inside the callback. It runs at most once, and calls made after the callback returns have no effect. For example, log the removal and keep default cleanup:
+请在回调中同步调用 `defaultHandler()`。它最多运行一次；回调返回后再调用将不起作用。例如，记录锚点移除事件并保留默认清理行为：
 
 ```js
 CommentsKit.configure({
@@ -132,11 +132,11 @@ CommentsKit.configure({
 
 ## onThreadStateChanged
 
-A callback that runs after a Yjs transaction changes an existing thread's state in the editor's collaboration field. It handles both local and remote changes. Creating a thread, adding a comment, or updating thread metadata does not trigger it.
+当 Yjs 事务更改编辑器协作字段中现有线程的状态后运行的回调。它会处理本地和远程更改。创建线程、添加评论或更新线程元数据都不会触发此回调。
 
-**Default:** `undefined`, which keeps default document handling. Permanent thread deletion removes its anchors and preserves their text. Resolving, reopening, soft-deleting, or restoring a thread keeps its anchors.
+**默认值：** `undefined`，此时使用默认文档处理行为。永久删除线程会移除其锚点并保留锚点处的文本。解决、重新打开、软删除或恢复线程都会保留其锚点。
 
-Set this option to `false` to disable automatic document handling for thread state changes. A callback replaces that handling unless it calls `defaultHandler()`.
+将此选项设为 `false` 可禁用针对线程状态更改的自动文档处理。除非回调调用 `defaultHandler()`，否则它会取代该处理行为。
 
 ```js
 CommentsKit.configure({
@@ -147,22 +147,22 @@ CommentsKit.configure({
 })
 ```
 
-The callback receives these arguments:
+回调会接收以下参数：
 
-| Argument         | Description                                                                                                                               |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `editor`         | The editor handling the state change.                                                                                                     |
-| `threadId`       | The thread ID.                                                                                                                            |
-| `event`          | `'resolved'`, `'unresolved'`, `'deleted'`, or `'restored'`.                                                                               |
-| `previousThread` | The thread data before the change.                                                                                                        |
-| `thread`         | The thread data after the change. This is `undefined` after permanent deletion.                                                           |
-| `field`          | The collaboration field containing the thread.                                                                                            |
-| `origin`         | `'local'` or `'remote'`, based on the Yjs transaction.                                                                                    |
-| `defaultHandler` | Runs default document handling. Call it synchronously inside the callback, at most once. Calls after the callback returns have no effect. |
+| 参数                | 说明                                                                                  |
+| ------------------- | ------------------------------------------------------------------------------------- |
+| `editor`            | 处理状态更改的编辑器。                                                                |
+| `threadId`          | 线程 ID。                                                                             |
+| `event`             | `'resolved'`、`'unresolved'`、`'deleted'` 或 `'restored'`。                           |
+| `previousThread`    | 更改前的线程数据。                                                                    |
+| `thread`            | 更改后的线程数据。永久删除后，此值为 `undefined`。                                    |
+| `field`             | 包含该线程的协作字段。                                                                |
+| `origin`            | 根据 Yjs 事务确定的 `'local'` 或 `'remote'`。                                         |
+| `defaultHandler`    | 执行默认文档处理。请在回调中同步调用，且最多调用一次。回调返回后再调用将不起作用。     |
 
-The `'deleted'` event covers both soft deletion and permanent deletion. The `'restored'` event means a soft-deleted thread was restored, not that its document anchor was restored.
+`'deleted'` 事件涵盖软删除和永久删除。`'restored'` 事件表示软删除的线程已恢复，并不表示其文档锚点已恢复。
 
-For example, remove the anchor when a thread is resolved while keeping the thread and its comments:
+例如，在线程被解决时移除锚点，同时保留线程及其评论：
 
 ```js
 CommentsKit.configure({
@@ -175,15 +175,15 @@ CommentsKit.configure({
 })
 ```
 
-Anchor removal inside this callback does not trigger `onThreadAnchorRemoved` or automatic deletion of the detached thread. Thread state changes made inside this callback do not trigger another local state callback. Reopening the thread does not recreate an anchor removed by custom handling.
+在此回调中移除锚点不会触发 `onThreadAnchorRemoved`，也不会自动删除已脱离锚点的线程。在此回调中进行的线程状态更改不会再次触发本地状态回调。重新打开线程不会重新创建由自定义处理移除的锚点。
 
 ## trackedChangesIntegration
 
-A boolean option that controls whether to enable the automatic [Track Changes](/editor/extensions/functionality/tracked-changes) integration. When enabled, threads are automatically created, updated, resolved, or deleted in response to Track Changes suggestion lifecycle events.
+用于控制是否启用自动[修订](/editor/extensions/functionality/tracked-changes)集成的布尔选项。启用后，系统会根据修订建议的生命周期事件自动创建、更新、解决或删除线程。
 
-Set this to `false` if you do not use the Track Changes extension and want to prevent any related event listeners and ProseMirror plugins from being registered.
+如果未使用修订扩展，并且希望阻止注册相关事件监听器和 ProseMirror 插件，请将此选项设为 `false`。
 
-**Default:** `true`
+**默认值：** `true`
 
 ```js
 Comments.configure({
@@ -194,11 +194,11 @@ Comments.configure({
 
 ## respectParentSchema
 
-With `respectParentSchema: true`, local edits inside a block thread must follow the parent node's content rules. For example, a block thread in a section that allows paragraphs but not lists cannot contain a list. The extension converts a single invalid text block when it can preserve its text. It rejects edits it cannot repair.
+启用 `respectParentSchema: true` 后，块级线程中的本地编辑必须遵循父节点的内容规则。例如，如果某个分区允许段落但不允许列表，那么其中的块级线程就不能包含列表。如果能够保留文本，扩展会将单个无效文本块转换为有效内容；无法修复的编辑则会被拒绝。
 
-Existing invalid block threads are not migrated. Their text remains editable as long as their child block types do not change. Enable this option on every collaborating client.
+现有的无效块级线程不会迁移。只要其子块类型未发生变化，其中的文本仍可编辑。请在每个协作客户端上启用此选项。
 
-**Default:** `false`
+**默认值：** `false`
 
 ```js
 CommentsKit.configure({
@@ -208,18 +208,15 @@ CommentsKit.configure({
 
 ## useLegacyWrapping
 
-<Callout title="Warning" variant="warning">
-  The new wrapping mechanism uses a different schema for threads on block nodes, which is not
-  compatible with the previous wrapping behavior. If this is set to `false` without mapping existing
-  thread nodes to the new schema, the threads content will be stripped from the document.
+<Callout title="警告" variant="warning">
+  新的包裹机制为块节点上的线程使用了不同的 schema，与旧版包裹行为不兼容。如果将此选项设为 `false`，却未将现有线程节点映射到新的 schema，文档中的线程内容将被移除。
 </Callout>
 
-A boolean option that controls whether to use the legacy wrapping mechanism for multi-line comments. We suggest for new implementations to set this to `false`, and existing integrations can stay on the previous behavior. This is only required for backwards compatibility with existing comments, and it will
-be removed in the future.
+用于控制多行评论是否使用旧版包裹机制的布尔选项。对于新的实现，我们建议将此选项设为 `false`；现有集成则可以继续使用旧版行为。此选项仅用于兼容现有评论，未来将被移除。
 
-The new wrapping mechanism is more flexible, allowing to wrap content more precise and supports mixed wrapping of inline and block nodes.
+新的包裹机制更加灵活，可以更精确地包裹内容，并支持混合包裹行内节点和块节点。
 
-**Default:** `true`
+**默认值：** `true`
 
 ```js
 Comments.configure({
