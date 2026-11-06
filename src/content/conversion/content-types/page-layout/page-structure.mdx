@@ -1,45 +1,45 @@
 ---
-title: Page structure
+title: 页面结构
 tags:
   - type: beta
 meta:
-  title: Page Structure | Tiptap Conversion
-  description: How page breaks, sections, page size, margins, and page numbers are handled across the DOCX conversion pipeline.
-  category: Conversion
+  title: 页面结构 | Tiptap 转换
+  description: 了解 DOCX 转换流程如何处理分页符、分节、页面大小、页边距和页码。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Page structure covers the elements that control how content flows across pages: page breaks, sections, page size, margins, and page numbers. Page breaks round-trip through the pipeline. Other page structure properties are partially supported.
+页面结构涵盖控制内容如何跨页流动的元素：分页符、分节、页面大小、页边距和页码。分页符可以在转换流程中往返保留。其他页面结构属性仅部分受支持。
 
-## What you need
+## 所需内容
 
-- **Extensions:** `@tiptap-pro/extension-pagebreak` (not in StarterKit) and [`Pages`](/pages/getting-started/overview) for paginated layout
-- **Export options:** `pageSize` and `pageMargins` on the export extension or REST API
-- **Integration paths:** Import and export work identically via both the [editor extension](/conversion/import/docx/editor-extension) and [REST API](/conversion/import/docx/rest-api). Both export paths accept `pageSize` and `pageMargins`.
+- **扩展：** `@tiptap-pro/extension-pagebreak`（不包含在 StarterKit 中），以及用于分页布局的 [`Pages`](/pages/getting-started/overview)
+- **导出选项：** 在导出扩展或 REST API 中设置 `pageSize` 和 `pageMargins`
+- **集成方式：** 通过[编辑器扩展](/conversion/import/docx/editor-extension)和 [REST API](/conversion/import/docx/rest-api) 导入和导出的效果相同。两种导出方式都接受 `pageSize` 和 `pageMargins`。
 
-## Support overview
+## 支持情况一览
 
-| Feature | Import | Editor | Export |
+| 功能 | 导入 | 编辑器 | 导出 |
 | --- | --- | --- | --- |
-| Page breaks | Supported | Supported (PageBreak) | Supported |
-| Page size | Not supported | Supported ([Pages](/pages/getting-started/overview)) | Supported (configurable) |
-| Page margins | Not supported | Supported (Pages) | Supported (configurable) |
-| Sections | Partial (column configuration is extracted and applied) | Not supported | Single section only |
-| Page numbers | Supported (PAGE/NUMPAGES → `{page}`/`{numpages}` tokens, see [below](#page-numbers)) | Supported (via header/footer) | Supported. The editor extension and the REST API emit `{page}`/`{total}` tokens in headers/footers as live `PAGE`/`NUMPAGES` fields. The REST API also accepts `{numpages}`. |
-| Columns | Supported on import (columns/column nodes created) | Not supported | Not supported |
+| 分页符 | 支持 | 支持（PageBreak） | 支持 |
+| 页面大小 | 不支持 | 支持（[Pages](/pages/getting-started/overview)） | 支持（可配置） |
+| 页边距 | 不支持 | 支持（Pages） | 支持（可配置） |
+| 分节 | 部分支持（提取并应用分栏配置） | 不支持 | 仅支持单个分节 |
+| 页码 | 支持（PAGE/NUMPAGES → `{page}`/`{numpages}` 标记，见[下文](#page-numbers)） | 支持（通过页眉/页脚） | 支持。编辑器扩展和 REST API 会在页眉/页脚中将 `{page}`/`{total}` 标记输出为动态 `PAGE`/`NUMPAGES` 字段。REST API 也接受 `{numpages}`。 |
+| 分栏 | 导入时支持（创建 columns/column 节点） | 不支持 | 不支持 |
 
-## Page breaks
+## 分页符
 
-Page breaks fully round-trip through the pipeline. See the dedicated [Page breaks](/conversion/content-types/page-layout/page-breaks) page for details.
+分页符可以在整个转换流程中完整往返保留。详情请参阅专门介绍[分页符](/conversion/content-types/page-layout/page-breaks)的页面。
 
-## Page size and margins
+## 页面大小和页边距
 
-Page size and margins are not imported from DOCX. The parser reads them from section properties but the Tiptap renderer discards them.
+DOCX 中的页面大小和页边距不会被导入。解析器会从分节属性中读取这些值，但 Tiptap 渲染器会将其丢弃。
 
-The [Pages extension](/pages/getting-started/overview) provides paginated layout with configurable page size and margins. For configuration details, see the [Page format guide](/pages/core-concepts/page-format).
+[Pages 扩展](/pages/getting-started/overview)提供可配置页面大小和页边距的分页布局。配置详情请参阅[页面格式指南](/pages/core-concepts/page-format)。
 
-The export extension accepts `pageSize` and `pageMargins` options:
+导出扩展接受 `pageSize` 和 `pageMargins` 选项：
 
 ```ts
 ExportDocx.configure({
@@ -56,33 +56,33 @@ ExportDocx.configure({
 })
 ```
 
-Values accept CSS-style units: `cm`, `in`, `pt`, `pc`, `mm`, `px`. Defaults produce an A4 page with standard Word margins.
+值可使用 CSS 样式的单位：`cm`、`in`、`pt`、`pc`、`mm`、`px`。默认值会生成采用 Word 标准页边距的 A4 页面。
 
-<Callout variant="info" title="No automatic sync between Pages and export">
-  The export extension does not automatically read page size or margins from the Pages extension. If your editor uses a custom page format, pass matching values to the export configuration.
+<Callout variant="info" title="Pages 与导出之间不会自动同步">
+  导出扩展不会自动从 Pages 扩展读取页面大小或页边距。如果编辑器使用自定义页面格式，请在导出配置中传入相应的值。
 </Callout>
 
-## Sections
+## 分节
 
-Word documents can have multiple sections, each with its own page layout properties (size, orientation, margins, columns, headers/footers). Section support in the conversion pipeline is partial:
+Word 文档可以包含多个分节，每个分节都有自己的页面布局属性（大小、方向、页边距、分栏、页眉/页脚）。转换流程对分节的支持有限：
 
-- **Import:** Section boundaries are used to detect multi-column layouts. Multi-column sections are wrapped in `columns`/`column` Tiptap nodes. Other section-level properties (size, orientation, margins) are parsed but not applied.
-- **Editor:** Tiptap does not have a section concept, but column nodes are rendered natively.
-- **Export:** Produces a single section. Mixed portrait/landscape or multi-section documents cannot be created.
+- **导入：** 使用分节边界检测多栏布局。多栏分节会被包装为 `columns`/`column` Tiptap 节点。其他分节级属性（大小、方向、页边距）会被解析，但不会应用。
+- **编辑器：** Tiptap 没有分节概念，但可以原生渲染分栏节点。
+- **导出：** 只生成单个分节。无法创建混合纵向/横向页面或包含多个分节的文档。
 
-## Page numbers
+## 页码
 
-Page numbers in Word are field codes (`PAGE`, `NUMPAGES`) inside headers and footers. The import translates these into canonical text tokens (`{page}` for `PAGE` and `{numpages}` for `NUMPAGES`) when the Pages extension is installed (or you opt in explicitly: `placeholders: true` (or `{ page?, total? }`) on the [editor command](/conversion/import/docx/editor-extension#page-number-fields), or the `placeholders={}` form field on the [REST API](/conversion/import/docx/rest-api#page-number-fields)). On export, the [editor extension](/conversion/export/docx/editor-extension) emits `{page}` / `{total}` tokens in header/footer content as live `PAGE` / `NUMPAGES` fields so Word recalculates them on print or repagination. The REST API export does the same translation; pass `placeholders: false` to keep the tokens as literal text.
+Word 中的页码是页眉和页脚中的字段代码（`PAGE`、`NUMPAGES`）。安装 Pages 扩展后，导入时会将这些代码转换为规范文本标记（`PAGE` 对应 `{page}`，`NUMPAGES` 对应 `{numpages}`）；也可以选择显式启用：在[编辑器命令](/conversion/import/docx/editor-extension#page-number-fields)中设置 `placeholders: true`（或 `{ page?, total? }`），或在 [REST API](/conversion/import/docx/rest-api#page-number-fields) 中使用 `placeholders={}` 表单字段。导出时，[编辑器扩展](/conversion/export/docx/editor-extension)会将页眉/页脚内容中的 `{page}` / `{total}` 标记输出为动态 `PAGE` / `NUMPAGES` 字段，以便 Word 在打印或重新分页时重新计算。REST API 导出也会执行相同的转换；传入 `placeholders: false` 可将标记保留为普通文本。
 
-The Pages extension recognizes `{page}` and `{total}` by default; it does **not** recognize `{numpages}`. To make Word's `NUMPAGES` field render live in the editor preview after an import, configure `Pages.configure({ placeholders: { total: 'numpages' } })`. See [DOCX import → page-number fields](/conversion/import/docx/editor-extension#page-number-fields).
+Pages 扩展默认识别 `{page}` 和 `{total}`，但**不**识别 `{numpages}`。若要在导入后让 Word 的 `NUMPAGES` 字段在编辑器预览中动态显示，请配置 `Pages.configure({ placeholders: { total: 'numpages' } })`。请参阅 [DOCX 导入 → 页码字段](/conversion/import/docx/editor-extension#page-number-fields)。
 
-## What round-trips
+## 往返转换支持情况
 
-| Feature | Round-trips? | Notes |
+| 功能 | 是否可往返转换？ | 说明 |
 | --- | --- | --- |
-| Page breaks | Yes | Requires `@tiptap-pro/extension-pagebreak` |
-| Page size | No | Configure separately for editor (Pages) and export |
-| Page margins | No | Configure separately for editor (Pages) and export |
-| Sections | Partial | Column configuration survives; other section properties do not |
-| Page numbers | Yes          | Word `PAGE` / `NUMPAGES` ↔ `{page}` / `{numpages}` (Pages canonical name for total is `{total}`; configure `placeholders: { total: 'numpages' }` to bridge). The REST API recognizes `{numpages}` on export without that setting. |
-| Columns | Partial | Import creates column nodes; export does not yet write them back |
+| 分页符 | 是 | 需要 `@tiptap-pro/extension-pagebreak` |
+| 页面大小 | 否 | 分别为编辑器（Pages）和导出单独配置 |
+| 页边距 | 否 | 分别为编辑器（Pages）和导出单独配置 |
+| 分节 | 部分支持 | 分栏配置会保留；其他分节属性不会保留 |
+| 页码 | 是 | Word `PAGE` / `NUMPAGES` ↔ `{page}` / `{numpages}`（Pages 中总页数的规范名称是 `{total}`；配置 `placeholders: { total: 'numpages' }` 即可进行转换）。REST API 导出时无需此设置即可识别 `{numpages}`。 |
+| 分栏 | 部分支持 | 导入时会创建分栏节点；导出时尚不会将其写回 |
