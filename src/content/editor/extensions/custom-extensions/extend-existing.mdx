@@ -1,16 +1,16 @@
 ---
-title: Add to an existing extension
+title: 扩展现有扩展
 meta:
-  title: Extend extensions | Tiptap Editor Docs
-  description: Extend an already existing extension in Tiptap to add new features and functionalities to your editor. More in the docs!
-  category: Editor
+  title: 扩展扩展 | Tiptap 编辑器文档
+  description: 扩展 Tiptap 中已有的扩展，为编辑器添加新功能。更多内容请参阅文档！
+  category: 编辑器
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Every extension has an `extend()` method, which takes an object with everything you want to change or add to it.
+每个扩展都有一个 `extend()` 方法，它接受一个对象，其中包含你想要修改或添加的所有内容。
 
-Let’s say, you’d like to change the keyboard shortcut for the bullet list. You should start with looking at the source code of the extension, in that case [the `BulletList` node](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-list/src/bullet-list/bullet-list.ts). For the bespoken example to overwrite the keyboard shortcut, your code could look like this:
+假设你想更改项目符号列表的键盘快捷键。首先应查看该扩展的源代码，在本例中是 [`BulletList` 节点](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-list/src/bullet-list/bullet-list.ts)。下面是重写键盘快捷键的示例代码：
 
 ```js
 // 1. Import the extension
@@ -34,17 +34,17 @@ new Editor({
 })
 ```
 
-The same applies to every aspect of an existing extension, except to the name. Let’s look at all the things that you can change through the extend method. We focus on one aspect in every example, but you can combine all those examples and change multiple aspects in one `extend()` call too.
+除了名称之外，现有扩展的各个方面都可以用同样的方式修改。下面来看看可以通过 `extend` 方法更改哪些内容。每个示例只关注一个方面，但你也可以组合这些示例，在一次 `extend()` 调用中修改多个方面。
 
-## Name
+## 名称
 
-The extension name is used in a whole lot of places and changing it isn’t too easy. If you want to change the name of an existing extension, you can copy the whole extension and change the name in all occurrences.
+扩展名称会在很多地方使用，因此更改起来并不容易。如果想更改现有扩展的名称，可以复制整个扩展，并修改其中所有出现的名称。
 
-The extension name is also part of the JSON. If you [store your content as JSON](/guides/output-json-html#option-1-json), you need to change the name there too.
+扩展名称也是 JSON 的一部分。如果你[将内容存储为 JSON](/guides/output-json-html#option-1-json)，也需要在那里修改名称。
 
-## Settings
+## 设置
 
-All settings can be configured through the extension anyway, but if you want to change the default settings, for example to provide a library on top of Tiptap for other developers, you can do it like this:
+扩展的所有设置都可以配置。如果你想更改默认设置，例如，为其他开发者提供一个基于 Tiptap 的库，可以这样做：
 
 ```js
 import Heading from '@tiptap/extension-heading'
@@ -59,9 +59,9 @@ const CustomHeading = Heading.extend({
 })
 ```
 
-## Storage
+## 存储
 
-At some point you probably want to save some data within your extension instance. This data is mutable. You can access it within the extension under `this.storage`.
+你可能会希望在扩展实例中保存一些数据。这些数据是可变的。在扩展中，可以通过 `this.storage` 访问这些数据。
 
 ```js
 import { Extension } from '@tiptap/core'
@@ -81,7 +81,7 @@ const CustomExtension = Extension.create({
 })
 ```
 
-Outside the extension you have access via `editor.storage`. Make sure that each extension has a unique name.
+在扩展外部，可以通过 `editor.storage` 访问这些数据。请确保每个扩展都有唯一的名称。
 
 ```js
 const editor = new Editor({
@@ -93,9 +93,9 @@ const awesomeness = editor.storage.customExtension.awesomeness
 
 ## Schema
 
-Tiptap works with a strict schema, which configures how the content can be structured, nested, how it behaves and many more things. You [can change all aspects of the schema](/editor/core-concepts/schema) for existing extensions. Let’s walk through a few common use cases.
+Tiptap 使用严格的 Schema 来配置内容的结构、嵌套方式、行为等。你[可以更改现有扩展的 Schema 的各个方面](/editor/core-concepts/schema)。下面来看几个常见用例。
 
-The default `Blockquote` extension can wrap other nodes, like headings. If you want to allow nothing but paragraphs in your blockquotes, set the `content` attribute accordingly:
+默认的 `Blockquote` 扩展可以包含其他节点，例如标题。如果你希望引用块中只能包含段落，可以相应地设置 `content` 属性：
 
 ```js
 // Blockquotes must only include paragraphs
@@ -106,7 +106,7 @@ const CustomBlockquote = Blockquote.extend({
 })
 ```
 
-The schema even allows you to make your nodes draggable; that’s what the `draggable` option is for. It defaults to `false`, but you can override that.
+Schema 还允许你将节点设置为可拖动，这可以通过 `draggable` 选项实现。该选项默认为 `false`，但你可以覆盖它。
 
 ```js
 // Draggable paragraphs
@@ -117,11 +117,11 @@ const CustomParagraph = Paragraph.extend({
 })
 ```
 
-These are just two tiny examples, but [the underlying ProseMirror schema](https://prosemirror.net/docs/ref/#model.SchemaSpec) is really powerful.
+这只是两个简单示例，但[底层的 ProseMirror Schema](https://prosemirror.net/docs/ref/#model.SchemaSpec) 功能非常强大。
 
-## Attributes
+## 属性
 
-You can use attributes to store additional information in the content. Let’s say you want to extend the default `Paragraph` node to have different colors:
+你可以使用属性在内容中存储额外信息。假设你想扩展默认的 `Paragraph` 节点，让它支持不同的颜色：
 
 ```js
 const CustomParagraph = Paragraph.extend({
@@ -131,7 +131,7 @@ const CustomParagraph = Paragraph.extend({
       color: {
         default: 'pink',
       },
-    },
+    }
   },
 })
 
@@ -139,11 +139,11 @@ const CustomParagraph = Paragraph.extend({
 // <p color="pink">Example Text</p>
 ```
 
-That is already enough to tell Tiptap about the new attribute, and set `'pink'` as the default value. All attributes will be rendered as an HTML attribute by default, and parsed from the content when initiated.
+这样就足以让 Tiptap 识别这个新属性，并将 `'pink'` 设为默认值。默认情况下，所有属性都会渲染为 HTML 属性，并在内容初始化时从内容中解析。
 
-Let’s stick with the color example and assume you want to add an inline style to actually color the text. With the `renderHTML` function you can return HTML attributes which will be rendered in the output.
+继续使用颜色示例，假设你想添加内联样式来实际改变文本颜色。使用 `renderHTML` 函数可以返回将在输出中渲染的 HTML 属性。
 
-This example adds a style HTML attribute based on the value of `color`:
+下面的示例根据 `color` 的值添加一个 `style` HTML 属性：
 
 ```js
 const CustomParagraph = Paragraph.extend({
@@ -167,7 +167,7 @@ const CustomParagraph = Paragraph.extend({
 // <p style="color: pink">Example Text</p>
 ```
 
-You can also control how the attribute is parsed from the HTML. Maybe you want to store the color in an attribute called `data-color` (and not just `color`), here’s how you would do that:
+你还可以控制如何从 HTML 中解析属性。比如，你可能想将颜色存储在名为 `data-color` 的属性中，而不是 `color`，可以这样做：
 
 ```js
 const CustomParagraph = Paragraph.extend({
@@ -193,13 +193,13 @@ const CustomParagraph = Paragraph.extend({
 // <p data-color="pink" style="color: pink">Example Text</p>
 ```
 
-You can completely disable the rendering of attributes with `rendered: false`.
+设置 `rendered: false` 可以完全禁用属性的渲染。
 
-### Extend existing attributes
+### 扩展现有属性
 
-If you want to add an attribute to an extension and keep existing attributes, you can access them through `this.parent()`.
+如果想为扩展添加属性，同时保留现有属性，可以通过 `this.parent()` 访问它们。
 
-In some cases, it is undefined, so make sure to check for that case, or use optional chaining `this.parent?.()`
+在某些情况下，它的值可能是 `undefined`，因此请确保处理这种情况，或者使用可选链 `this.parent?.()`。
 
 ```js
 const CustomTableCell = TableCell.extend({
@@ -214,11 +214,11 @@ const CustomTableCell = TableCell.extend({
 })
 ```
 
-## Global attributes
+## 全局属性
 
-Attributes can be applied to multiple extensions at once. That’s useful for text alignment, line height, color, font family, and other styling related attributes.
+属性可以同时应用于多个扩展。这对文本对齐、行高、颜色、字体系列以及其他样式相关属性很有用。
 
-Take a closer look at [the full source code](https://github.com/ueberdosis/tiptap/tree/main/packages/extension-text-align) of the [`TextAlign`](/editor/extensions/functionality/textalign) extension to see a more complex example. But here is how it works in a nutshell:
+查看 [`TextAlign`](/editor/extensions/functionality/textalign) 扩展的[完整源代码](https://github.com/ueberdosis/tiptap/tree/main/packages/extension-text-align)，了解更复杂的示例。下面简要介绍其工作原理：
 
 ```js
 import { Extension } from '@tiptap/core'
@@ -245,13 +245,13 @@ const TextAlign = Extension.create({
 })
 ```
 
-### Apply global attributes to all extensions
+### 将全局属性应用于所有扩展
 
-Beyond applying attributes to specific types, you can use shorthand string options for the `types` property to apply attributes more broadly. These provide an explicit, self-documenting API.
+除了将属性应用于特定类型之外，你还可以为 `types` 属性使用简写字符串选项，以便更广泛地应用属性。这些选项提供了明确且自说明的 API。
 
-#### Apply to all nodes and marks
+#### 应用于所有节点和标记
 
-Use `types: '*'` to apply attributes to all node types (excluding the built-in text node) and all mark types:
+使用 `types: '*'` 将属性应用于所有节点类型（不包括内置的文本节点）和所有标记类型：
 
 ```js
 import { Extension } from '@tiptap/core'
@@ -276,9 +276,9 @@ const UniversalAttribute = Extension.create({
 })
 ```
 
-#### Apply to all nodes
+#### 应用于所有节点
 
-Use `types: 'nodes'` to apply attributes to all node types (excluding the built-in text node):
+使用 `types: 'nodes'` 将属性应用于所有节点类型（不包括内置的文本节点）：
 
 ```js
 const NodeAttribute = Extension.create({
@@ -301,9 +301,9 @@ const NodeAttribute = Extension.create({
 })
 ```
 
-#### Apply to all marks
+#### 应用于所有标记
 
-Use `types: 'marks'` to apply attributes to all mark types:
+使用 `types: 'marks'` 将属性应用于所有标记类型：
 
 ```js
 const MarkAttribute = Extension.create({
@@ -327,9 +327,9 @@ const MarkAttribute = Extension.create({
 })
 ```
 
-#### Apply to specific types
+#### 应用于特定类型
 
-For more control, you can still specify an array of specific type names:
+如果需要更精细的控制，仍然可以指定一个包含特定类型名称的数组：
 
 ```js
 const TextAlignAttribute = Extension.create({
@@ -352,13 +352,13 @@ const TextAlignAttribute = Extension.create({
 })
 ```
 
-<Callout title="Tip">
-The string shorthand options (`'*'`, `'nodes'`, `'marks'`) provide a more explicit and self-documenting API compared to omitting the `types` property. Use them when you want to make the scope of your global attributes immediately clear to other developers.
+<Callout title="提示">
+与省略 `types` 属性相比，字符串简写选项（`'*'`、`'nodes'`、`'marks'`）提供了更明确且自说明的 API。如果你希望其他开发者能立即了解全局属性的作用范围，请使用这些选项。
 </Callout>
 
-## Render HTML
+## 渲染 HTML
 
-With the `renderHTML` function you can control how an extension is rendered to HTML. We pass an attributes object to it, with all local attributes, global attributes, and configured CSS classes. Here is an example from the `Bold` extension:
+使用 `renderHTML` 函数可以控制扩展如何渲染为 HTML。我们会向该函数传入一个属性对象，其中包含所有局部属性、全局属性以及已配置的 CSS 类。下面是 `Bold` 扩展中的一个示例：
 
 ```js
 renderHTML({ HTMLAttributes }) {
@@ -366,9 +366,9 @@ renderHTML({ HTMLAttributes }) {
 },
 ```
 
-The first value in the array should be the name of HTML tag. If the second element is an object, it’s interpreted as a set of attributes. Any elements after that are rendered as children.
+数组中的第一个值应为 HTML 标签名称。如果第二个元素是对象，则会将其视为一组属性。此后所有元素都会作为子元素渲染。
 
-The number zero (representing a hole) is used to indicate where the content should be inserted. Let’s look at the rendering of the `CodeBlock` extension with two nested tags:
+数字 `0`（表示一个占位位置）用于指明内容应插入的位置。下面来看 `CodeBlock` 扩展中使用两个嵌套标签的渲染方式：
 
 ```js
 renderHTML({ HTMLAttributes }) {
@@ -376,7 +376,7 @@ renderHTML({ HTMLAttributes }) {
 },
 ```
 
-If you want to add some specific attributes there, import the `mergeAttributes` helper from `@tiptap/core`:
+如果想添加特定属性，可以从 `@tiptap/core` 导入 `mergeAttributes` 辅助函数：
 
 ```js
 import { mergeAttributes } from '@tiptap/core'
@@ -388,9 +388,9 @@ renderHTML({ HTMLAttributes }) {
 },
 ```
 
-## Parse HTML
+## 解析 HTML
 
-The `parseHTML()` function tries to load the editor document from HTML. The function gets the HTML DOM element passed as a parameter, and is expected to return an object with attributes and their values. Here is a simplified example from the [`Bold`](/editor/extensions/marks/bold) mark:
+`parseHTML()` 函数会尝试从 HTML 加载编辑器文档。该函数会接收作为参数传入的 HTML DOM 元素，并预期返回一个包含属性及其值的对象。下面是 [`Bold`](/editor/extensions/marks/bold) 标记的简化示例：
 
 ```js
 parseHTML() {
@@ -402,7 +402,7 @@ parseHTML() {
 },
 ```
 
-This defines a rule to convert all `<strong>` tags to `Bold` marks. But you can get more advanced with this, here is the full example from the extension:
+这定义了一条规则，用于将所有 `<strong>` 标签转换为 `Bold` 标记。你还可以进行更复杂的设置，下面是该扩展的完整示例：
 
 ```js
 parseHTML() {
@@ -425,20 +425,20 @@ parseHTML() {
 },
 ```
 
-This checks for `<strong>` and `<b>` tags, and any HTML tag with an inline style setting the `font-weight` to bold.
+该规则会检查 `<strong>` 和 `<b>` 标签，以及任何通过内联样式将 `font-weight` 设为粗体的 HTML 标签。
 
-As you can see, you can optionally pass a `getAttrs` callback, to add more complex checks, for example for specific HTML attributes. The callback gets passed the HTML DOM node, except when checking for the `style` attribute, then it’s the value.
+如你所见，可以选择传入 `getAttrs` 回调，以执行更复杂的检查，例如检查特定 HTML 属性。该回调会接收 HTML DOM 节点；但在检查 `style` 属性时，接收的是属性值。
 
-You are wondering what’s that `&& null` doing? [ProseMirror expects null or undefined if the check is successful.](https://prosemirror.net/docs/ref/version/0.18.0.html#model.ParseRule.getAttrs)
+你可能会好奇 `&& null` 的作用。[如果检查成功，ProseMirror 要求返回 `null` 或 `undefined`。](https://prosemirror.net/docs/ref/version/0.18.0.html#model.ParseRule.getAttrs)
 
-[Pass `priority` to a rule](https://prosemirror.net/docs/ref/version/0.18.0.html#model.ParseRule.priority) to resolve conflicts with other extensions, for example if you build a custom extension which looks for paragraphs with a class attribute, but you already use the default paragraph extension.
+如果要解决与其他扩展之间的冲突，可以为规则[传入 `priority`](https://prosemirror.net/docs/ref/version/0.18.0.html#model.ParseRule.priority)。例如，你创建了一个自定义扩展，用于查找带有 class 属性的段落，但同时也使用了默认的段落扩展。
 
-### Using getAttrs
+### 使用 getAttrs
 
-The `getAttrs` function you’ve probably noticed in the example has two purposes:
+你可能已经注意到，示例中的 `getAttrs` 函数有两个用途：
 
-1. Check the HTML attributes to decide whether a rule matches (and a mark or node is created from that HTML). When the function returns `false`, it’s not matching.
-2. Get the DOM Element and use the HTML attributes to set your mark or node attributes accordingly:
+1. 检查 HTML 属性，以确定规则是否匹配（并根据该 HTML 创建标记或节点）。如果函数返回 `false`，则表示不匹配。
+2. 获取 DOM 元素，并使用 HTML 属性相应地设置标记或节点属性：
 
 ```js
 parseHTML() {
@@ -458,7 +458,7 @@ parseHTML() {
 },
 ```
 
-You can return an object with the attribute as the key and the parsed value to set your mark or node attribute. We would recommend to use the `parseHTML` inside `addAttributes()`, though. That will keep your code cleaner.
+你可以返回一个对象，以属性为键、解析出的值为值，从而设置标记或节点属性。不过，我们建议在 `addAttributes()` 中使用 `parseHTML`，这样代码会更简洁。
 
 ```js
 addAttributes() {
@@ -471,4 +471,4 @@ addAttributes() {
 },
 ```
 
-Read more about `getAttrs` and all other `ParseRule` properties in the [ProseMirror reference](https://prosemirror.net/docs/ref/#model.ParseRule).
+在 [ProseMirror 参考文档](https://prosemirror.net/docs/ref/#model.ParseRule)中了解更多关于 `getAttrs` 以及其他所有 `ParseRule` 属性的信息。
