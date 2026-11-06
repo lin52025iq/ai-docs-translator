@@ -1,12 +1,12 @@
 ---
-title: Add a toolbar UI component into Tiptap
+title: 在 Tiptap 中添加工具栏 UI 组件
 meta:
-  title: Toolbar | Tiptap UI Components
-  description: Organize actions and controls in an accessible horizontal toolbar. More in the docs!
-  category: UI Components
+  title: 工具栏 | Tiptap UI 组件
+  description: 在可访问的水平工具栏中整理操作和控件。更多内容请参阅文档！
+  category: UI 组件
 component:
   name: Toolbar
-  description: Organize actions and controls in a toolbar UI component.
+  description: 使用工具栏 UI 组件整理操作和控件。
   type: primitive
   isFree: true
   isCloud: false
@@ -19,7 +19,7 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A horizontal container for organizing related actions and controls with roving keyboard focus.
+用于整理相关操作和控件的水平容器，支持键盘焦点依次移动。
 
 <CodeDemo
   isScrollable
@@ -27,15 +27,15 @@ A horizontal container for organizing related actions and controls with roving k
   src="https://template.tiptap.dev/preview/tiptap-ui-primitive/toolbar"
 />
 
-## Install
+## 安装
 
-You can add the primitive via Tiptap CLI
+可以通过 Tiptap CLI 添加此基础组件
 
 ```bash
 npx @tiptap/cli@latest add toolbar
 ```
 
-## Usage
+## 使用方法
 
 ```tsx
 import { Toolbar, ToolbarGroup, ToolbarSeparator } from '@/components/tiptap-ui-primitive/toolbar'
@@ -72,32 +72,31 @@ export default function MyComponent() {
 }
 ```
 
-## Props
+## 属性
 
 ### Toolbar
 
-| Name       | Type                  | Default   | Description                  |
-| ---------- | --------------------- | --------- | ---------------------------- |
-| variant    | 'fixed' \| 'floating' | 'fixed'   | Toolbar style variant        |
-| data-plain | boolean               | undefined | Whether to use plain styling |
+| 名称      | 类型                  | 默认值    | 说明             |
+| --------- | --------------------- | --------- | ---------------- |
+| variant   | 'fixed' \| 'floating' | 'fixed'   | 工具栏样式变体   |
+| data-plain | boolean               | undefined | 是否使用简洁样式 |
 
 ### ToolbarSeparator
 
-| Name        | Type                       | Default    | Description                  |
-| ----------- | -------------------------- | ---------- | ---------------------------- |
-| orientation | 'horizontal' \| 'vertical' | 'vertical' | Orientation of the separator |
+| 名称        | 类型                       | 默认值     | 说明       |
+| ----------- | -------------------------- | ---------- | ---------- |
+| orientation | 'horizontal' \| 'vertical' | 'vertical' | 分隔符方向 |
 
-## Keyboard behavior
+## 键盘行为
 
-The toolbar follows a horizontal roving-focus pattern. Disabled controls are skipped, including when
-their disabled state changes while the toolbar is open.
+工具栏采用水平焦点依次移动模式。禁用的控件会被跳过，包括工具栏打开期间其禁用状态发生变化的控件。
 
-| Key                       | Behavior                                                              |
-| ------------------------- | --------------------------------------------------------------------- |
-| `ArrowLeft`, `ArrowRight` | Move between enabled controls and wrap at either end.                 |
-| `Home`, `End`             | Move to the first or last enabled control.                            |
-| `Enter`                   | Activate the focused control.                                         |
-| `Space`                   | Activate a focused native button using its standard browser behavior. |
-| `Tab`, `Shift+Tab`        | Leave the toolbar instead of cycling through its controls.            |
+| 按键                      | 行为                                             |
+| ------------------------- | ------------------------------------------------ |
+| `ArrowLeft`, `ArrowRight` | 在可用控件之间移动，并在两端循环。               |
+| `Home`, `End`             | 移至第一个或最后一个可用控件。                   |
+| `Enter`                   | 激活当前聚焦的控件。                             |
+| `Space`                   | 按照浏览器的标准行为激活聚焦的原生按钮。         |
+| `Tab`, `Shift+Tab`        | 离开工具栏，而不是在其控件之间循环切换。         |
 
-The toolbar does not consume `Escape`; an owning floating element or menu can handle that key.
+工具栏不会拦截 `Escape`；所属的浮动元素或菜单可以处理此按键。
