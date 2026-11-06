@@ -1,35 +1,35 @@
 ---
-title: Page breaks
+title: 分页符
 tags:
   - type: beta
 meta:
-  title: Page Breaks | Tiptap Conversion
-  description: How page breaks are handled across the DOCX conversion pipeline, including import, editor rendering, and export.
-  category: Conversion
+  title: 分页符 | Tiptap 转换
+  description: 了解 DOCX 转换流程中如何处理分页符，包括导入、编辑器渲染和导出。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Page breaks are the only page-structure element that fully round-trips between DOCX and the editor. The import creates `pageBreak` nodes, and the export writes them back as DOCX page breaks.
+分页符是唯一能在 DOCX 与编辑器之间完整往返转换的页面结构元素。导入时会创建 `pageBreak` 节点，导出时则会将其写回为 DOCX 分页符。
 
-## What you need
+## 所需内容
 
-- **Extensions:** `@tiptap-pro/extension-pagebreak` (not in StarterKit)
-- **Optional:** [Pages extension](/pages/getting-started/overview) for paginated layout where page breaks push content to the next visual page
+- **扩展：** `@tiptap-pro/extension-pagebreak`（不包含在 StarterKit 中）
+- **可选：** [Pages 扩展](/pages/getting-started/overview)，用于分页布局；分页符会将内容推至下一视觉页面
 
-## Support overview
+## 支持情况概览
 
-| | Import | Editor | Export |
+| | 导入 | 编辑器 | 导出 |
 | --- | --- | --- | --- |
-| Page breaks | Supported | Supported (requires PageBreak extension) | Supported |
+| 分页符 | 支持 | 支持（需要 PageBreak 扩展） | 支持 |
 
-## Import
+## 导入
 
-Import page breaks using the [editor extension](/conversion/import/docx/editor-extension) or the [REST API](/conversion/import/docx/rest-api). Both produce identical output.
+使用[编辑器扩展](/conversion/import/docx/editor-extension)或 [REST API](/conversion/import/docx/rest-api) 导入分页符。两者生成的结果相同。
 
-The import detects `<w:br w:type="page"/>` elements in the DOCX and produces `pageBreak` nodes. When a page break appears in a paragraph alongside text content, the text is emitted as a paragraph first, followed by a separate `pageBreak` node. Standalone page breaks (paragraphs containing only a page break) produce a single `pageBreak` node.
+导入过程会检测 DOCX 中的 `<w:br w:type="page"/>` 元素，并生成 `pageBreak` 节点。当分页符与文本内容出现在同一段落中时，系统会先将文本输出为段落，再输出单独的 `pageBreak` 节点。独立的分页符（仅包含分页符的段落）会生成一个 `pageBreak` 节点。
 
-Soft page breaks (`<w:lastRenderedPageBreak/>`) are layout hints from Word's renderer and are not imported. Only explicit page breaks are converted.
+软分页符（`<w:lastRenderedPageBreak/>`）是 Word 渲染器提供的布局提示，不会被导入。只有显式分页符才会转换。
 
 ```json
 {
@@ -37,26 +37,26 @@ Soft page breaks (`<w:lastRenderedPageBreak/>`) are layout hints from Word's ren
 }
 ```
 
-<Callout variant="info" title="PageBreak extension required">
-  The `pageBreak` node type is not part of StarterKit. Without the [PageBreak extension](/pages/core-concepts/page-break-node), imported page break nodes require a [custom extension](/editor/extensions/custom-extensions/extend-existing) to render. See the [invalid schema guide](/guides/invalid-schema) for strategies.
+<Callout variant="info" title="需要 PageBreak 扩展">
+  `pageBreak` 节点类型不属于 StarterKit。若未安装 [PageBreak 扩展](/pages/core-concepts/page-break-node)，导入的分页符节点需要通过[自定义扩展](/editor/extensions/custom-extensions/extend-existing)才能渲染。有关处理方法，请参阅[无效架构指南](/guides/invalid-schema)。
 </Callout>
 
-## Editor rendering
+## 编辑器渲染
 
-The [`PageBreak`](/pages/core-concepts/page-break-node) extension renders page break nodes in the editor. The behavior depends on whether the Pages extension is also installed:
+[`PageBreak`](/pages/core-concepts/page-break-node) 扩展会在编辑器中渲染分页符节点。具体行为取决于是否同时安装了 Pages 扩展：
 
-**Without Pages:** The page break renders as a visual dashed divider with a centered "Page break" label. It serves as a visual hint only, with no paginated layout.
+**未安装 Pages：** 分页符会显示为带有居中“分页符”标签的虚线分隔线。它仅作为视觉提示，不会进行分页布局。
 
-**With Pages:** The page break fills the remaining space on the current page, pushing subsequent content to the next page. This mirrors Word's behavior.
+**已安装 Pages：** 分页符会填满当前页面的剩余空间，并将后续内容推至下一页。这与 Word 的行为一致。
 
-For full configuration details, see the [PageBreak node guide](/pages/core-concepts/page-break-node).
+完整配置详情请参阅 [PageBreak 节点指南](/pages/core-concepts/page-break-node)。
 
-## Export
+## 导出
 
-Export page breaks using the [editor extension](/conversion/export/docx/editor-extension) or the [REST API](/conversion/export/docx/rest-api). Both handle page breaks identically.
+使用[编辑器扩展](/conversion/export/docx/editor-extension)或 [REST API](/conversion/export/docx/rest-api) 导出分页符。两者对分页符的处理方式相同。
 
-Each `pageBreak` node is exported as a DOCX paragraph containing `<w:br w:type="page"/>`. No additional configuration is needed.
+每个 `pageBreak` 节点都会导出为包含 `<w:br w:type="page"/>` 的 DOCX 段落。无需额外配置。
 
-## What round-trips
+## 往返转换
 
-Page breaks round-trip correctly when the PageBreak extension is installed. The import produces `pageBreak` nodes, the editor preserves them, and the export writes them back to DOCX.
+安装 PageBreak 扩展后，分页符可以正确往返转换。导入时会生成 `pageBreak` 节点，编辑器会保留这些节点，导出时则会将其写回 DOCX。
