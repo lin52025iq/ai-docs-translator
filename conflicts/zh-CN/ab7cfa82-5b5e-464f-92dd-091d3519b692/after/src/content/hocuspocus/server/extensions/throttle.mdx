@@ -1,0 +1,58 @@
+---
+title: 限流
+meta:
+  title: 限流 | Hocuspocus 文档
+  category: Hocuspocus
+tags:
+  - type: image
+    src: https://img.shields.io/npm/v/@hocuspocus/extension-throttle.svg?label=version
+    url: https://www.npmjs.com/package/@hocuspocus/extension-throttle
+    label: 版本
+  - type: image
+    src: https://img.shields.io/npm/dm/@hocuspocus/extension-throttle.svg
+    url: https://npmcharts.com/compare/@hocuspocus/extension-throttle?minimal=true
+    label: 下载量
+  - type: image
+    src: https://img.shields.io/npm/l/@hocuspocus/extension-throttle.svg
+    url: https://www.npmjs.com/package/@hocuspocus/extension-throttle
+    label: 许可证
+  - type: image
+    src: https://img.shields.io/badge/chat-on%20discord-7289da.svg?sanitize=true
+    url: https://discord.gg/WtJ49jGshW
+    label: 聊天
+---
+
+此扩展会限制连接尝试频率；如果 IP 地址超过配置的阈值，就会被封禁。
+
+请务必在其他扩展**之前**注册此扩展！
+
+## 安装
+
+使用以下命令安装 Throttle 包：
+
+```bash
+npm install @hocuspocus/extension-throttle
+```
+
+## 配置
+
+```js
+import { Server } from "@hocuspocus/server";
+import { Throttle } from "@hocuspocus/extension-throttle";
+
+const server = new Server({
+  extensions: [
+    new Throttle({
+      // [optional] allows up to 15 connection attempts per ip address per minute.
+      // set to null or false to disable throttling, defaults to 15
+      throttle: 15,
+
+      // [optional] bans ip addresses for 5 minutes after reaching the threshold
+      // defaults to 5
+      banTime: 5,
+    }),
+  ],
+});
+
+server.listen();
+```
