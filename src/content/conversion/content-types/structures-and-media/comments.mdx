@@ -1,106 +1,106 @@
 ---
-title: Comments
+title: 评论
 tags:
   - type: version
     label: v2.39.1
 meta:
-  title: Comments | Tiptap Conversion
-  description: Import DOCX comments as live collaboration threads, export editor threads back to DOCX, and round-trip comments through Microsoft Word without duplicates.
-  category: Conversion
+  title: 评论 | Tiptap 转换
+  description: 将 DOCX 评论导入为实时协作讨论串，将编辑器中的讨论串导出回 DOCX，并通过 Microsoft Word 往返处理评论而不会产生重复项。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Comments are supported across the full conversion round-trip. You can import a `.docx` that contains comments, work on those comments live in a collaborative Tiptap editor, export them back to a `.docx`, and re-import the result (including after it has been edited in Microsoft Word) without ending up with duplicates.
+评论支持完整的转换往返流程。你可以导入包含评论的 `.docx` 文件，在 Tiptap 协作编辑器中实时处理这些评论，将它们导出回 `.docx`，然后重新导入结果（包括在 Microsoft Word 中编辑后的文件），而不会产生重复项。
 
-## Support overview
+## 支持概览
 
-| | Import | Editor | Export |
+| | 导入 | 编辑器 | 导出 |
 | --- | --- | --- | --- |
-| Comments | Live collaboration threads (or data via REST API) | Read, reply, resolve, delete | DOCX comments |
-| Replies | Preserved, in order | Threaded | Preserved |
-| Resolved state | Preserved | Toggle | Preserved |
-| Author, initials, date | Preserved | N/A | Preserved |
+| 评论 | 实时协作讨论串（或通过 REST API 获取数据） | 阅读、回复、解决、删除 | DOCX 评论 |
+| 回复 | 保留，顺序不变 | 按讨论串显示 | 保留 |
+| 已解决状态 | 保留 | 切换 | 保留 |
+| 作者、姓名缩写、日期 | 保留 | 不适用 | 保留 |
 
-## How it works
+## 工作原理
 
-A round-trip has three stages:
+往返流程分为三个阶段：
 
-1. **Import**: each comment in the `.docx` becomes a thread anchored to the same text it marked in Word, carrying its author, initials, date, replies (in order), and resolved state.
-2. **Edit**: threads are live in your collaborative editor: read them, reply, resolve or reopen, and delete.
-3. **Export**: your editor's threads are written back into the `.docx` as native Word comments, anchored to the same text.
+1. **导入**：`.docx` 中的每条评论都会变成一个讨论串，并锚定到其在 Word 中标记的相同文本，同时保留作者、姓名缩写、日期、回复（顺序不变）和已解决状态。
+2. **编辑**：讨论串在协作编辑器中实时呈现：你可以阅读、回复、解决或重新打开，也可以删除。
+3. **导出**：编辑器中的讨论串会作为原生 Word 评论写回 `.docx`，并锚定到相同文本。
 
-Re-importing an exported document recognises the comments that are already there and keeps them in sync instead of creating them again, even if the document was opened and edited in Microsoft Word in between.
+重新导入导出的文档时，系统会识别已有评论并保持同步，而不是再次创建，即使文档期间曾在 Microsoft Word 中打开和编辑过，也同样如此。
 
-## Import
+## 导入
 
-When an import is authenticated with [Tiptap access control](/authentication) and targets an existing collaborative document, the comments are registered as **live threads on that document automatically**. They are ready to read and reply to the moment the document opens, with no extra wiring on your side.
+导入操作通过 [Tiptap 访问控制](/authentication)完成身份验证并指向现有协作文档时，评论会**自动注册为该文档上的实时讨论串**。文档打开后即可阅读和回复，无需额外配置。
 
-<Callout variant="info" title="Live comment threads require a Team plan">
-  Registering live threads creates them on the Tiptap Document Server through the [Comments REST API](/comments/integrate/rest-api), which requires a [Team plan](https://cloud.tiptap.dev/v2/billing) or higher. The import forwards your access token to the Document Server, so an account below the Team plan is rejected and **no live threads are created**. The import itself still succeeds and returns the comment **data** with its original identifiers. Importing comments as data and exporting comments to DOCX are not affected by this requirement.
+<Callout variant="info" title="实时评论讨论串需要 Team 计划">
+  注册实时讨论串会通过 [Comments REST API](/comments/integrate/rest-api) 在 Tiptap Document Server 上创建讨论串，这需要 [Team 计划](https://cloud.tiptap.dev/v2/billing)或更高版本。导入操作会将你的访问令牌转发给 Document Server，因此低于 Team 计划的账户会被拒绝，**不会创建实时讨论串**。导入本身仍会成功，并返回带有原始标识符的评论**数据**。将评论作为数据导入以及将评论导出为 DOCX 不受此要求影响。
 </Callout>
 
-What is carried over from the Word document:
+从 Word 文档中保留的内容包括：
 
-- **Text anchor**: the thread is attached to the same range of text the comment marked in Word.
-- **Author, initials, and date**: shown on each comment.
-- **Replies**: multi-comment conversations keep their order: the original comment first, then replies.
-- **Resolved state**: threads marked resolved in Word arrive already resolved.
+- **文本锚点**：讨论串会附加到评论在 Word 中标记的相同文本范围。
+- **作者、姓名缩写和日期**：显示在每条评论上。
+- **回复**：多条评论组成的对话会保留顺序：先是原始评论，再是回复。
+- **已解决状态**：在 Word 中标记为已解决的讨论串，导入后仍为已解决状态。
 
-If the import is not authenticated for collaboration, or does not target a collaborative document, the import still succeeds and the comments are returned as data with their original identifiers, for you to handle yourself. See the [import editor extension](/conversion/import/docx/editor-extension) and [import REST API](/conversion/import/docx/rest-api) for the integration details, and [ConvertKit](/conversion/import/docx/convertkit) for configuring the editor to render imported content.
+如果导入操作未通过协作功能进行身份验证，或未指向协作文档，导入仍会成功，评论会以带有原始标识符的数据形式返回，供你自行处理。有关集成详情，请参阅[导入编辑器扩展](/conversion/import/docx/editor-extension)和[导入 REST API](/conversion/import/docx/rest-api)；有关如何配置编辑器以呈现导入内容，请参阅 [ConvertKit](/conversion/import/docx/convertkit)。
 
-<Callout variant="hint" title="Live threads need collaboration">
-  Comments become live, editable threads only when the import is authenticated with access control and points at a collaborative document. Every other import returns the comment data with its original identifiers and behaves exactly as before.
+<Callout variant="hint" title="实时讨论串需要协作功能">
+  只有在导入操作通过访问控制完成身份验证并指向协作文档时，评论才会成为可实时编辑的讨论串。其他所有导入操作都会返回带有原始标识符的评论数据，行为与之前完全相同。
 </Callout>
 
-## Editor
+## 编辑器
 
-Imported comments are standard Tiptap collaboration threads. With the comments extension in your editor you can read each thread, reply, resolve or reopen it, and delete it, and those changes are reflected when you export.
+导入的评论是标准的 Tiptap 协作讨论串。在编辑器中使用评论扩展后，你可以阅读每个讨论串、回复、解决或重新打开，也可以删除；这些更改会在导出时体现。
 
-Comments created live in the editor (not from a DOCX import) are first-class too: they export to DOCX alongside the imported ones, and they are never altered or removed by a later re-import.
+直接在编辑器中实时创建的评论（并非从 DOCX 导入）同样是一等内容：它们会与导入的评论一同导出到 DOCX，之后重新导入也绝不会更改或删除这些评论。
 
-## Export
+## 导出
 
-Your editor's comment threads are written into the exported `.docx` as native Word comments. Each thread becomes a comment anchored to the right text, replies are preserved as a threaded conversation in order, and resolved threads are exported as resolved. Author and date travel with each comment. See the [export editor extension](/conversion/export/docx/editor-extension) for setup.
+编辑器中的评论讨论串会作为原生 Word 评论写入导出的 `.docx`。每个讨论串都会成为一条锚定到正确文本的评论，回复会按顺序保留为讨论串对话，已解决的讨论串导出后仍为已解决状态。每条评论都会保留作者和日期。有关设置说明，请参阅[导出编辑器扩展](/conversion/export/docx/editor-extension)。
 
-The text inside a comment keeps its basic formatting (such as bold, italic, links, and line breaks). Comment bodies are intended for discussion text; very rich block content placed inside a comment may be simplified.
+评论中的文本会保留基本格式（例如粗体、斜体、链接和换行）。评论正文用于讨论；如果其中包含非常复杂的块级内容，转换时可能会简化。
 
-## The full round-trip
+## 完整的往返流程
 
-This is the headline: you can take a document all the way around and back without your comments drifting.
+重点在于：你可以让文档完整地往返一圈，而评论不会错乱。
 
-1. Import a `.docx` with comments into a collaborative document.
-2. Read, reply to, resolve, and add comments live.
-3. Export to `.docx`.
-4. Optionally open and edit the comments in Microsoft Word.
-5. Re-import the document onto the same collaborative document.
+1. 将包含评论的 `.docx` 导入协作文档。
+2. 实时阅读、回复、解决评论并添加评论。
+3. 导出为 `.docx`。
+4. 可选择在 Microsoft Word 中打开并编辑评论。
+5. 将文档重新导入同一协作文档。
 
-On that re-import:
+重新导入时：
 
-- **No duplicates.** Comments that are already present are recognised and left in place, not created again.
-- **Edits flow through.** If a comment's text changed, the existing thread is updated to match.
-- **New comments come in once.** A comment added in Word (or anywhere) during the round-trip is imported as a single new comment, in the right thread.
-- **Removals are cleaned up.** A comment deleted from the document is removed on the next import.
-- **Resolved/reopened follows the document.** Resolving or reopening a comment is reflected on re-import.
-- **Your live comments are protected.** Comments authored directly in the editor are never changed or removed by a re-import; only comments that originated from a DOCX import are kept in sync.
+- **不会产生重复项。** 已存在的评论会被识别并保留，不会再次创建。
+- **更改会同步。** 如果评论文本发生变化，现有讨论串会更新为相应内容。
+- **新评论只会导入一次。** 在往返过程中于 Word（或其他位置）添加的评论，会作为单条新评论导入到正确的讨论串中。
+- **已删除的评论会清理。** 从文档中删除的评论会在下次导入时一并删除。
+- **已解决或重新打开的状态会随文档同步。** 解决或重新打开评论的操作会在重新导入时体现。
+- **实时创建的评论受到保护。** 直接在编辑器中创建的评论不会被重新导入更改或删除；只有源自 DOCX 导入的评论才会保持同步。
 
-<Callout variant="hint" title="Survives Microsoft Word">
-  Microsoft Word reorganises its internal comment bookkeeping every time it saves a document. The round-trip is designed around that, so editing your exported comments in Word and re-importing does not create duplicates.
+<Callout variant="hint" title="兼容 Microsoft Word">
+  Microsoft Word 每次保存文档时都会重新整理其内部评论记录。往返流程针对这一行为进行了设计，因此在 Word 中编辑已导出的评论并重新导入，不会产生重复项。
 </Callout>
 
-<Callout variant="info" title="Best practice: one collaborative document per DOCX">
-  Keep a one-to-one mapping between an imported `.docx` and the collaborative document you import it into. A re-import reconciles the comments against the threads already on **that** document, so importing several different DOCX files onto a single shared document mixes their comments together on the same surface. This shouldn't cause problems on its own, but dedicating one collaborative document to each DOCX lets you iterate on its comments collaboratively (adding, replying, resolving, and round-tripping through Word) with no chance of a re-import ever touching comments that originated from a different file. It's a simple safety net for clean, predictable iteration.
+<Callout variant="info" title="最佳实践：每个 DOCX 使用一个协作文档">
+  导入的 `.docx` 与作为导入目标的协作文档应保持一对一映射。重新导入时，系统会将评论与**该**文档中已有的讨论串进行核对，因此将多个不同的 DOCX 文件导入同一共享文档，会使它们的评论混在一起。这本身不一定会造成问题，但为每个 DOCX 单独使用一个协作文档，可以让你协作处理其评论（添加、回复、解决并通过 Word 往返），同时确保重新导入绝不会影响源自其他文件的评论。这是一种简单的保障措施，有助于保持迭代过程清晰可预测。
 </Callout>
 
-## What to expect
+## 预期效果
 
-- Importing a `.docx` with comments into a collaborative document gives you live threads with authors, dates, replies, and resolved state intact.
-- Exporting produces native Word comments that open cleanly in Microsoft Word and other Word-compatible editors.
-- Re-importing keeps comments in sync (add, update, resolve, remove) rather than duplicating them, including after a Word edit.
+- 将包含评论的 `.docx` 导入协作文档后，会得到实时讨论串，并完整保留作者、日期、回复和已解决状态。
+- 导出后会生成原生 Word 评论，可在 Microsoft Word 和其他兼容 Word 的编辑器中正常打开。
+- 重新导入后，评论会保持同步（新增、更新、解决、删除），而不是产生重复项；即使经过 Word 编辑也一样。
 
-## What won't work
+## 不支持的情况
 
-- **Live threads require collaboration and a Team plan.** Without access-control authentication and a target collaborative document, comments are returned as data rather than created as live threads. Creating live threads also requires a [Team plan](https://cloud.tiptap.dev/v2/billing) or higher, since it uses the Document Server's [Comments REST API](/comments/integrate/rest-api).
-- **Duplicate-free re-import applies to documents exported by Tiptap.** A `.docx` produced elsewhere imports its comments fresh each time; its comments are never merged into unrelated threads. This is deliberate: it prevents comments from different documents being mistaken for one another.
-- **Comments anchor to text.** A comment is tied to the range of text it marks. If that text is removed, the comment's anchor goes with it, the same as in any word processor.
-- **Comment bodies are for discussion text.** Basic inline formatting is preserved; complex block-level content inside a comment may be simplified on conversion.
+- **实时讨论串需要协作功能和 Team 计划。** 如果未通过访问控制完成身份验证，或没有指定目标协作文档，评论会作为数据返回，而不会创建为实时讨论串。创建实时讨论串还需要 [Team 计划](https://cloud.tiptap.dev/v2/billing)或更高版本，因为该功能使用 Document Server 的 [Comments REST API](/comments/integrate/rest-api)。
+- **无重复项的重新导入仅适用于 Tiptap 导出的文档。** 从其他位置生成的 `.docx` 每次导入时都会重新导入其中的评论；这些评论绝不会与无关的讨论串合并。这是有意为之，旨在防止将不同文档中的评论误认为同一批评论。
+- **评论锚定到文本。** 评论与其标记的文本范围关联。如果该文本被删除，评论的锚点也会随之消失，与任何文字处理软件中的行为相同。
+- **评论正文用于讨论。** 基本的行内格式会保留；评论中的复杂块级内容在转换时可能会简化。
