@@ -1,21 +1,21 @@
 ---
-title: Whiteboard extensions
+title: 白板扩展
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Whiteboard extensions | Tiptap Editor Docs
-  description: WhiteboardKit and its options, the extensions it brings, and BoardCollaboration.
+  title: 白板扩展 | Tiptap 编辑器文档
+  description: WhiteboardKit 及其选项、包含的扩展和 BoardCollaboration。
   category: Editor
 ---
 
-`WhiteboardKit` brings every extension of the board. Import it, and each of these extensions, from `@tiptap-pro/extension-whiteboard`. `BoardCollaboration` comes from its own entry.
+`WhiteboardKit` 包含白板的所有扩展。请从 `@tiptap-pro/extension-whiteboard` 导入它及其中的各个扩展。`BoardCollaboration` 则从其单独的入口导入。
 
-`Editor` comes from `@tiptap/core`, and `UndoRedoOptions` from `@tiptap/extensions`.
+`Editor` 来自 `@tiptap/core`，`UndoRedoOptions` 来自 `@tiptap/extensions`。
 
 ## `WhiteboardKit`
 
-The whiteboard: the board and its shapes, their text, the selection, the tools, the styles for new shapes, and undo. It brings its own document node and text extensions too, so don't add `Document` or `StarterKit` to its editor. Your app provides the stage around the board, see [`attachStage`](/editor/whiteboard/api-reference/utilities#attachstage).
+白板功能包括白板及其图形、图形文本、选区、工具、新图形的样式和撤销功能。它还包含自己的文档节点和文本扩展，因此不要在其编辑器中添加 `Document` 或 `StarterKit`。你的应用需要为白板提供外围舞台，参见 [`attachStage`](/editor/whiteboard/api-reference/utilities#attachstage)。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -24,14 +24,14 @@ import { WhiteboardKit } from '@tiptap-pro/extension-whiteboard'
 const editor = new Editor({ element: viewport, extensions: [WhiteboardKit] })
 ```
 
-### Options (`WhiteboardKitOptions`)
+### 选项（`WhiteboardKitOptions`）
 
-- `undoRedo` (`Partial<UndoRedoOptions> | false`): The options of Tiptap's [`UndoRedo`](/editor/extensions/functionality/undo-redo). Set to `false` when collaboration handles undo. `undoBoard` and `redoBoard` then use it. Default: `{}`.
-- `shapeElementAttributes` (`ShapeElementAttributes | null`): Extra attributes for the element of every shape, from the shape's node. Values become strings, and `null` or `undefined` leaves an attribute out. Default: `null`.
-- `docs` (`BoardDocs | null`): Where the documents of doc frames live. Without it, doc frames show no document. Default: `null`. See [Doc frames](/editor/whiteboard/guides/doc-frames).
-- `images` (`BoardImages | null`): Where the files of image shapes go. Without it, users can't add images, but the images on the board still show. Default: `null`. See [Images](/editor/whiteboard/guides/images).
-- `colors` (`readonly ShapeColor[]`): The names of the board's colors. Text colors and highlights from pasted HTML keep only these. Default: [`shapeColors`](/editor/whiteboard/api-reference/utilities#shapecolors). See [Colors](/editor/whiteboard/api-reference/styling#colors).
-- `toolKeys` (`ToolKeys | false`): Keys that replace the default keys of their tools, see [`toolKeys`](/editor/whiteboard/api-reference/utilities#toolkeys). `null` leaves a tool without a key, and `false` turns all tool keys off. Default: `toolKeys`.
+- `undoRedo`（`Partial<UndoRedoOptions> | false`）：Tiptap 的 [`UndoRedo`](/editor/extensions/functionality/undo-redo) 选项。如果由协作功能处理撤销，请设为 `false`。此时，`undoBoard` 和 `redoBoard` 会使用该功能。默认值：`{}`。
+- `shapeElementAttributes`（`ShapeElementAttributes | null`）：用于每个图形元素的额外属性，来源于图形节点。值会转换为字符串；值为 `null` 或 `undefined` 时会省略该属性。默认值：`null`。
+- `docs`（`BoardDocs | null`）：文档框架中文档的存放位置。如果未设置，文档框架将不显示文档。默认值：`null`。参见[文档框架](/editor/whiteboard/guides/doc-frames)。
+- `images`（`BoardImages | null`）：图像图形中文件的存放位置。如果未设置，用户无法添加图像，但白板上的图像仍会显示。默认值：`null`。参见[图像](/editor/whiteboard/guides/images)。
+- `colors`（`readonly ShapeColor[]`）：白板颜色的名称。从 HTML 粘贴的文本颜色和高亮只会保留这些颜色。默认值：[`shapeColors`](/editor/whiteboard/api-reference/utilities#shapecolors)。参见[颜色](/editor/whiteboard/api-reference/styling#colors)。
+- `toolKeys`（`ToolKeys | false`）：用于替换工具默认按键的按键，参见 [`toolKeys`](/editor/whiteboard/api-reference/utilities#toolkeys)。`null` 表示工具不绑定按键，`false` 表示关闭所有工具按键。默认值：`toolKeys`。
 
 ```js
 import { getSuggestionHTMLAttributes } from '@tiptap-pro/extension-tracked-changes'
@@ -39,60 +39,60 @@ import { shapeColors, WhiteboardKit } from '@tiptap-pro/extension-whiteboard'
 
 WhiteboardKit.configure({
   undoRedo: { depth: 50 },
-  // Lets CSS show the shapes that a suggestion changes
+  // 让 CSS 显示建议所修改的图形
   shapeElementAttributes: getSuggestionHTMLAttributes,
   colors: [...shapeColors, 'brand'],
   toolKeys: { pen: 'b', eraser: null },
 })
 ```
 
-### Included extensions
+### 包含的扩展
 
-| Extension              | Name                   | Description                                                                                                   |
-| ---------------------- | ---------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `WhiteboardDocument`   | `doc`                  | The top node of a board's editor, which holds the board and nothing else                                      |
-| `Board`                | `board`                | The board, which holds every shape, with the commands that change shapes                                      |
-| `StickyNote`           | `stickyNote`           | A sticky note with text                                                                                       |
-| `Geo`                  | `geo`                  | A geometric shape with text, like a rectangle or an ellipse                                                   |
-| `FreeText`             | `freeText`             | Text without a shape around it                                                                                |
-| `Freehand`             | `freehand`             | A line drawn with the pen                                                                                     |
-| `DocFrame`             | `docFrame`             | A frame on the board that shows a document of its own, in an editor of its own                                |
-| `Frame`                | `frame`                | A frame that groups shapes, which move along with it and are cut off at its edges                             |
-| `BoardImage`           | `boardImage`           | An image from a URL, which keeps its proportions while it is resized                                          |
-| `Arrow`                | `arrow`                | An arrow between shapes or free points                                                                        |
-| `BoardTextColor`       | `textColor`            | Colors parts of a shape's text with the name of a board color                                                 |
-| `BoardHighlight`       | `highlight`            | Highlights parts of a shape's text in a board color. Highlights without a board color are yellow              |
-| `BoardLink`            | `link`                 | Links in shape text, which open in a new tab with a click with <kbd>Control</kbd>, or <kbd>Cmd</kbd> on macOS |
-| `BoardTaskItem`        | `taskItem`             | A task item whose checkbox also toggles while no text is edited                                               |
-| `KeepSelectionInShape` | `keepSelectionInShape` | Stops selections, arrow keys and jumps from leaving the current shape                                         |
-| `ShapeSelection`       | `shapeSelection`       | Selects shapes by id                                                                                          |
-| `RemoteSelections`     | `remoteSelections`     | Shows the shapes that other users select                                                                      |
-| `BoardHistory`         | `boardHistory`         | Undo and redo for the board, which select the shapes that they change                                         |
-| `BoardTools`           | `boardTools`           | Keeps the active tool outside of the document, like the selection                                             |
-| `ShapeStyle`           | `shapeStyle`           | Keeps the styles for new shapes outside of the document                                                       |
+| 扩展                   | 名称                   | 说明                                                                                         |
+| ---------------------- | ---------------------- | -------------------------------------------------------------------------------------------- |
+| `WhiteboardDocument`   | `doc`                  | 白板编辑器的顶层节点，仅包含白板                                                             |
+| `Board`                | `board`                | 包含所有图形的白板，以及用于更改图形的命令                                                   |
+| `StickyNote`           | `stickyNote`           | 带文本的便笺                                                                                 |
+| `Geo`                  | `geo`                  | 带文本的几何图形，例如矩形或椭圆                                                             |
+| `FreeText`             | `freeText`             | 没有外围图形的文本                                                                           |
+| `Freehand`             | `freehand`             | 使用画笔绘制的线条                                                                           |
+| `DocFrame`             | `docFrame`             | 白板上的文档框架，可在独立编辑器中显示其自身的文档                                           |
+| `Frame`                | `frame`                | 用于组合图形的框架；图形会随框架移动，并在框架边缘处被裁切                                   |
+| `BoardImage`           | `boardImage`           | 来自 URL 的图像，调整大小时会保持其比例                                                      |
+| `Arrow`                | `arrow`                | 连接图形或自由点的箭头                                                                       |
+| `BoardTextColor`       | `textColor`            | 使用白板颜色名称为图形文本的部分内容着色                                                     |
+| `BoardHighlight`       | `highlight`            | 使用白板颜色高亮图形文本的部分内容。未指定白板颜色的高亮为黄色                               |
+| `BoardLink`            | `link`                 | 图形文本中的链接；按住 <kbd>Control</kbd>（macOS 上为 <kbd>Cmd</kbd>）并单击可在新标签页中打开 |
+| `BoardTaskItem`        | `taskItem`             | 任务项；未编辑文本时，也可以切换其复选框                                                     |
+| `KeepSelectionInShape` | `keepSelectionInShape` | 防止选区、方向键和跳转操作离开当前图形                                                       |
+| `ShapeSelection`       | `shapeSelection`       | 按 ID 选择图形                                                                               |
+| `RemoteSelections`     | `remoteSelections`     | 显示其他用户选中的图形                                                                       |
+| `BoardHistory`         | `boardHistory`         | 白板的撤销和重做功能，并会选中其更改的图形                                                   |
+| `BoardTools`           | `boardTools`           | 将当前工具（例如选择工具）保存在文档之外                                                     |
+| `ShapeStyle`           | `shapeStyle`           | 将新图形的样式保存在文档之外                                                                 |
 
-The kit also adds these Tiptap extensions: `Paragraph`, `Text`, `Bold`, `Italic`, `Strike`, `Code`, `BulletList`, `OrderedList`, `ListItem`, `TaskList` and `ListKeymap`, and `UndoRedo` unless `undoRedo` is `false`. Task lists can nest.
+该套件还会添加以下 Tiptap 扩展：`Paragraph`、`Text`、`Bold`、`Italic`、`Strike`、`Code`、`BulletList`、`OrderedList`、`ListItem`、`TaskList` 和 `ListKeymap`；除非 `undoRedo` 为 `false`，否则还会添加 `UndoRedo`。任务列表可以嵌套。
 
-See [Commands](/editor/whiteboard/api-reference/commands) for the commands of each extension.
+各扩展的命令请参见[命令](/editor/whiteboard/api-reference/commands)。
 
 ## `Board`
 
-The board, which holds every shape, with the commands that change shapes. It adds the CSS that the board needs to the page, unless the editor's `injectCSS` is `false`. Configure it through `WhiteboardKit`, which passes on `shapeElementAttributes`, `docs` and `images`.
+白板包含所有图形，并提供用于更改图形的命令。除非编辑器的 `injectCSS` 为 `false`，否则它会向页面添加白板所需的 CSS。请通过 `WhiteboardKit` 配置它；`WhiteboardKit` 会传递 `shapeElementAttributes`、`docs` 和 `images`。
 
-### Storage (`BoardStorage`)
+### 存储（`BoardStorage`）
 
-Available at `editor.storage.board`.
+可通过 `editor.storage.board` 访问。
 
-- `shapeElementAttributes` (`ShapeElementAttributes | null`): The `shapeElementAttributes` option, for the node views of the shapes.
-- `docs` (`BoardDocs | null`): The `docs` option, for doc frames and their copies.
-- `images` (`BoardImages | null`): The `images` option, for the image files that users paste, drop or pick.
-- `docEditors` (`Map<string, Editor>`): The editors of the documents that doc frames show, by document id.
+- `shapeElementAttributes`（`ShapeElementAttributes | null`）：`shapeElementAttributes` 选项，用于图形的节点视图。
+- `docs`（`BoardDocs | null`）：`docs` 选项，用于文档框架及其副本。
+- `images`（`BoardImages | null`）：`images` 选项，用于用户粘贴、拖放或选择的图像文件。
+- `docEditors`（`Map<string, Editor>`）：文档框架所显示文档的编辑器，按文档 ID 索引。
 
-To read the document editors, prefer [`getDocEditors`](/editor/whiteboard/api-reference/utilities#getdoceditors). It returns none once the board's editor is destroyed.
+读取文档编辑器时，建议使用 [`getDocEditors`](/editor/whiteboard/api-reference/utilities#getdoceditors)。白板编辑器销毁后，该方法不会返回任何编辑器。
 
 ## `BoardCollaboration`
 
-Collaboration that also syncs a first change that leaves the document empty, like deleting the last shape. Plain `Collaboration` drops that change when the editor starts on content from Yjs. Use it instead of `Collaboration`, and turn off the kit's own undo.
+此协作功能还会同步使文档变为空的首次更改，例如删除最后一个图形。普通的 `Collaboration` 在编辑器以 Yjs 内容启动时会丢弃此类更改。请使用它替代 `Collaboration`，并关闭该套件自身的撤销功能。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -109,6 +109,6 @@ const editor = new Editor({
 })
 ```
 
-It comes from `@tiptap-pro/extension-whiteboard/collaboration` and takes the options of [Collaboration](/editor/extensions/functionality/collaboration). It needs the optional peer dependencies `@tiptap/extension-collaboration`, `@tiptap/y-tiptap` and `yjs`, and `y-protocols`, which `@tiptap/y-tiptap` needs.
+它来自 `@tiptap-pro/extension-whiteboard/collaboration`，并采用 [Collaboration](/editor/extensions/functionality/collaboration) 的选项。它需要以下可选的对等依赖：`@tiptap/extension-collaboration`、`@tiptap/y-tiptap` 和 `yjs`，以及 `@tiptap/y-tiptap` 所需的 `y-protocols`。
 
-See [Collaboration on the board](/editor/whiteboard/guides/collaboration).
+参见[白板协作](/editor/whiteboard/guides/collaboration)。
