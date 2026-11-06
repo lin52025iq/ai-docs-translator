@@ -1,26 +1,26 @@
 ---
 title: Vue 3
 meta:
-  title: Vue 3 | Tiptap Editor Docs
-  description: Learn how to set up Tiptap with Vue 3 for enhanced rich text editing. Get started with our thorough guide in our docs!
-  category: Editor
+  title: Vue 3 | Tiptap 编辑器文档
+  description: 了解如何将 Tiptap 与 Vue 3 搭配使用，打造更出色的富文本编辑体验。阅读我们的详细指南，快速开始使用！
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-Discover how to integrate Tiptap with your Vue 3 project using this step-by-step guide. Alternatively, check out our [Vue text editor example](/examples/basics/default-text-editor).
+本分步指南将介绍如何将 Tiptap 集成到 Vue 3 项目中。你也可以查看我们的 [Vue 文本编辑器示例](/examples/basics/default-text-editor)。
 
-### Requirements
+### 环境要求
 
-- [Node](https://nodejs.org/en/download/) installed on your machine
-- [Vue CLI](https://cli.vuejs.org/) installed on your machine
-- Experience with [Vue](https://v3.vuejs.org/guide/introduction.html)
+- 在你的计算机上安装 [Node](https://nodejs.org/en/download/)
+- 在你的计算机上安装 [Vue CLI](https://cli.vuejs.org/)
+- 具备 [Vue](https://v3.vuejs.org/guide/introduction.html) 使用经验
 
-## Create a project (optional)
+## 创建项目（可选）
 
-If you already have a Vue project, that's fine too. Just skip this step.
+如果你已经有 Vue 项目，也可以直接使用，跳过此步骤即可。
 
-For the purpose of this guide, start with a fresh Vue project called `my-tiptap-project`. The Vue CLI sets up everything we need. Just select the Vue 3 template.
+本指南将从一个名为 `my-tiptap-project` 的全新 Vue 项目开始。Vue CLI 会为我们配置所需的一切，只需选择 Vue 3 模板即可。
 
 ```bash
 # create a project
@@ -30,21 +30,21 @@ vue create my-tiptap-project
 cd my-tiptap-project
 ```
 
-### Install the dependencies
+### 安装依赖
 
-Okay, enough boilerplate work. Let's finally install Tiptap! For the following example, you'll need the `@tiptap/vue-3` package, `@tiptap/pm` (the ProseMirror library), and `@tiptap/starter-kit`, which includes the most common extensions to get started quickly.
+好了，样板工作到此为止。现在终于可以安装 Tiptap 了！在接下来的示例中，你需要安装 `@tiptap/vue-3`、`@tiptap/pm`（ProseMirror 库）和 `@tiptap/starter-kit`。后者包含了最常用的扩展，能帮助你快速上手。
 
 ```bash
 npm install @tiptap/vue-3 @tiptap/pm @tiptap/starter-kit
 ```
 
-If you followed steps 1 and 2, you can now start your project with `npm run dev` and open [http://localhost:8080](http://localhost:8080) in your favorite browser. This might be different if you're working with an existing project.
+如果你已完成第 1 步和第 2 步，现在可以运行 `npm run dev` 启动项目，然后在你喜欢的浏览器中打开 [http://localhost:8080](http://localhost:8080)。如果你使用的是现有项目，具体操作可能会有所不同。
 
-## Integrate Tiptap
+## 集成 Tiptap
 
-To start using Tiptap, you'll need to add a new component to your app. Let's call it `Tiptap` and put the following example code in `components/Tiptap.vue`.
+要开始使用 Tiptap，需要在应用中添加一个新组件。我们将它命名为 `Tiptap`，并把下面的示例代码放入 `components/Tiptap.vue`。
 
-This is the fastest way to get Tiptap up and running with Vue. It will give you a very basic version of Tiptap, without any buttons. No worries, you will be able to add more functionality soon.
+这是在 Vue 中快速运行 Tiptap 的最简单方法。它会提供一个非常基础的 Tiptap 版本，不包含任何按钮。别担心，很快你就能为它添加更多功能。
 
 ```html
 <template>
@@ -80,7 +80,7 @@ This is the fastest way to get Tiptap up and running with Vue. It will give you 
 </script>
 ```
 
-Alternatively, you can use the Composition API with the `useEditor` method.
+你也可以使用组合式 API 和 `useEditor` 方法。
 
 ```html
 <template>
@@ -108,7 +108,7 @@ Alternatively, you can use the Composition API with the `useEditor` method.
 </script>
 ```
 
-Or feel free to use the new [`<script setup>` syntax](https://v3.vuejs.org/api/sfc-script-setup.html).
+你也可以使用新的 [`<script setup>` 语法](https://v3.vuejs.org/api/sfc-script-setup.html)。
 
 ```html
 <template>
@@ -126,9 +126,9 @@ Or feel free to use the new [`<script setup>` syntax](https://v3.vuejs.org/api/s
 </script>
 ```
 
-### Add it to your app
+### 将组件添加到应用中
 
-Now, let's replace the content of `src/App.vue` with the following example code to use our new `Tiptap` component in our app.
+现在，将 `src/App.vue` 的内容替换为以下示例代码，以便在应用中使用新建的 `Tiptap` 组件。
 
 ```html
 <template>
@@ -149,18 +149,18 @@ Now, let's replace the content of `src/App.vue` with the following example code 
 </script>
 ```
 
-You should now see Tiptap in your browser. Time to give yourself a pat on the back! :)
+现在，你应该能在浏览器中看到 Tiptap 了。给自己一点掌声吧！:)
 
-### Use v-model (optional)
+### 使用 v-model（可选）
 
-You're probably used to binding your data with `v-model` in forms, that's also possible with Tiptap. Here is how that would work with Tiptap:
+你可能已经习惯在表单中使用 `v-model` 绑定数据。Tiptap 也支持这种方式，下面介绍如何在 Tiptap 中使用它：
 
 <CodeDemo path="/GuideGettingStarted/VModel" />
 
-## Next steps
+## 后续步骤
 
-- [Configure your editor](/editor/getting-started/configure)
-- [Add styles to your editor](/editor/getting-started/style-editor)
-- [Learn more about Tiptaps concepts](/editor/core-concepts/introduction)
-- [Learn how to persist the editor state](/editor/core-concepts/persistence)
-- [Start building your own extensions](/editor/extensions/custom-extensions)
+- [配置编辑器](/editor/getting-started/configure)
+- [为编辑器添加样式](/editor/getting-started/style-editor)
+- [进一步了解 Tiptap 的核心概念](/editor/core-concepts/introduction)
+- [了解如何持久化编辑器状态](/editor/core-concepts/persistence)
+- [开始构建自己的扩展](/editor/extensions/custom-extensions)
