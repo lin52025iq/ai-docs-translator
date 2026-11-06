@@ -1,22 +1,22 @@
 ---
-title: Policy language
+title: 策略语言
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Policy language | Tiptap Content Protection Docs
-  description: Policy types, selectors, permissions and rule precedence.
-  category: Composable Docs
+  title: 策略语言 | Tiptap 内容保护文档
+  description: 策略类型、选择器、权限和规则优先级。
+  category: 可组合文档
 ---
 
-A policy is a JSON object defining read and edit permissions. All content is allowed unless a matching rule denies access.
+策略是定义读取和编辑权限的 JSON 对象。除非匹配的规则拒绝访问，否则允许访问所有内容。
 
 ## `ContentProtectionPolicy`
 
-### Properties
+### 属性
 
-- `version` (`1`): Policy format version. Only `1` is supported.
-- `rules` (`ProtectionRule[]`): Permission rules. An empty array allows all reads and edits.
+- `version` (`1`)：策略格式版本。目前仅支持 `1`。
+- `rules` (`ProtectionRule[]`)：权限规则。空数组表示允许读取和编辑所有内容。
 
 ```ts
 const policy: ContentProtectionPolicy = {
@@ -32,23 +32,23 @@ const policy: ContentProtectionPolicy = {
 
 ## `ProtectionRule`
 
-One selector and the permissions it grants or denies.
+一个选择器，以及它授予或拒绝的权限。
 
-### Properties
+### 属性
 
-- `id?` (`string`): Optional diagnostic identifier. Must be nonempty and unique within the policy. Anonymous rules are identified by their array index.
-- `selector` (`ProtectionSelector`): What the rule applies to.
-- `permissions` (`{ read?: boolean; edit?: boolean }`): At least one permission. `true` allows; `false` denies. Rules with omitted permissions have no effect and are ignored.
-- `priority?` (`number`): Integer precedence. Omitted: `0`. Higher values win; negative values are allowed. At equal priority, a denial wins over an allowance, regardless of rule order. This also applies when both rules omit `priority`.
-- `reason?` (`string`): Plain-text explanation returned in diagnostics. Does not affect permissions. Must not contain hidden content.
+- `id?` (`string`)：可选的诊断标识符。在同一策略中必须非空且唯一。匿名规则通过其数组索引标识。
+- `selector` (`ProtectionSelector`)：规则的适用对象。
+- `permissions` (`{ read?: boolean; edit?: boolean }`)：至少指定一项权限。`true` 表示允许；`false` 表示拒绝。未指定权限的规则不起作用，会被忽略。
+- `priority?` (`number`)：整数优先级。未指定时为 `0`。数值越大优先级越高；允许负数。优先级相同时，无论规则顺序如何，拒绝都优先于允许。两条规则都省略 `priority` 时也适用此规则。
+- `reason?` (`string`)：在诊断信息中返回的纯文本说明。不影响权限。不得包含隐藏内容。
 
 ## `ProtectionSelector`
 
-Select one aspect with a string `target`, or several aspects with a nonempty target array. Use `node` for Node targets and `mark` for Mark targets. `SingleProtectionSelector` is the string-target form of this type.
+使用字符串 `target` 选择一个方面，或使用非空目标数组选择多个方面。Node 目标使用 `node`，Mark 目标使用 `mark`。`SingleProtectionSelector` 是此类型中以字符串指定目标的形式。
 
-### Multiple targets
+### 多个目标
 
-Combine aspects of the same matched Nodes or Marks when they share permissions:
+当同一批匹配的 Node 或 Mark 具有相同权限时，可以组合其多个方面：
 
 ```ts
 const rule = {
@@ -61,47 +61,47 @@ const rule = {
 } satisfies ProtectionRule
 ```
 
-Protects heading structure and levels while leaving text editable. It behaves like separate `nodeType` and `attribute` rules with the same permissions and priority.
+此规则保护标题结构和级别，同时允许编辑文本。其效果等同于具有相同权限和优先级的独立 `nodeType` 和 `attribute` 规则。
 
-- Combine Node targets (`node`, `nodeType`, `nodeContent`, `children`, `attribute`) with `node`, or Mark targets (`mark`, `markType`, `markContent`, `markAttribute`) with `mark`. Mixing the two categories is invalid.
-- The rule participates when any selected aspect applies. All aspects share its ID, reason and priority. Matching multiple aspects does not increase priority or repeat the rule in diagnostic metadata. Repeated targets have no additional effect.
-- `names` is only valid when selecting `attribute` or `markAttribute`, and applies only to that aspect. For Node attributes, omission selects all attributes. Mark attributes require `names`. An empty `names` array selects no attributes; the other targets still apply.
-- If any target is `children`, the rule supports only `edit`. Either value of `read` is invalid.
-- Empty target arrays are invalid. Existing string targets and policy version `1` remain supported.
+- 将 Node 目标（`node`、`nodeType`、`nodeContent`、`children`、`attribute`）与 `node` 组合，或将 Mark 目标（`mark`、`markType`、`markContent`、`markAttribute`）与 `mark` 组合。混用这两类目标无效。
+- 只要任一所选方面适用，该规则就会生效。所有方面共用其 ID、原因和优先级。匹配多个方面不会提高优先级，也不会在诊断元数据中重复记录该规则。重复的目标不会产生额外效果。
+- 只有选择 `attribute` 或 `markAttribute` 时，才可以使用 `names`，且它只应用于该方面。对于 Node 属性，省略 `names` 表示选择所有属性。Mark 属性必须指定 `names`。空 `names` 数组表示不选择任何属性；其他目标仍然适用。
+- 如果目标中包含 `children`，该规则只支持 `edit`。无论 `read` 的值为何，都无效。
+- 目标数组不能为空。仍然支持原有的字符串目标和策略版本 `1`。
 
-Ancestor conditions in `within` apply to every selected aspect. They only locate matching Nodes or Marks; they do not protect the ancestors. See [nested ancestor matching](#nested-ancestor-matching).
+`within` 中的祖先条件适用于每个所选方面。它们只用于定位匹配的 Node 或 Mark，不会保护祖先。参见[嵌套祖先匹配](#嵌套祖先匹配)。
 
 ### `target: 'node'`
 
-- `node` (`NodeMatch`): Nodes to match.
-- `edit: false`: Protects the Node's existence, type, attributes and entire content, including descendants and Marks.
-- `read: false`: Conceals the Node and its subtree.
+- `node` (`NodeMatch`)：要匹配的 Node。
+- `edit: false`：保护 Node 的存在、类型、属性和全部内容，包括后代和 Mark。
+- `read: false`：隐藏该 Node 及其子树。
 
-Use this to lock a whole Node. Changing its type or a matching attribute cannot unlock it. Higher-priority rules can allow specific edits inside it.
+使用此目标锁定整个 Node。更改其类型或匹配的属性无法解除锁定。优先级更高的规则可以允许在其中进行特定编辑。
 
 ### `target: 'nodeType'`
 
-- `node` (`NodeMatch`): Nodes to match.
-- `edit: false`: Prevents inserting, removing, retyping, splitting, joining or moving the Node.
-- `read: false`: Conceals the Node and its subtree.
+- `node` (`NodeMatch`)：要匹配的 Node。
+- `edit: false`：禁止插入、移除、重设类型、拆分、合并或移动该 Node。
+- `read: false`：隐藏该 Node 及其子树。
 
-With edit-only protection, content and attributes remain editable. Redacted Nodes are entirely non-editable. Position shifts caused by earlier edits are not moves.
+仅保护编辑时，内容和属性仍可编辑。被隐藏的 Node 完全不可编辑。由更早的编辑导致的位置偏移不视为移动。
 
 ### `target: 'nodeContent'`
 
-- `node` (`NodeMatch`): Nodes whose contents are governed.
-- `edit: false`: Prevents changes to text, descendant Nodes, descendant attributes and Marks.
-- `read: false`: Conceals the Node's children.
+- `node` (`NodeMatch`)：其内容受规则控制的 Node。
+- `edit: false`：禁止更改文本、后代 Node、后代属性和 Mark。
+- `read: false`：隐藏该 Node 的子项。
 
-With edit-only protection, the owner's type, attributes and existence are not protected. Changing its type or a matching attribute can allow later edits. Use `node` to protect the whole Node, or add `nodeType` and appropriate `attribute` rules. Deleting an owner with protected contents still requires permission to delete those contents.
+仅保护编辑时，不会保护所属 Node 的类型、属性和存在状态。更改其类型或匹配的属性可能会允许后续编辑。使用 `node` 保护整个 Node，或添加 `nodeType` 和适当的 `attribute` 规则。即使所属 Node 的内容受到保护，删除它仍需要获得删除这些内容的权限。
 
-With `read: false`, the owner is also non-editable: its type, attributes and existence cannot be changed, even when its content is empty. This prevents changing the owner to reveal redacted content.
+设为 `read: false` 时，所属 Node 也不可编辑：即使其内容为空，也无法更改其类型、属性或存在状态。这样可以防止通过更改所属 Node 来显示被隐藏的内容。
 
-### Nested content rules
+### 嵌套内容规则
 
-Content rules apply recursively, including nested Slots. Separate rules may grant or deny **edit access** inside a subtree when they have higher priority than the ancestor's edit rule. Match the nested region using `within` or attributes. Selector depth does not affect precedence, and an overriding edit rule also applies to its descendants.
+内容规则会递归应用，包括嵌套 Slot。如果优先级高于祖先的编辑规则，单独的规则可以授予或拒绝子树内的**编辑权限**。使用 `within` 或属性匹配嵌套区域。选择器的嵌套深度不影响优先级，覆盖规则也会应用于其后代。
 
-This does not override read restrictions: content inside a redacted ancestor remains redacted and cannot be edited. See [read restrictions](#read-restrictions).
+这不会覆盖读取限制：被隐藏祖先中的内容仍然处于隐藏状态，且无法编辑。参见[读取限制](#读取限制)。
 
 ```ts
 const rules = [
@@ -120,67 +120,67 @@ const rules = [
 ] satisfies ProtectionRule[]
 ```
 
-Allows editing paragraph text and formatting inside protected blockquotes. Other blockquote content remains protected. The allow rule needs a higher priority than the deny rule's default of `0`.
+允许编辑受保护引用块中的段落文本和格式。引用块中的其他内容仍受保护。允许规则的优先级必须高于拒绝规则的默认值 `0`。
 
 ### `target: 'children'`
 
-- `node` (`NodeMatch`): Parent Nodes to match.
-- `edit: false`: Preserves the ordered sequence of direct non-text children while the parent survives.
-- `read`: Not supported; use `nodeContent` instead.
+- `node` (`NodeMatch`)：要匹配的父级 Node。
+- `edit: false`：只要父级仍然存在，就保留其直接非文本子项的顺序序列。
+- `read`：不支持；请改用 `nodeContent`。
 
-Text and formatting inside children remain editable. Use `nodeType` to protect the parent's existence without freezing its content. This target supports fixed table columns with editable cells and removable body rows.
+子项中的文本和格式仍可编辑。使用 `nodeType` 可在不冻结父级内容的情况下保护其存在状态。此目标适用于固定表格列、可编辑单元格以及可删除的表体行。
 
 ### `target: 'attribute'`
 
-- `node` (`NodeMatch`): Nodes to match.
-- `names?` (`string[]`): Attributes to govern. Omitted: all attributes. `[]`: none.
-- `edit: false`: Prevents changes to the selected attributes.
-- `read: false`: Conceals the entire owning Node and its subtree.
+- `node` (`NodeMatch`)：要匹配的 Node。
+- `names?` (`string[]`)：要控制的属性。省略表示所有属性；`[]` 表示无属性。
+- `edit: false`：禁止更改所选属性。
+- `read: false`：隐藏整个所属 Node 及其子树。
 
 ### `target: 'mark'`
 
-- `mark` (`MarkMatch`): Marks to match.
-- `edit: false`: Protects the Mark's presence, type, attributes and marked content, including other formatting.
-- `read: false`: Conceals the marked content.
+- `mark` (`MarkMatch`)：要匹配的 Mark。
+- `edit: false`：保护 Mark 的存在、类型、属性和标记内容，包括其他格式。
+- `read: false`：隐藏被标记的内容。
 
-Use this to lock a marked passage and its metadata.
+使用此目标锁定一段已标记的内容及其元数据。
 
 ### `target: 'markType'`
 
-- `mark` (`MarkMatch`): Marks to match.
-- `edit: false`: Prevents adding, removing or replacing the Mark with another type.
-- `read: false`: Conceals the marked content.
+- `mark` (`MarkMatch`)：要匹配的 Mark。
+- `edit: false`：禁止添加、移除或将 Mark 替换为其他类型。
+- `read: false`：隐藏被标记的内容。
 
-Wording, Mark attributes and other formatting remain editable. Deleting the last content carrying the Mark removes it and requires permission. Use `markAttribute` to also protect metadata while allowing wording changes.
+文字、Mark 属性和其他格式仍可编辑。删除最后一段带有此 Mark 的内容会导致 Mark 被移除，因此需要相应权限。使用 `markAttribute` 还可以保护元数据，同时允许更改文字。
 
 ### `target: 'markContent'`
 
-- `mark` (`MarkMatch`): Marks identifying protected content.
-- `edit: false`: Prevents changes to the marked content, including its Marks and descendant content.
-- `read: false`: Conceals the marked content.
+- `mark` (`MarkMatch`)：用于标识受保护内容的 Mark。
+- `edit: false`：禁止更改被标记的内容，包括其 Mark 和后代内容。
+- `read: false`：隐藏被标记的内容。
 
-Removing or changing the selecting Mark is also governed by this rule. For edit protection, `markContent` and `mark` cover the same marked range. A higher-priority `markType` rule can allow removing the Mark; edit the newly unlocked content in a separate transaction.
+移除或更改用于选择内容的 Mark 也受此规则控制。对于编辑保护，`markContent` 和 `mark` 覆盖相同的标记范围。优先级更高的 `markType` 规则可以允许移除 Mark；解锁后的内容需在单独的事务中编辑。
 
 ### `target: 'markAttribute'`
 
-- `mark` (`MarkMatch`): Marks to match.
-- `names` (`string[]`): Attributes to govern. Required; `[]` selects none.
-- `edit: false`: Prevents changes to the selected Mark attributes.
-- `read: false`: Conceals the marked content.
+- `mark` (`MarkMatch`)：要匹配的 Mark。
+- `names` (`string[]`)：要控制的属性。必填；`[]` 表示不选择任何属性。
+- `edit: false`：禁止更改所选 Mark 属性。
+- `read: false`：隐藏被标记的内容。
 
 ## `NodeMatch`
 
-Matches Nodes in the document, independent of DOM structure or CSS.
+匹配文档中的 Node，与 DOM 结构或 CSS 无关。
 
-### Properties
+### 属性
 
-- `types?` (`string[]`): Exact, case-sensitive schema names. Omitted: all Node types. `[]`: none. Entries are combined with OR.
-- `attributes?` (`AttributePredicate[]`): Attribute tests combined with AND. Omitted or `[]`: no attribute restriction.
-- `within?` (`NodeMatch`): Requires a matching strict ancestor. Nested `within` values express further ancestors.
+- `types?` (`string[]`)：区分大小写的精确 schema 名称。省略表示所有 Node 类型；`[]` 表示无类型。多个条目按 OR 组合。
+- `attributes?` (`AttributePredicate[]`)：属性测试按 AND 组合。省略或设为 `[]` 表示不限制属性。
+- `within?` (`NodeMatch`)：要求存在匹配的严格祖先。嵌套的 `within` 值表示更上层的祖先。
 
-`{}` matches every Node. Select the root with its schema name, usually `doc`; `nodeContent` on the root covers the entire document.
+`{}` 匹配所有 Node。使用根节点的 schema 名称（通常为 `doc`）来选择根节点；在根节点上使用 `nodeContent` 可覆盖整个文档。
 
-### Nested ancestor matching
+### 嵌套祖先匹配
 
 ```ts
 const rule = {
@@ -202,13 +202,13 @@ const rule = {
 } satisfies ProtectionRule
 ```
 
-Protects heading structure and levels when the heading is inside a blockquote that is inside the `legal-notice` Slot. Text remains editable. Each `within` requires an ancestor at any depth, not necessarily the immediate parent, and the conditions must form that ancestry chain.
+当标题位于引用块中，且该引用块位于 `legal-notice` Slot 中时，此规则会保护标题结构和级别。文本仍可编辑。每个 `within` 都要求在任意深度上存在祖先，不一定是直接父级；各条件必须构成这条祖先链。
 
-The blockquote and Slot are matching conditions, not additional protection targets. `within` accepts only matcher properties; putting `target` or `permissions` inside it is invalid. Use separate rules to protect the ancestors themselves.
+引用块和 Slot 是匹配条件，不是额外的保护目标。`within` 只接受匹配器属性；在其中放入 `target` 或 `permissions` 无效。使用单独的规则来保护祖先本身。
 
-### Target an individual Node with UniqueID
+### 使用 UniqueID 指定单个 Node
 
-Configure [UniqueID](/editor/extensions/functionality/uniqueid) for the relevant Node types:
+为相关 Node 类型配置 [UniqueID](/editor/extensions/functionality/uniqueid)：
 
 ```ts
 import { UniqueID } from '@tiptap/extension-unique-id'
@@ -216,7 +216,7 @@ import { UniqueID } from '@tiptap/extension-unique-id'
 UniqueID.configure({ types: ['paragraph'] })
 ```
 
-Match the Node's stored `id` attribute. Replace `'paragraph-id'` with an ID from your document:
+匹配 Node 存储的 `id` 属性。将 `'paragraph-id'` 替换为文档中的 ID：
 
 ```ts
 const rule = {
@@ -231,90 +231,90 @@ const rule = {
 } satisfies ProtectionRule
 ```
 
-Protects that paragraph's contents. Use `target: 'node'` instead to also protect its type, existence and attributes, including its ID. If UniqueID uses a custom `attributeName`, use that name in the predicate instead of `id`.
+此规则保护该段落的内容。若要同时保护其类型、存在状态和属性（包括其 ID），请改用 `target: 'node'`。如果 UniqueID 使用自定义的 `attributeName`，请在谓词中使用该名称，而不是 `id`。
 
 ## `MarkMatch`
 
-Matches Marks on inline Nodes.
+匹配行内 Node 上的 Mark。
 
-### Properties
+### 属性
 
-- `types?` (`string[]`): Exact, case-sensitive Mark names. Omitted: all Mark types. `[]`: none. Entries are combined with OR.
-- `attributes?` (`AttributePredicate[]`): Attribute tests combined with AND. Omitted or `[]`: no attribute restriction.
-- `within?` (`NodeMatch`): Requires a matching ancestor of the marked inline Node.
+- `types?` (`string[]`)：区分大小写的精确 Mark 名称。省略表示所有 Mark 类型；`[]` 表示无类型。多个条目按 OR 组合。
+- `attributes?` (`AttributePredicate[]`)：属性测试按 AND 组合。省略或设为 `[]` 表示不限制属性。
+- `within?` (`NodeMatch`)：要求被标记的行内 Node 存在匹配的祖先。
 
-Different Mark types are evaluated independently, including where they overlap.
+不同 Mark 类型会分别评估，包括彼此重叠的情况。
 
 ## `AttributePredicate`
 
-These predicates are specific to Content Protection; they do not implement an external query standard. `operator` selects one of the tests below. Attribute names refer to whole attributes; dotted paths are not supported.
+这些谓词专用于 Content Protection；它们不实现任何外部查询标准。`operator` 用于选择以下测试之一。属性名称指完整属性；不支持点分路径。
 
-Attribute values must be JSON: strings, finite numbers, booleans, `null`, or arrays and plain objects containing these values. The TypeScript API calls this type `JsonValue`.
+属性值必须是 JSON：字符串、有限数值、布尔值、`null`，或包含这些值的数组和普通对象。TypeScript API 将此类型称为 `JsonValue`。
 
 ### `operator: 'exists'`
 
-- `name` (`string`): Attribute whose key must exist. A value of `null` still counts as present.
+- `name` (`string`)：必须存在其键的属性。值为 `null` 仍视为存在。
 
 ### `operator: 'eq'`
 
-- `name` (`string`): Attribute to compare.
-- `value` (`JsonValue`): Required value. Uses structural equality without coercion; object-key order is ignored and array order is preserved.
+- `name` (`string`)：要比较的属性。
+- `value` (`JsonValue`)：必需值。使用结构相等比较，不进行类型强制转换；对象键顺序不影响结果，数组顺序则会保留。
 
 ### `operator: 'in'`
 
-- `name` (`string`): Attribute to compare.
-- `values` (`JsonValue[]`): Accepted values, compared using `eq`. `[]` matches nothing.
+- `name` (`string`)：要比较的属性。
+- `values` (`JsonValue[]`)：可接受的值，使用 `eq` 进行比较。`[]` 不匹配任何值。
 
-Schema defaults count as attribute values. A missing attribute differs from an attribute with value `null`.
+Schema 默认值也视为属性值。属性缺失与属性值为 `null` 是不同的。
 
-## Rule precedence
+## 规则优先级
 
-Resolve `read` and `edit` independently for each affected operation:
+针对每项受影响的操作，分别解析 `read` 和 `edit`：
 
-1. Select matching rules that state the permission.
-2. If none match, allow.
-3. Treat omitted priorities as `0`, then keep only rules with the highest `priority`.
-4. At that priority, deny if any rule denies; otherwise allow. Two rules without a priority therefore resolve a conflict by denying.
+1. 选择声明了相应权限且匹配的规则。
+2. 如果没有匹配规则，则允许。
+3. 将省略的优先级视为 `0`，然后只保留 `priority` 最高的规则。
+4. 在该优先级下，只要有任一规则拒绝，就拒绝；否则允许。因此，两条都未指定优先级的规则发生冲突时，结果为拒绝。
 
-List order and selector specificity do not affect permission. A transaction is allowed only when every affected operation is allowed.
+规则列表顺序和选择器的具体程度不影响权限。只有事务中的每项受影响操作都获准时，才允许该事务。
 
-| Matching rules                                          | Result                           |
-| ------------------------------------------------------- | -------------------------------- |
-| Content deny at `0`; content allow at `10`              | Allow within the allowed region. |
-| Allow and deny at `10`                                  | Deny.                            |
-| Attribute deny at `20`; enclosing content allow at `10` | Deny the attribute change.       |
-| Read allow at `50`; edit deny at `0`                    | Readable, not editable.          |
+| 匹配规则 | 结果 |
+| --- | --- |
+| 内容拒绝，优先级为 `0`；内容允许，优先级为 `10` | 在允许区域内允许。 |
+| 优先级均为 `10` 的允许和拒绝 | 拒绝。 |
+| 属性拒绝，优先级为 `20`；外围内容允许，优先级为 `10` | 拒绝属性更改。 |
+| 读取允许，优先级为 `50`；编辑拒绝，优先级为 `0` | 可读取，不可编辑。 |
 
-## Read restrictions
+## 读取限制
 
-- Read rules resolve by priority on each selected target. A read-denied target then redacts its entire subtree.
-- A separate `read: true` rule on a child does not reveal it, even with higher priority than the ancestor's read denial.
-- To reveal a child, narrow the ancestor's deny or use a higher-priority read allowance targeting that ancestor itself.
-- Redacted Nodes are non-editable, including their type, attributes, existence and content. You do not need an additional `edit: false` rule. Retyping, deleting or changing a matching attribute cannot reveal or remove redacted content.
-- Redacted marked content cannot be changed or have its selecting Mark removed. An edit allowance cannot override a read denial, regardless of priority.
-- Denying an attribute conceals its owner; it does not selectively sanitize a NodeView.
+- 读取规则针对每个所选目标按优先级解析。读取被拒绝的目标会隐藏其整个子树。
+- 针对子项的单独 `read: true` 规则不会使其显示，即使其优先级高于祖先的读取拒绝规则也是如此。
+- 若要显示子项，请缩小祖先拒绝规则的范围，或使用优先级更高、以该祖先本身为目标的读取允许规则。
+- 被隐藏的 Node 不可编辑，包括其类型、属性、存在状态和内容。无需额外添加 `edit: false` 规则。重设类型、删除或更改匹配属性都无法显示或移除被隐藏的内容。
+- 被隐藏的已标记内容无法更改，也无法移除用于选择它的 Mark。无论优先级如何，编辑允许规则都无法覆盖读取拒绝规则。
+- 拒绝访问某个属性会隐藏其所属 Node；它不会对 NodeView 进行选择性净化。
 
-See [Redacted content](/composable-docs/content-protection/api-reference/rendering) for rendering, clipboard and export behavior.
+有关渲染、剪贴板和导出行为，请参见[隐藏内容](/composable-docs/content-protection/api-reference/rendering)。
 
-## Validation
+## 验证
 
-Pass the policy directly to `ContentProtection.configure({ policy })` or `setContentProtectionPolicy({ policy })`. The extension validates it automatically and stores an immutable copy.
+将策略直接传递给 `ContentProtection.configure({ policy })` 或 `setContentProtectionPolicy({ policy })`。扩展会自动验证策略并存储不可变副本。
 
-Standalone utilities also accept policy JSON directly and validate it against the document or transaction's schema. Use [`validateContentProtectionPolicy`](/composable-docs/content-protection/api-reference/utilities#validatecontentprotectionpolicy) to check a policy without applying it.
+独立工具也可以直接接受策略 JSON，并根据文档或事务的 schema 进行验证。使用 [`validateContentProtectionPolicy`](/composable-docs/content-protection/api-reference/utilities#validatecontentprotectionpolicy) 可在不应用策略的情况下检查它。
 
-Invalid policies include:
+以下策略无效：
 
-- Unsupported versions, unknown properties, targets or operators.
-- Empty target arrays, mixed Node/Mark targets, or `names` without an attribute target.
-- Missing `names` when any target is `markAttribute`.
-- Empty permissions, duplicate or empty IDs, non-integer priorities.
-- Invalid JSON values or explicitly named types/attributes absent from the schema.
-- `read` on `children`, including when combined with other targets.
+- 不支持的版本、未知属性、目标或运算符。
+- 空目标数组、混用 Node/Mark 目标，或未选择属性目标却指定了 `names`。
+- 任一目标为 `markAttribute` 时未指定 `names`。
+- 权限为空、ID 重复或为空、优先级不是整数。
+- JSON 值无效，或明确指定的类型/属性不存在于 schema 中。
+- 在 `children` 上使用 `read`，包括与其他目标组合时。
 
-## How edits are checked
+## 如何检查编辑
 
-Local changes are checked when typing, pasting content, running editor commands (including `setContent`) and using local undo/redo. [Tiptap Collaboration updates](/composable-docs/content-protection/getting-started/overview#collaboration), including initial synchronization and collaborative undo/redo, bypass local permission checks so collaborators with different policies stay synchronized.
+输入、粘贴内容、运行编辑器命令（包括 `setContent`）以及使用本地撤销/重做时，都会检查本地更改。[Tiptap 协作更新](/composable-docs/content-protection/getting-started/overview#collaboration)（包括初始同步和协作式撤销/重做）会绕过本地权限检查，以便使用不同策略的协作者保持同步。
 
-If any part of a transaction makes a forbidden change, the entire transaction is rejected. For example, pasting over both editable and protected text leaves the document unchanged.
+如果事务中的任何部分造成了被禁止的更改，整个事务都会被拒绝。例如，同时覆盖可编辑文本和受保护文本的粘贴操作不会更改文档。
 
-For Slot-only editing, use [`createSlotFillingPolicy`](/composable-docs/slots/api-reference/utilities#createslotfillingpolicy). It produces ordinary rules in this policy language.
+若仅编辑 Slot，请使用 [`createSlotFillingPolicy`](/composable-docs/slots/api-reference/utilities#createslotfillingpolicy)。它会生成此策略语言中的普通规则。
