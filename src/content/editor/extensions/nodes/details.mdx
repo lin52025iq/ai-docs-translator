@@ -1,9 +1,9 @@
 ---
-title: Details extension
+title: Details 扩展
 icon: menu-unfold-line
 extension:
   name: Details
-  description: Add collapsible details nodes to your editor content.
+  description: 在编辑器内容中添加可折叠的 details 节点。
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-details
   type: node
   icon: ListCollapse
@@ -11,37 +11,37 @@ tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-details.svg?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-details
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-details.svg
     url: https://npmcharts.com/compare/@tiptap/extension-details?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  title: Details extension | Tiptap Editor Docs
-  description: Use the Details extension in Tiptap to enable the <details> HTML tag for showing and hiding content. Learn more in our docs!
-  category: Editor
+  title: Details 扩展 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 Details 扩展，以启用用于显示和隐藏内容的 `<details>` HTML 标签。欢迎查阅文档了解详情！
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-The Details extension enables you to use the `<details>` HTML tag in the editor. This is great to show and hide content.
+Details 扩展支持在编辑器中使用 `<details>` HTML 标签，方便显示和隐藏内容。
 
 <CodeDemo path="/Nodes/Details" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-details
 ```
 
-This extension requires the [`DetailsSummary`](/editor/extensions/nodes/details-summary) and [`DetailsContent`](/editor/extensions/nodes/details-content) node.
+此扩展需要 [`DetailsSummary`](/editor/extensions/nodes/details-summary) 和 [`DetailsContent`](/editor/extensions/nodes/details-content) 节点。
 
-## Settings
+## 设置
 
 ### persist
 
-Specify if the open status should be saved in the document. Defaults to `false`.
+指定是否将打开状态保存到文档中。默认为 `false`。
 
 ```js
 Details.configure({
@@ -51,7 +51,7 @@ Details.configure({
 
 ### openClassName
 
-Specifies a CSS class that is set when toggling the content. Defaults to `is-open`.
+指定切换内容时设置的 CSS 类。默认为 `is-open`。
 
 ```js
 Details.configure({
@@ -61,9 +61,9 @@ Details.configure({
 
 ### renderToggleButton
 
-Customize the button that toggles a details node. The callback receives the button `element`, the current `isOpen` state, and the `node` that should be used to derive the label.
+自定义用于切换 details 节点的按钮。回调会接收按钮 `element`、当前的 `isOpen` 状态，以及用于生成标签的 `node`。
 
-This is useful when you want to change the button's accessible label or update the button element directly.
+当你想更改按钮的无障碍标签或直接更新按钮元素时，此选项会很有用。
 
 ```js
 Details.configure({
@@ -80,7 +80,7 @@ Details.configure({
 
 ### HTMLAttributes
 
-Custom HTML attributes that should be added to the rendered HTML tag.
+要添加到渲染后的 HTML 标签中的自定义 HTML 属性。
 
 ```js
 Details.configure({
@@ -90,11 +90,11 @@ Details.configure({
 })
 ```
 
-## Commands
+## 命令
 
 ### setDetails()
 
-Wrap content in a details node.
+将内容包裹在 details 节点中。
 
 ```js
 editor.commands.setDetails()
@@ -102,7 +102,7 @@ editor.commands.setDetails()
 
 ### unsetDetails()
 
-Unwrap a details node.
+移除 details 节点的包裹。
 
 ```js
 editor.commands.unsetDetails()
