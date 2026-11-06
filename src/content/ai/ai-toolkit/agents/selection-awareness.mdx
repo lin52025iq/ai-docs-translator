@@ -1,9 +1,9 @@
 ---
-title: Selection awareness
+title: 选区感知
 meta:
-  title: Selection awareness | Tiptap Server AI Toolkit
-  description: Let the server-side AI read and edit a collaborator's live selection.
-  category: AI Toolkit
+  title: 选区感知 | Tiptap Server AI Toolkit
+  description: 让服务端 AI 读取并编辑协作者的实时选区。
+  category: AI 工具包
 ---
 
 import { Callout } from '@/components/ui/Callout'
@@ -12,11 +12,10 @@ import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 
 <EnterpriseCalloutAuto variant="server-ai-toolkit" renderMode="sidebar" />
 
-Make AI aware of the user's selected content, so it can edit it.
+让 AI 感知用户选中的内容，从而对其进行编辑。
 
-<Callout title="Continuation from the AI agent chatbot guide" variant="info">
-  This guide continues the [AI agent chatbot guide](/ai/ai-toolkit/agents/ai-agent-chatbot). Read it
-  first.
+<Callout title="接续阅读 AI 代理聊天机器人指南" variant="info">
+  本指南接续[AI 代理聊天机器人指南](/ai/ai-toolkit/agents/ai-agent-chatbot)。请先阅读该指南。
 </Callout>
 
 <CodeDemo
@@ -26,13 +25,13 @@ Make AI aware of the user's selected content, so it can edit it.
   src="https://ai-toolkit-demos.vercel.app/server-read-selection"
 />
 
-See the [source code on GitHub](https://github.com/ueberdosis/ai-toolkit-demos).
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
 
-## The `readSelection` tool
+## `readSelection` 工具
 
-With the `readSelection` tool, the AI can read the user's selection. This tool only works with Tiptap Cloud collaborative documents.
+借助 `readSelection` 工具，AI 可以读取用户的选区。此工具仅适用于 Tiptap Cloud 协作文档。
 
-Enable it in the `fetch-tools` request alongside the other tools:
+在 `fetch-tools` 请求中与其他工具一并启用：
 
 ```ts
 const response = await fetch(`${apiBaseUrl}/v4/ai/toolkit/fetch-tools`, {
@@ -50,7 +49,7 @@ const response = await fetch(`${apiBaseUrl}/v4/ai/toolkit/fetch-tools`, {
 })
 ```
 
-The `readSelection` tool reads the selection of a single user. This is usually the user who prompts the AI. Pass the user ID as the `tool.config.user` parameter when the tool is executed. The developer passes this parameter, so the AI does not generate it.
+`readSelection` 工具读取单个用户的选区，通常是向 AI 发出提示的用户。执行工具时，将用户 ID 作为 `tool.config.user` 参数传入。此参数由开发者传入，AI 不会生成该参数。
 
 ```ts
 const response = await fetch(`${apiBaseUrl}/v4/ai/toolkit/execute-tool`, {
@@ -70,13 +69,11 @@ const response = await fetch(`${apiBaseUrl}/v4/ai/toolkit/execute-tool`, {
 })
 ```
 
-See the [REST API reference](/ai/ai-toolkit/api-reference/rest-api#readselection) for more details about the tool.
+如需了解工具详情，请参阅 [REST API 参考](/ai/ai-toolkit/api-reference/rest-api#readselection)。
 
-## Publish the selection to awareness
+## 将选区发布到 awareness
 
-The server reads the selection from live collaboration awareness data. To make this data available, configure
-the [`CollaborationCaret` extension](/editor/extensions/functionality/collaboration-caret) and give the user an `id` that matches the `tool.config.user` you
-send to the server. Create the editor once the provider is connected so the caret can attach.
+服务器会从实时协作 awareness 数据中读取选区。若要提供这些数据，请配置 [`CollaborationCaret` 扩展](/editor/extensions/functionality/collaboration-caret)，并为用户设置一个 `id`，使其与发送到服务器的 `tool.config.user` 匹配。待 provider 连接后再创建编辑器，以便光标能够附加。
 
 ```tsx
 import { CollaborationCaret } from '@tiptap/extension-collaboration-caret'
@@ -95,13 +92,11 @@ const editor = useEditor({
 })
 ```
 
-## Preserving the selection
+## 保留选区
 
-The server reads the selection from awareness at the moment the tool runs. `CollaborationCaret`
-clears the awareness selection when the editor loses focus, so if the user clicks into a chat input
-before sending, the server reads an empty selection.
+服务器会在工具运行时从 awareness 中读取选区。编辑器失去焦点时，`CollaborationCaret` 会清除 awareness 中的选区。因此，如果用户在发送消息前点击聊天输入框，服务器读取到的将是空选区。
 
-Re-focus the editor when the user sends a message so `CollaborationCaret` re-publishes the current selection:
+用户发送消息时，让编辑器重新获得焦点，以便 `CollaborationCaret` 重新发布当前选区：
 
 ```tsx
 const handleSubmit = () => {
@@ -114,9 +109,9 @@ const handleSubmit = () => {
 }
 ```
 
-## End result
+## 最终效果
 
-With additional CSS styles, the result is a chatbot that can edit the user's selection:
+添加 CSS 样式后，即可得到一个能够编辑用户选区的聊天机器人：
 
 <CodeDemo
   isLarge
@@ -125,27 +120,23 @@ With additional CSS styles, the result is a chatbot that can edit the user's sel
   src="https://ai-toolkit-demos.vercel.app/server-read-selection"
 />
 
-See the [source code on GitHub](https://github.com/ueberdosis/ai-toolkit-demos).
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
 
-## Limitations
+## 限制
 
-### Only works with Tiptap Cloud documents on the `default` field
+### 仅适用于 `default` 字段中的 Tiptap Cloud 文档
 
-The `readSelection` tool reads the selection state from the live updates sent by the `CollaborationCaret` extension. Therefore, it only works with Tiptap Cloud collaborative documents and is not compatible with documents provided inline.
+`readSelection` 工具会读取 `CollaborationCaret` 扩展发送的实时更新中的选区状态。因此，它仅适用于 Tiptap Cloud 协作文档，不兼容以内联方式提供的文档。
 
-An advanced option of collaborative documents is to store [multiple fields](/editor/extensions/functionality/collaboration#field). Currently, the `readSelection` tool only supports the `default` field. If you have a use case that involves multiple fields, [contact us](mailto:humans@tiptap.dev).
+协作文档的一项高级选项是存储[多个字段](/editor/extensions/functionality/collaboration#field)。目前，`readSelection` 工具仅支持 `default` 字段。如果你的使用场景涉及多个字段，请[联系我们](mailto:humans@tiptap.dev)。
 
-### AI model behavior
+### AI 模型行为
 
-`readSelection` tells AI what content is selected, but it does not force it to edit only the
-selection. Smaller, less capable AI models may rewrite the surrounding paragraph instead of
-just the selected span, especially for a sub-sentence selection.
+`readSelection` 会告知 AI 哪些内容已被选中，但不会强制它只编辑选区内容。能力较弱的小型 AI 模型可能会改写选区所在的段落，而不只是选中的文本范围；当选区只是句子的一部分时尤其如此。
 
-In our testing, models with reasoning enabled (for example, `gpt-5.6-luna` with reasoning effort set
-to `low`) keep their edits scoped to the selection more reliably. A clear instruction such as "edit
-only the selected text" also helps.
+根据我们的测试，启用了推理能力的模型（例如将推理力度设为 `low` 的 `gpt-5.6-luna`）更可靠地将修改限制在选区范围内。明确指示模型“只编辑选中的文本”也会有所帮助。
 
-## Next steps
+## 后续步骤
 
-- Read the [`readSelection` REST API reference](/ai/ai-toolkit/api-reference/rest-api#readselection)
-- Add more capabilities to your agent by following the guides in the [Agents section](/ai/ai-toolkit/agents)
+- 阅读 [`readSelection` REST API 参考](/ai/ai-toolkit/api-reference/rest-api#readselection)
+- 按照 [Agents 部分](/ai/ai-toolkit/agents)中的指南，为你的代理添加更多功能
