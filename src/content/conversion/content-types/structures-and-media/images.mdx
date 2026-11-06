@@ -1,45 +1,45 @@
 ---
-title: Images
+title: 图片
 tags:
   - type: beta
 meta:
-  title: Images | Tiptap Conversion
-  description: How images are handled when importing from DOCX, rendering in the editor, and exporting back to DOCX.
-  category: Conversion
+  title: 图片 | Tiptap 转换
+  description: 了解从 DOCX 导入、在编辑器中渲染以及导出回 DOCX 时如何处理图片。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Images in DOCX documents are extracted during import, rendered in the editor, and re-embedded on export. The Image extension is not in StarterKit and must be installed separately.
+DOCX 文档中的图片会在导入时提取、在编辑器中渲染，并在导出时重新嵌入。Image 扩展不包含在 StarterKit 中，必须单独安装。
 
-## What you need
+## 所需内容
 
-- **Extensions (recommended):** [`ConvertKit`](/conversion/import/docx/convertkit). Its custom Image declares `cropTop`, `cropBottom`, `cropLeft`, `cropRight` on top of the base Image extension, so DOCX crop metadata survives schema validation.
-- **Extensions (minimum):** `@tiptap/extension-image` (not in StarterKit). The base extension renders `src`, `alt`, `title`, `width`, `height`. DOCX crop attributes are dropped on schema validation in this setup.
-- **Configuration:** An image upload endpoint configured via `imageUploadConfig` on the import extension or REST API request, regardless of which extension setup you use.
+- **扩展（推荐）：** [`ConvertKit`](/conversion/import/docx/convertkit)。它的自定义 Image 在基础 Image 扩展的基础上声明了 `cropTop`、`cropBottom`、`cropLeft`、`cropRight`，因此 DOCX 裁剪元数据可以通过 schema 验证并保留下来。
+- **扩展（最低要求）：** `@tiptap/extension-image`（不包含在 StarterKit 中）。基础扩展会渲染 `src`、`alt`、`title`、`width`、`height`。在此配置下，DOCX 裁剪属性会在 schema 验证时被丢弃。
+- **配置：** 无论使用哪种扩展配置，都需要在导入扩展或 REST API 请求中通过 `imageUploadConfig` 配置图片上传端点。
 
-<Callout title="imageUploadConfig is required for import" variant="warning">
-  When importing a DOCX, images are extracted as binary blobs from the file. Without an `imageUploadConfig`, the resulting `src` values will not be resolvable and images will appear broken. You must provide an upload endpoint so the converter can POST each image and replace internal references with real URLs.
+<Callout title="导入时必须配置 imageUploadConfig" variant="warning">
+  导入 DOCX 时，图片会从文件中提取为二进制 Blob。如果没有 `imageUploadConfig`，生成的 `src` 值将无法解析，图片也会显示为损坏状态。必须提供上传端点，以便转换器将每张图片 POST 到该端点，并将内部引用替换为真实 URL。
 </Callout>
 
-## Support overview
+## 支持概览
 
-| Feature | Import | Editor | Export | Notes |
+| 功能 | 导入 | 编辑器 | 导出 | 备注 |
 | --- | --- | --- | --- | --- |
-| Inline images | Supported | Supported | Supported | Requires imageUploadConfig on import |
-| Floating/wrapped images | Partial | Not supported | Not supported | Anchor images are converted but wrap type is not tracked. All images become inline. Background/watermark images (`behindDoc`) are skipped. |
-| Image dimensions | Supported | Supported | Supported | Width and height are extracted from EMU values and passed as pixel attributes on the image node. Export reads width/height attrs. |
-| Alt text | Supported | Supported | Supported | `descr` and `title` from `wp:docPr` are extracted on import. Alt from editor node maps to DOCX alt text on export. |
-| Formats (PNG, JPEG, GIF, BMP, SVG) | Supported | Supported | Supported | |
-| EMF/WMF | Supported (import) | Depends on browser | Not supported (export) | Windows vector formats may not round-trip |
-| Image cropping | Supported | Attributes preserved by ConvertKit; visual crop requires CSS | Not supported | `cropTop`, `cropBottom`, `cropLeft`, `cropRight` extracted as attributes (percentage values) |
-| Image resizing | N/A | Supported | Supported | Resized dimensions export correctly |
+| 行内图片 | 支持 | 支持 | 支持 | 导入时需要配置 imageUploadConfig |
+| 浮动/环绕图片 | 部分支持 | 不支持 | 不支持 | 锚定图片会被转换，但不会跟踪环绕类型。所有图片都会变为行内图片。背景/水印图片（`behindDoc`）会被跳过。 |
+| 图片尺寸 | 支持 | 支持 | 支持 | 从 EMU 值提取宽度和高度，并作为像素属性传递给图片节点。导出时会读取 width/height 属性。 |
+| 替代文本 | 支持 | 支持 | 支持 | 导入时会从 `wp:docPr` 提取 `descr` 和 `title`。编辑器节点中的 alt 会在导出时映射为 DOCX 替代文本。 |
+| 格式（PNG、JPEG、GIF、BMP、SVG） | 支持 | 支持 | 支持 | |
+| EMF/WMF | 支持（导入） | 取决于浏览器 | 不支持（导出） | Windows 矢量格式可能无法往返转换 |
+| 图片裁剪 | 支持 | ConvertKit 会保留属性；视觉裁剪需要 CSS | 不支持 | `cropTop`、`cropBottom`、`cropLeft`、`cropRight` 会作为属性提取（百分比值） |
+| 图片缩放 | 不适用 | 支持 | 支持 | 缩放后的尺寸可正确导出 |
 
-## Import
+## 导入
 
-Import images using the [editor extension](/conversion/import/docx/editor-extension) or the [REST API](/conversion/import/docx/rest-api). Both accept `imageUploadConfig` and produce identical output. The conversion service handles image uploads on both paths.
+使用[编辑器扩展](/conversion/import/docx/editor-extension)或 [REST API](/conversion/import/docx/rest-api)导入图片。两者都接受 `imageUploadConfig`，并生成相同的输出。转换服务会在这两种方式下处理图片上传。
 
-When a DOCX is imported, each embedded image is extracted from the zip archive as a blob. If you provide an `imageUploadConfig`, the converter POSTs each blob to your upload endpoint and replaces the internal reference with the URL your server returns.
+导入 DOCX 时，每张嵌入的图片都会从 ZIP 存档中提取为 Blob。如果提供了 `imageUploadConfig`，转换器会将每个 Blob POST 到你的上传端点，并将内部引用替换为服务器返回的 URL。
 
 ```ts
 ImportDocx.configure({
@@ -50,17 +50,17 @@ ImportDocx.configure({
 })
 ```
 
-Without this configuration, imported images will have unresolvable `src` values.
+如果没有此配置，导入图片的 `src` 值将无法解析。
 
-If the source image has cropping applied in Word, the crop values are extracted as `cropTop`, `cropBottom`, `cropLeft`, and `cropRight` attributes (percentage values from 0 to 100). [ConvertKit](/conversion/import/docx/convertkit)'s custom Image accepts these attributes and emits them as `data-crop-top`, `data-crop-bottom`, `data-crop-left`, `data-crop-right` on the rendered `<img>` element. The package does not ship CSS to translate the data attributes into a visual crop. To produce the actual crop, add CSS that reads the attributes (e.g. `clip-path` or a wrapper with `overflow: hidden` plus negative `object-position`). Without ConvertKit, the values are dropped on schema validation. Crop values are not preserved on export.
+如果源图片在 Word 中应用了裁剪，裁剪值会作为 `cropTop`、`cropBottom`、`cropLeft` 和 `cropRight` 属性提取（取值为 0 到 100 的百分比）。[ConvertKit](/conversion/import/docx/convertkit) 的自定义 Image 会接受这些属性，并在渲染的 `<img>` 元素上输出为 `data-crop-top`、`data-crop-bottom`、`data-crop-left`、`data-crop-right`。该软件包不包含用于将这些 data 属性转换为视觉裁剪效果的 CSS。若要实现实际裁剪，请添加读取这些属性的 CSS（例如使用 `clip-path`，或使用带有 `overflow: hidden` 的包装元素并设置负的 `object-position`）。如果不使用 ConvertKit，这些值会在 schema 验证时被丢弃。导出时不会保留裁剪值。
 
-<Callout title="Floating images are not fully supported" variant="info">
-  DOCX documents often contain images with text wrapping (square, tight, behind text). Anchor images are converted during import, but wrap type is not tracked. All images are inserted as inline nodes regardless of their original positioning. Background or watermark images (`behindDoc`) are skipped entirely.
+<Callout title="尚未完全支持浮动图片" variant="info">
+  DOCX 文档中的图片通常会设置文字环绕（四周型、紧密型、衬于文字下方等）。导入时会转换锚定图片，但不会跟踪环绕类型。无论原始定位方式如何，所有图片都会作为行内节点插入。背景或水印图片（`behindDoc`）会被完全跳过。
 </Callout>
 
-## Editor rendering
+## 在编辑器中渲染
 
-The [`Image`](/editor/extensions/nodes/image) extension adds an `image` node with `src`, `alt`, `title`, `width`, and `height` attributes. It renders as a standard `<img>` tag. It is not included in StarterKit.
+[`Image`](/editor/extensions/nodes/image) 扩展会添加一个带有 `src`、`alt`、`title`、`width` 和 `height` 属性的 `image` 节点，并将其渲染为标准 `<img>` 标签。它不包含在 StarterKit 中。
 
 ```bash
 npm install @tiptap/extension-image
@@ -77,7 +77,7 @@ const editor = new Editor({
 })
 ```
 
-To enable drag-to-resize handles, pass the `resize` option:
+若要启用拖动缩放控点，请传入 `resize` 选项：
 
 ```ts
 Image.configure({
@@ -86,28 +86,22 @@ Image.configure({
 })
 ```
 
-Without the Image extension, imported image nodes are not recognized by the schema. See the [invalid schema guide](/guides/invalid-schema) for handling strategies.
+如果没有 Image 扩展，schema 将无法识别导入的图片节点。有关处理方法，请参阅[无效 schema 指南](/guides/invalid-schema)。
 
-## Export
+## 导出
 
-Export images using the [editor extension](/conversion/export/docx/editor-extension) or the [REST API](/conversion/export/docx/rest-api). The extension supports [`imageOverrides`](/conversion/export/docx/styles#element-overrides) for customizing image defaults in the output. The REST API does not accept image overrides.
+使用[编辑器扩展](/conversion/export/docx/editor-extension)或 [REST API](/conversion/export/docx/rest-api)导出图片。该扩展支持通过 [`imageOverrides`](/conversion/export/docx/styles#element-overrides) 自定义输出中的图片默认设置。REST API 不接受图片覆盖设置。
 
-On export, each image node's `src` URL is fetched and the binary data is embedded into the DOCX. Supported export formats: PNG, JPG, JPEG, GIF, BMP, and SVG.
+导出时，会获取每个图片节点的 `src` URL，并将二进制数据嵌入 DOCX。支持导出的格式：PNG、JPG、JPEG、GIF、BMP 和 SVG。
 
-If the node has `width` and `height` attributes (in pixels), those values are converted to points (1px = 0.75pt). If no dimensions are set, the exporter detects intrinsic size automatically. If detection fails, images default to 800x400 pixels.
+如果节点具有 `width` 和 `height` 属性（单位为像素），这些值会转换为磅（1px = 0.75pt）。如果未设置尺寸，导出器会自动检测图片的固有尺寸。如果检测失败，图片默认尺寸为 800x400 像素。
 
-The `alt` attribute on the image node is mapped to the DOCX image's alt text fields.
+图片节点上的 `alt` 属性会映射到 DOCX 图片的替代文本字段。
 
-### When an image cannot be fetched
+### 无法获取图片时
 
-An image whose URL returns a 404, whose host does not answer, or whose format is not one of
-the supported ones is left out of the document, and the rest of the document still exports.
-If that image was the only thing in its paragraph, the paragraph is dropped too, so no blank
-line is left behind.
+如果图片 URL 返回 404、主机无响应，或图片格式不受支持，该图片会从文档中移除，但文档的其余部分仍会正常导出。如果该图片是其所在段落中唯一的内容，该段落也会被删除，因此不会留下空行。
 
-EMF is the common case: Word writes it for pasted charts and equations, and DOCX export
-cannot embed it.
+常见情况是 EMF：Word 会将其用于粘贴的图表和公式，而 DOCX 导出无法嵌入这种格式。
 
-Pass `onWarning` to see which images were skipped, or `onImageError: 'throw'` to fail the
-export instead. See [Images that cannot be
-exported](/conversion/export/docx/editor-extension#images-that-cannot-be-exported).
+传入 `onWarning` 可查看哪些图片被跳过；也可以设置 `onImageError: 'throw'`，在此情况下让导出失败。请参阅[无法导出的图片](/conversion/export/docx/editor-extension#images-that-cannot-be-exported)。
