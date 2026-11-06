@@ -1,17 +1,17 @@
 ---
-title: Styling
+title: 样式
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Styling | Tiptap Slots Docs
-  description: Customize Slot markup, NodeViews and view updates.
-  category: Composable Docs
+  title: 样式 | Tiptap Slots Docs
+  description: 自定义 Slot 标记、NodeView 和视图更新。
+  category: 可组合文档
 ---
 
-Customize `BlockSlot` and `InlineSlot` as ordinary Tiptap Node extensions. Pass them to `Slot`; it retains the commands, indexing and validation behavior.
+将 `BlockSlot` 和 `InlineSlot` 按普通的 Tiptap Node 扩展进行自定义。将它们传给 `Slot`；它会保留命令、索引和验证行为。
 
-## HTML attributes
+## HTML 属性
 
 ```ts
 Slot.configure({
@@ -20,31 +20,31 @@ Slot.configure({
 })
 ```
 
-- `HTMLAttributes` (`Record<string, string>`): Outer-element attributes. Default: `{}`.
-- Required `data-slot-*` attributes take precedence over custom attributes.
-- The package supplies no toolbar, borders or colors. Style the wrapper in your application.
+- `HTMLAttributes`（`Record<string, string>`）：外层元素的属性。默认值：`{}`。
+- 必需的 `data-slot-*` 属性优先于自定义属性。
+- 此软件包不提供工具栏、边框或颜色。请在应用中为包装元素添加样式。
 
-### Serialized attributes
+### 序列化属性
 
-| Attribute          | Value                   | Purpose                           |
-| ------------------ | ----------------------- | --------------------------------- |
-| `data-slot-kind`   | `'block'` or `'inline'` | Identifies the Node kind.         |
-| `data-slot-id`     | Slot ID                 | Preserves identity.               |
-| `data-slot-config` | Escaped JSON            | Preserves embedded configuration. |
+| 属性               | 值                      | 用途                     |
+| ------------------ | ----------------------- | ------------------------ |
+| `data-slot-kind`   | `'block'` 或 `'inline'` | 标识 Node 类型。         |
+| `data-slot-id`     | Slot ID                 | 保留身份标识。           |
+| `data-slot-config` | 转义后的 JSON           | 保留嵌入的配置。         |
 
-Default wrappers are `div` for block Slots and `span` for inline Slots. The accessible name uses `config.label`, falling back to the ID.
+块级 Slot 的默认包装元素为 `div`，行内 Slot 的默认包装元素为 `span`。无障碍名称使用 `config.label`；若未设置，则回退为 ID。
 
-### View-only attributes
+### 仅视图属性
 
-| Attribute               | Value                  | Purpose                                |
-| ----------------------- | ---------------------- | -------------------------------------- |
-| `data-slot-empty`       | `'true'` or `'false'`  | Styles empty fields.                   |
-| `data-slot-active`      | `'true'` or `'false'`  | Styles the active field.               |
-| `data-slot-placeholder` | Configured placeholder | Supplies text when the field is empty. |
+| 属性                    | 值                     | 用途                   |
+| ----------------------- | ---------------------- | ---------------------- |
+| `data-slot-empty`       | `'true'` 或 `'false'`  | 为字段为空时设置样式。 |
+| `data-slot-active`      | `'true'` 或 `'false'`  | 为活动字段设置样式。   |
+| `data-slot-placeholder` | 配置的占位文本         | 字段为空时提供文本。   |
 
-These attributes and placeholder presentation are not persisted in JSON, serialized HTML or clipboard content.
+这些属性和占位文本的呈现不会持久化到 JSON、序列化后的 HTML 或剪贴板内容中。
 
-## Custom NodeViews
+## 自定义 NodeView
 
 ```ts
 const CustomBlockSlot = BlockSlot.extend({
@@ -56,49 +56,49 @@ const CustomBlockSlot = BlockSlot.extend({
 Slot.configure({ blockSlot: CustomBlockSlot })
 ```
 
-`ReactNodeViewRenderer` comes from `@tiptap/react`. JavaScript and Vue use their standard Tiptap NodeView APIs.
+`ReactNodeViewRenderer` 来自 `@tiptap/react`。JavaScript 和 Vue 使用各自标准的 Tiptap NodeView API。
 
-### Contract
+### 约定
 
-- Preserve the canonical Node name, `id`/`config` attributes, content expression and defining/isolating behavior.
-- Register customized instances through `Slot` only. Instances are fixed at editor construction.
-- Provide one editable `contentDOM`, or the framework's `NodeViewContent` equivalent.
-- Let Tiptap render document content. Do not render a second copy from `node.content`.
-- Mark controls and labels noneditable. Make edits through commands.
-- Inline wrappers and content containers must use inline-compatible elements, such as `span`.
-- Custom views own visible labels and placeholders. Default placeholder text is not added to custom views.
-- Preserve selection, nested editing, IME and caret behavior. Do not swallow required content events or mutations.
+- 保留规范的 Node 名称、`id`/`config` 属性、内容表达式以及 defining/isolating 行为。
+- 仅通过 `Slot` 注册自定义实例。实例在编辑器创建时确定。
+- 提供一个可编辑的 `contentDOM`，或框架中对应的 `NodeViewContent`。
+- 让 Tiptap 渲染文档内容。不要从 `node.content` 再渲染一份。
+- 将控件和标签设为不可编辑。通过命令进行编辑。
+- 行内包装元素和内容容器必须使用兼容行内布局的元素，例如 `span`。
+- 自定义视图负责显示标签和占位文本。默认占位文本不会添加到自定义视图中。
+- 保留选区、嵌套编辑、IME 和光标行为。不要拦截必需的内容事件或变更。
 
-See [Tiptap NodeViews](/editor/extensions/custom-extensions/node-views) for the framework APIs.
+有关各框架的 API，请参阅 [Tiptap NodeView](/editor/extensions/custom-extensions/node-views)。
 
-## Validation and permission updates
+## 验证和权限更新
 
-Use [`subscribeSlotViewUpdates`](/composable-docs/slots/api-reference/utilities#subscribeslotviewupdates) to refresh UI when attributes alone do not change.
+当仅靠属性变化无法触发更新时，使用 [`subscribeSlotViewUpdates`](/composable-docs/slots/api-reference/utilities#subscribeslotviewupdates) 刷新 UI。
 
 ```ts
 const unsubscribe = subscribeSlotViewUpdates({ editor, onUpdate: refresh })
-// When disposing the view:
+// 视图销毁时：
 unsubscribe()
 ```
 
-- Read `editor.storage.slot` for the snapshot, active field and validation state.
-- Use `getPos()` and entry positions when imported IDs are ambiguous.
-- Use `editor.can()` for command availability and Content Protection queries for explanations.
-- Render only current validation results. Apply read permissions before displaying messages or content.
-- Mounting a view does not start validation.
+- 从 `editor.storage.slot` 读取快照、活动字段和验证状态。
+- 导入的 ID 存在歧义时，使用 `getPos()` 和条目位置。
+- 使用 `editor.can()` 检查命令是否可用，并通过 Content Protection 查询了解原因。
+- 仅呈现当前的验证结果。显示消息或内容前，先应用读取权限。
+- 挂载视图不会启动验证。
 
-## HTML serialization
+## HTML 序列化
 
-- `addNodeView` controls the editor UI; `renderHTML` controls exported HTML.
-- For content-slot nodes (`BlockSlot` and `InlineSlot`), custom `renderHTML` must preserve the three serialized attributes and one content hole.
-- Generate attributes from the current Node with proper escaping.
-- Custom `parseHTML` must preserve IDs and complete configuration. Keep the default parser as a fallback.
-- Malformed configuration JSON in HTML becomes `config: null` and produces a validation issue.
-- UI controls, placeholders and validation messages belong to the NodeView, not exported content.
+- `addNodeView` 控制编辑器 UI；`renderHTML` 控制导出的 HTML。
+- 对于内容槽位节点（`BlockSlot` 和 `InlineSlot`），自定义 `renderHTML` 必须保留三个序列化属性和一个内容孔位。
+- 根据当前 Node 生成属性，并正确转义。
+- 自定义 `parseHTML` 必须保留 ID 和完整配置。保留默认解析器作为后备方案。
+- HTML 中格式错误的配置 JSON 会变为 `config: null`，并产生一条验证问题。
+- UI 控件、占位文本和验证消息应放在 NodeView 中，而非导出的内容中。
 
-## Value slot NodeViews
+## 值槽位 NodeView
 
-Customize `BlockValueSlot` or `InlineValueSlot` through `addNodeView`. These leaf nodes have no `contentDOM` or `NodeViewContent`. Keep their wrappers noneditable and use native controls or framework components inside them. See the [value slots guide](/composable-docs/slots/guides/value-slots#mix-custom-and-default-nodeviews) for a complete demo.
+通过 `addNodeView` 自定义 `BlockValueSlot` 或 `InlineValueSlot`。这些叶节点没有 `contentDOM` 或 `NodeViewContent`。其包装元素应保持不可编辑，并在其中使用原生控件或框架组件。完整示例请参阅[值槽位指南](/composable-docs/slots/guides/value-slots#mix-custom-and-default-nodeviews)。
 
 ### `createSlotValueController`
 
@@ -106,29 +106,29 @@ Customize `BlockValueSlot` or `InlineValueSlot` through `addNodeView`. These lea
 const slot = createSlotValueController({ editor, getPos })
 ```
 
-Accepts an `Editor` and the NodeView's live `getPos: () => number | undefined` callback. No framework dependency is required.
+接受一个 `Editor` 和 NodeView 的实时 `getPos: () => number | undefined` 回调。不需要依赖任何框架。
 
-- `getState(): SlotValueState`: Stable immutable snapshot with `value: JsonValue`, `config: SlotConfig | null`, `editable: boolean`, and `available: boolean`.
-- `getValue(): JsonValue`: Latest readable value; `null` when unavailable.
-- `setValue(value: JsonValue): boolean`: Guarded command; false when unavailable, protected, ambiguous, or variable-controlled.
-- `subscribe(listener: () => void): () => void`: Notify on state changes; returns an unsubscribe function. Read initial state explicitly. The editor listener is removed after the last subscriber unsubscribes.
-- `focus(): void`: Select the readable value node when its control receives focus. It does not move DOM focus.
-- `destroy(): void`: Release subscriptions and prevent further writes.
+- `getState(): SlotValueState`：稳定的不可变快照，包含 `value: JsonValue`、`config: SlotConfig | null`、`editable: boolean` 和 `available: boolean`。
+- `getValue(): JsonValue`：最新的可读值；不可用时为 `null`。
+- `setValue(value: JsonValue): boolean`：受保护的命令；字段不可用、受保护、有歧义或由变量控制时返回 false。
+- `subscribe(listener: () => void): () => void`：状态变化时通知；返回一个取消订阅函数。请显式读取初始状态。最后一个订阅者取消订阅后，编辑器监听器会被移除。
+- `focus(): void`：控件获得焦点时选中可读的值节点。此操作不会移动 DOM 焦点。
+- `destroy(): void`：释放订阅并阻止后续写入。
 
-The snapshot reference changes only when its properties change, making it suitable for React's `useSyncExternalStore`. Do not destroy a controller while other consumers still use it. Missing or unreadable fields have `available: false` and do not expose their value or configuration.
+只有快照属性发生变化时，快照引用才会变化，因此适用于 React 的 `useSyncExternalStore`。其他使用者仍在使用控制器时，不要销毁它。字段缺失或不可读时，`available: false`，且不会暴露其值或配置。
 
 ### `createDefaultSlotValueView`
 
-Accepts standard `NodeViewRendererProps` and returns a complete ProseMirror `NodeView`. Call it inside `addNodeView` for fields that should retain built-in controls. It never calls your renderer again.
+接受标准的 `NodeViewRendererProps`，并返回完整的 ProseMirror `NodeView`。对于需要保留内置控件的字段，请在 `addNodeView` 中调用它。它不会再次调用你的渲染器。
 
-The default view manages events, composition, value updates, permission changes, and disposal. It recreates when the input type changes. Custom views must also return false from `update` when a configuration change requires a different renderer.
+默认视图负责管理事件、组合输入、值更新、权限变更和销毁。输入类型发生变化时，它会重新创建。如果配置变化要求使用不同的渲染器，自定义视图也必须在 `update` 中返回 false。
 
-### Value HTML
+### 值槽位 HTML
 
-Value nodes serialize `data-slot-kind`, `data-slot-mode="value"`, `data-slot-id`, `data-slot-config`, and `data-slot-value`. Config and value use escaped JSON. Exported HTML includes a static value representation and no content hole or interactive control. Custom value-slot serialization must preserve these attributes without adding a content hole.
+值节点会序列化 `data-slot-kind`、`data-slot-mode="value"`、`data-slot-id`、`data-slot-config` 和 `data-slot-value`。配置和值均使用转义后的 JSON。导出的 HTML 包含静态值表示，不包含内容孔位或交互控件。自定义值槽位序列化必须保留这些属性，且不得添加内容孔位。
 
-## Redacted content
+## 已遮蔽内容
 
-Content Protection replaces concealed Nodes with its own [redaction renderer](/composable-docs/content-protection/api-reference/rendering). Their original Slot NodeViews do not remain mounted.
+Content Protection 会使用自己的[脱敏渲染器](/composable-docs/content-protection/api-reference/rendering)替换被遮蔽的 Node。其原有 Slot NodeView 不会继续挂载。
 
-A readable parent may contain concealed children. Its custom controls must not display those children's text, attributes or JSON elsewhere. The complete source document remains in client memory.
+可读的父节点可能包含被遮蔽的子节点。其自定义控件不得在其他位置显示这些子节点的文本、属性或 JSON。完整的源文档仍保留在客户端内存中。
