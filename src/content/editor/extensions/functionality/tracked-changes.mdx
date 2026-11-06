@@ -1,38 +1,37 @@
 ---
-title: Tracked Changes extension
+title: 修订跟踪扩展
 extension:
   name: Tracked Changes
-  description: Enable suggestion mode for collaborative editing and document review workflows.
+  description: 为协作编辑和文档审阅工作流启用建议模式。
   type: extension
   icon: FileEdit
 tags:
   - type: addon
-    tooltip: Add Tracked Changes to your subscription
+    tooltip: 将 Tracked Changes 添加到您的订阅中
 meta:
-  category: Editor
-  title: Tracked Changes extension | Tiptap Editor Docs
-  description: Enable track changes and suggestion mode in your Tiptap editor for collaborative editing and document review.
+  category: 编辑器
+  title: Tracked Changes 扩展 | Tiptap 编辑器文档
+  description: 在 Tiptap 编辑器中启用修订跟踪和建议模式，以支持协作编辑和文档审阅。
 ---
 
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-The Tracked Changes extension enables suggestion mode for collaborative editing workflows. When enabled, all edits appear as proposals that can be accepted or rejected, similar to change tracking in word processors.
+Tracked Changes 扩展可为协作编辑工作流启用建议模式。启用后，所有编辑都会显示为可接受或拒绝的提议，类似文字处理软件中的修订跟踪。
 
-<Callout title="More details" variant="hint">
-  For more detailed information on how to integrate, install, and configure the Tiptap Tracked
-  Changes extension, please visit our [feature page](/tracked-changes/getting-started/overview).
+<Callout title="了解详情" variant="hint">
+  如需了解有关集成、安装和配置 Tiptap Tracked Changes 扩展的更多信息，请访问我们的[功能介绍页面](/tracked-changes/getting-started/overview)。
 </Callout>
 
 <CodeDemo isPro path="/Experiments/TrackedChanges" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap-pro/extension-tracked-changes
 ```
 
-## Basic setup
+## 基本设置
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -49,11 +48,11 @@ const editor = new Editor({
 })
 ```
 
-## Programmatic suggestions
+## 以编程方式创建建议
 
-In addition to interactive review workflows, the extension also exposes commands for creating tracked suggestions directly from application logic. Use these commands when you need to insert, delete, or replace content as suggestions without turning tracked changes mode on for every editor interaction. You can also attach a `reason` to programmatic suggestions, which is emitted with the creation event for downstream workflows. Insert and replace commands accept full Tiptap `Content`, so they can work with JSON nodes such as images, not just plain text. Tracked mark commands support both simple formatting marks like `bold` and attributed marks like `link` or `highlight`.
+除了交互式审阅工作流外，此扩展还提供了一些命令，可直接通过应用逻辑创建修订建议。如果需要以建议的形式插入、删除或替换内容，而不希望在每次编辑器交互时都开启修订跟踪模式，可以使用这些命令。您还可以为以编程方式创建的建议附加 `reason`，该字段会随创建事件一同发出，供后续工作流使用。插入和替换命令接受完整的 Tiptap `Content`，因此不仅可以处理纯文本，也可以处理图像等 JSON 节点。修订标记命令支持简单的格式标记（如 `bold`），也支持带属性的标记（如 `link` 或 `highlight`）。
 
-If you also use the [TrailingNode](/editor/extensions/functionality/trailing-node) extension, `addTrackedInsertion()` and `addTrackedReplacement()` can set `skipTrailingNode: true` to forward that transaction meta onto the emitted tracked-changes transaction.
+如果您也使用 [TrailingNode](/editor/extensions/functionality/trailing-node) 扩展，`addTrackedInsertion()` 和 `addTrackedReplacement()` 可以设置 `skipTrailingNode: true`，将该事务元数据传递到发出的修订跟踪事务中。
 
 ```js
 editor.commands.addTrackedInsertion({
@@ -109,11 +108,11 @@ editor.commands.addTrackedInsertion({
 })
 ```
 
-See the [commands reference](/tracked-changes/api-reference/commands) for the full API.
+完整 API 请参阅[命令参考](/tracked-changes/api-reference/commands)。
 
-## Next steps
+## 后续步骤
 
-- [Install and configure](/tracked-changes/getting-started/install) — Full settings reference
-- [Basic usage](/tracked-changes/usage/basic-usage) — Enable tracking, accept and reject suggestions
-- [Advanced usage](/tracked-changes/usage/advanced-usage) — Grouping, collaboration, comments integration
-- [API Reference](/tracked-changes/api-reference/commands) — Commands, events, utilities, and types
+- [安装和配置](/tracked-changes/getting-started/install) — 完整设置参考
+- [基本用法](/tracked-changes/usage/basic-usage) — 启用跟踪、接受和拒绝建议
+- [高级用法](/tracked-changes/usage/advanced-usage) — 分组、协作和评论集成
+- [API 参考](/tracked-changes/api-reference/commands) — 命令、事件、工具和类型
