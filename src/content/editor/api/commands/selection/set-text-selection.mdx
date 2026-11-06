@@ -1,22 +1,22 @@
 ---
-title: setTextSelection command
+title: setTextSelection 命令
 meta:
-  title: setTextSelection command | Tiptap Editor Docs
-  description: Use the setTextSelection command to control and set text selection to a specified range or position. Learn more in our docs!
-  category: Editor
+  title: setTextSelection 命令 | Tiptap 编辑器文档
+  description: 使用 setTextSelection 命令将文本选区设置为指定范围或位置。了解更多信息，请参阅我们的文档！
+  category: 编辑器
 ---
 
-If you think of selection in the context of an editor, you’ll probably think of a text selection. With `setTextSelection` you can control that text selection and set it to a specified range or position.
+在编辑器的上下文中谈到选区时，你可能会想到文本选区。使用 `setTextSelection`，你可以控制文本选区，并将其设置为指定的范围或位置。
 
-See also: [focus](/editor/api/commands/selection/focus), [setNodeSelection](/editor/api/commands/selection/set-node-selection), [deleteSelection](/editor/api/commands/selection/delete-selection), [selectAll](/editor/api/commands/selection/select-all)
+另请参阅：[focus](/editor/api/commands/selection/focus)、[setNodeSelection](/editor/api/commands/selection/set-node-selection)、[deleteSelection](/editor/api/commands/selection/delete-selection)、[selectAll](/editor/api/commands/selection/select-all)
 
-## Parameters
+## 参数
 
 `position: number | Range`
 
-Pass a number, or a Range, for example `{ from: 5, to: 10 }`.
+传入一个数字或一个 Range，例如 `{ from: 5, to: 10 }`。
 
-## Use the setTextSelection command
+## 使用 setTextSelection 命令
 
 ```js
 // Set the cursor to the specified position
