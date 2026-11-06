@@ -1,14 +1,14 @@
 ---
-title: 'ConvertKit: DOCX-aware editor extensions'
+title: 'ConvertKit：支持 DOCX 的编辑器扩展'
 tags:
   - type: start
   - type: beta
   - type: version
     label: v0.8.0
 meta:
-  title: ConvertKit | Tiptap Conversion
-  description: A bundled Tiptap extension that configures the editor for DOCX-imported content.
-  category: Conversion
+  title: ConvertKit | Tiptap 转换
+  description: 一组 Tiptap 扩展，可将编辑器配置为处理从 DOCX 导入的内容。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
@@ -18,49 +18,45 @@ import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 
 <EnterpriseCalloutAuto variant="docx" renderMode="sidebar" disableWaitlist />
 
-<Callout variant="hint" title="Beta feature">
-  ConvertKit's APIs, attribute names, and bundled extensions are stabilising but may still see
-  refinements before general availability. Pin exact package versions if you depend on ConvertKit,
-  and read the **What won't work** section before you adopt it.
+<Callout variant="hint" title="Beta 功能">
+  ConvertKit 的 API、属性名称和内置扩展仍在趋于稳定，正式发布前可能还会有所调整。如果你依赖 ConvertKit，请固定使用确切的包版本，并在采用前阅读 **无法实现的功能** 一节。
 </Callout>
 
 <Requirements>
-  <RequirementItem label="1. Activate trial or subscribe">
-    Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start
-    plan](https://cloud.tiptap.dev/v2/billing) in your account.
+  <RequirementItem label="1. 激活试用或订阅">
+    在你的账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 计划](https://cloud.tiptap.dev/v2/billing)。
   </RequirementItem>
-  <RequirementItem label="2. Install from private registry">
-    Authenticate to Tiptap's private npm registry by following the [setup
-    guide](/guides/pro-extensions).
+  <RequirementItem label="2. 从私有注册表安装">
+    按照[设置指南](/guides/pro-extensions)完成身份验证，以访问 Tiptap 的私有 npm 注册表。
   </RequirementItem>
 </Requirements>
 
 <CodeDemo isPro path="/Extensions/ImportDocxCssStyles" />
 
-## What this does
+## 功能简介
 
-A DOCX file carries formatting metadata that the stock Tiptap extensions do not know about: paragraph spacing in twips, table-row height rules, image crop percentages, vertical cell alignment, per-side border widths. If you render DOCX content with vanilla Tiptap, that information is lost or mis-rendered.
+DOCX 文件包含标准 Tiptap 扩展无法识别的格式元数据：以 twips 为单位的段落间距、表格行高规则、图像裁剪百分比、单元格垂直对齐方式以及各边框宽度。如果使用原生 Tiptap 渲染 DOCX 内容，这些信息就会丢失或渲染错误。
 
-**ConvertKit is a single extension that configures your editor for DOCX-imported content.** Drop it in and you get:
+**ConvertKit 是一个扩展，可将编辑器配置为处理从 DOCX 导入的内容。** 添加它即可获得：
 
-- 32 bundled extensions wired up to handle everything the Convert API produces.
-- Custom Paragraph, Heading, Image, Table, TableRow, TableCell, and TableHeader extensions that accept the DOCX-specific attributes.
-- A small CSS reset injected at editor creation that normalises browser defaults so DOCX spacing values render accurately.
-- Every bundled extension is individually configurable or disableable.
+- 32 个内置扩展，已配置好，可处理 Convert API 生成的所有内容。
+- 自定义的 Paragraph、Heading、Image、Table、TableRow、TableCell 和 TableHeader 扩展，可接受 DOCX 专用属性。
+- 创建编辑器时注入一小段 CSS 重置样式，用于规范浏览器默认行为，从而准确呈现 DOCX 间距值。
+- 每个内置扩展都可以单独配置或禁用。
 
-## Install
+## 安装
 
 ```bash
 npm i @tiptap-pro/extension-convert-kit@^0.1.0
 ```
 
-## How it works
+## 工作原理
 
-Three parts:
+主要由三部分组成：
 
-1. **A bundle of pre-configured extensions.** ConvertKit registers a curated set of Tiptap extensions (base extensions for marks and lists, plus DOCX-aware custom overrides for paragraphs, headings, images, and tables). You can pass `false` for any slot in `ConvertKit.configure({…})` to exclude that extension.
-2. **DOCX attributes on schema nodes.** The DOCX-aware overrides extend their base counterparts and declare additional attributes (paragraph spacing, image crop, table cell properties). The conversion service produces these attributes; ConvertKit's nodes render them.
-3. **Scoped CSS reset.** ConvertKit injects a small CSS reset that normalises browser defaults for paragraph margins, table line-heights, cell vertical-alignment, and exact-height rows so DOCX spacing values render accurately. The reset is removed when the editor is destroyed.
+1. **一组预配置的扩展。** ConvertKit 会注册一组精选的 Tiptap 扩展（用于标记和列表的基础扩展，以及支持 DOCX 的段落、标题、图像和表格自定义覆盖扩展）。你可以在 `ConvertKit.configure({…})` 中为任意选项传入 `false`，以排除相应扩展。
+2. **架构节点上的 DOCX 属性。** 支持 DOCX 的覆盖扩展会扩展相应的基础扩展，并声明其他属性（段落间距、图像裁剪、表格单元格属性）。转换服务会生成这些属性；ConvertKit 的节点负责渲染它们。
+3. **作用域限定的 CSS 重置样式。** ConvertKit 会注入一小段 CSS 重置样式，规范浏览器对段落边距、表格行高、单元格垂直对齐和精确行高的默认处理，从而准确呈现 DOCX 间距值。销毁编辑器时会移除这段样式。
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -71,7 +67,7 @@ const editor = new Editor({
 })
 ```
 
-Customise or disable specific children:
+自定义或禁用特定子扩展：
 
 ```ts
 new Editor({
@@ -85,101 +81,100 @@ new Editor({
 })
 ```
 
-## What works
+## 支持的功能
 
-### Bundled extensions
+### 内置扩展
 
-ConvertKit ships **32** extensions inside the single `@tiptap-pro/extension-convert-kit` package. The list below is reference material so you know what shows up in the editor's schema; you do not install or register these separately.
+ConvertKit 在单个 `@tiptap-pro/extension-convert-kit` 包中提供 **32** 个扩展。下表供你参考，帮助了解编辑器架构中包含哪些扩展；你无需单独安装或注册它们。
 
-| Category   | Extensions                                                                                                                                                          |
+| 类别 | 扩展 |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Core       | `Document`, `Text`, `Paragraph`_, `Heading`_                                                                                                                        |
-| Marks      | `Bold`, `Italic`, `Underline`, `Strike`, `Code`, `Link`                                                                                                             |
-| Blocks     | `Blockquote`, `HorizontalRule`, `HardBreak`, `CodeBlock`, `PageBreak`                                                                                               |
-| Lists      | `BulletList`, `OrderedList`, `ListItem`, `ListKeymap`, `TaskList`, `TaskItem`, `OrderedListNumbering`†                                                              |
-| Media      | `Image`\*                                                                                                                                                           |
-| Styling    | `TextStyleKit` (`TextStyle`, `Color`, `BackgroundColor`, `FontFamily`, `FontSize`, `LineHeight`), `TextAlign`, `Highlight` (multicolor), `Superscript`, `Subscript` |
-| UI helpers | `Dropcursor`, `Gapcursor`                                                                                                                                           |
-| History    | `UndoRedo`                                                                                                                                                          |
-| Tables     | `ConvertTableKit` (Table*, TableRow*, TableCell*, TableHeader*)                                                                                                     |
+| 核心 | `Document`、`Text`、`Paragraph`_、`Heading`_ |
+| 标记 | `Bold`、`Italic`、`Underline`、`Strike`、`Code`、`Link` |
+| 块 | `Blockquote`、`HorizontalRule`、`HardBreak`、`CodeBlock`、`PageBreak` |
+| 列表 | `BulletList`、`OrderedList`、`ListItem`、`ListKeymap`、`TaskList`、`TaskItem`、`OrderedListNumbering`† |
+| 媒体 | `Image`\* |
+| 样式 | `TextStyleKit`（`TextStyle`、`Color`、`BackgroundColor`、`FontFamily`、`FontSize`、`LineHeight`）、`TextAlign`、`Highlight`（多色）、`Superscript`、`Subscript` |
+| UI 辅助 | `Dropcursor`、`Gapcursor` |
+| 历史记录 | `UndoRedo` |
+| 表格 | `ConvertTableKit`（Table*、TableRow*、TableCell*、TableHeader*） |
 
-Extensions marked with `*` are custom, DOCX-aware overrides of the Tiptap base. See the next section for what they add. Extensions marked with `†` are bundled but **off by default**: opt in via the configuration option of the same name (see [Configuration reference](#configuration-reference)).
+标有 `*` 的扩展是自定义的、支持 DOCX 的 Tiptap 基础扩展覆盖版本。它们增加的内容详见下一节。标有 `†` 的扩展虽已内置，但**默认关闭**：可通过同名配置选项启用（参见[配置参考](#配置参考)）。
 
-ConvertKit also exports the helpers and types that pair with `OrderedListNumbering` for editor-preview rendering: `generateNumberingFormatCss`, `GenerateNumberingFormatCssOptions`, `NumberingFormatDefinition`, `NumberingLevelDefinition`, `NumberingBaseStyle`, and `NumberingMarkerFont`. See [List numbering and bullets](/conversion/export/docx/ordered-list-numbering) for the end-to-end recipe.
+ConvertKit 还导出了与 `OrderedListNumbering` 配套的辅助函数和类型，用于在编辑器预览中渲染：`generateNumberingFormatCss`、`GenerateNumberingFormatCssOptions`、`NumberingFormatDefinition`、`NumberingLevelDefinition`、`NumberingBaseStyle` 和 `NumberingMarkerFont`。端到端操作指南请参阅[列表编号和项目符号](/conversion/export/docx/ordered-list-numbering)。
 
-### Attributes added on top of Tiptap base extensions
+### 在 Tiptap 基础扩展之上添加的属性
 
-| Extension                   | Added attributes                                                                                                                                                                                                                                                       | Source                                                                                                                                                      |
+| 扩展 | 新增属性 | 来源 |
 | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Paragraph`                 | `spacingBefore`, `spacingAfter`, `lineHeight`, `fontSize`, `indent`, `indentRight`, `firstLineIndent`, `contextualSpacing`, `keepNext`, `keepLines`                                                                                                                    | DOCX `w:pPr` + `w:rPr` on paragraph mark                                                                                                                    |
-| `Heading`                   | same as `Paragraph`                                                                                                                                                                                                                                                    | DOCX `w:pPr` + `w:rPr` on paragraph mark                                                                                                                    |
-| `Image`                     | `cropTop`, `cropBottom`, `cropLeft`, `cropRight`                                                                                                                                                                                                                       | DOCX `a:srcRect` on drawings                                                                                                                                |
-| `Table`                     | `width`, `indent`, per-side table border (`width` / `style` / `color` on top/bottom/left/right plus the inside horizontal and vertical grid), `cellMarginTop`, `cellMarginRight`, `cellMarginBottom`, `cellMarginLeft` (+ `cellMinWidth: 1` default, vs Tiptap's `25`) | DOCX `w:tblW`, `w:tblInd`, `w:tblGrid`, `w:tblBorders`, `w:tblCellMar`                                                                                      |
-| `TableRow`                  | `height`, `heightRule` (`exact` / `atLeast`)                                                                                                                                                                                                                           | DOCX `w:trHeight` + `w:hRule`                                                                                                                               |
-| `TableCell` / `TableHeader` | `background`, `verticalAlign`, per-side border (`width` / `style` / `color` on top/bottom/left/right)                                                                                                                                                                  | DOCX `w:tcPr`                                                                                                                                               |
-| `OrderedListNumbering`†     | `numberingFormat`, on `orderedList` and `bulletList`                                                                                                                                                                                                                   | `ExportDocx` numbering format registry, outermost list of each kind only. See [List numbering and bullets](/conversion/export/docx/ordered-list-numbering). |
+| `Paragraph` | `spacingBefore`、`spacingAfter`、`lineHeight`、`fontSize`、`indent`、`indentRight`、`firstLineIndent`、`contextualSpacing`、`keepNext`、`keepLines` | 段落标记上的 DOCX `w:pPr` + `w:rPr` |
+| `Heading` | 与 `Paragraph` 相同 | 段落标记上的 DOCX `w:pPr` + `w:rPr` |
+| `Image` | `cropTop`、`cropBottom`、`cropLeft`、`cropRight` | 图形对象上的 DOCX `a:srcRect` |
+| `Table` | `width`、`indent`、各边表格边框（上/下/左/右边框及内部水平和垂直网格的 `width` / `style` / `color`）、`cellMarginTop`、`cellMarginRight`、`cellMarginBottom`、`cellMarginLeft`（默认 `cellMinWidth: 1`，而 Tiptap 默认为 `25`） | DOCX `w:tblW`、`w:tblInd`、`w:tblGrid`、`w:tblBorders`、`w:tblCellMar` |
+| `TableRow` | `height`、`heightRule`（`exact` / `atLeast`） | DOCX `w:trHeight` + `w:hRule` |
+| `TableCell` / `TableHeader` | `background`、`verticalAlign`、各边边框（上/下/左/右边框的 `width` / `style` / `color`） | DOCX `w:tcPr` |
+| `OrderedListNumbering`† | `numberingFormat`，用于 `orderedList` 和 `bulletList` | `ExportDocx` 编号格式注册表；仅处理每种列表最外层的列表。参见[列表编号和项目符号](/conversion/export/docx/ordered-list-numbering)。 |
 
-### What the CSS reset normalises
+### CSS 重置样式规范的内容
 
-The reset is scoped to `.tiptap` and adjusts a few areas where browser defaults would otherwise misalign with DOCX spacing:
+该重置样式限定在 `.tiptap` 作用域内，并调整了几个可能导致浏览器默认样式与 DOCX 间距不一致的部分：
 
-- **Paragraph spacing.** Top and bottom margins on paragraphs and on `*` descendants are zeroed so DOCX-authored spacing values (which carry their own before/after values) render accurately rather than being added on top of the browser's default margins.
-- **Table line-height and cell padding.** Defaults are tightened so a table that declared specific row heights actually renders at those heights.
-- **Exact-height rows clip overflowing content.** Rows with `heightRule: "exact"` clip via the inner cell wrapper; content taller than the declared row height is hidden, matching Word's behaviour.
-- **Trailing-break artefacts.** ProseMirror's trailing break gets zero margin and padding so it doesn't introduce phantom space at the end of a paragraph.
+- **段落间距。** 将段落及其 `*` 后代元素的上下边距设为零，使 DOCX 中定义的间距值（包含各自的段前和段后值）能够准确呈现，而不会叠加浏览器默认边距。
+- **表格行高和单元格内边距。** 收紧默认值，确保声明了特定行高的表格能够按指定高度渲染。
+- **精确行高会裁切溢出内容。** 对于 `heightRule: "exact"` 的行，通过单元格内部包装元素裁切内容；超出声明行高的内容会被隐藏，与 Word 的行为一致。
+- **尾随换行符伪影。** 将 ProseMirror 尾随换行符的边距和内边距设为零，以免在段落末尾引入多余空白。
 
-If you need to override any of this, target your own selectors inside `.tiptap`; your rules win against the reset.
+如果需要覆盖其中任何规则，请在 `.tiptap` 内设置自己的选择器；你的规则优先于重置样式。
 
-### Small-but-important defaults
+### 细微但重要的默认设置
 
-- `cellMinWidth: 1` on Table. Tiptap defaults to `25`, which inflates DOCX spacer columns (1–15 px narrow columns used for layout) into visible gaps. ConvertKit caps the minimum at `1` px.
-- `textAlign` configured with `types: ['paragraph', 'heading']` so DOCX paragraph justification flows through both blocks.
-- `highlight` configured with `multicolor: true` so DOCX `w:highlight` colours come through as-is.
+- Table 的 `cellMinWidth: 1`。Tiptap 的默认值为 `25`，会将 DOCX 中用作布局的狭窄间隔列（宽 1–15 px）扩展成明显的空隙。ConvertKit 将最小宽度限制为 `1` px。
+- `textAlign` 配置为 `types: ['paragraph', 'heading']`，确保 DOCX 段落对齐方式同时应用于这两种块。
+- `highlight` 配置为 `multicolor: true`，因此 DOCX `w:highlight` 颜色会原样保留。
 
-## What won't work
+## 无法实现的功能
 
-<Callout variant="warning" title="These are intentional limits">
-  These are not bugs. They are explicit, documented boundaries of the feature. If your workflow
-  depends on any of the items below, this feature is not the right tool.
+<Callout variant="warning" title="这些是有意设定的限制">
+  这些并非错误，而是此功能明确记录的边界。如果你的工作流依赖以下任何功能，那么此功能并不适合你。
 </Callout>
 
-- **Floating tables.** DOCX `w:tblpPr` (tables positioned relative to an anchor with text wrapping) render as plain stacked inline tables. The positioning metadata is dropped by the converter. This is intentional; float layout fidelity is out of scope.
-- **Negative table indents.** `w:tblInd` values below zero are preserved in `attrs.indent` but clamped to `0` at render time. Word renders negative indents into the paper gutter; browsers have no gutter, so rendering them would push the table past the page edge.
-- **Exact-height row overflow.** Rows with `heightRule: "exact"` clip overflowing content via the `.cell-content` wrapper's `overflow: hidden`. Content taller than the declared height is not visible.
-- **Over-wide table widths.** Tables whose declared `width` exceeds the container render with `max-width: 100%`. The declared width is preserved in `attrs.width` but visually clamped.
-- **Multi-page layout.** ConvertKit does not paginate. If you need tables that span pages, an actual page container, headers/footers, or page breaks to be respected visually, pair ConvertKit with the [Pages extension](/pages/getting-started/overview) and use [PagesTableKit](/pages/guides/pages-tablekit) for the table extensions.
-- **Footnotes, endnotes, comments.** Not rendered. The converter emits them as paragraphs or drops them; ConvertKit does not add any footnote/comment UI.
+- **浮动表格。** DOCX `w:tblpPr`（相对于锚点定位并带有文字环绕的表格）会渲染为普通的内联堆叠表格。转换器会丢弃定位元数据。这是有意为之；浮动布局的保真度不在支持范围内。
+- **负表格缩进。** 小于零的 `w:tblInd` 值会保留在 `attrs.indent` 中，但渲染时会限制为 `0`。Word 会将负缩进渲染到纸张装订线区域；浏览器没有装订线，因此渲染负缩进会把表格推到页面边缘之外。
+- **精确行高时的内容溢出。** 对于 `heightRule: "exact"` 的行，溢出内容会通过 `.cell-content` 包装元素的 `overflow: hidden` 裁切。超出声明高度的内容不可见。
+- **表格宽度超出容器。** 对于声明的 `width` 超出容器宽度的表格，会使用 `max-width: 100%` 渲染。声明的宽度保留在 `attrs.width` 中，但视觉上会限制在容器范围内。
+- **多页布局。** ConvertKit 不会分页。如果你需要跨页表格、实际页面容器，或在视觉上遵循页眉/页脚及分页符，请将 ConvertKit 与 [Pages 扩展](/pages/getting-started/overview)搭配使用，并使用 [PagesTableKit](/pages/guides/pages-tablekit) 提供表格扩展。
+- **脚注、尾注和批注。** 不会渲染。转换器会将它们输出为段落或直接丢弃；ConvertKit 不会添加脚注或批注 UI。
 
-## What to expect
+## 使用时的预期
 
-- A small, scoped CSS reset is applied while the editor is mounted. Multiple ConvertKit-powered editors on the same page share the reset: it is inserted once and removed only when the last of them is destroyed.
-- A consistent render of DOCX-imported content across your app. Images with non-zero DOCX crops actually render cropped; rows with `heightRule: "atLeast"` grow vertically when their columns shrink; cells with `verticalAlign: "center"` centre their content.
-- **List indents position the item, not the paragraph.** With `orderedListNumbering` on, the `indent` on an imported list paragraph moves the whole list item, marker and text together, rather than padding the paragraph inside it. Imported items then sit where Word drew them instead of drifting away from their own marker at each nesting level. See [Indents on a single item](/conversion/export/docx/ordered-list-numbering#indents-on-a-single-item) for the conditions and for what stays on the paragraph.
-- Full compatibility with the rest of the Tiptap Pro extension ecosystem. `@tiptap-pro/extension-import-docx` and `@tiptap-pro/extension-export-docx` are the natural siblings; `@tiptap-pro/extension-pages-tablekit` stacks on top if you need pagination.
-- **Tight default typography.** The CSS reset zeroes paragraph margins and applies tight line-heights. If you're using ConvertKit for content that wasn't imported from DOCX, layer your own typography rules on top. The reset is intentional, not a default we expect to be visually polished.
+- 编辑器挂载期间会应用一小段作用域限定的 CSS 重置样式。同一页面上由 ConvertKit 驱动的多个编辑器会共用这段样式：只插入一次，并且只有在最后一个编辑器销毁时才会移除。
+- 在整个应用中一致地渲染从 DOCX 导入的内容。非零 DOCX 裁剪值的图像会实际裁剪；列宽缩小时，`heightRule: "atLeast"` 的行会垂直扩展；`verticalAlign: "center"` 的单元格会将内容垂直居中。
+- **列表缩进作用于列表项，而不是段落。** 启用 `orderedListNumbering` 后，导入列表段落的 `indent` 会移动整个列表项（包括标记和文本），而不是给列表项内的段落添加内边距。这样导入的列表项就会位于 Word 中的原始位置，不会在每个嵌套层级上逐渐偏离自己的标记。有关适用条件以及哪些内容仍作用于段落，请参阅[缩进单个列表项](/conversion/export/docx/ordered-list-numbering#indents-on-a-single-item)。
+- 与 Tiptap Pro 扩展生态系统的其他部分完全兼容。`@tiptap-pro/extension-import-docx` 和 `@tiptap-pro/extension-export-docx` 是自然搭配；如果需要分页，可在此基础上叠加 `@tiptap-pro/extension-pages-tablekit`。
+- **默认排版较紧凑。** CSS 重置样式会将段落边距设为零，并应用较紧凑的行高。如果你用 ConvertKit 处理的内容并非从 DOCX 导入，请在此基础上叠加自己的排版规则。这种重置是有意设计的，并非我们认为视觉效果已打磨完善的默认样式。
 
-## What not to expect
+## 不应期待的功能
 
-- **DOCX fidelity beyond the node-attr level.** ConvertKit wires up the attributes the Convert API produces. If the converter doesn't parse a given DOCX feature, ConvertKit can't render it.
-- **Automatic resize handles on tables.** ConvertKit's Table extension inherits from `@tiptap/extension-table` and supports the standard resize behaviour, but the default `cellMinWidth: 1` means handles can drag columns down to 1 px wide, which is usually not what you want for hand-editing. Override `table.cellMinWidth` when mixing DOCX imports with hand authoring.
+- **超出节点属性层面的 DOCX 保真度。** ConvertKit 会接入 Convert API 生成的属性。如果转换器无法解析某项 DOCX 功能，ConvertKit 也无法渲染它。
+- **表格自动调整大小手柄。** ConvertKit 的 Table 扩展继承自 `@tiptap/extension-table`，支持标准的调整大小行为，但默认的 `cellMinWidth: 1` 意味着手柄可以将列拖动到仅 1 px 宽，通常不适合手动编辑。混合处理 DOCX 导入和手动编辑时，请覆盖 `table.cellMinWidth`。
 
-## What ConvertKit does not cover
+## ConvertKit 未涵盖的内容
 
-ConvertKit handles every feature the Convert API produces as Tiptap nodes and marks. Some imported DOCX content sits outside that scope and still needs handling at the application level:
+ConvertKit 会将 Convert API 生成的所有功能作为 Tiptap 节点和标记处理。部分导入的 DOCX 内容不在此范围内，仍需在应用层处理：
 
-- **Footnote and endnote references.** The [import REST API](/conversion/import/docx/rest-api) returns footnote and endnote data, but the [editor extension](/conversion/import/docx/editor-extension) does not surface it and there is no Tiptap extension that renders footnote markers or notes. See [Footnotes and endnotes](/conversion/content-types/structures-and-media/footnotes-endnotes).
-- **Multi-column layouts.** The import produces `columns` and `column` nodes for multi-column sections, but there is no editor extension to render them. See [Page structure](/conversion/content-types/page-layout/page-structure).
-- **Table of contents.** Imported as a `tableOfContents` node. Renders as plain content unless you add a custom extension. See [Supported features](/conversion/getting-started/feature-support-matrix).
-- **Word styles.** Style names are used during import for structural detection (headings, blockquotes, code blocks). The visual styling defined in the document's style catalog is not applied. Pair ConvertKit with [CSS injection](/conversion/import/docx/css-injection) to bring the style catalog through, or see [Word styles](/conversion/content-types/structures-and-media/word-styles).
-- **Math equations.** OMML is not parsed by the Convert API. See [Math equations](/conversion/content-types/structures-and-media/math-equations).
-- **Letter spacing.** The Convert API extracts character spacing as `textStyle.letterSpacing` on per-run marks, but the bundled `TextStyleKit` does not declare a `letterSpacing` attribute, so the value is dropped on render. [CSS injection](/conversion/import/docx/css-injection) does not extract it either (only export-side compilation accepts it). To render imported letter spacing, extend `TextStyle` with a `letterSpacing` attribute that emits `style="letter-spacing: …"` in `renderHTML`. See [Font family and size](/conversion/content-types/text-and-formatting/font-family-size).
-- **Page layout.** Page size, margins, headers, and footers are document-level concerns. ConvertKit renders content; pair it with the [Pages extension](/pages/getting-started/overview) for paginated layout.
+- **脚注和尾注引用。** [导入 REST API](/conversion/import/docx/rest-api) 会返回脚注和尾注数据，但[编辑器扩展](/conversion/import/docx/editor-extension)不会提供这些数据，并且没有 Tiptap 扩展可渲染脚注标记或注释。参见[脚注和尾注](/conversion/content-types/structures-and-media/footnotes-endnotes)。
+- **多栏布局。** 导入时会为多栏分节生成 `columns` 和 `column` 节点，但没有编辑器扩展可以渲染这些节点。参见[页面结构](/conversion/content-types/page-layout/page-structure)。
+- **目录。** 会导入为 `tableOfContents` 节点。除非添加自定义扩展，否则会渲染为普通内容。参见[支持的功能](/conversion/getting-started/feature-support-matrix)。
+- **Word 样式。** 导入时会使用样式名称进行结构检测（标题、引用块、代码块），但不会应用文档样式目录中定义的视觉样式。可将 ConvertKit 与 [CSS 注入](/conversion/import/docx/css-injection)搭配使用，以保留样式目录中的样式；也可参阅 [Word 样式](/conversion/content-types/structures-and-media/word-styles)。
+- **数学公式。** Convert API 不会解析 OMML。参见[数学公式](/conversion/content-types/structures-and-media/math-equations)。
+- **字符间距。** Convert API 会将字符间距提取为各个文本运行标记上的 `textStyle.letterSpacing`，但内置的 `TextStyleKit` 未声明 `letterSpacing` 属性，因此渲染时会丢弃该值。[CSS 注入](/conversion/import/docx/css-injection)也不会提取此属性（只有导出端编译支持它）。若要渲染导入的字符间距，请扩展 `TextStyle`，添加 `letterSpacing` 属性，并在 `renderHTML` 中输出 `style="letter-spacing: …"`。参见[字体系列和字号](/conversion/content-types/text-and-formatting/font-family-size)。
+- **页面布局。** 页面大小、边距、页眉和页脚属于文档级设置。ConvertKit 负责渲染内容；如需分页布局，请将它与 [Pages 扩展](/pages/getting-started/overview)搭配使用。
 
-For guidance on extending ConvertKit's bundled extensions and styling converted content with CSS, see the [Styling converted content](/conversion/getting-started/guides/styling-converted-content) guide.
+有关如何扩展 ConvertKit 的内置扩展，以及如何使用 CSS 设置转换后内容的样式，请参阅[转换后内容的样式设置](/conversion/getting-started/guides/styling-converted-content)指南。
 
-## Configuration reference
+## 配置参考
 
-Every key is optional. Pass `false` to exclude an extension. Pass a partial options object to forward to the underlying extension's `configure()`. Defaults for each key are `{}`, except where called out below.
+所有键均为可选项。传入 `false` 可排除某个扩展。传入部分选项对象可将其转发给底层扩展的 `configure()`。除下方特别说明外，各键的默认值均为 `{}`。
 
 ```ts
 ConvertKit.configure({
@@ -217,17 +212,12 @@ ConvertKit.configure({
 })
 ```
 
-<Callout variant="warning" title="Turning on `orderedListNumbering` changes bullet-list JSON">
-  The `numberingFormat` attribute is registered on `bulletList` as well as `orderedList`, so with
-  the option on, `editor.getJSON()` writes `attrs: { numberingFormat: null }` on a bullet list that
-  names no format, where it wrote no `attrs` at all before. This is what an ordered list has always
-  looked like, and the rendered HTML does not change: a list with no format is still a bare `<ul>`.
-  Stored JSON, collaborative documents and snapshot tests that compare a bullet list byte for byte
-  will see the new key.
+<Callout variant="warning" title="启用 `orderedListNumbering` 会改变项目符号列表的 JSON">
+  `numberingFormat` 属性会同时注册到 `bulletList` 和 `orderedList` 上。因此启用此选项后，对于未指定格式的项目符号列表，`editor.getJSON()` 会写入 `attrs: { numberingFormat: null }`；此前不会写入任何 `attrs`。这与有序列表一直以来的表现一致，渲染出的 HTML 不会改变：未指定格式的列表仍然是普通的 `<ul>`。逐字节比较项目符号列表的已存储 JSON、协作文档和快照测试会发现这个新键。
 </Callout>
 
-## Related
+## 相关内容
 
-- [PagesTableKit](/pages/guides/pages-tablekit): companion package that wraps ConvertKit's Table extensions in a CSS-Grid NodeView compatible with the Pages extension's pagination.
-- [CSS injection (import)](/conversion/import/docx/css-injection): pair ConvertKit with CSS injection to get typographic fidelity from the DOCX style catalog.
-- [Editor extension (import DOCX)](/conversion/import/docx/editor-extension): how the `ImportDocx` extension calls into the Convert API.
+- [PagesTableKit](/pages/guides/pages-tablekit)：配套软件包，它将 ConvertKit 的 Table 扩展封装在 CSS Grid NodeView 中，并与 Pages 扩展的分页功能兼容。
+- [CSS 注入（导入）](/conversion/import/docx/css-injection)：将 ConvertKit 与 CSS 注入搭配使用，以忠实呈现 DOCX 样式目录中的排版样式。
+- [编辑器扩展（导入 DOCX）](/conversion/import/docx/editor-extension)：了解 `ImportDocx` 扩展如何调用 Convert API。
