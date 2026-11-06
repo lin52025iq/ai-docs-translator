@@ -1,30 +1,30 @@
 ---
-title: Whiteboard styling
+title: 白板样式
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Whiteboard styling | Tiptap Editor Docs
-  description: The CSS of the Tiptap Whiteboard board, and the data attributes and CSS variables that style shapes and the stage.
+  title: 白板样式 | Tiptap Editor Docs
+  description: Tiptap 白板的 CSS，以及用于设置形状和工作区样式的数据属性和 CSS 变量。
   category: Editor
 ---
 
-The board adds only the CSS that it needs to work. Colors, fonts and cursors are up to your app, which styles the board with the data attributes on its elements.
+白板只会添加其运行所需的 CSS。颜色、字体和光标由你的应用决定；应用可通过白板元素上的数据属性为白板设置样式。
 
-## The board's CSS
+## 白板的 CSS
 
-`boardStyles` holds the CSS that the board needs to work: the size of the board and the area around it, how shapes hold their text, outline or component, where their handles and the cursors of other users show, and which parts of a frame take presses. The rules are in the `whiteboard` cascade layer, so your app's CSS outside of layers overrides them.
+`boardStyles` 包含白板运行所需的 CSS：白板及其周围区域的尺寸、形状如何容纳文本、轮廓或组件、形状控点和其他用户的光标显示位置，以及框架的哪些部分会响应点击。这些规则位于 `whiteboard` 级联层中，因此不属于任何级联层的应用 CSS 会覆盖它们。
 
-The board adds its CSS when its editor starts, so the `whiteboard` layer comes after the layers that your app declared before, like Tailwind's, and wins over them. To override the board from those layers, declare the `whiteboard` layer first:
+白板会在编辑器启动时添加 CSS，因此 `whiteboard` 层会排在你的应用此前声明的各层之后（例如 Tailwind 的层），并覆盖这些层中的样式。若要从这些层覆盖白板样式，请将 `whiteboard` 层声明在最前面：
 
 ```css
 /* With Tailwind, before @import 'tailwindcss' */
 @layer whiteboard, theme, base, components, utilities;
 ```
 
-A doc frame is as tall as its document. Its `height: auto !important` also wins over `!important` rules of your app outside of layers.
+文档框架的高度与其文档内容高度一致。其 `height: auto !important` 也会覆盖应用中不属于任何级联层的 `!important` 规则。
 
-The board adds this CSS to the page itself, in a `<style data-tiptap-style-whiteboard>` element. It uses the editor's `injectNonce`. An editor with `injectCSS: false` leaves the CSS to your app:
+白板会将此 CSS 添加到页面本身的 `<style data-tiptap-style-whiteboard>` 元素中，并使用编辑器的 `injectNonce`。设置了 `injectCSS: false` 的编辑器会将 CSS 留给你的应用处理：
 
 ```js
 import { boardStyles } from '@tiptap-pro/extension-whiteboard'
@@ -34,11 +34,11 @@ style.textContent = boardStyles
 document.head.append(style)
 ```
 
-Shapes have the size of their attributes. An app that sizes a shape by its content also sets `contain: none` on it.
+形状的尺寸由其属性决定。如果应用根据内容调整形状尺寸，也需要在形状上设置 `contain: none`。
 
-## Zoom
+## 缩放
 
-Set `--zoom` to the zoom of the camera on the element that holds the editor. The handles and the cursors of other users read it to keep their size at every zoom. Divide your own outlines and borders by it too:
+在包含编辑器的元素上，将 `--zoom` 设置为摄像机的缩放比例。形状控点和其他用户的光标会读取该值，以便在任何缩放比例下保持大小不变。你自己的轮廓和边框也应除以该值：
 
 ```css
 [data-shape][data-selected] {
@@ -47,44 +47,44 @@ Set `--zoom` to the zoom of the camera on the element that holds the editor. The
 }
 ```
 
-## Shapes
+## 形状
 
-Every shape element has `data-shape`, and a `data-type` with the kind of shape: `sticky-note`, `geo`, `free-text`, `freehand`, `doc-frame`, `frame`, `board-image` or `arrow`. [Custom shapes](/editor/whiteboard/guides/custom-shapes) have the `data-type` from their `shapeNodeView`. The board element has `data-type="board"`.
+每个形状元素都有 `data-shape`，以及一个表示形状类型的 `data-type`：`sticky-note`、`geo`、`free-text`、`freehand`、`doc-frame`、`frame`、`board-image` 或 `arrow`。[自定义形状](/editor/whiteboard/guides/custom-shapes)的 `data-type` 来自其 `shapeNodeView`。白板元素的属性为 `data-type="board"`。
 
-| Attribute              | On                             | Description                                                                                |
+| 属性                   | 适用对象                         | 说明                                                                                       |
 | ---------------------- | ------------------------------ | ------------------------------------------------------------------------------------------ |
-| `data-id`              | Every shape                    | The id of the shape                                                                        |
-| `data-color`           | Shapes with a color            | The name of its color, like `blue`. Custom shapes have it with a `color` attribute         |
-| `data-font-size`       | Shapes with text               | `s`, `m`, `l`, `xl` or a name of your own                                                  |
-| `data-text-align`      | Shapes with text               | `start`, `center` or `end`                                                                 |
-| `data-font`            | Shapes with text               | `sans`, `serif`, `mono` or a name of your own                                              |
-| `data-kind`            | Geometric shapes               | `rectangle`, `ellipse`, `diamond` or `triangle`                                            |
-| `data-selected`        | Selected shapes                | Present while the shape is selected                                                        |
-| `data-editing`         | The edited shape               | Present while its text, or the document of a doc frame, is edited                          |
-| `data-remote-selected` | Shapes that other users select | Present while another user selects the shape. That user's color is in `--remote-selection` |
-| `data-erasing`         | Every shape                    | Present while the eraser is about to erase the shape                                       |
-| `data-arrow-target`    | Shapes that arrows connect     | Present while a dragged arrow end would connect the shape                                  |
+| `data-id`              | 所有形状                         | 形状的 ID                                                                                  |
+| `data-color`           | 带颜色的形状                     | 颜色名称，例如 `blue`。自定义形状通过 `color` 属性获得此属性                               |
+| `data-font-size`       | 带文本的形状                     | `s`、`m`、`l`、`xl` 或你自定义的名称                                                        |
+| `data-text-align`      | 带文本的形状                     | `start`、`center` 或 `end`                                                                 |
+| `data-font`            | 带文本的形状                     | `sans`、`serif`、`mono` 或你自定义的名称                                                    |
+| `data-kind`            | 几何形状                         | `rectangle`、`ellipse`、`diamond` 或 `triangle`                                             |
+| `data-selected`        | 已选中的形状                     | 形状处于选中状态时存在                                                                      |
+| `data-editing`         | 正在编辑的形状                   | 正在编辑形状文本或文档框架中的文档时存在                                                    |
+| `data-remote-selected` | 被其他用户选中的形状             | 其他用户选中该形状时存在。该用户的颜色保存在 `--remote-selection` 中                        |
+| `data-erasing`         | 所有形状                         | 橡皮擦即将擦除该形状时存在                                                                  |
+| `data-arrow-target`    | 箭头连接的形状                   | 拖动的箭头端点即将连接到该形状时存在                                                        |
 
-The `shapeElementAttributes` option of `WhiteboardKit` adds attributes of your own, like the `data-suggestion-*` attributes of [Tracked Changes](/editor/whiteboard/guides/tracked-changes).
+`WhiteboardKit` 的 `shapeElementAttributes` 选项可添加自定义属性，例如[修订跟踪](/editor/whiteboard/guides/tracked-changes)中的 `data-suggestion-*` 属性。
 
-### Parts of shapes
+### 形状的组成部分
 
-| Selector                       | Description                                                                                                                                               |
-| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `[data-shape-content]`         | The element that holds the text of a shape, or the document of a doc frame                                                                                |
-| `[data-shape-outline]`         | The SVG outline behind the text of a geometric shape. It stretches over the whole shape                                                                   |
-| `[data-shape-handle='resize']` | A resize handle on a corner of a selected shape. `data-corner` is `top-left`, `top-right`, `bottom-left` or `bottom-right`                                |
-| `[data-arrow-handle]`          | A handle on an end of a selected arrow. Its value is `from` or `to`                                                                                       |
-| `[data-arrow-label]`           | The label of an arrow, in the middle of its line. Without text, it has `data-empty` and shows only while it is edited                                     |
-| `[data-shape-component]`       | The element of a custom shape's node view. It has the size of the shape, and so does a `NodeViewWrapper` in it                                            |
-| `[data-shape-interactive]`     | Your mark on parts of a custom shape's component that take their own presses, like the legend of a chart                                                  |
-| `[data-frame-title]`           | The name of a frame, above its top left corner and as wide as the frame at most. A press on it selects and moves the frame, and a double click renames it |
-| `[data-frame-title-field]`     | The field in the name of a frame while the frame is renamed                                                                                               |
-| `[data-frame-edge]`            | An SVG over a frame, whose edge takes the presses on the frame's edge. The rest of the frame lets presses through to the board                            |
+| 选择器                         | 说明                                                                                                                                                   |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `[data-shape-content]`         | 用于容纳形状文本或文档框架中文档的元素                                                                                                                 |
+| `[data-shape-outline]`         | 位于几何形状文本后方的 SVG 轮廓，会延伸覆盖整个形状                                                                                                    |
+| `[data-shape-handle='resize']` | 已选中形状角上的缩放控点。`data-corner` 的值为 `top-left`、`top-right`、`bottom-left` 或 `bottom-right`                                                |
+| `[data-arrow-handle]`          | 已选中箭头端点上的控点。其值为 `from` 或 `to`                                                                                                         |
+| `[data-arrow-label]`           | 箭头线段中间的标签。没有文本时，它带有 `data-empty`，且只在编辑箭头时显示                                                                             |
+| `[data-shape-component]`       | 自定义形状节点视图的元素，其大小与形状相同，其中的 `NodeViewWrapper` 也一样                                                                            |
+| `[data-shape-interactive]`     | 用于标记自定义形状组件中可独立响应点击的部分，例如图表的图例                                                                                            |
+| `[data-frame-title]`           | 框架的名称，位于左上角上方，宽度不会超过框架宽度。点击名称会选中并移动框架，双击可重命名                                                                |
+| `[data-frame-title-field]`     | 重命名框架时用于编辑框架名称的字段                                                                                                                     |
+| `[data-frame-edge]`            | 覆盖在框架上的 SVG，其边缘负责响应对框架边缘的点击。框架的其余部分会让点击穿透到白板                                                                   |
 
-A shape in a frame has an inline `clip-path`, which cuts it off at the edges of the frame while it is not selected.
+框架中的形状带有内联 `clip-path`；形状未选中时，该属性会将形状裁剪到框架边缘以内。
 
-An image shape holds an `img`, which fills the whole shape. For a shape with other proportions than its image, like one that `insertShape` adds with a size of your own, give the `img` an `object-fit`:
+图像形状包含一个 `img`，该图像会填满整个形状。如果形状与图像的宽高比例不同（例如使用自定义尺寸调用 `insertShape` 添加形状），请为 `img` 设置 `object-fit`：
 
 ```css
 [data-type='board-image'] img {
@@ -92,7 +92,7 @@ An image shape holds an `img`, which fills the whole shape. For a shape with oth
 }
 ```
 
-Arrows and pen lines are drawn in the current color, so set their `color`. The outline of a geometric shape is a path that your CSS fills and strokes:
+箭头和画笔线条会以当前颜色绘制，因此请为它们设置 `color`。几何形状的轮廓是一个路径，你可以使用 CSS 为其设置填充和描边：
 
 ```css
 [data-type='arrow'],
@@ -108,9 +108,9 @@ Arrows and pen lines are drawn in the current color, so set their `color`. The o
 }
 ```
 
-## Colors
+## 颜色
 
-Shapes, text colors and highlights store the name of a board color, so your CSS decides how each one looks. One way is a few variables for each color:
+形状、文本颜色和高亮会存储白板颜色的名称，因此具体外观由你的 CSS 决定。一种做法是为每种颜色设置几个变量：
 
 ```css
 [data-color='blue'] {
@@ -124,9 +124,9 @@ Shapes, text colors and highlights store the name of a board color, so your CSS 
 }
 ```
 
-Text colors are `span` elements with `data-color`, and highlights `mark` elements with `data-color`. See the [example](/editor/whiteboard/examples/simple) for the styles of all colors.
+文本颜色是带有 `data-color` 的 `span` 元素，高亮是带有 `data-color` 的 `mark` 元素。所有颜色的样式请参阅[示例](/editor/whiteboard/examples/simple)。
 
-To add a color of your own, add its name to the `colors` option of `WhiteboardKit`, and style it like the others:
+若要添加自定义颜色，请将其名称添加到 `WhiteboardKit` 的 `colors` 选项中，并像其他颜色一样为其设置样式：
 
 ```js
 import { shapeColors, WhiteboardKit } from '@tiptap-pro/extension-whiteboard'
@@ -134,27 +134,27 @@ import { shapeColors, WhiteboardKit } from '@tiptap-pro/extension-whiteboard'
 WhiteboardKit.configure({ colors: [...shapeColors, 'brand'] })
 ```
 
-Commands take any name. The list decides which text colors and highlights pasted HTML keeps: other text colors go away, and other highlights become yellow.
+命令可以使用任意名称。颜色列表决定粘贴的 HTML 会保留哪些文本颜色和高亮：列表以外的文本颜色会被移除，其他高亮则会变为黄色。
 
-## Stage
+## 工作区
 
-`attachStage` marks the stage, so your CSS can show the tool and the pan:
+`attachStage` 会标记工作区，以便你的 CSS 显示当前工具和拖动画布状态：
 
-| Attribute   | Description                                                    |
-| ----------- | -------------------------------------------------------------- |
-| `data-tool` | The active tool, like `select` or `pen`                        |
-| `data-pan`  | `ready` while space is held, and `active` while the board pans |
+| 属性        | 说明                                                         |
+| ----------- | ------------------------------------------------------------ |
+| `data-tool` | 当前工具，例如 `select` 或 `pen`                             |
+| `data-pan`  | 按住空格键时为 `ready`，白板正在平移时为 `active`            |
 
-While a drag runs, the stage holds a preview element:
+拖动期间，工作区会包含一个预览元素：
 
-| Selector               | Description                                                                                                                   |
-| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `[data-selection-box]` | The box of a selection drag                                                                                                   |
-| `[data-shape-preview]` | The box of a shape while a tool draws it. Its value is the tool, like `note`, and `data-color` holds the chosen color, if any |
-| `[data-arrow-preview]` | The line of an arrow while the arrow tool draws it, in the current color                                                      |
-| `[data-pen-preview]`   | The line of the pen while it draws, in the current color. `data-color` holds the color of the line                            |
+| 选择器                 | 说明                                                                                                                            |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `[data-selection-box]` | 框选拖动时显示的矩形框                                                                                                          |
+| `[data-shape-preview]` | 工具绘制形状时显示的形状框。其值为工具名称（例如 `note`），`data-color` 则包含所选颜色（如果有）                                 |
+| `[data-arrow-preview]` | 使用箭头工具绘制箭头时显示的线条，颜色为当前颜色                                                                                |
+| `[data-pen-preview]`   | 画笔绘制时显示的线条，颜色为当前颜色。`data-color` 包含线条的颜色                                                                |
 
-The previews are not scaled with the board, so they need no `--zoom`:
+预览元素不会随白板缩放，因此不需要设置 `--zoom`：
 
 ```css
 [data-selection-box],
@@ -168,25 +168,25 @@ The previews are not scaled with the board, so they need no `--zoom`:
 }
 ```
 
-## Cursors of other users
+## 其他用户的光标
 
-[`createRemoteCursors`](/editor/whiteboard/api-reference/utilities#createremotecursors) puts the cursors in a `data-remote-cursors` element next to the editor's element, over the shapes:
+[`createRemoteCursors`](/editor/whiteboard/api-reference/utilities#createremotecursors) 会将光标放在编辑器元素旁边、形状上方的 `data-remote-cursors` 元素中：
 
-| Selector                     | Description                                                                                                                                                |
-| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `[data-remote-cursor]`       | A cursor, with its user's color in `--remote-cursor`. It has `data-idle` after a minute without moving, and `data-leaving` while it goes. Both fade it out |
-| `[data-remote-cursor-arrow]` | The SVG arrow, with its tip where the user points                                                                                                          |
-| `[data-remote-cursor-name]`  | The user's name, next to the arrow. It doesn't show without a name                                                                                         |
+| 选择器                       | 说明                                                                                                                                                        |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `[data-remote-cursor]`       | 光标，其用户颜色保存在 `--remote-cursor` 中。光标一分钟未移动后会带有 `data-idle`，离开时会带有 `data-leaving`；这两种状态都会使光标淡出             |
+| `[data-remote-cursor-arrow]` | SVG 箭头，箭头尖端指向用户所指的位置                                                                                                                        |
+| `[data-remote-cursor-name]`  | 箭头旁边的用户名。未提供名称时不会显示                                                                                                                      |
 
-An app that sets `--zoom` only once zooming pauses can set it at once on the `data-remote-cursors` element, so the cursors keep their size while the board zooms.
+如果应用仅在缩放暂停后才设置 `--zoom`，可以直接在 `data-remote-cursors` 元素上设置该属性，这样白板缩放时光标大小也会保持不变。
 
-## Keyboard
+## 键盘
 
-While keys act on the board, the editor element has `data-keyboard="board"`. While the text of a shape is edited, it doesn't. It stays while the document of a doc frame is edited.
+按键作用于白板时，编辑器元素会带有 `data-keyboard="board"`。编辑形状文本时则不会带有该属性；编辑文档框架中的文档时，该属性仍会保留。
 
-## Read-only
+## 只读
 
-While the board is [read-only](/editor/whiteboard/guides/shapes-and-tools#read-only-boards), the editor element has `data-read-only`, and selected shapes show no handles. Use it for cursors that promise a change, like a move cursor on shapes:
+白板处于[只读](/editor/whiteboard/guides/shapes-and-tools#read-only-boards)状态时，编辑器元素会带有 `data-read-only`，且已选中的形状不会显示控点。你可以利用它处理会暗示内容可被修改的光标，例如形状上的移动光标：
 
 ```css
 .tiptap[data-read-only] [data-shape] {
