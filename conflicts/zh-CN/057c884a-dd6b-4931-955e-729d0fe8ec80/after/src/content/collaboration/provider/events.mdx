@@ -1,0 +1,115 @@
+---
+title: 状态与变更事件
+meta:
+  title: Provider 事件 | Tiptap 协作文档
+  description: 使用 Tiptap Collaboration Provider 的事件监听器，有效管理实时状态和变更。了解更多信息，请参阅文档！
+  category: 协作
+---
+
+Collaboration Provider 中的事件可让你响应各种状态和变更，例如连接成功或身份验证信息更新。你可以在初始化 Provider 时附加事件监听器，也可以根据应用需求稍后添加。
+
+## 使用 Provider 事件
+
+| 事件                | 描述                                                   |
+| -------------------- | ------------------------------------------------------------- |
+| `open`               | WebSocket 连接打开时触发。                |
+| `connect`            | Provider 连接到服务器时触发。           |
+| `authenticated`      | 表示客户端身份验证成功。                   |
+| `authenticationFailed` | 客户端身份验证失败时触发。                |
+| `status`             | 跟踪连接状态的变化。                          |
+| `close`              | WebSocket 连接关闭时触发。               |
+| `disconnect`         | Provider 断开连接时触发。                      |
+| `destroy`            | 表示 Provider 即将销毁。          |
+| `message`            | 收到消息时触发。                               |
+| `outgoingMessage`    | 消息发送前触发。                           |
+| `synced`             | 表示 Yjs 文档首次成功同步。    |
+| `stateless`          | 收到无状态消息时触发。             |
+| `awarenessUpdate`    | 用户 Awareness 信息更新时触发。            |
+| `awarenessChange`    | Awareness 状态发生变化时触发。                   |
+
+## 配置事件监听器
+
+要立即跟踪事件，请将事件监听器直接传递给 Provider 的构造函数。这样可以确保监听器从一开始就处于启用状态。
+
+```ts
+const provider = new TiptapCollabProvider({
+  appId: '', // Your document server ID (for cloud setups), replace with baseUrl for on-prem
+  name: 'example-document', // Document identifier
+  token: '', // Your authentication JWT
+  document: ydoc,
+  onOpen() {
+    console.log('WebSocket connection opened.')
+  },
+  onConnect() {
+    console.log('Connected to the server.')
+  },
+  // See below for more event listeners...
+})
+```
+
+### 动态绑定事件
+
+初始化后，Provider 支持动态绑定和解绑事件处理程序，以便添加或移除监听器。
+
+**示例：**在初始化 Provider 时绑定事件监听器
+
+```ts
+const provider = new TiptapCollabProvider({
+  // …
+})
+
+provider.on('synced', () => {
+  console.log('Document synced.')
+})
+```
+
+**示例：**在初始化 Provider 后绑定或解绑事件监听器
+
+```typescript
+const onMessage = () => {
+  console.log('New message received.')
+}
+
+// Binding
+provider.on('message', onMessage)
+
+// Unbinding
+provider.off('message', onMessage)
+```
+
+## Provider 事件示例
+
+### 显示连接状态
+
+使用 `onConnect` 和 `onDisconnect` 向用户实时反馈连接状态，提升用户体验。
+
+```tsx
+provider.on('connect', () => {
+  showStatus('Connected')
+})
+
+provider.on('disconnect', () => {
+  showStatus('Disconnected')
+})
+```
+
+### 同步文档状态
+
+使用 `synced` 在文档首次完成同步时通知用户，确保他们从最新版本开始工作。
+
+```tsx
+provider.on('synced', () => {
+  alert('Document initialized')
+})
+```
+
+### 处理身份验证问题
+
+使用 `authenticationFailed` 捕获身份验证错误，并提示用户重新进行身份验证，确保访问安全。
+
+```tsx
+provider.on('authenticationFailed', ({ reason }) => {
+  console.error('Authentication failed:', reason)
+  requestUserReauthentication()
+})
+```
