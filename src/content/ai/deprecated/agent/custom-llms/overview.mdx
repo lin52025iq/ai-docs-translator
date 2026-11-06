@@ -1,46 +1,46 @@
 ---
-title: Add text-editing tools to your AI agent
+title: 为 AI 智能体添加文本编辑工具
 meta:
-  title: Custom AI agent | Tiptap Content AI
-  description: Learn how to add text-editing capabilities to your custom AI agent.
-  category: Content AI
+  title: 自定义 AI 智能体 | Tiptap Content AI
+  description: 了解如何为自定义 AI 智能体添加文本编辑功能。
+  category: 内容 AI
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Like other Tiptap AI Extensions, the AI Agent extension can be used in two ways:
+与其他 Tiptap AI 扩展一样，AI Agent 扩展有两种使用方式：
 
-- With Tiptap Cloud: Includes a managed AI agent. Works out of the box, no server setup required.
-- With your own AI agent: Add text-editing capabilities to your custom AI agent that runs in your backend.
+- 使用 Tiptap Cloud：内置托管式 AI 智能体，开箱即用，无需设置服务器。
+- 使用自己的 AI 智能体：为运行在你后端的自定义 AI 智能体添加文本编辑功能。
 
-This guide explains when to use each option.
+本指南将介绍何时使用这两种方式。
 
 ## Tiptap Cloud
 
-Using the AI Agent extension with Tiptap Cloud is the fastest way to get started. It eliminates the need to build and maintain your own server.
+使用 Tiptap Cloud 搭配 AI Agent 扩展，是最快的入门方式。你无需构建和维护自己的服务器。
 
-Tiptap Cloud's AI agent is highly configurable:
+Tiptap Cloud 的 AI 智能体具有高度可配置性：
 
-- Customize how the AI agent behaves, by editing the [system prompt](/ai/deprecated/agent/configure/system-prompt). Define multiple AI Agents, each with their own rules and personality.
-- [Provide context](/ai/deprecated/agent/features/context) to the user messages.
-- [Customize the AI model](/ai/deprecated/agent/use-with-content-ai-cloud#customize-the-openai-model). Only OpenAI models are supported in Tiptap Cloud.
+- 编辑[系统提示](/ai/deprecated/agent/configure/system-prompt)，自定义 AI 智能体的行为。你可以定义多个 AI 智能体，并为每个智能体设置各自的规则和个性。
+- 为用户消息[提供上下文](/ai/deprecated/agent/features/context)。
+- [自定义 AI 模型](/ai/deprecated/agent/use-with-content-ai-cloud#customize-the-openai-model)。Tiptap Cloud 仅支持 OpenAI 模型。
 
-Tiptap Cloud's AI agent is the recommended option for beginners. To get started, [follow this guide](/ai/deprecated/agent/use-with-content-ai-cloud).
+对于初学者，推荐使用 Tiptap Cloud 的 AI 智能体。要开始使用，请[参阅本指南](/ai/deprecated/agent/use-with-content-ai-cloud)。
 
-## Custom AI agent
+## 自定义 AI 智能体
 
-<Callout title="Beginner's tip" variant="info">
-  Building an AI agent for the first time? Start with [Tiptap Cloud's AI
-  Agent](/ai/deprecated/agent/use-with-content-ai-cloud), then migrate to a custom AI
-  Agent when you need more features.
+<Callout title="给初学者的建议" variant="info">
+  第一次构建 AI 智能体？建议先使用 [Tiptap Cloud 的 AI
+  Agent](/ai/deprecated/agent/use-with-content-ai-cloud)，需要更多功能时再迁移到自定义 AI
+  Agent。
 </Callout>
 
-A custom AI agent gives you more control over the AI model and tools. Use it in these situations:
+自定义 AI 智能体让你能够更灵活地控制 AI 模型和工具。以下情况适合使用自定义 AI 智能体：
 
-- If you've already built an AI agent and want to add text-editing capabilities to it.
-- To use an AI model that is not supported in Tiptap Cloud.
-- To create an AI agent with [custom tools](/ai/deprecated/agent/custom-llms/tools) that interact with external data sources. For example, a tool that searches the web for information.
+- 你已经构建了 AI 智能体，并希望为其添加文本编辑功能。
+- 你想使用 Tiptap Cloud 不支持的 AI 模型。
+- 你想创建带有[自定义工具](/ai/deprecated/agent/custom-llms/tools)的 AI 智能体，以便与外部数据源交互。例如，可以创建一个用于搜索网络信息的工具。
 
-However, a custom AI agent requires more work to set up and maintain. You need to build and maintain your own backend.
+不过，设置和维护自定义 AI 智能体需要投入更多工作。你需要自行构建并维护后端。
 
-To get started with a custom AI agent, [follow this guide](/ai/deprecated/agent/custom-llms/get-started).
+要开始使用自定义 AI 智能体，请[参阅本指南](/ai/deprecated/agent/custom-llms/get-started)。
