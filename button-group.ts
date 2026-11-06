@@ -6,33 +6,33 @@ import type { ButtonProps } from './button'
 
 export interface ButtonGroupProps {
   /**
-   * @description control the size of buttons in this button-group
+   * @description 控制此按钮组中按钮的尺寸
    */
   size?: ButtonProps['size']
   /**
-   * @description control the type of buttons in this button-group
+   * @description 控制此按钮组中按钮的类型
    */
   type?: ButtonProps['type']
   /**
-   * @description display direction
+   * @description 显示方向
    */
   direction?: 'horizontal' | 'vertical'
 }
 
 /**
- * @deprecated Removed after 3.0.0, Use `ButtonGroupProps` instead.
+ * @deprecated 将在 3.0.0 后移除，请改用 `ButtonGroupProps`。
  */
 export const buttonGroupProps = {
   /**
-   * @description control the size of buttons in this button-group
+   * @description 控制此按钮组中按钮的尺寸
    */
   size: buttonProps.size,
   /**
-   * @description control the type of buttons in this button-group
+   * @description 控制此按钮组中按钮的类型
    */
   type: buttonProps.type,
   /**
-   * @description display direction
+   * @description 显示方向
    */
   direction: {
     type: definePropType<'horizontal' | 'vertical'>(String),
@@ -42,7 +42,7 @@ export const buttonGroupProps = {
 } as const
 
 /**
- * @deprecated Removed after 3.0.0, Use `ButtonGroupProps` instead.
+ * @deprecated 将在 3.0.0 后移除，请改用 `ButtonGroupProps`。
  */
 export type ButtonGroupPropsPublic = ExtractPublicPropTypes<
   typeof buttonGroupProps
