@@ -1,12 +1,12 @@
 ---
-title: Mark Button
+title: 标记按钮
 meta:
-  title: Mark button | Tiptap UI Components
-  description: Integrate a button that toggles through text marks like bold, italics and underline. More in the docs!
-  category: UI Components
+  title: 标记按钮 | Tiptap UI 组件
+  description: 集成一个可切换粗体、斜体和下划线等文本标记的按钮。更多信息请参阅文档！
+  category: UI 组件
 component:
-  name: Mark button
-  description: Add a button to trigger a text mark like bold, italics, etc.
+  name: 标记按钮
+  description: 添加一个可应用粗体、斜体等文本标记的按钮。
   type: component
   isFree: true
   isCloud: false
@@ -19,25 +19,25 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A fully accessible mark button for Tiptap editors. Easily toggle text formatting marks like bold, italic, strikethrough, and more with keyboard shortcut support and flexible customization options.
+适用于 Tiptap 编辑器的完全无障碍标记按钮。借助键盘快捷键支持和灵活的自定义选项，轻松切换粗体、斜体、删除线等文本格式标记。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui/mark-button" />
 
-## Installation
+## 安装
 
-Add the component via the Tiptap CLI:
+使用 Tiptap CLI 添加此组件：
 
 ```bash
 npx @tiptap/cli@latest add mark-button
 ```
 
-## Components
+## 组件
 
 ### `<MarkButton />`
 
-A prebuilt React component that toggles mark formatting for a specific mark type.
+预构建的 React 组件，可切换指定类型的标记格式。
 
-#### Usage
+#### 用法
 
 ```tsx
 import { useEditor, EditorContent, EditorContext } from '@tiptap/react'
@@ -102,24 +102,24 @@ export default function MyEditor() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type             | Default     | Description                                               |
-| --------------------- | ---------------- | ----------- | --------------------------------------------------------- |
-| `editor`              | `Editor \| null` | `undefined` | The Tiptap editor instance                                |
-| `type`                | `Mark`           | `required`  | The type of mark (`"bold"`, `"italic"`, `"strike"`, etc.) |
-| `text`                | `string`         | `undefined` | Optional text label for the button                        |
-| `hideWhenUnavailable` | `boolean`        | `false`     | Hides the button when mark toggle is not available        |
-| `onToggled`           | `() => void`     | `undefined` | Callback fired after a successful mark toggle             |
-| `showShortcut`        | `boolean`        | `false`     | Shows a keyboard shortcut badge (if available)            |
+| 名称                  | 类型             | 默认值      | 说明                                                         |
+| --------------------- | ---------------- | ----------- | ------------------------------------------------------------ |
+| `editor`              | `Editor \| null` | `undefined` | Tiptap 编辑器实例                                            |
+| `type`                | `Mark`           | `required`  | 标记类型（`"bold"`、`"italic"`、`"strike"` 等）            |
+| `text`                | `string`         | `undefined` | 按钮的可选文本标签                                           |
+| `hideWhenUnavailable` | `boolean`        | `false`     | 标记不可切换时隐藏按钮                                       |
+| `onToggled`           | `() => void`     | `undefined` | 成功切换标记后调用的回调                                     |
+| `showShortcut`        | `boolean`        | `false`     | 显示键盘快捷键徽标（如果有）                                 |
 
 ## Hooks
 
 ### `useMark()`
 
-A custom hook to build your own mark button with full control over rendering and behavior.
+自定义 Hook，可完全掌控渲染和行为，以构建自己的标记按钮。
 
-#### Usage
+#### 用法
 
 ```tsx
 import { useMark } from '@/components/tiptap-ui/mark-button'
@@ -152,39 +152,39 @@ function MyMarkButton() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type             | Default     | Description                                      |
-| --------------------- | ---------------- | ----------- | ------------------------------------------------ |
-| `editor`              | `Editor \| null` | `undefined` | The Tiptap editor instance                       |
-| `type`                | `Mark`           | `required`  | The type of mark to toggle                       |
-| `hideWhenUnavailable` | `boolean`        | `false`     | Hides the button if mark toggle is not available |
-| `onToggled`           | `() => void`     | `undefined` | Callback fired after a successful mark toggle    |
+| 名称                  | 类型             | 默认值      | 说明                                   |
+| --------------------- | ---------------- | ----------- | -------------------------------------- |
+| `editor`              | `Editor \| null` | `undefined` | Tiptap 编辑器实例                      |
+| `type`                | `Mark`           | `required`  | 要切换的标记类型                       |
+| `hideWhenUnavailable` | `boolean`        | `false`     | 标记不可切换时隐藏按钮                 |
+| `onToggled`           | `() => void`     | `undefined` | 成功切换标记后调用的回调               |
 
-#### Return Values
+#### 返回值
 
-| Name           | Type            | Description                                         |
+| 名称           | 类型            | 说明                                                |
 | -------------- | --------------- | --------------------------------------------------- |
-| `isVisible`    | `boolean`       | Whether the button should be rendered               |
-| `isActive`     | `boolean`       | If the specific mark type is currently active       |
-| `canToggle`    | `boolean`       | If the mark toggle is currently allowed             |
-| `handleMark`   | `() => boolean` | Function to toggle mark formatting, returns success |
-| `label`        | `string`        | Formatted display name (e.g., "Bold", "Italic")     |
-| `shortcutKeys` | `string`        | Keyboard shortcut for the specific mark type        |
-| `Icon`         | `React.FC`      | Icon component for the mark button                  |
+| `isVisible`    | `boolean`       | 是否应渲染按钮                                      |
+| `isActive`     | `boolean`       | 指定类型的标记当前是否处于激活状态                  |
+| `canToggle`    | `boolean`       | 当前是否允许切换标记                                |
+| `handleMark`   | `() => boolean` | 切换标记格式的函数，返回操作是否成功                |
+| `label`        | `string`        | 格式化后的显示名称（例如“Bold”“Italic”）            |
+| `shortcutKeys` | `string`        | 此标记类型对应的键盘快捷键                          |
+| `Icon`         | `React.FC`      | 标记按钮的图标组件                                  |
 
-## Utilities
+## 实用函数
 
 ### `canToggleMark(editor, type)`
 
-Checks if a specific mark type can be toggled in the current editor state.
+检查当前编辑器状态下是否可以切换指定类型的标记。
 
-**Parameters:**
+**参数：**
 
-- `editor`: `Editor | null` - The Tiptap editor instance
-- `type`: `Mark` - The mark type to check
+- `editor`：`Editor | null` - Tiptap 编辑器实例
+- `type`：`Mark` - 要检查的标记类型
 
-**Returns:** `boolean` - Whether the mark can be toggled
+**返回值：** `boolean` - 是否可以切换标记
 
 ```tsx
 import { canToggleMark } from '@/components/tiptap-ui/mark-button'
@@ -194,14 +194,14 @@ const canToggle = canToggleMark(editor, 'bold') // Check if bold can be toggled
 
 ### `toggleMark(editor, type)`
 
-Programmatically toggles mark formatting for the specified type.
+以编程方式切换指定类型的标记格式。
 
-**Parameters:**
+**参数：**
 
-- `editor`: `Editor | null` - The Tiptap editor instance
-- `type`: `Mark` - The mark type to toggle
+- `editor`：`Editor | null` - Tiptap 编辑器实例
+- `type`：`Mark` - 要切换的标记类型
 
-**Returns:** `boolean` - Whether the toggle was successful
+**返回值：** `boolean` - 切换是否成功
 
 ```tsx
 import { toggleMark } from '@/components/tiptap-ui/mark-button'
@@ -214,14 +214,14 @@ if (success) {
 
 ### `isMarkActive(editor, type)`
 
-Checks if a specific mark type is currently active.
+检查指定类型的标记当前是否处于激活状态。
 
-**Parameters:**
+**参数：**
 
-- `editor`: `Editor | null` - The Tiptap editor instance
-- `type`: `Mark` - The mark type to check
+- `editor`：`Editor | null` - Tiptap 编辑器实例
+- `type`：`Mark` - 要检查的标记类型
 
-**Returns:** `boolean` - Whether the mark is active
+**返回值：** `boolean` - 标记是否处于激活状态
 
 ```tsx
 import { isMarkActive } from '@/components/tiptap-ui/mark-button'
@@ -231,13 +231,13 @@ const active = isMarkActive(editor, 'underline')
 
 ### `getFormattedMarkName(type)`
 
-Gets the formatted display name for a mark type.
+获取标记类型对应的格式化显示名称。
 
-**Parameters:**
+**参数：**
 
-- `type`: `Mark` - The mark type
+- `type`：`Mark` - 标记类型
 
-**Returns:** `string` - The formatted name (e.g., "Bold", "Italic")
+**返回值：** `string` - 格式化后的名称（例如“Bold”“Italic”）
 
 ```tsx
 import { getFormattedMarkName } from '@/components/tiptap-ui/mark-button'
@@ -248,16 +248,16 @@ const name2 = getFormattedMarkName('superscript') // Returns "Superscript"
 
 ### `shouldShowButton(props)`
 
-Determines if the mark button should be shown based on editor state and configuration.
+根据编辑器状态和配置确定是否应显示标记按钮。
 
-**Parameters:**
+**参数：**
 
-- `props`: `object`
-  - `editor`: `Editor | null` - The Tiptap editor instance
-  - `type`: `Mark` - The mark type
-  - `hideWhenUnavailable`: `boolean` - Whether to hide when unavailable
+- `props`：`object`
+  - `editor`：`Editor | null` - Tiptap 编辑器实例
+  - `type`：`Mark` - 标记类型
+  - `hideWhenUnavailable`：`boolean` - 是否在不可用时隐藏
 
-**Returns:** `boolean` - Whether the button should be shown
+**返回值：** `boolean` - 是否应显示按钮
 
 ```tsx
 import { shouldShowButton } from '@/components/tiptap-ui/mark-button'
@@ -269,41 +269,41 @@ const shouldShow = shouldShowButton({
 })
 ```
 
-## Keyboard Shortcuts
+## 键盘快捷键
 
-Each mark type has its own keyboard shortcut:
+每种标记类型都有对应的键盘快捷键：
 
-- **Cmd/Ctrl + B**: Toggle bold
-- **Cmd/Ctrl + I**: Toggle italic
-- **Cmd/Ctrl + U**: Toggle underline
-- **Cmd/Ctrl + Shift + S**: Toggle strikethrough
-- **Cmd/Ctrl + E**: Toggle code
-- **Cmd/Ctrl + .**: Toggle superscript
-- **Cmd/Ctrl + ,**: Toggle subscript
+- **Cmd/Ctrl + B**：切换粗体
+- **Cmd/Ctrl + I**：切换斜体
+- **Cmd/Ctrl + U**：切换下划线
+- **Cmd/Ctrl + Shift + S**：切换删除线
+- **Cmd/Ctrl + E**：切换代码格式
+- **Cmd/Ctrl + .**：切换上标
+- **Cmd/Ctrl + ,**：切换下标
 
-The shortcuts are automatically registered when using either the `<MarkButton />` component or the `useMark()` hook.
+使用 `<MarkButton />` 组件或 `useMark()` Hook 时，系统都会自动注册这些快捷键。
 
-## Requirements
+## 要求
 
-### Dependencies
+### 依赖项
 
-- `@tiptap/react` - Core Tiptap React integration
-- `@tiptap/starter-kit` - Basic Tiptap extensions including mark support
-- `@tiptap/extension-underline` - Underline mark extension
-- `@tiptap/extension-superscript` - Superscript mark extension
-- `@tiptap/extension-subscript` - Subscript mark extension
-- `react-hotkeys-hook` - Keyboard shortcut management
+- `@tiptap/react` - Tiptap React 核心集成
+- `@tiptap/starter-kit` - Tiptap 基础扩展，包含标记支持
+- `@tiptap/extension-underline` - 下划线标记扩展
+- `@tiptap/extension-superscript` - 上标标记扩展
+- `@tiptap/extension-subscript` - 下标标记扩展
+- `react-hotkeys-hook` - 键盘快捷键管理
 
-### Referenced Components
+### 引用的组件
 
-- `use-tiptap-editor` (hook)
-- `button` (primitive)
-- `badge` (primitive)
-- `tiptap-utils` (lib)
-- `bold-icon` (icon)
-- `italic-icon` (icon)
-- `underline-icon` (icon)
-- `strike-icon` (icon)
-- `code-2-icon` (icon)
-- `superscript-icon` (icon)
-- `subscript-icon` (icon)
+- `use-tiptap-editor`（Hook）
+- `button`（基础组件）
+- `badge`（基础组件）
+- `tiptap-utils`（库）
+- `bold-icon`（图标）
+- `italic-icon`（图标）
+- `underline-icon`（图标）
+- `strike-icon`（图标）
+- `code-2-icon`（图标）
+- `superscript-icon`（图标）
+- `subscript-icon`（图标）
