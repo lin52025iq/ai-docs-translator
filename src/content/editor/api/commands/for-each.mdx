@@ -1,24 +1,24 @@
 ---
-title: forEach command
+title: forEach 命令
 meta:
-  title: forEach command | Tiptap Editor Docs
-  description: Use the forEach command in Tiptap to loop through an array of items and insert content into the editor. Learn more in our docs!
-  category: Editor
+  title: forEach 命令 | Tiptap 编辑器文档
+  description: 使用 Tiptap 中的 forEach 命令遍历项目数组，并将内容插入编辑器。了解更多信息，请参阅我们的文档！
+  category: 编辑器
 ---
 
-Loop through an array of items.
+遍历项目数组。
 
-## Parameters
+## 参数
 
 `items: any[]`
 
-An array of items.
+项目数组。
 
 `fn: (item: any, props: CommandProps & { index: number }) => boolean`
 
-A function to do anything with your item.
+一个用于对项目执行任意操作的函数。
 
-## Use the forEach command
+## 使用 forEach 命令
 
 ```js
 const items = ['foo', 'bar', 'baz']
