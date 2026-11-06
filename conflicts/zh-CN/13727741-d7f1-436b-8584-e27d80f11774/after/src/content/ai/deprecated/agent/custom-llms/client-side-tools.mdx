@@ -1,0 +1,122 @@
+---
+title: 客户端工具
+meta:
+  title: 客户端工具 | Tiptap Content AI
+  description: 了解如何通过 AI Agent 扩展在客户端调用工具。
+  category: Content AI
+---
+
+import { Callout } from '@/components/ui/Callout'
+
+客户端工具是在浏览器中运行的工具，可用于与编辑器内容交互。例如：
+
+- 统计文档中的字数
+- 替换文档中某个词的所有实例
+- 设置文档格式。
+
+所有[内置工具](/ai/deprecated/agent/custom-llms/tools#built-in-tools)都是客户端工具。
+
+本指南将介绍如何实现一个工具，将文档中某个词的所有出现位置替换为另一个词。开始之前，请先[使用自定义后端配置 AI Agent 扩展](/ai/deprecated/agent/custom-llms/get-started)。
+
+<Callout title="提供代码示例" variant="info">
+  本指南包含代码示例，帮助你快速上手。请参阅 [GitHub
+  仓库](https://github.com/ueberdosis/ai-agent-custom-llm-demos)。
+</Callout>
+
+## 客户端设置
+
+为工具声明一个工具调用处理程序。工具处理程序是在编辑器中执行工具调用的函数，必须实现 `AiAgentToolHandler` 接口。
+
+```ts
+import { z } from 'zod'
+import type { AiAgentToolHandler } from '@tiptap-pro/extension-ai-agent'
+import { ToolCallError, invalidArgumentsResponseFormatter } from '@tiptap-pro/extension-ai-agent'
+
+// Schema for validating tool arguments
+const replaceAllToolSchema = z.object({
+  find: z.string().min(1, 'Find text cannot be empty'),
+  replace: z.string(),
+})
+
+export const replaceAllToolHandler = (): AiAgentToolHandler => ({
+  // Unique identifier for the tool
+  name: 'replace_all',
+  modifiesEditor: true,
+  handleToolCall: ({ editor, state, toolCall }) => {
+    // Validate the arguments
+    const result = replaceAllToolSchema.safeParse(toolCall.arguments)
+    if (!result.success) {
+      // Return an error message to the AI
+      throw new ToolCallError(invalidArgumentsResponseFormatter(result.error))
+    }
+    const args = result.data
+
+    try {
+      // Get the current HTML content
+      const html = editor.getHTML()
+
+      // Replace all occurrences of the find text with the replace text
+      const replacedHtml = html.replaceAll(args.find, args.replace)
+
+      // Set the new content in the editor
+      editor.commands.setContent(replacedHtml)
+
+      // Return a success message
+      return `Successfully replaced all occurrences of "${args.find}" with "${args.replace}".`
+    } catch (error) {
+      console.error(error)
+      throw new ToolCallError(`Failed to replace text: ${error.message}`)
+    }
+  },
+})
+```
+
+然后，将该工具添加到 `AiAgentProvider` 中：
+
+```ts
+import { AiAgentProvider, toolHandlersStarterKit } from '@tiptap-pro/extension-ai-agent'
+
+const provider = new AiAgentProvider({
+  toolHandlers: [...toolHandlersStarterKit(), replaceAllToolHandler()],
+})
+```
+
+`toolHandlersStarterKit` 包含所有[内置工具](/ai/deprecated/agent/custom-llms/tools#built-in-tools)的工具处理程序。你可以将自定义工具处理程序添加到该数组中。
+
+## 服务端设置
+
+在服务端定义工具。工具定义包含工具名称、描述和 [JSON Schema](https://json-schema.org/)。这些数据会发送给 LLM，以生成工具调用。工具定义必须实现 `AiAgentTool` 接口。
+
+```ts
+import type { AiAgentTool } from '@tiptap-pro/extension-ai-agent-server'
+
+export const replaceAllTool = (): AiAgentTool => ({
+  // Unique identifier for the tool. Must match the one in the tool handler
+  name: 'replace_all',
+  description: 'Replaces all occurrences of a word in the document with another word',
+  parameters: {
+    type: 'object',
+    properties: {
+      find: {
+        type: 'string',
+      },
+      replace: {
+        type: 'string',
+      },
+    },
+    required: ['find', 'replace'],
+  },
+})
+```
+
+然后，将该工具添加到 `AiAgentToolkit` 实例中：
+
+```ts
+import { AiAgentToolkit, toolsStarterKit } from '@tiptap-pro/extension-ai-agent-server'
+
+const toolkit = new AiAgentToolkit({
+  tools: [...toolsStarterKit(), replaceAllTool()],
+})
+```
+
+`toolsStarterKit` 包含所有[内置工具](/ai/deprecated/agent/custom-llms/tools#built-in-tools)的工具定义。你可以将自定义工具定义添加到该数组中。
