@@ -1,50 +1,50 @@
 ---
-title: Footnotes and endnotes
+title: 脚注和尾注
 tags:
   - type: beta
 meta:
-  title: Footnotes and Endnotes | Tiptap Conversion
-  description: How footnotes and endnotes are handled across the DOCX conversion pipeline, including import extraction and current limitations.
-  category: Conversion
+  title: 脚注和尾注 | Tiptap 转换
+  description: 了解 DOCX 转换流程中脚注和尾注的处理方式，包括导入提取和当前限制。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-The DOCX import service extracts footnote and endnote content from imported documents. However, this data is only available via the [REST API](/conversion/import/docx/rest-api). The [editor extension](/conversion/import/docx/editor-extension) does not surface footnotes or endnotes in the `onImport` callback. There is no editor extension to render footnotes, and export is not supported.
+DOCX 导入服务会从导入的文档中提取脚注和尾注内容。不过，这些数据只能通过 [REST API](/conversion/import/docx/rest-api) 获取。[编辑器扩展](/conversion/import/docx/editor-extension) 不会在 `onImport` 回调中提供脚注或尾注。目前没有用于渲染脚注的编辑器扩展，也不支持导出。
 
-## Support overview
+## 支持概览
 
-| | Import | Editor | Export |
+| | 导入 | 编辑器 | 导出 |
 | --- | --- | --- | --- |
-| Footnotes | REST API only (not in extension callback) | No extension | In development |
-| Endnotes | REST API only (not in extension callback) | No extension | In development |
+| 脚注 | 仅限 REST API（不包含在扩展回调中） | 无扩展 | 开发中 |
+| 尾注 | 仅限 REST API（不包含在扩展回调中） | 无扩展 | 开发中 |
 
-## Import
+## 导入
 
-Footnote and endnote data is only available via the [REST API](/conversion/import/docx/rest-api). The [editor extension](/conversion/import/docx/editor-extension) calls the same API but does not include this data in the `onImport` callback.
+脚注和尾注数据只能通过 [REST API](/conversion/import/docx/rest-api) 获取。[编辑器扩展](/conversion/import/docx/editor-extension) 会调用同一个 API，但不会在 `onImport` 回调中包含这些数据。
 
-The REST API extracts footnotes and endnotes from the DOCX and returns them as `footnotes` and `endnotes` fields in the response, keyed by note ID. Inline references in the body text are represented as `footnoteReference` and `endnoteReference` nodes with a `noteId` attribute.
+REST API 会从 DOCX 中提取脚注和尾注，并在响应中以 `footnotes` 和 `endnotes` 字段返回，按注释 ID 编索引。正文中的行内引用会表示为带有 `noteId` 属性的 `footnoteReference` 和 `endnoteReference` 节点。
 
-<Callout variant="warning" title="Extension does not surface footnote/endnote data">
-  To access footnote and endnote data, use the [REST API](/conversion/import/docx/rest-api) directly. The `footnoteReference` and `endnoteReference` nodes in the body text require a [custom extension](/editor/extensions/custom-extensions/extend-existing) to render in the editor. See the [invalid schema guide](/guides/invalid-schema) for strategies.
+<Callout variant="warning" title="扩展不会提供脚注/尾注数据">
+  如需访问脚注和尾注数据，请直接使用 [REST API](/conversion/import/docx/rest-api)。正文中的 `footnoteReference` 和 `endnoteReference` 节点需要通过[自定义扩展](/editor/extensions/custom-extensions/extend-existing)才能在编辑器中渲染。有关处理策略，请参阅[无效 schema 指南](/guides/invalid-schema)。
 </Callout>
 
-If you use the REST API directly, each footnote and endnote value is a Tiptap JSON document (`{ type: "doc", content: [...] }`). How you use this data is up to you. Some options include appending the notes as a numbered list at the end of the document, rendering them in a custom sidebar, or storing them for later use.
+如果直接使用 REST API，每个脚注和尾注的值都是一个 Tiptap JSON 文档（`{ type: "doc", content: [...] }`）。如何使用这些数据由你决定。你可以将注释作为编号列表追加到文档末尾，在自定义侧边栏中渲染，或存储起来以供日后使用。
 
-## Editor
+## 编辑器
 
-There is no footnote or endnote extension in Tiptap or Tiptap Pro. The editor schema has no built-in node or mark type that can represent footnote references or footnote content.
+Tiptap 和 Tiptap Pro 均没有脚注或尾注扩展。编辑器 schema 没有内置的节点类型或标记类型来表示脚注引用或脚注内容。
 
-To render footnotes in your editor, you would need to build a custom extension that handles `footnoteReference` and `endnoteReference` node types and provides a UI for displaying the note content.
+若要在编辑器中渲染脚注，你需要构建一个自定义扩展来处理 `footnoteReference` 和 `endnoteReference` 节点类型，并提供用于显示注释内容的界面。
 
-## Export
+## 导出
 
-Neither the [editor extension](/conversion/export/docx/editor-extension) nor the [REST API](/conversion/export/docx/rest-api) exports footnotes or endnotes. There is currently no way to produce footnotes or endnotes in exported DOCX files.
+[编辑器扩展](/conversion/export/docx/editor-extension)和 [REST API](/conversion/export/docx/rest-api) 均不会导出脚注或尾注。目前无法在导出的 DOCX 文件中生成脚注或尾注。
 
-## Workarounds
+## 替代方案
 
-If your workflow requires footnote-like content in the editor and exported documents, consider these alternatives:
+如果你的工作流需要在编辑器和导出的文档中包含类似脚注的内容，可以考虑以下替代方案：
 
-- **Inline parenthetical notes**: Convert footnote content to parenthetical text within the body. This survives the full round-trip.
-- **Endnote section**: Append a manually maintained "Notes" section at the end of the document using regular paragraphs and numbered text.
-- **Custom handling**: Use the import callback to extract footnote data, store it alongside your document, and inject it back during a custom export step.
+- **行内括号注释**：将脚注内容转换为正文中的括号注释。这样可以完整保留往返转换的内容。
+- **尾注部分**：在文档末尾追加一个手动维护的“注释”部分，使用常规段落和编号文本。
+- **自定义处理**：使用导入回调提取脚注数据，将其与文档一同存储，并在自定义导出步骤中重新注入。
