@@ -1,12 +1,12 @@
 ---
-title: Slash Command Trigger Button
+title: 斜杠命令触发按钮
 meta:
-  title: Slash Command Trigger Button | Tiptap UI Components
-  description: Insert slash command triggers in Tiptap editors with smart positioning, customizable triggers, keyboard shortcuts, and accessibility support.
-  category: UI Components
+  title: 斜杠命令触发按钮 | Tiptap UI 组件
+  description: 在 Tiptap 编辑器中插入斜杠命令触发符，支持智能定位、自定义触发符、键盘快捷键和无障碍访问。
+  category: UI 组件
 component:
-  name: Slash Command Trigger Button
-  description: A prebuilt React component that inserts slash command triggers into Tiptap editors.
+  name: 斜杠命令触发按钮
+  description: 一个预构建的 React 组件，可在 Tiptap 编辑器中插入斜杠命令触发符。
   type: component
   isFree: false
   isCloud: false
@@ -19,28 +19,28 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A fully accessible slash command trigger button for Tiptap editors. Easily insert slash command triggers to initiate block-level command menus with keyboard shortcut support and flexible customization options.
+一款完全支持无障碍访问的 Tiptap 编辑器斜杠命令触发按钮。轻松插入斜杠命令触发符，以打开块级命令菜单，并支持键盘快捷键和灵活的自定义选项。
 
 <CodeDemo
   isScrollable
   src="https://template.tiptap.dev/preview/tiptap-ui/slash-command-trigger-button"
 />
 
-## Installation
+## 安装
 
-Add the component via the Tiptap CLI:
+通过 Tiptap CLI 添加此组件：
 
 ```bash
 npx @tiptap/cli@latest add slash-command-trigger-button
 ```
 
-## Components
+## 组件
 
 ### `<SlashCommandTriggerButton />`
 
-A prebuilt React component that inserts slash command triggers into the editor.
+一个预构建的 React 组件，可在编辑器中插入斜杠命令触发符。
 
-#### Usage
+#### 用法
 
 ```tsx
 <SlashCommandTriggerButton
@@ -53,26 +53,26 @@ A prebuilt React component that inserts slash command triggers into the editor.
 />
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type                        | Default     | Description                                              |
-| --------------------- | --------------------------- | ----------- | -------------------------------------------------------- |
-| `editor`              | `Editor \| null`            | `undefined` | The Tiptap editor instance                               |
-| `node`                | `Node \| null`              | `undefined` | The node to apply trigger to                             |
-| `nodePos`             | `number \| null`            | `undefined` | The position of the node in the document                 |
-| `text`                | `string`                    | `undefined` | Optional text label for the button                       |
-| `trigger`             | `string`                    | `"/"`       | The trigger text to insert                               |
-| `hideWhenUnavailable` | `boolean`                   | `false`     | Hides the button when trigger insertion is not available |
-| `onTriggered`         | `(trigger: string) => void` | `undefined` | Callback fired after a successful trigger insertion      |
-| `showShortcut`        | `boolean`                   | `false`     | Shows a keyboard shortcut badge (if available)           |
+| 名称                  | 类型                        | 默认值      | 说明                                              |
+| --------------------- | --------------------------- | ----------- | ------------------------------------------------- |
+| `editor`              | `Editor \| null`            | `undefined` | Tiptap 编辑器实例                                 |
+| `node`                | `Node \| null`              | `undefined` | 要应用触发符的节点                                |
+| `nodePos`             | `number \| null`            | `undefined` | 节点在文档中的位置                                |
+| `text`                | `string`                    | `undefined` | 按钮的可选文本标签                                |
+| `trigger`             | `string`                    | `"/"`       | 要插入的触发符文本                                |
+| `hideWhenUnavailable` | `boolean`                   | `false`     | 无法插入触发符时隐藏按钮                          |
+| `onTriggered`         | `(trigger: string) => void` | `undefined` | 成功插入触发符后调用的回调                        |
+| `showShortcut`        | `boolean`                   | `false`     | 显示键盘快捷键标记（如果有）                      |
 
 ## Hooks
 
 ### `useSlashCommandTrigger()`
 
-A custom hook to build your own slash command trigger button with full control over rendering and behavior.
+自定义 Hook，可让你完全控制渲染和行为，从而构建自己的斜杠命令触发按钮。
 
-#### Usage
+#### 用法
 
 ```tsx
 function MySlashCommandButton() {
@@ -96,34 +96,34 @@ function MySlashCommandButton() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type                        | Default     | Description                                            |
-| --------------------- | --------------------------- | ----------- | ------------------------------------------------------ |
-| `editor`              | `Editor \| null`            | `undefined` | The Tiptap editor instance                             |
-| `node`                | `Node \| null`              | `undefined` | The node to apply trigger to                           |
-| `nodePos`             | `number \| null`            | `undefined` | The position of the node in the document               |
-| `trigger`             | `string`                    | `"/"`       | The trigger text to insert                             |
-| `hideWhenUnavailable` | `boolean`                   | `false`     | Hides the button if trigger insertion is not available |
-| `onTriggered`         | `(trigger: string) => void` | `undefined` | Callback fired after a successful trigger insertion    |
+| 名称                  | 类型                        | 默认值      | 说明                                              |
+| --------------------- | --------------------------- | ----------- | ------------------------------------------------- |
+| `editor`              | `Editor \| null`            | `undefined` | Tiptap 编辑器实例                                 |
+| `node`                | `Node \| null`              | `undefined` | 要应用触发符的节点                                |
+| `nodePos`             | `number \| null`            | `undefined` | 节点在文档中的位置                                |
+| `trigger`             | `string`                    | `"/"`       | 要插入的触发符文本                                |
+| `hideWhenUnavailable` | `boolean`                   | `false`     | 无法插入触发符时隐藏按钮                          |
+| `onTriggered`         | `(trigger: string) => void` | `undefined` | 成功插入触发符后调用的回调                        |
 
-#### Return Values
+#### 返回值
 
-| Name                 | Type            | Description                                  |
-| -------------------- | --------------- | -------------------------------------------- |
-| `isVisible`          | `boolean`       | Whether the button should be rendered        |
-| `canInsert`          | `boolean`       | If trigger insertion is currently allowed    |
-| `handleSlashCommand` | `() => boolean` | Function to insert the slash command trigger |
-| `label`              | `string`        | Accessible label text for the button         |
-| `shortcutKeys`       | `string`        | Keyboard shortcut (Cmd/Ctrl + /)             |
-| `trigger`            | `string`        | The trigger text that will be inserted       |
-| `Icon`               | `React.FC`      | Icon component for the slash command button  |
+| 名称                 | 类型            | 说明                                      |
+| -------------------- | --------------- | ----------------------------------------- |
+| `isVisible`          | `boolean`       | 按钮是否应当渲染                            |
+| `canInsert`          | `boolean`       | 当前是否允许插入触发符                      |
+| `handleSlashCommand` | `() => boolean` | 插入斜杠命令触发符的函数                    |
+| `label`              | `string`        | 按钮的无障碍标签文本                        |
+| `shortcutKeys`       | `string`        | 键盘快捷键（Cmd/Ctrl + /）                 |
+| `trigger`            | `string`        | 将要插入的触发符文本                        |
+| `Icon`               | `React.FC`      | 斜杠命令按钮的图标组件                      |
 
-## Utilities
+## 实用工具
 
 ### `canInsertSlashCommand(editor, node?, nodePos?)`
 
-Checks if a slash command trigger can be inserted in the current editor state or at a specific position.
+检查当前编辑器状态或指定位置是否可以插入斜杠命令触发符。
 
 ```tsx
 import { canInsertSlashCommand } from '@/components/tiptap-ui/slash-command-trigger-button'
@@ -134,7 +134,7 @@ const canInsertAtNode = canInsertSlashCommand(editor, node, nodePos) // Check sp
 
 ### `insertSlashCommand(editor, trigger?, node?, nodePos?)`
 
-Programmatically inserts a slash command trigger in the editor.
+以编程方式在编辑器中插入斜杠命令触发符。
 
 ```tsx
 import { insertSlashCommand } from '@/components/tiptap-ui/slash-command-trigger-button'
@@ -153,25 +153,25 @@ if (success) {
 }
 ```
 
-## Keyboard Shortcuts
+## 键盘快捷键
 
-The slash command trigger button supports the following keyboard shortcut:
+斜杠命令触发按钮支持以下键盘快捷键：
 
-- **Cmd/Ctrl + /**: Insert slash command trigger
+- **Cmd/Ctrl + /**：插入斜杠命令触发符
 
-The shortcut is automatically registered when using either the `<SlashCommandTriggerButton />` component or the `useSlashCommandTrigger()` hook.
+使用 `<SlashCommandTriggerButton />` 组件或 `useSlashCommandTrigger()` Hook 时，系统会自动注册此快捷键。
 
-## Requirements
+## 要求
 
-### Dependencies
+### 依赖项
 
-- `@tiptap/react` - Core Tiptap React integration
-- `react-hotkeys-hook` - Keyboard shortcut management
+- `@tiptap/react` - Tiptap React 核心集成
+- `react-hotkeys-hook` - 键盘快捷键管理
 
-### Referenced Components
+### 引用的组件
 
-- `use-tiptap-editor` (hook)
-- `button` (primitive)
-- `badge` (primitive)
-- `tiptap-utils` (lib)
-- `plus-icon` (icon)
+- `use-tiptap-editor`（Hook）
+- `button`（基础组件）
+- `badge`（基础组件）
+- `tiptap-utils`（库）
+- `plus-icon`（图标）
