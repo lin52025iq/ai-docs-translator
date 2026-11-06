@@ -1,0 +1,1085 @@
+---
+title: 钩子
+meta:
+  title: Hocuspocus | Hocuspocus Docs
+  category: Hocuspocus
+---
+
+## 简介
+
+Hocuspocus 提供钩子，用于扩展其功能并将其集成到现有应用程序中。钩子的配置方式与[其他配置选项](/hocuspocus/server/configuration)相同，只需定义简单的方法即可。
+
+钩子会将钩子载荷作为第一个参数。载荷是一个对象，其中包含可供使用和修改的数据。借助这一简单机制，你可以构建复杂功能，例如[扩展](/hocuspocus/guides/custom-extensions)。
+
+钩子必须返回一个 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)；最简单的方式是将函数标记为 `async`（从 v4 开始需要 Node.js 22+）。这样，你就可以执行 API 请求、运行数据库查询、触发 Webhook，或完成任何将其集成到应用程序中所需的操作。
+
+从 v4 开始，钩子载荷使用符合 Web 标准的 `Request` 和 `Headers` 对象，而不是 Node.js 的 `IncomingMessage` 和 `IncomingHttpHeaders`。读取标头时使用 `requestHeaders.get('authorization')`，而不是 `requestHeaders['authorization']`。`onUpgrade` 和 `onRequest` 钩子是例外——由于它们在 WebSocket 升级之前处理 HTTP 层的请求，因此仍使用 Node.js 类型。
+
+## 生命周期
+
+钩子会在 Hocuspocus 生命周期的不同阶段调用。例如，当你对服务器实例调用 `listen()` 方法时，会调用 `onListen` 钩子。
+
+有些钩子不仅可以让你响应这些事件，还可以拦截它们。例如，底层 WebSocket 服务器建立新连接时会触发 `onConnect` 钩子。你可以在钩子中拒绝 Promise（如果使用 async，也可以抛出空异常），从而终止连接并中断调用链。
+
+## 钩子调用链
+
+扩展使用钩子为 Hocuspocus 添加功能。钩子会按照在配置中的注册顺序依次调用，配置本身则位于调用链的最后。
+
+如果钩子中的 Promise 被拒绝，后续扩展或配置中的钩子就不会被调用。这就像请求必须经过的一组中间件。使用钩子时请记住这一点。
+
+举例来说，如果不允许某个用户连接，只需在 `onAuthenticate()` 钩子中抛出错误即可。很简单，对吧？
+
+## 汇总表
+
+| 钩子                       | 描述                               | 链接                                                  |
+| -------------------------- |-------------------------------------------|-------------------------------------------------------|
+| `beforeHandleMessage`      | 处理消息之前                 | [了解详情](/hocuspocus/server/hooks#before-handle-message)      |
+| `afterHandleMessage`       | 处理入站消息之后 | [了解详情](/hocuspocus/server/hooks#after-handle-message)       |
+| `beforeHandleAwareness`    | 应用入站 awareness 更新之前 | [了解详情](/hocuspocus/server/hooks#before-handle-awareness)  |
+| `onConnect`                | 建立连接时          | [了解详情](/hocuspocus/server/hooks#on-connect)                 |
+| `connected`                | 成功建立连接之后     | [了解详情](/hocuspocus/server/hooks#connected)                  |
+| `onAuthenticate`           | 需要身份验证时           | [了解详情](/hocuspocus/server/hooks#on-authenticate)            |
+| `onAwarenessUpdate`        | awareness 发生变化时                    | [了解详情](/hocuspocus/server/hooks#on-awareness-update)        |
+| `onLoadDocument`           | 创建新文档期间     | [了解详情](/hocuspocus/server/hooks#on-load-document)           |
+| `afterLoadDocument`        | 创建文档之后               | [了解详情](/hocuspocus/server/hooks#after-load-document)        |
+| `onChange`                 | 文档发生变化时               | [了解详情](/hocuspocus/server/hooks#on-change)                  |
+| `onDisconnect`             | 连接关闭时              | [了解详情](/hocuspocus/server/hooks#on-disconnect)              |
+| `onListen`                 | 服务器初始化时            | [了解详情](/hocuspocus/server/hooks#on-listen)                  |
+| `onDestroy`                | 服务器即将销毁时         | [了解详情](/hocuspocus/server/hooks#ondestroy)                 |
+| `onConfigure`              | 服务器配置完成时       | [了解详情](/hocuspocus/server/hooks#on-configure)               |
+| `onRequest`                | 收到 HTTP 请求时              | [了解详情](/hocuspocus/server/hooks#on-request)                 |
+| `onStoreDocument`          | 文档发生变化时          | [了解详情](/hocuspocus/server/hooks#on-store-document)          |
+| `onUpgrade`                | WebSocket 连接升级时 | [了解详情](/hocuspocus/server/hooks#on-upgrade)                 |
+| `onStateless`              | 收到无状态消息时    | [了解详情](/hocuspocus/server/hooks#on-stateless)               |
+| `beforeBroadcastStateless` | 广播无状态消息之前      | [了解详情](/hocuspocus/server/hooks#before-broadcast-stateless) |
+| `afterUnloadDocument`      | 文档关闭时                 | [了解详情](/hocuspocus/server/hooks#after-unload-document)      |
+
+## 用法
+
+```js
+import { Server } from "@hocuspocus/server";
+
+const server = new Server({
+  async onAuthenticate({ documentName, token }) {
+    // Could be an API call, DB query or whatever …
+    // The endpoint should return 200 OK in case the user is authenticated, and an http error
+    // in case the user is not.
+    return axios.get("/user", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
+});
+
+server.listen();
+```
+
+## 钩子
+
+### beforeHandleMessage
+
+服务器收到消息后、开始处理或应用消息之前，会调用 `beforeHandleMessage` 钩子。你可以用它拒绝消息（例如，身份验证令牌已过期时），也可以检查更新消息，并根据自定义规则拒绝或接受消息。如果在钩子中抛出错误，连接将关闭。你可以通过抛出实现了 CloseEvent 的错误来返回自定义代码或原因（请参见下方示例）。
+
+**钩子载荷**
+
+传递给 `beforeHandleMessage` 钩子的 `data` 具有以下属性：
+
+```js
+import { URLSearchParams } from "url";
+import { Doc } from "yjs";
+import { CloseEvent } from "@hocuspocus/common";
+
+const data = {
+  clientsCount: number,
+  context: any,
+  document: Doc,
+  documentName: string,
+  instance: Hocuspocus,
+  requestHeaders: Headers,
+  requestParameters: URLSearchParams,
+  update: Uint8Array,
+  socketId: string,
+};
+```
+
+`context` 包含之前 `onConnect` 钩子提供的数据。
+
+**示例**
+
+```js
+import { debounce } from "debounce";
+import { Server } from "@hocuspocus/server";
+import { TiptapTransformer } from "@hocuspocus/transformer";
+import { writeFile } from "fs";
+
+let debounced;
+
+const server = new Server({
+  beforeHandleMessage(data) {
+    if (data.context.tokenExpiresAt <= new Date()) {
+      const error: CloseEvent = {
+        reason: "Token expired",
+      };
+
+      throw error;
+    }
+  },
+});
+
+server.listen();
+```
+
+### afterHandleMessage
+
+处理完入站消息后会调用 `afterHandleMessage` 钩子，也就是说，此时 Yjs 更新已应用到文档。它与 `beforeHandleMessage` 相对应。无论应用更新成功还是抛出错误，都会触发此钩子；但如果 `beforeHandleMessage` 拒绝了消息，则不会触发此钩子（这种情况下消息不会被应用）。
+
+你可以使用它来响应已应用的更新，例如记录指标、写日志，或在文档状态发生变化后触发副作用。
+
+**钩子载荷**
+
+传递给 `afterHandleMessage` 钩子的 `data` 具有以下属性：
+
+```js
+import { URLSearchParams } from "url";
+import { Doc } from "yjs";
+import type { Connection } from "@hocuspocus/server";
+
+const data = {
+  clientsCount: number,
+  context: any,
+  document: Doc,
+  documentName: string,
+  instance: Hocuspocus,
+  requestHeaders: Headers,
+  requestParameters: URLSearchParams,
+  update: Uint8Array,
+  socketId: string,
+  connection: Connection,
+};
+```
+
+`context` 包含之前 `onConnect` 钩子提供的数据。
+
+**示例**
+
+```js
+import { Server } from "@hocuspocus/server";
+
+const server = new Server({
+  async afterHandleMessage({ documentName, context }) {
+    console.log(`Applied an update to "${documentName}" for ${context.user?.name}`);
+  },
+});
+
+server.listen();
+```
+
+### connected
+
+成功建立新连接后会调用 `connected` 钩子。
+
+**示例**
+
+```js
+import { Server } from "@hocuspocus/server";
+
+const server = new Server({
+  async connected() {
+    console.log("connections:", server.getConnectionsCount());
+  },
+});
+
+server.listen();
+```
+
+### onAuthenticate
+
+当服务器收到客户端 provider 发来的身份验证请求时，会调用 `onAuthenticate` 钩子。它应返回一个 Promise。抛出异常或拒绝 Promise 都会终止连接。请注意，如果未指定令牌，调用此钩子时令牌将是空字符串。
+
+**钩子载荷**
+
+传递给 `onAuthenticate` 钩子的 `data` 具有以下属性：
+
+```js
+import { URLSearchParams } from "url";
+import { Doc } from "yjs";
+
+const data = {
+  documentName: string,
+  instance: Hocuspocus,
+  requestHeaders: Headers,
+  requestParameters: URLSearchParams,
+  request: Request,
+  socketId: string,
+  token: string,
+  providerVersion: string | undefined,
+  connection: {
+    readOnly: boolean,
+  },
+};
+```
+
+**示例**
+
+```js
+import { Server } from "@hocuspocus/server";
+
+const server = new Server({
+  async onAuthenticate(data) {
+    const { token } = data;
+
+    // Example test if a user is authenticated using a
+    // request parameter
+    if (token !== "super-secret-token") {
+      throw new Error("Not authorized!");
+    }
+
+    // Example to set a document to read only for the current user
+    // thus changes will not be accepted and synced to other clients
+    if (someCondition === true) {
+      data.connection.readOnly = true;
+    }
+
+    // You can set contextual data to use it in other hooks
+    return {
+      user: {
+        id: 1234,
+        name: "John",
+      },
+    };
+  },
+});
+
+server.listen();
+```
+
+### onTokenSync
+
+当服务器收到已连接 provider 发来的令牌同步请求时，会调用 `onTokenSync` 钩子。这样，服务器就可以在会话进行期间验证用户令牌，而无需完整地重新建立连接。
+
+**钩子载荷**
+
+传递给 `onTokenSync` 钩子的 `data` 具有以下属性：
+
+```js
+const data = {
+  context: any,
+  document: Doc,
+  documentName: string,
+  instance: Hocuspocus,
+  requestHeaders: Headers,
+  requestParameters: URLSearchParams,
+  socketId: string,
+  token: string,
+  connectionConfig: {
+    readOnly: boolean,
+  },
+  connection: Connection,
+};
+```
+
+**示例**
+
+```js
+import { Server } from "@hocuspocus/server";
+
+const server = new Server({
+  async onTokenSync({ token, context, connection }) {
+    // Validate the current token
+    const isValid = await validateToken(token);
+
+    if (!isValid) {
+      throw new Error("Token has expired or is invalid");
+    }
+
+    // Update permissions if changed
+    const permissions = await getUserPermissions(context.userId);
+    if (permissions.readOnly !== connection.readOnly) {
+      connection.readOnly = permissions.readOnly;
+    }
+
+    return { lastTokenSync: new Date() };
+  },
+});
+
+server.listen();
+```
+
+**Provider 用法**
+
+```js
+// Provider sends token to server
+provider.sendToken();
+```
+
+**服务器用法**
+
+```js
+// Server requests token from provider
+const connection = document.connections.values().next().value?.connection;
+connection.requestToken();
+```
+
+### beforeHandleAwareness
+
+服务器解码入站 awareness 消息后、将其应用到文档的 awareness 状态之前，会调用 `beforeHandleAwareness` 钩子。与在 awareness 变化应用后进行观察的 `onAwarenessUpdate` 不同，`beforeHandleAwareness` 允许你检查并改写更新，然后再将其写入文档的 awareness 状态或广播给其他客户端。
+
+该钩子会收到按 Yjs `clientId` 为键、包含已解码各客户端 `states` 的可变 `Map`。你可以就地修改这个映射及其中的状态对象，以便：
+
+- 修改状态对象中的字段（例如，使用经过服务器验证的 `user` 覆盖客户端提供的值）。
+- 使用 `states.delete(clientId)` 将某个客户端从广播中移除。
+- 使用 `states.set(clientId, ...)` 添加或替换合成状态。
+
+所有钩子都运行完毕后，发送给其他客户端的编码更新会反映映射的最终内容。抛出错误即可拒绝整个更新——不会应用任何内容，也不会进行广播。
+
+多个扩展会自然地组成调用链：每个扩展都会看到前一个扩展修改后的映射，并可继续修改。扩展会先于配置级别的钩子运行。
+
+**钩子载荷**
+
+传递给 `beforeHandleAwareness` 钩子的 `data` 具有以下属性：
+
+```js
+import { Awareness } from 'y-protocols/awareness'
+import type { Connection, TransactionOrigin } from '@hocuspocus/server'
+
+const data = {
+  awareness: Awareness,
+  clientsCount: number,
+  // Connection context populated by `onAuthenticate`. `undefined` when the
+  // update did not originate from a client connection (e.g. server-internal
+  // writes via DirectConnection).
+  context: any | undefined,
+  document: Document,
+  documentName: string,
+  instance: Hocuspocus,
+  requestHeaders: Headers,
+  requestParameters: URLSearchParams,
+  socketId: string,
+  // Per-client awareness states decoded from the inbound update, keyed by
+  // Yjs clientId. Mutate this map in place to rewrite the update.
+  states: Map<number, Record<string, any>>,
+  // The TransactionOrigin that will be passed to applyAwarenessUpdate.
+  // Use isTransactionOrigin() to discriminate sources.
+  transactionOrigin: TransactionOrigin,
+  // Convenience shortcut: `origin.connection` when transactionOrigin is a
+  // ConnectionTransactionOrigin, otherwise undefined.
+  connection?: Connection,
+}
+```
+
+**示例：使用服务器验证过的字段覆盖客户端值**
+
+```js
+import { Server } from '@hocuspocus/server'
+
+const server = new Server({
+  async beforeHandleAwareness({ states, context }) {
+    for (const state of states.values()) {
+      // Overwrite whatever the client claimed with what the server knows.
+      state.user = context?.user ?? null
+    }
+  },
+})
+
+server.listen()
+```
+
+**示例：完全拒绝更新**
+
+```js
+import { Server } from '@hocuspocus/server'
+
+const server = new Server({
+  async beforeHandleAwareness({ context }) {
+    if (context?.readOnly) {
+      throw new Error('Awareness updates not allowed for read-only sessions')
+    }
+  },
+})
+
+server.listen()
+```
+
+### onAwarenessUpdate
+
+awareness 发生变化时会调用 `onAwarenessUpdate` 钩子（[Provider Awareness API](/hocuspocus/provider/events)）。
+
+**钩子载荷**
+
+传递给 `onAwarenessUpdate` 钩子的 `data` 具有以下属性：
+
+```js
+import { Awareness } from 'y-protocols/awareness'
+import type { Connection, TransactionOrigin } from '@hocuspocus/server'
+
+const data = {
+  document: Document,
+  documentName: string,
+  instance: Hocuspocus,
+  update: Uint8Array,
+  added: number[],
+  updated: number[],
+  removed: number[],
+  awareness: Awareness,
+  states: { clientId: number, [key: string | number]: any }[],
+  // Structured origin of the awareness update (since v4)
+  transactionOrigin: TransactionOrigin,
+  // Optional: the connection that triggered this update (since v4)
+  connection?: Connection,
+}
+```
+
+从 v4 开始，载荷已简化。连接专属字段（`context`、`requestHeaders`、`requestParameters`、`socketId`）已移除。如需访问这些字段，可通过可选的 `connection` 获取（例如 `connection?.context`）。
+
+**示例**
+
+```js
+const provider = new HocuspocusProvider({
+  url: "ws://127.0.0.1:1234",
+  name: "example-document",
+  document: ydoc,
+  onAwarenessUpdate: ({ states }) => {
+    currentStates = states;
+  },
+});
+```
+
+### onChange
+
+文档本身发生变化时会调用 `onChange` 钩子。它应返回一个 Promise。
+
+需要注意的是，每个文档只会调用一次此钩子。载荷中包含 `context` 和 `update`（见下文），因此你可以用它来响应特定连接所做的更改。
+
+强烈建议对开销较大的操作进行防抖，因为此钩子每秒可能触发多次。
+
+**钩子载荷**
+
+传递给 `onChange` 钩子的 `data` 具有以下属性：
+
+```js
+import { URLSearchParams } from "url";
+import { Doc } from "yjs";
+import type { TransactionOrigin } from "@hocuspocus/server";
+
+const data = {
+  clientsCount: number,
+  context: any,
+  document: Doc,
+  documentName: string,
+  instance: Hocuspocus,
+  requestHeaders: Headers,
+  requestParameters: URLSearchParams,
+  update: Uint8Array,
+  socketId: string,
+  // Structured origin (since v4) — use isTransactionOrigin() and switch on .source
+  transactionOrigin: TransactionOrigin,
+};
+```
+
+`context` 包含之前 `onConnect` 钩子提供的数据。
+
+**示例**
+
+:::warning 使用主存储
+以下示例不适合作为主存储，因为将数据序列化为 JSON 再反序列化，并不会保存协作历史步骤，只会保存最终文档。此示例仅用于存储应用视图所需的最终文档。有关主存储，请参阅 [Database 扩展](/hocuspocus/server/extensions/database)。
+:::
+
+```js
+import { debounce } from "debounce";
+import { Server } from "@hocuspocus/server";
+import { TiptapTransformer } from "@hocuspocus/transformer";
+import { writeFile } from "fs";
+
+let debounced;
+
+const server = new Server({
+  async onChange(data) {
+    const save = () => {
+      // Convert the y-doc to something you can actually use in your views.
+      // In this example we use the TiptapTransformer to get JSON from the given
+      // ydoc.
+      const prosemirrorJSON = TiptapTransformer.fromYdoc(data.document);
+
+      // Save your document. In a real-world app this could be a database query
+      // a webhook or something else
+      writeFile(`/path/to/your/documents/${data.documentName}.json`, prosemirrorJSON);
+
+      // Maybe you want to store the user who changed the document?
+      // Guess what, you have access to your custom context from the
+      // onConnect hook here. See authorization & authentication for more
+      // details
+      console.log(`Document ${data.documentName} changed by ${data.context.user.name}`);
+    };
+
+    debounced?.clear();
+    debounced = debounce(save, 4000);
+    debounced();
+  },
+});
+
+server.listen();
+```
+
+### onConfigure
+
+创建服务器后会调用 `onConfigure` 钩子。它应返回一个 Promise。
+
+**默认配置**
+
+如果从未调用 `configure()`，可以通过导入来获取默认配置：
+
+```js
+import { defaultConfiguration } from "@hocuspocus/server";
+```
+
+**钩子载荷**
+
+传递给 `onConfigure` 钩子的 `data` 具有以下属性：
+
+```js
+import { Configuration } from "@hocuspocus/server";
+
+const data = {
+  configuration: Configuration,
+  version: string,
+  instance: Hocuspocus,
+};
+```
+
+**示例**
+
+```js
+import { Server } from "@hocuspocus/server";
+
+const server = new Server({
+  async onConfigure(data) {
+    // Output some information
+    console.log(`Server was configured!`);
+  },
+});
+
+server.listen();
+```
+
+### onConnect
+
+建立新连接时会调用 `onConnect` 钩子。它应返回一个 Promise。抛出异常或拒绝 Promise 都会终止连接。
+
+**钩子载荷**
+
+传递给 `onConnect` 钩子的 `data` 具有以下属性：
+
+```js
+import { URLSearchParams } from "url";
+import { Doc } from "yjs";
+
+const data = {
+  documentName: string,
+  instance: Hocuspocus,
+  request: Request,
+  requestHeaders: Headers,
+  requestParameters: URLSearchParams,
+  socketId: string,
+  providerVersion: string | undefined,
+  connection: {
+    readOnly: boolean,
+  },
+};
+```
+
+**示例**
+
+```js
+import { Server } from "@hocuspocus/server";
+
+const server = new Server({
+  async onConnect(data) {
+    // Output some information
+    console.log(`New websocket connection`);
+  },
+});
+
+server.listen();
+```
+
+### onDestroy
+
+使用 [destroy](/hocuspocus/server/usage#server) 方法关闭服务器后，会调用 `onDestroy` 钩子。它应返回一个 Promise。
+
+**钩子载荷**
+
+传递给 `onDestroy` 钩子的 `data` 具有以下属性：
+
+```js
+const data = {
+  instance: Hocuspocus,
+};
+```
+
+**示例**
+
+```js
+import { Server } from "@hocuspocus/server";
+
+const server = new Server({
+  async onDestroy(data) {
+    // Output some information
+    console.log(`Server was shut down!`);
+  },
+});
+
+server.listen();
+```
+
+### onDisconnect
+
+连接终止时会调用 `onDisconnect` 钩子。它应返回一个 Promise。
+
+**钩子载荷**
+
+传递给 `onDisconnect` 钩子的 `data` 具有以下属性：
+
+```js
+import { URLSearchParams } from "url";
+import { Doc } from "yjs";
+
+const data = {
+  clientsCount: number,
+  context: any,
+  document: Document,
+  documentName: string,
+  instance: Hocuspocus,
+  requestHeaders: Headers,
+  requestParameters: URLSearchParams,
+  socketId: string,
+};
+```
+
+`context` 包含之前 `onConnect` 钩子提供的数据。
+
+**示例**
+
+```js
+import { Server } from "@hocuspocus/server";
+
+const server = new Server({
+  async onDisconnect(data) {
+    // Output some information
+    console.log(`"${data.context.user.name}" has disconnected.`);
+  },
+});
+
+server.listen();
+```
+
+### onListen
+
+服务器启动并开始接受连接后，会调用 `onListen` 钩子。它应返回一个 Promise。
+
+**钩子载荷**
+
+传递给 `onListen` 钩子的 `data` 具有以下属性：
+
+```js
+const data = {
+  port: number,
+};
+```
+
+**示例**
+
+```js
+import { Server } from "@hocuspocus/server";
+
+const server = new Server({
+  async onListen(data) {
+    // Output some information
+    console.log(`Server is listening on port "${data.port}"!`);
+  },
+});
+
+server.listen();
+```
+
+### onLoadDocument
+
+`onLoadDocument` 钩子会从你的存储中获取已有数据。你可能习惯在应用程序中加载 JSON/HTML 文档，但这不是 Y.js 的工作方式。为了让 Y.js 正常工作，我们需要保存更改历史。只有这样，才能合并来自多个来源的更改。
+
+你仍然可以存储 JSON/HTML 文档，但应该将它视为数据的“视图”，而不是数据源。
+
+**从 JSON/HTML 创建 Y.js 文档（一次性操作）**
+
+你可以根据现有数据（例如 JSON）创建 Y.js 文档。此方法仅应用于迁移数据，不应作为永久的数据存储方式。
+
+你可以使用 Transformer 包来完成这项工作。对于兼容 Tiptap 的 JSON，可以这样做：
+
+```js
+import { TiptapTransformer } from "@hocuspocus/transformer";
+import Document from "@tiptap/extension-document";
+import Paragraph from "@tiptap/extension-paragraph";
+import Text from "@tiptap/extension-text";
+
+const ydoc = TiptapTransformer.toYdoc(
+  // the actual JSON
+  json,
+  // the `field` you’re using in Tiptap. If you don’t know what that is, use 'default'.
+  "default",
+  // The Tiptap extensions you’re using. Those are important to create a valid schema.
+  [Document, Paragraph, Text]
+);
+```
+
+如果要导入 HTML，必须先将其[转换为兼容 Tiptap 的 JSON](/editor/api/utilities/html#generating-json-from-html)。
+
+不过，无论数据来自哪里，我们都要求你从 `onLoadDocument` 钩子返回一个 Y.js 文档（从 v4 开始，也可以返回原始的 `Uint8Array` Yjs 更新）。
+
+```js
+import { Server } from '@hocuspocus/server'
+
+const server = new Server({
+  async onLoadDocument(data) {
+    // fetch the Y.js document from somewhere
+    const ydoc = …
+
+    return ydoc
+  },
+})
+
+server.listen()
+```
+
+从 v4 开始，你也可以直接返回原始的 Yjs 更新 `Uint8Array`，这对存储扩展很方便：
+
+```js
+const server = new Server({
+  async onLoadDocument({ documentName }) {
+    const update = await loadUpdateFromStorage(documentName)
+    return update // Uint8Array
+  },
+})
+```
+
+**获取 Y.js 文档（推荐）**
+
+你可以通过多种方式将 Y.js 文档（及其历史记录）存储在任意位置。通常，你应该使用 `onStoreDocument` 钩子。对于发生变化的文档，该钩子会经过防抖处理，并每隔几秒执行一次。它会提供当前的 Y.js 文档，至于如何存储则由你决定。不用担心，我们提供了一些便捷的方案。
+
+如果你只想快速开始，可以查看用于本地开发的 [`SQLite`](/hocuspocus/server/extensions/sqlite) 扩展，以及便于获取和存储文档的通用 [`Database`](/hocuspocus/server/extensions/database) 扩展。
+
+**钩子载荷**
+
+传递给 `onLoadDocument` 钩子的 `data` 具有以下属性：
+
+```js
+import { Doc } from "yjs";
+
+const data = {
+  context: any,
+  document: Doc,
+  documentName: string,
+  instance: Hocuspocus,
+  requestHeaders: Headers,
+  requestParameters: URLSearchParams,
+  socketId: string,
+};
+```
+
+`context` 包含之前 `onConnect` 钩子提供的数据。
+
+### afterLoadDocument
+
+文档成功加载后会调用 `afterLoadDocument` 钩子。这与 `onLoadDocument` 钩子不同：后者属于文档创建过程的一部分，例如在数据库中找不到文档时可能会失败。
+
+由于只有所有 `onLoadDocument` 钩子都成功后才会运行 `afterLoadDocument`，因此此时可以确定服务器已将该文档视为打开状态。
+
+**钩子载荷**
+
+传递给 `afterLoadDocument` 钩子的 `data` 具有以下属性：
+
+```js
+import { Doc } from "yjs";
+
+const data = {
+  context: any,
+  document: Doc,
+  documentName: string,
+  instance: Hocuspocus,
+  requestHeaders: Headers,
+  requestParameters: URLSearchParams,
+  socketId: string,
+};
+```
+
+### onRequest
+
+Hocuspocus 内部的 HTTP 服务器收到新请求时会调用 `onRequest` 钩子。它应返回一个 Promise。如果抛出空异常或拒绝返回的 Promise，调用链中的后续钩子就不会运行，因此你可以自行响应请求。这与请求中间件的概念类似。
+
+如果你想在 Hocuspocus 使用的同一端口上创建自定义路由，此钩子就很有用。
+
+**钩子载荷**
+
+传递给 `onRequest` 钩子的 `data` 具有以下属性：
+
+```js
+import { IncomingMessage, ServerResponse } from "http";
+
+const data = {
+  request: IncomingMessage,
+  response: ServerResponse,
+  instance: Hocuspocus,
+};
+```
+
+**示例**
+
+```js
+import { Server } from "@hocuspocus/server";
+
+const server = new Server({
+  onRequest(data) {
+    return new Promise((resolve, reject) => {
+      const { request, response } = data;
+
+      // Check if the request hits your custom route
+      if (request.url?.split("/")[1] === "custom-route") {
+        // Respond with your custom content
+        response.writeHead(200, { "Content-Type": "text/plain" });
+        response.end("This is my custom response, yay!");
+
+        // Rejecting the promise will stop the chain and no further
+        // onRequest hooks are run
+        return reject();
+      }
+
+      resolve();
+    });
+  },
+});
+
+server.listen();
+```
+
+### onStoreDocument
+
+文档发生变化后（即 `onChange` 钩子之后）会调用 `onStoreDocument` 钩子，可用于将更改后的文档保存到持久化存储中。默认情况下，对 `onStoreDocument` 的调用会经过防抖处理（参见 `debounce` 和 `maxDebounce` 配置选项）。
+
+实现此功能最简单的方式是扩展 `extension-database` 并实现 `fetch()` 和 `store()` 方法，正如我们在 `extension-sqlite` 中所做的那样。你也可以直接通过钩子实现 `onStoreDocument`，只需确保像 `extension-database` 中那样应用或编码 yDoc 的状态。
+
+从 v4 开始，任何文档变化都会触发 `onStoreDocument`，不再仅限于源自 WebSocket 的变化。由于此钩子现在也可能由未绑定到特定连接的来源触发（例如直接连接、Redis 复制），其载荷也已重新设计。如果钩子抛出错误，为避免数据丢失，文档会保留在内存中并重试；关闭服务器时，`Server.destroy()` 会刷新所有待处理的防抖存储操作。
+
+如果你想针对某次本地变更跳过存储钩子，可以在打开直接连接时，在 `LocalTransactionOrigin` 上设置 `skipStoreHooks`。扩展也可以抛出 `SkipFurtherHooksError`（来自 `@hocuspocus/common`），以表明持久化已处理，并跳过剩余的钩子。
+
+**钩子载荷**
+
+传递给 `onStoreDocument` 钩子的 `data` 具有以下属性：
+
+```js
+import { Doc } from "yjs";
+import type { TransactionOrigin } from "@hocuspocus/server";
+
+const data = {
+  clientsCount: number,
+  document: Doc,
+  documentName: string,
+  instance: Hocuspocus,
+  // Context of the last connection that triggered the hook (was `context` in v3)
+  lastContext: any,
+  // Structured origin of the last transaction (was `transactionOrigin` in v3)
+  lastTransactionOrigin: TransactionOrigin,
+};
+```
+
+在 v3 中，此载荷还包含 `context`、`requestHeaders`、`requestParameters`、`socketId` 和 `transactionOrigin`。在 v4 中，这些字段已被移除或重命名——如需连接专属数据，可通过 `lastContext` 访问。
+
+### onUpgrade
+
+Hocuspocus 内部的 HTTP 服务器收到新的升级请求时会调用 `onUpgrade` 钩子。它应返回一个 Promise。如果抛出空异常或拒绝返回的 Promise，调用链中的后续钩子就不会运行，因此你可以自行响应请求并完成升级。这与请求中间件的概念类似。
+
+如果你想在 Hocuspocus 使用的同一端口上创建自定义 WebSocket 路由，此钩子就很有用。
+
+**钩子载荷**
+
+传递给 `onUpgrade` 钩子的 `data` 具有以下属性：
+
+```js
+import { IncomingMessage } from "http";
+import { Socket } from "net";
+
+const data = {
+  head: any,
+  request: IncomingMessage,
+  socket: Socket,
+  instance: Hocuspocus,
+};
+```
+
+**示例**
+
+```js
+import { Server } from "@hocuspocus/server";
+import WebSocket, { WebSocketServer } from "ws";
+
+const server = new Server({
+  onUpgrade(data) {
+    return new Promise((resolve, reject) => {
+      const { request, socket, head } = data;
+
+      // Check if the request hits your custom route
+      if (request.url?.split("/")[1] === "custom-route") {
+        // Create your own websocket server to upgrade the request, make
+        // sure noServer is set to true, because we're handling the upgrade
+        // ourselves
+        const websocketServer = new WebSocketServer({ noServer: true });
+        websocketServer.on("connection", (connection: WebSocket, request: IncomingMessage) => {
+          // Put your application logic here to respond to new connections
+          // and subscribe to incoming messages
+          console.log("A new connection to our websocket server!");
+        });
+
+        // Handle the upgrade request within your own websocket server
+        websocketServer.handleUpgrade(request, socket, head, (ws) => {
+          websocketServer.emit("connection", ws, request);
+        });
+
+        // Rejecting the promise will stop the chain and no further
+        // onUpgrade hooks are run
+        return reject();
+      }
+
+      resolve();
+    });
+  },
+});
+
+server.listen();
+```
+
+### onStateless
+
+服务器收到无状态消息后会调用 `onStateless` 钩子。它应返回一个 Promise。
+
+**钩子载荷**
+
+传递给 `onListen` 钩子的 `data` 具有以下属性：
+
+```js
+const data = {
+  connection: Connection,
+  documentName: string,
+  document: Document,
+  payload: string,
+}
+```
+
+**示例**
+
+```js
+import { Server } from '@hocuspocus/server'
+
+const server = new Server({
+  async onStateless({ payload, document, connection }) {
+    // Output some information
+    console.log(`Server has received a stateless message "${payload}"!`)
+    // Broadcast a stateless message to all connections based on document
+    document.broadcastStateless('This is a broadcast message.')
+    // Send a stateless message to a specific connection
+    connection.sendStateless('This is a specific message.')
+  },
+})
+
+server.listen()
+```
+
+### beforeSync
+
+处理同步消息之前会调用 `beforeSync` 钩子。如果你想检查即将应用到文档的同步消息，此钩子就很有用。
+请注意，此钩子**不是**异步的。
+
+**钩子载荷**
+
+```js
+const data = {
+  documentName: string,
+  document: Document,
+  // The y-protocols/sync message type
+  type: number,
+  // The payload of the y-protocols/sync message
+  payload: Uint8Array,
+}
+```
+
+**示例**
+
+```js
+import { Server } from '@hocuspocus/server'
+
+const server = new Server({
+  beforeSync({ payload, document, documentName, type }) {
+    console.log(`Server will handle a sync message: "${payload}"!`)
+  },
+})
+
+server.listen()
+```
+
+### beforeBroadcastStateless
+
+服务器广播无状态消息之前会调用 `beforeBroadcastStateless` 钩子。
+
+**钩子载荷**
+
+传递给 `beforeBroadcastStateless` 钩子的 `data` 具有以下属性：
+
+```js
+import { Doc } from 'yjs'
+
+const data = {
+  documentName: string,
+  document: Doc,
+  payload: string,
+}
+```
+
+**示例**
+
+```js
+import { Server } from '@hocuspocus/server'
+
+const server = new Server({
+  beforeBroadcastStateless({ payload }) {
+    console.log(`Server will broadcast a stateless message: "${payload}"!`)
+  },
+})
+
+server.listen()
+```
+
+### afterUnloadDocument
+
+服务器关闭文档后会调用 `afterUnloadDocument` 钩子。此时文档已被销毁，你无法再访问它，但可以通知所有订阅该文档的对象。
+
+**钩子载荷**
+
+传递给 `onDestroy` 钩子的 `data` 具有以下属性：
+
+```js
+const data = {
+  instance: Hocuspocus,
+  documentName: string,
+};
+```
+
+**示例**
+
+```js
+import { Server } from "@hocuspocus/server";
+
+const server = new Server({
+  async afterUnloadDocument(data) {
+    // Output some information
+    console.log(`Document ${data.documentName} was closed`);
+  },
+});
+
+server.listen();
+```
