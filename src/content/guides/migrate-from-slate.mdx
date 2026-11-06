@@ -1,24 +1,24 @@
 ---
 tags:
   - type: editor
-title: Migrate from Slate to Tiptap
+title: 从 Slate 迁移到 Tiptap
 meta:
-  title: Migrate from Slate | Tiptap Editor Docs
-  description: Learn how to migrate your existing Slate editor to Tiptap. Complete guide covering content migration, setup, and feature mapping.
-  category: Editor
+  title: 从 Slate 迁移 | Tiptap 编辑器文档
+  description: 了解如何将现有的 Slate 编辑器迁移到 Tiptap。本指南涵盖内容迁移、设置和功能映射。
+  category: 编辑器
 ---
 
 import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 
 <EnterpriseCalloutAuto variant="migration" renderMode="sidebar" disableWaitlist/>
 
-Tiptap is a popular Slate alternative and migrating from Slate to Tiptap is straightforward. This guide will help you transition from Slate's JSON structure to Tiptap's extension system.
+Tiptap 是广受欢迎的 Slate 替代方案，从 Slate 迁移到 Tiptap 非常简单。本指南将帮助你从 Slate 的 JSON 结构过渡到 Tiptap 的扩展系统。
 
-## Content migration
+## 内容迁移
 
-### HTML content compatibility
+### HTML 内容兼容性
 
-Slate uses a custom JSON structure that needs to be converted for Tiptap. You'll need to serialize your Slate content to HTML first:
+Slate 使用自定义 JSON 结构，需要转换后才能用于 Tiptap。你需要先将 Slate 内容序列化为 HTML：
 
 ```ts
 // Convert Slate JSON to HTML using Slate's serialization
@@ -60,7 +60,7 @@ const editor = new Editor({
 })
 ```
 
-For simpler Slate structures, you might be able to map directly to Tiptap's JSON format:
+对于较简单的 Slate 结构，你也可以尝试直接映射为 Tiptap 的 JSON 格式：
 
 ```ts
 // Example Slate to Tiptap JSON conversion
@@ -90,23 +90,23 @@ const editor = new Editor({
 })
 ```
 
-While HTML works perfectly, we recommend converting it to Tiptap's JSON format for better performance and readability. For batch conversion of existing content, use the [HTML utility](/editor/api/utilities/html) to convert HTML to JSON programmatically.
+虽然 HTML 完全可用，但我们建议将内容转换为 Tiptap 的 JSON 格式，以获得更好的性能和可读性。若要批量转换现有内容，请使用 [HTML 工具](/editor/api/utilities/html)以编程方式将 HTML 转换为 JSON。
 
-## Editor setup
+## 编辑器设置
 
-### Installation
+### 安装
 
-First, install Tiptap and its dependencies:
+首先，安装 Tiptap 及其依赖项：
 
 ```bash
 npm install @tiptap/core @tiptap/starter-kit
 ```
 
-Tiptap supports all modern frontend UI frameworks like React and Vue. Follow the framework-specific installation instructions in our [installation guides](/editor/getting-started/install).
+Tiptap 支持 React 和 Vue 等所有现代前端 UI 框架。请按照[安装指南](/editor/getting-started/install)中的框架专属说明进行安装。
 
-### Basic editor setup
+### 基本编辑器设置
 
-Replace your Slate editor with Tiptap:
+将 Slate 编辑器替换为 Tiptap：
 
 ```tsx
 // Slate (before)
@@ -133,32 +133,32 @@ const editor = new Editor({
 })
 ```
 
-## Extensions
+## 扩展
 
-### Understanding Tiptap's extension system
+### 了解 Tiptap 的扩展系统
 
-Tiptap uses a modular extension system that resembles Slate's plugin system. Each feature is an independent extension with clear APIs and configuration options.
+Tiptap 使用模块化扩展系统，与 Slate 的插件系统类似。每项功能都是独立的扩展，具有清晰的 API 和配置选项。
 
-The [StarterKit](/editor/extensions/functionality/starterkit) is a bundle of all the basic extensions, and you can add or remove other extensions as needed.
+[StarterKit](/editor/extensions/functionality/starterkit)包含所有基础扩展，你可以根据需要添加或移除其他扩展。
 
-Explore all available extensions in our [extensions guide](/editor/extensions/overview), or [create your own](/editor/extensions/custom-extensions) to support custom functionality and HTML elements.
+请查看[扩展指南](/editor/extensions/overview)了解所有可用扩展，或[创建自己的扩展](/editor/extensions/custom-extensions)以支持自定义功能和 HTML 元素。
 
-### Common Slate plugin equivalents
+### 常见 Slate 插件的对应项
 
-| Slate Concept    | Tiptap Extension                        | Notes                  |
+| Slate 概念 | Tiptap 扩展 | 说明 |
 | ---------------- | --------------------------------------- | ---------------------- |
-| Bold mark        | `Bold`                                  | Included in StarterKit |
-| Italic mark      | `Italic`                                | Included in StarterKit |
-| Underline mark   | `Underline`                             | Included in StarterKit |
-| Link mark        | `Link`                                  | Included in StarterKit |
-| Image block      | `Image`                                 | Available separately   |
-| List blocks      | `BulletList`, `OrderedList`, `ListItem` | Included in StarterKit |
-| Heading blocks   | `Heading`                               | Included in StarterKit |
-| Blockquote block | `Blockquote`                            | Included in StarterKit |
-| Code block       | `CodeBlock`                             | Included in StarterKit |
-| Table blocks     | `Table`                                 | Available separately   |
+| 粗体标记 | `Bold` | 包含在 StarterKit 中 |
+| 斜体标记 | `Italic` | 包含在 StarterKit 中 |
+| 下划线标记 | `Underline` | 包含在 StarterKit 中 |
+| 链接标记 | `Link` | 包含在 StarterKit 中 |
+| 图片块 | `Image` | 可单独使用 |
+| 列表块 | `BulletList`、`OrderedList`、`ListItem` | 包含在 StarterKit 中 |
+| 标题块 | `Heading` | 包含在 StarterKit 中 |
+| 引用块 | `Blockquote` | 包含在 StarterKit 中 |
+| 代码块 | `CodeBlock` | 包含在 StarterKit 中 |
+| 表格块 | `Table` | 可单独使用 |
 
-### Extension configuration
+### 配置扩展
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -186,15 +186,15 @@ const editor = new Editor({
 })
 ```
 
-### Custom extensions
+### 自定义扩展
 
-For Slate custom plugins, create custom Tiptap extensions. See our [custom extensions guide](/editor/extensions/custom-extensions) for detailed instructions.
+对于 Slate 自定义插件，可以创建 Tiptap 自定义扩展。详细说明请参阅[自定义扩展指南](/editor/extensions/custom-extensions)。
 
-## UI implementation
+## UI 实现
 
-### Toolbar implementation
+### 工具栏实现
 
-Slate's custom toolbar components translate to Tiptap UI components:
+Slate 的自定义工具栏组件可以转换为 Tiptap UI 组件：
 
 ```tsx
 // Slate toolbar (before)
@@ -245,16 +245,16 @@ function Toolbar({ editor }) {
 }
 ```
 
-### Pre-built UI components
+### 预构建 UI 组件
 
-For faster development, use Tiptap's pre-built UI components:
+如需加快开发进度，请使用 Tiptap 预构建的 UI 组件：
 
-- Explore our [UI components](/ui-components/getting-started/overview) for ready-to-use components
-- Check out practical examples in our [default text editor example](/examples/basics/default-text-editor)
+- 浏览我们的 [UI 组件](/ui-components/getting-started/overview)，获取可直接使用的组件
+- 查看[默认文本编辑器示例](/examples/basics/default-text-editor)中的实用示例
 
-### Hovering toolbar
+### 悬浮工具栏
 
-Replicate Slate's hovering toolbar using Tiptap's BubbleMenu:
+使用 Tiptap 的 BubbleMenu 复现 Slate 的悬浮工具栏：
 
 ```tsx
 import { BubbleMenu } from '@tiptap/react'
@@ -297,9 +297,9 @@ function MyEditor() {
 }
 ```
 
-### Node views (custom elements)
+### 节点视图（自定义元素）
 
-Slate's custom elements can be replaced with Tiptap's Node Views. Learn more about Node Views in our [official guide](/editor/extensions/custom-extensions/node-views)
+Slate 的自定义元素可以替换为 Tiptap 的节点视图。请参阅我们的[官方指南](/editor/extensions/custom-extensions/node-views)了解更多节点视图相关信息。
 
 ```tsx
 // Slate custom element (before)
@@ -329,26 +329,26 @@ const CustomImage = Node.create({
 })
 ```
 
-## Migration checklist
+## 迁移检查清单
 
 <Checklist>
-  <CheckboxItem>Install Tiptap packages</CheckboxItem>
-  <CheckboxItem>Convert Slate JSON content to HTML or Tiptap JSON</CheckboxItem>
-  <CheckboxItem>Replace Slate editor initialization with Tiptap setup</CheckboxItem>
-  <CheckboxItem>Map Slate plugins to Tiptap extensions</CheckboxItem>
-  <CheckboxItem>Migrate custom elements to [Node Views](/editor/extensions/custom-extensions/node-views)</CheckboxItem>
-  <CheckboxItem>Migrate toolbar components to Tiptap UI</CheckboxItem>
-  <CheckboxItem>Test content compatibility</CheckboxItem>
-  <CheckboxItem>Convert existing content to JSON format (recommended)</CheckboxItem>
-  <CheckboxItem>Implement custom extensions for any missing functionality</CheckboxItem>
-  <CheckboxItem>Update event handlers and API calls</CheckboxItem>
-  <CheckboxItem>Test hovering toolbar functionality</CheckboxItem>
-  <CheckboxItem>Verify custom element rendering</CheckboxItem>
+  <CheckboxItem>安装 Tiptap 软件包</CheckboxItem>
+  <CheckboxItem>将 Slate JSON 内容转换为 HTML 或 Tiptap JSON</CheckboxItem>
+  <CheckboxItem>将 Slate 编辑器初始化替换为 Tiptap 设置</CheckboxItem>
+  <CheckboxItem>将 Slate 插件映射为 Tiptap 扩展</CheckboxItem>
+  <CheckboxItem>将自定义元素迁移到[节点视图](/editor/extensions/custom-extensions/node-views)</CheckboxItem>
+  <CheckboxItem>将工具栏组件迁移到 Tiptap UI</CheckboxItem>
+  <CheckboxItem>测试内容兼容性</CheckboxItem>
+  <CheckboxItem>将现有内容转换为 JSON 格式（推荐）</CheckboxItem>
+  <CheckboxItem>为缺少的功能实现自定义扩展</CheckboxItem>
+  <CheckboxItem>更新事件处理程序和 API 调用</CheckboxItem>
+  <CheckboxItem>测试悬浮工具栏功能</CheckboxItem>
+  <CheckboxItem>验证自定义元素的渲染效果</CheckboxItem>
 </Checklist>
 
-## Next steps
+## 后续步骤
 
-- Explore the [extension overview](/editor/extensions/overview) to discover all available extensions
-- Learn about [custom extensions](/editor/extensions/custom-extensions) for advanced customization
-- Check out our [examples](/examples) for implementation inspiration
-- Review the [performance guide](/guides/performance) for optimization tips
+- 浏览[扩展概览](/editor/extensions/overview)，了解所有可用扩展
+- 了解[自定义扩展](/editor/extensions/custom-extensions)，进行高级定制
+- 查看我们的[示例](/examples)，获取实现灵感
+- 阅读[性能指南](/guides/performance)，了解优化技巧
