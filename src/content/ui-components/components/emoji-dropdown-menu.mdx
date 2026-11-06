@@ -1,12 +1,12 @@
 ---
-title: Emoji Dropdown Menu
+title: Emoji 下拉菜单
 meta:
-  title: Emoji Dropdown Menu | Tiptap UI Components
-  description: A searchable emoji picker for Tiptap editors triggered by colon with intelligent filtering, keyboard navigation, and fallback image support.
-  category: UI Components
+  title: Emoji 下拉菜单 | Tiptap UI 组件
+  description: 适用于 Tiptap 编辑器的可搜索表情选择器，输入冒号即可触发，支持智能筛选、键盘导航和备用图片。
+  category: UI 组件
 component:
-  name: Emoji Dropdown Menu
-  description: A prebuilt React component that provides emoji suggestions triggered by typing `:`.
+  name: Emoji 下拉菜单
+  description: 一个预构建的 React 组件，输入 `:` 即可触发表情建议。
   type: component
   isFree: false
   isCloud: false
@@ -19,25 +19,25 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A fully accessible emoji dropdown menu for Tiptap editors. Provides intelligent emoji suggestions as you type with the `:` trigger character, offering seamless emoji insertion with keyboard navigation support.
+一款完全无障碍的 Tiptap 编辑器表情下拉菜单。输入触发字符 `:` 时，它会智能提供表情建议，并支持通过键盘导航，无缝插入表情。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui/emoji-dropdown-menu" />
 
-## Installation
+## 安装
 
-Add the component via the Tiptap CLI:
+通过 Tiptap CLI 添加此组件：
 
 ```bash
 npx @tiptap/cli@latest add emoji-dropdown-menu
 ```
 
-## Components
+## 组件
 
 ### `<EmojiDropdownMenu />`
 
-A prebuilt React component that provides emoji suggestions triggered by typing `:`.
+一个预构建的 React 组件，输入 `:` 即可触发表情建议。
 
-#### Usage
+#### 用法
 
 ```tsx
 import * as React from 'react'
@@ -78,6 +78,6 @@ export const EmojiDropdownMenuExample = () => {
 }
 ```
 
-#### Props
+#### 属性
 
-The `EmojiDropdownMenu` inherits all props from [SuggestionMenuProps](/ui-components/utils-components/suggestion-menu#props).
+`EmojiDropdownMenu` 继承了 [SuggestionMenuProps](/ui-components/utils-components/suggestion-menu#props) 的所有属性。
