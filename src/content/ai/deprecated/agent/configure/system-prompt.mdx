@@ -1,16 +1,16 @@
 ---
-title: Customize the system prompt
+title: 自定义系统提示词
 meta:
-  title: Custom system prompt | Tiptap Content AI
-  description: Learn how to customize the system prompt for the AI agent when using it with Tiptap Cloud.
+  title: 自定义系统提示词 | Tiptap Content AI
+  description: 了解如何在 Tiptap Cloud 中自定义 AI 代理的系统提示词。
   category: Content AI
 ---
 
-Would you like to customize how your AI agent acts, writes and responds to users? Define a custom system prompt.
+想要自定义 AI 代理的行为、写作方式和用户交互方式吗？定义自定义系统提示词即可。
 
-## Usage with Tiptap Cloud
+## 在 Tiptap Cloud 中使用
 
-When using the AI Agent extension with Tiptap Cloud, use the `systemPrompt` option to set a custom system prompt for the AI agent.
+在 Tiptap Cloud 中使用 AI Agent 扩展时，可以通过 `systemPrompt` 选项为 AI 代理设置自定义系统提示词。
 
 ```ts
 const provider = new AiAgentProvider({
@@ -19,23 +19,23 @@ const provider = new AiAgentProvider({
 })
 ```
 
-This will **replace** the default system prompt that is used in Tiptap Cloud.
+这会**替换** Tiptap Cloud 中使用的默认系统提示词。
 
-## Usage with a custom AI agent
+## 与自定义 AI 代理搭配使用
 
-When using the AI Agent extension with a custom AI agent running in your backend, the way to customize the system prompt depends on the AI model provider you are using. Learn more in our [Custom AI agent integration guide](/ai/deprecated/agent/custom-llms/overview).
+如果 AI Agent 扩展使用的是运行在后端的自定义 AI 代理，自定义系统提示词的方式取决于你使用的 AI 模型提供商。了解详情，请参阅[自定义 AI 代理集成指南](/ai/deprecated/agent/custom-llms/overview)。
 
-## Support multiple AI agent types
+## 支持多种 AI 代理类型
 
-Thanks to system prompts, your app can support multiple types of AI Agents, each with their rules and personality. You can change the system prompt at any time by calling the `setSystemPrompt` method.
+借助系统提示词，应用可以支持多种 AI 代理类型，每种类型都有自己的规则和个性。你可以随时调用 `setSystemPrompt` 方法来更改系统提示词。
 
 ```ts
 provider.setSystemPrompt('You are an AI agent that edits rich text...')
 ```
 
-## Crafting a good system prompt
+## 编写优质的系统提示词
 
-Nailing the right system prompt can be hard. The `@tiptap-pro/extension-ai-agent-server` package provides a default system prompt that works out of the box with the AI agent. Use it as a starting point to build your custom system prompt.
+要编写出合适的系统提示词并非易事。`@tiptap-pro/extension-ai-agent-server` 包提供了一个开箱即用的默认系统提示词。你可以以此为基础，构建自己的自定义系统提示词。
 
 ```ts
 import { getDefaultSystemPrompt } from '@tiptap-pro/extension-ai-agent-server'
@@ -44,9 +44,9 @@ import { getDefaultSystemPrompt } from '@tiptap-pro/extension-ai-agent-server'
 console.log(getDefaultSystemPrompt())
 ```
 
-Prompt engineering techniques can help you obtain the desired behavior from the AI agent. To learn more, see these resources:
+提示工程技巧可以帮助你让 AI 代理实现预期行为。更多信息，请参阅以下资源：
 
-- [ChatGPT Prompt Engineering for Developers (course by DeepLearning.AI)](https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/)
-- [OpenAI prompt engineering guide](https://platform.openai.com/docs/guides/text)
-- [GPT-4.1 prompting guide](https://cookbook.openai.com/examples/gpt4-1_prompting_guide)
-- [Anthropic prompt engineering guide](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview)
+- [面向开发者的 ChatGPT 提示工程（DeepLearning.AI 课程）](https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/)
+- [OpenAI 提示工程指南](https://platform.openai.com/docs/guides/text)
+- [GPT-4.1 提示指南](https://cookbook.openai.com/examples/gpt4-1_prompting_guide)
+- [Anthropic 提示工程指南](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview)
