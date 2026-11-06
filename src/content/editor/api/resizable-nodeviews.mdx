@@ -1,69 +1,69 @@
 ---
-title: Resizable Node Views
+title: 可调整大小的节点视图
 meta:
-  title: Resizable Node Views | Tiptap Editor Docs
-  description: A small, framework-agnostic NodeView that wraps any HTMLElement and adds configurable resize handles.
-  category: Editor
+  title: 可调整大小的节点视图 | Tiptap 编辑器文档
+  description: 一个轻量、与框架无关的 NodeView，可包装任意 HTMLElement 并添加可配置的调整大小控点。
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A small, framework-agnostic NodeView that wraps any HTMLElement (image, iframe, video…) and adds configurable resize handles. It manages user interaction, applies min/max constraints, optionally preserves aspect ratio, and exposes callbacks for live updates and commits.
+这是一个轻量、与框架无关的 NodeView，可包装任意 HTMLElement（图像、iframe、视频等）并添加可配置的调整大小控点。它负责处理用户交互、应用最小值和最大值限制、按需保持宽高比，并提供用于实时更新和提交的回调。
 
 ---
 
-## What is a Resizable Node View?
+## 什么是可调整大小的节点视图？
 
-ResizableNodeView is a ProseMirror/Tiptap-compatible NodeView that:
+ResizableNodeView 是兼容 ProseMirror/Tiptap 的 NodeView，能够：
 
-- Wraps your element in a container + wrapper
-- Adds configurable resize handles (corners and edges)
-- Emits `onResize` continuously while dragging
-- Emits `onCommit` once when the user finishes resizing (use this to persist new attributes)
-- Supports min/max constraints, aspect-ratio locking (config / Shift key), and class customization
-- Adds a `data-resize-state` attribute and optional `resizing` css class while active
+- 将你的元素包裹在一个容器和一个包装器中
+- 添加可配置的调整大小控点（角和边）
+- 在拖动过程中持续触发 `onResize`
+- 在用户完成调整大小后触发一次 `onCommit`（可用它持久化新属性）
+- 支持最小值和最大值限制、宽高比锁定（配置项 / Shift 键）以及类名自定义
+- 激活时添加 `data-resize-state` 属性和可选的 `resizing` CSS 类
 
 ---
 
-## Options
+## 选项
 
-- `element: HTMLElement` — the element to make resizable (required)
-- `contentElement?: HTMLElement` — optional HTML node to use as contentElement (for contenteditable nodes)
-- `node: Node` — the ProseMirror node (required)
-- `getPos: () => number | undefined` — function that returns the node position (required to persist)
-- `onResize?: (width: number, height: number) => void` — optional, called continuously while dragging
-- `onCommit: (width: number, height: number) => void` — called once when the drag finishes
-- `onUpdate?: NodeView['update']` — optional node update handler
-- `options?: object` — optional configuration (see below)
+- `element: HTMLElement` — 要设置为可调整大小的元素（必填）
+- `contentElement?: HTMLElement` — 可选的 HTML 节点，用作 contentElement（适用于 contenteditable 节点）
+- `node: Node` — ProseMirror 节点（必填）
+- `getPos: () => number | undefined` — 返回节点位置的函数（持久化时必需）
+- `onResize?: (width: number, height: number) => void` — 可选，在拖动过程中持续调用
+- `onCommit: (width: number, height: number) => void` — 在拖动结束时调用一次
+- `onUpdate?: NodeView['update']` — 可选的节点更新处理函数
+- `options?: object` — 可选配置（见下文）
 
-### `options` properties:
+### `options` 属性：
 
 - `directions?: ResizableNodeViewDirection[]`
-  Default: `['bottom-left', 'bottom-right', 'top-left', 'top-right']`
-  Allowed: `'top' | 'right' | 'bottom' | 'left' | 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left'`
+  默认值：`['bottom-left', 'bottom-right', 'top-left', 'top-right']`
+  可选值：`'top' | 'right' | 'bottom' | 'left' | 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left'`
 
 - `min?: Partial<{ width: number; height: number; }>`
-  Default: `{ width: 8, height: 8 }` (pixels)
+  默认值：`{ width: 8, height: 8 }`（像素）
 
 - `max?: Partial<{ width: number; height: number; }>`
-  Default: `undefined` (no max)
+  默认值：`undefined`（无最大值限制）
 
 - `preserveAspectRatio?: boolean`
-  Default: `false`
-  When `true` always preserves aspect ratio. When `false`, pressing `Shift` while dragging temporarily preserves aspect ratio.
+  默认值：`false`
+  为 `true` 时始终保持宽高比。为 `false` 时，拖动期间按住 `Shift` 可临时保持宽高比。
 
 - `className?: { container?: string; wrapper?: string; handle?: string; resizing?: string }`
-  Optional class names applied to container, wrapper, each handle, and a class added while actively resizing.
+  可选的类名，分别应用于容器、包装器、每个控点，以及正在调整大小时添加的类名。
 
 ---
 
-## Callbacks
+## 回调
 
-- `onResize(width, height)`: update the element visually (style.width/height) while dragging.
-- `onCommit(width, height)`: persist final dimensions (e.g., `editor.commands.updateAttributes(...)`).
-- `onUpdate(node, decorations, innerDecorations)`: return `true` to accept updates or `false` to re-create the node view.
+- `onResize(width, height)`：拖动期间更新元素的视觉尺寸（`style.width/height`）。
+- `onCommit(width, height)`：持久化最终尺寸（例如 `editor.commands.updateAttributes(...)`）。
+- `onUpdate(node, decorations, innerDecorations)`：返回 `true` 接受更新，返回 `false` 则重新创建节点视图。
 
-Example pattern to persist sizes inside `onCommit`:
+在 `onCommit` 中持久化尺寸的示例：
 
 ```ts
 const pos = getPos()
@@ -72,9 +72,9 @@ if (pos !== undefined) {
 }
 ```
 
-## Usage example
+## 使用示例
 
-Minimal image extension node view:
+最简图像扩展节点视图：
 
 ```ts
 // inside addNodeView()
@@ -123,26 +123,26 @@ return ({ node, getPos, HTMLAttributes }) => {
 }
 ```
 
-### Notes:
+### 注意事项：
 
-- The class does not inject visual styles; supply CSS for `[data-resize-handle]`, `.is-resizing`, etc. (demos provide minimal styles).
-- Currently contentEditable nodes are not fully supported and won't resize their content.
-
----
-
-## Behavior details & edge cases
-
-- Aspect-ratio + constraints: when aspect ratio is preserved, constraints snap the dimension that hits a min/max first and compute the other dimension proportionally — the ratio is not broken.
-- Shift key: while resizing, pressing Shift toggles a temporary aspect-ratio lock (when `preserveAspectRatio` is `false`).
+- 此类不会注入视觉样式；请为 `[data-resize-handle]`、`.is-resizing` 等提供 CSS（示例提供了最简样式）。
+- 目前尚未完全支持 contentEditable 节点，调整大小时不会缩放其内容。
 
 ---
 
-## Examples
+## 行为细节与边缘情况
 
-### Resizable Images
+- 宽高比与限制：保持宽高比时，若某个尺寸先达到最小值或最大值，则会将该尺寸限制在边界内，并按比例计算另一个尺寸，因此不会破坏宽高比。
+- Shift 键：调整大小期间，按下 Shift 可切换临时的宽高比锁定（当 `preserveAspectRatio` 为 `false` 时）。
+
+---
+
+## 示例
+
+### 可调整大小的图像
 
 <CodeDemo path="/Examples/ResizableImages" />
 
-### Resizable Custom Nodes
+### 可调整大小的自定义节点
 
 <CodeDemo path="/Examples/ResizableNodes" />
