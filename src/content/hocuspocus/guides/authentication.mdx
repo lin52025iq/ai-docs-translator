@@ -1,19 +1,19 @@
 ---
-title: Authentication
+title: 身份验证
 meta:
-  title: Authentication | Hocuspocus Docs
+  title: 身份验证 | Hocuspocus 文档
   category: Hocuspocus
 ---
 
-## Introduction
+## 简介
 
-With the `onAuthenticate` hook you can check if a client is authenticated and authorized to view the current document. In a real world application this would probably be a request to an API, a database query or something else.
+通过 `onAuthenticate` 钩子，你可以检查客户端是否已通过身份验证，并有权查看当前文档。在实际应用中，这通常会涉及向 API 发起请求、查询数据库或执行其他操作。
 
-## Example
+## 示例
 
-When throwing an error or rejecting the returned Promise, the connection to the client will be terminated (see [server hooks lifecycle](/hocuspocus/server/hooks#lifecycle)). If the client is authorized and authenticated you can also return contextual data such as a user id which will be accessible in other hooks. But you don’t need to.
+如果抛出错误或返回被拒绝的 Promise，客户端连接将被终止（参见[服务器钩子生命周期](/hocuspocus/server/hooks#lifecycle)）。如果客户端已通过身份验证并获得授权，你也可以返回上下文数据，例如用户 ID，供其他钩子使用。不过，这并非必需。
 
-For more information on the hook and its payload, check out its [section](/hocuspocus/server/hooks#on-authenticate).
+有关此钩子及其负载的详细信息，请参阅对应的[章节](/hocuspocus/server/hooks#on-authenticate)。
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -22,12 +22,12 @@ const server = new Server({
   async onAuthenticate(data) {
     const { token } = data;
 
-    // Example test if a user is authenticated with a token passed from the client
+    // 示例：检查用户是否使用从客户端传来的令牌通过身份验证
     if (token !== "super-secret-token") {
       throw new Error("Not authorized!");
     }
 
-    // You can set contextual data to use it in other hooks
+    // 你可以设置上下文数据，供其他钩子使用
     return {
       user: {
         id: 1234,
@@ -40,7 +40,7 @@ const server = new Server({
 server.listen();
 ```
 
-On the client you would pass the "token" parameter as one of the Hocuspocus options, like so:
+在客户端，你可以将 `token` 参数作为 Hocuspocus 选项之一传入，如下所示：
 
 ```js
 new HocuspocusProvider({
@@ -51,10 +51,9 @@ new HocuspocusProvider({
 });
 ```
 
-## Read only mode
+## 只读模式
 
-If you want to restrict the current user only to read the document and its updates but not apply
-updates themselves, you can use the `connection` property in the `onAuthenticate` hooks payload:
+如果你希望限制当前用户只能读取文档及其更新，而不能应用更新，可以使用 `onAuthenticate` 钩子负载中的 `connection` 属性：
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -63,11 +62,10 @@ const usersWithWriteAccess = ["jane", "john", "christina"];
 
 const server = new Server({
   async onAuthenticate(data): Doc {
-    // Example code to check if the current user has write access by a
-    // request parameter. In a real world application you would probably
-    // get the user by a token from your database
+    // 示例代码：通过请求参数检查当前用户是否具有写入权限。在实际应用中，
+    // 通常会根据令牌从数据库中获取用户信息
     if (!usersWithWriteAccess.includes(data.requestParameters.get("user"))) {
-      // Set the connection to readonly
+      // 将连接设为只读
       data.connection.readOnly = true;
     }
   },
