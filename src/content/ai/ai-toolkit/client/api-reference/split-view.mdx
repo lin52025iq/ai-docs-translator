@@ -1,44 +1,44 @@
 ---
-title: Split view
+title: 分屏视图
 meta:
-  title: Split view API reference | Tiptap AI Toolkit
-  description: API reference for createSplitView and the SplitView instance methods.
+  title: 分屏视图 API 参考 | Tiptap AI Toolkit
+  description: createSplitView 和 SplitView 实例方法的 API 参考。
   category: AI Toolkit
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-This page is the API reference for `createSplitView` and the `SplitView` instance.
+本页介绍 `createSplitView` 和 `SplitView` 实例的 API。
 
-If you're new to the split view, start with the [split view guide](/ai/ai-toolkit/client/advanced-guides/split-view).
+如果你是第一次使用分屏视图，请先阅读[分屏视图指南](/ai/ai-toolkit/client/advanced-guides/split-view)。
 
 ## `createSplitView`
 
-Creates a split view instance that wires together three editors for side-by-side change review.
+创建一个分屏视图实例，将三个编辑器连接起来，以便并排审阅更改。
 
-Called on the AI Toolkit instance:
+在 AI Toolkit 实例上调用：
 
 ```ts
 const toolkit = getAiToolkit(mainEditor)
 const splitView = toolkit.createSplitView(options)
 ```
 
-### Parameters
+### 参数
 
-- `options` (`CreateSplitViewOptions`): Configuration for the split view
-  - `leftEditor` (`Editor`): The left panel editor (shows the original document). Must have `AiToolkit` installed.
-  - `rightEditor` (`Editor`): The right panel editor (shows the modified document). Must have `AiToolkit` installed.
-  - `leftContainer?` (`HTMLElement`): Scroll container for the left panel. When provided together with `rightContainer`, enables automatic scroll synchronization.
-  - `rightContainer?` (`HTMLElement`): Scroll container for the right panel. When provided together with `leftContainer`, enables automatic scroll synchronization.
-  - `diffOptions?` (`SplitViewDiffOptions`): Options for the internal diff algorithm
-    - `mode?` (`'smart' | 'inline' | 'block'`): Diff algorithm mode. Defaults to `'smart'`.
-    - `groupInlineChanges?` (`number`): Threshold for grouping inline changes into block-level changes. Defaults to `0`.
+- `options` (`CreateSplitViewOptions`)：分屏视图配置
+  - `leftEditor` (`Editor`)：左侧面板的编辑器（显示原始文档）。必须已安装 `AiToolkit`。
+  - `rightEditor` (`Editor`)：右侧面板的编辑器（显示修改后的文档）。必须已安装 `AiToolkit`。
+  - `leftContainer?` (`HTMLElement`)：左侧面板的滚动容器。与 `rightContainer` 一起提供时，将启用自动滚动同步。
+  - `rightContainer?` (`HTMLElement`)：右侧面板的滚动容器。与 `leftContainer` 一起提供时，将启用自动滚动同步。
+  - `diffOptions?` (`SplitViewDiffOptions`)：内部差异算法的选项
+    - `mode?` (`'smart' | 'inline' | 'block'`)：差异算法模式。默认为 `'smart'`。
+    - `groupInlineChanges?` (`number`)：将行内更改合并为块级更改的阈值。默认为 `0`。
 
-### Returns (`SplitView`)
+### 返回值（`SplitView`）
 
-Returns a `SplitView` instance. See the [SplitView methods](#splitview-methods) section below.
+返回一个 `SplitView` 实例。请参阅下文的 [SplitView 方法](#splitview-methods)部分。
 
-### Example
+### 示例
 
 ```ts
 import { getAiToolkit } from '@tiptap-pro/client-ai-toolkit'
@@ -51,13 +51,13 @@ const splitView = getAiToolkit(mainEditor).createSplitView({
 })
 ```
 
-## `SplitView` methods
+## `SplitView` 方法
 
 ### `sync`
 
-Recomputes the diff from the main editor's tracked changes and updates both panels. Loads the before/after snapshots into the left and right editors, then renders highlight decorations and spacers.
+根据主编辑器中跟踪的更改重新计算差异，并更新两个面板。将更改前后的快照加载到左右编辑器中，然后渲染高亮装饰和间隔元素。
 
-Call this whenever the main editor's tracked changes have changed (for example after a new AI suggestion is applied).
+每当主编辑器中跟踪的更改发生变化时，都应调用此方法（例如，应用新的 AI 建议后）。
 
 ```ts
 splitView.sync()
@@ -65,18 +65,18 @@ splitView.sync()
 
 ### `getEntries`
 
-Returns the current list of diff entries computed by the last `sync()` call.
+返回上次调用 `sync()` 时计算出的当前差异条目列表。
 
 ```ts
 const entries = splitView.getEntries()
 // SplitDiffEntry[]
 ```
 
-See [`SplitDiffEntry`](#splitdiffentry) for the shape of each entry.
+每个条目的结构请参阅 [`SplitDiffEntry`](#splitdiffentry)。
 
 ### `acceptEntry`
 
-Accepts a single diff entry by applying its underlying tracked change to the main editor, then re-syncs.
+通过将某个差异条目对应的跟踪更改应用到主编辑器来接受该条目，然后重新同步。
 
 ```ts
 const accepted = splitView.acceptEntry('diff-tc-abc123')
@@ -85,7 +85,7 @@ const accepted = splitView.acceptEntry('diff-tc-abc123')
 
 ### `rejectEntry`
 
-Rejects a single diff entry by reverting its underlying tracked change in the main editor, then re-syncs.
+通过还原主编辑器中某个差异条目对应的跟踪更改来拒绝该条目，然后重新同步。
 
 ```ts
 const rejected = splitView.rejectEntry('diff-tc-abc123')
@@ -94,7 +94,7 @@ const rejected = splitView.rejectEntry('diff-tc-abc123')
 
 ### `acceptAll`
 
-Accepts all remaining tracked changes at once, then re-syncs.
+一次性接受所有剩余的跟踪更改，然后重新同步。
 
 ```ts
 splitView.acceptAll()
@@ -102,7 +102,7 @@ splitView.acceptAll()
 
 ### `rejectAll`
 
-Rejects all remaining tracked changes at once, then re-syncs.
+一次性拒绝所有剩余的跟踪更改，然后重新同步。
 
 ```ts
 splitView.rejectAll()
@@ -110,7 +110,7 @@ splitView.rejectAll()
 
 ### `setHighlight`
 
-Sets the highlighted diff entry ID for cross-editor hover highlighting. This is called automatically by the built-in hover listeners when `data-diff-id` elements are hovered. Only use this if you are implementing custom hover logic.
+设置高亮显示的差异条目 ID，以便在编辑器之间同步悬停高亮。内置悬停监听器在鼠标悬停于带有 `data-diff-id` 的元素时会自动调用此方法。仅在实现自定义悬停逻辑时使用此方法。
 
 ```ts
 splitView.setHighlight('diff-tc-abc123') // highlight an entry
@@ -119,7 +119,7 @@ splitView.setHighlight(null)             // clear highlight
 
 ### `on` / `off`
 
-Registers or removes an event listener.
+注册或移除事件监听器。
 
 ```ts
 const handler = (entries) => {
@@ -131,29 +131,29 @@ splitView.on('sync', handler)
 splitView.off('sync', handler)
 ```
 
-Currently supported events:
+当前支持的事件：
 
-| Event | Payload | Description |
+| 事件 | 负载 | 说明 |
 |---|---|---|
-| `sync` | `SplitDiffEntry[]` | Fires after each sync with the updated list of entries |
+| `sync` | `SplitDiffEntry[]` | 每次同步后触发，并传入更新后的条目列表 |
 
 ### `destroy`
 
-Tears down the instance: cancels any pending animation frames, clears all decorations from both editors, and removes all event listeners.
+销毁实例：取消所有待处理的动画帧、清除两个编辑器中的所有装饰，并移除所有事件监听器。
 
 ```ts
 splitView.destroy()
 ```
 
-Always call `destroy()` when the split view is no longer needed (for example on component unmount).
+不再需要分屏视图时（例如组件卸载时），务必调用 `destroy()`。
 
 ## `SplitDiffEntry`
 
-Each entry in the list returned by `getEntries()` has the following shape:
+`getEntries()` 返回的列表中，每个条目的结构如下：
 
 ```ts
 interface SplitDiffEntry {
-  /** Unique identifier, e.g. `"diff-tc-abc123"` */
+  /** Unique identifier, e.g. "diff-tc-abc123" */
   id: string
 
   /** Range of this change in the left (original) document */
@@ -170,19 +170,19 @@ interface SplitDiffEntry {
 }
 ```
 
-## CSS decoration classes
+## CSS 装饰类
 
-The split view applies the following CSS classes to the editor DOM. You must define styles for these classes in your own stylesheet.
+分屏视图会向编辑器 DOM 应用以下 CSS 类。你必须在自己的样式表中为这些类定义样式。
 
-| Class | Applied to | Description |
+| 类 | 应用对象 | 说明 |
 |---|---|---|
-| `split-diff-deletion` | Left editor | Highlights blocks that were deleted or modified |
-| `split-diff-insertion` | Right editor | Highlights blocks that were added or modified |
-| `split-diff-highlight` | Both editors | Added alongside deletion/insertion on the currently hovered entry |
-| `split-diff-spacer` | Both editors | Widget elements that maintain vertical alignment between panels |
+| `split-diff-deletion` | 左侧编辑器 | 高亮显示已删除或已修改的块 |
+| `split-diff-insertion` | 右侧编辑器 | 高亮显示已添加或已修改的块 |
+| `split-diff-highlight` | 两个编辑器 | 添加到当前悬停条目的删除/插入类旁边 |
+| `split-diff-spacer` | 两个编辑器 | 用于保持两个面板垂直对齐的部件元素 |
 
-All decorated elements include a `data-diff-id` attribute set to the entry ID, which you can use for custom click and hover handling.
+所有添加了装饰的元素都包含一个 `data-diff-id` 属性，其值为条目 ID，可用于自定义点击和悬停处理。
 
-<Callout title="Do not override spacer margins">
-  The split view sets `margin: 0` on each spacer element via inline style. Overriding this in CSS will break vertical alignment because the spacer height already accounts for the full visual gap including surrounding block margins.
+<Callout title="请勿覆盖间隔元素的外边距">
+  分屏视图会通过内联样式将每个间隔元素的 `margin` 设为 `0`。在 CSS 中覆盖此设置会破坏垂直对齐，因为间隔元素的高度已计入周围块级元素外边距在内的全部视觉间距。
 </Callout>
