@@ -1,45 +1,45 @@
 ---
-title: Integrate Comments into your app
+title: 将评论集成到你的应用中
 tags:
   - type: beginStart
-    tooltip: Comments work on the Start plan. Webhooks and REST API require the Team plan.
+    tooltip: 评论功能适用于 Start 套餐。Webhook 和 REST API 需要 Team 套餐。
 meta:
-  title: Comments | Tiptap Comments Docs
-  description: Use the comments extension in Tiptap to add and manage comments in your Editor or via the REST API or Webhooks. More in the docs!
-  category: Comments
+  title: 评论 | Tiptap 评论文档
+  description: 使用 Tiptap 的评论扩展，在编辑器中或通过 REST API、Webhook 添加和管理评论。更多信息请参阅文档！
+  category: 评论
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 import { Requirements, RequirementItem } from '@/components/Requirements'
 
-The `Comments` extension lets users create threads and comments in the editor. Threads can be used to discuss specific parts of the document, while individual comments can be added to particular sections.
+`Comments` 扩展支持用户在编辑器中创建讨论串和评论。讨论串可用于讨论文档的特定部分，也可以在特定章节添加单条评论。
 
-Comments can be accessed and manipulated through the [Comments REST API](/comments/integrate/rest-api) or received via [webhooks](/comments/integrate/webhook), enabling the creation of notification systems and the ability to add comments from outside the Editor.
+你可以通过 [Comments REST API](/comments/integrate/rest-api) 访问和管理评论，也可以通过 [webhooks](/comments/integrate/webhook) 接收评论，从而创建通知系统，并支持从编辑器外部添加评论。
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 开启试用或订阅">
+        在你的账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 套餐](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Start Document server">
-        To store Comments [Add an Environment](https://cloud.tiptap.dev/v2/configuration/document-server) in your dashboard and configure your [Document server](https://cloud.tiptap.dev/v2/configuration/document-server).
+    <RequirementItem label="2. 启动文档服务器">
+        若要存储评论，请在控制面板中[添加环境](https://cloud.tiptap.dev/v2/configuration/document-server)，并配置[文档服务器](https://cloud.tiptap.dev/v2/configuration/document-server)。
     </RequirementItem>
-    <RequirementItem label="3. Install from private registry">
-        To install this extension, authenticate to Tiptap’s private npm registry by following the [setup guide](/guides/pro-extensions).
+    <RequirementItem label="3. 从私有注册表安装">
+        若要安装此扩展，请按照[设置指南](/guides/pro-extensions)对 Tiptap 的私有 npm 注册表进行身份验证。
     </RequirementItem>
 </Requirements>
 
 <CodeDemo isPro path="/Extensions/Comments?inline=false&hideSource=false" />
-For simpler use cases, start with the [install](/comments/getting-started/install) section.
+对于较简单的使用场景，请先参阅[安装](/comments/getting-started/install)部分。
 
-## Comments features
+## 评论功能
 
-- Add inline, document, or sidebar comments
-- Comments on text, nodes, custom nodes, or across a selection of nodes
-- Rich text support within comments (e.g., bold, emojis)
-- Resolve, edit, or delete comments
-- Offline commenting support
-- Handle overlapping comments
-- Mention users directly within comments
-- Webhooks to  trigger custom notifications services when users are mentioned
-- Programmatically manage comments using the Comments API
+- 添加行内评论、文档评论或侧边栏评论
+- 对文本、节点、自定义节点或多个选定节点进行评论
+- 支持在评论中使用富文本（例如粗体、表情符号）
+- 解决、编辑或删除评论
+- 支持离线评论
+- 处理重叠评论
+- 直接在评论中提及用户
+- 当用户被提及时，通过 Webhook 触发自定义通知服务
+- 使用 Comments API 以编程方式管理评论
