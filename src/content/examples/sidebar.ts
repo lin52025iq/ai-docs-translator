@@ -3,58 +3,58 @@ import { SidebarConfig } from '@/types'
 export const sidebarConfig: SidebarConfig = {
   id: 'examples',
   rootHref: '/examples',
-  title: 'Examples',
+  title: '示例',
   items: [
     {
       type: 'group',
-      title: 'Get started',
+      title: '入门',
       href: '/examples',
       children: [
         {
           href: '/examples',
-          title: 'Overview',
+          title: '概览',
         },
       ],
     },
     {
       type: 'group',
       href: '',
-      title: 'Basics',
+      title: '基础',
       children: [
         {
-          title: 'Default text editor',
+          title: '默认文本编辑器',
           href: '/examples/basics/default-text-editor',
         },
         {
-          title: 'Formatting',
+          title: '格式设置',
           href: '/examples/basics/formatting',
         },
         {
-          title: 'Images',
+          title: '图片',
           href: '/examples/basics/images',
         },
         {
-          title: 'Long texts',
+          title: '长文本',
           href: '/examples/basics/long-texts',
         },
         {
-          title: 'Markdown shortcuts',
+          title: 'Markdown 快捷键',
           href: '/examples/basics/markdown-shortcuts',
         },
         {
-          title: 'Minimal setup',
+          title: '最简配置',
           href: '/examples/basics/minimal-setup',
         },
         {
-          title: 'Tables',
+          title: '表格',
           href: '/examples/basics/tables',
         },
         {
-          title: 'Tasks',
+          title: '任务',
           href: '/examples/basics/tasks',
         },
         {
-          title: 'Text direction & RTL support',
+          title: '文本方向与 RTL 支持',
           href: '/examples/basics/text-direction',
         },
       ],
@@ -62,42 +62,42 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '',
-      title: 'Advanced',
+      title: '高级',
       children: [
         {
-          title: 'Clever editor',
+          title: '智能编辑器',
           href: '/examples/advanced/clever-editor',
         },
         {
-          title: 'Collaborative editing',
+          title: '协同编辑',
           href: '/examples/advanced/collaborative-editing',
         },
         {
-          title: 'Drawing',
+          title: '绘图',
           href: '/examples/advanced/drawing',
         },
         {
-          title: 'Forced content structure',
+          title: '强制内容结构',
           href: '/examples/advanced/forced-content-structure',
         },
         {
-          title: 'Interactive React & Vue views',
+          title: '交互式 React 和 Vue 视图',
           href: '/examples/advanced/interactive-react-and-vue-views',
         },
         {
-          title: 'React performance',
+          title: 'React 性能',
           href: '/examples/advanced/react-performance',
         },
         {
-          title: 'Menus',
+          title: '菜单',
           href: '/examples/advanced/menus',
         },
         {
-          title: 'Mentions',
+          title: '提及',
           href: '/examples/advanced/mentions',
         },
         {
-          title: 'Syntax highlighting',
+          title: '语法高亮',
           href: '/examples/advanced/syntax-highlighting',
         },
       ],
@@ -105,18 +105,18 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '',
-      title: 'Experiments',
+      title: '实验',
       children: [
         {
-          title: 'Collaborative fields',
+          title: '协作字段',
           href: '/examples/experiments/collaborative-fields',
         },
         {
-          title: 'Figure',
+          title: '图形',
           href: '/examples/experiments/figure',
         },
         {
-          title: 'Generic figure',
+          title: '通用图形',
           href: '/examples/experiments/generic-figure',
         },
         {
@@ -124,11 +124,11 @@ export const sidebarConfig: SidebarConfig = {
           href: '/examples/experiments/iframe',
         },
         {
-          title: 'Linting',
+          title: '代码检查',
           href: '/examples/experiments/linting',
         },
         {
-          title: 'Slash commands',
+          title: '斜杠命令',
           href: '/examples/experiments/slash-commands',
         },
       ],
