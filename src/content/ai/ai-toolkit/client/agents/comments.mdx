@@ -1,8 +1,8 @@
 ---
-title: Add comments with the AI Toolkit
+title: 使用 AI Toolkit 添加评论
 meta:
-  title: Add comments with the AI Toolkit | Tiptap AI Toolkit
-  description: Give your AI agents the ability to read, write and edit comments in your documents.
+  title: 使用 AI Toolkit 添加评论 | Tiptap AI Toolkit
+  description: 赋予 AI 代理在文档中读取、撰写和编辑评论的能力。
   category: AI Toolkit
 sidebars:
   hideSecondary: true
@@ -10,25 +10,25 @@ sidebars:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-Give your AI agents the ability to read, write and edit comments in your document.
+赋予 AI 代理在文档中读取、撰写和编辑评论的能力。
 
 <CodeDemo isLarge path="" isScrollable src="https://ai-toolkit-demos.vercel.app/comments" />
 
-See the [source code on GitHub](https://github.com/ueberdosis/ai-toolkit-demos).
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
 
-## Initial setup
+## 初始设置
 
-First, build a Tiptap Editor with comments by following the [comments guide](/comments/getting-started/overview).
+首先，按照[评论指南](/comments/getting-started/overview)创建一个带有评论功能的 Tiptap 编辑器。
 
-## API endpoint
+## API 端点
 
-Create an API endpoint that calls the AI model. In our example, we build the API endpoint with the [Next.js framework](https://nextjs.org/), and use the [AI SDK by Vercel](https://ai-sdk.dev/) to call the AI model.
+创建一个调用 AI 模型的 API 端点。在本例中，我们使用 [Next.js 框架](https://nextjs.org/)构建 API 端点，并使用 [Vercel AI SDK](https://ai-sdk.dev/)调用 AI 模型。
 
-If your backend is in another programming language than TypeScript, see [this guide](/ai/ai-toolkit/client/advanced-guides/non-typescript-backends).
+如果你的后端使用的编程语言不是 TypeScript，请参阅[本指南](/ai/ai-toolkit/client/advanced-guides/non-typescript-backends)。
 
-Provide the [tool definitions](/ai/ai-toolkit/client/agents/tools/ai-sdk) for the Tiptap AI Toolkit. Enable the `getThreads` and `editThreads` tools so that the AI agent can read and edit comments in your document.
+为 Tiptap AI Toolkit 提供[工具定义](/ai/ai-toolkit/client/agents/tools/ai-sdk)。启用 `getThreads` 和 `editThreads` 工具，让 AI 代理能够读取和编辑文档中的评论。
 
-Optionally, you can disable the `tiptapEdit` tool to prevent the AI from making changes to the document.
+你也可以禁用 `tiptapEdit` 工具，以防止 AI 修改文档。
 
 ```ts
 // app/api/chat/route.ts
@@ -44,10 +44,10 @@ export async function POST(req: Request) {
     instructions: 'You are an assistant that can add comments to a rich text document.',
     tools: toolDefinitions({
       tools: {
-        // Enable the tools for reading and editing comments
+        // 启用用于读取和编辑评论的工具
         getThreads: true,
         editThreads: true,
-        // (Optional) Prevent the AI from making changes to the document
+        // （可选）阻止 AI 修改文档
         tiptapEdit: false,
       },
     }),
@@ -60,16 +60,16 @@ export async function POST(req: Request) {
 }
 ```
 
-## Client-side setup
+## 客户端设置
 
-In your frontend, create a React component that renders a chatbot UI. This component leverages the [useChat hook](https://ai-sdk.dev/docs/reference/ai-sdk-ui/use-chat) from the Vercel AI SDK to call the API endpoint and manage the chat conversation.
+在前端创建一个用于呈现聊天机器人界面的 React 组件。该组件使用 Vercel AI SDK 的 [useChat hook](https://ai-sdk.dev/docs/reference/ai-sdk-ui/use-chat) 调用 API 端点并管理聊天对话。
 
-When the AI model outputs a tool call, it uses the Tiptap AI Toolkit to execute the tool:
+当 AI 模型输出工具调用时，它会使用 Tiptap AI Toolkit 来执行工具：
 
-- If the tool is the `getThreads` tool, it will read the comments in the document.
-- If the tool is the `editThreads` tool, it will edit the comments in the document.
+- 如果调用的是 `getThreads` 工具，它会读取文档中的评论。
+- 如果调用的是 `editThreads` 工具，它会编辑文档中的评论。
 
-Here's an example of how to implement this:
+以下示例展示了如何实现：
 
 ```tsx
 import { useChat } from '@ai-sdk/react'
@@ -90,7 +90,7 @@ export function CommentsAiChatbot({ editor }) {
 
       const { toolName, input, toolCallId } = toolCall
 
-      // Use the AI Toolkit to execute the tool
+      // 使用 AI Toolkit 执行工具
       const toolkit = getAiToolkit(editor)
       const result = toolkit.executeTool({
         toolName,
@@ -128,34 +128,34 @@ export function CommentsAiChatbot({ editor }) {
 }
 ```
 
-## End result
+## 最终效果
 
-With additional CSS styles, the result is a simple but polished AI chatbot application:
+添加一些 CSS 样式后，就能得到一个简单而精致的 AI 聊天机器人应用：
 
 <CodeDemo isLarge path="" isScrollable src="https://ai-toolkit-demos.vercel.app/comments" />
 
-See the [source code on GitHub](https://github.com/ueberdosis/ai-toolkit-demos).
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
 
-## Customize the AI agent's behaviour
+## 自定义 AI 代理的行为
 
-You can influence the commenting behaviour of the AI agent by providing a custom system prompt. For example, the AI can be instructed to add comments in a specific style or format.
+你可以通过提供自定义系统提示词来影响 AI 代理撰写评论的方式。例如，可以指示 AI 按特定风格或格式添加评论。
 
 ```
 You are an assistant that can add comments to a rich text document. The content of the comments should always be in Markdown format.
 ```
 
-The AI can also be instructed to perform specific actions. Thanks to the [tool definitions](/ai/ai-toolkit/client/agents/tools), the AI understands the concepts of threads, comments, resolved threads, and replies.
+你也可以指示 AI 执行特定操作。借助[工具定义](/ai/ai-toolkit/client/agents/tools)，AI 能够理解线程、评论、已解决的线程和回复等概念。
 
 ```
 Never resolve threads, even if the user asks you to. Only users can resolve threads by clicking on the resolve button.
 ```
 
-Learn more about prompt engineering in the [AI engineering guide](/ai/ai-toolkit/client/advanced-guides/ai-engineering).
+如需了解有关提示词工程的更多信息，请参阅 [AI 工程指南](/ai/ai-toolkit/client/advanced-guides/ai-engineering)。
 
-## Combine comments with tracked changes
+## 将评论与修订跟踪结合使用
 
-Want to make document edits and associate them with comments? See the [tracked changes with comments guide](/ai/ai-toolkit/client/agents/review-changes/tracked-changes-with-comments) to learn how to combine AI-generated tracked changes with comment threads that explain each change.
+想要修改文档并将修改与评论关联起来？请参阅[结合评论使用修订跟踪指南](/ai/ai-toolkit/client/agents/review-changes/tracked-changes-with-comments)，了解如何将 AI 生成的修订与解释每项修改的评论线程结合起来。
 
-## Roadmap
+## 路线图
 
-In future releases, we aim to support streaming comments into the editor, to allow for a faster user experience. We are also exploring ways to improve token usage, speed, and developer experience.
+未来版本中，我们计划支持将评论流式传输到编辑器，以提供更快的用户体验。我们也在探索如何改进 token 使用效率、速度和开发者体验。
