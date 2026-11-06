@@ -3,8 +3,8 @@ title: 'PageKit'
 tags:
   - type: alpha
 meta:
-  title: PageKit usage | Tiptap Pages Docs
-  description: Learn how to use the PageKit extension to quickly add Pages and Table support to your editor.
+  title: PageKit 用法 | Tiptap Pages 文档
+  description: 了解如何使用 PageKit 扩展，快速为编辑器添加 Pages 和表格支持。
   category: Pages
 sidebars:
   hideSecondary: true
@@ -13,22 +13,22 @@ sidebars:
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-PageKit is a convenience extension that wraps `Pages`, the pagination-safe `TableKit`, and `PageBreak` in a single registration so you can configure them under one roof. By default, **only Pages and PageBreak are registered**. `TableKit` is opt-in: pass any options object (e.g. `table: {}`) to enable it. PageKit does **not** include `ConvertKit`; ConvertKit is a separate package install that you pair with PageKit.
+PageKit 是一个便捷扩展，它将 `Pages`、支持分页的 `TableKit` 和 `PageBreak` 封装在一起，只需注册一次即可统一配置。默认情况下，**仅注册 Pages 和 PageBreak**。`TableKit` 需要主动启用：传入任意选项对象（例如 `table: {}`）即可启用。PageKit **不包含** `ConvertKit`；ConvertKit 是需要单独安装、与 PageKit 配合使用的程序包。
 
 <CodeDemo isPro path="/Extensions/PagesPageKit" />
 
 ---
 
-## 1. Install ConvertKit and PageKit
+## 1. 安装 ConvertKit 和 PageKit
 
-PageKit bundles three Pages-related extensions, but you still need `ConvertKit` separately for the editor's node and mark schema.
+PageKit 捆绑了三个与 Pages 相关的扩展，但你仍需单独安装 `ConvertKit`，以提供编辑器的节点和标记 schema。
 
 ```bash
 npm install @tiptap-pro/extension-convert-kit \
             @tiptap-pro/extension-pages-pagekit
 ```
 
-## 2. Add ConvertKit and PageKit to your editor
+## 2. 将 ConvertKit 和 PageKit 添加到编辑器
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -41,54 +41,54 @@ const editor = new Editor({
     PageKit.configure({
       pages: {
         pageFormat: 'A4',
-        header: 'My Project',
-        footer: 'Page {page} of {total}',
+        header: '我的项目',
+        footer: '第 {page} 页，共 {total} 页',
       },
       table: {
-        // Enables PageKit's bundled TableKit. Pass `{}` for defaults, or forward
-        // TableKitOptions here. Without this key (or `false`), tables are not registered.
-        table: { resizable: true }, // forwarded to the underlying Table extension
+        // 启用 PageKit 捆绑的 TableKit。传入 `{}` 使用默认值，或在此传入 TableKitOptions。
+        // 不设置此键（或设为 `false`）时，不会注册表格。
+        table: { resizable: true }, // 传递给底层的 Table 扩展
       },
       pagebreak: {
-        // Forwarded to PageBreak (optional)
-        label: 'Page break',
+        // 传递给 PageBreak（可选）
+        label: '分页符',
       },
     }),
   ],
 })
 ```
 
-<Callout title="Why ConvertKit's tables are disabled" variant="info">
-  When PageKit's `table` slot is enabled, it registers the pagination-safe `TableKit` from
-  <code>@tiptap-pro/extension-pages-tablekit</code>. ConvertKit ships its own table stack
-  (DOCX-aware, but not pagination-safe), so we disable it here and let PageKit's tables take over.
-  ConvertKit's tables and PageKit's tables accept the same DOCX cell attributes, so imported content
-  renders correctly either way.
+<Callout title="为什么要禁用 ConvertKit 的表格" variant="info">
+  启用 PageKit 的 `table` 选项后，它会注册来自
+  <code>@tiptap-pro/extension-pages-tablekit</code> 的分页安全型 `TableKit`。ConvertKit 自带一套表格扩展
+  （支持 DOCX，但不支持分页），因此我们在这里将其禁用，改用 PageKit 的表格。
+  ConvertKit 的表格和 PageKit 的表格接受相同的 DOCX 单元格属性，因此无论使用哪一种，导入的内容
+  都能正确呈现。
 </Callout>
 
-<Callout title="How it works" variant="info">
-  PageKit configures the Pages, TableKit, and PageBreak extensions for you. Pass your Pages options
-  under <code>pages</code>, your Table options under <code>table</code>, and your PageBreak options
-  under <code>pagebreak</code>.
+<Callout title="工作原理" variant="info">
+  PageKit 会为你配置 Pages、TableKit 和 PageBreak 扩展。将 Pages 选项放在
+  <code>pages</code> 下，将 Table 选项放在 <code>table</code> 下，将 PageBreak 选项
+  放在 <code>pagebreak</code> 下。
 </Callout>
 
-## Disabling PageBreak
+## 禁用 PageBreak
 
-If you don't need explicit page breaks, you can disable the PageBreak extension:
+如果不需要显式分页符，可以禁用 PageBreak 扩展：
 
 ```ts
 PageKit.configure({
   pages: { pageFormat: 'A4' },
-  pagebreak: false, // Disable PageBreak
+  pagebreak: false, // 禁用 PageBreak
 })
 ```
 
-## 3. When to use PageKit?
+## 3. 何时使用 PageKit？
 
-- Use PageKit for the fastest setup if you want both pagination and tables.
-- If you need to deeply customize TableKit or Pages, import and configure them individually instead. See the [PagesTableKit guide](/pages/guides/pages-tablekit) for the unbundled setup.
+- 如果同时需要分页和表格，使用 PageKit 可以最快完成配置。
+- 如果需要深度自定义 TableKit 或 Pages，请改为分别导入并配置它们。有关不使用捆绑配置的方法，请参阅 [PagesTableKit 指南](/pages/guides/pages-tablekit)。
 
-## 4. Next steps
+## 4. 后续步骤
 
-- Explore [Pages options](/pages/core-concepts/options) for more layout control.
-- See the [Pages with tables guide](/pages/guides/table-with-pages) for the unbundled table setup.
+- 查看 [Pages 选项](/pages/core-concepts/options)，了解更多布局控制方式。
+- 参阅 [Pages 与表格指南](/pages/guides/table-with-pages)，了解如何单独配置表格。
