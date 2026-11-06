@@ -1,25 +1,25 @@
 ---
-title: Content Editor commands
+title: 内容编辑器命令
 meta:
-  title: Content commands | Tiptap Editor Docs
-  description: Learn about the clearContent, insertContent, insertContentAt, and setContent commands to efficiently manage content in Tiptap.
-  category: Editor
+  title: 内容命令 | Tiptap 编辑器文档
+  description: 了解 clearContent、insertContent、insertContentAt 和 setContent 命令，以便高效管理 Tiptap 中的内容。
+  category: 编辑器
 ---
 
-Use these commands to dynamically insert, replace, or remove content in your editor. Initialize new documents, update existing ones, or manage user selections, these commands provide you with tools to handle content manipulation.
+使用这些命令可在编辑器中动态插入、替换或删除内容。无论是初始化新文档、更新现有文档，还是管理用户选择，这些命令都能帮助你处理内容操作。
 
-## Use Cases
+## 使用场景
 
-- **Initializing New Documents:** Start fresh with the [`setContent`](/editor/api/commands/content/set-content) command to initialize a clean document or predefined template.
-- **Updating Existing Content:** Use the [`insertContent`](/editor/api/commands/content/insert-content) or [`insertContentAt`](/editor/api/commands/content/insert-content-at) commands to add new content or update specific sections based on user interactions.
-- **Clearing Content:** Remove all content with the [`clearContent`](/editor/api/commands/content/clear-content) command while maintaining a valid document structure.
-- **Managing User Selections:** Insert or replace content at specific positions or ranges using [`insertContentAt`](/editor/api/commands/content/insert-content-at) according to user selections.
+- **初始化新文档：** 使用 [`setContent`](/editor/api/commands/content/set-content) 命令，创建空白文档或初始化预定义模板。
+- **更新现有内容：** 使用 [`insertContent`](/editor/api/commands/content/insert-content) 或 [`insertContentAt`](/editor/api/commands/content/insert-content-at) 命令，根据用户交互添加新内容或更新特定部分。
+- **清除内容：** 使用 [`clearContent`](/editor/api/commands/content/clear-content) 命令移除所有内容，同时保持文档结构有效。
+- **管理用户选择：** 根据用户的选择，使用 [`insertContentAt`](/editor/api/commands/content/insert-content-at) 在特定位置或范围插入或替换内容。
 
-## List of content commands
+## 内容命令列表
 
-| Command           | Description                                                         |
-| ----------------- | ------------------------------------------------------------------- |
-| `clearContent`    | Deletes the current document while adhering to the editor’s schema. |
-| `insertContent`   | Adds content to the document using plain text, HTML, or JSON.       |
-| `insertContentAt` | Inserts content at a specific position or range in the document.    |
-| `setContent`      | Replaces the entire document with a new one using JSON or HTML.     |
+| 命令              | 描述                                      |
+| ----------------- | ----------------------------------------- |
+| `clearContent`    | 删除当前文档，同时遵循编辑器的 schema。   |
+| `insertContent`   | 使用纯文本、HTML 或 JSON 向文档添加内容。 |
+| `insertContentAt` | 在文档中的特定位置或范围插入内容。        |
+| `setContent`      | 使用 JSON 或 HTML 替换整个文档。          |
