@@ -2,23 +2,23 @@
 title: Vite
 meta:
   title: Vite | Tiptap UI Components
-  description: Install and configure Tiptap UI Components in your Vite project.
-  category: UI Components
+  description: 在 Vite 项目中安装并配置 Tiptap UI Components。
+  category: UI 组件
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Use the command below to scaffold a new Vite project. When prompted, choose `React + TypeScript`.
+使用以下命令搭建新的 Vite 项目。出现提示时，选择 `React + TypeScript`。
 
 ```bash
 npm create vite@latest
 ```
 
-## Configure TypeScript Paths
+## 配置 TypeScript 路径
 
-Vite splits TypeScript config into multiple files. You'll need to update both `tsconfig.json` and `tsconfig.app.json`.
+Vite 将 TypeScript 配置拆分到多个文件中。你需要同时更新 `tsconfig.json` 和 `tsconfig.app.json`。
 
-Within `tsconfig.json` add the following inside `compilerOptions`:
+在 `tsconfig.json` 的 `compilerOptions` 中添加以下内容：
 
 ```json
 {
@@ -32,7 +32,7 @@ Within `tsconfig.json` add the following inside `compilerOptions`:
 }
 ```
 
-In `tsconfig.app.json` update these `compilerOptions`:
+在 `tsconfig.app.json` 中更新以下 `compilerOptions`：
 
 ```json
 {
@@ -47,17 +47,17 @@ In `tsconfig.app.json` update these `compilerOptions`:
 }
 ```
 
-## Update Vite Configuration
+## 更新 Vite 配置
 
-To enable path aliases and avoid `__dirname` type errors:
+若要启用路径别名并避免 `__dirname` 类型错误：
 
-Install Node types:
+安装 Node 类型：
 
 ```bash
 npm install -D @types/node
 ```
 
-And then edit `vite.config.ts`:
+然后编辑 `vite.config.ts`：
 
 ```ts
 import path from 'path'
@@ -72,15 +72,14 @@ export default defineConfig({
 })
 ```
 
-## Render the editor
+## 渲染编辑器
 
-<Callout title="A new project still shows the default Vite page" variant="warning">
-  Scaffolding creates a standard Vite + React app. Adding components copies them into
-  `src/components/` as source, but `src/App.tsx` still renders Vite's default starter page until you
-  render a Tiptap component there yourself. This is expected, not a broken install.
+<Callout title="新项目仍会显示 Vite 默认页面" variant="warning">
+  搭建项目会创建标准的 Vite + React 应用。添加组件时，组件源代码会复制到
+  `src/components/`，但在你自行于 `src/App.tsx` 中渲染 Tiptap 组件之前，该文件仍会渲染 Vite 的默认起始页面。这是预期行为，并不代表安装失败。
 </Callout>
 
-Replace the contents of `src/App.tsx` with the template or component you installed. For example, the **Simple Editor** template:
+将你安装的模板或组件替换到 `src/App.tsx` 中。例如，**Simple Editor** 模板：
 
 ```tsx
 import { SimpleEditor } from '@/components/tiptap-templates/simple/components/simple-editor'
@@ -90,21 +89,21 @@ export default function App() {
 }
 ```
 
-Start the dev server to see your editor:
+启动开发服务器以查看编辑器：
 
 ```bash
 npm run dev
 ```
 
-## Add Tiptap components
+## 添加 Tiptap 组件
 
-Install Tiptap UI components using the CLI. For example, to add the `HeadingButton` component:
+使用 CLI 安装 Tiptap UI 组件。例如，添加 `HeadingButton` 组件：
 
 ```bash
 npx @tiptap/cli@latest add heading-button
 ```
 
-The command above will install the `HeadingButton` component and its dependencies. You can then import and use it in your **Tiptap** project:
+上述命令会安装 `HeadingButton` 组件及其依赖项。然后，你就可以在 **Tiptap** 项目中导入并使用它：
 
 ```tsx
 import { HeadingButton } from '@/components/ui/heading-button'
@@ -122,29 +121,29 @@ export default function App() {
 }
 ```
 
-## Add Styles
+## 添加样式
 
-<Callout title="Styles are added automatically" variant="info">
-  When you install your first Tiptap UI Component, the CLI automatically adds the required{' '}
-  <code>.scss</code> imports to your main stylesheet. In most cases, **no manual setup is needed**.
+<Callout title="样式会自动添加" variant="info">
+  安装第一个 Tiptap UI Component 时，CLI 会自动将所需的{' '}
+  <code>.scss</code> 导入语句添加到主样式表中。大多数情况下，**无需手动设置**。
 </Callout>
 
-Before proceeding, ensure your project includes a CSS reset.
-If you are using Tailwind CSS, you already have one.
+继续之前，请确保项目中包含 CSS 重置样式。
+如果你使用 Tailwind CSS，则已经包含了重置样式。
 
-#### Where styles are imported
+#### 样式导入位置
 
-The CLI automatically injects style imports into your global stylesheet, such as:
+CLI 会自动将样式导入语句注入全局样式表，例如：
 
-- `src/index.css` (depending on your project)
+- `src/index.css`（取决于你的项目）
 
-If you’ve customized your entry file, make sure this is present:
+如果你自定义了入口文件，请确保其中包含以下内容：
 
-**File:** `src/index.css` (depending on your project)
+**文件：** `src/index.css`（取决于你的项目）
 
 ```css
 @import '<path-to-styles>/_variables.scss';
 @import '<path-to-styles>/_keyframe-animations.scss';
 ```
 
-Learn more about configuring styles in the [style setup guide](/ui-components/getting-started/style).
+有关样式配置的更多信息，请参阅[样式设置指南](/ui-components/getting-started/style)。
