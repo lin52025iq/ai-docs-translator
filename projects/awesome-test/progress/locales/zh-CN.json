@@ -2,11 +2,11 @@
     "schemaVersion": 1,
     "projectId": "awesome-test",
     "locale": "zh-CN",
-    "evaluatedAt": "2026-11-06T11:39:58.285Z",
+    "evaluatedAt": "2026-11-06T11:40:13.008Z",
     "total": 5,
     "completed": 2,
     "summary": {
-        "pending": 3,
+        "pending": 2,
         "translated": 2,
         "manually_modified": 0,
         "retryable_failed": 0,
@@ -15,7 +15,7 @@
         "deleted": 0,
         "out_of_scope": 1,
         "not_text": 0,
-        "conflict": 0
+        "conflict": 1
     },
     "files": [
         {
@@ -41,8 +41,8 @@
         },
         {
             "path": "compaction.mdx",
-            "status": "pending",
-            "shouldTranslate": true,
+            "status": "conflict",
+            "shouldTranslate": false,
             "sourceBlobSha": "ca02312c3fc7fdbc7d6b6dd92f8ee044035cfc6b",
             "targetBlobSha": "ca02312c3fc7fdbc7d6b6dd92f8ee044035cfc6b"
         },
