@@ -1,24 +1,24 @@
 ---
-title: setNode command
+title: setNode 命令
 meta:
-  title: setNode command | Tiptap Editor Docs
-  description: Use the setNode command in Tiptap to replace a given range with a specified text block node. Learn more in our docs!
-  category: Editor
+  title: setNode 命令 | Tiptap 编辑器文档
+  description: 使用 Tiptap 中的 setNode 命令，将指定范围替换为指定的文本块节点。了解更多信息，请参阅我们的文档！
+  category: 编辑器
 ---
 
-The `setNode` command will replace a given range with a given node. The range depends on the current selection. **Important**: Currently `setNode` only supports text block nodes.
+`setNode` 命令会将指定范围替换为指定节点。范围取决于当前选区。**重要提示**：目前 `setNode` 仅支持文本块节点。
 
-## Parameters
+## 参数
 
 `typeOrName: string | NodeType`
 
-The type of the node that will replace the range. Can be a string or a NodeType.
+用于替换该范围的节点类型。可以是字符串或 NodeType。
 
 `attributes?: Record<string, any>`
 
-The attributes that should be applied to the node. **This is optional.**
+要应用于节点的属性。**此参数可选。**
 
-## Use the setNode command
+## 使用 setNode 命令
 
 ```js
 editor.commands.setNode('paragraph', { id: 'paragraph-01' })
