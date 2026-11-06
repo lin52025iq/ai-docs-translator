@@ -1,48 +1,48 @@
 ---
-title: Tiptap Edit hooks
+title: Tiptap Edit 钩子
 meta:
-  title: Tiptap Edit hooks | Tiptap AI Toolkit
-  description: Intercept, modify, or reject Tiptap Edit operations before they are applied.
+  title: Tiptap Edit 钩子 | Tiptap AI Toolkit
+  description: 在 Tiptap Edit 操作应用前拦截、修改或拒绝这些操作。
   category: AI Toolkit
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Tiptap Edit hooks allow you to intercept operations before they are applied to the document. You can accept or reject each operation based on custom logic, and optionally modify the content or operation type when accepting.
+Tiptap Edit 钩子可让你在操作应用到文档之前拦截这些操作。你可以根据自定义逻辑接受或拒绝每项操作，也可以在接受操作时选择修改内容或操作类型。
 
-<Callout title="Experimental feature" variant="info">
-  Tiptap Edit hooks are currently an experimental feature and their API may change in the future.
+<Callout title="实验性功能" variant="info">
+  Tiptap Edit 钩子目前仍是实验性功能，其 API 未来可能会发生变化。
 </Callout>
 
-## Use cases
+## 使用场景
 
-- **Content moderation**: Filter or sanitize AI-generated content before it reaches the document
-- **Custom validation**: Ensure operations meet business requirements
-- **Logging and analytics**: Track what changes the AI is making
-- **Access control**: Prevent modifications to certain parts of the document
+- **内容审核**：在 AI 生成的内容写入文档前对其进行筛选或清理
+- **自定义验证**：确保操作符合业务要求
+- **日志记录与分析**：跟踪 AI 所做的更改
+- **访问控制**：防止修改文档的特定部分
 
-## The `beforeOperation` hook
+## `beforeOperation` 钩子
 
-The `beforeOperation` hook is called before each Tiptap Edit operation is applied. It receives context about the operation and returns an action to take.
+每次应用 Tiptap Edit 操作之前，都会调用 `beforeOperation` 钩子。该钩子会接收操作上下文，并返回要执行的动作。
 
-### Hook context
+### 钩子上下文
 
-The hook receives a `BeforeOperationContext` object with these properties:
+该钩子会接收一个 `BeforeOperationContext` 对象，其中包含以下属性：
 
-| Property         | Type                           | Description                                                                                                       |
+| 属性             | 类型                           | 描述                                                                                                       |
 | ---------------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
-| `operation`      | `TiptapEditOperation`          | The operation being executed, containing `type`, `target`, and `content`                                          |
-| `operationIndex` | `number`                       | Index of this operation in the batch (0-based)                                                                    |
-| `doc`            | `Node`                         | The document at the current point in the transaction                                                              |
-| `deleteContent`  | `Fragment \| null`             | The content that will be deleted (`null` for `insertBefore`/`insertAfter`)                                        |
-| `insertContent`  | `Fragment`                     | The content that will be inserted (as a [ProseMirror Fragment](https://prosemirror.net/docs/ref/#model.Fragment)) |
-| `range`          | `{ from: number; to: number }` | The position range where the operation will be applied                                                            |
+| `operation`      | `TiptapEditOperation`          | 正在执行的操作，包含 `type`、`target` 和 `content`                                                                  |
+| `operationIndex` | `number`                       | 此操作在批次中的索引（从 0 开始）                                                                    |
+| `doc`            | `Node`                         | 事务当前阶段的文档                                                              |
+| `deleteContent`  | `Fragment \| null`             | 将被删除的内容（对于 `insertBefore`/`insertAfter`，值为 `null`）                                        |
+| `insertContent`  | `Fragment`                     | 将要插入的内容（作为 [ProseMirror Fragment](https://prosemirror.net/docs/ref/#model.Fragment)） |
+| `range`          | `{ from: number; to: number }` | 将应用操作的位置范围                                                            |
 
-To access the editor instance inside your hook, capture it in a closure when defining the hook.
+若要在钩子中访问编辑器实例，请在定义钩子时通过闭包捕获该实例。
 
-### Hook return values
+### 钩子返回值
 
-The hook must return one of these actions:
+钩子必须返回以下某个动作：
 
 ```ts
 // Accept the operation unchanged
@@ -61,13 +61,13 @@ The hook must return one of these actions:
 { action: 'reject', error: 'Reason for rejection' }
 ```
 
-The `fragment` property allows you to override the [ProseMirror Fragment](https://prosemirror.net/docs/ref/#model.Fragment) that will be inserted. The `operationType` property allows you to change the operation type (`'replace'`, `'insertBefore'`, or `'insertAfter'`).
+`fragment` 属性可用于替换将要插入的 [ProseMirror Fragment](https://prosemirror.net/docs/ref/#model.Fragment)。`operationType` 属性可用于更改操作类型（`'replace'`、`'insertBefore'` 或 `'insertAfter'`）。
 
-When an operation is rejected, the remaining operations in the batch continue to execute.
+拒绝某项操作后，批次中的其余操作仍会继续执行。
 
-## Usage
+## 用法
 
-### With `executeTool`
+### 与 `executeTool` 搭配使用
 
 ```ts
 import { getAiToolkit } from '@tiptap-pro/client-ai-toolkit'
@@ -99,7 +99,7 @@ const result = toolkit.executeTool({
 })
 ```
 
-### With `streamTool`
+### 与 `streamTool` 搭配使用
 
 ```ts
 const result = toolkit.streamTool({
@@ -123,7 +123,7 @@ const result = toolkit.streamTool({
 })
 ```
 
-### With `tiptapEditWorkflow`
+### 与 `tiptapEditWorkflow` 搭配使用
 
 ```ts
 const { content } = toolkit.tiptapRead()
