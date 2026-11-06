@@ -1,18 +1,18 @@
 ---
-title: Other providers
+title: 其他提供商
 meta:
-  title: AI agent tools — Other providers | Tiptap AI Toolkit
-  description: Use the tool definitions output to build adapters for other AI providers or languages.
+  title: AI 代理工具 — 其他提供商 | Tiptap AI Toolkit
+  description: 使用输出的工具定义，为其他 AI 提供商或编程语言构建适配器。
   category: AI Toolkit
 ---
 
-The Tiptap AI Toolkit provides tool definitions for the most popular AI provider libraries, like the [AI SDK by Vercel](https://ai-sdk.dev/). If your AI provider is not supported, [reach out to the Tiptap team](mailto:humans@tiptap.dev) with your request.
+Tiptap AI Toolkit 为最常用的 AI 提供商库（例如 [Vercel 的 AI SDK](https://ai-sdk.dev/)）提供工具定义。如果你的 AI 提供商尚未获得支持，请[联系 Tiptap 团队](mailto:humans@tiptap.dev)提出需求。
 
-Another option is to get all tool definitions as a generic JSON object and convert them to your AI provider's format.
+你也可以获取所有工具定义组成的通用 JSON 对象，并将其转换为你的 AI 提供商所需的格式。
 
-## Get tool definitions
+## 获取工具定义
 
-Use the `toolDefinitions()` function from the `@tiptap-pro/client-ai-toolkit-tool-definitions` package to get the tool definitions in a generic format:
+使用 `@tiptap-pro/client-ai-toolkit-tool-definitions` 包中的 `toolDefinitions()` 函数，以通用格式获取工具定义：
 
 ```ts
 import { toolDefinitions } from '@tiptap-pro/client-ai-toolkit-tool-definitions'
@@ -20,33 +20,33 @@ import { toolDefinitions } from '@tiptap-pro/client-ai-toolkit-tool-definitions'
 const tools = toolDefinitions()
 ```
 
-Each tool definition is an object with the following properties:
+每个工具定义都是一个包含以下属性的对象：
 
-- `name`: The name of the tool. This is its unique identifier.
-- `description`: The description of the tool, to be read by the AI model.
-- `inputSchema`: A [JSON Schema](https://json-schema.org/) describing the input parameters of the tool.
+- `name`：工具名称，是工具的唯一标识符。
+- `description`：工具描述，供 AI 模型读取。
+- `inputSchema`：[JSON Schema](https://json-schema.org/)，用于描述工具的输入参数。
 
-Use this data to build the tool definitions in your AI provider's format.
+使用这些数据，按照你的 AI 提供商所需的格式构建工具定义。
 
-### Non-TypeScript backends
+### 非 TypeScript 后端
 
-If your backend is in another programming language than TypeScript, you can use the CLI to generate a JSON file with the tool definitions. See [this guide](/ai/ai-toolkit/client/advanced-guides/non-typescript-backends).
+如果你的后端使用 TypeScript 以外的编程语言，可以使用 CLI 生成包含工具定义的 JSON 文件。请参阅[本指南](/ai/ai-toolkit/client/advanced-guides/non-typescript-backends)。
 
-## API reference
+## API 参考
 
 ### `toolDefinitions`
 
-Creates tool definitions for the Tiptap AI Toolkit in a generic format that can be converted to any AI provider's format.
+以通用格式创建 Tiptap AI Toolkit 的工具定义，可将其转换为任何 AI 提供商所需的格式。
 
-#### Parameters (`ToolDefinitionsOptions`)
+#### 参数（`ToolDefinitionsOptions`）
 
-- `tools?`: `EnabledTools` - Enable/disable specific tools by setting the value to `true` (enabled) or `false` (disabled).
-  - `tiptapRead?`: `boolean` - Enable/disable the `tiptapRead` tool (default: `true`)
-  - `tiptapEdit?`: `boolean` - Enable/disable the `tiptapEdit` tool (default: `true`)
-  - `tiptapReadSelection?`: `boolean` - Enable/disable the `tiptapReadSelection` tool (default: `true`)
-  - `getThreads?`: `boolean` - Enable/disable the `getThreads` tool (default: `false`)
-  - `editThreads?`: `boolean` - Enable/disable the `editThreads` tool (default: `false`)
+- `tools?`：`EnabledTools` — 通过将值设为 `true`（启用）或 `false`（禁用）来启用或禁用特定工具。
+  - `tiptapRead?`：`boolean` — 启用或禁用 `tiptapRead` 工具（默认值：`true`）
+  - `tiptapEdit?`：`boolean` — 启用或禁用 `tiptapEdit` 工具（默认值：`true`）
+  - `tiptapReadSelection?`：`boolean` — 启用或禁用 `tiptapReadSelection` 工具（默认值：`true`）
+  - `getThreads?`：`boolean` — 启用或禁用 `getThreads` 工具（默认值：`false`）
+  - `editThreads?`：`boolean` — 启用或禁用 `editThreads` 工具（默认值：`false`）
 
-#### Returns
+#### 返回值
 
-An array containing the enabled tool definitions in a generic format. Each tool definition is an object with `name`, `description`, and `inputSchema` properties. To see the full list of tools, see the [Available tools](/ai/ai-toolkit/client/agents/tools) page.
+包含已启用工具定义的数组，格式为通用格式。每个工具定义都是包含 `name`、`description` 和 `inputSchema` 属性的对象。如需查看完整工具列表，请参阅[可用工具](/ai/ai-toolkit/client/agents/tools)页面。
