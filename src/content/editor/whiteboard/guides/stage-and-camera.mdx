@@ -1,19 +1,19 @@
 ---
-title: Whiteboard stage and camera
+title: 白板舞台与相机
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Whiteboard stage and camera | Tiptap Editor Docs
-  description: Connect a whiteboard to the stage around it, and pan, zoom and fit the board with the camera helpers.
-  category: Editor
+  title: 白板舞台与相机 | Tiptap Editor 文档
+  description: 将白板连接到周围的舞台，并使用相机辅助函数平移、缩放和适配白板。
+  category: 编辑器
 ---
 
-A board lives in three elements. The **stage** is the element around the board. It takes pointer and wheel events, and clips everything outside it. Inside the stage, the **viewport** holds the editor. The **camera** moves and scales the viewport.
+白板由三个元素组成。**舞台**是白板周围的元素。它接收指针和滚轮事件，并裁剪超出其范围的所有内容。舞台内部的**视口**包含编辑器。**相机**负责移动视口并缩放视口。
 
-## The camera
+## 相机
 
-The camera is part of your app's state:
+相机是应用状态的一部分：
 
 ```ts
 type Camera = {
@@ -23,9 +23,9 @@ type Camera = {
 }
 ```
 
-`x` and `y` are in screen pixels, and a `zoom` of 1 is 100%. The camera helpers keep the zoom between `minZoom`, which is 10%, and `maxZoom`, which is 400%.
+`x` 和 `y` 的单位是屏幕像素，`zoom` 为 1 时表示 100%。相机辅助函数会将缩放范围限制在 `minZoom`（10%）和 `maxZoom`（400%）之间。
 
-Show the board with the camera: move the viewport with `toCssTransform`, and set `--zoom` to the zoom. Handles read `--zoom` to keep their size at every zoom.
+使用相机显示白板：通过 `toCssTransform` 移动视口，并将 `--zoom` 设置为缩放值。控制柄会读取 `--zoom`，以便在任意缩放级别下保持大小不变。
 
 ```js
 import { toCssTransform } from '@tiptap-pro/extension-whiteboard'
@@ -33,11 +33,11 @@ import { toCssTransform } from '@tiptap-pro/extension-whiteboard'
 toCssTransform({ x: 100, y: 50, zoom: 2 }) // 'translate(100px, 50px) scale(2)'
 ```
 
-The viewport needs `transform-origin: 0 0`. See [Add the stage CSS](/editor/whiteboard/guides/react#add-the-stage-css) for the CSS of the stage and the viewport.
+视口需要设置 `transform-origin: 0 0`。有关舞台和视口的 CSS，请参阅[添加舞台 CSS](/editor/whiteboard/guides/react#add-the-stage-css)。
 
-## Attach the stage
+## 连接舞台
 
-`attachStage` connects the board of an editor to its stage. It returns a function that detaches everything again:
+`attachStage` 会将编辑器的白板连接到舞台。它会返回一个用于解除连接并清理所有内容的函数：
 
 ```js
 import { attachStage } from '@tiptap-pro/extension-whiteboard'
@@ -45,24 +45,23 @@ import { attachStage } from '@tiptap-pro/extension-whiteboard'
 const detach = attachStage({ stage, editor, updateCamera: setCamera })
 ```
 
-`updateCamera` changes the camera through an update function, like a React state setter. In React, pass the setter of a `useState`. Without React, apply the update yourself, see [Basic setup](/editor/whiteboard/getting-started/overview#basic-setup).
+`updateCamera` 通过更新函数修改相机，例如 React 状态 setter。在 React 中，传入 `useState` 返回的 setter。如果不使用 React，则自行应用更新，请参阅[基本设置](/editor/whiteboard/getting-started/overview#basic-setup)。
 
-Once attached, users can work with the board in the stage. Its keys work while the focus is in the stage, so the rest of the page, and other boards on it, keep theirs:
+连接后，用户便可以在舞台上操作白板。焦点位于舞台内时，白板会响应相应按键，因此页面其余部分以及页面上的其他白板仍可使用各自的按键：
 
-- **Pan**: drag with space held, with the middle mouse button, or with the `hand` tool. Turning the wheel or scrolling on a trackpad pans too. On a touch screen, drag the empty board with one finger while the `select` tool is active, or move two fingers. A pan wins over drawing and selecting. A pan or a click with the `hand` tool gives the board the keyboard, like a click with `select`, so its keys work right after a toolbar button chose the tool.
-- **Zoom**: <kbd>Control</kbd> + wheel, or <kbd>Cmd</kbd> + wheel on macOS, or a pinch on a trackpad, zooms at the pointer. On a touch screen, a pinch with two fingers zooms at the middle between them. The second finger stops what the first one started, and undoes it, like moving a shape.
-- **Zoom shortcuts**: <kbd>Control</kbd> + <kbd>=</kbd> or <kbd>+</kbd> zooms in, <kbd>Control</kbd> + <kbd>-</kbd> zooms out, and <kbd>Control</kbd> + <kbd>0</kbd> goes back to 100%, around the middle of the stage, instead of zooming the page. On macOS, use <kbd>Cmd</kbd> instead of <kbd>Control</kbd>. Keys in a field are left to the field.
-- **Fit**: <kbd>Shift</kbd> + <kbd>1</kbd> fits all shapes into view while no text is edited.
-- **Draw**: with a shape tool, a drag on the board adds a shape. A click adds a note, text, doc frame, frame or geometric shape at a fixed size for its tool, centered on the pointer. The pen draws lines, and the eraser erases the shapes it touches. A doc frame stays when the erase starts on it, so users can erase the pen lines on a document. Drawing also works over other shapes.
-- **Select**: with the `select` tool, a drag of the mouse or a pen on the empty board selects the shapes that its box touches. A frame counts only when the box holds all of it, and a drag inside a frame draws a box too. Hold <kbd>Shift</kbd> to add them to the selection. A click or a tap on the empty board clears the selection.
-- **Images**: with the board's [`images`](/editor/whiteboard/guides/images), image files that users drop land where they drop them, and pasted ones land in the middle of the stage.
+- **平移**：按住空格键拖动、使用鼠标中键拖动，或使用 `hand` 工具拖动。滚动滚轮或触控板也可平移。在触摸屏上，启用 `select` 工具时，可用一根手指拖动空白画布；也可以移动两根手指。平移操作优先于绘制和选择。使用 `hand` 工具平移或单击，会让白板获得键盘焦点，效果与使用 `select` 工具单击相同，因此工具栏按钮切换工具后，白板按键即可立即生效。
+- **缩放**：按住 <kbd>Control</kbd> 并滚动滚轮，在 macOS 上按住 <kbd>Cmd</kbd> 并滚动滚轮，或在触控板上捏合，即可围绕指针位置缩放。在触摸屏上，用两根手指捏合时，会围绕两指之间的中点缩放。第二根手指会中止并撤销第一根手指开始的操作，效果类似移动图形。
+- **缩放快捷键**：按 <kbd>Control</kbd> + <kbd>=</kbd> 或 <kbd>+</kbd> 放大，按 <kbd>Control</kbd> + <kbd>-</kbd> 缩小，按 <kbd>Control</kbd> + <kbd>0</kbd> 则恢复到 100%，并以舞台中部为中心，而不是缩放整个页面。在 macOS 上，将 <kbd>Control</kbd> 替换为 <kbd>Cmd</kbd>。在输入框中按下的按键由输入框处理。
+- **适配视图**：未编辑文本时，按 <kbd>Shift</kbd> + <kbd>1</kbd> 可将所有图形适配到视图中。
+- **绘制**：使用图形工具时，在白板上拖动即可添加图形。单击会在指针位置居中添加便笺、文本、文档框、画框或几何图形；其大小由对应工具预先设定。画笔用于绘制线条，橡皮擦会擦除碰到的图形。如果从文档框上开始擦除，文档框会保留，因此用户可以擦除文档上的笔迹。也可以在其他图形上绘制。
+- **选择**：使用 `select` 工具时，在空白画布上用鼠标或画笔拖动，框选区域触及的图形。只有当框选区域完整包含画框时，画框才会被选中；在画框内部拖动也会绘制框选区域。按住 <kbd>Shift</kbd> 可将图形添加到所选内容中。在空白画布上单击或轻触可清除选择。
+- **图像**：使用白板的 [`images`](/editor/whiteboard/guides/images) 功能时，用户拖入的图像文件会放置在拖放位置，粘贴的图像则会放置在舞台中央。
 
-<kbd>Escape</kbd> cancels a drag while it runs, except a pan.
+拖动过程中按 <kbd>Escape</kbd> 可取消操作，平移除外。
 
-### Keep room for your controls
+### 为控件留出空间
 
-<kbd>Shift</kbd> + <kbd>1</kbd> keeps 64 screen pixels free at each edge of the stage. When panels
-float over the stage, keep more room with `fitInsets`:
+按 <kbd>Shift</kbd> + <kbd>1</kbd> 时，舞台每条边缘都会保留 64 个屏幕像素的空白。如果面板浮在舞台上方，可通过 `fitInsets` 留出更多空间：
 
 ```js
 import { attachStage } from '@tiptap-pro/extension-whiteboard'
@@ -76,9 +75,9 @@ attachStage({
 })
 ```
 
-### Show the tool and the pan in CSS
+### 在 CSS 中显示工具和正在进行的平移
 
-The stage shows the active tool as `data-tool`, and a pan as `data-pan`: `ready` while space is held, and `active` while the board pans. Use them for cursors:
+舞台会通过 `data-tool` 显示当前工具，并通过 `data-pan` 显示平移状态：按住空格键时为 `ready`，白板正在平移时为 `active`。可以使用这些属性设置光标：
 
 ```css
 .stage:where([data-tool]:not([data-tool='select'], [data-tool='hand'])),
@@ -99,11 +98,11 @@ The stage shows the active tool as `data-tool`, and a pan as `data-pan`: `ready`
 }
 ```
 
-While a drag runs, the stage holds a preview element: `data-selection-box`, `data-shape-preview`, `data-arrow-preview` or `data-pen-preview`. See [Styling](/editor/whiteboard/api-reference/styling#stage).
+拖动过程中，舞台会包含一个预览元素：`data-selection-box`、`data-shape-preview`、`data-arrow-preview` 或 `data-pen-preview`。请参阅[样式设置](/editor/whiteboard/api-reference/styling#stage)。
 
-## Zoom buttons
+## 缩放按钮
 
-`zoomAtStageCenter` changes the zoom around the middle of the stage, so the board stays put there. `stepZoom` returns the next zoom step in a direction, from 10% to 400%:
+`zoomAtStageCenter` 会围绕舞台中部调整缩放，因此白板在该位置保持不动。`stepZoom` 会按指定方向返回下一个缩放级别，范围为 10% 到 400%：
 
 ```js
 import { stepZoom, zoomAtStageCenter } from '@tiptap-pro/extension-whiteboard'
@@ -119,11 +118,11 @@ zoomAtStageCenter({
 zoomAtStageCenter({ stage, updateCamera: setCamera, nextZoom: () => 1 })
 ```
 
-A zoom between two steps goes to the next step in that direction. For example, `stepZoom({ zoom: 0.8, direction: -1 })` returns `0.75`.
+如果当前缩放值位于两个级别之间，函数会沿指定方向跳到下一个级别。例如，`stepZoom({ zoom: 0.8, direction: -1 })` 会返回 `0.75`。
 
-## Fit shapes into view
+## 将图形适配到视图中
 
-`zoomToFitShapes` moves and zooms the camera so every shape is in the stage. It never zooms in beyond 100%, or out beyond `minZoom`, and does nothing on an empty board:
+`zoomToFitShapes` 会移动并缩放相机，使舞台中显示所有图形。它不会放大到超过 100%，也不会缩小到低于 `minZoom`；如果白板为空，则不执行任何操作：
 
 ```js
 import { zoomToFitShapes } from '@tiptap-pro/extension-whiteboard'
@@ -131,7 +130,7 @@ import { zoomToFitShapes } from '@tiptap-pro/extension-whiteboard'
 zoomToFitShapes({ stage, editor, updateCamera: setCamera })
 ```
 
-`scrollShapesIntoView` moves the camera as little as it can, so the shapes with the given ids are in the stage. It zooms out only when they don't fit:
+`scrollShapesIntoView` 会尽可能少地移动相机，让指定 ID 的图形显示在舞台中。只有图形无法全部显示时，它才会缩小：
 
 ```js
 import { getSelectedShapeIds, scrollShapesIntoView } from '@tiptap-pro/extension-whiteboard'
@@ -144,9 +143,9 @@ scrollShapesIntoView({
 })
 ```
 
-Both keep 64 screen pixels free at each edge. Pass `insets` to change that room, with one number for every edge or one for each.
+这两个函数都会在每条边缘留出 64 个屏幕像素的空白。传入 `insets` 可调整留白：可以用一个数字应用于所有边缘，也可以分别为每条边缘指定数值。
 
-To show a part of the board, like when the board opens, `fitCameraToRect` returns the camera that shows a rectangle in the middle of the stage:
+如果要显示白板的一部分（例如白板打开时），`fitCameraToRect` 会返回一个相机设置，使矩形显示在舞台中央：
 
 ```js
 import { fitCameraToRect } from '@tiptap-pro/extension-whiteboard'
@@ -157,11 +156,11 @@ const camera = fitCameraToRect({
 })
 ```
 
-It zooms out until the rectangle fits, but not beyond `minZoom`, and by default never zooms in beyond 100%. Set `largestZoom` to allow more.
+它会持续缩小，直到矩形适配视图，但不会低于 `minZoom`；默认情况下，放大倍数也不会超过 100%。设置 `largestZoom` 可允许更高的缩放值。
 
-## Convert coordinates
+## 转换坐标
 
-Shapes use board units. `clientToBoard` converts a point in window coordinates, like the `clientX` and `clientY` of a pointer event, to board units. It returns `null` while the board isn't on the page, like before `useEditor`'s editor is mounted, or once the editor is destroyed:
+图形使用白板坐标单位。`clientToBoard` 会将窗口坐标中的点（例如指针事件的 `clientX` 和 `clientY`）转换为白板坐标单位。当白板尚未显示在页面上时（例如 `useEditor` 中的编辑器尚未挂载），或编辑器已销毁时，它会返回 `null`：
 
 ```js
 import { clientToBoard } from '@tiptap-pro/extension-whiteboard'
@@ -175,7 +174,7 @@ stage.addEventListener('pointermove', (event) => {
 })
 ```
 
-`visibleBoardRect` returns the part of the board that the stage shows. Use it to add a shape where users look:
+`visibleBoardRect` 会返回舞台当前显示的白板区域。可以用它在用户正在查看的位置添加图形：
 
 ```js
 import { stickyNoteSize, visibleBoardRect } from '@tiptap-pro/extension-whiteboard'
@@ -193,7 +192,7 @@ editor.commands.insertStickyNote({
 })
 ```
 
-## Next steps
+## 后续步骤
 
-- Add and change [shapes, and choose tools](/editor/whiteboard/guides/shapes-and-tools)
-- See all [utilities](/editor/whiteboard/api-reference/utilities), with the stage and camera helpers
+- 添加和修改[图形，并选择工具](/editor/whiteboard/guides/shapes-and-tools)
+- 查看所有[实用工具](/editor/whiteboard/api-reference/utilities)，包括舞台和相机辅助函数
