@@ -1,14 +1,14 @@
 ---
-title: Export custom styles to .docx
+title: 将自定义样式导出到 .docx
 tags:
   - type: start
   - type: beta
   - type: version
     label: v0.26.1
 meta:
-  title: Export styles | Tiptap Conversion
-  description: Learn how to export custom styles from Tiptap JSON to DOCX in our documentation.
-  category: Conversion
+  title: 导出样式 | Tiptap Conversion
+  description: 在我们的文档中了解如何将 Tiptap JSON 中的自定义样式导出为 DOCX。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
@@ -19,27 +19,25 @@ import ExportStylesGuide from '../_shared/_export-styles-guide.mdx'
 <EnterpriseCalloutAuto variant="docx" renderMode="sidebar" disableWaitlist />
 
 <Requirements>
-  <RequirementItem label="1. Activate trial or subscribe">
-    Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start
-    plan](https://cloud.tiptap.dev/v2/billing) in your account.
+  <RequirementItem label="1. 开通试用或订阅">
+    在你的账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 计划](https://cloud.tiptap.dev/v2/billing)。
   </RequirementItem>
-  <RequirementItem label="2. Install from private registry">
-    To install this frontend extensions, authenticate to Tiptap's private npm registry by following
-    the [setup guide](/guides/pro-extensions).
+  <RequirementItem label="2. 从私有注册表安装">
+    要安装这些前端扩展，请按照[设置指南](/guides/pro-extensions)进行操作，以通过身份验证访问 Tiptap 的私有 npm 注册表。
   </RequirementItem>
 </Requirements>
 
-When exporting to `DOCX`, you can define custom styles that will be applied to the exported document. This is useful when you want to have a consistent look and feel across your documents.
+导出为 `DOCX` 时，你可以定义应用于导出文档的自定义样式。如果你希望文档整体外观保持一致，这会很有用。
 
 <ExportStylesGuide />
 
-## Native DOCX options
+## 原生 DOCX 选项
 
-The exported `Docx` namespace and raw element overrides use native `docx` 9.12 options.
+导出的 `Docx` 命名空间和原始元素覆盖项使用原生 `docx` 9.12 选项。
 
-### RTL alignment
+### RTL 对齐
 
-Set `bidirectional: true` and `alignment` together in the raw paragraph options. Use `LEFT` for text on the physical left; native docx handles the left/right mapping:
+在原始段落选项中同时设置 `bidirectional: true` 和 `alignment`。对于需要显示在物理左侧的文本，请使用 `LEFT`；原生 docx 会处理左右方向的映射：
 
 ```ts
 import { Docx, ExportDocx } from '@tiptap-pro/extension-export-docx'
@@ -52,17 +50,17 @@ ExportDocx.configure({
 })
 ```
 
-This applies to both static overrides and callbacks. A paragraph node's explicit `textAlign` takes precedence over the override.
+这对静态覆盖项和回调函数都适用。段落节点中显式设置的 `textAlign` 优先于覆盖项。
 
-### Table widths and default styles
+### 表格宽度和默认样式
 
-With `Docx.WidthType.PERCENTAGE`, numeric `size: 50` means 50 percent. Use a percentage string such as `size: '33.33%'` to preserve finer precision; native numeric percentages round to increments of 0.02 percent.
+使用 `Docx.WidthType.PERCENTAGE` 时，数值 `size: 50` 表示 50%。若要保留更高精度，请使用百分比字符串，例如 `size: '33.33%'`；原生数值百分比会按 0.02% 的增量进行舍入。
 
-Native documents include `Normal` and `TableNormal` styles and infer omitted grid and cell widths. The exporter also supplies its paragraph and list styles, which you can customize through `styleOverrides`.
+原生文档包含 `Normal` 和 `TableNormal` 样式，并会推断未指定的网格宽度和单元格宽度。导出器还会提供段落和列表样式，你可以通过 `styleOverrides` 对其进行自定义。
 
-## Per-node overrides with a function
+## 使用函数设置各节点的覆盖项
 
-Every element override — `paragraphOverrides`, `textRunOverrides`, `tableOverrides`, `tableRowOverrides`, `tableCellOverrides`, and `imageOverrides` — accepts a function in addition to a static object. The function receives the node currently being converted and returns the overrides for that node, so you can vary overrides per node based on its attributes. The object form keeps working unchanged, so this is a drop-in addition.
+除静态对象外，每种元素覆盖项——`paragraphOverrides`、`textRunOverrides`、`tableOverrides`、`tableRowOverrides`、`tableCellOverrides` 和 `imageOverrides`——也都接受函数。该函数会接收当前正在转换的节点，并返回该节点的覆盖项，因此你可以根据节点属性为不同节点设置不同的覆盖项。对象形式仍可照常使用；此功能可直接用于现有代码，无需其他更改。
 
 ```ts
 ExportDocx.configure({
@@ -86,9 +84,8 @@ ExportDocx.configure({
 })
 ```
 
-The value returned by the function is applied exactly like the static object — with the same precedence as the object form of that override. Returning an empty object leaves every default in place for that node.
+函数返回的值与静态对象的应用方式完全相同，并遵循该覆盖项对象形式的相同优先级。返回空对象时，该节点的所有默认设置都会保留。
 
-<Callout title="Function form is DOCX-only">
-  The function form of the element overrides is supported by the DOCX export. Other export formats
-  accept the static object form.
+<Callout title="函数形式仅适用于 DOCX">
+  DOCX 导出支持以函数形式设置元素覆盖项。其他导出格式仅接受静态对象形式。
 </Callout>
