@@ -1,28 +1,28 @@
 ---
-title: toggleMark command
+title: toggleMark 命令
 meta:
-  title: toggleMark command | Tiptap Editor Docs
-  description: Use the toggleMark command in Tiptap to toggle a specific mark on and off at the current selection. Learn more in our docs!
-  category: Editor
+  title: toggleMark 命令 | Tiptap 编辑器文档
+  description: 使用 Tiptap 中的 toggleMark 命令，在当前选区切换特定标记的启用和禁用状态。了解更多信息，请参阅文档！
+  category: 编辑器
 ---
 
-The `toggleMark` command toggles a specific mark on and off at the current selection.
+`toggleMark` 命令可在当前选区切换特定标记的启用和禁用状态。
 
-## Parameters
+## 参数
 
 `typeOrName: string | MarkType`
 
-The type of mark that should be toggled.
+要切换的标记类型。
 
 `attributes?: Record<string, any>`
 
-The attributes that should be applied to the mark. **This is optional.**
+要应用于标记的属性。**此参数可选。**
 
 `options?: { extendEmptyMarkRange?: boolean }`
 
-- `extendEmptyMarkRange: boolean` - Removes the mark even across the current selection. Defaults to `false`
+- `extendEmptyMarkRange: boolean` - 即使跨越当前选区，也会移除标记。默认值为 `false`。
 
-## Use the toggleMark command
+## 使用 toggleMark 命令
 
 ```js
 // toggles a bold mark
