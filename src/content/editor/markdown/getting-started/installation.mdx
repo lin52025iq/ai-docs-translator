@@ -1,26 +1,26 @@
 ---
-title: Install and Setup the Markdown Package
+title: 安装和设置 Markdown 包
 tags:
   - type: beta
 meta:
-  title: Install Markdown | Tiptap Editor Docs
-  description: Learn how to install and use the Markdown package in Tiptap to enable Markdown support in your editor.
-  category: Editor
+  title: 安装 Markdown | Tiptap 编辑器文档
+  description: 了解如何在 Tiptap 中安装和使用 Markdown 包，以便在编辑器中启用 Markdown 支持。
+  category: 编辑器
 ---
 
-This guide will walk you through installing and setting up the Markdown extension in your Tiptap editor.
+本指南将介绍如何在 Tiptap 编辑器中安装和设置 Markdown 扩展。
 
-## Installation
+## 安装
 
-Install the Markdown extension using your preferred package manager:
+使用你偏好的包管理器安装 Markdown 扩展：
 
 ```bash
 npm install @tiptap/markdown
 ```
 
-## Basic Setup
+## 基本设置
 
-Add the Markdown extension to your editor:
+将 Markdown 扩展添加到编辑器：
 
 ```typescript
 import { Editor } from '@tiptap/core'
@@ -34,11 +34,11 @@ const editor = new Editor({
 })
 ```
 
-That's it! Your editor now supports Markdown parsing and serialization.
+完成！现在，编辑器已支持 Markdown 解析和序列化。
 
-### Initial Content as Markdown
+### 将初始内容设为 Markdown
 
-To load Markdown content when creating the editor:
+创建编辑器时加载 Markdown 内容：
 
 ```typescript
 const editor = new Editor({
@@ -48,13 +48,13 @@ const editor = new Editor({
 })
 ```
 
-## Configuration Options
+## 配置选项
 
-The Markdown extension accepts several configuration options:
+Markdown 扩展支持多种配置选项：
 
-### Indentation Style
+### 缩进样式
 
-Configure how nested structures (lists, code blocks) are indented in the serialized Markdown:
+配置序列化 Markdown 中嵌套结构（列表、代码块）的缩进方式：
 
 ```typescript
 Markdown.configure({
@@ -65,7 +65,7 @@ Markdown.configure({
 })
 ```
 
-**Examples:**
+**示例：**
 
 ```typescript
 // Use 4 spaces for indentation (default: 2 spaces)
@@ -79,9 +79,9 @@ Markdown.configure({
 })
 ```
 
-### Custom Marked Instance
+### 自定义 Marked 实例
 
-If you need to use a custom version of marked or pre-configure it:
+如果需要使用自定义版本的 marked，或预先配置它：
 
 ```typescript
 import { marked } from 'marked'
@@ -98,9 +98,9 @@ Markdown.configure({
 })
 ```
 
-### Marked Options
+### Marked 选项
 
-You can also pass marked options directly to the extension:
+你也可以直接向扩展传入 marked 选项：
 
 ```typescript
 Markdown.configure({
@@ -112,11 +112,11 @@ Markdown.configure({
 })
 ```
 
-See the [marked documentation](https://marked.js.org/using_advanced#options) for all available options.
+所有可用选项请参阅 [marked 文档](https://marked.js.org/using_advanced#options)。
 
-## Verifying Installation
+## 验证安装
 
-To verify the extension is installed correctly:
+验证扩展是否已正确安装：
 
 ```typescript
 // Check if Markdown manager is available
@@ -133,30 +133,30 @@ console.log(markdown)
 // # Hello
 ```
 
-## Common Issues
+## 常见问题
 
-### Extension Not Found
+### 找不到扩展
 
-If you get an error that `@tiptap/markdown` cannot be found:
+如果出现找不到 `@tiptap/markdown` 的错误：
 
-1. Make sure it's installed: `npm list @tiptap/markdown`
-2. Clear your build cache and node_modules
-3. Reinstall dependencies
+1. 确认已安装该包：`npm list @tiptap/markdown`
+2. 清除构建缓存和 node_modules
+3. 重新安装依赖
 
-### Markdown Not Parsing
+### Markdown 无法解析
 
-If Markdown isn't being parsed:
+如果 Markdown 无法解析：
 
-1. Make sure you're using `contentType: 'markdown'` when setting initial content
-2. Or use the `contentType: 'markdown'` option when calling `setContent()`
+1. 设置初始内容时，请确认使用了 `contentType: 'markdown'`
+2. 或者调用 `setContent()` 时使用 `contentType: 'markdown'` 选项
 
-### TypeScript Errors
+### TypeScript 错误
 
-If you get TypeScript errors:
+如果出现 TypeScript 错误：
 
-1. Make sure `@tiptap/core` is installed (it includes type definitions)
-2. Update to the latest version of both packages
-3. Check your `tsconfig.json` includes the correct module resolution
+1. 确认已安装 `@tiptap/core`（其中包含类型定义）
+2. 将这两个包都更新到最新版本
+3. 检查 `tsconfig.json` 是否包含正确的模块解析配置
 
 ```json
 {
