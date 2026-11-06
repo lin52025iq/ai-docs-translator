@@ -1,337 +1,337 @@
 ---
-title: Whiteboard types
+title: 白板类型
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Whiteboard types | Tiptap Editor Docs
-  description: TypeScript types of the Tiptap Whiteboard extension.
-  category: Editor
+  title: 白板类型 | Tiptap 编辑器文档
+  description: Tiptap Whiteboard 扩展的 TypeScript 类型。
+  category: 编辑器
 ---
 
-Import these TypeScript types for the camera, shapes, tools, styles, doc frames, board files and images from `@tiptap-pro/extension-whiteboard`.
+从 `@tiptap-pro/extension-whiteboard` 导入用于相机、形状、工具、样式、文档框架、白板文件和图像的 TypeScript 类型。
 
-`Editor` comes from `@tiptap/core` and `UndoRedoOptions` from `@tiptap/extensions`. `ProseMirrorNode` is `Node` from `@tiptap/pm/model`.
+`Editor` 来自 `@tiptap/core`，`UndoRedoOptions` 来自 `@tiptap/extensions`。`ProseMirrorNode` 是 `@tiptap/pm/model` 中的 `Node`。
 
 ## `Camera`
 
-Where the board shows in the stage.
+白板在舞台中的显示位置。
 
-### Properties
+### 属性
 
-- `x` (`number`): In screen pixels.
-- `y` (`number`): In screen pixels.
-- `zoom` (`number`): The zoom, where 1 is 100%.
+- `x`（`number`）：以屏幕像素为单位。
+- `y`（`number`）：以屏幕像素为单位。
+- `zoom`（`number`）：缩放比例，1 表示 100%。
 
 ## `UpdateCamera`
 
-Type: `(update: (camera: Camera) => Camera) => void`. Changes the camera through an update function, like a React state setter.
+类型：`(update: (camera: Camera) => Camera) => void`。通过更新函数更改相机，类似 React 状态设置函数。
 
-## `Point`, `Rect` and `Size`
+## `Point`、`Rect` 和 `Size`
 
 ### `Point`
 
-A point, with `x` to the right and `y` down.
+一个点，`x` 向右，`y` 向下。
 
-- `x` (`number`)
-- `y` (`number`)
+- `x`（`number`）
+- `y`（`number`）
 
 ### `Rect`
 
-A rectangle, from its top left corner.
+一个矩形，以左上角为起点。
 
-- `x` (`number`)
-- `y` (`number`)
-- `width` (`number`)
-- `height` (`number`)
+- `x`（`number`）
+- `y`（`number`）
+- `width`（`number`）
+- `height`（`number`）
 
 ### `Size`
 
-A width and a height.
+宽度和高度。
 
-- `width` (`number`)
-- `height` (`number`)
+- `width`（`number`）
+- `height`（`number`）
 
 ## `Insets`
 
-Room to keep free at each edge of the stage, in screen pixels. Options that take insets also take one number for every edge.
+舞台每条边缘要留出的空白区域，以屏幕像素为单位。接收内边距的选项也会为每条边缘接收一个数值。
 
-### Properties
+### 属性
 
-- `top` (`number`)
-- `right` (`number`)
-- `bottom` (`number`)
-- `left` (`number`)
+- `top`（`number`）
+- `right`（`number`）
+- `bottom`（`number`）
+- `left`（`number`）
 
 ## `ShapeAttributes`
 
-The attributes of shapes. Positions and sizes are in board units.
+形状的属性。位置和尺寸以白板单位为准。
 
-### Properties
+### 属性
 
-- `id` (`string | null`): Unique on the board.
-- `x` (`number`)
-- `y` (`number`)
-- `width` (`number`)
-- `height` (`number`)
-- `zIndex` (`string | null`): A fractional index: shapes with a higher one are in front.
-- `frameId` (`string | null`): The [frame](/editor/whiteboard/guides/frames) that the shape is in, or `null`. The board keeps it as shapes move in and out.
-- `color` (`string`): The name of a board color, like `yellow`.
-- `kind?` (`GeoKind`): The kind of a geometric shape, a name from `geoKinds`.
+- `id`（`string | null`）：在白板上唯一。
+- `x`（`number`）
+- `y`（`number`）
+- `width`（`number`）
+- `height`（`number`）
+- `zIndex`（`string | null`）：分数索引；值越大，形状越靠前。
+- `frameId`（`string | null`）：形状所在的[框架](/editor/whiteboard/guides/frames)，或 `null`。形状移入或移出框架时，白板会保留此值。
+- `color`（`string`）：白板颜色的名称，例如 `yellow`。
+- `kind?`（`GeoKind`）：几何形状的种类，即 `geoKinds` 中的名称。
 
-Arrows have no box, but ends, see [`ArrowEndAttributes`](#arrowendattributes), the styles `arrowheads`, `arrowheadKind`, `arrowKind` and `dash`, and a `fontSize` and a `font` for their label. Doc frames have no `color`, but a `docId`. Frames have no `color` and no `frameId`, but a `name`. Images have no `color`, but a `src`, the URL of their image, and an `alt`, its text for screen readers. Shapes with text also have the styles `fontSize`, `textAlign` and `font`, see [`ShapeStyles`](#shapestyles). Pen lines also have `points` and `strokeWidth`.
+箭头没有边界框，而是有端点，参见 [`ArrowEndAttributes`](#arrowendattributes)；还有 `arrowheads`、`arrowheadKind`、`arrowKind` 和 `dash` 样式，以及用于标签的 `fontSize` 和 `font`。文档框架没有 `color`，但有 `docId`。框架没有 `color` 和 `frameId`，但有 `name`。图像没有 `color`，但有 `src`（图像 URL）和 `alt`（供屏幕阅读器使用的文本）。含文本的形状还具有 `fontSize`、`textAlign` 和 `font` 样式，参见 [`ShapeStyles`](#shapestyles)。画笔线条还具有 `points` 和 `strokeWidth`。
 
 ## `ShapeGeometry`
 
-Type: `Pick<ShapeAttributes, 'x' | 'y' | 'width' | 'height'>`. The box of a shape, in board units.
+类型：`Pick<ShapeAttributes, 'x' | 'y' | 'width' | 'height'>`。形状的边界框，以白板单位为准。
 
 ## `ArrowEndAttributes`
 
-Where the ends of an arrow are. An end with the id of a shape on the board follows that shape. Otherwise it is free and sits at its point.
+箭头端点的位置。如果端点的 id 对应白板上的某个形状，它就会跟随该形状；否则端点是自由的，位于其指定点上。
 
-### Properties
+### 属性
 
-- `fromId` (`string | null`)
-- `toId` (`string | null`)
-- `fromX` (`number`)
-- `fromY` (`number`)
-- `toX` (`number`)
-- `toY` (`number`)
-- `fromAnchorX`, `fromAnchorY`, `toAnchorX` and `toAnchorY` (`number`): Where a connected end aims in the box of its shape, from 0 at the left or top to 1 at the right or bottom. The line stops at the shape's outline. A curved or elbow line goes through the side nearest to it, unless it lies in the middle half of the box on both axes. Default: `0.5`, the middle.
+- `fromId`（`string | null`）
+- `toId`（`string | null`）
+- `fromX`（`number`）
+- `fromY`（`number`）
+- `toX`（`number`）
+- `toY`（`number`）
+- `fromAnchorX`、`fromAnchorY`、`toAnchorX` 和 `toAnchorY`（`number`）：连接端点在形状边界框中的目标位置，左侧或顶部为 0，右侧或底部为 1。线条会在形状轮廓处停止。曲线或折线会从离端点最近的一侧经过，除非端点在两个轴上都位于边界框的中间半区。默认值：`0.5`，即中间位置。
 
 ## `ShapeUpdate`
 
-A change to the attributes of one shape. An update can change any of a shape's attributes, except the id.
+对单个形状属性的更改。更新可以更改形状的任意属性，但 `id` 除外。
 
-### Properties
+### 属性
 
-- `id` (`string`)
-- `attributes` (`ShapeUpdateAttributes`)
+- `id`（`string`）
+- `attributes`（`ShapeUpdateAttributes`）
 
 ### `ShapeUpdateAttributes`
 
-Type: `Partial<Omit<ShapeAttributes, 'id'> & ArrowEndAttributes & ShapeStyles & { points: string; strokeWidth: number; docId: string }> & { [attribute: string]: unknown; id?: never }`.
+类型：`Partial<Omit<ShapeAttributes, 'id'> & ArrowEndAttributes & ShapeStyles & { points: string; strokeWidth: number; docId: string }> & { [attribute: string]: unknown; id?: never }`。
 
-`points` and `strokeWidth` are those of a pen line, and `docId` is the document of a doc frame. [Custom shapes](/editor/whiteboard/guides/custom-shapes) can have attributes of their own, like the data of a chart.
+`points` 和 `strokeWidth` 是画笔线条的属性，`docId` 是文档框架的文档 id。[自定义形状](/editor/whiteboard/guides/custom-shapes)可以有自己的属性，例如图表数据。
 
-## `Tool`, `ShapeTool` and `ToolKeys`
+## `Tool`、`ShapeTool` 和 `ToolKeys`
 
 ### `Tool`
 
-Type: `'select' | 'hand' | 'eraser' | ShapeTool`. What a press on the board does: select shapes, pan the board, erase shapes, or add a shape.
+类型：`'select' | 'hand' | 'eraser' | ShapeTool`。在白板上按下鼠标时执行的操作：选择形状、平移白板、擦除形状或添加形状。
 
 ### `ShapeTool`
 
-Type: `'note' | 'text' | 'doc' | 'rectangle' | 'ellipse' | 'diamond' | 'pen' | 'arrow' | 'frame'`. A `ShapeTool` adds a shape of its kind.
+类型：`'note' | 'text' | 'doc' | 'rectangle' | 'ellipse' | 'diamond' | 'pen' | 'arrow' | 'frame'`。`ShapeTool` 会添加对应种类的形状。
 
 ### `ToolKeys`
 
-Type: `Readonly<Partial<Record<Tool, string | null>>>`. The key that chooses each tool. `null` leaves a tool without a key. See [`toolKeys`](/editor/whiteboard/api-reference/utilities#toolkeys).
+类型：`Readonly<Partial<Record<Tool, string | null>>>`。用于选择各工具的按键。设为 `null` 时，工具不会绑定按键。参见 [`toolKeys`](/editor/whiteboard/api-reference/utilities#toolkeys)。
 
-## `GeoKind` and `ShapeColor`
+## `GeoKind` 和 `ShapeColor`
 
 ### `GeoKind`
 
-Type: `(typeof geoKinds)[number]`, which is `'rectangle' | 'ellipse' | 'diamond' | 'triangle'`. A kind of geometric shape, from `geoKinds`.
+类型：`(typeof geoKinds)[number]`，即 `'rectangle' | 'ellipse' | 'diamond' | 'triangle'`。`geoKinds` 中的几何形状种类。
 
 ### `ShapeColor`
 
-Type: `(typeof shapeColors)[number] | (string & {})`. The name of a board color: one from `shapeColors`, like `'black'` or `'red'`, or one of your own. See [Colors](/editor/whiteboard/api-reference/styling#colors).
+类型：`(typeof shapeColors)[number] | (string & {})`。白板颜色的名称：可以是 `shapeColors` 中的值（如 `'black'` 或 `'red'`），也可以是自定义名称。参见[颜色](/editor/whiteboard/api-reference/styling#colors)。
 
 ## `ShapeStyles`
 
-Type: `{ [Name in ShapeStyleName]: ShapeStyleValue<Name> }`. The styles of shapes come from `shapeStyles`. `ShapeStyles` has a value for each style.
+类型：`{ [Name in ShapeStyleName]: ShapeStyleValue<Name> }`。形状样式来自 `shapeStyles`。`ShapeStyles` 为每种样式提供一个值。
 
 ### `ShapeStyleName`
 
-Type: `keyof typeof shapeStyles`, which is `'color' | 'fontSize' | 'textAlign' | 'font' | 'arrowheads' | 'arrowheadKind' | 'arrowKind' | 'dash'`. The name of a style, like `color` or `fontSize`.
+类型：`keyof typeof shapeStyles`，即 `'color' | 'fontSize' | 'textAlign' | 'font' | 'arrowheads' | 'arrowheadKind' | 'arrowKind' | 'dash'`。样式名称，例如 `color` 或 `fontSize`。
 
 ### `ShapeStyleValue`
 
-Type: `(typeof shapeStyles)[Name][number] | (string & {})` for `color`, `fontSize` and `font`, and `(typeof shapeStyles)[Name][number]` for the other styles, where `Name extends ShapeStyleName`. The name of a value of a style, like `blue` for `color`. Colors, font sizes and fonts also take names of your own, because only your CSS gives them a look.
+对于 `color`、`fontSize` 和 `font`，类型为 `(typeof shapeStyles)[Name][number] | (string & {})`；对于其他样式，类型为 `(typeof shapeStyles)[Name][number]`，其中 `Name extends ShapeStyleName`。样式值的名称，例如 `color` 的 `blue`。颜色、字号和字体也可以使用自定义名称，因为只有你的 CSS 才能定义它们的外观。
 
 ## `ShapeElementAttributes`
 
-Type: `(node: ProseMirrorNode) => Record<string, unknown>`. Returns extra attributes for the element of a shape, from the shape's node. Values become strings, and `null` or `undefined` leaves an attribute out.
+类型：`(node: ProseMirrorNode) => Record<string, unknown>`。根据形状的节点，返回该形状元素的额外属性。值会转换为字符串，值为 `null` 或 `undefined` 时则不添加该属性。
 
 ## `WhiteboardKitOptions`
 
-The options of `WhiteboardKit`. See [Extensions](/editor/whiteboard/api-reference/extensions#whiteboardkit).
+`WhiteboardKit` 的选项。参见[扩展](/editor/whiteboard/api-reference/extensions#whiteboardkit)。
 
-### Properties
+### 属性
 
-- `undoRedo` (`Partial<UndoRedoOptions> | false`)
-- `shapeElementAttributes` (`ShapeElementAttributes | null`)
-- `docs` (`BoardDocs | null`)
-- `images` (`BoardImages | null`)
-- `colors` (`readonly ShapeColor[]`)
-- `toolKeys` (`ToolKeys | false`)
+- `undoRedo`（`Partial<UndoRedoOptions> | false`）
+- `shapeElementAttributes`（`ShapeElementAttributes | null`）
+- `docs`（`BoardDocs | null`）
+- `images`（`BoardImages | null`）
+- `colors`（`readonly ShapeColor[]`）
+- `toolKeys`（`ToolKeys | false`）
 
-`BoardOptions`, the options of `Board`, has `shapeElementAttributes`, `docs` and `images`. `BoardStorage` is what the board keeps in `editor.storage.board`, see [Extensions](/editor/whiteboard/api-reference/extensions#storage-boardstorage).
+`BoardOptions` 是 `Board` 的选项，包含 `shapeElementAttributes`、`docs` 和 `images`。`BoardStorage` 是白板存储在 `editor.storage.board` 中的内容，参见[扩展](/editor/whiteboard/api-reference/extensions#storage-boardstorage)。
 
-The kit passes `colors` and `toolKeys` on to its extensions. `BoardTextColorOptions`, the options of `BoardTextColor`, has `colors`. `BoardHighlightOptions`, the options of `BoardHighlight`, has `colors` and the `HighlightOptions` of Tiptap's Highlight. `ShapeSelectionOptions`, the options of `ShapeSelection`, has `toolKeys`.
+Kit 会将 `colors` 和 `toolKeys` 传递给其扩展。`BoardTextColorOptions` 是 `BoardTextColor` 的选项，包含 `colors`。`BoardHighlightOptions` 是 `BoardHighlight` 的选项，包含 `colors` 和 Tiptap Highlight 的 `HighlightOptions`。`ShapeSelectionOptions` 是 `ShapeSelection` 的选项，包含 `toolKeys`。
 
 ## `BoardDocs`
 
-Where the documents of doc frames live, like local storage or Tiptap Cloud. The app provides it, so the board stays free of any storage. See [Doc frames](/editor/whiteboard/guides/doc-frames).
+文档框架的文档存放位置，例如本地存储或 Tiptap Cloud。由应用提供，以便白板无需处理任何存储。参见[文档框架](/editor/whiteboard/guides/doc-frames)。
 
-### Properties
+### 属性
 
-- `createEditor` (`(options: CreateDocEditorOptions) => Editor`): Creates the editor of a document inside `element`, the frame's content element, `[data-shape-content]`. The board destroys it with its frame.
-- `start?` (`(docId: string) => void`): Starts the document of every frame that a change in this editor brings onto the board: a new frame, a copy after `copy`, and frames that `setContent` or an undo with `UndoRedo` bring back. Runs before the frame shows, so keep a document that the frame already has. Frames that come through Yjs, from other editors or from its undo, don't start a document here.
-- `copy` (`(options: CopyDocOptions) => void`): Copies a document for the copy of its frame. Runs before the copy shows, and before `start`.
-- `load?` (`(options: LoadDocOptions) => void`): Fills a new document with the content of a frame from a board file, for `importBoard`. Runs before the frame shows, and before `start`. Without it, imported frames start empty.
+- `createEditor`（`(options: CreateDocEditorOptions) => Editor`）：在 `element` 中创建文档的编辑器。`element` 是框架的内容元素 `[data-shape-content]`。销毁框架时，白板也会销毁该编辑器。
+- `start?`（`(docId: string) => void`）：启动此编辑器中的更改带到白板上的每个框架所对应的文档，包括新建的框架、执行 `copy` 后的副本，以及通过 `setContent` 或 `UndoRedo` 撤销操作恢复的框架。此回调会在框架显示前运行，因此应保留框架已有的文档。通过 Yjs 从其他编辑器或其撤销操作带来的框架，不会在此处启动文档。
+- `copy`（`(options: CopyDocOptions) => void`）：为框架副本复制文档。此回调会在副本显示前、`start` 运行前执行。
+- `load?`（`(options: LoadDocOptions) => void`）：为通过 `importBoard` 从白板文件导入的新框架填充文档内容。此回调会在框架显示前、`start` 运行前执行。如果未提供，导入的框架将为空。
 
 ### `CreateDocEditorOptions`
 
-- `element` (`HTMLElement`)
-- `docId` (`string`)
+- `element`（`HTMLElement`）
+- `docId`（`string`）
 
 ### `CopyDocOptions`
 
-- `fromDocId` (`string`)
-- `toDocId` (`string`)
+- `fromDocId`（`string`）
+- `toDocId`（`string`）
 
 ### `LoadDocOptions`
 
-- `docId` (`string`): The id of the new document, which the imported frame shows.
-- `content` (`JSONContent`): The JSON of the document, from the board file.
+- `docId`（`string`）：新文档的 id，导入的框架会显示该文档。
+- `content`（`JSONContent`）：白板文件中该文档的 JSON。
 
 ## `BoardImages`
 
-Where the files of image shapes go, like a file storage of your app. The app provides it, so the board stays free of any storage. Images show from the URLs that `upload` returns. See [Images](/editor/whiteboard/guides/images).
+图像形状的文件存放位置，例如应用的文件存储。由应用提供，以便白板无需处理任何存储。图像会从 `upload` 返回的 URL 加载。参见[图像](/editor/whiteboard/guides/images)。
 
-### Properties
+### 属性
 
-- `upload` (`(options: UploadImageOptions) => Promise<string>`): Uploads an image file and returns the URL that its image shape shows it from.
-- `accept?` (`readonly string[]`): The image types that users can add. Default: `['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/avif', 'image/svg+xml']`.
-- `maxSize?` (`number`): The size of the largest file that users can add, in bytes. Default: `10 * 1024 * 1024`, 10 MB.
-- `onError?` (`(options: ImageErrorOptions) => void`): Tells the app about a file that the board left out, like to show a message.
+- `upload`（`(options: UploadImageOptions) => Promise<string>`）：上传图像文件，并返回图像形状用于加载图像的 URL。
+- `accept?`（`readonly string[]`）：用户可以添加的图像类型。默认值：`['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/avif', 'image/svg+xml']`。
+- `maxSize?`（`number`）：用户可以添加的最大文件大小，以字节为单位。默认值：`10 * 1024 * 1024`，即 10 MB。
+- `onError?`（`(options: ImageErrorOptions) => void`）：通知应用白板未能添加的文件，以便应用显示提示等信息。
 
 ### `UploadImageOptions`
 
-- `file` (`File`): The image file that a user pasted, dropped or picked.
-- `signal` (`AbortSignal`): Aborts when the board's editor is destroyed before the upload ends.
+- `file`（`File`）：用户粘贴、拖放或选择的图像文件。
+- `signal`（`AbortSignal`）：如果上传结束前白板编辑器被销毁，则中止上传。
 
 ### `ImageErrorOptions`
 
-- `file` (`File`): The file that the board left out.
-- `reason` (`'type' | 'size' | 'upload'`): `type` when `accept` doesn't list the file's type or the browser can't show the file, `size` when the file is larger than `maxSize`, and `upload` when `upload` threw or returned a URL that can't show.
-- `error?` (`unknown`): What `upload` threw, or the URL that it returned when the URL can't show.
+- `file`（`File`）：白板未能添加的文件。
+- `reason`（`'type' | 'size' | 'upload'`）：`type` 表示 `accept` 未列出该文件类型，或浏览器无法显示该文件；`size` 表示文件大小超过 `maxSize`；`upload` 表示 `upload` 抛出错误，或返回了无法显示的 URL。
+- `error?`（`unknown`）：`upload` 抛出的内容；如果返回的 URL 无法显示，则为该 URL。
 
 ## `BoardFile`
 
-A board saved as JSON by `exportBoard`, with the documents that its doc frames show. `importBoard` opens it again. See [Export and import](/editor/whiteboard/guides/export-and-import).
+由 `exportBoard` 保存为 JSON 的白板，其中包含文档框架显示的文档。可通过 `importBoard` 重新打开。参见[导出和导入](/editor/whiteboard/guides/export-and-import)。
 
-### Properties
+### 属性
 
-- `type` (`'tiptap-whiteboard'`): Marks the JSON as a board file.
-- `version` (`number`): The version of the file format. `importBoard` opens versions up to the one that `exportBoard` writes.
-- `content` (`JSONContent`): The board's document, like `editor.getJSON()` returns it.
-- `docs` (`Record<string, JSONContent>`): The documents that the doc frames show, by document id.
+- `type`（`'tiptap-whiteboard'`）：将 JSON 标记为白板文件。
+- `version`（`number`）：文件格式版本。`importBoard` 可以打开不高于 `exportBoard` 写入版本的文件。
+- `content`（`JSONContent`）：白板文档，类似于 `editor.getJSON()` 返回的内容。
+- `docs`（`Record<string, JSONContent>`）：文档框架显示的文档，按文档 id 索引。
 
 ## `BoardFileError`
 
-A class that extends `Error`. `importBoard` throws it when the JSON is none of the files that it opens, or has a newer file format of the whiteboard or of tldraw.
+一个扩展 `Error` 的类。当 JSON 不是可打开的文件，或使用了更新的白板或 tldraw 文件格式时，`importBoard` 会抛出此错误。
 
-### Properties
+### 属性
 
-- `code` (`BoardFileErrorCode`): Why the file can't be opened.
+- `code`（`BoardFileErrorCode`）：文件无法打开的原因。
 
 ### `BoardFileErrorCode`
 
-Type: `'not-a-board-file' | 'version-too-new'`. `not-a-board-file` is for JSON that is none of the files that `importBoard` opens, and `version-too-new` for a newer format of the whiteboard or of tldraw.
+类型：`'not-a-board-file' | 'version-too-new'`。`not-a-board-file` 表示 JSON 不属于 `importBoard` 可打开的文件；`version-too-new` 表示白板或 tldraw 文件格式较新。
 
 ## `ImportBoardResult`
 
-What `importBoard` added, and what it left out.
+`importBoard` 添加了哪些内容，以及跳过了哪些内容。
 
-### Properties
+### 属性
 
-- `ids` (`string[]`): The ids of the added shapes.
-- `skipped` (`SkippedShape[]`): The shapes of the file that the editor can't show, like ones of a type that it doesn't have, or with attributes of the wrong type. For a file of Excalidraw or tldraw, also what the board has no shape for, like frames, and the shapes of other pages. Each says why, and what it held and where it would be when the file says.
+- `ids`（`string[]`）：已添加形状的 id。
+- `skipped`（`SkippedShape[]`）：编辑器无法显示的文件中的形状，例如类型不受支持或属性类型不正确的形状。对于 Excalidraw 或 tldraw 文件，还包括白板没有对应形状的内容（例如框架）以及其他页面中的形状。每项都会说明跳过原因、内容以及文件提供的位置。
 
 ### `SkippedShape`
 
-- `id` (`string | null`): The shape's id in the file, or `null` when it has none.
-- `type` (`string`): The shape's node type in the file, or its type in the app that saved the file, like `frame`.
-- `reason` (`SkippedReason`): Why it was left out.
-- `detail` (`string`, optional): What it held, to name it by: a frame's name, a link, a page's name or text.
-- `box` ([`Rect`](#point-rect-and-size), optional): Where it would be on the board, when the file says. The width and height are 0 when the file gives only its spot. In `insert` mode, it moves with the copies.
+- `id`（`string | null`）：形状在文件中的 id；如果没有，则为 `null`。
+- `type`（`string`）：形状在文件中的节点类型，或保存文件的应用中的类型，例如 `frame`。
+- `reason`（`SkippedReason`）：跳过原因。
+- `detail`（`string`，可选）：用于标识形状的内容，例如框架名称、链接、页面名称或文本。
+- `box`（[`Rect`](#point-rect-and-size)，可选）：文件提供的白板位置。如果文件只提供位置，则宽度和高度为 0。在 `insert` 模式下，该位置会随副本一起移动。
 
 ### `SkippedReason`
 
-Type: `'unsupported' | 'other-page' | 'missing-image' | 'unreadable'`. The board has no shape like it, like a frame, or the editor lacks its node type. It is on a page after the first of a tldraw file. The file lacks the image that it shows. Its data is broken.
+类型：`'unsupported' | 'other-page' | 'missing-image' | 'unreadable'`。白板没有对应的形状（例如框架），或编辑器缺少对应的节点类型；该形状位于 tldraw 文件的第一页之后；文件缺少形状所显示的图像；或形状数据已损坏。
 
 ## `BoardSvg`
 
-An SVG image of shapes on the board, as `exportBoardSvg` returns it.
+`exportBoardSvg` 返回的白板形状 SVG 图像。
 
-### Properties
+### 属性
 
-- `svg` (`string`): The markup of the SVG.
-- `width` (`number`): The width of the image, in board units.
-- `height` (`number`): The height of the image, in board units.
+- `svg`（`string`）：SVG 标记。
+- `width`（`number`）：图像宽度，以白板单位为准。
+- `height`（`number`）：图像高度，以白板单位为准。
 
 ## `RemoteSelection`
 
-The shapes that one other user selects, and their color as `#RRGGBB`. A selection with another color, like `red` or `#abc`, doesn't show.
+另一位用户选中的形状及其颜色，颜色格式为 `#RRGGBB`。如果选择颜色是其他格式（例如 `red` 或 `#abc`），则不会显示。
 
-### Properties
+### 属性
 
-- `color` (`string`)
-- `ids` (`readonly string[]`)
+- `color`（`string`）
+- `ids`（`readonly string[]`）
 
 ## `RemoteCursor`
 
-Where another user points on the board, and what they drag.
+另一位用户在白板上指向的位置以及拖动的内容。
 
-### Properties
+### 属性
 
-- `owner` (`unknown`): Whose cursor it is, like the client id of another user.
-- `point` (`Point`): Where the user points, in board units.
-- `time?` (`number`): When the user's browser shared the point, by its own clock, in ms. The cursor moves at the pace that the points were shared. Without it, it takes the time that a point arrives.
-- `name` (`string`): The name next to the cursor.
-- `color` (`string`): The user's color as `#RRGGBB`, in the cursor's `--remote-cursor`. Another color doesn't show.
-- `drag?` (`{ ids: readonly string[]; delta: Point } | null`): The shapes that the user drags, and how far they moved them since the drag began, in board units, when the user pointed at `point`.
+- `owner`（`unknown`）：光标所属者，例如另一位用户的客户端 id。
+- `point`（`Point`）：用户指向的位置，以白板单位为准。
+- `time?`（`number`）：用户浏览器按自身时钟共享该位置的时间，以毫秒为单位。光标会按照位置共享的节奏移动。未提供时，使用位置到达的时间。
+- `name`（`string`）：光标旁显示的名称。
+- `color`（`string`）：用户的颜色，格式为 `#RRGGBB`，用于光标的 `--remote-cursor`。其他格式的颜色不会显示。
+- `drag?`（`{ ids: readonly string[]; delta: Point } | null`）：用户正在拖动的形状，以及从拖动开始至用户指向 `point` 时移动的距离，以白板单位为准。
 
 ## `RemoteCursors`
 
-The cursors of other users on a board. `createRemoteCursors` returns it.
+白板上其他用户的光标。`createRemoteCursors` 会返回此对象。
 
-### Properties
+### 属性
 
-- `update` (`(cursors: readonly RemoteCursor[]) => void`)
-- `destroy` (`() => void`)
+- `update`（`(cursors: readonly RemoteCursor[]) => void`）
+- `destroy`（`() => void`）
 
 ## `RemoteMoves`
 
-Shows the drags of other users, until they drop their shapes. `createRemoteMoves` returns it.
+显示其他用户的拖动操作，直到他们放下形状。`createRemoteMoves` 会返回此对象。
 
-### Properties
+### 属性
 
-- `show` (`(options: ShowRemoteMoveOptions) => void`)
-- `end` (`(owner: unknown) => void`)
+- `show`（`(options: ShowRemoteMoveOptions) => void`）
+- `end`（`(owner: unknown) => void`）
 
 ### `ShowRemoteMoveOptions`
 
-- `owner` (`unknown`): Whose drag it is, like the client id of another user.
-- `ids` (`readonly string[]`)
-- `delta` (`Point`): How far the drag has moved the shapes since it began, in board units.
+- `owner`（`unknown`）：拖动所属者，例如另一位用户的客户端 id。
+- `ids`（`readonly string[]`）
+- `delta`（`Point`）：从拖动开始至今，形状移动的距离，以白板单位为准。
 
 ## `FreehandShape`
 
-Type: `ShapeGeometry & { points: string }`. The box and the points of a pen line, as `freehandFromPoints` returns them.
+类型：`ShapeGeometry & { points: string }`。`freehandFromPoints` 返回的画笔线条边界框和点。
 
 ## `StackPlace`
 
-Type: `'front' | 'back'`. Where `restackShapes` puts shapes: in front of all others, or behind them.
+类型：`'front' | 'back'`。`restackShapes` 放置形状的位置：所有其他形状的前方或后方。
 
-## Options types
+## 选项类型
 
-The options of each function and command have a type of their own:
+每个函数和命令的选项都有各自的类型：
 
-| Type                          | Options of                                                                                |
+| 类型                          | 对应选项的函数或命令                                                                    |
 | ----------------------------- | ----------------------------------------------------------------------------------------- |
 | `StageOptions`                | [`attachStage`](/editor/whiteboard/api-reference/utilities#attachstage)                   |
 | `ZoomAtStageCenterOptions`    | [`zoomAtStageCenter`](/editor/whiteboard/api-reference/utilities#zoomatstagecenter)       |
