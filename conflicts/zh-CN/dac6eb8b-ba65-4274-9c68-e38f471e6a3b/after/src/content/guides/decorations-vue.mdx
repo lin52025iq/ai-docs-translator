@@ -1,0 +1,537 @@
+---
+title: '在 Vue 3 中使用 Decorations 高亮搜索词'
+meta:
+  title: '在 Vue 3 中使用 Decorations 高亮搜索词 | Tiptap Editor 文档'
+  description: 使用 inline、node 和 widget decorations，为 Vue 3 Tiptap 编辑器构建词语高亮功能。
+  category: Editor
+---
+
+import { Callout } from '@/components/ui/Callout'
+
+本教程将带你为 Vue 3 中的 Tiptap 编辑器构建词语高亮功能。用户在输入框中输入搜索词，文档中所有匹配项都会高亮显示。文档本身不会发生任何变化，高亮效果纯粹是视觉上的。
+
+最终实现的功能会用到全部三种 decoration 类型：
+
+- **Inline decorations** 为每个匹配项添加黄色背景。
+- **Node decorations** 为至少包含一个匹配项的整个块添加轮廓。
+- **Widget decorations** 在每个匹配项后显示一个带编号的 Vue 徽标。
+
+## 什么是 decorations？
+
+Decorations 是叠加在文档上的视觉标记。它们会改变用户看到的内容，但不会改变文档内容。将编辑器保存为 JSON 或 HTML 时，不会包含 decorations。
+
+Tiptap 有三种 decoration：
+
+- **Inline** 将一段文本包裹在带样式的 span 中，适用于高亮。
+- **Node** 为整个块的 DOM 包装元素添加属性（例如 CSS 类），适用于为段落或标题添加轮廓。
+- **Widget** 在单个位置插入 DOM 元素，适用于徽标、标记或小型 UI 元素。
+
+这三种 decoration 都通过从 `@tiptap/core` 导入的 `Decoration` 类创建。对于要渲染 Vue 组件的 widget，则使用来自 `@tiptap/vue-3` 的 `VueWidgetRenderer`。
+
+## 设置编辑器和搜索输入框
+
+首先创建一个基本的 Vue 组件，用于渲染搜索输入框和编辑器：
+
+```vue
+<!-- TiptapEditor.vue -->
+<template>
+  <div>
+    <div class="highlight-toolbar">
+      <input
+        v-model="searchTerm"
+        aria-label="Search"
+        placeholder="Type a word to highlight..."
+      />
+    </div>
+    <EditorContent :editor="editor" />
+  </div>
+</template>
+
+<script setup lang="ts">
+import StarterKit from '@tiptap/starter-kit'
+import { Editor, EditorContent } from '@tiptap/vue-3'
+import { onBeforeUnmount, ref } from 'vue'
+
+import { Highlight } from './highlight'
+import './styles.css'
+
+// We store the search term in a ref so the input stays reactive
+const searchTerm = ref('')
+
+const editor = new Editor({
+  extensions: [StarterKit, Highlight],
+  content: `
+    <h2>Tiptap decorations tutorial</h2>
+    <p>Tiptap is a headless editor toolkit built on ProseMirror.</p>
+    <p>You can highlight words without changing the document.</p>
+    <p>Try typing "tiptap" in the search box above.</p>
+  `,
+})
+
+// Clean up the editor when the component unmounts
+onBeforeUnmount(() => {
+  editor.destroy()
+})
+</script>
+```
+
+`Highlight` 扩展目前还不存在，下一步我们会创建它。输入框已绑定到 Vue ref，但尚未连接到编辑器。等扩展准备好后，我们再完成连接。
+
+## 创建高亮扩展
+
+扩展是 Tiptap 的构建模块。从粗体文本到代码块，每项功能都由扩展实现。我们需要一个自定义扩展，用于读取搜索词并生成 decorations。
+
+先创建一个空扩展，并添加用于存储搜索词的字段：
+
+```ts
+// highlight.ts
+import { Extension } from '@tiptap/core'
+
+// This tells TypeScript what our storage looks like
+interface HighlightStorage {
+  term: string
+}
+
+// Tiptap keeps every extension's storage in one shared object: editor.storage.
+// TypeScript does not know about our "highlight" key by default, so we use
+// declare module to add it. This gives us type checking on editor.storage.highlight.
+declare module '@tiptap/core' {
+  interface Storage {
+    highlight: HighlightStorage
+  }
+}
+
+export const Highlight = Extension.create<{}, HighlightStorage>({
+  name: 'highlight',
+
+  // addStorage returns the initial values for this extension's storage.
+  // We store the search term here so the decoration logic can read it.
+  addStorage() {
+    return {
+      term: '',
+    }
+  },
+
+  // addCommands defines custom commands callable via editor.commands.
+  // Writing to storage alone does not trigger a decoration rebuild, so we
+  // create one command that stores the term and refreshes decorations together.
+  addCommands() {
+    return {
+      setSearchTerm: (term: string) => ({ editor, commands }) => {
+        editor.storage.highlight.term = term
+        commands.updateDecorations('highlight')
+        return true
+      },
+    }
+  },
+})
+```
+
+Storage 是扩展实例上的一个普通对象。单独写入该对象不会触发 decorations 重建，所以我们添加了 `setSearchTerm` 命令，让它在存储搜索词的同时调用 `updateDecorations`。稍后我们会在 Vue 组件中调用这个命令。在 `addDecorations` 中，我们会从 storage 读取搜索词。
+
+## 创建徽标 widget 组件
+
+添加 decorations 之前，先创建 widget 要渲染的 Vue 组件。它是一个带编号的小徽标，会显示在每个匹配项后面。
+
+`VueWidgetRenderer` 会自动将 `editor` 和 `getPos` 与你提供的其他 props 一起传给组件。这个徽标只需要匹配项的编号：
+
+```vue
+<!-- MatchBadge.vue -->
+<template>
+  <span class="match-badge" contenteditable="false">
+    {{ matchNumber }}
+  </span>
+</template>
+
+<script setup lang="ts">
+import type { Editor } from '@tiptap/vue-3'
+
+// editor and getPos are passed automatically by VueWidgetRenderer.
+// We declare them so Vue does not warn about unknown props,
+// but we do not use them for a static badge.
+defineProps<{
+  editor: Editor
+  getPos: () => number | undefined
+  matchNumber: number
+}>()
+</script>
+```
+
+`contenteditable="false"` 属性很重要。没有它，用户就能在徽标中输入内容，这会干扰 ProseMirror 的编辑逻辑。
+
+<Callout title="Vue widget 组件必须只有一个根元素" variant="warning">
+  Vue 要求每个组件只能有一个根元素。徽标使用单个 `<span>`，这没有问题。如果 widget 需要多个元素，请用容器元素将它们包起来。
+</Callout>
+
+<Callout title="editor 和 getPos 是什么？" variant="info">
+  每个 widget 组件都会收到 `editor`（Tiptap 编辑器实例）和 `getPos`（返回 widget 当前文档位置的函数）。静态徽标不需要它们，但对于交互式 widget，它们必不可少。例如，“替换”按钮会使用 `getPos()` 来确定要替换文档中的哪个部分。需要位置时，请始终调用 `getPos()`，不要保存它的返回值，因为用户编辑时位置会发生变化。
+</Callout>
+
+## 查找并高亮匹配项
+
+现在，我们在扩展中添加 `addDecorations` 钩子。这里会扫描文档以查找匹配项，并返回 decorations。
+
+我们分三步完成：先添加 inline decorations，再添加 node decorations，最后添加 widget decorations。
+
+### 第 1 步：使用 inline decorations 高亮
+
+```ts
+// highlight.ts
+import { Decoration, Extension } from '@tiptap/core'
+
+// ... HighlightStorage, declare module, addStorage, and addCommands stay the same ...
+
+export const Highlight = Extension.create<{}, HighlightStorage>({
+  name: 'highlight',
+
+  addStorage() {
+    return { term: '' }
+  },
+
+  addDecorations() {
+    return {
+      // 'manual' means Tiptap will not rebuild decorations on every keystroke.
+      // We decide when to rebuild by calling editor.commands.updateDecorations().
+      update: 'manual',
+
+      // create runs on init and every time we call updateDecorations().
+      create: ({ editor, state }) => {
+        // Read the search term from storage and clean it up
+        const term = editor.storage.highlight.term.trim().toLowerCase()
+
+        // If there is no search term, return an empty array (no decorations)
+        if (!term) return []
+
+        const decorations: Decoration[] = []
+
+        // descendants() walks every node in the document.
+        // Each node comes with its starting position (pos).
+        state.doc.descendants((node, pos) => {
+          // We only care about text nodes. Skip headings, paragraphs, etc.
+          if (!node.isText || !node.text) return
+
+          // Search inside this text node (case-insensitive)
+          const text = node.text.toLowerCase()
+          let index = text.indexOf(term)
+
+          // Keep searching until we run out of matches in this text node
+          while (index !== -1) {
+            // pos is where the text node starts.
+            // index is where the match starts inside the text node.
+            // So the match's document position is pos + index.
+            const matchFrom = pos + index
+            const matchTo = matchFrom + term.length
+
+            // Create an inline decoration that wraps the match in a span
+            // with the CSS class "highlight-match"
+            decorations.push(
+              Decoration.Inline(matchFrom, matchTo, { class: 'highlight-match' }),
+            )
+
+            // Move past this match and look for the next one
+            index = text.indexOf(term, index + term.length)
+          }
+        })
+
+        return decorations
+      },
+    }
+  },
+})
+```
+
+<Callout title="为什么使用手动更新策略？" variant="info">
+  搜索词来自文档之外的输入框。用户在编辑器中输入时，文档会变化，但搜索词不会变化。因此，没有必要在每次按键时都重建 decorations。使用 `update: 'manual'` 时，Tiptap 只会将已有的 decorations 映射到新位置（速度很快），并等待我们在搜索词实际变化时调用 `updateDecorations()`。
+</Callout>
+
+### 第 2 步：使用 node decorations 为块添加轮廓
+
+Inline decorations 会高亮单个词语。Node decorations 则可以为包含匹配项的整个块（段落、标题等）添加轮廓。我们会跟踪已经添加 decoration 的块，以避免重复：
+
+```ts
+// Inside create, before the descendants() call, add a Set to track decorated blocks:
+
+create: ({ editor, state }) => {
+  const term = editor.storage.highlight.term.trim().toLowerCase()
+  if (!term) return []
+
+  const decorations: Decoration[] = []
+  // Track block start positions we have already outlined
+  const decoratedBlocks = new Set<number>()
+
+  state.doc.descendants((node, pos) => {
+    if (!node.isText || !node.text) return
+
+    const text = node.text.toLowerCase()
+    let index = text.indexOf(term)
+
+    while (index !== -1) {
+      const matchFrom = pos + index
+      const matchTo = matchFrom + term.length
+
+      // Inline: highlight the match
+      decorations.push(
+        Decoration.Inline(matchFrom, matchTo, { class: 'highlight-match' }),
+      )
+
+      // Node: outline the block that contains this match.
+      // resolve() gives us info about the position, including which block it sits in.
+      const $match = state.doc.resolve(matchFrom)
+
+      // depth is how deeply the match is nested: 1 is a top-level block,
+      // 2 is a block inside another block. The calculation selects the
+      // innermost block around the match.
+      const depth = Math.max(1, $match.depth)
+
+      // before() and after() give us the start and end of the containing block
+      const blockStart = $match.before(depth)
+      const blockEnd = $match.after(depth)
+
+      // Only outline each block once, even if it has multiple matches
+      if (!decoratedBlocks.has(blockStart)) {
+        decoratedBlocks.add(blockStart)
+        decorations.push(
+          Decoration.Node(blockStart, blockEnd, { class: 'has-match' }),
+        )
+      }
+
+      index = text.indexOf(term, index + term.length)
+    }
+  })
+
+  return decorations
+},
+```
+
+### 第 3 步：使用 widget decorations 显示带编号的徽标
+
+现在添加 widget。我们使用 `VueWidgetRenderer` 来渲染之前创建的 `MatchBadge` 组件。还需要一个计数器，为所有文本节点中的匹配项编号：
+
+```ts
+// Add the imports at the top of highlight.ts:
+import { VueWidgetRenderer } from '@tiptap/vue-3'
+import MatchBadge from './MatchBadge.vue'
+
+// Inside create, add a counter before the descendants() call:
+let matchNumber = 0
+
+// Then inside the while loop, after the node decoration:
+
+// Widget: render a numbered Vue badge after the match.
+// VueWidgetRenderer takes the component and an options object.
+// The component receives the props we pass plus editor and getPos.
+matchNumber++
+decorations.push(
+  VueWidgetRenderer(MatchBadge, {
+    editor,
+    // Place the widget right after the match
+    pos: matchTo,
+    // The key identifies this widget across rebuilds.
+    // Position-based keys are fine here because the badge has no state.
+    // For stateful widgets, use a stable key like `match-${id}` instead.
+    key: `match-badge-${matchFrom}`,
+    // These props are passed to the MatchBadge component
+    props: { matchNumber },
+    // side: 1 places the widget after the match (right side)
+    side: 1,
+  }),
+)
+```
+
+<Callout title="Widget key 说明" variant="info">
+  每个 widget 都需要一个 `key`。ProseMirror 会根据 key 决定在重绘时复用 widget 的 DOM，还是销毁并重新创建。如果 key 保持不变，widget 就会保持挂载状态，Vue 也会保留其状态。如果 key 发生变化，widget 就会重新创建。
+
+  对于这个徽标这样的无状态 widget，基于位置的 key（`match-badge-${matchFrom}`）就可以了。对于有状态的 widget（即用户可以更改其数据的 widget），请使用与项目身份相关联的稳定 key，例如 `comment-${id}`。请参阅核心概念指南中的 [widget keys 部分](/editor/core-concepts/decorations#widget-keys)。
+</Callout>
+
+## 完整扩展
+
+下面是包含全部三种 decoration 类型的完整扩展：
+
+```ts
+// highlight.ts
+import { Decoration, Extension } from '@tiptap/core'
+import { VueWidgetRenderer } from '@tiptap/vue-3'
+
+import MatchBadge from './MatchBadge.vue'
+
+interface HighlightStorage {
+  term: string
+}
+
+// Augment Tiptap's Storage interface so editor.storage.highlight is typed
+declare module '@tiptap/core' {
+  interface Storage {
+    highlight: HighlightStorage
+  }
+}
+
+export const Highlight = Extension.create<{}, HighlightStorage>({
+  name: 'highlight',
+
+  addStorage() {
+    return { term: '' }
+  },
+
+  addCommands() {
+    return {
+      setSearchTerm: (term: string) => ({ editor, commands }) => {
+        editor.storage.highlight.term = term
+        commands.updateDecorations('highlight')
+        return true
+      },
+    }
+  },
+
+  addDecorations() {
+    return {
+      update: 'manual',
+      create: ({ editor, state }) => {
+        const term = editor.storage.highlight.term.trim().toLowerCase()
+        if (!term) return []
+
+        const decorations: Decoration[] = []
+        let matchNumber = 0
+        const decoratedBlocks = new Set<number>()
+
+        state.doc.descendants((node, pos) => {
+          if (!node.isText || !node.text) return
+
+          const text = node.text.toLowerCase()
+          let index = text.indexOf(term)
+
+          while (index !== -1) {
+            const matchFrom = pos + index
+            const matchTo = matchFrom + term.length
+
+            // Inline: highlight the match
+            decorations.push(
+              Decoration.Inline(matchFrom, matchTo, { class: 'highlight-match' }),
+            )
+
+            // Node: outline the containing block once
+            const $match = state.doc.resolve(matchFrom)
+            const depth = Math.max(1, $match.depth)
+            const blockStart = $match.before(depth)
+            const blockEnd = $match.after(depth)
+
+            if (!decoratedBlocks.has(blockStart)) {
+              decoratedBlocks.add(blockStart)
+              decorations.push(
+                Decoration.Node(blockStart, blockEnd, { class: 'has-match' }),
+              )
+            }
+
+            // Widget: numbered Vue badge after the match
+            matchNumber++
+            decorations.push(
+              VueWidgetRenderer(MatchBadge, {
+                editor,
+                pos: matchTo,
+                key: `match-badge-${matchFrom}`,
+                props: { matchNumber },
+                side: 1,
+              }),
+            )
+
+            index = text.indexOf(term, index + term.length)
+          }
+        })
+
+        return decorations
+      },
+    }
+  },
+})
+```
+
+## 连接搜索输入框
+
+现在将输入框连接到扩展。搜索词变化时，我们会将其写入扩展的 storage，并通知 Tiptap 重建 decorations：
+
+```vue
+<!-- TiptapEditor.vue -->
+<template>
+  <div>
+    <div class="highlight-toolbar">
+      <input
+        v-model="searchTerm"
+        aria-label="Search"
+        placeholder="Type a word to highlight..."
+      />
+    </div>
+    <EditorContent :editor="editor" />
+  </div>
+</template>
+
+<script setup lang="ts">
+import StarterKit from '@tiptap/starter-kit'
+import { Editor, EditorContent } from '@tiptap/vue-3'
+import { onBeforeUnmount, ref, watch } from 'vue'
+
+import { Highlight } from './highlight'
+import './styles.css'
+
+const searchTerm = ref('')
+const editor = new Editor({
+  extensions: [StarterKit, Highlight],
+  content: `
+    <h2>Tiptap decorations tutorial</h2>
+    <p>Tiptap is a headless editor toolkit built on ProseMirror.</p>
+    <p>You can highlight words without changing the document.</p>
+    <p>Try typing "tiptap" in the search box above.</p>
+  `,
+})
+
+// Watch the search term ref. When it changes, call our custom command
+// which stores the term and rebuilds decorations in one step.
+watch(searchTerm, (value) => {
+  editor.commands.setSearchTerm(value)
+})
+
+onBeforeUnmount(() => {
+  editor.destroy()
+})
+</script>
+```
+
+整个流程如下：用户输入内容后，Vue ref 会更新；watcher 调用 `setSearchTerm` 存储搜索词并触发重建；随后 Tiptap 调用 `create` 函数扫描文档，并返回新的 decorations。
+
+## 设置 decorations 的样式
+
+Decorations 会为文档添加 CSS 类。添加以下样式即可使它们显示出来：
+
+```css
+/* styles.css */
+
+/* Inline decoration: yellow highlight on each match */
+.highlight-match {
+  background: #fff3a3;
+  border-radius: 2px;
+}
+
+/* Node decoration: outline blocks that contain matches */
+.has-match {
+  outline: 2px solid #ffc857;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Widget decoration: numbered badge after each match */
+.match-badge {
+  margin-inline-start: 0.25rem;
+  padding: 0.1rem 0.4rem;
+  background: #1f2937;
+  color: white;
+  font-size: 0.75rem;
+  border-radius: 0.25rem;
+  vertical-align: middle;
+  user-select: none;
+}
+```
+
+## 后续步骤
+
+- 在核心概念指南中查看 [decoration 类型和更新策略](/editor/core-concepts/decorations)。
+- 阅读完整的 [Decorations API 参考](/editor/api/decorations)，了解所有签名和选项。
+- 如果想在不使用框架的情况下手动构建 widget，请参阅 [Vanilla JS 教程](/guides/decorations-vanilla)；如果使用 React，请参阅 [React 教程](/guides/decorations-react)。
