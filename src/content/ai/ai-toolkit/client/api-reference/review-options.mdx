@@ -1,12 +1,12 @@
 ---
-title: Review options
+title: 审阅选项
 meta:
-  title: Review options | Tiptap AI Toolkit
-  description: Configure preview and review behavior for AI-generated changes with ReviewOptions.
-  category: AI Toolkit
+  title: 审阅选项 | Tiptap AI Toolkit
+  description: 使用 ReviewOptions 配置 AI 生成更改的预览和审阅行为。
+  category: AI 工具包
 ---
 
-All AI Toolkit methods that [edit the document](/ai/ai-toolkit/client/api-reference/edit-the-document) have a `reviewOptions` property. When configured, it allows you to display a review UI after the document is edited.
+所有[编辑文档](/ai/ai-toolkit/client/api-reference/edit-the-document)的 AI Toolkit 方法都包含 `reviewOptions` 属性。配置此属性后，文档编辑完成后即可显示审阅界面。
 
 ```ts
 const result = toolkit.executeTool({
@@ -18,20 +18,20 @@ const result = toolkit.executeTool({
 })
 ```
 
-After editing the document, a list of [suggestions](/ai/ai-toolkit/client/agents/review-changes) will be displayed.
+编辑文档后，将显示一组[建议](/ai/ai-toolkit/client/agents/review-changes)。
 
-The `reviewOptions` property takes a `ReviewOptions` configuration object.
+`reviewOptions` 属性接受一个 `ReviewOptions` 配置对象。
 
 ## `ReviewOptions`
 
-- `mode?` (`'disabled' | 'review' | 'preview' | 'trackedChanges'`): Whether to review the changes before or after applying them. Default: `'disabled'`
-  - `'disabled'`: No review UI is displayed.
-  - `'review'`: The changes are applied first, then a review UI is displayed allowing the user to undo them.
-  - `'preview'`: A preview UI is displayed before applying the changes, allowing the user to accept or reject them.
-  - `'trackedChanges'`: AI-generated changes are encoded as tracked changes using the [Tracked Changes](/tracked-changes/getting-started/overview) extension, allowing users to accept or reject individual changes.
-- `displayOptions?` (`DisplayOptions`): Customize how suggestions are displayed in the editor UI. Sets the `displayOptions` property of the [`Suggestion`](/ai/ai-toolkit/client/api-reference/suggestions#the-suggestion-object) type. [See available options](/ai/ai-toolkit/client/api-reference/suggestions#the-suggestion-object).
-- `metadata?` (`Record<string, any>`): Extra metadata for the suggestions that can be used to store additional information about them (e.g. their source or their category). It is not used internally by the extension but it may help developers customize how the suggestions are displayed in the UI.
-- `trackedChangesOptions?` (`{ userId: string, userMetadata?: Record<string, unknown> | null }`): Configuration for the `trackedChanges` mode. `userId` identifies the author of the tracked changes. `userMetadata` stores additional information about the author.
-- `commentsOptions?` (`{ threadData?: Record<string, unknown>, commentData?: Record<string, unknown> }`): When provided alongside the `trackedChanges` mode, operation metadata (the `meta` field in edit operations) becomes a comment thread linked to each tracked change. Requires the [Comments](/comments/getting-started/overview) extension.
-- `useDiffUtility?` (`boolean`): Whether to use the [Diff Utility](/ai/ai-toolkit/client/api-reference/diff-utility) to compare the documents before and after the change, displaying the deleted and added content as a rich diff. If `false`, the deleted content and added content are displayed in a whole block, as a single change. Default: `true`
-- `diffUtilityOptions?` ([`ExternalDiffUtilityOptions`](/ai/ai-toolkit/client/api-reference/diff-utility#parameters-diffutilityoptions)): Options for comparing the documents with the diff utility. [See available options](/ai/ai-toolkit/client/api-reference/diff-utility#parameters-diffutilityoptions).
+- `mode?`（`'disabled' | 'review' | 'preview' | 'trackedChanges'`）：在应用更改之前还是之后审阅更改。默认值：`'disabled'`
+  - `'disabled'`：不显示审阅界面。
+  - `'review'`：先应用更改，然后显示审阅界面，供用户撤销更改。
+  - `'preview'`：应用更改之前显示预览界面，供用户接受或拒绝更改。
+  - `'trackedChanges'`：使用 [Tracked Changes](/tracked-changes/getting-started/overview) 扩展将 AI 生成的更改编码为修订记录，用户可以逐项接受或拒绝更改。
+- `displayOptions?`（`DisplayOptions`）：自定义建议在编辑器界面中的显示方式。此选项会设置 [`Suggestion`](/ai/ai-toolkit/client/api-reference/suggestions#the-suggestion-object) 类型的 `displayOptions` 属性。[查看可用选项](/ai/ai-toolkit/client/api-reference/suggestions#the-suggestion-object)。
+- `metadata?`（`Record<string, any>`）：建议的额外元数据，可用于存储相关信息（例如来源或类别）。扩展内部不会使用此属性，但开发者可借此自定义建议在界面中的显示方式。
+- `trackedChangesOptions?`（`{ userId: string, userMetadata?: Record<string, unknown> | null }`）：`trackedChanges` 模式的配置。`userId` 用于标识修订记录的作者。`userMetadata` 用于存储有关作者的其他信息。
+- `commentsOptions?`（`{ threadData?: Record<string, unknown>, commentData?: Record<string, unknown> }`）：与 `trackedChanges` 模式一起提供时，操作元数据（编辑操作中的 `meta` 字段）会成为与每条修订记录关联的评论线程。此选项需要 [Comments](/comments/getting-started/overview) 扩展。
+- `useDiffUtility?`（`boolean`）：是否使用[差异工具](/ai/ai-toolkit/client/api-reference/diff-utility)比较更改前后的文档，并以丰富的差异视图显示删除和新增的内容。如果为 `false`，删除和新增的内容会作为单个更改显示在一个整体区块中。默认值：`true`
+- `diffUtilityOptions?`（[`ExternalDiffUtilityOptions`](/ai/ai-toolkit/client/api-reference/diff-utility#parameters-diffutilityoptions)）：使用差异工具比较文档时的选项。[查看可用选项](/ai/ai-toolkit/client/api-reference/diff-utility#parameters-diffutilityoptions)。
