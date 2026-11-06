@@ -1,31 +1,30 @@
 ---
-title: Review changes with the AI Changes extension
+title: 使用 AI Changes 扩展审查更改
 meta:
-  title: Review changes with AI Changes | Tiptap Content AI
-  description: Learn how to integrate the AI agent with the AI Changes extension to review AI-generated changes.
-  category: Content AI
+  title: 使用 AI Changes 审查更改 | Tiptap Content AI
+  description: 了解如何将 AI agent 与 AI Changes 扩展集成，以审查 AI 生成的更改。
+  category: 内容 AI
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Integrate the AI Agent extension with the AI Changes extension to provide a review workflow for AI-generated changes. Allow users to review changes after they are applied to the document.
+将 AI Agent 扩展与 AI Changes 扩展集成，为 AI 生成的更改提供审查工作流。用户可以在更改应用到文档后进行审查。
 
-## Setting up the AI Changes integration
+## 设置 AI Changes 集成
 
-This guide walks you through the process of setting up the AI Changes extension for reviewing, accepting and rejecting changes.
+本指南将介绍如何设置 AI Changes 扩展，以便审查、接受和拒绝更改。
 
-<Callout title="Note" variant="info">
-  We provide a code demo of how to integrate the AI Changes extension in [the introduction
-  page](/ai/deprecated/agent/overview).
+<Callout title="注意" variant="info">
+  我们在[介绍页面](/ai/deprecated/agent/overview)中提供了集成 AI Changes 扩展的代码示例。
 </Callout>
 
-### Step 1: Install both extensions
+### 第 1 步：安装两个扩展
 
 ```bash
 npm install @tiptap-pro/extension-ai-agent @tiptap-pro/extension-ai-changes
 ```
 
-### Step 2: Configure both extensions in your editor
+### 第 2 步：在编辑器中配置两个扩展
 
 ```tsx
 import { Editor } from '@tiptap/core'
@@ -62,9 +61,9 @@ const editor = new Editor({
 })
 ```
 
-### Step 3: Configure styles
+### 第 3 步：配置样式
 
-Customize how the suggestions are displayed in the editor.
+自定义建议在编辑器中的显示方式。
 
 ```css
 .tiptap-ai-changes--old {
@@ -82,17 +81,17 @@ Customize how the suggestions are displayed in the editor.
 }
 ```
 
-## How the review workflow works
+## 审查工作流的运作方式
 
-1. When the AI agent makes changes to the document, they are tracked by the AI Changes extension
-2. If `autoAccept` is set to `never` or `onlyRead` (for content-modifying changes), the changes are shown as pending
-3. The provider's state changes to `reviewingToolCall`
-4. The user can review the changes and decide to accept or reject them
-5. After accepting or rejecting, the conversation continues
+1. AI agent 更改文档时，AI Changes 扩展会跟踪这些更改
+2. 如果 `autoAccept` 设置为 `never`，或对于会修改内容的更改设置为 `onlyRead`，这些更改会显示为待处理状态
+3. provider 的状态会变为 `reviewingToolCall`
+4. 用户可以审查更改，并决定接受或拒绝
+5. 接受或拒绝后，对话会继续
 
-## Accepting and rejecting changes
+## 接受和拒绝更改
 
-You can call these methods to accept or reject changes:
+可以调用以下方法来接受或拒绝更改：
 
 ```tsx
 // Accept all pending changes
@@ -102,18 +101,12 @@ provider.acceptToolCall()
 provider.rejectToolCall()
 ```
 
-<Callout title="Note" variant="warning">
-  If the tool call is rejected, the AI agent provider will attempt to reset the document to the
-  state before the tool call was executed, with the AI Changes extension. However, if the AI Changes
-  extension is not imported or the `extension` parameter is set to `null`, the AI agent will not be
-  able to reset the document state automatically, so you will need to implement your own logic to
-  handle rejected tool calls and restore the document to a previous state.
+<Callout title="注意" variant="warning">
+  如果工具调用被拒绝，AI agent provider 会尝试借助 AI Changes 扩展，将文档重置为执行工具调用之前的状态。不过，如果未导入 AI Changes 扩展，或 `extension` 参数设为 `null`，AI agent 将无法自动重置文档状态。因此，你需要自行实现逻辑，以处理被拒绝的工具调用并将文档恢复到之前的状态。
 </Callout>
 
-A way to handle rejected tool calls without the AI Changes extension is to store the document state before the tool call is applied (when the `beforeToolCall` event is triggered), and restore it when the tool call is rejected.
+如果不使用 AI Changes 扩展，要处理被拒绝的工具调用，可以在应用工具调用之前（触发 `beforeToolCall` 事件时）保存文档状态，并在工具调用被拒绝时恢复该状态。
 
-<Callout title="Note" variant="info">
-  The AI Changes extension lets users review changes after they are applied to the document. To
-  review changes before they are applied, integrate the [AI
-  Suggestion](/ai/deprecated/agent/review/ai-suggestion) extension.
+<Callout title="注意" variant="info">
+  AI Changes 扩展允许用户在更改应用到文档后进行审查。若要在应用更改之前进行审查，请集成 [AI Suggestion](/ai/deprecated/agent/review/ai-suggestion) 扩展。
 </Callout>
