@@ -1,12 +1,12 @@
 ---
-title: Mention Trigger Button
+title: 提及触发按钮
 meta:
-  title: Mention Trigger Button | Tiptap UI Components
-  description: Insert mention trigger characters in Tiptap editors with smart positioning, customizable triggers, keyboard shortcuts, and accessibility support.
-  category: UI Components
+  title: 提及触发按钮 | Tiptap UI 组件
+  description: 在 Tiptap 编辑器中插入提及触发字符，支持智能定位、自定义触发字符、键盘快捷键和无障碍功能。
+  category: UI 组件
 component:
-  name: Mention Trigger Button
-  description: A prebuilt React component that inserts mention trigger characters into Tiptap editors.
+  name: 提及触发按钮
+  description: 一个预构建的 React 组件，可在 Tiptap 编辑器中插入提及触发字符。
   type: component
   isFree: false
   isCloud: false
@@ -19,25 +19,25 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A fully accessible mention trigger button for Tiptap editors. Easily insert mention triggers like `"@"` to initiate mention functionality with keyboard shortcut support and flexible customization options.
+适用于 Tiptap 编辑器的完全无障碍提及触发按钮。轻松插入 `"@"` 等提及触发字符，以启用提及功能，并支持键盘快捷键和灵活的自定义选项。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui/mention-trigger-button" />
 
-## Installation
+## 安装
 
-Add the component via the Tiptap CLI:
+通过 Tiptap CLI 添加组件：
 
 ```bash
 npx @tiptap/cli@latest add mention-trigger-button
 ```
 
-## Components
+## 组件
 
 ### `<MentionTriggerButton />`
 
-A prebuilt React component that inserts mention triggers into the editor.
+一个预构建的 React 组件，可在编辑器中插入提及触发字符。
 
-#### Usage
+#### 用法
 
 ```tsx
 function MyMentionTriggerButton() {
@@ -54,26 +54,26 @@ function MyMentionTriggerButton() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type                        | Default     | Description                                              |
-| --------------------- | --------------------------- | ----------- | -------------------------------------------------------- |
-| `editor`              | `Editor \| null`            | `undefined` | The Tiptap editor instance                               |
-| `node`                | `Node \| null`              | `undefined` | The node to apply trigger to                             |
-| `nodePos`             | `number \| null`            | `undefined` | The position of the node in the document                 |
-| `text`                | `string`                    | `undefined` | Optional text label for the button                       |
-| `trigger`             | `string`                    | `"@"`       | The trigger text to insert                               |
-| `hideWhenUnavailable` | `boolean`                   | `false`     | Hides the button when trigger insertion is not available |
-| `onTriggered`         | `(trigger: string) => void` | `undefined` | Callback fired after a successful trigger insertion      |
-| `showShortcut`        | `boolean`                   | `false`     | Shows a keyboard shortcut badge (if available)           |
+| 名称                  | 类型                        | 默认值      | 说明                                             |
+| --------------------- | --------------------------- | ----------- | ------------------------------------------------ |
+| `editor`              | `Editor \| null`            | `undefined` | Tiptap 编辑器实例                                |
+| `node`                | `Node \| null`              | `undefined` | 要应用触发字符的节点                             |
+| `nodePos`             | `number \| null`            | `undefined` | 节点在文档中的位置                               |
+| `text`                | `string`                    | `undefined` | 按钮的可选文本标签                               |
+| `trigger`             | `string`                    | `"@"`       | 要插入的触发文本                                 |
+| `hideWhenUnavailable` | `boolean`                   | `false`     | 无法插入触发字符时隐藏按钮                       |
+| `onTriggered`         | `(trigger: string) => void` | `undefined` | 成功插入触发字符后调用的回调                     |
+| `showShortcut`        | `boolean`                   | `false`     | 显示键盘快捷键标记（如果有）                     |
 
-## Hooks
+## Hook
 
 ### `useMentionTrigger()`
 
-A custom hook to build your own mention trigger button with full control over rendering and behavior.
+自定义 Hook，可完全控制渲染和行为，帮助你构建自己的提及触发按钮。
 
-#### Usage
+#### 用法
 
 ```tsx
 function MyMentionTriggerButton() {
@@ -97,34 +97,34 @@ function MyMentionTriggerButton() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type                        | Default     | Description                                            |
-| --------------------- | --------------------------- | ----------- | ------------------------------------------------------ |
-| `editor`              | `Editor \| null`            | `undefined` | The Tiptap editor instance                             |
-| `node`                | `Node \| null`              | `undefined` | The node to apply trigger to                           |
-| `nodePos`             | `number \| null`            | `undefined` | The position of the node in the document               |
-| `trigger`             | `string`                    | `"@"`       | The trigger text to insert                             |
-| `hideWhenUnavailable` | `boolean`                   | `false`     | Hides the button if trigger insertion is not available |
-| `onTriggered`         | `(trigger: string) => void` | `undefined` | Callback fired after a successful trigger insertion    |
+| 名称                  | 类型                        | 默认值      | 说明                                             |
+| --------------------- | --------------------------- | ----------- | ------------------------------------------------ |
+| `editor`              | `Editor \| null`            | `undefined` | Tiptap 编辑器实例                                |
+| `node`                | `Node \| null`              | `undefined` | 要应用触发字符的节点                             |
+| `nodePos`             | `number \| null`            | `undefined` | 节点在文档中的位置                               |
+| `trigger`             | `string`                    | `"@"`       | 要插入的触发文本                                 |
+| `hideWhenUnavailable` | `boolean`                   | `false`     | 无法插入触发字符时隐藏按钮                       |
+| `onTriggered`         | `(trigger: string) => void` | `undefined` | 成功插入触发字符后调用的回调                     |
 
-#### Return Values
+#### 返回值
 
-| Name            | Type            | Description                                   |
-| --------------- | --------------- | --------------------------------------------- |
-| `isVisible`     | `boolean`       | Whether the button should be rendered         |
-| `canInsert`     | `boolean`       | If trigger insertion is currently allowed     |
-| `handleMention` | `() => boolean` | Function to insert the mention trigger        |
-| `label`         | `string`        | Accessible label text for the button          |
-| `shortcutKeys`  | `string`        | Keyboard shortcut (Cmd/Ctrl + Shift + 2)      |
-| `trigger`       | `string`        | The trigger text that will be inserted        |
-| `Icon`          | `React.FC`      | Icon component for the mention trigger button |
+| 名称            | 类型            | 说明                                 |
+| --------------- | --------------- | ------------------------------------ |
+| `isVisible`     | `boolean`       | 按钮是否应渲染                       |
+| `canInsert`     | `boolean`       | 当前是否允许插入触发字符             |
+| `handleMention` | `() => boolean` | 插入提及触发字符的函数               |
+| `label`         | `string`        | 按钮的无障碍标签文本                 |
+| `shortcutKeys`  | `string`        | 键盘快捷键（Cmd/Ctrl + Shift + 2）   |
+| `trigger`       | `string`        | 将要插入的触发文本                   |
+| `Icon`          | `React.FC`      | 提及触发按钮的图标组件               |
 
-## Utilities
+## 工具函数
 
 ### `canInsertMention(editor, node?, nodePos?)`
 
-Checks if a mention trigger can be inserted in the current editor state or at a specific position.
+检查当前编辑器状态或指定位置是否可以插入提及触发字符。
 
 ```tsx
 import { canInsertMention } from '@/components/tiptap-ui/mention-trigger-button'
@@ -135,7 +135,7 @@ const canInsertAtNode = canInsertMention(editor, node, nodePos) // Check specifi
 
 ### `addMentionTrigger(editor, trigger?, node?, nodePos?)`
 
-Programmatically inserts a mention trigger in the editor.
+以编程方式在编辑器中插入提及触发字符。
 
 ```tsx
 import { addMentionTrigger } from '@/components/tiptap-ui/mention-trigger-button'
@@ -154,26 +154,26 @@ if (success) {
 }
 ```
 
-## Keyboard Shortcuts
+## 键盘快捷键
 
-The mention trigger button supports the following keyboard shortcut:
+提及触发按钮支持以下键盘快捷键：
 
-- **Cmd/Ctrl + Shift + 2**: Insert mention trigger
+- **Cmd/Ctrl + Shift + 2**：插入提及触发字符
 
-The shortcut is automatically registered when using either the `<MentionTriggerButton />` component or the `useMentionTrigger()` hook.
+使用 `<MentionTriggerButton />` 组件或 `useMentionTrigger()` Hook 时，系统会自动注册此快捷键。
 
-## Requirements
+## 要求
 
-### Dependencies
+### 依赖项
 
-- `@tiptap/react` - Core Tiptap React integration
-- `@tiptap/extension-mention` - Mention extension
-- `react-hotkeys-hook` - Keyboard shortcut management
+- `@tiptap/react` - Tiptap React 核心集成
+- `@tiptap/extension-mention` - 提及扩展
+- `react-hotkeys-hook` - 键盘快捷键管理
 
-### Referenced Components
+### 引用的组件
 
-- `use-tiptap-editor` (hook)
-- `button` (primitive)
-- `badge` (primitive)
-- `tiptap-utils` (lib)
-- `at-sign-icon` (icon)
+- `use-tiptap-editor`（Hook）
+- `button`（基础组件）
+- `badge`（基础组件）
+- `tiptap-utils`（库）
+- `at-sign-icon`（图标）
