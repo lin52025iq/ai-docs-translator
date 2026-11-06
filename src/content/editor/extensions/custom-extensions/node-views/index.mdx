@@ -1,24 +1,24 @@
 ---
-title: Create a custom node view
+title: 创建自定义节点视图
 meta:
-  description: Customize and create nodes in your Tiptap editor for editable and non-editable content with interactive node views. More in the docs!
-  title: Node views | Tiptap Editor Docs
-  category: Editor
+  description: 使用交互式节点视图，在 Tiptap 编辑器中自定义和创建可编辑及不可编辑的内容节点。更多信息请参阅文档！
+  title: 节点视图 | Tiptap 编辑器文档
+  category: 编辑器
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Node views are the best thing since sliced bread, at least if you are a fan of customization (and bread). With node views you can add interactive nodes to your editor. That can literally be everything. If you can write it in JavaScript, you can use it in your editor.
+节点视图堪称自切片面包以来最棒的发明——至少对喜欢自定义功能（和面包）的人来说是这样。借助节点视图，你可以在编辑器中添加交互式节点，几乎任何内容都可以。如果能用 JavaScript 编写，就能在编辑器中使用。
 
-Node views are amazing to improve the in-editor experience, but can also be used in a read-only instance of Tiptap. They are unrelated to the HTML output by design, so you have full control about the in-editor experience _and_ the output.
+节点视图非常适合改善编辑器内的使用体验，也可以用于 Tiptap 的只读实例。按照设计，它们与 HTML 输出相互独立，因此你可以完全掌控编辑器内的体验_以及_输出内容。
 
-## Different types of node views
+## 节点视图的不同类型
 
-Depending on what you would like to build, node views work a little bit different and can have their very specific capabilities, but also pitfalls. The main question is: How should your custom node look like?
+根据你想要构建的内容，节点视图的工作方式会有所不同，可能具备各自独特的功能，也可能存在一些陷阱。关键问题是：你的自定义节点应该是什么样子？
 
-### Editable text
+### 可编辑文本
 
-Yes, node views can have editable text, just like a regular node. That’s simple. The cursor will exactly behave like you would expect it from a regular node. Existing commands work very well with those nodes.
+没错，节点视图可以包含可编辑文本，就像常规节点一样。这很简单。光标的行为会和你对常规节点的预期完全一致。现有命令也能很好地处理这类节点。
 
 ```html
 <div class="Prosemirror" contenteditable="true">
@@ -28,13 +28,13 @@ Yes, node views can have editable text, just like a regular node. That’s simpl
 </div>
 ```
 
-That’s how the [`TaskItem`](/editor/extensions/nodes/task-item) node works.
+[`TaskItem`](/editor/extensions/nodes/task-item) 节点就是这样工作的。
 
-### Non-editable text
+### 不可编辑文本
 
-Nodes can also have text, which is not editable. The cursor can’t jump into those, but you don’t want that anyway.
+节点也可以包含不可编辑的文本。光标无法移入其中，而这正是你想要的效果。
 
-Tiptap adds a `contenteditable="false"` to those by default.
+Tiptap 默认会为这类文本添加 `contenteditable="false"`。
 
 ```html
 <div class="Prosemirror" contenteditable="true">
@@ -44,15 +44,15 @@ Tiptap adds a `contenteditable="false"` to those by default.
 </div>
 ```
 
-That’s how you could render mentions, which shouldn’t be editable. Users can add or delete them, but not delete single characters.
+你可以用这种方式渲染不应被编辑的提及内容。用户可以添加或删除它们，但不能删除单个字符。
 
-Statamic uses those for their Bard editor, which renders complex modules inside Tiptap, which can have their own text inputs.
+Statamic 在其 Bard 编辑器中就使用了这种方式：它会在 Tiptap 中渲染复杂模块，而这些模块可以包含自己的文本输入框。
 
-### Mixed content
+### 混合内容
 
-You can even mix non-editable and editable text. That’s great to build complex things, and still use marks like bold and italic inside the editable content.
+你甚至可以混合不可编辑和可编辑文本。这非常适合构建复杂内容，同时仍能在可编辑内容中使用粗体和斜体等标记。
 
-**BUT**, if there are other elements with non-editable text in your node view, the cursor can jump there. You can improve that with manually adding `contenteditable="false"` to the specific parts of your node view.
+**但是**，如果节点视图中还有其他包含不可编辑文本的元素，光标可能会跳到那里。你可以在节点视图的特定部分手动添加 `contenteditable="false"` 来改善这种情况。
 
 ```html
 <div class="Prosemirror" contenteditable="true">
@@ -65,24 +65,23 @@ You can even mix non-editable and editable text. That’s great to build complex
 </div>
 ```
 
-## Markup
+## 标记
 
-But what happens if you [access the editor content](/guides/output-json-html)? If you’re working with HTML, you’ll need to tell Tiptap how your node should be serialized.
+但如果你[访问编辑器内容](/guides/output-json-html)，会发生什么？如果你使用 HTML，就需要告诉 Tiptap 如何序列化节点。
 
-The editor **does not** export the rendered JavaScript node, and for a lot of use cases you wouldn’t want that anyway.
+编辑器**不会**导出渲染后的 JavaScript 节点，而且在很多使用场景中，你本来也不会希望它这样做。
 
-Let’s say you have a node view which lets users add a video player and configure the appearance (autoplay, controls, …). You want the interface to do that in the editor, not in the output of the editor. The output of the editor should probably only have the video player.
+假设你有一个节点视图，允许用户添加视频播放器并配置其外观（自动播放、控件等）。你希望用户在编辑器中进行这些设置，而不是将设置界面输出到编辑器内容中。编辑器的输出应该只包含视频播放器。
 
-I know, I know, it’s not that easy. Just keep in mind, that you‘re in full control of the rendering inside the editor and of the output.
+我知道，我知道，这并不简单。只要记住，你可以完全掌控编辑器内的渲染方式以及输出内容。
 
-<Callout title="What if you store JSON?" variant="warning">
-  That doesn’t apply to JSON. In JSON, everything is stored as an object. There is no need to
-  configure the “translation” to and from JSON.
+<Callout title="如果存储的是 JSON 呢？" variant="warning">
+  这不适用于 JSON。JSON 中的所有内容都以对象形式存储，因此无需配置与 JSON 之间的“转换”。
 </Callout>
 
-### Render HTML
+### 渲染 HTML
 
-Okay, you’ve set up your node with an interactive node view and now you want to control the output. Even if your node view is pretty complex, the rendered HTML can be simple:
+好了，你已经为节点设置了交互式节点视图，现在想要控制输出内容。即使节点视图相当复杂，渲染出来的 HTML 也可以很简单：
 
 ```js
 renderHTML({ HTMLAttributes }) {
@@ -92,13 +91,13 @@ renderHTML({ HTMLAttributes }) {
 // Output: <my-custom-node count="1"></my-custom-node>
 ```
 
-Make sure it’s something distinguishable, so it’s easier to restore the content from the HTML. If you just need something generic markup like a `<div>` consider to add a `data-type="my-custom-node"`.
+请确保标记具有可辨识性，这样就能更轻松地从 HTML 中还原内容。如果只需要像 `<div>` 这样的通用标记，可以考虑添加 `data-type="my-custom-node"`。
 
-### Parse HTML
+### 解析 HTML
 
-The same applies to restoring the content. You can configure what markup you expect, that can be something completely unrelated to the node view markup. It just needs to contain all the information you want to restore.
+还原内容时也是如此。你可以配置预期的标记，它可以与节点视图的标记完全不同。只要包含你想要还原的所有信息即可。
 
-Attributes are automagically restored, if you registered them through [`addAttributes`](/editor/extensions/custom-extensions/extend-existing#attributes).
+如果通过 [`addAttributes`](/editor/extensions/custom-extensions/extend-existing#attributes) 注册了属性，这些属性就会自动还原。
 
 ```js
 // Input: <my-custom-node count="1"></my-custom-node>
@@ -110,6 +109,6 @@ parseHTML() {
 },
 ```
 
-### Render JavaScript/Vue/React
+### 渲染 JavaScript/Vue/React
 
-But what if you want to render your actual JavaScript/Vue/React code? Use the [Static Renderer](/editor/api/utilities/static-renderer). This utility lets you render your content as HTML, Markdown, or React components, without an Editor instance.
+但如果你想渲染实际的 JavaScript/Vue/React 代码呢？可以使用 [Static Renderer](/editor/api/utilities/static-renderer)。借助此工具，你可以在没有 Editor 实例的情况下，将内容渲染为 HTML、Markdown 或 React 组件。
