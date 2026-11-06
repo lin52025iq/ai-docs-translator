@@ -17,7 +17,7 @@ const formatWithPrettier = (files, parser) => ({
 })
 
 export default defineConfig(
-    { ignores: ['**/node_modules/**', '**/dist/**', 'pnpm-lock.yaml'] },
+    { ignores: ['**/node_modules/**', '**/dist/**', '.translation-config/**', 'pnpm-lock.yaml'] },
     js.configs.recommended,
     tseslint.configs.recommended,
     eslintConfigPrettier,

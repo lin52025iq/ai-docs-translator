@@ -2,6 +2,7 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 
+import { isGitEnvKey } from '@simple-git/argv-parser'
 import { type SimpleGit, simpleGit } from 'simple-git'
 import { z } from 'zod'
 
@@ -27,7 +28,12 @@ export function repositoryGit(repository: string, indexFile?: string) {
         // simple-git 4 要求显式允许；仅提交实例使用由本程序创建的临时索引。
         allowEnvironment: indexFile ? ['GIT_INDEX_FILE'] : []
     })
-    return indexFile ? git.env({ ...process.env, GIT_INDEX_FILE: indexFile }) : git
+    if (!indexFile) return git
+    // 复用 SDK 的环境变量分类，避免把宿主的分页器、编辑器等设置显式传给 Git。
+    const environment = Object.fromEntries(
+        Object.entries(process.env).filter(([name]) => !/^GIT_/i.test(name) && !isGitEnvKey(name.toLowerCase()))
+    )
+    return git.env({ ...environment, GIT_INDEX_FILE: indexFile })
 }
 
 /** 本地不存在时读取远端已有分支；只取回对象，不检出或执行仓库内容。 */
@@ -67,7 +73,7 @@ export async function readBlob(git: SimpleGit, sha: string): Promise<Buffer> {
     return content
 }
 
-/** 用独立索引提交指定文件，不带入工作树或暂存区；管理分支可仅推送提交而不移动当前 HEAD。 */
+/** 用独立索引提交指定文件，不切换当前分支，不带入工作树或暂存区。 */
 export async function commitBranchFiles(input: {
     repository: string
     branch: string
@@ -76,14 +82,13 @@ export async function commitBranchFiles(input: {
     message: string
     push: boolean
     remote: string
-    updateLocalRef?: boolean
 }) {
     const directory = await mkdtemp(join(tmpdir(), 'translation-index-'))
     try {
         const git = repositoryGit(input.repository, join(directory, 'index'))
         const ref = `refs/heads/${input.branch}`
         await git.raw(['check-ref-format', ref])
-        if (input.updateLocalRef !== false && (await git.branchLocal()).current === input.branch) {
+        if ((await git.branchLocal()).current === input.branch) {
             throw new Error(`请先切换离开待写入分支 ${input.branch}`)
         }
         const oldLocal = await branchHead(git, input.branch)
@@ -119,9 +124,7 @@ export async function commitBranchFiles(input: {
                           input.message
                       ])
                   ).trim()
-        if (input.updateLocalRef !== false) {
-            await git.raw(['update-ref', ref, commit, oldLocal ?? '0'.repeat(40)])
-        }
+        await git.raw(['update-ref', ref, commit, oldLocal ?? '0'.repeat(40)])
         if (input.push) {
             try {
                 await git.push(input.remote, `${commit}:${ref}`)

@@ -1,32 +1,40 @@
-# 复制到 .github/workflows/<项目名>.yml 后生效；替换 your-project 和 YOUR_PROJECT_SOURCE_REPO_TOKEN。
+# 通用翻译 Workflow 模板；复制到 .github/workflows/ 后才会生效。
 name: 项目文档翻译
 
 on:
-    workflow_dispatch: {}
-    schedule:
-        # UTC 时间，此处为北京时间每天 10:17。
-        - cron: '17 2 * * *'
+    workflow_dispatch:
+        inputs:
+            project_id:
+                description: 项目 ID（读取对应的配置分支）
+                required: true
+                type: string
 
-# 管理仓库发布分支和进度所需权限。
 permissions:
     contents: write
 
-# 同一项目排队执行。
 concurrency:
-    group: translation-your-project
+    group: translation-${{ inputs.project_id }}
     cancel-in-progress: false
 
 jobs:
     translate:
         runs-on: ubuntu-latest
         env:
-            PROJECT_CONFIG: projects/your-project/config.yml
+            PROJECT_CONFIG: .translation-config/config.yml
+            PROJECT_ID: ${{ inputs.project_id }}
         steps:
             - name: 检出翻译管理仓库
               uses: actions/checkout@v7
               with:
                   ref: ${{ github.event.repository.default_branch }}
                   fetch-depth: 0
+
+            - name: 检出项目配置分支
+              uses: actions/checkout@v7
+              with:
+                  ref: ${{ format('{0}-config', inputs.project_id) }}
+                  path: .translation-config
+                  persist-credentials: false
 
             - name: 配置 Node.js
               uses: actions/setup-node@v7
@@ -50,17 +58,20 @@ jobs:
                   import { appendFile } from 'node:fs/promises'
                   import { loadProject } from './src/project/config.ts'
                   const { config } = await loadProject(process.env.PROJECT_CONFIG)
+                  if (config.project.id !== process.env.PROJECT_ID) throw new Error('配置分支与项目 ID 不一致')
+                  const tokenSecret = `${config.project.id.toUpperCase().replaceAll('-', '_')}_SOURCE_REPO_TOKEN`
+                  await appendFile(process.env.GITHUB_OUTPUT, `token_secret=${tokenSecret}\n`)
                   await appendFile(process.env.GITHUB_OUTPUT, `repository=${config.source.repository}\nref=${config.source.ref}\n`)
                   NODE
 
             - name: 检查运行凭据
               env:
                   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-                  # 替换为该项目独立的上游只读 Secret。
-                  SOURCE_REPO_TOKEN: ${{ secrets.YOUR_PROJECT_SOURCE_REPO_TOKEN }}
+                  SOURCE_REPO_TOKEN: ${{ secrets[steps.source.outputs.token_secret] }}
+                  SOURCE_TOKEN_SECRET: ${{ steps.source.outputs.token_secret }}
               run: |
                   if [ -z "$OPENAI_API_KEY" ] || [ -z "$SOURCE_REPO_TOKEN" ]; then
-                      echo '请在仓库 Secrets 中配置 OPENAI_API_KEY 和 YOUR_PROJECT_SOURCE_REPO_TOKEN。' >&2
+                      echo "请在仓库 Secrets 中配置 OPENAI_API_KEY 和 $SOURCE_TOKEN_SECRET。" >&2
                       exit 1
                   fi
 
@@ -71,30 +82,28 @@ jobs:
                   ref: ${{ steps.source.outputs.ref }}
                   path: .translation-source
                   fetch-depth: 0
-                  token: ${{ secrets.YOUR_PROJECT_SOURCE_REPO_TOKEN }}
-                  # 上游凭据不留在检出目录中。
+                  token: ${{ secrets[steps.source.outputs.token_secret] }}
                   persist-credentials: false
 
-            # --push 发布译文、冲突档案和进度；结果 JSON 与实时日志分开保存。
             - name: 顺序执行项目文档翻译
               id: translate
               env:
                   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
               run: |
-                  mkdir -p .translation-drafts/your-project
+                  mkdir -p .translation-drafts
                   pnpm --silent translator run-project \
                       --project "$PROJECT_CONFIG" \
                       --source-root .translation-source \
                       --repository . \
                       --push \
-                      > .translation-drafts/your-project/result.json
+                      > .translation-drafts/result.json
 
             - name: 输出翻译结果汇总
               if: ${{ always() }}
               run: |
                   node --input-type=module <<'NODE'
                   import { appendFile, readFile } from 'node:fs/promises'
-                  const content = await readFile('.translation-drafts/your-project/result.json', 'utf8').catch((error) => {
+                  const content = await readFile('.translation-drafts/result.json', 'utf8').catch((error) => {
                       if (error.code === 'ENOENT') return ''
                       throw error
                   })
@@ -114,10 +123,10 @@ jobs:
               if: ${{ always() }}
               uses: actions/upload-artifact@v7
               with:
-                  name: your-project-${{ github.run_id }}-${{ github.run_attempt }}
+                  name: translation-${{ github.run_id }}-${{ github.run_attempt }}
                   path: |
-                      .translation-drafts/your-project/
-                      projects/your-project/progress/
+                      .translation-drafts/result.json
+                      .translation-config/progress/
                   include-hidden-files: true
                   if-no-files-found: ignore
                   retention-days: 7

@@ -6,6 +6,7 @@ import { Command } from 'commander'
 import { repositoryGit, repositoryPathSchema } from './git/branches.ts'
 import { commitConflictDraft } from './git/conflict-draft.ts'
 import { createScopeMatcher, loadProject, localeSchema, sourceLanguageSchema } from './project/config.ts'
+import { createProject } from './project/create.ts'
 import { runProject } from './project/run.ts'
 import { readTranslationFile } from './shared/files.ts'
 import { logWarning } from './shared/log.ts'
@@ -24,7 +25,7 @@ async function scanFiles(root: string, patterns: string[]) {
     const files: [string, FileSnapshot][] = []
     for await (const path of glob(patterns, {
         cwd: root,
-        exclude: ['.git/**', 'node_modules/**', '.translation/**'],
+        exclude: ['.git/**', 'node_modules/**'],
         withFileTypes: true
     })) {
         if (!path.isFile()) continue
@@ -37,6 +38,22 @@ async function scanFiles(root: string, patterns: string[]) {
 }
 
 const program = new Command().name('translator').description('项目配置、增量规划与文件级 AI 翻译')
+
+program
+    .command('create-project')
+    .description('创建独立的 <项目ID>-config 配置分支，或导入已有配置目录')
+    .requiredOption('--name <id>', '项目 ID')
+    .option('--source-repository <owner/repo>', '上游仓库')
+    .option('--ref <ref>', '上游分支、标签或提交', 'main')
+    .option('--source-language <locale>', '源语言或 auto', 'auto')
+    .option('--locale <locales...>', '目标语言，可传多个', ['zh-CN'])
+    .option('--from <directory>', '导入包含 config.yml 的已有配置目录，并保留提示词、术语及进度')
+    .option('--repository <path>', '翻译管理仓库', '.')
+    .option('--remote <name>', '配置分支推送远端；导入时使用已有配置中的远端', 'origin')
+    .option('--push', '创建后推送配置分支')
+    .action(async (options: Parameters<typeof createProject>[0]) => {
+        console.log(JSON.stringify(await createProject(options), null, 4))
+    })
 
 program
     .command('run-project')
@@ -93,7 +110,7 @@ program
             const sourceRoot = resolve(options.sourceRoot)
             const targetRoot = resolve(options.targetRoot)
             const manifest = await loadManifest(
-                resolve(targetRoot, '.translation/manifest.json'),
+                resolve(project.directory, 'state', options.locale, 'manifest.json'),
                 project.config.project.id,
                 options.locale
             )

@@ -1,5 +1,5 @@
 import { mkdir, writeFile } from 'node:fs/promises'
-import { dirname, relative, resolve } from 'node:path'
+import { dirname, resolve } from 'node:path'
 
 import { type SimpleGit } from 'simple-git'
 
@@ -10,8 +10,7 @@ import {
     type GitEntry,
     readBlob,
     readTree,
-    repositoryGit,
-    repositoryPathSchema
+    repositoryGit
 } from '../git/branches.ts'
 import { commitConflictDraft } from '../git/conflict-draft.ts'
 import { decodeTranslationText } from '../shared/files.ts'
@@ -24,13 +23,12 @@ import {
     planTranslations,
     prepareSuccessfulTranslation,
     recordTranslationFailure,
+    saveManifest,
     saveProgress
 } from '../state/translation-state.ts'
 import { buildTranslationContext } from '../translation/prompt.ts'
 import { createTranslator, TranslationError } from '../translation/translator.ts'
 import { createScopeMatcher, loadProject, type ProjectConfig } from './config.ts'
-
-const manifestPath = '.translation/manifest.json'
 
 /** 从 Git 快照读取配置命中的文本，不读取工作树修改或跟随符号链接。 */
 async function snapshots(git: SimpleGit, tree: Record<string, GitEntry>, config: ProjectConfig) {
@@ -38,7 +36,6 @@ async function snapshots(git: SimpleGit, tree: Record<string, GitEntry>, config:
     const files: Record<string, FileSnapshot> = {}
     const contents: Record<string, string> = {}
     for (const [path, entry] of Object.entries(tree)) {
-        if (path.startsWith('.translation/')) continue
         const content =
             matches(path) && (entry.mode === '100644' || entry.mode === '100755')
                 ? await decodeTranslationText(await readBlob(git, entry.blobSha))
@@ -49,7 +46,7 @@ async function snapshots(git: SimpleGit, tree: Record<string, GitEntry>, config:
     return { files, contents }
 }
 
-/** 项目级顺序执行：同步分支、增量翻译、逐文件发布并更新管理分支进度。 */
+/** 项目级顺序执行：同步分支、增量翻译、逐文件发布并更新配置分支进度。 */
 export async function runProject(options: {
     project: string
     repository: string
@@ -63,21 +60,19 @@ export async function runProject(options: {
     if (options.push) config.translation.review.pushDraft = true
     const git = repositoryGit(options.repository)
     const remote = config.translation.review.remote
+    const configBranch = `${config.project.id}-config`
     const managementBranch = (await git.branchLocal()).current
     if (!managementBranch) throw new Error('项目运行需要在管理分支上执行，不能使用 detached HEAD')
-    const reservedBranches = [config.source.branch, ...config.targets.map((target) => target.branch)]
+    const reservedBranches = [configBranch, config.source.branch, ...config.targets.map((target) => target.branch)]
     if (
         reservedBranches.includes(managementBranch) ||
         managementBranch === (config.translation.review.draftBranch ?? `${config.project.id}-draft`)
     ) {
-        throw new Error('请在管理分支运行项目，不能在 Source、目标语言或 draft 分支运行')
+        throw new Error('请在管理分支运行项目，不能在配置、Source、目标语言或 draft 分支运行')
     }
-    let managementHead = await branchHead(git, managementBranch)
-    if (!managementHead) throw new Error('管理仓库必须至少有一个已提交版本')
-    if (options.push) {
-        await git.fetch(remote, `refs/heads/${managementBranch}`)
-        managementHead = (await git.revparse(['FETCH_HEAD'])).trim()
-    }
+    let configHead = await branchHead(git, configBranch, options.push ? remote : undefined)
+    if (!configHead) throw new Error(`配置分支 ${configBranch} 不存在，请先使用 create-project 创建或导入项目`)
+    const configTree = await readTree(git, configHead)
     const enabledTargets = config.targets.filter((target) => target.enabled)
     if (!enabledTargets.length) throw new Error('项目没有启用任何目标语言')
     // 在任何分支写入前，确认所有目标配置和提示词均可加载。
@@ -88,9 +83,6 @@ export async function runProject(options: {
     await git.fetch(resolve(options.sourceRoot), 'HEAD')
     const sourceCommit = (await git.revparse(['FETCH_HEAD'])).trim()
     const sourceTree = await readTree(git, sourceCommit)
-    if (Object.keys(sourceTree).some((path) => path === '.translation' || path.startsWith('.translation/'))) {
-        throw new Error('上游包含保留目录 .translation，不能覆盖翻译状态')
-    }
     const sourceRef = `refs/heads/${config.source.branch}`
     await git.raw(['check-ref-format', sourceRef])
     const oldSource = await branchHead(git, config.source.branch)
@@ -118,9 +110,10 @@ export async function runProject(options: {
         logProgress(`[${target.locale}] 开始同步目标分支 ${target.branch}`)
         let targetHead = await branchHead(git, target.branch, options.push ? remote : undefined)
         let targetTree = await readTree(git, targetHead ?? sourceCommit)
+        const manifestPath = `state/${target.locale}/manifest.json`
         let manifest = parseManifest(
-            targetTree[manifestPath]
-                ? (await readBlob(git, targetTree[manifestPath].blobSha)).toString('utf8')
+            configTree[manifestPath]
+                ? (await readBlob(git, configTree[manifestPath].blobSha)).toString('utf8')
                 : undefined,
             config.project.id,
             target.locale
@@ -138,7 +131,7 @@ export async function runProject(options: {
             if (!previous || previous.blobSha !== next.blobSha || previous.mode !== next.mode) sync[path] = next
         }
         for (const path of Object.keys(targetTree)) {
-            if (!sourceTree[path] && !path.startsWith('.translation/')) sync[path] = null
+            if (!sourceTree[path]) sync[path] = null
         }
         targetHead = await commitBranchFiles({
             repository: options.repository,
@@ -162,16 +155,13 @@ export async function runProject(options: {
                 retryFailed: options.retryFailed
             })
         const progressPath = resolve(project.directory, 'progress/locales', `${target.locale}.json`)
-        const progressKey = repositoryPathSchema.parse(
-            relative(resolve(options.repository), progressPath).replaceAll('\\', '/')
-        )
+        const progressKey = `progress/locales/${target.locale}.json`
         const summaryPath = resolve(project.directory, 'progress/summary.json')
-        const summaryKey = repositoryPathSchema.parse(
-            relative(resolve(options.repository), summaryPath).replaceAll('\\', '/')
-        )
+        const summaryKey = 'progress/summary.json'
         const publishProgress = async () => {
             const progress = createProgress(manifest, plan())
             locales[target.locale] = progress
+            await saveManifest(resolve(project.directory, manifestPath), manifest)
             await saveProgress(progressPath, progress)
             const summary = {
                 projectId: config.project.id,
@@ -191,21 +181,24 @@ export async function runProject(options: {
             const summaryContent = `${JSON.stringify(summary, null, 4)}\n`
             await mkdir(dirname(summaryPath), { recursive: true })
             await writeFile(summaryPath, summaryContent)
-            managementHead = await commitBranchFiles({
+            configHead = await commitBranchFiles({
                 repository: options.repository,
-                branch: managementBranch,
-                parent: managementHead,
-                files: { [progressKey]: `${JSON.stringify(progress, null, 4)}\n`, [summaryKey]: summaryContent },
+                branch: configBranch,
+                parent: configHead,
+                files: {
+                    [manifestPath]: `${JSON.stringify(manifest, null, 4)}\n`,
+                    [progressKey]: `${JSON.stringify(progress, null, 4)}\n`,
+                    [summaryKey]: summaryContent
+                },
                 message: `docs(${config.project.id}/${target.locale}): update translation progress`,
                 push: options.push,
-                remote,
-                updateLocalRef: false
+                remote
             })
             logProgress(
-                `[${target.locale}] 进度更新完成：${progress.completed}/${progress.total}，冲突 ${progress.summary.conflict}，失败 ${progress.summary.failed + progress.summary.retryable_failed + progress.summary.blocked}`
+                `[${target.locale}] ${configBranch} 状态与进度更新完成：${progress.completed}/${progress.total}，冲突 ${progress.summary.conflict}，失败 ${progress.summary.failed + progress.summary.retryable_failed + progress.summary.blocked}`
             )
         }
-        // 即使没有新增翻译，也先从目标分支 Manifest 修复管理分支的进度。
+        // 即使没有新增翻译，也先结合配置分支 Manifest 与实际译文重建进度。
         await publishProgress()
         const initialPlan = plan()
         const tasks = initialPlan.filter((entry) => entry.shouldTranslate)
@@ -274,24 +267,24 @@ export async function runProject(options: {
                     errorCode: result.review.localConflict?.code ?? 'DECISIONS_CONFLICT'
                 })
             }
-            files[manifestPath] = `${JSON.stringify(nextManifest, null, 4)}\n`
-            targetHead = await commitBranchFiles({
-                repository: options.repository,
-                branch: target.branch,
-                parent: targetHead,
-                files,
-                message: `docs(${config.project.id}/${target.locale}): process ${file.path}`,
-                push: options.push,
-                remote
-            })
-            manifest = nextManifest
-            logProgress(
-                `[${target.locale}] ${file.path} ${result?.review.approved ? '译文与状态' : '失败记录'}${options.push ? '发布' : '本地提交'}完成：${targetHead}`
-            )
             if (result?.review.approved) {
+                targetHead = await commitBranchFiles({
+                    repository: options.repository,
+                    branch: target.branch,
+                    parent: targetHead,
+                    files,
+                    message: `docs(${config.project.id}/${target.locale}): translate ${file.path}`,
+                    push: options.push,
+                    remote
+                })
+                logProgress(
+                    `[${target.locale}] ${file.path} 译文${options.push ? '发布' : '本地提交'}完成：${targetHead}`
+                )
                 translated.files[file.path] = { blobSha: gitBlobSha(Buffer.from(result.content)), isText: true }
                 translated.contents[file.path] = result.content
             }
+            // 确认译文提交/推送完成后，才把成功凭证和进度写回配置分支。
+            manifest = nextManifest
             await publishProgress()
             logProgress(`[${target.locale}] 文件 ${fileIndex + 1}/${tasks.length} 处理结束：${file.path}`)
             if (providerBlocked) logProgress('模型服务不可用，停止剩余文件和语言的调用，保留已发布结果')
@@ -312,7 +305,8 @@ export async function runProject(options: {
     return {
         projectId: config.project.id,
         sourceCommit,
-        managementCommit: managementHead,
+        configBranch,
+        configCommit: configHead,
         pushed: options.push,
         status: incomplete ? (hasErrors ? 'partial_success' : 'warning') : 'success',
         processed: { successful: successfulFiles, conflict: conflictFiles, failed: failedFiles },

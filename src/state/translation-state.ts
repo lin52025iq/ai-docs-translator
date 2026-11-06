@@ -72,13 +72,13 @@ export function parseManifest(content: string | undefined, projectId: string, lo
     return manifest
 }
 
-/** 只写本地状态；Git 发布器须将此快照与译文放进同一个提交，发布成功后再刷新 main 进度。 */
+/** 保存本地状态快照；发布器在确认译文发布后，将状态和进度提交到配置分支。 */
 export async function saveManifest(path: string, manifest: Manifest) {
     await mkdir(dirname(path), { recursive: true })
     await writeFile(path, `${JSON.stringify(manifest, null, 4)}\n`, 'utf8')
 }
 
-/** 生成待发布快照，不代表译文已经发布；调用方不可在发布前对外宣称成功。 */
+/** 生成待保存快照；只有译文发布成功后，发布器才能将其保存到配置分支。 */
 export function prepareSuccessfulTranslation(
     manifest: Manifest,
     path: string,
@@ -180,7 +180,7 @@ export function createProgress(manifest: Manifest, files: ReturnType<typeof plan
     }
 }
 
-/** 保存 main 中的进度快照；应由发布器在确认远端结果后调用。 */
+/** 保存配置检出目录中的进度快照；由发布器在确认译文结果后调用。 */
 export async function saveProgress(path: string, progress: ReturnType<typeof createProgress>) {
     await mkdir(dirname(path), { recursive: true })
     await writeFile(path, `${JSON.stringify(progress, null, 4)}\n`, 'utf8')
