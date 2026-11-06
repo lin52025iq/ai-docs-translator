@@ -1,0 +1,273 @@
+---
+title: 布局参与者
+meta:
+  title: 布局参与者 | Tiptap Pages 文档
+  description: 让你自己的 NodeView 和扩展参与 Pages 布局周期、测量页面边界，并响应分页变化。
+  category: Pages
+---
+
+import { Callout } from '@/components/ui/Callout'
+
+Tiptap 文档并没有真实的页面。Pages 会测量内容，并在内容上方绘制页眉、页脚和页面间距，让文档看起来像纸张。
+
+有些内容在渲染前必须知道页面的位置。例如：
+
+- 不能被分页符从中间截断的块
+- 只有加载完成后才能确定高度的嵌入内容
+- 必须与页面边缘对齐的叠加层
+
+布局参与者是构建这类内容的方式。你向 Pages 提供一个 DOM 元素和一个回调。每次分页更新后，Pages 都会调用该回调。你测量布局，然后调整自己的元素。
+
+内置的 [PageBreak 节点](/pages/core-concepts/page-break-node)以及 PagesTableKit 中实验性的[跨页表格行](/pages/guides/row-fragmentation)都会接入同一个周期。它们没有特殊权限，你的代码也可以完成相同的操作。
+
+<Callout title="确认 API 是否可用" variant="hint">
+  此 API 位于 `editor.storage.pages` 上。请始终使用可选链调用，例如
+  `editor.storage.pages?.registerLayoutParticipant?.(…)`。这样，你的扩展在未安装 Pages 的编辑器中或较旧版本的 Pages 中也能正常工作；在这些情况下，它只是什么也不做。
+</Callout>
+
+## 布局周期的工作方式
+
+文档发生变化后，Pages 会运行一个布局周期：
+
+1. Pages 按照**文档顺序**依次调用每个参与者。文档顶部附近的参与者会先被调用。
+2. 如果某个参与者报告发生了变化，Pages 就会重新运行整个周期。这样，文档中靠后的参与者便能测量新的位置。
+3. 周期会持续重复，直到没有参与者报告变化。
+4. 只有此时，Pages 才会统计页面并重绘页眉和页脚。
+
+文档顺序很重要。顶部附近的块变高时，它下面的所有内容都会下移。因此，文档中靠后的参与者必须在前面的参与者之后进行测量。
+
+回调中的操作应当简单且严格：进行测量，只更改自己的元素，然后如实报告是否发生了变化。
+
+## API 参考
+
+### registerLayoutParticipant(options)
+
+```ts
+const registration = editor.storage.pages?.registerLayoutParticipant?.({
+  element: nodeViewDom,
+  layout: (context) => {
+    // Measure the pages, then adjust your own element.
+    return changedSomething
+  },
+})
+```
+
+| 选项      | 说明                                                                                   |
+| --------- | -------------------------------------------------------------------------------------- |
+| `element` | 你的根元素。Pages 使用它来识别你，并确定你在文档顺序中的位置。                           |
+| `layout`  | 你的回调。Pages 会在每轮调用它，并向其传入一个 `PageLayoutContext`。                     |
+
+你会获得一个注册对象，其中包含一个 `dispose()` 方法。NodeView 销毁时调用它。重复调用是安全的，并且不会移除同一元素上更新的注册。
+
+### 回调的返回值
+
+| 返回值 | 含义                                                                                              |
+| ------ | ------------------------------------------------------------------------------------------------- |
+| `true` | “我更改了内容。”Pages 会再运行一轮，让位于你之后的参与者重新测量。                                 |
+| `false` | “我没有更改任何内容。”                                                                            |
+| 无     | Pages 会比较调用前后你元素的内联样式。最好返回布尔值。                                              |
+
+在作用域化轮次中，参见 [requestParticipantLayout](#requestparticipantlayoutelement)：此时 `true` 的含义不同，即“请改为运行完整周期”。
+
+### PageLayoutContext
+
+| 字段        | 说明                                                                                                                                                                   |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `passToken` | 每轮都会生成一个新对象。可将其用作缓存键，从而让该轮中的所有参与者共享一次耗时的测量结果。                                                                              |
+| `defer()`   | 表示你的更新稍后会通过 ProseMirror 事务到达。这样 Pages 会等到事务到达后再统计页面。如果你直接写入样式，则不需要调用此方法。                                           |
+| `scope`     | 完整周期中为 `'document'`，作用域化轮次中为 `'participant'`。旧版本的 Pages 不会设置此字段。                                                                             |
+
+### requestPageLayout()
+
+当你自己的元素尺寸发生变化，需要更新分页时调用此方法。例如，图像加载完成、某个区域折叠或嵌入内容自行调整大小时。
+
+此方法会安排在下一帧动画中运行一次完整周期。Pages 会重新测量页眉和页脚，运行已注册的参与者，然后统计页面。同一帧内的多次调用会合并为一个周期。由于该周期会测量页眉和页脚，因此 CSS 更改导致页眉或页脚变高或变矮后，也可以调用此方法。
+
+只有在确实发生变化时才调用，不要在每轮都调用。如果参与者每次运行时都请求新周期，编辑器会一直忙碌，因此 Pages 会停止重复并发出警告。若要在回调中请求再运行一轮，请改为返回 `true`。
+
+### requestParticipantLayout(element)
+
+对于每秒发生多次且完全处于**你自己的元素内部**的变化，这是开销更低的选择。这类变化不会让内容变高或变矮，也不会导致页面边缘移动。拖动交互就是典型示例。
+
+此时 Pages 只会自行运行你的回调。它不会遍历文档、统计页面或同步脚注。开销取决于你通知的参与者数量，而非文档大小。
+
+如果回调发现变化比预期更大，请返回 `true` 或抛出异常。这样 Pages 就会运行完整周期。如果已经安排了完整周期，则会取代所有等待中的作用域化请求。
+
+## 最简示例
+
+```ts
+// In your NodeView constructor:
+const registration = editor.storage.pages?.registerLayoutParticipant?.({
+  element: dom,
+  layout: () => {
+    const changed = adjustMyOwnDom(dom)
+    return changed
+  },
+})
+
+// When your own size changes:
+editor.storage.pages?.requestPageLayout?.()
+
+// In NodeView.destroy():
+registration?.dispose()
+```
+
+## 完整示例：永远不会被分页符截断的块
+
+这个提示框在即将跨越下一个分页符时，会将自身移到分页符下方。它相当于为自己的节点设置了 `break-inside: avoid`。
+
+```ts
+import { mergeAttributes, Node } from '@tiptap/core'
+
+// Browsers report fractional pixels, so never compare positions with ===.
+const PIXEL_TOLERANCE = 0.5
+
+// One measurement per pass, shared by every callout in the document.
+const breakRectsPerPass = new WeakMap<object, DOMRect[]>()
+
+function getPageBreakRects(editorDom: HTMLElement, passToken: object): DOMRect[] {
+  const cached = breakRectsPerPass.get(passToken)
+  if (cached) return cached
+
+  // `.breaker` is the block Pages draws between two pages.
+  const rects = Array.from(
+    editorDom.querySelectorAll('[data-tiptap-pagination] .breaker'),
+    (element) => element.getBoundingClientRect(),
+  )
+  breakRectsPerPass.set(passToken, rects)
+  return rects
+}
+
+export const KeepTogetherCallout = Node.create({
+  name: 'keepTogetherCallout',
+  group: 'block',
+  content: 'block+',
+
+  parseHTML() {
+    return [{ tag: 'aside[data-keep-together]' }]
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return ['aside', mergeAttributes(HTMLAttributes, { 'data-keep-together': '' }), 0]
+  },
+
+  addNodeView() {
+    return ({ editor }) => {
+      const dom = document.createElement('aside')
+      dom.setAttribute('data-keep-together', '')
+
+      // How far we push the box down right now. We keep it so we can work out
+      // where the box would sit without the push.
+      let appliedPush = 0
+
+      const registration = editor.storage.pages?.registerLayoutParticipant?.({
+        element: dom,
+        layout: (context) => {
+          const box = dom.getBoundingClientRect()
+          const naturalTop = box.top - appliedPush
+          const naturalBottom = naturalTop + box.height
+
+          // Does the box sit across a page break?
+          const breaks = getPageBreakRects(editor.view.dom, context.passToken)
+          const crossed = breaks.find(
+            (rect) => naturalTop < rect.top - PIXEL_TOLERANCE && naturalBottom > rect.top,
+          )
+
+          const neededPush = crossed ? crossed.bottom - naturalTop : 0
+
+          // Write only when the value really changed. Writing the same value on
+          // every pass looks like a new change every time, and the cycle would
+          // never end.
+          if (Math.abs(neededPush - appliedPush) <= PIXEL_TOLERANCE) {
+            return false
+          }
+
+          appliedPush = neededPush
+          dom.style.marginTop = neededPush > 0 ? `${neededPush}px` : ''
+          return true
+        },
+      })
+
+      editor.storage.pages?.requestPageLayout?.()
+
+      return {
+        dom,
+        contentDOM: dom,
+
+        // We change our own style outside of ProseMirror. Without this,
+        // ProseMirror treats the DOM as broken, redraws the node, and removes
+        // the push again.
+        ignoreMutation: (mutation) =>
+          mutation.type === 'attributes' &&
+          mutation.target === dom &&
+          mutation.attributeName === 'style',
+
+        destroy: () => {
+          registration?.dispose()
+        },
+      }
+    }
+  },
+})
+```
+
+<Callout title="高于一页的块" variant="warning">
+  高度超过一页的块无法保持完整。将它移到下一页也无济于事。你的代码必须检测这种情况并且不进行下推，否则就会造成[超大块布局循环](/pages/core-concepts/limitations#oversized-non-splittable-blocks-cause-an-infinite-layout-loop)。Pages 会停止循环并发出警告，但块的位置不会符合预期。
+</Callout>
+
+## 测量页面
+
+在回调中，你通常需要知道页面的位置。有三种方式。
+
+最简单的方式是查询 Pages：
+
+```ts
+const pages = editor.storage.pages
+const position = editor.state.selection.from
+
+const count = pages?.getPageCount?.()
+const pageNumber = pages?.getPageForPosition?.(position)
+const spaceLeftBelow = pages?.getDistanceToNextPagebreak?.(position)
+```
+
+`getDistanceToNextPagebreak(pos)` 和 `getDistanceToPrevPagebreak(pos)` 会返回文档位置到下方或上方页面边缘的像素距离；如果没有页面边缘，则返回 `null`。它们已经考虑了 `zoom` 选项。
+
+第二种方式是使用 CSS 变量 `--page-max-height`。它表示单页内容区域可能达到的最大高度。
+
+第三种方式是自行测量已渲染的部分：容器 `[data-tiptap-pagination]`、页面之间的块 `.breaker`，以及容器中的 `.tiptap-page-header` 和 `.tiptap-page-footer`。如果需要精确的矩形尺寸（如上例所示），请使用这种方式。
+
+<Callout title="注意两点" variant="warning">
+  Pages 会为页眉和页脚绘制纯色背景。它们后面的内容会被遮挡，而不是绘制在上方。因此，如果参与者的内容会跨越页面边缘，就必须移动它或为它留出空间。如果你通过自己的 `--background` 令牌设置该背景主题，请改为设置
+  `--pages-page-background-color`。
+
+Pages 还支持 `zoom` 选项。自行测量得到的矩形尺寸以缩放后的像素为单位，因此需要除以缩放系数。请从自己的配置中获取该系数。不要通过将矩形与 `offsetWidth` 比较来推算。`offsetWidth` 是整数，因此结果会略有偏差，而且测量位置越靠近文档底部，误差就越大。
+
+</Callout>
+
+## 高级用法：通过事务更新
+
+有些参与者会通过 ProseMirror 事务应用更新，而不是写入样式。请在该事务上设置以下一个或两个标记：
+
+- `'pages-layout-participant-change'`：告知 Pages 在更改渲染完成后再运行一轮，并在此之前暂缓统计页面。请将它与创建该事务的轮次中的 `defer()` 配合使用。
+- `'pages-layout-participant-scoped-change'`：表示你的更改没有使任何内容上移或下移。这样 Pages 就会跳过额外的周期。只有确认这一点属实时才设置此标记。如果承诺不实，页面计数就会过期，直到发生下一次实际更改才会更新。
+
+[跨页表格行](/pages/guides/row-fragmentation)就是通过这种方式实现的。大多数参与者会直接写入样式，不需要使用这些标记。
+
+## 保持周期正常运行的规则
+
+1. **只操作自己的元素。** 更改其他元素会让参与者彼此冲突。
+2. **只有值发生变化时才写入。** 先用较小的容差进行比较，因为浏览器会报告小数像素。每轮都写入，是周期无法结束的最常见原因。
+3. **如实返回布尔值。** 返回 `true` 会让所有参与者多运行一轮。只有确实更改了内容时才返回它。
+4. **使用 `passToken` 缓存。** 无论有多少参与者，每轮只测量一次页面。
+5. **销毁时清理注册。** 如果参与者的元素已离开文档，Pages 会跳过它；但清理注册能让状态保持整洁。
+
+## 出现问题时
+
+Pages 会保护编辑器，并在浏览器控制台中输出警告。请将下列每种情况都视为回调中的错误。
+
+| 发生的情况                                      | Pages 的处理方式                                                                                                                        |
+| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| 回调抛出异常                                    | 本轮跳过该参与者并继续运行，编辑器仍可正常工作。                                                                                        |
+| 回调每次都报告发生变化，始终无法稳定            | 仅暂停该参与者，其他参与者继续运行。文档发生下一次实际更改后，Pages 会再次调用该参与者。                                                |
+| 每轮都请求新周期或作用域化轮次                  | 停止重复调用。输入文字等实际编辑会清除此状态，因此正常编辑不会触发此情况。                                                              |
+| 调用了 `defer()`，但事务始终未到达              | 等待一段时间后仍会统计页面，因此页面计数会持续跟随文档更新。                                                                             |
