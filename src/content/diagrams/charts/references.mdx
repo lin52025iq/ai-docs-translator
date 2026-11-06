@@ -1,6 +1,6 @@
 ---
-title: 'Reference lines and bands'
-intro: 'A reference line marks one value across the plot, such as a target. A band marks a range between two values, such as a range to stay in. Both belong to the value axis and are stored in <code>spec.references</code>.'
+title: '参考线和区间带'
+intro: '参考线会在绘图区标示一个数值，例如目标值。区间带会标示两个数值之间的范围，例如需要保持在其中的区间。两者都属于数值轴，并存储在 <code>spec.references</code> 中。'
 headerDemo:
   path: '/Extensions/DiagramsReferenceLines'
   isPro: true
@@ -8,15 +8,14 @@ tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Reference lines and bands | Tiptap Diagrams Docs'
-  description: 'A reference line marks one value across the plot, such as a target.'
-  category: Diagrams
+  title: '参考线和区间带 | Tiptap Diagrams 文档'
+  description: '参考线会在绘图区标示一个数值，例如目标值。'
+  category: 图表
 ---
 
-## Quick start
+## 快速开始
 
-Set the references with `updateChartSpec`. The new list replaces the old one, and `undefined`
-removes it.
+使用 `updateChartSpec` 设置参考线和区间带。新列表会替换旧列表，设为 `undefined` 则会将其移除。
 
 ```ts
 editor.commands.updateChartSpec({
@@ -29,37 +28,30 @@ editor.commands.updateChartSpec({
 })
 ```
 
-## Fields
+## 字段
 
-Each entry of `spec.references` is a `ChartReference`:
+`spec.references` 中的每个条目都是一个 `ChartReference`：
 
-| Field        | Type                              | Description                                                                    |
-| ------------ | --------------------------------- | ------------------------------------------------------------------------------ |
-| `value`      | `number`                          | A line at this value. Wins over `from` and `to`                                |
-| `from`, `to` | `number`                          | A band between these values, instead of `value`                                |
-| `label`      | `string`                          | Written above a line, or inside a band at its top                              |
-| `labelAt`    | `'start' \| 'end'`                | Which end of the category axis the label stands at. Default: `'end'`           |
-| `color`      | `string`                          | A CSS color. A band is a light tint of it. Without it, the theme's label color |
-| `line`       | `'solid' \| 'dashed' \| 'dotted'` | A line only. Default: `'dashed'`                                               |
-| `width`      | `number`                          | A line only: 0.5 to 4 CSS pixels. Default: 1.5                                 |
+| 字段         | 类型                              | 说明                                                                     |
+| ------------ | --------------------------------- | ------------------------------------------------------------------------ |
+| `value`      | `number`                          | 在此数值处绘制一条线。优先于 `from` 和 `to`                               |
+| `from`, `to` | `number`                          | 绘制这两个数值之间的区间带，而不是使用 `value`                            |
+| `label`      | `string`                          | 显示在线上方，或显示在区间带顶部内侧                                      |
+| `labelAt`    | `'start' \| 'end'`                | 标签显示在分类轴的哪一端。默认值：`'end'`                                 |
+| `color`      | `string`                          | CSS 颜色。区间带会使用该颜色的浅色调。未指定时使用主题的标签颜色           |
+| `line`       | `'solid' \| 'dashed' \| 'dotted'` | 仅适用于线条。默认值：`'dashed'`                                          |
+| `width`      | `number`                          | 仅适用于线条：0.5 到 4 CSS 像素。默认值：1.5                              |
 
-An entry with neither a `value` nor two different `from` and `to` values is dropped. A chart
-keeps at most 20 entries.
+如果条目既没有 `value`，`from` 和 `to` 也不同时存在且数值不同，该条目就会被丢弃。每张图表最多保留 20 个条目。
 
-## How they are drawn
+## 绘制方式
 
-Bands lie behind the series. Lines and every label lie over the series. On a chart with a
-`background`, a label gets an outline in that color, so you can read it across a bar.
+区间带绘制在数据系列后方。线条和所有标签都绘制在数据系列上方。对于带有 `background` 的图表，标签会带有与背景同色的描边，因此即使标签覆盖在柱形上也能清晰辨认。
 
-A reference outside the data widens the value axis to show it. On horizontal bars, the
-references stand upright. On a combo chart with a second axis, they belong to the left axis.
+如果参考值超出数据范围，数值轴会扩展以显示它。对于水平柱状图，参考线会竖直显示。在带有第二坐标轴的组合图中，参考线和区间带属于左侧坐标轴。
 
-## Which charts and Renderers draw them
+## 支持绘制的图表和渲染器
 
-References apply to line, bar, area, scatter and combo charts. The
-[ECharts](/diagrams/renderers/echarts#chart-types) and
-[D3](/diagrams/renderers/d3#chart-types) Renderers draw them. The Mermaid Renderer declines
-such a chart, see its [limits](/diagrams/renderers/mermaid#limits).
+参考线和区间带适用于折线图、柱状图、面积图、散点图和组合图。它们可由 [ECharts](/diagrams/renderers/echarts#chart-types) 和 [D3](/diagrams/renderers/d3#chart-types) 渲染器绘制。Mermaid 渲染器不支持此类图表，详见其[限制](/diagrams/renderers/mermaid#limits)。
 
-Word charts have no reference lines, so `exportDocx` writes the chart as an image and says so in
-its notes.
+Word 图表不支持参考线，因此 `exportDocx` 会将图表导出为图像，并在备注中说明这一点。
