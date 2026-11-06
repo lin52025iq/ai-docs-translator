@@ -1,6 +1,6 @@
 ---
-title: 'Charts'
-intro: 'A chart is a <code>chart</code> node. It stores its values, the Chart Data, and its settings, the Chart Spec. To insert your first chart, see <a href="/docs/diagrams/getting-started/install#a-first-chart">Getting started</a>.'
+title: '图表'
+intro: '图表是一个 <code>chart</code> 节点。它存储图表数据（Chart Data）和设置（图表规范，Chart Spec）。要插入第一个图表，请参阅<a href="/docs/diagrams/getting-started/install#a-first-chart">入门</a>。'
 headerDemo:
   path: '/Extensions/DiagramsChartTypes'
   isPro: true
@@ -8,75 +8,67 @@ tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Charts | Tiptap Diagrams Docs'
-  description: 'A chart is a chart node.'
-  category: Diagrams
+  title: '图表 | Tiptap Diagrams 文档'
+  description: '图表是一种图表节点。'
+  category: 图表
 ---
 
-## Quick start
+## 快速入门
 
 ```ts
 editor.commands.insertFromText({ text: 'Month | Sales\nJan | 2\nFeb | 3' })
 ```
 
-[`insertFromText`](/diagrams/data/pasting#insertfromtext) reads the text the way a paste would, so
-these rows become a chart. The rows are written in the [Chart syntax](/diagrams/data/chart-syntax).
+[`insertFromText`](/diagrams/data/pasting#insertfromtext) 会像粘贴文本一样读取文本，因此这些行会转换为图表。行的格式遵循[图表语法](/diagrams/data/chart-syntax)。
 
-## More about charts
+## 了解更多图表信息
 
-| Page                                                     | Covers                                                                          |
+| 页面                                                     | 涵盖内容                                                                          |
 | -------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| [Appearance](/diagrams/charts/appearance)                | Title, legend, colors, frame, caption, line styles, and which Renderer draws it |
-| [Editing in the chart](/diagrams/charts/editing)         | Renaming the title, axis titles, series and categories with a double click      |
-| [Axes](/diagrams/charts/axes)                            | Axis titles and ranges, grid and axis lines, ticks, category labels             |
-| [Reference lines and bands](/diagrams/charts/references) | Lines and bands at a value, such as a target or a range to stay in              |
-| [Looks](/diagrams/charts/looks)                          | Copying the colors and lines of one chart to another, or to a new one           |
-| [Export](/diagrams/export)                               | SVG, PNG, WebP, Word, and replacing a chart with an image                       |
-| [Size and view](/diagrams/guides/size-and-view)          | Size, alignment, zoom, pan, maximize, narrow screens                            |
+| [外观](/diagrams/charts/appearance)                | 标题、图例、颜色、边框、说明文字、线条样式，以及用于绘制图表的渲染器 |
+| [在图表中编辑](/diagrams/charts/editing)         | 双击可重命名标题、坐标轴标题、系列和类别      |
+| [坐标轴](/diagrams/charts/axes)                            | 坐标轴标题和范围、网格线和坐标轴线、刻度、类别标签             |
+| [参考线和参考带](/diagrams/charts/references) | 特定值处的线和带，例如目标值或需要保持在其中的范围              |
+| [样式](/diagrams/charts/looks)                          | 将一个图表的颜色和线条复制到另一个图表或新图表           |
+| [导出](/diagrams/export)                               | SVG、PNG、WebP、Word，以及将图表替换为图像                       |
+| [尺寸和视图](/diagrams/guides/size-and-view)          | 尺寸、对齐、缩放、平移、最大化、小屏幕                            |
 
-## Chart types
+## 图表类型
 
-A chart stores its type as `spec.type`. Most types read the Chart Data the same way. One column
-is the label column, usually the first: its cells name the rows, such as `Jan` and `Feb`. Each
-other column of numbers is a series, drawn as one line, one set of bars or one set of points.
+图表将类型存储在 `spec.type` 中。大多数类型以相同方式读取图表数据。一列是标签列，通常是第一列：其中的单元格为各行命名，例如 `Jan` 和 `Feb`。其他每个数值列都是一个系列，可绘制为一条线、一组柱形或一组点。
 
-The last column says what a chart becomes in a [Word document](/diagrams/export#word): a native Word
-chart that you can restyle in Word, an image, or a Word table.
+最后一列说明图表在 [Word 文档](/diagrams/export#word)中的呈现方式：可在 Word 中重新设置样式的原生 Word 图表、图像或 Word 表格。
 
-| Type                      | Reads the rows as                                                                                                | In a Word document |
+| 类型                      | 行的读取方式                                                                                                | 在 Word 文档中的形式 |
 | ------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------ |
-| `line`, `area`, `scatter` | A label column and one or more series                                                                            | Word chart         |
-| `bar`                     | The same. `spec.orientation: 'horizontal'` lays the bars on their side                                           | Word chart         |
-| `combo`                   | The same. See [Combo charts](/diagrams/charts/overview#combo-charts)                                             | Word chart         |
-| `radar`                   | One spoke per row, a line from the center out that the row's label names. One closed line per series             | Word chart         |
-| `pie`, `doughnut`         | A label column and one series, the parts of a whole                                                              | Word chart         |
-| `funnel`                  | A label per stage and one value, widest first                                                                    | Image              |
-| `gauge`                   | One value. `spec.range: { min, max }` sets its range, `0` to `100` by default                                    | Image              |
-| `treemap`, `tree`         | Labels as paths and one value per row. `Europe / Germany` places Germany under Europe                            | Image              |
-| `sankey`, `network`       | One link per row. The label column is where the link starts, the next column where it ends, the third its weight | Image              |
-| `matrix`                  | Words in a grid, see [Matrix](/diagrams/charts/overview#matrix)                                                  | Word table         |
+| `line`、`area`、`scatter` | 一列标签以及一个或多个系列                                                                            | Word 图表         |
+| `bar`                     | 同上。`spec.orientation: 'horizontal'` 会将柱形横向排列                                           | Word 图表         |
+| `combo`                   | 同上。请参阅[组合图表](/diagrams/charts/overview#combo-charts)                                             | Word 图表         |
+| `radar`                   | 每行对应一条辐射线，从中心向外延伸，行标签作为其名称。每个系列对应一条闭合线             | Word 图表         |
+| `pie`、`doughnut`         | 一列标签和一个系列，表示整体中的各部分                                                              | Word 图表         |
+| `funnel`                  | 每个阶段一个标签和一个数值，按宽度从大到小排列                                                                    | 图像              |
+| `gauge`                   | 一个数值。`spec.range: { min, max }` 设置其范围，默认值为 `0` 到 `100`                                    | 图像              |
+| `treemap`、`tree`         | 标签以路径形式表示，每行一个数值。`Europe / Germany` 表示 Germany 位于 Europe 下方                            | 图像              |
+| `sankey`、`network`       | 每行一条连接。标签列表示连接的起点，下一列表示终点，第三列表示权重 | 图像              |
+| `matrix`                  | 网格中的文字，请参阅 [矩阵](/diagrams/charts/overview#matrix)                                                  | Word 表格         |
 
-- Not every Renderer draws every type. A Renderer that does not draw a type leaves the chart to
-  the next one that does, see [Choosing the Renderer](/diagrams/charts/appearance#choosing-the-renderer).
-- A sankey link that would close a loop is dropped.
-- A type you register with the [`chartTypes`](/diagrams/api-reference/options#charttypes) option is stored,
-  offered to an AI model and drawn by any Renderer that lists it.
-- A type this editor does not know stays in the document unchanged.
+- 并非所有渲染器都能绘制所有类型。如果某个渲染器无法绘制某种类型，图表会交由下一个支持该类型的渲染器处理。请参阅[选择渲染器](/diagrams/charts/appearance#choosing-the-renderer)。
+- 如果 Sankey 图中的连接会形成闭环，则会将其丢弃。
+- 通过 [`chartTypes`](/diagrams/api-reference/options#charttypes) 选项注册的类型会被存储、提供给 AI 模型，并由任何列出该类型的渲染器绘制。
+- 如果编辑器不认识某个类型，该类型会原样保留在文档中。
 
-### Combo charts
+### 组合图表
 
-A combo chart draws some series as bars and others as lines. You choose this per series, by
-column id:
+组合图表将部分系列绘制为柱形，其他系列绘制为线条。可按系列通过列 ID 选择绘制方式：
 
-| Field                        | Values                                           |
+| 字段                        | 值                                           |
 | ---------------------------- | ------------------------------------------------ |
-| `spec.series[columnId].as`   | `'bar'` (default) or `'line'`                    |
-| `spec.series[columnId].axis` | `'right'` puts the series on a second value axis |
+| `spec.series[columnId].as`   | `'bar'`（默认）或 `'line'`                    |
+| `spec.series[columnId].axis` | `'right'` 会将系列放在第二个数值轴上 |
 
-### Matrix
+### 矩阵
 
-A `matrix` is a grid of words, such as a RACI matrix. The label column holds the tasks, each
-other column is a role, and each cell holds a letter.
+`matrix` 是由文字组成的网格，例如 RACI 矩阵。标签列存放任务，其他每列代表一个角色，每个单元格存放一个字母。
 
 ```txt
 Task   | Lead | Team | Board
@@ -84,37 +76,32 @@ Plan   | A    | R    | I
 Build  | C    | R    |
 ```
 
-Each distinct cell text gets a color from the series colors. R, A, C and I come first, in that
-order. The ECharts Renderer draws a matrix. A matrix cannot be written as Mermaid.
+每种不同的单元格文本都会从系列颜色中分配一种颜色。R、A、C 和 I 按此顺序优先。ECharts 渲染器可以绘制矩阵。矩阵不能写成 Mermaid。
 
-## How a chart is stored
+## 图表的存储方式
 
-A chart's attributes hold everything needed to draw it again:
+图表的属性包含重新绘制图表所需的全部信息：
 
-| Attribute    | Content                                                                                          |
+| 属性    | 内容                                                                                          |
 | ------------ | ------------------------------------------------------------------------------------------------ |
-| `data`       | Chart Data: `columns` (`id`, `label`, `role` of `label` or `series`) and `rows`                  |
-| `spec`       | Chart Spec, see [Chart Spec fields](/diagrams/charts/appearance#chart-spec-fields)               |
-| `renderer`   | The id of the Renderer chosen for this chart, or `null` for the default                          |
-| `source`     | The Data Source the data was read from, or `null`                                                |
-| `delimiter`  | The delimiter the data was typed with, so the data looks the same when you edit it as text again |
-| `previewUrl` | An optional image URL written into the HTML output                                               |
+| `data`       | 图表数据：`columns`（`id`、`label`、`role`，其中 `role` 为 `label` 或 `series`）以及 `rows`                  |
+| `spec`       | 图表规范，请参阅[图表规范字段](/diagrams/charts/appearance#chart-spec-fields)               |
+| `renderer`   | 为此图表选择的渲染器 ID；默认值为 `null`                          |
+| `source`     | 读取数据所用的数据源；若无则为 `null`                                                |
+| `delimiter`  | 输入数据时使用的分隔符，以便再次以文本形式编辑时数据外观保持不变 |
+| `previewUrl` | 可选的图像 URL，会写入 HTML 输出                                               |
 
-The document never stores the drawn chart, the size it was drawn at on screen, or its loading
-state. A size you set is stored in `spec.size`.
+文档不会存储绘制出的图表、图表在屏幕上的绘制尺寸或其加载状态。你设置的尺寸会存储在 `spec.size` 中。
 
-### In HTML
+### 在 HTML 中
 
-A chart is a `<figure data-type="chart">`. Its data is a `<table>`, so the numbers survive an
-HTML or Markdown export and a screen reader can read them. Its title is the `<figcaption>`. The
-Chart Spec and the Data Source are stored as JSON in `data-tt-chart-*` attributes on the
-`<figure>`, see [Data attributes](/diagrams/api-reference/selectors#data-attributes).
+图表是一个 `<figure data-type="chart">`。其数据为 `<table>`，因此导出为 HTML 或 Markdown 时数字会保留，屏幕阅读器也可以读取。图表标题是 `<figcaption>`。图表规范和数据源以 JSON 格式存储在 `<figure>` 的 `data-tt-chart-*` 属性中，请参阅[数据属性](/diagrams/api-reference/selectors#data-attributes)。
 
-## Commands
+## 命令
 
 ### insertChart
 
-Inserts a chart at the selection, or at `pos`, and selects it.
+在当前选区或 `pos` 位置插入图表，并选中该图表。
 
 ```ts
 editor.commands.insertChart({
@@ -132,23 +119,22 @@ editor.commands.insertChart({
 })
 ```
 
-| Option      | Type                  | Description                                                                                       |
+| 选项      | 类型                  | 说明                                                                                       |
 | ----------- | --------------------- | ------------------------------------------------------------------------------------------------- |
-| `data`      | `ChartData`           | The Chart Data                                                                                    |
-| `spec`      | `Partial<ChartSpec>`  | The Chart Spec. Wins over `look` where both set a field                                           |
-| `type`      | `ChartType`           | Shortcut for `spec.type`                                                                          |
-| `renderer`  | `string \| null`      | The id of the Renderer to draw with. `null` uses the default                                      |
-| `source`    | `ChartSource \| null` | The Data Source the chart follows                                                                 |
-| `delimiter` | `string \| null`      | The delimiter the data was typed with                                                             |
-| `pos`       | `number`              | The position to insert at. Defaults to the selection                                              |
-| `look`      | `ChartLook`           | A saved look the chart starts with, see [`applyChartLook`](/diagrams/charts/looks#applychartlook) |
+| `data`      | `ChartData`           | 图表数据                                                                                    |
+| `spec`      | `Partial<ChartSpec>`  | 图表规范。如果两者都设置了某个字段，则优先使用 `spec` 中的值                                           |
+| `type`      | `ChartType`           | `spec.type` 的快捷设置                                                                          |
+| `renderer`  | `string \| null`      | 用于绘制图表的渲染器 ID。`null` 表示使用默认渲染器                                      |
+| `source`    | `ChartSource \| null` | 图表所依赖的数据源                                                                 |
+| `delimiter` | `string \| null`      | 输入数据时使用的分隔符                                                             |
+| `pos`       | `number`              | 插入位置。默认为当前选区                                              |
+| `look`      | `ChartLook`           | 图表初始使用的已保存样式，请参阅 [`applyChartLook`](/diagrams/charts/looks#applychartlook) |
 
-An empty paragraph at the selection is replaced. When a chart is selected, the new chart goes
-after it.
+如果选区中有空段落，则会将其替换。如果选中了图表，新图表会插入到它后面。
 
 ### insertChartFrom
 
-Inserts a chart written in a registered format.
+插入以已注册格式编写的图表。
 
 ```ts
 editor.commands.insertChartFrom({
@@ -157,81 +143,74 @@ editor.commands.insertChartFrom({
 })
 ```
 
-| Option     | Type             | Description                                                     |
+| 选项     | 类型             | 说明                                                     |
 | ---------- | ---------------- | --------------------------------------------------------------- |
-| `format`   | `string`         | `'chart-json'`, `'chart-syntax'`, `'mermaid'`, or one you added |
-| `content`  | `string`         | The text in that format                                         |
-| `type`     | `ChartType`      | The type, used when the content does not name one               |
-| `renderer` | `string \| null` | The id of the Renderer to draw with                             |
-| `pos`      | `number`         | The position to insert at. Defaults to the selection            |
+| `format`   | `string`         | `'chart-json'`、`'chart-syntax'`、`'mermaid'` 或你添加的格式 |
+| `content`  | `string`         | 该格式的文本                                         |
+| `type`     | `ChartType`      | 当内容未指定类型时使用的类型               |
+| `renderer` | `string \| null` | 用于绘制图表的渲染器 ID                             |
+| `pos`      | `number`         | 插入位置。默认为当前选区            |
 
-Returns `false` when the content cannot be read.
+如果无法读取内容，则返回 `false`。
 
 ### importMermaidChart
 
-Inserts a chart from Mermaid chart source.
+从 Mermaid 图表源码插入图表。
 
 ```ts
 editor.commands.importMermaidChart({ source: 'pie\n  "Dogs" : 386\n  "Cats" : 85' })
 ```
 
-| Option   | Type     | Description                                          |
+| 选项   | 类型     | 说明                                          |
 | -------- | -------- | ---------------------------------------------------- |
-| `source` | `string` | The Mermaid source                                   |
-| `pos`    | `number` | The position to insert at. Defaults to the selection |
+| `source` | `string` | Mermaid 源码                                   |
+| `pos`    | `number` | 插入位置。默认为当前选区 |
 
-Mermaid draws most of its kinds as diagrams. These five kinds hold numbers, so they become
-charts with data you can edit:
+Mermaid 的大多数图表类型会绘制为示意图。以下五种类型包含数值，因此会转换为数据可编辑的图表：
 
-| First line     | Chart type      | Data                                                         |
+| 首行           | 图表类型      | 数据                                                         |
 | -------------- | --------------- | ------------------------------------------------------------ |
-| `pie`          | `pie`           | A row per slice                                              |
-| `xychart-beta` | `bar` or `line` | A row per x-axis category, a series per bar or line          |
-| `sankey-beta`  | `sankey`        | A row per flow: source, target, value                        |
-| `radar-beta`   | `radar`         | A row per axis, a series per curve. `min` and `max` are kept |
-| `treemap-beta` | `treemap`       | A row per node with a value, its label the path, `A / B`     |
+| `pie`          | `pie`           | 每个扇区对应一行                                              |
+| `xychart-beta` | `bar` 或 `line` | 每个 x 轴类别对应一行；每个柱形或线条对应一个系列          |
+| `sankey-beta`  | `sankey`        | 每条流对应一行：来源、目标、数值                        |
+| `radar-beta`   | `radar`         | 每个坐标轴对应一行，每条曲线对应一个系列。保留 `min` 和 `max` |
+| `treemap-beta` | `treemap`       | 每个节点对应一行且包含数值；标签为路径，如 `A / B`     |
 
-- The chart's title comes from `title`, or from frontmatter for sankey and treemap.
-- How Mermaid colors the chart (`classDef`, `showLegend`, `ticks`, `graticule`) is left out.
-- `toMermaidSource` and the `mermaid` format turn a chart back into Mermaid source. They write
-  the same five kinds.
-- Mermaid's pie, radar and treemap read no minus sign, so they cannot show a value below zero.
-  When such a chart is written back to Mermaid, a pie slice or a treemap node below zero is left
-  out, and a radar value below zero is written as zero.
+- 图表标题取自 `title`；对于 Sankey 图和树状图，则取自 frontmatter。
+- Mermaid 用于设置图表颜色的内容（`classDef`、`showLegend`、`ticks`、`graticule`）不会保留。
+- `toMermaidSource` 和 `mermaid` 格式可以将图表转换回 Mermaid 源码，支持的仍是上述五种类型。
+- Mermaid 的饼图、雷达图和树状图不识别负号，因此无法显示小于零的数值。将这类图表转换回 Mermaid 时，负值饼图扇区或树状图节点会被省略，负值雷达图数值则会写为零。
 
-Pasting Mermaid chart source runs this command, see
-[Pasting](/diagrams/data/pasting#how-pasted-text-is-read).
+粘贴 Mermaid 图表源码时会运行此命令，请参阅[粘贴](/diagrams/data/pasting#how-pasted-text-is-read)。
 
-Returns `false` for any other Mermaid diagram.
+对于其他 Mermaid 示意图，此命令返回 `false`。
 
 ### convertCodeBlockToChart
 
-Replaces a code block with the chart its [Mermaid chart source](/diagrams/charts/overview#importmermaidchart) describes.
+将代码块替换为其[Mermaid 图表源码](/diagrams/charts/overview#importmermaidchart)所描述的图表。
 
 ```ts
 if (editor.can().convertCodeBlockToChart()) editor.commands.convertCodeBlockToChart()
 ```
 
-| Option | Type     | Description                                                 |
+| 选项 | 类型     | 说明                                                 |
 | ------ | -------- | ----------------------------------------------------------- |
-| `pos`  | `number` | A position inside the code block. Defaults to the selection |
+| `pos`  | `number` | 代码块内的位置。默认为当前选区 |
 
-Any node with `code: true` in its spec counts as a code block. Mod-Enter in the code block runs
-the command too, see [Mod-Enter in a code block](/diagrams/data/quick-input#mod-enter-in-a-code-block).
+其规范中包含 `code: true` 的任何节点都视为代码块。在代码块中按 Mod-Enter 也会运行此命令，请参阅[在代码块中按 Mod-Enter](/diagrams/data/quick-input#mod-enter-in-a-code-block)。
 
-Returns `false` for a code block holding anything else.
+如果代码块包含其他内容，则返回 `false`。
 
 ### insertDiagramInput
 
-Opens an empty [Quick Input](/diagrams/data/quick-input) at the selection, as typing the
-[`trigger`](/diagrams/api-reference/options#trigger) does.
+在当前选区打开一个空的[快速输入](/diagrams/data/quick-input)，效果与输入[`触发符`](/diagrams/api-reference/options#trigger)相同。
 
 ```ts
 editor.chain().focus().insertDiagramInput({ type: 'pie' }).run()
 ```
 
-| Option | Type        | Description                                                                            |
+| 选项 | 类型        | 说明                                                                            |
 | ------ | ----------- | -------------------------------------------------------------------------------------- |
-| `type` | `ChartType` | The chart type the Quick Input starts with. Defaults to the `chart.defaultType` option |
+| `type` | `ChartType` | 快速输入初始使用的图表类型。默认为 `chart.defaultType` 选项 |
 
-Returns `false` when the schema has no `diagramInput` node.
+如果 schema 中没有 `diagramInput` 节点，则返回 `false`。
