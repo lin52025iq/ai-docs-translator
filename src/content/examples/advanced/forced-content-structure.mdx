@@ -1,15 +1,15 @@
 ---
-title: Enforcing a content structure
+title: 强制内容结构
 meta:
-  title: Forced content structure example | Tiptap Editor Docs
-  description: Learn how to add a text editor with a forced content structure with Tiptap. More in our documentation!
-  category: Examples
+  title: 强制内容结构示例 | Tiptap 编辑器文档
+  description: 了解如何使用 Tiptap 添加具有强制内容结构的文本编辑器。更多内容请参阅我们的文档！
+  category: 示例
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-Does your editor require content in a specific structure? You can enforce specific content structures via **custom documents** that extend our default `@tiptap/extension-document` extension. See below to learn more about how to create a custom document schema.
+你的编辑器是否要求内容遵循特定结构？你可以通过扩展默认的 `@tiptap/extension-document` 扩展来创建**自定义文档**，从而强制内容遵循特定结构。请参阅下方内容，进一步了解如何创建自定义文档架构。
 
 <CodeDemo path="/Examples/CustomDocument" />
 
-> **Note**: If you use the Trailing Node extension in combination with a custom document structure, adjust the `node` option manually - otherwise ProseMirror will fall back to the default node from your schema. For example, in the heading + block demo a heading node might be assumed as the default trailing node. See the [Trailing Node docs](/editor/extensions/functionality/trailing-node) for more details.
+> **注意**：如果将 Trailing Node 扩展与自定义文档结构结合使用，请手动调整 `node` 选项，否则 ProseMirror 会回退到架构中的默认节点。例如，在“标题 + 块”演示中，标题节点可能会被假定为默认的尾随节点。详情请参阅 [Trailing Node 文档](/editor/extensions/functionality/trailing-node)。
