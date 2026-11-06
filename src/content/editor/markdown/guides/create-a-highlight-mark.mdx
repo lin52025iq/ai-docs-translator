@@ -1,23 +1,23 @@
 ---
-title: Create a Highlight Mark with Markdown Support
+title: 创建支持 Markdown 的高亮标记
 tags:
   - type: beta
 meta:
-  title: Create a Highlight Mark with Markdown | Tiptap Editor Docs
-  description: Learn how to create a custom Highlight mark in Tiptap that supports Markdown syntax for enhanced text formatting.
-  category: Editor
+  title: 使用 Markdown 创建高亮标记 | Tiptap 编辑器文档
+  description: 了解如何在 Tiptap 中创建支持 Markdown 语法的自定义高亮标记，以增强文本格式设置。
+  category: 编辑器
 ---
 
-This guide walks through adding Markdown support for a small inline `highlight` mark that uses the `==text==` shorthand (common in some Markdown flavors) to produce a `mark` element in HTML.
+本指南将介绍如何为一个简单的内联 `highlight` 标记添加 Markdown 支持。该标记使用 `==text==` 简写形式（常见于某些 Markdown 方言），并在 HTML 中生成 `mark` 元素。
 
-We'll follow four clear steps and at each step include a full example so you always have the complete context:
+我们将分四个步骤进行，每个步骤都会提供完整示例，确保你始终掌握完整的上下文：
 
-1. Create the basic Tiptap `Mark` extension (without Markdown support).
-2. Add a custom Markdown tokenizer to produce tokens from the raw Markdown.
-3. Add a parser that converts those tokens into Tiptap JSON (applying the mark).
-4. Add a renderer (serializer) that converts the Tiptap content back to Markdown.
+1. 创建基础的 Tiptap `Mark` 扩展（不含 Markdown 支持）。
+2. 添加自定义 Markdown 分词器，从原始 Markdown 中生成 token。
+3. 添加解析器，将这些 token 转换为 Tiptap JSON（并应用标记）。
+4. 添加渲染器（序列化器），将 Tiptap 内容转换回 Markdown。
 
-Example shorthand we'll support:
+我们要支持的简写形式：
 
 ```js
 This is ==highlighted== text.
@@ -25,9 +25,9 @@ This is ==highlighted== text.
 
 ---
 
-## Step 1: Create the basic `highlight` Mark
+## 步骤 1：创建基础的 `highlight` Mark
 
-Start with a minimal `Mark` definition that describes the mark name, HTML parse/render behavior and any options. Keep Markdown integration out for now so you can focus on schema and HTML input/output first.
+首先定义一个最简的 `Mark`，描述标记名称、HTML 解析/渲染行为以及相关选项。暂时不加入 Markdown 集成，以便先专注于 schema 和 HTML 输入/输出。
 
 ```js
 import { Mark } from '@tiptap/core'
@@ -61,15 +61,15 @@ export const Highlight = Mark.create({
 })
 ```
 
-**Notes:**
-- This mark simply maps to the HTML `<mark>` tag.
-- The command `toggleHighlight` allows toggling the mark programmatically.
+**注意：**
+- 此标记仅映射到 HTML `<mark>` 标签。
+- `toggleHighlight` 命令可用于以编程方式切换该标记。
 
 ---
 
-## Step 2: Add a custom Markdown tokenizer
+## 步骤 2：添加自定义 Markdown 分词器
 
-The tokenizer is responsible for recognizing `==text==` in the raw Markdown and returning a token containing the inner text and any nested inline tokens. Keep this step focused on the tokenizer so you can test recognition independently.
+分词器负责识别原始 Markdown 中的 `==text==`，并返回包含内部文本及任何嵌套内联 token 的 token。本步骤只关注分词器，以便你能独立测试识别效果。
 
 ```js
 import { Mark } from '@tiptap/core'
@@ -91,22 +91,22 @@ export const Highlight = Mark.create({
     return ['mark', HTMLAttributes, 0]
   },
 
-  // define a custom Markdown tokenizer to recognize ==text==
+  // 定义自定义 Markdown 分词器，以识别 ==text==
   markdownTokenizer: {
     name: 'highlight',
-    level: 'inline', // inline element
-    // fast hint for the lexer to find candidate positions
+    level: 'inline', // 内联元素
+    // 提示词法分析器快速查找候选位置
     start: (src) => src.indexOf('=='),
     tokenize: (src, tokens, lexer) => {
-      // Match ==text== at the start of the remaining source
+      // 匹配剩余源文本开头的 ==text==
       const match = /^==([^=]+)==/.exec(src)
       if (!match) return undefined
 
       return {
-        type: 'highlight',       // token type (must match name)
-        raw: match[0],           // full matched string: ==text==
-        text: match[1],          // inner content: text
-        // Let the Markdown lexer process nested inline formatting
+        type: 'highlight',       // token 类型（必须与 name 相同）
+        raw: match[0],           // 完整匹配的字符串：==text==
+        text: match[1],          // 内部内容：text
+        // 让 Markdown 词法分析器处理嵌套的内联格式
         tokens: lexer.inlineTokens(match[1]),
       }
     },
@@ -124,15 +124,15 @@ export const Highlight = Mark.create({
 })
 ```
 
-**Implementation notes:**
-- `start` is an optimization used by the lexer to quickly locate potential matches.
-- The tokenizer returns `tokens: lexer.inlineTokens(match[1])` so nested inline formatting (bold, emphasis, links, etc.) is preserved.
+**实现说明：**
+- `start` 是词法分析器用于快速定位潜在匹配项的优化方法。
+- 分词器返回 `tokens: lexer.inlineTokens(match[1])`，因此可以保留嵌套的内联格式（粗体、斜体、链接等）。
 
 ---
 
-## Step 3: Add the parser
+## 步骤 3：添加解析器
 
-The `parseMarkdown` function converts the token produced by the tokenizer into a Tiptap representation. For marks, you'll typically parse the inner tokens into inline nodes and then apply the mark to that content.
+`parseMarkdown` 函数会将分词器生成的 token 转换为 Tiptap 表示形式。对于标记，通常需要先将内部 token 解析为内联节点，再将标记应用到这些内容上。
 
 ```js
 import { Mark } from '@tiptap/core'
@@ -154,32 +154,32 @@ export const Highlight = Mark.create({
     return ['mark', HTMLAttributes, 0]
   },
 
-  // define a custom Markdown tokenizer to recognize ==text==
+  // 定义自定义 Markdown 分词器，以识别 ==text==
   markdownTokenizer: {
     name: 'highlight',
-    level: 'inline', // inline element
-    // fast hint for the lexer to find candidate positions
+    level: 'inline', // 内联元素
+    // 提示词法分析器快速查找候选位置
     start: (src) => src.indexOf('=='),
     tokenize: (src, tokens, lexer) => {
-      // Match ==text== at the start of the remaining source
+      // 匹配剩余源文本开头的 ==text==
       const match = /^==([^=]+)==/.exec(src)
       if (!match) return undefined
 
       return {
-        type: 'highlight',       // token type (must match name)
-        raw: match[0],           // full matched string: ==text==
-        text: match[1],          // inner content: text
-        // Let the Markdown lexer process nested inline formatting
+        type: 'highlight',       // token 类型（必须与 name 相同）
+        raw: match[0],           // 完整匹配的字符串：==text==
+        text: match[1],          // 内部内容：text
+        // 让 Markdown 词法分析器处理嵌套的内联格式
         tokens: lexer.inlineTokens(match[1]),
       }
     },
   },
 
-  // Parse Markdown token to Tiptap JSON
+  // 将 Markdown token 解析为 Tiptap JSON
   parseMarkdown: (token, helpers) => {
-    // Parse nested inline tokens into Tiptap inline content
+    // 将嵌套的内联 token 解析为 Tiptap 兼容的内容数组
     const content = helpers.parseInline(token.tokens || [])
-    // Apply the 'highlight' mark to the parsed content
+    // 将 'highlight' 标记应用到解析后的内容
     return helpers.applyMark('highlight', content)
   },
 
@@ -195,15 +195,15 @@ export const Highlight = Mark.create({
 })
 ```
 
-**Notes:**
-- `helpers.parseInline` converts nested inline tokens into the tiptap-compatible `content` array.
-- `helpers.applyMark('highlight', content)` applies the mark to the parsed inline content and returns the structure the Markdown parser expects.
+**注意：**
+- `helpers.parseInline` 会将嵌套的内联 token 转换为 Tiptap 兼容的 `content` 数组。
+- `helpers.applyMark('highlight', content)` 会将 `highlight` 标记应用到解析后的内联内容，并返回 Markdown 解析器所需的结构。
 
 ---
 
-## Step 4: Add the renderer
+## 步骤 4：添加渲染器
 
-To support serializing editor state back to Markdown, implement the `renderMarkdown` function. It receives a Tiptap node (or mark node structure) and should return the Markdown string. Use `helpers.renderChildren` to serialize nested content.
+要支持将编辑器状态序列化回 Markdown，需要实现 `renderMarkdown` 函数。该函数接收一个 Tiptap 节点（或标记节点结构），并应返回 Markdown 字符串。使用 `helpers.renderChildren` 序列化嵌套内容。
 
 ```js
 import { Mark } from '@tiptap/core'
@@ -225,39 +225,39 @@ export const Highlight = Mark.create({
     return ['mark', HTMLAttributes, 0]
   },
 
-  // define a custom Markdown tokenizer to recognize ==text==
+  // 定义自定义 Markdown 分词器，以识别 ==text==
   markdownTokenizer: {
     name: 'highlight',
-    level: 'inline', // inline element
-    // fast hint for the lexer to find candidate positions
+    level: 'inline', // 内联元素
+    // 提示词法分析器快速查找候选位置
     start: (src) => src.indexOf('=='),
     tokenize: (src, tokens, lexer) => {
-      // Match ==text== at the start of the remaining source
+      // 匹配剩余源文本开头的 ==text==
       const match = /^==([^=]+)==/.exec(src)
       if (!match) return undefined
 
       return {
-        type: 'highlight',       // token type (must match name)
-        raw: match[0],           // full matched string: ==text==
-        text: match[1],          // inner content: text
-        // Let the Markdown lexer process nested inline formatting
+        type: 'highlight',       // token 类型（必须与 name 相同）
+        raw: match[0],           // 完整匹配的字符串：==text==
+        text: match[1],          // 内部内容：text
+        // 让 Markdown 词法分析器处理嵌套的内联格式
         tokens: lexer.inlineTokens(match[1]),
       }
     },
   },
 
-  // Parse Markdown token to Tiptap JSON
+  // 将 Markdown token 解析为 Tiptap JSON
   parseMarkdown: (token, helpers) => {
-    // Parse nested inline tokens into Tiptap inline content
+    // 将嵌套的内联 token 解析为 Tiptap 兼容的内容数组
     const content = helpers.parseInline(token.tokens || [])
-    // Apply the 'highlight' mark to the parsed content
+    // 将 'highlight' 标记应用到解析后的内容
     return helpers.applyMark('highlight', content)
   },
 
-  // Render Tiptap node back to Markdown
+  // 将 Tiptap 节点渲染回 Markdown
   renderMarkdown: (node, helpers) => {
     const content = helpers.renderChildren(node.content || [])
-    // Wrap serialized children in == delimiters
+    // 用 == 分隔符包裹序列化后的子内容
     return `==${content}==`
   },
 
@@ -273,38 +273,38 @@ export const Highlight = Mark.create({
 })
 ```
 
-**Notes:**
-- `helpers.renderChildren` serializes the node/mark children back to Markdown respecting nested formatting.
-- Ensure the `renderMarkdown` output matches the tokenizer's expectations (spacing/newlines). For inline marks like this the simple `==content==` form is appropriate.
+**注意：**
+- `helpers.renderChildren` 会将节点/标记的子内容序列化回 Markdown，并保留嵌套格式。
+- 确保 `renderMarkdown` 的输出符合分词器的预期（空格/换行）。对于此类内联标记，简单的 `==content==` 形式即可。
 
 ---
 
-## Usage
+## 用法
 
-Add the extension to your editor and set content from Markdown:
+将扩展添加到编辑器，并从 Markdown 设置内容：
 
 ```js
 import { Editor } from '@tiptap/core'
 import StarterKit from '@tiptap/starter-kit'
-import Markdown from 'some-markdown-integration' // replace with your Markdown integration
+import Markdown from 'some-markdown-integration' // 替换为你的 Markdown 集成
 import { Highlight } from './highlight'
 
 const editor = new Editor({
   extensions: [StarterKit, Markdown, Highlight],
 })
 
-// Set Markdown content (the Markdown integration must support 'contentType' or similar option)
+// 设置 Markdown 内容（Markdown 集成必须支持 'contentType' 或类似选项）
 editor.commands.setContent('This is ==highlighted== text', { contentType: 'markdown' })
 
-// Toggle highlight programmatically
+// 以编程方式切换高亮
 editor.commands.toggleHighlight()
 ```
 
 ---
 
-## Testing and edge cases
+## 测试与边缘情况
 
-- Nested inline formatting: The tokenizer used `lexer.inlineTokens(match[1])` so nested inline tokens (bold, emphasis, links) should be parsed and rendered correctly.
-- Greedy matches: The tokenizer uses a simple `^==([^=]+)==` regex — this will not match content containing `==` inside. If you need to support nested `==` or multiline highlights, extend the regex accordingly.
-- Whitespace handling: Some Markdown flavors permit spaces inside delimiters (e.g., `== text ==`). If you want to support that, update the tokenizer and the `renderMarkdown` output to preserve the chosen formatting.
-- Conflicts with other tokenizers: The `start` optimization helps the lexer pick candidate positions, but ensure your regex doesn't conflict with other inline tokenizers in your Markdown toolchain.
+- **嵌套的内联格式：** 分词器使用了 `lexer.inlineTokens(match[1])`，因此嵌套的内联 token（粗体、斜体、链接）应能正确解析和渲染。
+- **贪婪匹配：** 分词器使用简单的 `^==([^=]+)==` 正则表达式，因此无法匹配内部包含 `==` 的内容。如果需要支持嵌套的 `==` 或多行高亮，请相应扩展正则表达式。
+- **空白处理：** 某些 Markdown 方言允许分隔符内有空格（例如 `== text ==`）。如果需要支持这种形式，请更新分词器和 `renderMarkdown` 的输出，以保留所选格式。
+- **与其他分词器冲突：** `start` 优化有助于词法分析器选取候选位置，但请确保你的正则表达式不会与 Markdown 工具链中的其他内联分词器冲突。
