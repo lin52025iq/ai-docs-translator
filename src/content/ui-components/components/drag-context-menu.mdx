@@ -1,12 +1,12 @@
 ---
-title: Drag Context Menu
+title: 拖拽上下文菜单
 meta:
-  title: Drag Context Menu | Tiptap UI Components
-  description: A comprehensive drag handle with context menu for block-level operations. More in the docs.
-  category: UI Components
+  title: 拖拽上下文菜单 | Tiptap UI 组件
+  description: 功能全面的拖拽手柄和上下文菜单，可执行块级操作。详情请参阅文档。
+  category: UI 组件
 component:
-  name: Drag Context Menu
-  description: Add a drag handle with context menu that provides block-level operations like transforming, styling, copying, and deleting nodes.
+  name: 拖拽上下文菜单
+  description: 添加带有上下文菜单的拖拽手柄，提供转换、样式设置、复制和删除节点等块级操作。
   type: component
   isFree: false
   isCloud: false
@@ -19,77 +19,77 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-The DragContextMenu provides a drag handle with an extensive context menu for block-level operations. When you hover over any block in your editor, a drag handle appears on the left side. Clicking this handle opens a context menu with options to:
+DragContextMenu 提供拖拽手柄和丰富的上下文菜单，可执行块级操作。当你将鼠标悬停在编辑器中的任意块上时，左侧会出现一个拖拽手柄。点击该手柄会打开上下文菜单，其中包含以下选项：
 
-- Transform blocks into different types (headings, lists, blockquotes, etc.)
-- Apply colors and highlights
-- Copy, duplicate, or delete blocks
-- Reset formatting
-- Trigger AI assistance (if enabled)
-- Download images (for image nodes)
+- 将块转换为不同类型（标题、列表、引用块等）
+- 应用颜色和高亮
+- 复制、创建副本或删除块
+- 重置格式
+- 使用 AI 助手（如果已启用）
+- 下载图片（适用于图片节点）
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui/drag-context-menu" />
 
-## Installation
+## 安装
 
-### Step 1: Set Up Your Project
+### 第 1 步：设置项目
 
-> If your project is already set up with the Tiptap CLI, skip ahead to [Step 2: Configure Path Aliases](#step-2-configure-path-aliases).
+> 如果你的项目已经使用 Tiptap CLI 完成设置，请跳到[第 2 步：配置路径别名](#step-2-configure-path-aliases)。
 
-If not, initialize a new project with the following command:
+如果尚未设置，请运行以下命令初始化新项目：
 
 ```bash
 npx @tiptap/cli@latest init
 ```
 
-During setup, select your preferred framework and wait for the installation to complete.
-When prompted **“Would you like to add a template or UI components to your project?”**, select **No** — we’ll add the **DragContextMenu** component in the next steps.
+设置过程中，选择你偏好的框架，并等待安装完成。
+当系统询问 **“Would you like to add a template or UI components to your project?”** 时，请选择 **No** ——我们会在接下来的步骤中添加 **DragContextMenu** 组件。
 
 ---
 
-### Step 2: Configure Path Aliases
+### 第 2 步：配置路径别名
 
-Navigate to your project directory.
-If you’re using **Next.js**, **React Router**, **Laravel**, or **Astro**, you can skip this step and move to the next one.
-Otherwise, follow the guide below to properly configure path aliases for your framework:
+进入你的项目目录。
+如果你使用的是 **Next.js**、**React Router**、**Laravel** 或 **Astro**，可以跳过此步骤，继续下一步。
+否则，请按照以下指南为你的框架正确配置路径别名：
 
 - [Vite](/ui-components/install/vite)
 - [Next.js](/ui-components/install/next)
 - [React Router](/ui-components/install/react-router)
 - [Laravel](/ui-components/install/laravel)
 - [Astro](/ui-components/install/astro)
-- [Manual Setup](/ui-components/install/manual)
+- [手动设置](/ui-components/install/manual)
 
 ---
 
-### Step 3: Install the Component
+### 第 3 步：安装组件
 
-Use the Tiptap CLI to install the **DragContextMenu** component and all of its dependencies:
+使用 Tiptap CLI 安装 **DragContextMenu** 组件及其所有依赖项：
 
 ```bash
 npx @tiptap/cli@latest add drag-context-menu
 ```
 
-This command will:
+此命令将会：
 
-- Download all component files to your configured component directory
-- Install npm dependencies (`@floating-ui/react`, `@tiptap/extension-drag-handle-react`)
-- Install ~60 registry dependencies (hooks, UI primitives, icons, buttons, etc.)
-- Create the necessary folder structure
+- 将所有组件文件下载到已配置的组件目录
+- 安装 npm 依赖项（`@floating-ui/react`、`@tiptap/extension-drag-handle-react`）
+- 安装约 60 个注册表依赖项（钩子、UI 基础组件、图标、按钮等）
+- 创建所需的目录结构
 
-**Installed directories:**
+**已安装的目录：**
 
-- `{components}/tiptap-ui/drag-context-menu/` — Main component files
-- `{components}/hooks/` — Custom hooks (`use-tiptap-editor`, `use-mobile`, etc.)
-- `{components}/tiptap-ui-primitive/` — UI primitives (`button`, `menu`, `combobox`, etc.)
-- `{components}/tiptap-icons/` — Icon components
-- `{components}/tiptap-ui/` — Action button components (`duplicate`, `copy`, `delete`, etc.)
-- `{components}/tiptap-extension/` — Custom Tiptap extensions (`UiState`, etc.)
-- `{components}/lib/` — Utility functions
+- `{components}/tiptap-ui/drag-context-menu/` — 主组件文件
+- `{components}/hooks/` — 自定义钩子（`use-tiptap-editor`、`use-mobile` 等）
+- `{components}/tiptap-ui-primitive/` — UI 基础组件（`button`、`menu`、`combobox` 等）
+- `{components}/tiptap-icons/` — 图标组件
+- `{components}/tiptap-ui/` — 操作按钮组件（`duplicate`、`copy`、`delete` 等）
+- `{components}/tiptap-extension/` — 自定义 Tiptap 扩展（`UiState` 等）
+- `{components}/lib/` — 工具函数
 
-### Step 4: Install Nodes
+### 第 4 步：安装节点
 
-You may also want to install node components to ensure proper styling of blocks in your editor.
+你也可以安装节点组件，以确保编辑器中的块具有正确的样式。
 
 ```bash
 npx @tiptap/cli@latest add paragraph-node
@@ -100,21 +100,21 @@ npx @tiptap/cli@latest add list-node
 npx @tiptap/cli@latest add horizontal-rule-node
 ```
 
-### Step 5: Configure Styles
+### 第 5 步：配置样式
 
-When you install the `drag-context-menu` component, its styles are included automatically.
-Refer to the appropriate guide below for details on adding or customizing styles for your framework:
+安装 `drag-context-menu` 组件时，其样式会自动一并安装。
+请参阅以下相应指南，了解如何为你的框架添加或自定义样式：
 
 - [Vite](/ui-components/install/vite#add-styles)
 - [Next.js](/ui-components/install/next#add-styles)
 - [React Router](/ui-components/install/react-router#add-styles)
 - [Laravel](/ui-components/install/laravel#add-styles)
 - [Astro](/ui-components/install/astro#add-styles)
-- [Manual Setup](/ui-components/getting-started/style)
+- [手动设置](/ui-components/getting-started/style)
 
-### Step 6: Configure Your Editor Extensions
+### 第 6 步：配置编辑器扩展
 
-For starters, here’s a minimal set of extensions to get the DragContextMenu working:
+首先，使用以下最简扩展集即可让 DragContextMenu 正常工作：
 
 ```tsx
 import { EditorContent, EditorContext, useEditor } from '@tiptap/react'
@@ -178,43 +178,43 @@ export default function TiptapEditor() {
 }
 ```
 
-You should be able to see the drag handle on hover and open the context menu by clicking it.
+将鼠标悬停在块上时，你应该能看到拖拽手柄；点击手柄即可打开上下文菜单。
 
-### Extension Explanation
+### 扩展说明
 
-| Extension             | Purpose                                                             | Required? |
-| --------------------- | ------------------------------------------------------------------- | --------- |
-| `StarterKit`          | Provides basic editing features (paragraphs, headings, lists, etc.) | Yes       |
-| `Highlight`           | Enables text highlighting with colors                               | Optional  |
-| `TextStyle` + `Color` | Enables text color changes                                          | Optional  |
-| `NodeBackground`      | Enables background color changes for blocks                         | Optional  |
-| `UiState`             | Manages UI state for drag operations                                | Yes       |
+| 扩展                  | 用途                                                   | 是否必需 |
+| --------------------- | ------------------------------------------------------ | -------- |
+| `StarterKit`          | 提供基本编辑功能（段落、标题、列表等）                 | 是       |
+| `Highlight`           | 启用带颜色的文本高亮                                   | 可选     |
+| `TextStyle` + `Color` | 启用文本颜色更改                                       | 可选     |
+| `NodeBackground`      | 启用块的背景颜色更改                                   | 可选     |
+| `UiState`             | 管理拖拽操作的 UI 状态                                 | 是       |
 
-These extensions are optional but enable specific features in the context menu. Without them, those features will be automatically hidden.
+这些扩展是可选的，但能启用上下文菜单中的特定功能。若未安装相应扩展，这些功能会自动隐藏。
 
-#### Props Reference
+#### Props 参考
 
-| Prop                      | Type             | Default                               | Description                                                |
-| ------------------------- | ---------------- | ------------------------------------- | ---------------------------------------------------------- |
-| `editor`                  | `Editor \| null` | Required (unless using EditorContext) | Your Tiptap editor instance                                |
-| `withSlashCommandTrigger` | `boolean`        | `true`                                | Shows a slash command button alongside the drag handle     |
-| `mobileBreakpoint`        | `number`         | `768`                                 | Screen width (in px) below which the drag handle is hidden |
+| 属性                      | 类型             | 默认值                                  | 说明                                                    |
+| ------------------------- | ---------------- | --------------------------------------- | ------------------------------------------------------- |
+| `editor`                  | `Editor \| null` | 必填（除非使用 EditorContext）          | 你的 Tiptap 编辑器实例                                  |
+| `withSlashCommandTrigger` | `boolean`        | `true`                                  | 在拖拽手柄旁显示斜杠命令按钮                            |
+| `mobileBreakpoint`        | `number`         | `768`                                   | 低于该屏幕宽度（像素）时隐藏拖拽手柄                    |
 
-> **Note:** The `editor` prop is required unless you are using `EditorContext` (or a similar context provider) to supply the editor instance. If the context is available, you can omit the `editor` prop.
+> **注意：** 除非你使用 `EditorContext`（或类似的上下文提供器）来提供编辑器实例，否则必须传入 `editor` 属性。如果上下文可用，则可以省略 `editor` 属性。
 
-## Advanced Customization
+## 高级自定义
 
-### Disabling Slash Command Trigger
+### 禁用斜杠命令触发按钮
 
-If you don't want the slash command button:
+如果你不需要斜杠命令按钮：
 
 ```tsx
 <DragContextMenu editor={editor} withSlashCommandTrigger={false} />
 ```
 
-### Custom Mobile Breakpoint
+### 自定义移动端断点
 
-Adjust when the drag handle hides on smaller screens:
+调整拖拽手柄在较小屏幕上隐藏的临界宽度：
 
 ```tsx
 <DragContextMenu
@@ -223,9 +223,9 @@ Adjust when the drag handle hides on smaller screens:
 />
 ```
 
-### Programmatic Control
+### 以编程方式控制
 
-You can programmatically control drag handle behavior through editor commands:
+你可以通过编辑器命令以编程方式控制拖拽手柄的行为：
 
 ```tsx
 // Lock drag handle (prevent hiding)
@@ -238,74 +238,74 @@ editor.commands.setIsDragging(true)
 
 ---
 
-## Feature Reference
+## 功能参考
 
-### Available Context Menu Actions
+### 可用的上下文菜单操作
 
-The context menu dynamically shows actions based on:
+上下文菜单会根据以下因素动态显示操作：
 
-- Current node type
-- Available extensions
-- Editor selection
-- Content state
+- 当前节点类型
+- 可用的扩展
+- 编辑器选区
+- 内容状态
 
-#### Color Actions
+#### 颜色操作
 
-- **Text Color**: Change text color (requires `TextStyle` + `Color` extensions)
-- **Highlight**: Apply background highlights (requires `Highlight` extension)
+- **文本颜色**：更改文本颜色（需要 `TextStyle` + `Color` 扩展）
+- **高亮**：应用背景高亮（需要 `Highlight` 扩展）
 
-#### Transform Actions
+#### 转换操作
 
-Transform the current block into:
+将当前块转换为：
 
-- Paragraph
-- Heading 1, 2, 3
-- Bullet List
-- Numbered List
-- Task List (requires `TaskList` + `TaskItem` extensions)
-- Blockquote
-- Code Block
+- 段落
+- 标题 1、2、3
+- 项目符号列表
+- 编号列表
+- 任务列表（需要 `TaskList` + `TaskItem` 扩展）
+- 引用块
+- 代码块
 
-#### Core Actions
+#### 核心操作
 
-- **Copy**: Copy block content to clipboard
-- **Duplicate**: Create a copy of the current block
-- **Copy Anchor Link**: Copy a link to the current block (requires ID support)
+- **复制**：将块内容复制到剪贴板
+- **创建副本**：复制当前块
+- **复制锚点链接**：复制指向当前块的链接（需要 ID 支持）
 
-#### Format Actions
+#### 格式操作
 
-- **Reset Formatting**: Remove all formatting marks
+- **重置格式**：移除所有格式标记
 
-#### Image Actions (for image nodes)
+#### 图片操作（适用于图片节点）
 
-- **Download**: Download the image (requires `Image` extension)
+- **下载**：下载图片（需要 `Image` 扩展）
 
-#### Delete Actions
+#### 删除操作
 
-- **Delete**: Remove the current block
+- **删除**：移除当前块
 
-### Keyboard Shortcuts
+### 键盘快捷键
 
-The context menu respects standard Tiptap keyboard shortcuts:
+上下文菜单支持 Tiptap 的标准键盘快捷键：
 
-- Command/Ctrl + D: Duplicate block
-- Command/Ctrl + Shift + C: Copy to clipboard
-- Command/Ctrl + Delete/Backspace: Delete block
+- Command/Ctrl + D：创建块的副本
+- Command/Ctrl + Shift + C：复制到剪贴板
+- Command/Ctrl + Delete/Backspace：删除块
 
 ---
 
-## Next Steps
+## 后续步骤
 
-After integrating the DragContextMenu, you might want to:
+集成 DragContextMenu 后，你可能还想：
 
-1. **Add More Extensions**: Explore other Tiptap extensions to enhance functionality
-2. **Customize Styling**: Adjust colors, spacing, and animations to match your brand
-3. **Add Slash Commands**: Integrate the SlashDropdownMenu component for quick insertions
-4. **Enable AI Features**: Set up AI integration for the "Ask AI" context menu option
-5. **Add Collaboration**: Use Tiptap Collaboration for real-time editing
+1. **添加更多扩展**：探索其他 Tiptap 扩展，增强功能
+2. **自定义样式**：调整颜色、间距和动画，使其符合你的品牌风格
+3. **添加斜杠命令**：集成 SlashDropdownMenu 组件，实现快速插入
+4. **启用 AI 功能**：设置 AI 集成，以使用上下文菜单中的“询问 AI”选项
+5. **添加协作功能**：使用 Tiptap Collaboration 实现实时编辑
 
-## Need Help?
+## 需要帮助？
 
-- [Tiptap Documentation](https://tiptap.dev)
-- [GitHub Issues](https://github.com/ueberdosis/tiptap/issues)
-- [Discord Community](https://discord.gg/tiptap)
+- [Tiptap 文档](https://tiptap.dev)
+- [GitHub 问题](https://github.com/ueberdosis/tiptap/issues)
+- [Discord 社区](https://discord.gg/tiptap)
