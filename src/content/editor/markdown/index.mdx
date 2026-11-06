@@ -1,35 +1,35 @@
 ---
-title: Introduction into Markdown with Tiptap
+title: 使用 Tiptap 入门 Markdown
 tags:
   - type: beta
 meta:
-  title: Markdown Introduction | Tiptap Editor Docs
-  description: Get started with Markdown in Tiptap. Learn how to parse and render Markdown content in your Tiptap editor with our comprehensive guide.
-  category: Editor
+  title: Markdown 入门 | Tiptap 编辑器文档
+  description: 开始在 Tiptap 中使用 Markdown。通过这份全面的指南，了解如何在 Tiptap 编辑器中解析和渲染 Markdown 内容。
+  category: 编辑器
 ---
 
-> **Important**: The markdown extension is a early release and can be subject to change or may have edge cases that may not be supported yet. If you are encountering a bug or have a feature request, please open an issue on GitHub.
+> **重要提示**：Markdown 扩展目前处于早期发布阶段，后续可能会发生变化，也可能存在尚未支持的边缘情况。如果遇到 bug 或有功能需求，请在 GitHub 上提交 issue。
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-The Markdown extension provides bidirectional Markdown support for your Tiptap editor—parse Markdown strings into Tiptap's JSON format and serialize editor content back to Markdown.
+Markdown 扩展为 Tiptap 编辑器提供双向 Markdown 支持：将 Markdown 字符串解析为 Tiptap 的 JSON 格式，并将编辑器内容序列化回 Markdown。
 
 <CodeDemo src="https://embed.tiptap.dev/preview/Markdown/Full" />
 
-## Core Capabilities
+## 核心功能
 
-- **Markdown Parsing**: Convert Markdown strings to Tiptap JSON
-- **Markdown Serialization**: Export editor content as Markdown
-- **Custom Tokenizers**: Add support for custom Markdown syntax
-- **Extensible Architecture**: Each extension can define its own parsing and rendering logic
-- **Utilities to Simplify Custom Syntax Creation**: `createBlockMarkdownSpec`, `createInlineMarkdownSpec` and more
-- **HTML Support**: Parse HTML embedded in Markdown using Tiptap's existing HTML parsing
+- **Markdown 解析**：将 Markdown 字符串转换为 Tiptap JSON
+- **Markdown 序列化**：将编辑器内容导出为 Markdown
+- **自定义分词器**：支持自定义 Markdown 语法
+- **可扩展架构**：每个扩展都可以定义自己的解析和渲染逻辑
+- **简化自定义语法创建的实用工具**：`createBlockMarkdownSpec`、`createInlineMarkdownSpec` 等
+- **HTML 支持**：使用 Tiptap 现有的 HTML 解析功能解析 Markdown 中嵌入的 HTML
 
-## How It Works
+## 工作原理
 
-The Markdown extension acts as a bridge between Markdown text and Tiptap's JSON document structure.
+Markdown 扩展充当 Markdown 文本与 Tiptap JSON 文档结构之间的桥梁。
 
-It extends the base editor functionality by overwriting existing methods & properties with markdown-ready implementations, allowing for seamless integration between Markdown and Tiptap's rich text editor.
+它通过覆盖现有方法和属性，并替换为适用于 Markdown 的实现来扩展编辑器的基础功能，从而实现 Markdown 与 Tiptap 富文本编辑器的无缝集成。
 
 ```js
 // Set initial content
@@ -43,44 +43,44 @@ const editor = new Editor({
 editor.commands.insertContent('# Hello World\n\nThis is **Markdown**!')
 ```
 
-### Architecture
+### 架构
 
 ```
-Markdown String
+Markdown 字符串
       ↓
-   MarkedJS Lexer (Tokenization)
+   MarkedJS 词法分析器（分词）
       ↓
-   Markdown Tokens
+   Markdown 令牌
       ↓
-   Extension Parse Handlers
+   扩展解析处理程序
       ↓
    Tiptap JSON
 ```
 
-And in reverse:
+反向转换过程如下：
 
 ```
 Tiptap JSON
       ↓
-   Extension Render Handlers
+   扩展渲染处理程序
       ↓
-   Markdown String
+   Markdown 字符串
 ```
 
-## Limitations
+## 局限性
 
-The current implementation of the Markdown extension has some limitations:
+当前版本的 Markdown 扩展存在一些局限性：
 
-- **Comments are not supported yet**: Some advanced features like comments are not supported in Markdown. Be **cautious** when parsing Markdown content into a document that contains comments as they may be lost if replaced by Markdown content.
-- **Multiple child nodes in Tables**: Markdown tables are supported, but only one child node per cell is allowed as the Markdown syntax can't represent multiple child nodes.
+- **暂不支持评论**：Markdown 不支持评论等一些高级功能。将 Markdown 内容解析到包含评论的文档时请务必**谨慎**，因为如果用 Markdown 内容替换文档，评论可能会丢失。
+- **表格中的多个子节点**：支持 Markdown 表格，但每个单元格只允许一个子节点，因为 Markdown 语法无法表示多个子节点。
 
-## Why MarkedJS?
+## 为什么选择 MarkedJS？
 
-This extension integrates [MarkedJS](https://marked.js.org) as its parser:
+此扩展集成了 [MarkedJS](https://marked.js.org) 作为解析器：
 
-- **Fast and Lightweight**: One of the fastest Markdown parsers available
-- **Extensible**: Custom tokenizers enable non-standard Markdown syntax
-- **CommonMark Compliant**: Follows the CommonMark specification
-- **Battle-tested**: Widely used in production with active development
+- **快速轻量**：现有 Markdown 解析器中速度最快的解析器之一
+- **可扩展**：自定义分词器可支持非标准的 Markdown 语法
+- **符合 CommonMark 规范**：遵循 CommonMark 规范
+- **经过实战检验**：广泛用于生产环境，并持续积极开发
 
-The Lexer API breaks Markdown into tokens that map naturally to Tiptap's node structure, making the integration clean and maintainable. The extension works identically in browser and server environments.
+词法分析器 API 会将 Markdown 拆分为令牌，这些令牌与 Tiptap 的节点结构天然对应，使集成过程简洁且易于维护。该扩展在浏览器和服务器环境中的工作方式完全一致。
