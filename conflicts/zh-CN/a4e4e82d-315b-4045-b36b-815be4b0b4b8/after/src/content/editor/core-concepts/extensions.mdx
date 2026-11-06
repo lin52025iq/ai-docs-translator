@@ -1,0 +1,64 @@
+---
+title: Tiptap 中的扩展
+meta:
+  title: 扩展 | Tiptap 编辑器文档
+  description: 了解如何创建、自定义并集成扩展到 Tiptap 中，以增强文本编辑器的功能。
+---
+
+扩展可以为 Tiptap 添加新功能或修改编辑器的行为，从而增强其能力。无论是添加新的内容类型、自定义编辑器外观，还是扩展其功能，扩展都是构成 Tiptap 的基础模块。
+
+若要向编辑器添加新的内容类型，可以使用能够在编辑器中渲染内容的 [节点](/editor/api/nodes) 和 [标记](/editor/extensions/marks)。
+
+可选的 `@tiptap/starter-kit` 包含最常用的扩展，可简化配置。了解更多关于 [`StarterKit`](/editor/extensions/functionality/starterkit) 的信息。
+
+使用 Tiptap 社区创建的扩展来扩展编辑器的功能。你可以在 [Awesome Tiptap 仓库](https://github.com/ueberdosis/awesome-tiptap#community-extensions)中探索各种自定义功能和工具。如需交流与支持，可以在关于社区扩展的[讨论帖](https://github.com/ueberdosis/tiptap/discussions/2973)中与其他开发者互动。
+
+## 核心能力
+
+扩展的作用远不止添加新的内容类型。你可以：
+- **为节点和标记添加属性**，以存储额外数据
+- **应用全局属性**，一次性应用于多个扩展（适用于文本对齐、行高及其他属性）
+- **添加命令**，以执行自定义编辑器行为
+- **监听事件**，例如聚焦、失焦、更新等
+- **添加键盘快捷键**，以便快速使用功能
+- **添加[装饰](/editor/core-concepts/decorations)**，渲染仅在视图中显示的高亮、注释和小部件，而不更改文档
+
+## 什么是扩展？
+
+尽管 Tiptap 尝试隐藏 ProseMirror 的大部分复杂性，但它构建于 ProseMirror 的 API 之上。对于高级用法，我们建议你阅读 [ProseMirror 指南](https://ProseMirror.net/docs/guide/)。这能帮助你更好地理解其底层工作原理，并熟悉 Tiptap 使用的许多术语和行话。
+
+现有的[节点](/editor/extensions/nodes)、[标记](/editor/extensions/marks)和[功能](/editor/extensions/functionality)可以帮助你了解如何着手创建自己的扩展。为了方便你在文档和源代码之间切换，每个扩展的文档页面都附有指向其 GitHub 文件的链接。
+
+我们建议先从自定义现有扩展入手，积累经验后再创建自己的扩展。因此，下面的示例都基于现有扩展进行扩展，但同样适用于新创建的扩展。
+
+## 创建新扩展
+
+你可以自由创建自己的 Tiptap 扩展。下面是创建并注册扩展所需的样板代码：
+
+```js
+import { Extension } from '@tiptap/core'
+
+const CustomExtension = Extension.create({
+  // Your code here
+})
+
+const editor = new Editor({
+  extensions: [
+    // Register your custom extension with the editor.
+    CustomExtension,
+    // … and don’t forget all other extensions.
+    Document,
+    Paragraph,
+    Text,
+    // …
+  ],
+})
+```
+
+你可以通过我们的 CLI 轻松创建一个新的扩展项目。
+
+```bash
+npm init tiptap-extension
+```
+
+请参阅我们的[指南](/editor/extensions/custom-extensions)，了解更多有关自定义扩展的信息。
