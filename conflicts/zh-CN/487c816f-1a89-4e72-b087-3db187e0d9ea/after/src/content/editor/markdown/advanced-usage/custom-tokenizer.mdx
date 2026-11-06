@@ -1,0 +1,636 @@
+---
+title: 自定义 Markdown 分词器
+tags:
+  - type: beta
+meta:
+  title: 自定义 Markdown 分词器 | Tiptap 编辑器文档
+  description: 了解如何使用自定义分词器扩展 Tiptap 的 Markdown 解析器，以支持非标准语法。请按照文档中的分步指南进行操作！
+  category: Editor
+---
+
+import { CodeDemo } from '@/components/CodeDemo'
+
+自定义分词器可扩展 Markdown 解析器，以支持非标准或自定义语法。本指南将说明分词器的工作原理，以及如何创建自己的分词器。
+
+<CodeDemo src="https://embed.tiptap.dev/preview/Markdown/CustomSyntax" />
+
+> **提示**：对于 Pandoc 块或短代码等常见模式，请先查看[实用工具函数](../api/utilities)，其中提供了现成的分词器。
+
+## 什么是分词器？
+
+分词器是用于识别并将自定义 Markdown 语法解析为令牌的函数。分词器会注册到 MarkedJS，并在词法分析阶段运行，也就是在 Tiptap 的解析处理器处理令牌之前。
+
+> **注意**：想进一步了解分词器？请查看[术语表](../glossary)。
+
+### 分词流程
+
+```
+Markdown 字符串
+      ↓
+自定义分词器（识别自定义语法）
+      ↓
+标准 MarkedJS 词法分析器
+      ↓
+Markdown 令牌
+      ↓
+扩展解析处理器
+      ↓
+Tiptap JSON
+```
+
+## 何时使用自定义分词器
+
+如果你想支持以下内容，可以使用自定义分词器：
+
+- 自定义行内语法（例如，`++inserted text++`、`==highlighted==`）
+- 自定义块级语法（例如，`:::note`、`!!!warning`）
+- 短代码（例如，`[[embed:video-id]]`）
+- 自定义 Markdown 扩展
+- 特定领域的表示法
+
+## 分词器结构
+
+分词器是一个具有以下属性的对象：
+
+```typescript
+type MarkdownTokenizer = {
+  name: string // Token name (must be unique)
+  level?: 'block' | 'inline' // Level: block or inline
+  start?: (src: string) => number // Where the token starts
+  tokenize: (src, tokens, lexer) => MarkdownToken | undefined
+}
+```
+
+### 属性说明
+
+#### `name`（必需）
+
+令牌类型的唯一标识符：
+
+```typescript
+{
+  name: 'highlight',
+  // ...
+}
+```
+
+注册解析处理器时会用到这个名称。
+
+#### `level`（可选）
+
+指定分词器在块级还是行内级运行：
+
+```typescript
+{
+  level: 'inline', // 'block' or 'inline'
+  // ...
+}
+```
+
+- **`inline`**：用于粗体、斜体、自定义标记等行内元素（默认值）
+- **`block`**：用于自定义容器、提示框等块级元素
+
+#### `start`（可选）
+
+返回令牌在源字符串中可能起始位置的函数。这是一种优化，可避免不必要的解析尝试：
+
+```typescript
+{
+  start: (src) => {
+    // Find where '==' appears in the source
+    return src.indexOf('==')
+  },
+  // ...
+}
+```
+
+这项优化可以帮助 MarkedJS 跳过无关文本。如果省略此属性，MarkedJS 会在每个位置尝试运行你的分词器。
+
+#### `tokenize`（必需）
+
+用于识别并将语法转换为令牌的主要解析函数：
+
+```typescript
+{
+  tokenize: (src, tokens, lexer) => {
+    // Try to match your syntax at the start of src
+    const match = /^==(.+?)==/.exec(src)
+
+    if (match) {
+      return {
+        type: 'highlight',
+        raw: match[0],        // Full matched string
+        text: match[1],       // Captured content
+        tokens: lexer.inlineTokens(match[1]), // Parsed content
+      }
+    }
+
+    // Return undefined if no match
+    return undefined
+  },
+}
+```
+
+函数接收以下参数：
+
+- `src`：尚待解析的剩余源文本
+- `tokens`：此前已解析的令牌（通常不需要）
+- `lexer`：用于对子内容进行分词的辅助函数
+
+如上所述，Markdown 内容的处理流程如下：
+
+```
+Markdown => Tokenizer => Lexer => Token => markdown.parse() => Tiptap JSON
+```
+
+从 Tiptap JSON 转回 Markdown 的流程如下：
+
+```
+Tiptap JSON => markdown.render() => Markdown
+```
+
+## 创建简单的行内分词器
+
+下面来创建一个用于高亮语法（`==text==`）的分词器。
+
+```typescript
+import { Node } from '@tiptap/core'
+
+const Highlight = Node.create({
+  name: 'highlight',
+
+  // ... other config (parseHTML, renderHTML, etc.)
+
+  // Define the custom tokenizer
+  // note - this is turning Markdown strings to **tokens**
+  markdownTokenizer: {
+    name: 'highlight', // the token name you want to give to the token - must be unique and will be picked up by the parse function
+    level: 'inline', // the tokenizer level - inline or block
+
+    // This function should return the index of your syntax in the src string
+    // or -1 if not found. This is an optimization to avoid running the tokenizer unnecessarily
+    start: src => {
+      return src.indexOf('==')
+    },
+
+    // The tokenize function extracts information from the src string and returns a token object
+    // or undefined if the syntax is not matched
+    tokenize: (src, tokens, lexer) => {
+      // Match ==text== at the start of src
+      const match = /^==([^=]+)==/.exec(src)
+
+      if (!match) {
+        return undefined
+      }
+
+      return {
+        type: 'highlight',
+        raw: match[0], // '==text=='
+        text: match[1], // 'text'
+        tokens: lexer.inlineTokens(match[1]), // Parse inline content
+      }
+    },
+  },
+
+  // Parse the token to Tiptap JSON
+  // note - this is consuming **Tokens** and transforms them into Tiptap JSON
+  parseMarkdown: (token, helpers) => {
+    return helpers.applyMark('highlight', helpers.parseInline(token.tokens || []))
+  },
+
+  // Render back to Markdown
+  renderMarkdown: (node, helpers) => {
+    const content = helpers.renderChildren(node)
+    return `==${content}==`
+  },
+})
+```
+
+### 使用扩展
+
+```typescript
+import { Editor } from '@tiptap/core'
+import StarterKit from '@tiptap/starter-kit'
+import { Markdown } from '@tiptap/markdown'
+import Highlight from './Highlight'
+
+const editor = new Editor({
+  extensions: [StarterKit, Markdown, Highlight],
+})
+
+// Parse Markdown with custom syntax
+editor.commands.setContent('This is ==highlighted text==!', { contentType: 'markdown' })
+
+// Get Markdown back
+console.log(editor.getMarkdown())
+// This is ==highlighted text==!
+```
+
+## 创建块级分词器
+
+下面来创建一个用于提示框块的分词器：
+
+```markdown
+:::note
+This is a note
+:::
+```
+
+```typescript
+import { Node } from '@tiptap/core'
+
+const Admonition = Node.create({
+  name: 'admonition',
+  group: 'block',
+  content: 'block+',
+
+  addAttributes() {
+    return {
+      type: {
+        default: 'note',
+      },
+    }
+  },
+
+  parseHTML() {
+    return [
+      {
+        tag: 'div[data-admonition]',
+        getAttrs: node => ({
+          type: node.getAttribute('data-type'),
+        }),
+      },
+    ]
+  },
+
+  renderHTML({ node, HTMLAttributes }) {
+    return [
+      'div',
+      { 'data-admonition': '', 'data-type': node.attrs.type },
+      0, // Content
+    ]
+  },
+
+  markdownTokenizer: {
+    name: 'admonition',
+    level: 'block',
+
+    start: src => {
+      return src.indexOf(':::')
+    },
+
+    tokenize: (src, tokens, lexer) => {
+      // Match :::type\ncontent\n:::
+      const match = /^:::(\w+)\n([\s\S]*?)\n:::/.exec(src)
+
+      if (!match) {
+        return undefined
+      }
+
+      return {
+        type: 'admonition',
+        raw: match[0],
+        admonitionType: match[1], // 'note', 'warning', etc.
+        text: match[2], // Content
+        tokens: lexer.blockTokens(match[2]), // Parse block content
+      }
+    },
+  },
+
+  parseMarkdown: (token, helpers) => {
+    return {
+      type: 'admonition',
+      attrs: {
+        type: token.admonitionType || 'note',
+      },
+      content: helpers.parseChildren(token.tokens || []),
+    }
+  },
+
+  renderMarkdown: (node, helpers) => {
+    const type = node.attrs?.type || 'note'
+    const content = helpers.renderChildren(node.content || [])
+
+    return `:::${type}\n${content}\n:::\n\n`
+  },
+})
+```
+
+### 使用块级分词器
+
+```typescript
+const markdown = `
+# Document
+
+:::note
+This is a note with **bold** text.
+:::
+
+:::warning
+This is a warning!
+:::
+`
+
+editor.commands.setContent(markdown, { contentType: 'markdown' })
+```
+
+## 支持嵌套内容的分词器
+
+下面来创建一个支持嵌套行内解析的分词器：
+
+```typescript
+const Emoji = Node.create({
+  name: 'emoji',
+  group: 'inline',
+  inline: true,
+
+  addAttributes() {
+    return {
+      name: { default: null },
+    }
+  },
+
+  parseHTML() {
+    return [
+      {
+        tag: 'emoji',
+        getAttrs: node => ({ name: node.getAttribute('data-name') }),
+      },
+    ]
+  },
+
+  renderHTML({ node }) {
+    return ['emoji', { 'data-name': node.attrs.name }]
+  },
+
+  markdownTokenizer: {
+    name: 'emoji',
+    level: 'inline',
+
+    start: src => {
+      return src.indexOf(':')
+    },
+
+    tokenize: (src, tokens, lexer) => {
+      // Match :emoji_name:
+      const match = /^:([a-z0-9_+]+):/.exec(src)
+
+      if (!match) {
+        return undefined
+      }
+
+      return {
+        type: 'emoji',
+        raw: match[0],
+        emojiName: match[1],
+      }
+    },
+  },
+
+  parseMarkdown: (token, helpers) => {
+    return {
+      type: 'emoji',
+      attrs: {
+        name: token.emojiName,
+      },
+    }
+  },
+
+  renderMarkdown: (node, helpers) => {
+    return `:${node.attrs?.name || 'unknown'}:`
+  },
+})
+```
+
+## 使用词法分析器辅助函数
+
+`lexer` 参数提供了用于解析嵌套内容的辅助函数：
+
+### `lexer.inlineTokens(src)`
+
+解析行内内容（适用于行内级分词器）：
+
+```typescript
+tokenize: (src, tokens, lexer) => {
+  const match = /^\[\[([^\]]+)\]\]/.exec(src)
+
+  if (match) {
+    return {
+      type: 'custom',
+      raw: match[0],
+      tokens: lexer.inlineTokens(match[1]), // Parse inline content
+    }
+  }
+}
+```
+
+### `lexer.blockTokens(src)`
+
+解析块级内容（适用于块级分词器）：
+
+```typescript
+tokenize: (src, tokens, lexer) => {
+  const match = /^:::\w+\n([\s\S]*?)\n:::/.exec(src)
+
+  if (match) {
+    return {
+      type: 'container',
+      raw: match[0],
+      tokens: lexer.blockTokens(match[1]), // Parse block content
+    }
+  }
+}
+```
+
+## 正则表达式最佳实践
+
+### 使用 `^` 从字符串开头匹配
+
+始终在正则表达式开头添加锚点：
+
+```typescript
+// ✅ Good - matches from start
+/^==(.+?)==/
+
+// ❌ Bad - can match anywhere
+/==(.+?)==/
+```
+
+### 使用非贪婪匹配
+
+使用 `+?` 或 `*?`，而不是 `+` 或 `*`，以便更好地控制匹配范围：
+
+```typescript
+// ✅ Good - stops at first closing
+/^==(.+?)==/
+
+// ❌ Bad - matches too much
+/^==(.+)==/
+```
+
+### 测试边缘情况
+
+使用以下情况测试正则表达式：
+
+- 空内容：`====`
+- 嵌套语法：`==text **bold** text==`
+- 多次出现：`==one== ==two==`
+- 未闭合语法：`==text`
+
+```typescript
+// Handle unclosed syntax
+const match = /^==([^=]+)==/.exec(src)
+if (!match) {
+  return undefined // Not matched, let standard parser handle it
+}
+```
+
+## 调试分词器
+
+### 记录令牌输出
+
+```typescript
+tokenize: (src, tokens, lexer) => {
+  const match = /^==(.+?)==/.exec(src)
+
+  if (match) {
+    const token = {
+      type: 'highlight',
+      raw: match[0],
+      tokens: lexer.inlineTokens(match[1]),
+    }
+
+    console.log('Tokenized:', token)
+    return token
+  }
+
+  console.log('No match for:', src.substring(0, 20))
+  return undefined
+}
+```
+
+### 单独测试
+
+独立测试你的分词器：
+
+```typescript
+const src = '==highlighted text== and more'
+const match = /^==(.+?)==/.exec(src)
+
+console.log('Match:', match)
+// ['==highlighted text==', 'highlighted text==']
+
+// Adjust regex
+const betterMatch = /^==([^=]+)==/.exec(src)
+console.log('Better match:', betterMatch)
+// ['==highlighted text==', 'highlighted text']
+```
+
+### 检查令牌注册表
+
+确认你的分词器已注册：
+
+```typescript
+console.log(editor.markdown.instance)
+// Check the MarkedJS instance configuration
+```
+
+## 常见问题
+
+### 1. 忘记返回 `undefined`
+
+语法不匹配时，始终返回 `undefined`：
+
+```typescript
+// ✅ Good
+tokenize: (src, tokens, lexer) => {
+  const match = /^==(.+?)==/.exec(src)
+  if (!match) {
+    return undefined // Important!
+  }
+  return {
+    /* token */
+  }
+}
+
+// ❌ Bad - returns falsy value
+tokenize: (src, tokens, lexer) => {
+  const match = /^==(.+?)==/.exec(src)
+  return match
+    ? {
+        /* token */
+      }
+    : null // Should be undefined
+}
+```
+
+### 2. 未包含 `raw`
+
+务必在 `raw` 中包含完整的匹配字符串：
+
+```typescript
+return {
+  type: 'highlight',
+  raw: match[0], // Full match including delimiters
+  text: match[1], // Content only
+}
+```
+
+### 3. 级别设置错误
+
+确保 `level` 与分词器的用途一致：
+
+```typescript
+// Inline element (within text)
+{
+  level: 'inline'
+}
+
+// Block element (standalone)
+{
+  level: 'block'
+}
+```
+
+### 4. 消耗内容过多
+
+注意不要消耗超出语法范围的内容：
+
+```typescript
+// ✅ Good - stops at closing delimiter
+/^==([^=]+)==/
+
+// ❌ Bad - might consume multiple blocks
+/^==([\s\S]+)==/
+```
+
+## 进阶：有状态的分词器
+
+对于复杂语法，可以在分词过程中维护状态：
+
+```typescript
+let nestedLevel = 0
+
+const tokenizer = {
+  name: 'nested',
+  level: 'block',
+
+  tokenize: (src, tokens, lexer) => {
+    if (src.startsWith('{{')) {
+      nestedLevel++
+      // Handle opening
+    }
+
+    if (src.startsWith('}}')) {
+      nestedLevel--
+      // Handle closing
+    }
+
+    // Process based on state
+  },
+}
+```
+
+## 另请参阅
+
+- 创建自定义分词器之前，可先试用[实用工具函数](../api/utilities)中的常见模式
