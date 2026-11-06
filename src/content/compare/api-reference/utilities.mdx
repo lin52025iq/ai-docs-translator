@@ -1,365 +1,365 @@
 ---
-title: Utilities
+title: 实用工具
 tags:
   - type: addon
-    tooltip: Contact our team to add Compare to your plan
+    tooltip: 联系我们的团队，将 Compare 添加到您的套餐中
 meta:
-  title: Utilities | Tiptap Compare Docs
-  description: Utility functions exported by the Tiptap Compare package.
+  title: 实用工具 | Tiptap Compare 文档
+  description: Tiptap Compare 软件包导出的实用函数。
   category: Compare
 ---
 
-A list of classes and functions exported by the `@tiptap-pro/compare` package.
+`@tiptap-pro/compare` 软件包导出的类和函数列表。
 
 ## `Compare`
 
-The Compare Tiptap Editor extension. Add it to the editor that renders the diff. This extension does not take any configuration options.
+Compare Tiptap 编辑器扩展。将其添加到用于渲染差异的编辑器中。此扩展不接受任何配置选项。
 
 ## `compareDocuments`
 
-Compares two Tiptap JSON documents.
+比较两个 Tiptap JSON 文档。
 
-### Parameters (`CompareDocumentsOptions`)
+### 参数 (`CompareDocumentsOptions`)
 
-- `schema` (`Schema`): The ProseMirror schema used to parse both documents.
-- `docA` (`JSONContent`): The original document.
-- `docB` (`JSONContent`): The changed document.
-- `diffOptions?` (`DiffOptions`): Options that control the comparison. See [DiffOptions](/compare/api-reference/types#diffoptions).
+- `schema` (`Schema`)：用于解析两个文档的 ProseMirror schema。
+- `docA` (`JSONContent`)：原始文档。
+- `docB` (`JSONContent`)：修改后的文档。
+- `diffOptions?` (`DiffOptions`)：控制比较方式的选项。请参阅 [DiffOptions](/compare/api-reference/types#diffoptions)。
 
-### Returns (`Changeset`)
+### 返回值 (`Changeset`)
 
-Returns a changeset containing both documents and their changes. See [Changeset](/compare/api-reference/utilities#changeset).
+返回一个包含两个文档及其变更的变更集。请参阅 [Changeset](/compare/api-reference/utilities#changeset)。
 
 ## `compareFragments`
 
-Compares two Tiptap JSON fragments.
+比较两个 Tiptap JSON 片段。
 
-### Parameters (`CompareFragmentsOptions`)
+### 参数 (`CompareFragmentsOptions`)
 
-- `schema` (`Schema`): The ProseMirror schema used to parse both fragments.
-- `fragmentA` (`JSONContent[] | null`): The original fragment.
-- `fragmentB` (`JSONContent[] | null`): The changed fragment.
-- `diffOptions?` (`DiffOptions`): Options that control the comparison.
+- `schema` (`Schema`)：用于解析两个片段的 ProseMirror schema。
+- `fragmentA` (`JSONContent[] | null`)：原始片段。
+- `fragmentB` (`JSONContent[] | null`)：修改后的片段。
+- `diffOptions?` (`DiffOptions`)：控制比较方式的选项。
 
-### Returns (`Changeset`)
+### 返回值 (`Changeset`)
 
-Returns a changeset containing both fragments and their changes. See [Changeset](/compare/api-reference/utilities#changeset).
+返回一个包含两个片段及其变更的变更集。请参阅 [Changeset](/compare/api-reference/utilities#changeset)。
 
 ## `compareSteps`
 
-Converts a `StepSequence` into non-overlapping changes.
+将 `StepSequence` 转换为互不重叠的变更。
 
-### Parameters (`CompareStepsOptions`)
+### 参数 (`CompareStepsOptions`)
 
-- `stepSequence` (`StepSequence`): The document transitions to compare.
-- `compareMetadata?` (`(a: ChangeMetadata, b: ChangeMetadata) => boolean`): Decides whether adjacent steps can be grouped.
-- `diffOptions?` (`DiffOptions`): Options that control the comparison.
+- `stepSequence` (`StepSequence`)：要比较的文档状态转换序列。
+- `compareMetadata?` (`(a: ChangeMetadata, b: ChangeMetadata) => boolean`)：决定是否可以将相邻步骤分组。
+- `diffOptions?` (`DiffOptions`)：控制比较方式的选项。
 
-### Returns (`Changeset`)
+### 返回值 (`Changeset`)
 
-Returns a changeset containing the initial and final documents and their changes. Changes include metadata associated with the steps that produced them. See [Changeset](/compare/api-reference/utilities#changeset).
+返回一个包含初始文档、最终文档及其变更的变更集。变更中包含生成这些变更的步骤所关联的元数据。请参阅 [Changeset](/compare/api-reference/utilities#changeset)。
 
 ## `compareVersions`
 
-Compares two complete Yjs v2 updates and recovers collaboration metadata when available.
+比较两个完整的 Yjs v2 更新，并在可用时恢复协作元数据。
 
-### Parameters (`CompareVersionsOptions`)
+### 参数 (`CompareVersionsOptions`)
 
-- `versionA` (`Uint8Array`): The older Yjs v2 update.
-- `versionB` (`Uint8Array`): The newer Yjs v2 update.
-- `schema` (`Schema`): The schema used to hydrate both versions.
-- `diffOptions?` (`DiffOptions`): Options that control the comparison.
-- `compareMetadata?` (`(a: ChangeMetadata, b: ChangeMetadata) => boolean`): Decides whether adjacent changes can be grouped. By default, changes with the same `userId` are grouped.
-- `field?` (`string`): The Yjs document field. Default: `'default'`.
-- `permanentUserDataMapField?` (`string`): The shared user-data map field. Default: `'__tiptapcollab__users'`.
-- `enableDebugging?` (`boolean`): Enables extraction logging. Default: `false`.
+- `versionA` (`Uint8Array`)：较早的 Yjs v2 更新。
+- `versionB` (`Uint8Array`)：较新的 Yjs v2 更新。
+- `schema` (`Schema`)：用于还原两个版本的 schema。
+- `diffOptions?` (`DiffOptions`)：控制比较方式的选项。
+- `compareMetadata?` (`(a: ChangeMetadata, b: ChangeMetadata) => boolean`)：决定是否可以将相邻变更分组。默认情况下，具有相同 `userId` 的变更会被分组。
+- `field?` (`string`)：Yjs 文档字段。默认值：`'default'`。
+- `permanentUserDataMapField?` (`string`)：共享用户数据映射字段。默认值：`'__tiptapcollab__users'`。
+- `enableDebugging?` (`boolean`)：启用提取日志记录。默认值：`false`。
 
-### Returns (`Changeset`)
+### 返回值 (`Changeset`)
 
-Returns a changeset containing both versions and their changes. Changes include metadata from the change history, such as a `userId` when available. See [Changeset](/compare/api-reference/utilities#changeset).
+返回一个包含两个版本及其变更的变更集。变更中包含变更历史的元数据，例如在可用时包含 `userId`。请参阅 [Changeset](/compare/api-reference/utilities#changeset)。
 
 ## `Changeset`
 
-Represents the result of comparing two documents, fragments, steps, or versions.
+表示比较两个文档、片段、步骤或版本的结果。
 
-### Properties
+### 属性
 
-- `fragmentA` (`JSONFragment`): The original fragment.
-- `fragmentB` (`JSONFragment`): The modified fragment.
-- `changes` (`Change[]`): The changes between both fragments.
-- `docA` (`JSONContent`): The original document as a Tiptap JSON document.
-- `docB` (`JSONContent`): The modified document as a Tiptap JSON document.
+- `fragmentA` (`JSONFragment`)：原始片段。
+- `fragmentB` (`JSONFragment`)：修改后的片段。
+- `changes` (`Change[]`)：两个片段之间的变更。
+- `docA` (`JSONContent`)：以 Tiptap JSON 文档表示的原始文档。
+- `docB` (`JSONContent`)：以 Tiptap JSON 文档表示的修改后文档。
 
 ### `changeset.reverse`
 
-Creates a changeset in the opposite direction, where document A becomes document B, and vice versa.
+创建一个方向相反的变更集，其中文档 A 变为文档 B，反之亦然。
 
-#### Parameters
+#### 参数
 
-This method has no parameters.
+此方法不接受参数。
 
-#### Returns (`Changeset`)
+#### 返回值 (`Changeset`)
 
-- `Changeset`: A changeset with the original and modified documents reversed.
+- `Changeset`：原始文档和修改后文档已互换的变更集。
 
 ### `changeset.toJSON`
 
-Serializes the changeset.
+序列化变更集。
 
-#### Parameters
+#### 参数
 
-This method has no parameters.
+此方法不接受参数。
 
-#### Returns (`ChangesetJSON`)
+#### 返回值 (`ChangesetJSON`)
 
-- `fragmentA` (`JSONFragment`): The original fragment.
-- `fragmentB` (`JSONFragment`): The modified fragment.
-- `changes` (`Change[]`): The changes between both fragments.
+- `fragmentA` (`JSONFragment`)：原始片段。
+- `fragmentB` (`JSONFragment`)：修改后的片段。
+- `changes` (`Change[]`)：两个片段之间的变更。
 
 ### `Changeset.fromJSON`
 
-Hydrates a changeset from serialized JSON.
+从序列化的 JSON 还原变更集。
 
-#### Parameters
+#### 参数
 
-- `json` (`ChangesetJSON`): The serialized changeset.
+- `json` (`ChangesetJSON`)：序列化后的变更集。
 
-#### Returns (`Changeset`)
+#### 返回值 (`Changeset`)
 
-- `Changeset`: The hydrated changeset.
+- `Changeset`：还原后的变更集。
 
 ## `findDiffSuggestions`
 
-Returns the diff suggestions that are currently shown in the editor.
+返回编辑器中当前显示的差异建议。
 
-### Parameters
+### 参数
 
-- `editor` (`Editor`): The editor configured with `Compare`.
+- `editor` (`Editor`)：已配置 `Compare` 的编辑器。
 
-### Returns (`DiffSuggestion[]`)
+### 返回值 (`DiffSuggestion[]`)
 
-Each `DiffSuggestion` contains:
+每个 `DiffSuggestion` 包含：
 
-- `id` (`string`): The suggestion ID.
-- `range` (`Range`): The affected range in the editor.
-- `content` (`Slice`): The replacement content.
-- `metadata?` (`Record<string, any>`): Optional custom metadata.
-- `displayOptions?` (`DisplayOptions`): Options used to render the suggestion.
-- `isInlineGroup?` (`boolean`): Whether inline changes were grouped.
-- `mappableRange?` (`MappableRange`): A range that can be mapped through transactions.
-- `nestedChanges?` (`DiffSuggestionNestedChange[]`): Informational changes nested in this suggestion. Accept and reject actions target the parent suggestion.
+- `id` (`string`)：建议 ID。
+- `range` (`Range`)：编辑器中受影响的范围。
+- `content` (`Slice`)：替换内容。
+- `metadata?` (`Record<string, any>`)：可选的自定义元数据。
+- `displayOptions?` (`DisplayOptions`)：用于渲染建议的选项。
+- `isInlineGroup?` (`boolean`)：是否对行内变更进行了分组。
+- `mappableRange?` (`MappableRange`)：可通过事务映射的范围。
+- `nestedChanges?` (`DiffSuggestionNestedChange[]`)：此建议中嵌套的信息性变更。接受和拒绝操作针对父级建议。
 
 ## `getSuggestionNodeViewContext`
 
-Determines whether a [Tiptap Node View](/editor/extensions/custom-extensions/node-views) is inside a diff suggestion, and returns the suggestion's context.
+确定 [Tiptap Node View](/editor/extensions/custom-extensions/node-views) 是否位于差异建议中，并返回该建议的上下文。
 
-### Parameters
+### 参数
 
-- `decorations` (`Decoration[]`): The decorations passed to the custom node view.
+- `decorations` (`Decoration[]`)：传递给自定义 Node View 的装饰。
 
-### Returns (`SuggestionNodeViewContext`)
+### 返回值 (`SuggestionNodeViewContext`)
 
-- `suggestion` (`DiffSuggestion | null`): The suggestion where the node view is located or `null` if the node view is not part of a diff suggestion.
-- `isSelected` (`boolean`): Whether the suggestion is selected. A suggestion is selected when the cursor is inside the suggestion.
-- `isReplacement` (`boolean`): Whether the node view is inside replacement content. It is `false` for content in the current document.
+- `suggestion` (`DiffSuggestion | null`)：Node View 所在的建议；如果 Node View 不属于差异建议，则为 `null`。
+- `isSelected` (`boolean`)：建议是否已选中。当光标位于建议内时，建议即为选中状态。
+- `isReplacement` (`boolean`)：Node View 是否位于替换内容中。对于当前文档中的内容，此值为 `false`。
 
 ## `renderSlice`
 
-Renders a [ProseMirror slice](https://prosemirror.net/docs/ref/#model.Slice) as a document fragment for display in a diff.
+将 [ProseMirror 片段](https://prosemirror.net/docs/ref/#model.Slice)渲染为文档片段，以便在差异中显示。
 
-### Parameters (`RenderSliceToHtmlOptions`)
+### 参数 (`RenderSliceToHtmlOptions`)
 
-- `slice` ([`Slice`](https://prosemirror.net/docs/ref/#model.Slice)): The slice to render.
-- `editor` (`Editor`): The editor used to render the slice.
-- `suggestionNodeViewContext` (`SuggestionNodeViewContext`): Context data provided to custom node views while rendering.
+- `slice` ([`Slice`](https://prosemirror.net/docs/ref/#model.Slice))：要渲染的片段。
+- `editor` (`Editor`)：用于渲染片段的编辑器。
+- `suggestionNodeViewContext` (`SuggestionNodeViewContext`)：渲染期间提供给自定义 Node View 的上下文数据。
 
-### Returns ([`DocumentFragment`](https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment))
+### 返回值 ([`DocumentFragment`](https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment))
 
-Returns a [document fragment](https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment) containing the rendered slice.
+返回一个包含已渲染片段的[文档片段](https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment)。
 
 ## `generateSuggestionId`
 
-Creates a unique ID for a diff suggestion.
+为差异建议创建唯一 ID。
 
-### Parameters
+### 参数
 
-This utility has no parameters.
+此实用工具不接受参数。
 
-### Returns (`string`)
+### 返回值 (`string`)
 
-- `string`: A unique suggestion ID.
+- `string`：唯一的建议 ID。
 
 ## `getVersions`
 
-Requests two snapshots from a collaboration provider.
+从协作提供程序请求两个快照。
 
-### Parameters
+### 参数
 
-- `provider` (`TiptapCollabProvider`): A provider with version-listing and stateless-message methods.
-- `fromVersion` (`number`): The first version ID.
-- `toVersion?` (`number`): The second version ID. Defaults to the latest version.
+- `provider` (`TiptapCollabProvider`)：具有版本列表和无状态消息方法的提供程序。
+- `fromVersion` (`number`)：第一个版本 ID。
+- `toVersion?` (`number`)：第二个版本 ID。默认为最新版本。
 
-### Returns (`Promise<{ snapshot: Uint8Array; prevSnapshot: Uint8Array }>`)
+### 返回值 (`Promise<{ snapshot: Uint8Array; prevSnapshot: Uint8Array }>`)
 
-The promise resolves with:
+Promise 解析后会返回：
 
-- `snapshot` (`Uint8Array`): The newer version update.
-- `prevSnapshot` (`Uint8Array`): The older version update.
+- `snapshot` (`Uint8Array`)：较新版本的更新。
+- `prevSnapshot` (`Uint8Array`)：较早版本的更新。
 
 ## `getDocumentFromVersion`
 
-Hydrates a Tiptap JSON document from a complete Yjs v2 update.
+根据完整的 Yjs v2 更新还原 Tiptap JSON 文档。
 
-### Parameters (`GetDocumentFromVersionOptions`)
+### 参数 (`GetDocumentFromVersionOptions`)
 
-- `version` (`Uint8Array`): The complete Yjs v2 update.
-- `schema` (`Schema`): The schema used to hydrate the document.
-- `field?` (`string`): The Yjs document field. Default: `'default'`.
+- `version` (`Uint8Array`)：完整的 Yjs v2 更新。
+- `schema` (`Schema`)：用于还原文档的 schema。
+- `field?` (`string`)：Yjs 文档字段。默认值：`'default'`。
 
-### Returns (`JSONContent`)
+### 返回值 (`JSONContent`)
 
-The returned JSON document contains:
+返回的 JSON 文档包含：
 
-- `type` (`string`): The Tiptap node type, usually `'doc'` for a complete document.
-- `content?` (`JSONContent[]`): The document's child nodes.
-- `attrs?` (`Record<string, any>`): Attributes on the document node.
-- `marks?` (`Mark[]`): Marks on the node, when applicable.
-- `text?` (`string`): Text content, when applicable.
+- `type` (`string`)：Tiptap 节点类型；完整文档通常为 `'doc'`。
+- `content?` (`JSONContent[]`)：文档的子节点。
+- `attrs?` (`Record<string, any>`)：文档节点上的属性。
+- `marks?` (`Mark[]`)：节点上的标记（如适用）。
+- `text?` (`string`)：文本内容（如适用）。
 
 ## `TrackedChangesDocumentFactory`
 
-Creates a Tiptap JSON document with a `Changeset` encoded as [Tracked Changes](/tracked-changes/getting-started/overview). Use this on the server or anywhere an editor instance is unavailable.
+创建一个 Tiptap JSON 文档，其中的 `Changeset` 以[跟踪更改](/tracked-changes/getting-started/overview)形式编码。可在服务器端或任何无法使用编辑器实例的场景中使用。
 
 ### `fromChangeset`
 
-Converts a changeset into a document containing tracked changes.
+将变更集转换为包含跟踪更改的文档。
 
-#### Parameters (`TrackedChangesDocumentFactoryOptions`)
+#### 参数 (`TrackedChangesDocumentFactoryOptions`)
 
-- `changeset` (`Changeset`): The comparison result to encode.
-- `schema` (`Schema`): The ProseMirror schema that includes the Tracked Changes extension.
+- `changeset` (`Changeset`)：要编码的比较结果。
+- `schema` (`Schema`)：包含跟踪更改扩展的 ProseMirror schema。
 
-#### Returns (`TrackedChangesDocumentFactoryResult`)
+#### 返回值 (`TrackedChangesDocumentFactoryResult`)
 
-- `doc` (`JSONContent`): The document with tracked-change marks and node attributes.
-- `trackedChanges` (`TrackedChangeData[]`): The encoded tracked changes and their ranges in `doc`.
+- `doc` (`JSONContent`)：包含跟踪更改标记和节点属性的文档。
+- `trackedChanges` (`TrackedChangeData[]`)：编码后的跟踪更改及其在 `doc` 中的范围。
 
 ## `serializeSchema`
 
-Serializes a ProseMirror schema into JSON-safe data.
+将 ProseMirror schema 序列化为可安全用于 JSON 的数据。
 
-### Parameters
+### 参数
 
-- `schema` (`Schema`): The schema to serialize.
+- `schema` (`Schema`)：要序列化的 schema。
 
-### Returns (`SerializedSchema`)
+### 返回值 (`SerializedSchema`)
 
-The Tiptap editor schema, encoded as a JSON object, so it can be sent over the network.
+Tiptap 编辑器 schema 编码后的 JSON 对象，可通过网络发送。
 
 ## `deserializeSchema`
 
-Creates a ProseMirror schema from serialized schema data.
+根据序列化的 schema 数据创建 ProseMirror schema。
 
-### Parameters
+### 参数
 
-- `jsonSchema` (`SerializedSchema`): The JSON-safe schema data to deserialize.
+- `jsonSchema` (`SerializedSchema`)：要反序列化的 JSON 安全格式 schema 数据。
 
-### Returns (`Schema`)
+### 返回值 (`Schema`)
 
-- `Schema`: The hydrated ProseMirror schema.
+- `Schema`：还原后的 ProseMirror schema。
 
 ## `StepSequence`
 
-Stores a sequence of document states and the metadata for each transition.
+存储一系列文档状态以及每次状态转换的元数据。
 
 ### `StepSequence.fromInitialDocument`
 
-Creates an empty sequence.
+创建一个空序列。
 
-#### Parameters
+#### 参数
 
-- `before` (`Node`): The initial document.
+- `before` (`Node`)：初始文档。
 
-#### Returns (`StepSequence`)
+#### 返回值 (`StepSequence`)
 
-- `before` (`Node`): The initial document.
-- `after` (`Node`): The latest document, initially the same as `before`.
-- `stepCount` (`number`): The number of recorded steps, initially `0`.
+- `before` (`Node`)：初始文档。
+- `after` (`Node`)：最新文档，初始时与 `before` 相同。
+- `stepCount` (`number`)：已记录步骤的数量，初始值为 `0`。
 
 ### `StepSequence.fromJSON`
 
-Hydrates a sequence from JSON.
+从 JSON 还原序列。
 
-#### Parameters (`StepSequenceFromJSONOptions`)
+#### 参数 (`StepSequenceFromJSONOptions`)
 
-- `json` (`StepSequenceJSON`): The serialized sequence.
-- `schema` (`Schema`): The schema used to hydrate its documents.
+- `json` (`StepSequenceJSON`)：序列化后的序列。
+- `schema` (`Schema`)：用于还原其中文档的 schema。
 
-#### Returns (`StepSequence`)
+#### 返回值 (`StepSequence`)
 
-- `before` (`Node`): The initial document.
-- `after` (`Node`): The latest document.
-- `stepCount` (`number`): The number of recorded steps.
+- `before` (`Node`)：初始文档。
+- `after` (`Node`)：最新文档。
+- `stepCount` (`number`)：已记录步骤的数量。
 
 ### `sequence.addStep`
 
-Appends a document transition.
+追加一次文档状态转换。
 
-#### Parameters (`AddStepOptions`)
+#### 参数 (`AddStepOptions`)
 
-- `doc` (`Node`): The document after the step.
-- `metadata` (`ChangeMetadata`): Metadata for the step.
-- `changes?` (`Change[] | null`): Cached changes. `null` means there are no cached changes so the diff will be computed. An empty array means there were no changes between the steps.
-- `changedArea?` (`Change | null`): Cached changed area, when available.
+- `doc` (`Node`)：步骤执行后的文档。
+- `metadata` (`ChangeMetadata`)：此步骤的元数据。
+- `changes?` (`Change[] | null`)：缓存的变更。`null` 表示没有缓存的变更，因此会计算差异。空数组表示步骤之间没有变更。
+- `changedArea?` (`Change | null`)：可用时提供的缓存变更区域。
 
-#### Returns (`void`)
+#### 返回值 (`void`)
 
-This method does not return a value.
+此方法不返回值。
 
-### `sequence.copy` and `sequence.reverse`
+### `sequence.copy` 和 `sequence.reverse`
 
-`copy` duplicates a sequence. `reverse` returns a sequence that runs from the final document back to the initial document.
+`copy` 会复制一个序列。`reverse` 会返回一个从最终文档回溯至初始文档的序列。
 
-#### Parameters
+#### 参数
 
-These methods have no parameters.
+这些方法不接受参数。
 
-#### Returns (`StepSequence`)
+#### 返回值 (`StepSequence`)
 
-- `before` (`Node`): The initial document for the returned sequence.
-- `after` (`Node`): The final document for the returned sequence.
-- `stepCount` (`number`): The number of recorded steps.
+- `before` (`Node`)：返回序列的初始文档。
+- `after` (`Node`)：返回序列的最终文档。
+- `stepCount` (`number`)：已记录步骤的数量。
 
 ### `sequence.getSteps`
 
-Returns each recorded document transition.
+返回每次已记录的文档状态转换。
 
-#### Parameters
+#### 参数
 
-This method has no parameters.
+此方法不接受参数。
 
-#### Returns (`Step[]`)
+#### 返回值 (`Step[]`)
 
-Each `Step` contains:
+每个 `Step` 包含：
 
-- `before` (`Node`): The document before the transition.
-- `after` (`Node`): The document after the transition.
-- `metadata` (`ChangeMetadata`): Metadata for the transition.
-- `changes` (`Change[] | null`): Cached changes, when available.
-- `changedArea` (`Change | null`): Cached changed area, when available.
+- `before` (`Node`)：转换前的文档。
+- `after` (`Node`)：转换后的文档。
+- `metadata` (`ChangeMetadata`)：此转换的元数据。
+- `changes` (`Change[] | null`)：可用时提供的缓存变更。
+- `changedArea` (`Change | null`)：可用时提供的缓存变更区域。
 
 ### `sequence.toJSON`
 
-Serializes the sequence.
+序列化序列。
 
-#### Parameters
+#### 参数
 
-This method has no parameters.
+此方法不接受参数。
 
-#### Returns (`StepSequenceJSON`)
+#### 返回值 (`StepSequenceJSON`)
 
-- `before` (`JSONContent`): The initial document.
-- `docs` (`JSONContent[]`): Documents after each transition.
-- `metadata` (`ChangeMetadata[]`): Metadata for each transition.
-- `changes` (`Array<Change[] | null>`): Cached changes for each transition.
-- `changedAreas` (`Array<Change | null>`): Cached changed areas for each transition.
+- `before` (`JSONContent`)：初始文档。
+- `docs` (`JSONContent[]`)：每次转换后的文档。
+- `metadata` (`ChangeMetadata[]`)：每次转换的元数据。
+- `changes` (`Array<Change[] | null>`)：每次转换的缓存变更。
+- `changedAreas` (`Array<Change | null>`)：每次转换的缓存变更区域。
