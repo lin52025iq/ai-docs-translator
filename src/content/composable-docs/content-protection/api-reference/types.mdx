@@ -1,220 +1,220 @@
 ---
-title: Types
+title: 类型
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Types | Tiptap Content Protection Docs
-  description: Permission results, diagnostics, events and readable content types.
-  category: Composable Docs
+  title: 类型 | Tiptap 内容保护文档
+  description: 权限结果、诊断信息、事件和可读内容类型。
+  category: 组合式文档
 ---
 
-Types exported by `@tiptap-pro/extension-content-protection`. See also [policy types](/composable-docs/content-protection/api-reference/policy) and [redaction types](/composable-docs/content-protection/api-reference/rendering).
+`@tiptap-pro/extension-content-protection` 导出的类型。另请参阅[策略类型](/composable-docs/content-protection/api-reference/policy)和[遮蔽类型](/composable-docs/content-protection/api-reference/rendering)。
 
 ## `PolicyDocumentOptions`
 
-Shared input for utilities that inspect a document.
+用于检查文档的实用工具所共用的输入。
 
-### Properties
+### 属性
 
-- `policy` (`ContentProtectionPolicy`): The policy to evaluate.
-- `document` (`Node`): The document to inspect.
+- `policy` (`ContentProtectionPolicy`)：要评估的策略。
+- `document` (`Node`)：要检查的文档。
 
 ## `PolicyIssue`
 
-One configuration or input error.
+一项配置错误或输入错误。
 
-### Properties
+### 属性
 
-- `path` (`string`): Location of the invalid value.
-- `code` (`'invalidFormat' | 'unsupportedVersion' | 'duplicateRuleId' | 'unknownNodeType' | 'unknownMarkType' | 'unknownAttribute'`): Error category.
-- `message` (`string`): Human-readable explanation.
+- `path` (`string`)：无效值的位置。
+- `code` (`'invalidFormat' | 'unsupportedVersion' | 'duplicateRuleId' | 'unknownNodeType' | 'unknownMarkType' | 'unknownAttribute'`)：错误类别。
+- `message` (`string`)：易于理解的说明。
 
 ## `ProtectionConfigurationError`
 
-Extends `Error`. Thrown when a utility or the extension receives an invalid policy.
+继承自 `Error`。实用工具或扩展收到无效策略时抛出。
 
-### Properties
+### 属性
 
-- `issues` (`PolicyIssue[]`): Configuration diagnostics.
-- `name` (`string`): Error class name.
-- `message` (`string`): Summary of the failure.
+- `issues` (`PolicyIssue[]`)：配置诊断信息。
+- `name` (`string`)：错误类名称。
+- `message` (`string`)：错误摘要。
 
 ## `ProtectionInputError`
 
-Extends `ProtectionConfigurationError`. Thrown for invalid utility inputs, incompatible schemas or missing extension state.
+继承自 `ProtectionConfigurationError`。实用工具输入无效、架构不兼容或扩展状态缺失时抛出。
 
-### Properties
+### 属性
 
-- `issues` (`PolicyIssue[]`): Input diagnostics.
-- `name` (`string`): Error class name.
-- `message` (`string`): Summary of the failure.
+- `issues` (`PolicyIssue[]`)：输入诊断信息。
+- `name` (`string`)：错误类名称。
+- `message` (`string`)：错误摘要。
 
 ## `ProtectionOperationKind`
 
-The mutation being checked.
+正在检查的变更类型。
 
-| Value                   | Operation                         |
-| ----------------------- | --------------------------------- |
-| `'insertNode'`          | Insert a Node.                    |
-| `'removeNode'`          | Remove a Node.                    |
-| `'changeNodeType'`      | Change a Node's type.             |
-| `'moveNode'`            | Move a Node.                      |
-| `'changeChildren'`      | Change the direct child sequence. |
-| `'insertText'`          | Insert text.                      |
-| `'removeText'`          | Remove text.                      |
-| `'changeAttribute'`     | Change a Node attribute.          |
-| `'addMark'`             | Add a Mark.                       |
-| `'removeMark'`          | Remove a Mark.                    |
-| `'changeMarkAttribute'` | Change a Mark attribute.          |
+| 值                      | 操作                   |
+| ----------------------- | ---------------------- |
+| `'insertNode'`          | 插入节点。             |
+| `'removeNode'`          | 移除节点。             |
+| `'changeNodeType'`      | 更改节点类型。         |
+| `'moveNode'`            | 移动节点。             |
+| `'changeChildren'`      | 更改直接子节点序列。   |
+| `'insertText'`          | 插入文本。             |
+| `'removeText'`          | 移除文本。             |
+| `'changeAttribute'`     | 更改节点属性。         |
+| `'addMark'`             | 添加标记。             |
+| `'removeMark'`          | 移除标记。             |
+| `'changeMarkAttribute'` | 更改标记属性。         |
 
 ## `ProtectionOperation`
 
-Describes an affected part of the document without including its content.
+描述文档中受影响的部分，但不包含其内容。
 
-### Properties
+### 属性
 
-- `kind` (`ProtectionOperationKind`): Mutation category.
-- `from` (`number`): Start position in the document before the transaction.
-- `to` (`number`): End position in that document. Newly inserted content maps to its insertion point.
-- `nodeType?` (`string`): Affected Node type, when applicable.
-- `markType?` (`string`): Affected Mark type, when applicable.
-- `attribute?` (`string`): Affected attribute, when applicable.
+- `kind` (`ProtectionOperationKind`)：变更类别。
+- `from` (`number`)：事务发生前文档中的起始位置。
+- `to` (`number`)：该文档中的结束位置。新插入的内容映射到其插入位置。
+- `nodeType?` (`string`)：受影响的节点类型（如适用）。
+- `markType?` (`string`)：受影响的标记类型（如适用）。
+- `attribute?` (`string`)：受影响的属性（如适用）。
 
 ## `PermissionDecision`
 
-Result of resolving one permission.
+对一项权限进行解析后的结果。
 
-### Properties
+### 属性
 
-- `allowed` (`boolean`): Whether the permission is granted.
-- `ruleIds` (`string[]`): IDs of winning rules that have IDs, in declaration order.
-- `ruleIndexes` (`number[]`): Zero-based indexes of winning rules, including anonymous rules.
-- `reasons` (`string[]`): Winning rules' reasons in declaration order; absent reasons are omitted.
+- `allowed` (`boolean`)：是否授予该权限。
+- `ruleIds` (`string[]`)：按声明顺序排列的获胜规则 ID（仅包含具有 ID 的规则）。
+- `ruleIndexes` (`number[]`)：获胜规则从零开始的索引，包含匿名规则。
+- `reasons` (`string[]`)：按声明顺序排列的获胜规则原因；未提供的原因会被省略。
 
 ## `ProtectionViolation`
 
-One reason a transaction is refused.
+拒绝一项事务的原因。
 
-### Properties
+### 属性
 
-- `code` (`'editDenied' | 'readDenied' | 'unsupportedStep'`): Refusal category.
-- `operation` (`ProtectionOperation | null`): Denied operation; `null` for an unsupported Step.
-- `ruleIds` (`string[]`): Winning rule IDs, when supplied.
-- `ruleIndexes` (`number[]`): Zero-based winning rule indexes.
-- `reasons` (`string[]`): Matching refusal explanations.
+- `code` (`'editDenied' | 'readDenied' | 'unsupportedStep'`)：拒绝类别。
+- `operation` (`ProtectionOperation | null`)：被拒绝的操作；对于不受支持的 Step，为 `null`。
+- `ruleIds` (`string[]`)：获胜规则 ID（如有提供）。
+- `ruleIndexes` (`number[]`)：获胜规则从零开始的索引。
+- `reasons` (`string[]`)：匹配的拒绝说明。
 
 ## `ProtectionCheck`
 
-Result of checking a proposed transaction.
+检查拟议事务的结果。
 
-### Properties
+### 属性
 
-- `allowed` (`boolean`): `true` when every operation is allowed.
-- `violations` (`ProtectionViolation[]`): Refusals in deterministic position/operation order; empty when allowed.
-- `documentRevision` (`number | null`): Editor document revision, or `null` for pure checks.
-- `policyRevision` (`number | null`): Editor policy revision, or `null` for pure checks.
+- `allowed` (`boolean`)：所有操作均获准时为 `true`。
+- `violations` (`ProtectionViolation[]`)：按确定性的位置/操作顺序排列的拒绝项；全部获准时为空。
+- `documentRevision` (`number | null`)：编辑器文档版本；纯检查时为 `null`。
+- `policyRevision` (`number | null`)：编辑器策略版本；纯检查时为 `null`。
 
 ## `ProtectionRejection`
 
-Extends `ProtectionCheck` with `allowed: false`.
+继承自 `ProtectionCheck`，并将 `allowed` 设为 `false`。
 
 ## `PermissionSummary`
 
-Aggregate permissions for a range. A region with editable text but protected attributes can report `edit: 'some'`.
+某个范围的汇总权限。如果某区域的文本可编辑、但属性受保护，则 `edit` 可能为 `'some'`。
 
-### Properties
+### 属性
 
-- `read` (`'all' | 'some' | 'none'`): How much of the range is readable.
-- `edit` (`'all' | 'some' | 'none'`): Whether all, some or no evaluated edits are permitted.
-- `ruleIds` (`string[]`): Contributing rule IDs, when supplied.
-- `ruleIndexes` (`number[]`): Zero-based contributing rule indexes.
+- `read` (`'all' | 'some' | 'none'`)：该范围有多少内容可读。
+- `edit` (`'all' | 'some' | 'none'`)：评估的编辑操作中，全部、部分或没有被允许。
+- `ruleIds` (`string[]`)：产生影响的规则 ID（如有提供）。
+- `ruleIndexes` (`number[]`)：产生影响的规则从零开始的索引。
 
 ## `ProtectionSubject`
 
-An existing target to explain, discriminated by `target`.
+要说明的现有目标，由 `target` 区分。
 
-| `target`                                              | Additional properties                                                                                              |
+| `target`                                              | 其他属性                                                                                                          |
 | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `'node'`, `'nodeType'`, `'nodeContent'`, `'children'` | `pos` (`number`): Node opening position; `-1` for the document root.                                               |
-| `'attribute'`                                         | `pos` (`number`): Node position. `name` (`string`): Attribute name.                                                |
-| `'mark'`, `'markType'`, `'markContent'`               | `from` (`number`), `to` (`number`): Marked range. `type` (`string`): Mark name.                                    |
-| `'markAttribute'`                                     | `from` (`number`), `to` (`number`): Marked range. `type` (`string`): Mark name. `name` (`string`): Attribute name. |
+| `'node'`、`'nodeType'`、`'nodeContent'`、`'children'` | `pos` (`number`)：节点的起始位置；对于文档根节点为 `-1`。                                                         |
+| `'attribute'`                                         | `pos` (`number`)：节点位置。`name` (`string`)：属性名称。                                                         |
+| `'mark'`、`'markType'`、`'markContent'`               | `from` (`number`)、`to` (`number`)：标记范围。`type` (`string`)：标记名称。                                      |
+| `'markAttribute'`                                     | `from` (`number`)、`to` (`number`)：标记范围。`type` (`string`)：标记名称。`name` (`string`)：属性名称。         |
 
-The named Mark must cover the entire range. Invalid positions, absent Marks and unknown attribute names throw `ProtectionInputError`.
+指定的标记必须覆盖整个范围。位置无效、标记不存在或属性名称未知时，会抛出 `ProtectionInputError`。
 
 ## `ProtectionExplanation`
 
-Permission decisions for one subject.
+针对某个目标的权限判定。
 
-### Properties
+### 属性
 
-- `subject` (`ProtectionSubject`): The inspected target.
-- `read` (`PermissionDecision | null`): Read decision; `null` for `children`.
-- `edit` (`PermissionDecision`): Effective edit decision, including read restrictions.
-- `concealedBy` (`string[]`): IDs of enclosing read-deny rules that conceal this target. Anonymous rules have no ID to include.
+- `subject` (`ProtectionSubject`)：被检查的目标。
+- `read` (`PermissionDecision | null`)：读取权限判定；对于 `children` 为 `null`。
+- `edit` (`PermissionDecision`)：有效的编辑权限判定，包括读取限制。
+- `concealedBy` (`string[]`)：隐藏此目标的外层拒绝读取规则的 ID。匿名规则没有可纳入的 ID。
 
 ## `PolicyUpdate`
 
-An installed policy change.
+已安装的策略变更。
 
-### Properties
+### 属性
 
-- `policy` (`ContentProtectionPolicy`): The new policy.
-- `policyRevision` (`number`): Revision after the update.
+- `policy` (`ContentProtectionPolicy`)：新策略。
+- `policyRevision` (`number`)：更新后的版本。
 
 ## `ContentProtectionRejectedEvent`
 
-Extends `ProtectionRejection` with `editor` (`Editor`): the editor that refused the transaction. Contains diagnostics, not the transaction or hidden content.
+继承自 `ProtectionRejection`，并包含 `editor` (`Editor`)：拒绝该事务的编辑器。此事件包含诊断信息，不包含事务或隐藏内容。
 
 ## `ContentProtectionPolicyUpdateEvent`
 
-Extends `PolicyUpdate` with `editor` (`Editor`): the editor whose policy changed.
+继承自 `PolicyUpdate`，并包含 `editor` (`Editor`)：策略发生变更的编辑器。
 
 ## `ContentProtectionPolicyErrorEvent`
 
-### Properties
+### 属性
 
-- `editor` (`Editor`): The editor that rejected the policy update.
-- `issues` (`PolicyIssue[]`): Configuration diagnostics.
+- `editor` (`Editor`)：拒绝策略更新的编辑器。
+- `issues` (`PolicyIssue[]`)：配置诊断信息。
 
 ## `ReadableMark`
 
-A visible Mark in a readable projection.
+可读投影中的可见标记。
 
-### Properties
+### 属性
 
-- `type` (`string`): Mark type name.
-- `attrs?` (`Record<string, JsonValue>`): Visible Mark attributes.
+- `type` (`string`)：标记类型名称。
+- `attrs?` (`Record<string, JsonValue>`)：可见标记属性。
 
 ## `ReadableNode`
 
-A presentation-tree entry, discriminated by `kind`. This is not a Tiptap JSON Node.
+呈现树中的一个条目，由 `kind` 区分。它不是 Tiptap JSON 节点。
 
 ### `kind: 'node'`
 
-- `type` (`string`): Visible Node type or a projection wrapper for partially concealed content.
-- `attrs?` (`Record<string, JsonValue>`): Visible Node attributes.
-- `marks?` (`ReadableMark[]`): Visible Marks.
-- `content` (`ReadableNode[]`): Readable children.
+- `type` (`string`)：可见节点类型，或用于部分隐藏内容的投影包装节点。
+- `attrs?` (`Record<string, JsonValue>`)：可见节点属性。
+- `marks?` (`ReadableMark[]`)：可见标记。
+- `content` (`ReadableNode[]`)：可读子节点。
 
 ### `kind: 'text'`
 
-- `text` (`string`): Visible text.
-- `marks` (`ReadableMark[]`): Visible Marks.
+- `text` (`string`)：可见文本。
+- `marks` (`ReadableMark[]`)：可见标记。
 
 ### `kind: 'redacted'`
 
-- `inline` (`boolean`): Whether the placeholder occupies an inline position.
-- `label` (`string`): Neutral replacement text, supplied through `redactionText`.
+- `inline` (`boolean`)：占位符是否处于行内位置。
+- `label` (`string`)`：通过 `redactionText` 提供的中性替换文本。
 
-Redacted entries contain no original type, ID, attributes, Marks, text or content length.
+遮蔽条目不包含原始类型、ID、属性、标记、文本或内容长度。
 
 ## `ReadableContent`
 
-Output from [`getReadableContent`](/composable-docs/content-protection/api-reference/utilities#getreadablecontent).
+[`getReadableContent`](/composable-docs/content-protection/api-reference/utilities#getreadablecontent) 的输出。
 
-### Properties
+### 属性
 
-- `content` (`ReadableNode[]`): Presentation tree, retaining partial ancestor wrappers where needed.
-- `text` (`string`): Plain-text representation of that tree.
+- `content` (`ReadableNode[]`)：呈现树；必要时保留部分祖先包装节点。
+- `text` (`string`)：该树的纯文本表示。
