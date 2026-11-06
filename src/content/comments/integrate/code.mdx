@@ -1,18 +1,18 @@
 ---
-title: Add comments to code
+title: 向代码添加评论
 meta:
-  title: Comments on code | Tiptap Comments Docs
-  description: Allow comment threads on inline code and code blocks by extending the Code and CodeBlock schemas.
-  category: Comments
+  title: 代码评论 | Tiptap 评论文档
+  description: 扩展 Code 和 CodeBlock schema，即可在行内代码和代码块中添加评论线程。
+  category: 评论
 ---
 
-To comment on inline code or text inside code blocks, extend the code extensions to allow the `inlineThread` mark from `CommentsKit`.
+要在行内代码或代码块中的文本上添加评论，请扩展代码扩展，使其允许使用 `CommentsKit` 中的 `inlineThread` 标记。
 
-By default, `Code` excludes all other marks, and `CodeBlock` allows no marks. These rules remove comment anchors when you add comments to code or format commented text as code. See [issue #6398](https://github.com/ueberdosis/tiptap/issues/6398) for the reported behavior and maintainer guidance.
+默认情况下，`Code` 会排除所有其他标记，而 `CodeBlock` 不允许使用任何标记。这些规则会在你为代码添加评论或将带评论的文本设置为代码格式时移除评论锚点。请参阅 [issue #6398](https://github.com/ueberdosis/tiptap/issues/6398)，了解已报告的问题及维护者的指导。
 
-## Allow comments on inline code
+## 允许对行内代码添加评论
 
-Extend [Code](/editor/extensions/marks/code) with an empty `excludes` value so the code mark can coexist with `inlineThread`:
+扩展 [Code](/editor/extensions/marks/code)，并将 `excludes` 设为空值，使代码标记可以与 `inlineThread` 共存：
 
 ```js
 import Code from '@tiptap/extension-code'
@@ -22,11 +22,11 @@ const CodeWithComments = Code.extend({
 })
 ```
 
-This also allows code to coexist with other marks, such as bold and italic. To keep those exclusions, set `excludes` to a space-separated list of the mark names you want to exclude. Leave `inlineThread` out of that list.
+这样也允许代码与粗体、斜体等其他标记共存。若要保留这些排除规则，请将 `excludes` 设置为空格分隔的标记名称列表。不要将 `inlineThread` 放入该列表。
 
-## Allow comments inside code blocks
+## 允许在代码块中添加评论
 
-Extend [CodeBlock](/editor/extensions/nodes/code-block) to allow `inlineThread` on its text:
+扩展 [CodeBlock](/editor/extensions/nodes/code-block)，允许其文本使用 `inlineThread`：
 
 ```js
 import CodeBlock from '@tiptap/extension-code-block'
@@ -36,11 +36,11 @@ const CodeBlockWithComments = CodeBlock.extend({
 })
 ```
 
-This allows comment anchors while keeping other marks out of code blocks. If you use [CodeBlockLowlight](/editor/extensions/nodes/code-block-lowlight), apply the same `marks: 'inlineThread'` override to that extension instead.
+这样可以保留评论锚点，同时继续禁止代码块使用其他标记。如果你使用 [CodeBlockLowlight](/editor/extensions/nodes/code-block-lowlight)，请改为对该扩展应用相同的 `marks: 'inlineThread'` 覆盖设置。
 
-## Register the extended extensions
+## 注册扩展后的扩展
 
-If you use [StarterKit](/editor/extensions/functionality/starterkit), disable its built-in `Code` and `CodeBlock` extensions before registering your replacements:
+如果你使用 [StarterKit](/editor/extensions/functionality/starterkit)，请先禁用其内置的 `Code` 和 `CodeBlock` 扩展，再注册替代扩展：
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -62,6 +62,6 @@ const editor = new Editor({
 })
 ```
 
-Use your existing `TiptapCollabProvider` instance as `collabProvider`. Keep the collaboration setup from the [installation guide](/comments/getting-started/install).
+将现有的 `TiptapCollabProvider` 实例用作 `collabProvider`。保留[安装指南](/comments/getting-started/install)中的协作设置。
 
-Apply the same schema overrides on every collaborating client. Then use the usual [`setThread` command](/comments/integrate/editor-commands#setthread-content-data-commentdata) to comment on selected code. The overrides preserve comment anchors when you format commented text as code, but they do not restore threads already deleted under the default schema.
+在每个协作客户端上应用相同的 schema 覆盖设置。然后，使用常规的 [`setThread` 命令](/comments/integrate/editor-commands#setthread-content-data-commentdata)为选中的代码添加评论。这些覆盖设置可在你将带评论的文本设置为代码格式时保留评论锚点，但无法恢复默认 schema 下已删除的线程。
