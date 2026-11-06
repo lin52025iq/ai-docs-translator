@@ -1,22 +1,22 @@
 ---
-title: TextAlign extension
+title: TextAlign 扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-text-align?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-text-align
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-text-align.svg
     url: https://npmcharts.com/compare/@tiptap/extension-text-align?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  title: TextAlign extension | Tiptap Editor Docs
-  description: Left, right, center, whatever! Align the text however you like with the Text Align extension. More in the docs!
-  category: Editor
+  title: TextAlign 扩展 | Tiptap 编辑器文档
+  description: 左对齐、右对齐、居中对齐，随你选择！使用 Text Align 扩展，按你喜欢的方式对齐文本。更多内容请查看文档！
+  category: 编辑器
 extension:
-  name: Text Align
+  name: 文本对齐
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-text-align
-  description: Left, right, center, whatever! Align the text however you like.
+  description: 左对齐、右对齐、居中对齐，随你选择！按你喜欢的方式对齐文本。
   type: extension
   icon: AlignCenter
 ---
@@ -25,28 +25,27 @@ import { Callout } from '@/components/ui/Callout'
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-This extension adds a text align attribute to a specified list of nodes. The attribute is used to align the text.
+此扩展会为指定节点列表添加文本对齐属性，用于对齐文本。
 
-<Callout title="Firefox bug" variant="default">
-  `text-align: justify` doesn’t work together with `white-space: pre-wrap` in Firefox, [that’s a
-  known issue](https://bugzilla.mozilla.org/show_bug.cgi?id=1253840).
+<Callout title="Firefox 问题" variant="default">
+  在 Firefox 中，`text-align: justify` 无法与 `white-space: pre-wrap` 一起使用，这是一个[已知问题](https://bugzilla.mozilla.org/show_bug.cgi?id=1253840)。
 </Callout>
 
 <CodeDemo path="/Extensions/TextAlign" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-text-align
 ```
 
-## Settings
+## 设置
 
 ### types
 
-A list of nodes where the text align attribute should be applied to. Usually something like `['heading', 'paragraph']`.
+要应用文本对齐属性的节点列表。通常类似于 `['heading', 'paragraph']`。
 
-Default: `[]`
+默认值：`[]`
 
 ```js
 TextAlign.configure({
@@ -56,9 +55,9 @@ TextAlign.configure({
 
 ### alignments
 
-A list of available options for the text align attribute.
+文本对齐属性可用选项的列表。
 
-Default: `['left', 'center', 'right', 'justify']`
+默认值：`['left', 'center', 'right', 'justify']`
 
 ```js
 TextAlign.configure({
@@ -68,9 +67,9 @@ TextAlign.configure({
 
 ### defaultAlignment
 
-The default text align.
+默认文本对齐方式。
 
-Default: `null`
+默认值：`null`
 
 ```js
 TextAlign.configure({
@@ -78,11 +77,11 @@ TextAlign.configure({
 })
 ```
 
-## Commands
+## 命令
 
 ### setTextAlign()
 
-Set the text align to the specified value.
+将文本对齐方式设为指定值。
 
 ```js
 editor.commands.setTextAlign('right')
@@ -90,7 +89,7 @@ editor.commands.setTextAlign('right')
 
 ### unsetTextAlign()
 
-Remove the text align value.
+移除文本对齐值。
 
 ```js
 editor.commands.unsetTextAlign()
@@ -98,21 +97,21 @@ editor.commands.unsetTextAlign()
 
 ### toggleTextAlign()
 
-Toggles the text align value. If the current value is the same as the specified value, it will be removed.
+切换文本对齐方式。如果当前值与指定值相同，则会将其移除。
 
 ```js
 editor.commands.toggleTextAlign('right')
 ```
 
-## Keyboard shortcuts
+## 键盘快捷键
 
-| Command               | Windows/Linux                                     | macOS                                            |
+| 命令                  | Windows/Linux                                     | macOS                                            |
 | --------------------- | ------------------------------------------------- | ------------------------------------------------ |
 | setTextAlign(left)    | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>L</kbd> | <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>L</kbd> |
 | setTextAlign(center)  | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>E</kbd> | <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>E</kbd> |
 | setTextAlign(right)   | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd> | <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd> |
 | setTextAlign(justify) | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>J</kbd> | <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>J</kbd> |
 
-## Source code
+## 源代码
 
 [packages/extension-text-align/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-text-align/)
