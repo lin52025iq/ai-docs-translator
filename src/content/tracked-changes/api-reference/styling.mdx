@@ -1,16 +1,16 @@
 ---
-title: Styling
+title: 样式
 tags:
   - type: addon
 meta:
-  title: Styling | Tiptap Tracked Changes Docs
-  description: Style suggestion marks with CSS data attributes in the Tiptap Tracked Changes extension.
-  category: Tracked Changes
+  title: 样式 | Tiptap 跟踪更改文档
+  description: 在 Tiptap 跟踪更改扩展中，使用 CSS 数据属性设置建议标记的样式。
+  category: 跟踪更改
 ---
 
-Suggestion marks and node-level suggestions render data attributes that can be targeted with CSS.
+建议标记和节点级建议会渲染可通过 CSS 定位的数据属性。
 
-## CSS selectors
+## CSS 选择器
 
 ```css
 /* All suggestions */
@@ -64,25 +64,25 @@ Suggestion marks and node-level suggestions render data attributes that can be t
 }
 ```
 
-## Available data attributes
+## 可用的数据属性
 
-| Attribute                           | Description                                                                                                                                                   |
+| 属性                                 | 说明                                                                                                                                                   |
 | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `data-suggestion`                   | Always present on suggestion mark elements and node-level suggestion elements                                                                                 |
-| `data-suggestion-id`                | The unique suggestion ID                                                                                                                                      |
-| `data-suggestion-type`              | The internal type: `'add'`, `'delete'`, `'replaceDeletion'`, `'replaceInsertion'`, `'markChange'`, `'attributeChange'`, `'sink'`, `'lift'`, or `'blockSplit'` |
-| `data-suggestion-user`              | The ID of the user who created the suggestion                                                                                                                 |
-| `data-suggestion-created`           | ISO timestamp when the suggestion was created                                                                                                                 |
-| `data-suggestion-user-metadata`     | JSON-serialized user metadata object (only present when `userMetadata` is set)                                                                                |
-| `data-suggestion-attribute-changes` | JSON-serialized attribute changes (only present for `attributeChange` suggestions)                                                                            |
+| `data-suggestion`                   | 始终出现在建议标记元素和节点级建议元素上                                                                                 |
+| `data-suggestion-id`                | 唯一的建议 ID                                                                                                                                      |
+| `data-suggestion-type`              | 内部类型：`'add'`、`'delete'`、`'replaceDeletion'`、`'replaceInsertion'`、`'markChange'`、`'attributeChange'`、`'sink'`、`'lift'` 或 `'blockSplit'` |
+| `data-suggestion-user`              | 创建该建议的用户 ID                                                                                                                 |
+| `data-suggestion-created`           | 创建建议时的 ISO 时间戳                                                                                                                 |
+| `data-suggestion-user-metadata`     | JSON 序列化的用户元数据对象（仅在设置了 `userMetadata` 时存在）                                                                                |
+| `data-suggestion-attribute-changes` | JSON 序列化的属性更改（仅对 `attributeChange` 建议存在）                                                                            |
 
-`data-suggestion-type` holds the internal [SuggestionNodeType](/tracked-changes/api-reference/types#suggestionnodetype), not the public one. A [block split](/tracked-changes/usage/advanced-usage#block-splits) is `blockSplit` here, even though the query API reports it as `split`.
+`data-suggestion-type` 保存的是内部的 [SuggestionNodeType](/tracked-changes/api-reference/types#suggestionnodetype)，而非公开类型。这里的[块拆分](/tracked-changes/usage/advanced-usage#block-splits)值为 `blockSplit`，尽管查询 API 将其报告为 `split`。
 
-Node type proposals also expose `data-suggestion-node-type-change`, which contains JSON-serialized original and proposed types and original attributes. When a deletion or split shares the block, it also includes the formatting proposal's identity. Target `[data-suggestion-node-type-change]` to style these proposals independently of the block's primary suggestion type.
+节点类型提案还会提供 `data-suggestion-node-type-change`，其中包含 JSON 序列化的原始类型、提议类型和原始属性。当删除或拆分与该提案位于同一块时，此属性还会包含格式提案的标识信息。可通过 `[data-suggestion-node-type-change]` 定位这些提案，使其样式独立于块的主要建议类型。
 
-## Block split marker
+## 块拆分标记
 
-A suggested block split also renders a marker at the end of the block **before** the split, showing where the break was added. The default marker is a `<span>` with the class `tiptap-tracked-change-split-marker`:
+建议的块拆分还会在拆分**之前**的块末尾渲染一个标记，用于显示换行符的添加位置。默认标记是一个类名为 `tiptap-tracked-change-split-marker` 的 `<span>`：
 
 ```css
 .tiptap-tracked-change-split-marker {
@@ -93,7 +93,7 @@ A suggested block split also renders a marker at the end of the block **before**
 }
 ```
 
-Every marker also carries `data-tracked-change-split="true"`, so you can target custom markers too:
+每个标记还带有 `data-tracked-change-split="true"`，因此也可以定位自定义标记：
 
 ```css
 [data-tracked-change-split] {
@@ -101,12 +101,13 @@ Every marker also carries `data-tracked-change-split="true"`, so you can target 
 }
 ```
 
-The marker is a widget, not document content. The extension always sets `contenteditable="false"` and disables selection and pointer events on it, so it cannot be typed into, selected, or clicked. Use [`blockSplitMarker`](/tracked-changes/getting-started/install#blocksplitmarker) to change the character or element, or set it to `null` to render nothing.
+该标记是一个 widget，而非文档内容。扩展始终会将其设为 `contenteditable="false"`，并禁用其选择和指针事件，因此无法在其中输入、选中或点击。使用 [`blockSplitMarker`](/tracked-changes/getting-started/install#blocksplitmarker) 更改字符或元素，也可以将其设为 `null`，不渲染任何内容。
 
-## Known limitations
+## 已知限制
 
-This extension is in active development and will change significantly over the coming months. The following limitations are known and will be addressed in future releases:
+此扩展仍在积极开发中，未来几个月会有较大变化。目前已知以下限制，后续版本将予以解决：
 
-- Nesting is supported for inline suggestions only. Nested suggestions spanning whole blocks are out of scope
-- Tracking [node type changes](/tracked-changes/usage/advanced-usage#node-type-changes) as `attributeChange` suggestions requires the opt-in `nodeTypeChangeTypes` setting, which is available for local editors. When using Tiptap Collaboration (Y.js document), leave this setting at `[]` to track type conversions as replacements.
-- There is no explicit suggestion mode that renders a separate "clean" document alongside the tracked version
+- 仅支持内联建议的嵌套。不支持跨越整个块的嵌套建议。
+- 将[节点类型更改](/tracked-changes/usage/advanced-usage#node-type-changes)作为 `attributeChange` 建议进行跟踪，需要启用 `nodeTypeChangeTypes` 设置；此设置仅适用于本地编辑器。使用 Tiptap Collaboration（Y.js 文档）时，请将此设置保留为 `[]`，以便将类型转换作为替换进行跟踪。
+- 没有显式的建议模式可在跟踪版本旁边渲染单独的“干净”文档。
+
