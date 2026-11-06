@@ -1,6 +1,6 @@
 ---
-title: 'A Renderer that draws on a canvas'
-intro: 'Some libraries, such as Chart.js, draw pixels on a canvas and have no SVG to give. Their Renderer has <code>toImage</code> instead of <code>toSVG</code>, and <code>toImage</code> returns a PNG at <code>input.size</code>. Every exported file is made from that PNG, see <a href="/docs/diagrams/renderers/custom#members">Members</a>.'
+title: '在画布上绘制的渲染器'
+intro: '有些库（例如 Chart.js）会在画布上绘制像素，无法提供 SVG。它们的 Renderer 使用 <code>toImage</code> 而非 <code>toSVG</code>，并由 <code>toImage</code> 按照 <code>input.size</code> 返回 PNG。每个导出的文件都由该 PNG 生成，详见 <a href="/docs/diagrams/renderers/custom#members">成员</a>。'
 headerDemo:
   path: '/Extensions/DiagramsChartJs'
   isPro: true
@@ -8,12 +8,12 @@ tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'A Renderer that draws on a canvas | Tiptap Diagrams Docs'
-  description: 'Some libraries, such as Chart.js, draw pixels on a canvas and have no SVG to give.'
+  title: '在画布上绘制的渲染器 | Tiptap Diagrams 文档'
+  description: '有些库（例如 Chart.js）会在画布上绘制像素，无法提供 SVG。'
   category: Diagrams
 ---
 
-## The Renderer
+## 渲染器
 
 ```ts
 import type { RasterChartRenderer } from '@tiptap-pro/extension-diagrams'
@@ -54,11 +54,8 @@ export const chartJsRenderer: RasterChartRenderer = {
 }
 ```
 
-`toChartJsConfig` turns the Chart Data and the Chart Spec into a Chart.js configuration, in the
-colors of `input.theme`. The demo has a complete one.
+`toChartJsConfig` 会将图表数据和图表规范转换为 Chart.js 配置，并使用 `input.theme` 中的颜色。演示中提供了完整示例。
 
-- **An SVG file** holds the PNG, not shapes, and `export` returns `raster: true`.
-- **Draw without animation** in `toImage`. Also pass `responsive: false` with a fixed
-  `devicePixelRatio`, so the PNG has exactly the size that was asked for.
-- **A server** has no canvas. So `toImage` runs only in a browser, or with a canvas library of
-  your own.
+- **SVG 文件**中保存的是 PNG，而非图形；`export` 返回 `raster: true`。
+- 在 `toImage` 中**禁用动画绘制**。同时设置 `responsive: false` 和固定的 `devicePixelRatio`，这样 PNG 的尺寸就会与请求的尺寸完全一致。
+- **服务器**没有画布。因此，`toImage` 只能在浏览器中运行，或使用你自己的画布库运行。
