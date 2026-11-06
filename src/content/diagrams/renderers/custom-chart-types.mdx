@@ -1,16 +1,16 @@
 ---
-title: 'Register your own chart type'
-intro: 'A chart type is the id a chart stores in <code>spec.type</code>, such as <code>bar</code>. To add a type of your own, register it with the <code>chartTypes</code> option. Then list it in the <code>types</code> of the Renderer that draws it.'
+title: '注册自己的图表类型'
+intro: '图表类型是图表存储在 <code>spec.type</code> 中的 id，例如 <code>bar</code>。要添加自己的类型，请通过 <code>chartTypes</code> 选项注册。然后将其列入负责绘制它的 Renderer 的 <code>types</code> 中。'
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Register your own chart type | Tiptap Diagrams Docs'
-  description: 'A chart type is the id a chart stores in spec.type, such as bar.'
+  title: '注册自己的图表类型 | Tiptap Diagrams 文档'
+  description: '图表类型是图表存储在 spec.type 中的 id，例如 bar。'
   category: Diagrams
 ---
 
-## Quick start
+## 快速入门
 
 ```ts
 import { Diagrams, chartLinks, type ChartRenderer } from '@tiptap-pro/extension-diagrams'
@@ -42,46 +42,45 @@ Diagrams.configure({
 })
 ```
 
-[Members](/diagrams/renderers/custom#members) has the rest of a Renderer.
+[成员](/diagrams/renderers/custom#members)介绍了 Renderer 的其他内容。
 
-## Fields of a chart type
+## 图表类型的字段
 
-| Field         | Type                                                                        | Description                                                                                                                |
-| ------------- | --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `id`          | `string`                                                                    | What the chart stores in `spec.type`: letters, digits, `_` and `-`, at most 64 characters                                  |
-| `label`       | `string`                                                                    | For a menu                                                                                                                 |
-| `shape`       | `'cartesian' \| 'radial' \| 'single' \| 'hierarchy' \| 'matrix' \| 'graph'` | The data layout: how the type reads its columns and rows. The Quick Input shows example rows in that layout                |
-| `word`        | `'chart' \| 'table' \| 'image'`                                             | How a Word document holds a chart of this type: as a Word chart, as a Word table, or as an image. Use `'image'`, see below |
-| `description` | `string`                                                                    | Optional. One sentence for an AI model that chooses a type                                                                 |
+| 字段          | 类型                                                                        | 说明                                                                                                                      |
+| ------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `id`          | `string`                                                                    | 图表存储在 `spec.type` 中的内容：字母、数字、`_` 和 `-`，最多 64 个字符                                                    |
+| `label`       | `string`                                                                    | 用于菜单                                                                                                                  |
+| `shape`       | `'cartesian' \| 'radial' \| 'single' \| 'hierarchy' \| 'matrix' \| 'graph'` | 数据布局：该类型读取列和行的方式。快速输入会显示这种布局的示例行                                                          |
+| `word`        | `'chart' \| 'table' \| 'image'`                                             | Word 文档保存此类型图表的方式：作为 Word 图表、Word 表格或图像。请使用 `'image'`（见下文）                                |
+| `description` | `string`                                                                    | 可选。供用于选择类型的 AI 模型参考的一句话说明                                                                            |
 
-The data layouts of `shape`:
+`shape` 的数据布局：
 
-| `shape`     | Columns and rows                                       | Built-in types, for example |
-| ----------- | ------------------------------------------------------ | --------------------------- |
-| `cartesian` | A label column and one or more series                  | line, bar, radar, combo     |
-| `radial`    | A label column and one series, the parts of a whole    | pie, funnel                 |
-| `single`    | One value                                              | gauge                       |
-| `hierarchy` | Labels as paths, such as `A / B`, and a value per leaf | treemap, tree               |
-| `matrix`    | Words in a grid                                        | matrix (RACI)               |
-| `graph`     | A source column, a target column and a value per link  | sankey, network             |
+| `shape`     | 列和行                                   | 内置类型示例       |
+| ----------- | ---------------------------------------- | ------------------ |
+| `cartesian` | 一列标签和一个或多个系列                 | line、bar、radar、combo |
+| `radial`    | 一列标签和一个系列，表示整体的各个部分   | pie、funnel        |
+| `single`    | 一个值                                   | gauge              |
+| `hierarchy` | 标签以路径形式表示（如 `A / B`），每个叶节点对应一个值 | treemap、tree      |
+| `matrix`    | 网格中的词语                             | matrix (RACI)      |
+| `graph`     | 一列源、一列目标，每条连接对应一个值     | sankey、network    |
 
-### Word charts and tables
+### Word 图表和表格
 
-The extension writes a Word chart or a Word table only for built-in types. A type of your own
-becomes an image in Word, even with `word: 'chart'` or `word: 'table'`. So give it
-`word: 'image'`. See [Export](/diagrams/export) for what Word gets.
+该扩展仅为内置类型生成 Word 图表或 Word 表格。自定义类型在 Word 中会成为图像，即使设置了
+`word: 'chart'` 或 `word: 'table'` 也是如此。因此请将其设为
+`word: 'image'`。关于 Word 中的导出结果，请参阅[导出](/diagrams/export)。
 
-## Where a registered type appears
+## 注册的类型会出现在哪里
 
-- **The Quick Input.** You can type it after `:::`.
-- **`setDiagramInputType`** can choose it.
-- **AI models.** The tools and `describeCapabilities()` offer it to an AI model.
-- **A built-in type id.** An entry with the id of a built-in type replaces that type's definition,
-  such as its label and description.
+- **快速输入。** 可以在 `:::` 后输入该类型。
+- **`setDiagramInputType`** 可以选择该类型。
+- **AI 模型。** 工具和 `describeCapabilities()` 会向 AI 模型提供该类型。
+- **内置类型 id。** 使用内置类型 id 的条目会替换该类型的定义，例如其标签和说明。
 
-## Reading rows like the built-in types
+## 像内置类型一样读取行
 
-| Function               | Reads rows the way                | Returns                                                                                   |
-| ---------------------- | --------------------------------- | ----------------------------------------------------------------------------------------- |
-| `chartHierarchy(data)` | the built-in `hierarchy` types do | A tree of `{ name, path, value, total, children }`, from paths such as `Europe / Germany` |
-| `chartLinks(data)`     | the built-in `graph` types do     | `{ nodes, links }`, one link per row                                                      |
+| 函数                   | 读取行的方式             | 返回值                                                                                   |
+| ---------------------- | ------------------------ | ---------------------------------------------------------------------------------------- |
+| `chartHierarchy(data)` | 与内置 `hierarchy` 类型相同 | 一个 `{ name, path, value, total, children }` 树，路径示例：`Europe / Germany`            |
+| `chartLinks(data)`     | 与内置 `graph` 类型相同     | `{ nodes, links }`，每行对应一条连接                                                     |
