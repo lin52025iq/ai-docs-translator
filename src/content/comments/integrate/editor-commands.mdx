@@ -1,35 +1,35 @@
 ---
-title: Comments editor commands
+title: 评论编辑器命令
 meta:
-  title: Editor commands | Tiptap Comments Docs
-  description: Use editor commands to integrate comments and threads into your Tiptap Editor. Learn more in the docs!
-  category: Comments
+  title: 编辑器命令 | Tiptap Comments 文档
+  description: 使用编辑器命令将评论和讨论串集成到 Tiptap 编辑器中。了解更多信息，请参阅文档！
+  category: 评论
 ---
 
-The Comments Editor API focuses on the client-side interactions for managing comments within the editor, enabling direct manipulation and customization of comment threads.
+Comments Editor API 专注于在编辑器中管理评论的客户端交互，支持直接操作和自定义评论讨论串。
 
-For server-side operations, use the [Comments REST API](/comments/integrate/rest-api) to manage thread and comments outside the editor.
+对于服务器端操作，请使用 [Comments REST API](/comments/integrate/rest-api)，在编辑器外管理讨论串和评论。
 
-## All editor commands for comments
+## 所有评论编辑器命令
 
-| Command           | Description                                                            |
-| ----------------- | ---------------------------------------------------------------------- |
-| `setThread`       | Creates a new thread with optional user and content data               |
-| `removeThread`    | Deletes a specified thread, with an option to remove it from the Yjs document |
-| `updateThread`    | Updates specific thread properties like 'seen' status                  |
-| `selectThread`    | Focuses the editor on a specified thread                               |
-| `unselectThread`  | Removes focus from the selected thread                                   |
-| `resolveThread`   | Marks a thread as resolved                                             |
-| `unresolveThread` | Reverts a thread from resolved status                                  |
-| `createComment`   | Adds a new comment to a thread with details like content and user data |
-| `updateComment`   | Modifies an existing comment's content and metadata                    |
-| `removeComment`   | Deletes a specified comment from a thread                              |
+| 命令              | 说明                                                             |
+| ----------------- | ---------------------------------------------------------------- |
+| `setThread`       | 创建一个新的讨论串，可选提供用户和内容数据                       |
+| `removeThread`    | 删除指定的讨论串，也可选择将其从 Yjs 文档中移除                   |
+| `updateThread`    | 更新讨论串的特定属性，例如“已读”状态                             |
+| `selectThread`    | 将编辑器焦点移至指定的讨论串                                     |
+| `unselectThread`  | 取消当前选中讨论串的焦点                                         |
+| `resolveThread`   | 将讨论串标记为已解决                                             |
+| `unresolveThread` | 将讨论串从已解决状态恢复为未解决状态                             |
+| `createComment`   | 在讨论串中添加评论，可提供内容和用户数据等详细信息               |
+| `updateComment`   | 修改现有评论的内容和元数据                                       |
+| `removeComment`   | 从讨论串中删除指定评论                                           |
 
-## Interact with threads
+## 与讨论串交互
 
 ### setThread( content, data, commentData )
 
-Creates a new thread at your current selection.
+在当前选区创建一个新的讨论串。
 
 ```js
 editor.commands.setThread({
@@ -41,7 +41,7 @@ editor.commands.setThread({
 
 ### removeThread( id, deleteThread )
 
-Deletes a thread with the given ID. If no ID is provided, the thread at the current selection will be deleted. If `deleteThread` is set to `true`, the thread will also be deleted from the Yjs document.
+删除具有指定 ID 的讨论串。如果未提供 ID，则删除当前选区中的讨论串。如果将 `deleteThread` 设为 `true`，还会从 Yjs 文档中删除该讨论串。
 
 ```js
 editor.commands.removeThread({
@@ -52,7 +52,7 @@ editor.commands.removeThread({
 
 ### updateThread( id, data )
 
-Updates the properties of a thread with the specified ID.
+更新具有指定 ID 的讨论串属性。
 
 ```js
 editor.commands.updateThread({
@@ -63,7 +63,7 @@ editor.commands.updateThread({
 
 ### selectThread( options )
 
-Selects a thread with the specified ID.
+选中具有指定 ID 的讨论串。
 
 ```js
 editor.commands.selectThread({
@@ -71,18 +71,18 @@ editor.commands.selectThread({
 })
 ```
 
-#### Options
+#### 选项
 
-- `id` (string): The ID of the thread to select.
-- `selectAround` (boolean, default: false): If true, selects the content around the thread.
-- `focus` (boolean, default: true): If true, focuses the editor after selecting the thread.
-- `scrollIntoView` (boolean, default: true): If true, scrolls the editor to bring the selected thread into view.
-- `updateSelection` (boolean, default: true): If true, updates the editor's selection to the selected thread.
-- `triggerClick` (boolean, default: false): If true, simulates a click
+- `id`（string）：要选中的讨论串 ID。
+- `selectAround`（boolean，默认值：false）：如果为 true，则选中讨论串周围的内容。
+- `focus`（boolean，默认值：true）：如果为 true，则在选中讨论串后聚焦编辑器。
+- `scrollIntoView`（boolean，默认值：true）：如果为 true，则滚动编辑器，使选中的讨论串进入视野。
+- `updateSelection`（boolean，默认值：true）：如果为 true，则将编辑器选区更新为选中的讨论串。
+- `triggerClick`（boolean，默认值：false）：如果为 true，则模拟点击。
 
 ### unselectThread()
 
-Deselects the currently selected thread.
+取消选中当前已选中的讨论串。
 
 ```js
 editor.commands.unselectThread()
@@ -90,7 +90,7 @@ editor.commands.unselectThread()
 
 ### resolveThread( id )
 
-Marks the thread with the specified ID as resolved.
+将具有指定 ID 的讨论串标记为已解决。
 
 ```js
 editor.commands.resolveThread({
@@ -100,7 +100,7 @@ editor.commands.resolveThread({
 
 ### unresolveThread( id )
 
-Reverts the thread with the specified ID to unresolved status.
+将具有指定 ID 的讨论串恢复为未解决状态。
 
 ```js
 editor.commands.unresolveThread({
@@ -108,11 +108,11 @@ editor.commands.unresolveThread({
 })
 ```
 
-## Handle comments
+## 管理评论
 
 ### createComment( threadId, content, data )
 
-Creates a new comment on the thread with the specified thread ID.
+在具有指定讨论串 ID 的讨论串中创建一条新评论。
 
 ```js
 editor.commands.createComment({
@@ -124,7 +124,7 @@ editor.commands.createComment({
 
 ### updateComment( threadId, id, content, data )
 
-Updates a comment with the specified ID on the thread identified by a given thread ID.
+更新指定讨论串中具有指定 ID 的评论。
 
 ```js
 editor.commands.updateComment({
@@ -137,7 +137,7 @@ editor.commands.updateComment({
 
 ### removeComment( threadId, id )
 
-Deletes a comment with the specified ID from the thread identified by a given thread ID.
+从具有指定讨论串 ID 的讨论串中删除指定 ID 的评论。
 
 ```js
 editor.commands.removeComment({
