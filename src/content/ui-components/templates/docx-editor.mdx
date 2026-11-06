@@ -1,9 +1,9 @@
 ---
-title: DOCX Editor
+title: DOCX 编辑器
 meta:
-  title: DOCX Editor | Tiptap UI Components
-  description: A paginated, Word-style document editor built on Tiptap Pages with real-time collaboration, editable headers and footers, footnotes, page breaks, a live Word preview, and DOCX/PDF export.
-  category: UI Components
+  title: DOCX 编辑器 | Tiptap UI 组件
+  description: 基于 Tiptap Pages 构建的分页式 Word 风格文档编辑器，支持实时协作、可编辑页眉和页脚、脚注、分页符、实时 Word 预览以及 DOCX/PDF 导出。
+  category: UI 组件
 tags:
   - type: team
 ---
@@ -14,9 +14,9 @@ import { Button } from '@/components/ui/Button'
 import { Link } from '@/components/Link'
 import { Callout } from '@/components/ui/Callout'
 
-The **DOCX Editor Template** is a paginated, Word-style document editor. Unlike the continuous-canvas editors, it renders content on discrete pages with real margins, editable headers and footers, footnotes, manual page breaks, and a configurable page format—then exports a faithful `.docx` file and renders a live Word preview next to the editor.
+**DOCX 编辑器模板**是一款分页式 Word 风格文档编辑器。与连续画布编辑器不同，它会将内容呈现在独立页面上，并支持真实页边距、可编辑页眉和页脚、脚注、手动分页符以及可配置的页面格式；随后可导出忠实还原内容的 `.docx` 文件，并在编辑器旁显示实时 Word 预览。
 
-It is built on the [Tiptap Pages](/pages/getting-started/overview) extension and the [Conversion](/conversion/getting-started/overview) DOCX/PDF exporters, with real-time collaboration provided by [Tiptap Collaboration](/collaboration/getting-started/overview).
+该模板基于 [Tiptap Pages](/pages/getting-started/overview) 扩展和 [Conversion](/conversion/getting-started/overview) DOCX/PDF 导出器构建，并通过 [Tiptap Collaboration](/collaboration/getting-started/overview) 提供实时协作功能。
 
 <div className="flex items-center gap-4 mt-8">
   <Button variant="primary" size="medium">
@@ -24,7 +24,7 @@ It is built on the [Tiptap Pages](/pages/getting-started/overview) extension and
       href="https://template.tiptap.dev/docx"
       className="flex items-center justify-center gap-2"
     >
-      View in Full Screen
+      全屏查看
       <ArrowRightIcon className="size-3.5" />
     </Link>
   </Button>
@@ -32,82 +32,76 @@ It is built on the [Tiptap Pages](/pages/getting-started/overview) extension and
 
 <CodeDemo isScrollable isLarge src="https://template.tiptap.dev/docx" />
 
-<Callout title="Team plan required" variant="warning">
-  The DOCX Editor template requires at least a **Team plan** subscription to use in production. You
-  can integrate and test it during your trial period. Usage of this template is subject to our
-  [Terms of Service](https://tiptap.dev/terms-of-service) and [Pro
-  License](https://tiptap.dev/pro-license).
+<Callout title="需要 Team 套餐" variant="warning">
+  DOCX 编辑器模板在生产环境中使用至少需要订阅 **Team 套餐**。试用期间可以集成并测试此模板。使用本模板须遵守我们的[服务条款](https://tiptap.dev/terms-of-service)和[专业版许可](https://tiptap.dev/pro-license)。
 </Callout>
 
-## Overview
+## 概述
 
-The template combines several Tiptap Pro extensions into a single document-editing experience:
+该模板将多个 Tiptap Pro 扩展整合为一套文档编辑体验：
 
-- **[Pages](/pages/getting-started/overview)** — pagination, page format (size, orientation, margins), headers and footers, footnotes, and zoom.
-- **[Convert / Export DOCX](/conversion/export/docx/editor-extension)** — turns the editor document into a real Word `.docx` file in the browser.
-- **[Export PDF](/conversion/export/pdf/editor-extension)** — generates the side-by-side Word preview through the Tiptap Conversion API.
-- **[Collaboration](/collaboration/getting-started/overview)** — real-time multi-user editing of the body, headers, footers, and footnotes.
+- **[Pages](/pages/getting-started/overview)** — 分页、页面格式（大小、方向、页边距）、页眉和页脚、脚注及缩放。
+- **[Convert / Export DOCX](/conversion/export/docx/editor-extension)** — 在浏览器中将编辑器文档转换为真正的 Word `.docx` 文件。
+- **[Export PDF](/conversion/export/pdf/editor-extension)** — 通过 Tiptap Conversion API 生成并排显示的 Word 预览。
+- **[Collaboration](/collaboration/getting-started/overview)** — 对正文、页眉、页脚和脚注进行实时多人协作编辑。
 
-On top of these, the template adds a Word-like toolbar, a document-settings sidebar, an editable header/footer overlay, and a set of small workarounds that make the Pages interactions feel native.
+此外，模板还提供 Word 风格工具栏、文档设置侧边栏、可编辑的页眉/页脚浮层，以及一些小型兼容性处理，让 Pages 的交互体验更加自然。
 
-## Installation
+## 安装
 
-You'll need a Tiptap account with an active subscription or trial. Create one at [cloud.tiptap.dev/register](https://cloud.tiptap.dev/register).
+你需要拥有有效订阅或试用资格的 Tiptap 账户。请前往 [cloud.tiptap.dev/register](https://cloud.tiptap.dev/register) 创建账户。
 
-### For existing projects
+### 用于现有项目
 
 ```bash
 npx @tiptap/cli@latest add docx
 ```
 
-### For new projects
+### 用于新项目
 
 ```bash
 npx @tiptap/cli@latest init docx
 ```
 
-This template requires styling and configuration setup.
+此模板需要进行样式和配置设置。
 
-### Styling
+### 样式
 
-We stay unopinionated about styling frameworks, so you'll need to integrate it with your setup. Follow the [style setup guide](/ui-components/getting-started/style) to ensure the editor displays correctly.
+我们不限定样式框架，因此你需要根据自己的项目配置进行集成。请遵循[样式设置指南](/ui-components/getting-started/style)，确保编辑器正常显示。
 
-The template ships SCSS, so make sure `sass` (and `sass-embedded`) are available as dev dependencies in your project.
+模板附带 SCSS，因此请确保项目中已将 `sass`（以及 `sass-embedded`）作为开发依赖安装。
 
-### Environment variables
+### 环境变量
 
-The DOCX Editor uses two cloud services: **Collaboration** (for real-time editing) and **Conversion** (for the PDF/Word preview). Provide values for the following variables.
+DOCX 编辑器使用两项云服务：**Collaboration**（用于实时编辑）和 **Conversion**（用于 PDF/Word 预览）。请为以下变量提供相应值。
 
 **Collaboration**
 
-- `NEXT_PUBLIC_TIPTAP_COLLAB_APP_ID` — your Collaboration (document server) App ID.
-- `NEXT_PUBLIC_TIPTAP_COLLAB_TOKEN` — a JWT for accessing Collaboration services.
-- `NEXT_PUBLIC_TIPTAP_COLLAB_DOC_PREFIX` — _(optional)_ prefix prepended to every document name.
-- `NEXT_PUBLIC_USE_JWT_TOKEN_API_ENDPOINT` — _(production)_ an API endpoint that returns a freshly signed JWT, instead of shipping a static token to the client.
+- `NEXT_PUBLIC_TIPTAP_COLLAB_APP_ID` — 你的 Collaboration（文档服务器）App ID。
+- `NEXT_PUBLIC_TIPTAP_COLLAB_TOKEN` — 用于访问 Collaboration 服务的 JWT。
+- `NEXT_PUBLIC_TIPTAP_COLLAB_DOC_PREFIX` — _(可选)_ 添加到每个文档名称前的前缀。
+- `NEXT_PUBLIC_USE_JWT_TOKEN_API_ENDPOINT` — _(生产环境)_ 一个返回新签名 JWT 的 API 端点，可替代发送静态令牌到客户端的做法。
 
-**Conversion (PDF / Word preview)**
+**Conversion（PDF / Word 预览）**
 
-- `NEXT_PUBLIC_TIPTAP_CONVERSION_APP_ID` — your Conversion App ID (read on the client and passed to the PDF exporter).
-- `TIPTAP_CONVERSION_SECRET` — _(server only)_ the Conversion secret used by the `/api/convert/token` route to sign a short-lived (10 minute) JWT for the preview.
+- `NEXT_PUBLIC_TIPTAP_CONVERSION_APP_ID` — 你的 Conversion App ID（在客户端读取并传递给 PDF 导出器）。
+- `TIPTAP_CONVERSION_SECRET` — _(仅限服务器端)_ Conversion 密钥，`/api/convert/token` 路由使用该密钥为预览签发有效期较短（10 分钟）的 JWT。
 
-The `NEXT_PUBLIC_`-prefixed variables must be available on the client. Depending on your framework, use the matching prefix:
+带 `NEXT_PUBLIC_` 前缀的变量必须可在客户端访问。请根据所用框架添加相应前缀：
 
-- [Next.js](/ui-components/install/next): `NEXT_PUBLIC_`. For example, `NEXT_PUBLIC_TIPTAP_COLLAB_APP_ID`.
-- [Vite + React](/ui-components/install/vite): `VITE_`. For example, `VITE_TIPTAP_COLLAB_APP_ID`.
-- Other frameworks: follow your framework's rules and wire the values into `tiptap-collab-utils.ts`.
+- [Next.js](/ui-components/install/next)：`NEXT_PUBLIC_`。例如：`NEXT_PUBLIC_TIPTAP_COLLAB_APP_ID`。
+- [Vite + React](/ui-components/install/vite)：`VITE_`。例如：`VITE_TIPTAP_COLLAB_APP_ID`。
+- 其他框架：遵循框架的规则，并将变量值接入 `tiptap-collab-utils.ts`。
 
-<Callout title="Generate the JWT" variant="info">
-  To get started quickly, you can use the example JWTs from your Tiptap Cloud account and store them
-  in the token environment variables. Example JWTs are valid for a short time and should not be used
-  in production. In production, implement an API endpoint that generates JWTs on the server side.
-  See the full guide on [JWT authentication](/guides/authentication).
+<Callout title="生成 JWT" variant="info">
+  如需快速上手，可以使用 Tiptap Cloud 账户中的示例 JWT，并将其存入令牌环境变量。示例 JWT 的有效期较短，不应在生产环境中使用。生产环境中，请实现一个在服务器端生成 JWT 的 API 端点。请参阅 [JWT 身份验证](/guides/authentication)完整指南。
 </Callout>
 
-If Collaboration is not configured, the editor renders a setup notice prompting you to set the App ID and token (or the JWT endpoint). You can also append `?noCollab=1` to the URL to disable collaboration for local testing.
+如果未配置 Collaboration，编辑器会显示设置提示，要求你填写 App ID 和令牌（或 JWT 端点）。你也可以在 URL 后追加 `?noCollab=1`，以便在本地测试时停用协作功能。
 
-## Usage
+## 用法
 
-Render the `PageDocxEditor` component. Each document is a collaborative room, so pass a unique `room` ID per document.
+渲染 `PageDocxEditor` 组件。每份文档对应一个协作房间，因此请为每份文档传入唯一的 `room` ID。
 
 ```tsx
 import { PageDocxEditor } from '@/components/tiptap-templates/page-docx/components/page-docx-editor'
@@ -118,90 +112,90 @@ export default function App() {
 }
 ```
 
-### Routing
+### 路由
 
-The template ships with a page that mirrors how the demo runs: visiting `/docx` redirects to `/docx/<room-id>` with a freshly generated room ID, and the `[slug]` route renders the editor for that room while preloading the Google Fonts used by the font picker. Each room is a separate, persisted collaborative document.
+模板附带一个与演示版运行方式相同的页面：访问 `/docx` 会重定向到 `/docx/<room-id>`，并生成一个新的房间 ID；`[slug]` 路由则会渲染该房间的编辑器，同时预加载字体选择器使用的 Google Fonts。每个房间都是一份单独保存的协作文档。
 
 ### Props
 
-The exported `PageDocxEditor` component accepts:
+导出的 `PageDocxEditor` 组件接受以下属性：
 
 | Prop              | Type              | Description                                                                                                                                                                               |
 | ----------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `room`            | `string`          | Collaboration room ID. Each document should use a unique room. If omitted, a random room is created.                                                                                      |
-| `initialContent`  | `JSONContent`     | Tiptap JSON seeded into the document the first time the room is opened. The template ships a sample NDA. Seeding is guarded so it never duplicates.                                       |
-| `invertMenu`      | `boolean`         | Renders the toolbar at the bottom of the screen instead of the top. Can also be toggled with the `?menu=invert` query parameter. Defaults to `false`.                                     |
-| `settingsStorage` | `SettingsStorage` | Persistence backend for sidebar UI settings (page format, header/footer settings, preview toggle). Defaults to a localStorage adapter. See [Settings persistence](#settings-persistence). |
+| `room`            | `string`          | Collaboration 房间 ID。每份文档都应使用唯一房间；如果省略，则会创建随机房间。                                                                                      |
+| `initialContent`  | `JSONContent`     | 首次打开房间时写入文档的 Tiptap JSON。模板附带一个 NDA 示例。初始化过程会进行保护，避免重复写入。                                       |
+| `invertMenu`      | `boolean`         | 将工具栏显示在屏幕底部而非顶部。也可以通过 `?menu=invert` 查询参数切换。默认值为 `false`。                                     |
+| `settingsStorage` | `SettingsStorage` | 侧边栏 UI 设置（页面格式、页眉/页脚设置、预览开关）的持久化后端。默认使用 localStorage 适配器。请参阅[设置持久化](#settings-persistence)。 |
 
-## Features
+## 功能
 
-A fully paginated document editor with a Word-like toolbar, document settings, and live export.
+一款功能齐全的分页式文档编辑器，配有 Word 风格工具栏、文档设置和实时导出功能。
 
-- **Pagination**: Content flows across real pages with configurable size, orientation, and margins.
-- **Headers and footers**: Editable per-document, with different first page and different odd/even variants, adjustable distance from the page edge, and dynamic page-number fields.
-- **Footnotes**: Word-like footnotes—references in the body, content in a per-page area above the footer, edited in an automatically-numbered overlay.
-- **Manual page breaks**: Insert a break that consumes the remaining page space and pushes following content to the next page, exactly like Word.
-- **Document settings**: Page size (20+ presets plus custom), orientation, margins, units, page gap, and page background color.
-- **Zoom & fit-to-page**: 40%–200% presets with an automatic fit-to-page mode that scales the page to the available width.
-- **Font family**: A categorized, searchable font picker. Carlito (a Calibri-compatible metric match) is the default and the embedded export font.
-- **Ordered-list numbering**: Eight numbering schemes (decimal, alpha, roman, nested, and more) that stay identical on screen and in the exported document.
-- **Rich text formatting**: Headings, bold/italic/strike/code, text color, links, inline images, bullet lists, line spacing, text alignment, and font size.
-- **DOCX export**: One-click download of a real `.docx` file, generated entirely in the browser.
-- **Live Word preview**: A side-by-side PDF rendering of the document as Word would lay it out, refreshable on demand.
-- **Real-time collaboration**: Live multi-user editing of the body, headers, footers, and footnotes with presence carets.
-- **Dark and light mode**: Fully themed out of the box.
-- **Responsive design**: A mobile layout with a full-screen preview mode and an overflowing toolbar that collapses extra controls into a menu.
+- **分页**：内容会在真实页面间流动，并可配置页面大小、方向和页边距。
+- **页眉和页脚**：可按文档编辑，支持首页和奇偶页使用不同内容、调整与页面边缘的距离，以及动态页码字段。
+- **脚注**：提供类似 Word 的脚注功能——正文中显示引用，脚注内容位于每页页脚上方的专用区域，并在自动编号的浮层中编辑。
+- **手动分页符**：插入分页符后会占用当前页剩余空间，并将后续内容移到下一页，效果与 Word 完全一致。
+- **文档设置**：页面大小（20 多种预设及自定义选项）、方向、页边距、单位、页间距和页面背景色。
+- **缩放和适合页面**：提供 40%–200% 的预设缩放比例，以及根据可用宽度缩放页面的自动适合页面模式。
+- **字体系列**：可分类、可搜索的字体选择器。默认字体为 Carlito（一种与 Calibri 度量兼容的字体），导出时也会嵌入该字体。
+- **有序列表编号**：提供八种编号方案（十进制、字母、罗马数字、嵌套等），确保屏幕显示与导出文档一致。
+- **富文本格式**：标题、粗体/斜体/删除线/代码、文字颜色、链接、行内图片、项目符号列表、行距、文字对齐和字号。
+- **DOCX 导出**：一键下载真正的 `.docx` 文件，全程在浏览器中生成。
+- **实时 Word 预览**：并排显示文档的 PDF 渲染效果，呈现 Word 的排版结果，并可按需刷新。
+- **实时协作**：多人实时编辑正文、页眉、页脚和脚注，并显示协作者光标。
+- **深色和浅色模式**：开箱即用，完整支持主题样式。
+- **响应式设计**：适配移动设备，支持全屏预览模式；工具栏内容溢出时，会将额外控件折叠到菜单中。
 
-### Pagination and page format
+### 分页和页面格式
 
-The page geometry is owned by the Pages extension and configured from the document-settings sidebar. You can set:
+页面几何布局由 Pages 扩展管理，并可通过文档设置侧边栏配置。你可以设置：
 
-- **Page size** — A4, A5, A6, JIS B5, US Letter, US Legal, Executive, postcards, envelopes, and more, plus a **Custom** size with explicit width and height.
-- **Orientation** — portrait or landscape.
-- **Margins** — top, bottom, left, and right, with an optional “link margins” toggle that keeps all four in sync.
-- **Unit** — `cm`, `in`, `mm`, or `px`; all inputs reformat to the selected unit.
-- **Page gap** — the space between pages in the editor canvas.
-- **Page background color** — a transparent default plus a palette of preset colors.
+- **页面大小** — A4、A5、A6、JIS B5、US Letter、US Legal、Executive、明信片、信封等；还可以选择 **Custom**，明确指定宽度和高度。
+- **方向** — 纵向或横向。
+- **页边距** — 上、下、左、右边距；还可选择“链接页边距”，让四个边距保持一致。
+- **单位** — `cm`、`in`、`mm` 或 `px`；所有输入值都会根据所选单位重新格式化。
+- **页间距** — 编辑器画布中页面之间的距离。
+- **页面背景色** — 默认透明，并提供一组预设颜色。
 
-Settings entered in the sidebar drive the live editor; conversely, changes made through the Pages extension (including remote changes from a collaborator) flow back into the sidebar and persisted settings.
+侧边栏中设置的选项会应用到实时编辑器；反过来，通过 Pages 扩展进行的更改（包括协作者发起的远程更改）也会同步回侧边栏和持久化设置。
 
-### Headers and footers
+### 页眉和页脚
 
-Double-click any header or footer zone—or open the **Headers & footers** tab in the sidebar—to edit it in an overlay pinned over the live page. The sample document ships a header (document title + logo) and a footer (label, “Confidential”, and a `{page} of {pages}` field) laid out in tables.
+双击任意页眉或页脚区域，或在侧边栏中打开 **页眉和页脚** 标签，即可在覆盖于当前页面上的浮层中编辑。示例文档附带一个页眉（文档标题和徽标）以及一个页脚（标签、“Confidential”和 `{page} of {pages}` 字段），这些内容均使用表格排版。
 
-Supported options:
+支持的选项：
 
-- **Different first page** — a distinct header/footer on page 1.
-- **Different odd & even pages** — alternating headers/footers for book-style layouts.
-- **Distance to page edge** — header distance from the top and footer distance from the bottom, in the document's unit (clamped to Word's range, defaulting to ~1.25 cm).
-- **Page numbers** — insert a current-page or total-pages field. These render as `{page}` / `{pages}` tokens in the editor and become live Word fields on export.
+- **首页不同** — 为第 1 页设置独立的页眉/页脚。
+- **奇偶页不同** — 奇数页和偶数页交替使用不同的页眉/页脚，适合书籍版式。
+- **距页面边缘的距离** — 设置页眉距页面顶部、页脚距页面底部的距离，单位与文档一致（限制在 Word 的范围内，默认约为 1.25 cm）。
+- **页码** — 插入当前页码或总页数字段。这些字段在编辑器中显示为 `{page}` / `{pages}` 标记，导出后会成为实时 Word 字段。
 
-Because Pages keeps a separate inner editor per variant (default / first / odd / even), the sidebar includes a small pager to step between the reachable variants for the current document.
+由于 Pages 会为每种变体（默认 / 首页 / 奇数页 / 偶数页）分别维护一个内部编辑器，侧边栏提供了一个小型分页控件，用于切换当前文档中可用的变体。
 
-### Footnotes
+### 脚注
 
-Footnotes are a feature of the Pages extension. Insert one from the toolbar (or with the keyboard shortcut) and a numbered reference is placed in the body while the footnote content opens in an overlay editor; the rendered footnote sits in a dedicated area above the footer on its page. On export, the DOCX exporter extracts these into real Word footnotes automatically.
+脚注是 Pages 扩展的一项功能。从工具栏（或使用键盘快捷键）插入脚注后，正文中会出现带编号的引用，同时脚注内容会在浮层编辑器中打开；渲染后的脚注则显示在所在页面页脚上方的专用区域中。导出时，DOCX 导出器会自动将其提取为真正的 Word 脚注。
 
-### Page breaks
+### 分页符
 
-A manual page break always leaves an empty paragraph before the break and drops the caret into a paragraph after it—matching how Word treats a manual break. Backspacing from that trailing empty paragraph deletes adjacent page breaks one at a time before falling back to normal editing. Insert a break from the toolbar or with `Mod-Enter`.
+手动分页符前始终会保留一个空段落，并将光标放到分页符后的段落中——这与 Word 处理手动分页符的方式一致。从末尾空段落按退格键时，会逐个删除相邻的分页符，然后才恢复正常编辑行为。可通过工具栏或 `Mod-Enter` 插入分页符。
 
-### Zoom
+### 缩放
 
-The zoom control offers presets from 40% to 200% plus a **Fit to page** action. By default the editor is in an automatic mode that scales the page down to fit the available column width and back up to 100% as the viewport grows; choosing a preset switches to a fixed manual zoom. Zoom is published as a `--zoom` CSS variable so portalled overlays (such as the header/footer editors) scale consistently.
+缩放控件提供 40% 至 200% 的预设比例，以及 **适合页面** 操作。默认情况下，编辑器处于自动模式，会将页面缩小以适应可用列宽，并在视口变宽时放大至 100%；选择预设比例后，则会切换到固定的手动缩放。缩放值通过 `--zoom` CSS 变量发布，因此通过门户渲染的浮层（如页眉/页脚编辑器）也能保持一致的缩放比例。
 
-### Export and preview
+### 导出和预览
 
-- **DOCX export** downloads a `.docx` file built in the browser by the Export DOCX extension—no server round-trip. Page size, margins (including header/footer expansion), background color, ordered-list numbering, and page-number fields are all carried into the document, the Carlito font is embedded, and editor CSS-variable colors are normalized to fixed hex values so the file looks the same everywhere.
-- **Word preview** is an on-demand PDF rendering of the same document, shown beside the editor (and full-screen on mobile). It is generated through the Tiptap Conversion API using a short-lived token from the `/api/convert/token` route, then rendered with `react-pdf`. The preview refreshes when you open it, when the page layout changes, and via an **Update preview** button when the document has unsaved changes.
+- **DOCX 导出**：通过 Export DOCX 扩展在浏览器中生成 `.docx` 文件并下载，无需与服务器往返传输。页面大小、页边距（包括页眉/页脚扩展部分）、背景色、有序列表编号和页码字段都会写入文档；同时会嵌入 Carlito 字体，并将编辑器 CSS 变量颜色规范化为固定的十六进制值，确保文件在不同环境中的外观一致。
+- **Word 预览**：按需将同一份文档渲染为 PDF，并在编辑器旁显示（移动设备上则全屏显示）。预览通过 Tiptap Conversion API 生成，使用 `/api/convert/token` 路由提供的短时令牌，再由 `react-pdf` 渲染。打开预览或页面布局发生变化时，预览会刷新；文档有未保存更改时，也可以通过 **更新预览** 按钮手动刷新。
 
-### Real-time collaboration
+### 实时协作
 
-The body binds to a `TiptapCollabProvider` document, and each header/footer variant and the footnotes story sync through their own collaborative fields. Presence carets are shown for the body only (the inner editors intentionally forward content sync but not carets, to avoid duplicate cursors across the shared provider). The default header/footer chrome and the initial body content are seeded once per room, gated on the provider being synced so a returning room keeps whatever was edited.
+正文绑定到一个 `TiptapCollabProvider` 文档；每种页眉/页脚变体和脚注内容则通过各自的协作字段同步。只有正文会显示协作者光标（内部编辑器会有意转发内容同步，但不转发光标，以避免共享 provider 中出现重复光标）。每个房间只会初始化一次默认页眉/页脚框架和正文初始内容，并且会等待 provider 同步完成后再执行，因此用户重新进入房间时，已编辑的内容会得到保留。
 
-### Settings persistence
+### 设置持久化
 
-Sidebar UI settings (page format, header/footer settings, and the preview toggle) are persisted per room. By default they are stored in `localStorage` under room-scoped keys. The backend is pluggable via the `settingsStorage` prop and a `SettingsStorage` adapter interface:
+侧边栏 UI 设置（页面格式、页眉/页脚设置和预览开关）会按房间持久化。默认情况下，这些设置会以房间专属键名存储在 `localStorage` 中。你可以通过 `settingsStorage` 属性和 `SettingsStorage` 适配器接口替换后端：
 
 ```ts
 interface SettingsStorage {
@@ -211,40 +205,40 @@ interface SettingsStorage {
 }
 ```
 
-Pass `noopStorage` to disable persistence entirely, or implement the interface to persist settings to your own backend (for example, a database keyed by document).
+传入 `noopStorage` 可完全停用持久化；也可以实现该接口，将设置保存到自己的后端（例如按文档 ID 建立索引的数据库）。
 
-## Component breakdown
+## 组件构成
 
-The template is composed of its own components, hooks, and libraries on top of a set of shared Tiptap UI components.
+该模板基于一组共享的 Tiptap UI 组件，组合了自有组件、钩子和库。
 
-### Template components
+### 模板组件
 
-- `page-docx-editor` — the root component: collaboration setup, the editor instance, layout, and effects.
-- `page-docx-main-toolbar` — the Word-like toolbar, with overflow handling.
-- `page-docx-header-footer-overlay` — the floating “edit” affordance over hovered header/footer zones.
-- `page-docx-pdf-preview` — the `react-pdf` Word preview pane.
-- `page-docx-loading-overlay`, `floating`, `theme-toggle` — supporting UI.
-- `sidebar/*` — the document and header/footer settings panels, footer pagination, and the settings-panel primitives.
-- `zoom-dropdown-menu`, `font-family-combobox`, `numbering-format-dropdown-menu` — the specialized toolbar controls.
+- `page-docx-editor` — 根组件：负责协作设置、编辑器实例、布局和副作用。
+- `page-docx-main-toolbar` — Word 风格工具栏，支持溢出处理。
+- `page-docx-header-footer-overlay` — 悬停在页眉/页脚区域时显示的浮动“编辑”操作。
+- `page-docx-pdf-preview` — `react-pdf` Word 预览窗格。
+- `page-docx-loading-overlay`、`floating`、`theme-toggle` — 辅助 UI。
+- `sidebar/*` — 文档和页眉/页脚设置面板、页脚分页控件及设置面板基础组件。
+- `zoom-dropdown-menu`、`font-family-combobox`、`numbering-format-dropdown-menu` — 专用工具栏控件。
 
-### Hooks
+### 钩子
 
-- `use-page-editor-state` — derives page state (active editor type, page count, current page, header/footer flags) from the Pages storage.
-- `use-zoom`, `use-auto-export`, `use-page-docx-export`, `use-page-docx-insert-actions` — zoom, dirty-tracking, the DOCX/PDF export actions, and the toolbar insert actions (footnote / page break / image).
-- `use-overlay-focus`, `use-overlay-labels`, `use-mobile-typography-guard` — overlay behavior and layout helpers. Live element-rect tracking comes from the shared `use-bounding-rect` hook.
+- `use-page-editor-state` — 从 Pages 存储中获取页面状态（当前编辑器类型、页数、当前页、页眉/页脚标记）。
+- `use-zoom`、`use-auto-export`、`use-page-docx-export`、`use-page-docx-insert-actions` — 分别处理缩放、未保存状态追踪、DOCX/PDF 导出操作，以及工具栏插入操作（脚注 / 分页符 / 图片）。
+- `use-overlay-focus`、`use-overlay-labels`、`use-mobile-typography-guard` — 浮层行为和布局辅助功能。实时跟踪元素矩形的功能来自共享的 `use-bounding-rect` 钩子。
 
-### Lib
+### 库
 
-- `page-docx-utils`, `page-docx-pages` — units/conversions, page-format helpers, and settings sync.
-- `page-docx-export`, `page-docx-export-colors`, `page-docx-fonts` — export layout/styles, color normalization, and the font registry.
-- `settings-storage`, `settings-storage-context` — the pluggable persistence adapter and its React context.
+- `page-docx-utils`、`page-docx-pages` — 单位和转换、页面格式辅助功能以及设置同步。
+- `page-docx-export`、`page-docx-export-colors`、`page-docx-fonts` — 导出布局/样式、颜色规范化和字体注册表。
+- `settings-storage`、`settings-storage-context` — 可插拔的持久化适配器及其 React 上下文。
 
-### Extensions and workarounds
+### 扩展和兼容性处理
 
-- `extensions/extension-page-token-highlight` — the inline `{page}` / `{pages}` page-number node and its DOCX adapter.
-- `workaround/page-break`, `workaround/header-footer`, `workaround/footnote` — small, well-commented patches that make the Pages interactions (caret placement, overlay focus and scroll, footnote scroll-into-view) behave like a desktop word processor.
+- `extensions/extension-page-token-highlight` — 行内 `{page}` / `{pages}` 页码节点及其 DOCX 适配器。
+- `workaround/page-break`、`workaround/header-footer`、`workaround/footnote` — 小型且注释详尽的补丁，让 Pages 的交互（光标定位、浮层焦点和滚动、脚注滚动到可视区域）表现得像桌面文字处理器一样。
 
-### Tiptap Pro extensions
+### Tiptap Pro 扩展
 
 - `@tiptap-pro/extension-pages`
 - `@tiptap-pro/extension-convert-kit`
@@ -253,10 +247,10 @@ The template is composed of its own components, hooks, and libraries on top of a
 - `@tiptap-pro/extension-pagebreak`
 - `@tiptap-pro/provider`
 
-### Reused UI components
+### 复用的 UI 组件
 
-The toolbar and sidebar reuse the open-source UI components, including `mark-button`, `list-button`, `heading-button` / `heading-dropdown-menu`, `text-button`, `font-size-dropdown-menu`, `line-spacing-dropdown-menu`, `text-align-dropdown-menu`, `color-text-popover`, and `link-popover`, plus the `button`, `card`, `combobox`, `dropdown-menu`, `popover`, `sidebar`, and `toolbar` primitives.
+工具栏和侧边栏会复用开源 UI 组件，包括 `mark-button`、`list-button`、`heading-button` / `heading-dropdown-menu`、`text-button`、`font-size-dropdown-menu`、`line-spacing-dropdown-menu`、`text-align-dropdown-menu`、`color-text-popover` 和 `link-popover`，以及 `button`、`card`、`combobox`、`dropdown-menu`、`popover`、`sidebar` 和 `toolbar` 等基础组件。
 
-## License
+## 许可
 
-The DOCX Editor template uses Tiptap Pro extensions and requires an active **Team plan** (or higher) subscription. Usage is subject to the [Tiptap Pro License](https://tiptap.dev/pro-license) and [Terms of Service](https://tiptap.dev/terms-of-service). The open-source UI components it builds on remain MIT licensed.
+DOCX 编辑器模板使用 Tiptap Pro 扩展，需要有效的 **Team 套餐**（或更高级别）订阅。使用本模板须遵守 [Tiptap Pro 许可](https://tiptap.dev/pro-license)和[服务条款](https://tiptap.dev/terms-of-service)。该模板所基于的开源 UI 组件仍采用 MIT 许可。
