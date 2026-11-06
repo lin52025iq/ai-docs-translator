@@ -1,12 +1,12 @@
 ---
-title: List Dropdown Menu
+title: 列表下拉菜单
 meta:
-  title: List menu | Tiptap UI Components
-  description: Add a dropdown menu that helps selecting different list types in your Tiptap editor. More in the docs.
-  category: UI Components
+  title: 列表菜单 | Tiptap UI 组件
+  description: 在 Tiptap 编辑器中添加下拉菜单，帮助选择不同的列表类型。更多信息请参阅文档。
+  category: UI 组件
 component:
-  name: List dropdown
-  description: Select a list type from a dropdown menu.
+  name: 列表下拉菜单
+  description: 从下拉菜单中选择列表类型。
   type: component
   isFree: true
   isCloud: false
@@ -19,25 +19,25 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A fully accessible list dropdown menu for Tiptap editors. Easily toggle between different list types (bullet, ordered, task) with keyboard shortcut support and flexible customization options.
+为 Tiptap 编辑器提供完全无障碍的列表下拉菜单。轻松切换不同的列表类型（项目符号、有序列表、任务列表），支持键盘快捷键和灵活的自定义选项。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui/list-dropdown-menu" />
 
-## Installation
+## 安装
 
-Add the component via the Tiptap CLI:
+通过 Tiptap CLI 添加此组件：
 
 ```bash
 npx @tiptap/cli@latest add list-dropdown-menu
 ```
 
-## Components
+## 组件
 
 ### `<ListDropdownMenu />`
 
-A prebuilt React component that provides a dropdown menu for selecting different list types.
+预构建的 React 组件，提供用于选择不同列表类型的下拉菜单。
 
-#### Usage
+#### 用法
 
 ```tsx
 import { EditorContent, EditorContext, useEditor } from '@tiptap/react'
@@ -102,23 +102,23 @@ export default function MyEditor() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type                        | Default                                     | Description                                         |
-| --------------------- | --------------------------- | ------------------------------------------- | --------------------------------------------------- |
-| `editor`              | `Editor \| null`            | `undefined`                                 | The Tiptap editor instance                          |
-| `types`               | `ListType[]`                | `["bulletList", "orderedList", "taskList"]` | The list types to display in the dropdown           |
-| `hideWhenUnavailable` | `boolean`                   | `false`                                     | Hides the dropdown when no list types are available |
-| `onOpenChange`        | `(isOpen: boolean) => void` | `undefined`                                 | Callback fired when the dropdown opens or closes    |
-| `portal`              | `boolean`                   | `false`                                     | Whether to render the dropdown menu in a portal     |
+| 名称                  | 类型                        | 默认值                                      | 说明                                           |
+| --------------------- | --------------------------- | ------------------------------------------- | ---------------------------------------------- |
+| `editor`              | `Editor \| null`            | `undefined`                                 | Tiptap 编辑器实例                              |
+| `types`               | `ListType[]`                | `["bulletList", "orderedList", "taskList"]` | 要在下拉菜单中显示的列表类型                    |
+| `hideWhenUnavailable` | `boolean`                   | `false`                                     | 没有可用列表类型时隐藏下拉菜单                  |
+| `onOpenChange`        | `(isOpen: boolean) => void` | `undefined`                                 | 下拉菜单打开或关闭时触发的回调                  |
+| `portal`              | `boolean`                   | `false`                                     | 是否通过 portal 渲染下拉菜单                    |
 
 ## Hooks
 
 ### `useListDropdownMenu()`
 
-A custom hook for managing list dropdown state and determining which options are available.
+用于管理列表下拉菜单状态并确定可用选项的自定义 Hook。
 
-#### Usage
+#### 用法
 
 ```tsx
 import { useListDropdownMenu } from '@/components/tiptap-ui/list-dropdown-menu'
@@ -162,32 +162,32 @@ function MyListDropdown() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type             | Default                                     | Description                                    |
-| --------------------- | ---------------- | ------------------------------------------- | ---------------------------------------------- |
-| `editor`              | `Editor \| null` | `undefined`                                 | The Tiptap editor instance                     |
-| `types`               | `ListType[]`     | `["bulletList", "orderedList", "taskList"]` | Array of list types to display in the dropdown |
-| `hideWhenUnavailable` | `boolean`        | `false`                                     | Whether to hide when no lists can be toggled   |
+| 名称                  | 类型             | 默认值                                      | 说明                                      |
+| --------------------- | ---------------- | ------------------------------------------- | ----------------------------------------- |
+| `editor`              | `Editor \| null` | `undefined`                                 | Tiptap 编辑器实例                         |
+| `types`               | `ListType[]`     | `["bulletList", "orderedList", "taskList"]` | 要在下拉菜单中显示的列表类型数组           |
+| `hideWhenUnavailable` | `boolean`        | `false`                                     | 没有列表可切换时是否隐藏                  |
 
-#### Return Values
+#### 返回值
 
-| Name            | Type                    | Description                                   |
-| --------------- | ----------------------- | --------------------------------------------- |
-| `isVisible`     | `boolean`               | Whether the dropdown should be rendered       |
-| `activeType`    | `ListType \| undefined` | Currently active list type                    |
-| `isActive`      | `boolean`               | If any list type is currently active          |
-| `canToggle`     | `boolean`               | If any list type can be toggled               |
-| `types`         | `ListType[]`            | Array of list types from configuration        |
-| `filteredLists` | `ListOption[]`          | List options filtered by available types      |
-| `label`         | `string`                | Accessible label text for the dropdown        |
-| `Icon`          | `React.FC`              | Icon component for the active list or default |
+| 名称            | 类型                    | 说明                                      |
+| --------------- | ----------------------- | ----------------------------------------- |
+| `isVisible`     | `boolean`               | 下拉菜单是否应显示                        |
+| `activeType`    | `ListType \| undefined` | 当前激活的列表类型                        |
+| `isActive`      | `boolean`               | 是否有任意列表类型处于激活状态            |
+| `canToggle`     | `boolean`               | 是否可以切换任意列表类型                  |
+| `types`         | `ListType[]`            | 配置中的列表类型数组                      |
+| `filteredLists` | `ListOption[]`          | 按可用类型筛选后的列表选项                |
+| `label`         | `string`                | 下拉菜单的无障碍标签文本                  |
+| `Icon`          | `React.FC`              | 当前列表或默认列表的图标组件              |
 
-## Utilities
+## 工具函数
 
 ### `canToggleAnyList(editor, listTypes)`
 
-Checks if any of the specified list types can be toggled in the current editor state.
+检查当前编辑器状态下是否可以切换指定列表类型中的任意一种。
 
 ```tsx
 import { canToggleAnyList } from '@/components/tiptap-ui/list-dropdown-menu'
@@ -198,20 +198,20 @@ if (canToggle) {
 }
 ```
 
-#### Parameters
+#### 参数
 
-| Name        | Type             | Description                  |
-| ----------- | ---------------- | ---------------------------- |
-| `editor`    | `Editor \| null` | The Tiptap editor instance   |
-| `listTypes` | `ListType[]`     | Array of list types to check |
+| 名称        | 类型             | 说明                     |
+| ----------- | ---------------- | ------------------------ |
+| `editor`    | `Editor \| null` | Tiptap 编辑器实例        |
+| `listTypes` | `ListType[]`     | 要检查的列表类型数组     |
 
-#### Returns
+#### 返回值
 
-`boolean` - Whether at least one list type can be toggled.
+`boolean` - 是否至少有一种列表类型可以切换。
 
 ### `isAnyListActive(editor, listTypes)`
 
-Checks if any of the specified list types are currently active in the editor.
+检查编辑器中指定的列表类型是否有任意一种处于激活状态。
 
 ```tsx
 import { isAnyListActive } from '@/components/tiptap-ui/list-dropdown-menu'
@@ -222,20 +222,20 @@ if (isActive) {
 }
 ```
 
-#### Parameters
+#### 参数
 
-| Name        | Type             | Description                  |
-| ----------- | ---------------- | ---------------------------- |
-| `editor`    | `Editor \| null` | The Tiptap editor instance   |
-| `listTypes` | `ListType[]`     | Array of list types to check |
+| 名称        | 类型             | 说明                     |
+| ----------- | ---------------- | ------------------------ |
+| `editor`    | `Editor \| null` | Tiptap 编辑器实例        |
+| `listTypes` | `ListType[]`     | 要检查的列表类型数组     |
 
-#### Returns
+#### 返回值
 
-`boolean` - Whether at least one list type is currently active.
+`boolean` - 是否至少有一种列表类型当前处于激活状态。
 
 ### `getFilteredListOptions(availableTypes)`
 
-Filters the predefined list options based on the available types.
+根据可用类型筛选预定义的列表选项。
 
 ```tsx
 import { getFilteredListOptions } from '@/components/tiptap-ui/list-dropdown-menu'
@@ -244,19 +244,19 @@ const availableOptions = getFilteredListOptions(['bulletList', 'taskList'])
 // Returns only bullet list and task list options
 ```
 
-#### Parameters
+#### 参数
 
-| Name             | Type         | Description                    |
-| ---------------- | ------------ | ------------------------------ |
-| `availableTypes` | `ListType[]` | Array of list types to include |
+| 名称             | 类型         | 说明                    |
+| ---------------- | ------------ | ----------------------- |
+| `availableTypes` | `ListType[]` | 要包含的列表类型数组    |
 
-#### Returns
+#### 返回值
 
-`ListOption[]` - Filtered array of list options.
+`ListOption[]` - 筛选后的列表选项数组。
 
 ### `getActiveListType(editor, availableTypes)`
 
-Gets the currently active list type from the available types.
+从可用类型中获取当前激活的列表类型。
 
 ```tsx
 import { getActiveListType } from '@/components/tiptap-ui/list-dropdown-menu'
@@ -265,45 +265,45 @@ const activeType = getActiveListType(editor, ['bulletList', 'orderedList', 'task
 console.log('Current list type:', activeType)
 ```
 
-#### Parameters
+#### 参数
 
-| Name             | Type             | Description                  |
-| ---------------- | ---------------- | ---------------------------- |
-| `editor`         | `Editor \| null` | The Tiptap editor instance   |
-| `availableTypes` | `ListType[]`     | Array of list types to check |
+| 名称             | 类型             | 说明                    |
+| ---------------- | ---------------- | ----------------------- |
+| `editor`         | `Editor \| null` | Tiptap 编辑器实例       |
+| `availableTypes` | `ListType[]`     | 要检查的列表类型数组    |
 
-#### Returns
+#### 返回值
 
-`ListType | undefined` - The active list type, or `undefined` if no list is active.
+`ListType | undefined` - 当前激活的列表类型；如果没有激活的列表，则为 `undefined`。
 
-## Keyboard Shortcuts
+## 键盘快捷键
 
-Each list type supports keyboard shortcuts (inherited from the underlying `ListButton` components):
+每种列表类型都支持键盘快捷键（继承自底层的 `ListButton` 组件）：
 
-- **Cmd/Ctrl + Shift + 8**: Toggle bullet list
-- **Cmd/Ctrl + Shift + 7**: Toggle ordered list
-- **Cmd/Ctrl + Shift + 9**: Toggle task list
+- **Cmd/Ctrl + Shift + 8**：切换项目符号列表
+- **Cmd/Ctrl + Shift + 7**：切换有序列表
+- **Cmd/Ctrl + Shift + 9**：切换任务列表
 
-The shortcuts are automatically registered when the list types are available in the editor schema.
+当编辑器架构中提供这些列表类型时，系统会自动注册相应快捷键。
 
-## Requirements
+## 要求
 
-### Dependencies
+### 依赖项
 
-- `@tiptap/react` - Core Tiptap React integration
-- `@tiptap/starter-kit` - Basic Tiptap extensions including list support
-- `@tiptap/extension-task-list` - Task list extension
-- `@tiptap/extension-task-item` - Task item extension
+- `@tiptap/react` - Tiptap React 核心集成
+- `@tiptap/starter-kit` - Tiptap 基础扩展，包括列表支持
+- `@tiptap/extension-task-list` - 任务列表扩展
+- `@tiptap/extension-task-item` - 任务项扩展
 
-### Referenced Components
+### 引用的组件
 
-- `use-tiptap-editor` (hook)
-- `list-button` (component)
-- `button` (primitive)
-- `dropdown-menu` (primitive)
-- `card` (primitive)
-- `tiptap-utils` (lib)
-- `chevron-down-icon` (icon)
-- `list-icon` (icon)
-- `list-ordered-icon` (icon)
-- `list-todo-icon` (icon)
+- `use-tiptap-editor`（hook）
+- `list-button`（组件）
+- `button`（基础组件）
+- `dropdown-menu`（基础组件）
+- `card`（基础组件）
+- `tiptap-utils`（库）
+- `chevron-down-icon`（图标）
+- `list-icon`（图标）
+- `list-ordered-icon`（图标）
+- `list-todo-icon`（图标）
