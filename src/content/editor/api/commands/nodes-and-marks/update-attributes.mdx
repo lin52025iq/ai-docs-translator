@@ -1,31 +1,31 @@
 ---
-title: updateAttributes command
+title: updateAttributes 命令
 meta:
-  title: updateAttributes command | Tiptap Editor Docs
-  description: Use the updateAttributes command in Tiptap to set new attribute values for a node or mark. Learn more in our docs!
-  category: Editor
+  title: updateAttributes 命令 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 updateAttributes 命令为节点或标记设置新的属性值。了解更多信息，请参阅我们的文档！
+  category: 编辑器
 ---
 
-The `updateAttributes` command sets attributes of a node or mark to new values. Not passed attributes won’t be touched.
+`updateAttributes` 命令会将节点或标记的属性设为新值。未传入的属性不会受到影响。
 
-See also: [extendMarkRange](/editor/api/commands/nodes-and-marks/extend-mark-range)
+另请参阅：[extendMarkRange](/editor/api/commands/nodes-and-marks/extend-mark-range)
 
-## Parameters
+## 参数
 
 `typeOrName: string | NodeType | MarkType`
 
-Pass the type you want to update, for example `'heading'`.
+传入要更新的类型，例如 `'heading'`。
 
 `attributes: Record<string, any>`
 
-This expects an object with the attributes that need to be updated. It doesn’t need to have all attributes.
+此参数需要一个包含待更新属性的对象，无需包含所有属性。
 
-## Use the updateAttributes command
+## 使用 updateAttributes 命令
 
 ```js
-// Update node attributes
+// 更新节点属性
 editor.commands.updateAttributes('heading', { level: 1 })
 
-// Update mark attributes
+// 更新标记属性
 editor.commands.updateAttributes('highlight', { color: 'pink' })
 ```
