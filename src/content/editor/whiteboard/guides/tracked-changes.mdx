@@ -1,26 +1,25 @@
 ---
-title: Tracked Changes on the whiteboard
+title: 白板中的 Tracked Changes
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Tracked Changes on the whiteboard | Tiptap Editor Docs
-  description: Show the suggestions of Tracked Changes on whiteboard shapes, and accept or reject them.
+  title: 白板中的 Tracked Changes | Tiptap Editor 文档
+  description: 在白板形状上显示 Tracked Changes 建议，并接受或拒绝这些建议。
   category: Editor
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Shapes are nodes, so they can carry the suggestions of [Tracked Changes](/tracked-changes/getting-started/overview), like a note that an AI agent suggests. The board shows those suggestions on the shapes, and the commands of Tracked Changes review them.
+形状是节点，因此可以携带 [Tracked Changes](/tracked-changes/getting-started/overview) 的建议，例如 AI 代理建议添加的便笺。白板会在形状上显示这些建议，你可以使用 Tracked Changes 命令审核它们。
 
-<Callout title="Separate product" variant="info">
-  [Tracked Changes](/tracked-changes/getting-started/overview) is a different Tiptap product from
-  Whiteboard, sold separately.
+<Callout title="单独销售的产品" variant="info">
+  [Tracked Changes](/tracked-changes/getting-started/overview) 是与 Whiteboard 不同的 Tiptap 产品，需单独购买。
 </Callout>
 
-## Set up the editor
+## 设置编辑器
 
-[Install Tracked Changes](/tracked-changes/getting-started/install), and add it to the board's editor. Pass `getSuggestionHTMLAttributes` from Tracked Changes as the `shapeElementAttributes` option of `WhiteboardKit`:
+[安装 Tracked Changes](/tracked-changes/getting-started/install)，并将其添加到白板的编辑器中。将 Tracked Changes 中的 `getSuggestionHTMLAttributes` 作为 `WhiteboardKit` 的 `shapeElementAttributes` 选项传入：
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -36,15 +35,15 @@ const editor = new Editor({
 })
 ```
 
-In React, create the configured kit once, outside the component or with `useMemo`. See [Set up a board in React](/editor/whiteboard/guides/react).
+在 React 中，请在组件外部创建一次配置好的 kit，或使用 `useMemo` 创建。请参阅[在 React 中设置白板](/editor/whiteboard/guides/react)。
 
-`shapeElementAttributes` adds attributes to the element of every shape, from the shape's node. With `getSuggestionHTMLAttributes`, the element of a shape that a suggestion changes gets `data-suggestion-*` attributes, like `data-suggestion-type` and `data-suggestion-user`.
+`shapeElementAttributes` 会根据形状节点，为每个形状的元素添加属性。使用 `getSuggestionHTMLAttributes` 后，被建议修改的形状元素会获得 `data-suggestion-*` 属性，例如 `data-suggestion-type` 和 `data-suggestion-user`。
 
-Tracked Changes starts with `enabled: false`. Edits on the board then apply directly, and the board shows the suggestions that shapes carry.
+Tracked Changes 默认以 `enabled: false` 启动。此时，白板上的编辑会直接生效，而白板仍会显示形状所携带的建议。
 
-## Show suggestions
+## 显示建议
 
-Style the shapes that suggestions change with the attributes on their elements:
+使用形状元素上的属性为被建议修改的形状设置样式：
 
 ```css
 /* A shape that a suggestion adds */
@@ -63,11 +62,11 @@ Style the shapes that suggestions change with the attributes on their elements:
 }
 ```
 
-The attributes go away once the suggestion is reviewed. Suggestions in the text of a shape show like in any other document. See [Styling](/tracked-changes/api-reference/styling) for all attributes.
+建议审核完成后，这些属性就会消失。形状文本中的建议与其他文档中的建议显示方式相同。有关所有属性，请参阅[样式设置](/tracked-changes/api-reference/styling)。
 
-## Review suggestions
+## 审核建议
 
-Find suggestions with `findSuggestions`, and accept or reject them by id:
+使用 `findSuggestions` 查找建议，并通过 ID 接受或拒绝建议：
 
 ```js
 import { findSuggestions } from '@tiptap-pro/extension-tracked-changes'
@@ -79,19 +78,19 @@ if (suggestion) {
 }
 ```
 
-A suggestion that adds shapes lists them in `insertedNodes`, like `{ type: 'stickyNote' }`. When a suggestion adds several shapes, like all the notes that one AI tool call adds, one id accepts or rejects them all.
+添加形状的建议会在 `insertedNodes` 中列出这些形状，例如 `{ type: 'stickyNote' }`。如果一条建议添加了多个形状，例如某次 AI 工具调用添加的所有便笺，那么使用同一个 ID 即可接受或拒绝所有这些形状。
 
-| Suggestion       | Accept              | Reject                   |
+| 建议 | 接受 | 拒绝 |
 | ---------------- | ------------------- | ------------------------ |
-| Adds a shape     | Keeps the shape     | Removes the shape        |
-| Deletes a shape  | Removes the shape   | Keeps the shape          |
-| Moves a shape    | Keeps the new place | Puts the shape back      |
-| Changes its text | Keeps the new text  | Brings back the old text |
+| 添加形状 | 保留该形状 | 移除该形状 |
+| 删除形状 | 移除该形状 | 保留该形状 |
+| 移动形状 | 保留新位置 | 将形状移回原位 |
+| 修改形状文本 | 保留新文本 | 恢复旧文本 |
 
-When a rejected suggestion removes a shape, the arrows that connected it keep a free end. Reviews work in collaborative boards too: all users see the suggestion, and a review applies everywhere.
+拒绝一条会移除形状的建议后，与该形状相连的箭头会保留一个悬空端点。协作白板也支持审核：所有用户都能看到建议，审核结果也会同步应用到所有人的白板上。
 
-## Next steps
+## 后续步骤
 
-- See all [commands of Tracked Changes](/tracked-changes/api-reference/commands)
-- Let an AI agent suggest changes with the [Server AI Toolkit](/ai/ai-toolkit/agents/whiteboard)
-- Learn about [`shapeElementAttributes`](/editor/whiteboard/api-reference/extensions#whiteboardkit)
+- 查看 [Tracked Changes 的所有命令](/tracked-changes/api-reference/commands)
+- 使用 [Server AI Toolkit](/ai/ai-toolkit/agents/whiteboard) 让 AI 代理提出修改建议
+- 了解 [`shapeElementAttributes`](/editor/whiteboard/api-reference/extensions#whiteboardkit)
