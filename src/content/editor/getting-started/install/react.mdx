@@ -2,20 +2,20 @@
 title: React
 meta:
   title: React | Tiptap Editor Docs
-  description: Learn how to integrate the Tiptap Editor with a React app and develop your custom editor experience.
+  description: 了解如何将 Tiptap Editor 集成到 React 应用中，并打造专属的编辑器体验。
   category: Editor
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-This guide describes how to integrate Tiptap with your React project. We're using Vite, but the workflow should be similar with other setups.
+本指南介绍如何将 Tiptap 集成到 React 项目中。我们使用 Vite，但其他配置下的流程也应该类似。
 
 <CodeDemo path="/Examples/Default" />
 
-## Create a React project (optional)
+## 创建 React 项目（可选）
 
-Start with a fresh React project called `my-tiptap-project`. [Vite](https://vitejs.dev/guide/) will set up everything we need.
+首先创建一个名为 `my-tiptap-project` 的全新 React 项目。[Vite](https://vitejs.dev/guide/) 会为我们配置好所需的一切。
 
 ```bash
 # create a project with npm
@@ -31,27 +31,27 @@ yarn create vite my-tiptap-project --template react-ts
 cd my-tiptap-project
 ```
 
-## Install Tiptap dependencies
+## 安装 Tiptap 依赖
 
-Next, install the `@tiptap/react` package, `@tiptap/pm` (the ProseMirror library), and `@tiptap/starter-kit`, which includes the most common extensions to get started quickly.
+接下来，安装 `@tiptap/react` 包、`@tiptap/pm`（ProseMirror 库）以及 `@tiptap/starter-kit`。后者包含了最常用的扩展，助你快速上手。
 
-- **@tiptap/react**: The React bindings for Tiptap including Tiptap's core functionality.
-- **@tiptap/pm**: Tiptap's ProseMirror dependencies, which are required for the editor to function.
-- **@tiptap/starter-kit**: A collection of commonly used extensions that provide basic functionality like paragraphs, headings, bold, italic, and more.
+- **@tiptap/react**：Tiptap 的 React 绑定，包含 Tiptap 的核心功能。
+- **@tiptap/pm**：Tiptap 的 ProseMirror 依赖，是编辑器正常运行所必需的。
+- **@tiptap/starter-kit**：常用扩展的集合，提供段落、标题、粗体、斜体等基础功能。
 
 ```bash
 npm install @tiptap/react @tiptap/pm @tiptap/starter-kit
 ```
 
-If you followed steps 1 and 2, you can now start your project with `npm run dev` and open [http://localhost:3000](http://localhost:3000) in your browser.
+如果你已完成步骤 1 和 2，现在可以运行 `npm run dev` 启动项目，然后在浏览器中打开 [http://localhost:3000](http://localhost:3000)。
 
-## Integrate Tiptap into your React app
+## 将 Tiptap 集成到 React 应用中
 
-<Callout title="New: React Composable API" variant="hint">
-  Tiptap now offers a declarative `<Tiptap>` component with automatic context management and built-in subcomponents. Perfect for complex UIs with multiple child components. [Learn more →](/guides/react-composable-api)
+<Callout title="新增：React 组合式 API" variant="hint">
+  Tiptap 现已提供声明式的 `<Tiptap>` 组件，支持自动管理上下文并内置子组件，非常适合包含多个子组件的复杂 UI。[了解更多 →](/guides/react-composable-api)
 </Callout>
 
-To start using Tiptap, create a new component. Let's call it `Tiptap` and add the following code in `src/Tiptap.tsx`:
+要开始使用 Tiptap，请新建一个组件。我们将其命名为 `Tiptap`，并在 `src/Tiptap.tsx` 中添加以下代码：
 
 ```jsx
 // src/Tiptap.tsx
@@ -77,9 +77,9 @@ const Tiptap = () => {
 export default Tiptap
 ```
 
-### Add it to your app
+### 将其添加到应用中
 
-Finally, replace the content of `src/App.tsx` with our new `Tiptap` component.
+最后，用新的 `Tiptap` 组件替换 `src/App.tsx` 中的内容。
 
 ```jsx
 import Tiptap from './Tiptap'
@@ -95,9 +95,9 @@ const App = () => {
 export default App
 ```
 
-## Using the EditorContext
+## 使用 EditorContext
 
-Tiptap provides a React context called `EditorContext`, that allows you to access the editor instance and its state from anywhere in your component tree. This is particularly useful for building custom toolbars, menus, or other components that need to interact with the editor.
+Tiptap 提供了名为 `EditorContext` 的 React 上下文，让你可以在组件树的任意位置访问编辑器实例及其状态。这对于构建需要与编辑器交互的自定义工具栏、菜单或其他组件尤其有用。
 
 ```jsx
 // src/Tiptap.tsx
@@ -127,9 +127,9 @@ const Tiptap = () => {
 export default Tiptap
 ```
 
-### Consume the Editor context in child components
+### 在子组件中使用 Editor 上下文
 
-If you use the `EditorProvider` to set up your Tiptap editor, you can now access your editor instance from any child component using the `useCurrentEditor` hook.
+如果使用 `EditorProvider` 设置 Tiptap 编辑器，就可以在任意子组件中使用 `useCurrentEditor` hook 访问编辑器实例。
 
 ```tsx
 import { useCurrentEditor } from '@tiptap/react'
@@ -141,13 +141,13 @@ const EditorJSONPreview = () => {
 }
 ```
 
-**Important**: This won't work if you use the `useEditor` hook to setup your editor.
+**重要提示**：如果使用 `useEditor` hook 设置编辑器，此方法将无法使用。
 
-You should now see a pretty barebones example of Tiptap in your browser.
+现在，你应该能在浏览器中看到一个非常基础的 Tiptap 示例。
 
-## Reacting to Editor state changes
+## 响应编辑器状态变化
 
-To react to editor state changes, you can use the `useEditorState` hook from `@tiptap/react`. This hook can be used to fetch information from the editor state without causing re-renders on the editor component or it's children.
+要响应编辑器状态变化，可以使用 `@tiptap/react` 中的 `useEditorState` hook。此 hook 可用于获取编辑器状态信息，同时不会导致编辑器组件或其子组件重新渲染。
 
 ```jsx
 import { useEditorState } from '@tiptap/react'
@@ -175,12 +175,11 @@ function MyEditorComponent() {
 }
 ```
 
-## Use SSR with React and Tiptap
+## 在 React 和 Tiptap 中使用 SSR
 
-Tiptap can be used with server-side rendering (SSR) in React applications. However, to ensure that the editor is only initialized on the client side, you need to use the `immediatelyRender` option
-when creating the editor instance to prevent it from rendering on the server.
+Tiptap 可在 React 应用中与服务器端渲染（SSR）配合使用。不过，为确保编辑器仅在客户端初始化，需要在创建编辑器实例时使用 `immediatelyRender` 选项，避免在服务器端渲染编辑器。
 
-Here is an example of how to set up Tiptap with SSR in a React component:
+以下示例展示了如何在 React 组件中为 SSR 配置 Tiptap：
 
 ```jsx
 'use client'
@@ -204,18 +203,18 @@ export function MyEditor() {
 }
 ```
 
-## Optimize your performance
+## 优化性能
 
-We recommend visiting the [React Performance Guide](/guides/performance) to integrate the Tiptap Editor efficiently. This will help you avoid potential issues as your app scales.
+建议阅读 [React 性能指南](/guides/performance)，了解如何高效集成 Tiptap Editor，避免应用扩展时可能出现的问题。
 
-## Alternative: Composable React API
+## 替代方案：React 组合式 API
 
-Tiptap also provides a declarative `<Tiptap>` component that simplifies editor setup with automatic context management and built-in subcomponents. This composable API is ideal for complex UIs with many child components. Learn more in the [React Composable API guide](/guides/react-composable-api).
+Tiptap 还提供了声明式的 `<Tiptap>` 组件，通过自动管理上下文和内置子组件简化编辑器配置。对于包含许多子组件的复杂 UI，这种组合式 API 非常适用。请参阅 [React 组合式 API 指南](/guides/react-composable-api)了解更多信息。
 
-## Next steps
+## 后续步骤
 
-- [Configure your editor](/editor/getting-started/configure)
-- [Add styles to your editor](/editor/getting-started/style-editor)
-- [Learn more about Tiptap concepts](/editor/core-concepts/introduction)
-- [Learn how to persist the editor state](/editor/core-concepts/persistence)
-- [Start building your own extensions](/editor/extensions/custom-extensions)
+- [配置编辑器](/editor/getting-started/configure)
+- [为编辑器添加样式](/editor/getting-started/style-editor)
+- [深入了解 Tiptap 概念](/editor/core-concepts/introduction)
+- [了解如何持久化编辑器状态](/editor/core-concepts/persistence)
+- [开始构建自己的扩展](/editor/extensions/custom-extensions)
