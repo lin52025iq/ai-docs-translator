@@ -1,12 +1,12 @@
 ---
-title: Add a dropdown menu to Tiptap
+title: 向 Tiptap 添加下拉菜单
 meta:
-  title: Dropdown Menu | Tiptap UI Components
-  description: Add a dropdown menu into your Tiptap Editor with this UI Component. More in the docs!
-  category: UI Components
+  title: 下拉菜单 | Tiptap UI 组件
+  description: 使用此 UI 组件，在 Tiptap 编辑器中添加下拉菜单。更多内容请查看文档！
+  category: UI 组件
 component:
-  name: Dropdown menu
-  description: Select an option from a dropdown menu UI component.
+  name: 下拉菜单
+  description: 从下拉菜单 UI 组件中选择一个选项。
   type: primitive
   isFree: true
   isCloud: false
@@ -19,22 +19,22 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A menu that appears when triggered by a button or other control, displaying a list of options.
+由按钮或其他控件触发后显示的菜单，其中包含一组选项。
 
 <CodeDemo
   isScrollable
   src="https://template.tiptap.dev/preview/tiptap-ui-primitive/dropdown-menu"
 />
 
-## Install
+## 安装
 
-You can add the primitive via Tiptap CLI
+你可以通过 Tiptap CLI 添加此基础组件
 
 ```bash
 npx @tiptap/cli@latest add dropdown-menu
 ```
 
-## Usage
+## 用法
 
 ```tsx
 import {
@@ -71,33 +71,33 @@ export default function MyComponent() {
 }
 ```
 
-## Props
+## 属性
 
 ### DropdownMenu
 
-| Name         | Type                    | Default   | Description                          |
-| ------------ | ----------------------- | --------- | ------------------------------------ |
-| open         | boolean                 | undefined | Controlled open state                |
-| onOpenChange | (open: boolean) => void | undefined | Callback when open state changes     |
-| defaultOpen  | boolean                 | false     | Default open state                   |
-| modal        | boolean                 | true      | Whether to render in a modal context |
+| 名称         | 类型                    | 默认值    | 说明           |
+| ------------ | ----------------------- | --------- | -------------- |
+| open         | boolean                 | undefined | 受控打开状态   |
+| onOpenChange | (open: boolean) => void | undefined | 打开状态变化时的回调 |
+| defaultOpen  | boolean                 | false     | 默认打开状态   |
+| modal        | boolean                 | true      | 是否在模态上下文中渲染 |
 
 ### DropdownMenuTrigger
 
-| Name    | Type    | Default | Description                       |
-| ------- | ------- | ------- | --------------------------------- |
-| asChild | boolean | false   | Whether to merge props with child |
+| 名称   | 类型    | 默认值 | 说明           |
+| ------ | ------- | ------ | -------------- |
+| asChild | boolean | false  | 是否将属性与子元素合并 |
 
 ### DropdownMenuContent
 
-| Name   | Type                                   | Default  | Description                       |
-| ------ | -------------------------------------- | -------- | --------------------------------- |
-| side   | 'top' \| 'right' \| 'bottom' \| 'left' | 'bottom' | Preferred side to display content |
-| align  | 'start' \| 'center' \| 'end'           | 'center' | Alignment along the edge          |
-| portal | boolean                                | true     | Whether to render in a portal     |
+| 名称   | 类型                                   | 默认值   | 说明             |
+| ------ | -------------------------------------- | -------- | ---------------- |
+| side   | 'top' \| 'right' \| 'bottom' \| 'left' | 'bottom' | 内容优先显示的一侧 |
+| align  | 'start' \| 'center' \| 'end'           | 'center' | 沿边缘对齐的方式 |
+| portal | boolean                                | true     | 是否在 portal 中渲染 |
 
 ### DropdownMenuItem
 
-| Name    | Type    | Default | Description                       |
-| ------- | ------- | ------- | --------------------------------- |
-| asChild | boolean | false   | Whether to merge props with child |
+| 名称   | 类型    | 默认值 | 说明           |
+| ------ | ------- | ------ | -------------- |
+| asChild | boolean | false  | 是否将属性与子元素合并 |
