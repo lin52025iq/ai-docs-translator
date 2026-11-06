@@ -2,117 +2,117 @@ import type { SidebarConfig } from '@/types'
 
 export const sidebarConfig: SidebarConfig = {
   id: 'composable-docs',
-  title: 'Composable Docs',
+  title: '可组合文档',
   rootHref: '/composable-docs/slots/getting-started/overview',
   items: [
     {
       type: 'group',
-      title: 'Slots',
+      title: '插槽',
       href: '/composable-docs/slots',
       children: [
-        { title: 'Overview', href: '/composable-docs/slots/getting-started/overview' },
+        { title: '概览', href: '/composable-docs/slots/getting-started/overview' },
         {
-          title: 'Guides',
+          title: '指南',
           href: '/composable-docs/slots/guides/add-slots',
           children: [
             {
-              title: 'Add slots to a document',
+              title: '向文档添加插槽',
               href: '/composable-docs/slots/guides/add-slots',
             },
-            { title: 'Allow filling only', href: '/composable-docs/slots/guides/fill-only' },
-            { title: 'Value slots', href: '/composable-docs/slots/guides/value-slots' },
+            { title: '仅允许填写', href: '/composable-docs/slots/guides/fill-only' },
+            { title: '值插槽', href: '/composable-docs/slots/guides/value-slots' },
             {
-              title: 'Validate Slot values',
+              title: '验证插槽值',
               href: '/composable-docs/slots/guides/validate-submission',
             },
           ],
         },
         {
-          title: 'Examples',
+          title: '示例',
           href: '/composable-docs/slots/examples/table-fields',
           children: [
-            { title: 'Table fields example', href: '/composable-docs/slots/examples/table-fields' },
+            { title: '表格字段示例', href: '/composable-docs/slots/examples/table-fields' },
           ],
         },
         {
-          title: 'API reference',
+          title: 'API 参考',
           href: '/composable-docs/slots/api-reference/extension',
           children: [
             {
-              title: 'Extension',
+              title: '扩展',
               href: '/composable-docs/slots/api-reference/extension',
             },
-            { title: 'Commands', href: '/composable-docs/slots/api-reference/commands' },
-            { title: 'Validation', href: '/composable-docs/slots/api-reference/validation' },
-            { title: 'Utilities', href: '/composable-docs/slots/api-reference/utilities' },
-            { title: 'Types', href: '/composable-docs/slots/api-reference/types' },
-            { title: 'Configuration', href: '/composable-docs/slots/api-reference/concepts' },
+            { title: '命令', href: '/composable-docs/slots/api-reference/commands' },
+            { title: '验证', href: '/composable-docs/slots/api-reference/validation' },
+            { title: '实用工具', href: '/composable-docs/slots/api-reference/utilities' },
+            { title: '类型', href: '/composable-docs/slots/api-reference/types' },
+            { title: '配置', href: '/composable-docs/slots/api-reference/concepts' },
             {
-              title: 'Styling',
+              title: '样式',
               href: '/composable-docs/slots/api-reference/rendering',
             },
-            { title: 'Editor events', href: '/composable-docs/slots/api-reference/events' },
+            { title: '编辑器事件', href: '/composable-docs/slots/api-reference/events' },
           ],
         },
       ],
     },
     {
       type: 'group',
-      title: 'Variables',
+      title: '变量',
       href: '/composable-docs/variables',
       children: [
-        { title: 'Overview', href: '/composable-docs/variables/getting-started/overview' },
-        { title: 'Slot bindings', href: '/composable-docs/variables/guides/bind-slots' },
-        { title: 'API reference', href: '/composable-docs/variables/api-reference/extension' },
+        { title: '概览', href: '/composable-docs/variables/getting-started/overview' },
+        { title: '插槽绑定', href: '/composable-docs/variables/guides/bind-slots' },
+        { title: 'API 参考', href: '/composable-docs/variables/api-reference/extension' },
         {
-          title: 'Styling',
+          title: '样式',
           href: '/composable-docs/variables/api-reference/rendering',
         },
       ],
     },
     {
       type: 'group',
-      title: 'Content Protection',
+      title: '内容保护',
       href: '/composable-docs/content-protection',
       children: [
-        { title: 'Overview', href: '/composable-docs/content-protection/getting-started/overview' },
+        { title: '概览', href: '/composable-docs/content-protection/getting-started/overview' },
         {
-          title: 'Guides',
+          title: '指南',
           href: '/composable-docs/content-protection/guides/example-policies',
           children: [
             {
-              title: 'Example Policies',
+              title: '策略示例',
               href: '/composable-docs/content-protection/guides/example-policies',
             },
             {
-              title: 'Lock selected content',
+              title: '锁定所选内容',
               href: '/composable-docs/content-protection/guides/lock-selected-content',
             },
           ],
         },
         {
-          title: 'API reference',
+          title: 'API 参考',
           href: '/composable-docs/content-protection/api-reference/extension',
           children: [
             {
-              title: 'Extension',
+              title: '扩展',
               href: '/composable-docs/content-protection/api-reference/extension',
             },
             {
-              title: 'Commands',
+              title: '命令',
               href: '/composable-docs/content-protection/api-reference/commands',
             },
             {
-              title: 'Utilities',
+              title: '实用工具',
               href: '/composable-docs/content-protection/api-reference/utilities',
             },
-            { title: 'Types', href: '/composable-docs/content-protection/api-reference/types' },
+            { title: '类型', href: '/composable-docs/content-protection/api-reference/types' },
             {
-              title: 'Policy language',
+              title: '策略语言',
               href: '/composable-docs/content-protection/api-reference/policy',
             },
             {
-              title: 'Redacted content',
+              title: '已隐藏内容',
               href: '/composable-docs/content-protection/api-reference/rendering',
             },
           ],
