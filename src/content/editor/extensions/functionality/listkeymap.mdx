@@ -1,39 +1,39 @@
 ---
-title: List Keymap extension
+title: List Keymap 扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-list?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-list
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-list.svg
     url: https://npmcharts.com/compare/@tiptap/extension-list?minimal=true
-    label: Downloads
+    label: 下载量
 extension:
   name: List Keymap
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-list
-  description: Lists’ behavior can be tricky, so we made this small extension to make them easier to work with.
+  description: 列表的行为有时会比较复杂，因此我们开发了这个小型扩展，让列表更易于使用。
   type: extension
   icon: Keyboard
 meta:
-  title: List Keymap extension | Tiptap Editor Docs
-  description: Add extra keymap handlers to change the default backspace and delete behavior for lists. Learn more in our docs!
-  category: Editor
+  title: List Keymap 扩展 | Tiptap 编辑器文档
+  description: 添加额外的键盘映射处理程序，以更改列表的默认退格键和删除键行为。了解更多信息，请参阅我们的文档！
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-The List Keymap extension modifies the default ProseMirror and Tiptap behavior. Without this extension, pressing backspace at the start of a list item keeps the list item content on the same line. With the List Keymap, the content is lifted into the list item above.
+List Keymap 扩展会修改 ProseMirror 和 Tiptap 的默认行为。未使用此扩展时，在列表项开头按退格键，列表项内容会保留在同一行。使用 List Keymap 后，内容会提升到上方的列表项中。
 
 <CodeDemo path="/Extensions/ListKeymap" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-list
 ```
 
-And import it in your editor:
+然后在编辑器中导入：
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -44,7 +44,7 @@ new Editor({
 })
 ```
 
-This extension is installed by default with the `ListKit` extension, so you don’t need to install it separately.
+此扩展默认随 `ListKit` 扩展一起安装，因此无需单独安装。
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -55,11 +55,11 @@ new Editor({
 })
 ```
 
-## Settings
+## 设置
 
 ### listTypes
 
-An array of list items and their parent wrapper node types.
+由列表项及其父级包装节点类型组成的数组。
 
 ```js
 ListKeymap.configure({
@@ -72,7 +72,7 @@ ListKeymap.configure({
 })
 ```
 
-Default value:
+默认值：
 
 ```json
 [
@@ -87,11 +87,11 @@ Default value:
 ]
 ```
 
-## Source code
+## 源代码
 
 [packages/extension-list/src/keymap/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-list/src/keymap/)
 
-## Minimal Install
+## 最小化安装
 
 ```js
 import { Editor } from '@tiptap/core'
