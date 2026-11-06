@@ -1,37 +1,37 @@
 ---
-title: Register a custom command and prompt
+title: 注册自定义命令和提示词
 tags:
   - type: start
 meta:
-  title: Custom command | Tiptap Basic AI Generation
-  description: Create custom AI commands with tailored prompts by extending the Basic AI Generation extension for specialized content transformation workflows.
-  category: Basic AI Generation
+  title: 自定义命令 | Tiptap 基础 AI 生成
+  description: 扩展基础 AI 生成扩展，使用定制提示词创建自定义 AI 命令，以满足特定内容转换工作流的需求。
+  category: 基础 AI 生成
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Requirements, RequirementItem } from '@/components/Requirements'
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 激活试用或订阅">
+        在你的账户中开始[免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 计划](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Integrate an AI provider">
-        Configure OpenAI in your [AI settings](https://cloud.tiptap.dev/v2/cloud/ai) or review the [Custom LLM guides](/ai/basic/custom-llms).
+    <RequirementItem label="2. 集成 AI 提供商">
+        在[AI 设置](https://cloud.tiptap.dev/v2/cloud/ai)中配置 OpenAI，或查看[自定义 LLM 指南](/ai/basic/custom-llms)。
     </RequirementItem>
-    <RequirementItem label="3. Install from private registry">
-        To install the frontend extensions, authenticate to Tiptap’s private npm registry by following the [setup guide](/guides/pro-extensions).
+    <RequirementItem label="3. 从私有注册表安装">
+        要安装前端扩展，请按照[设置指南](/guides/pro-extensions)登录 Tiptap 的私有 npm 注册表。
     </RequirementItem>
 </Requirements>
 
-The Basic AI Generation extension provides a list of [built-in commands](/ai/basic/text-generation/built-in-commands), but you can extend it to define your own. These custom commands can be used to call the LLM with your custom prompt.
+基础 AI 生成扩展提供了一组[内置命令](/ai/basic/text-generation/built-in-commands)，你也可以扩展它来定义自己的命令。这些自定义命令可以使用自定义提示词调用 LLM。
 
 <CodeDemo isPro path="/Extensions/AiCustomCommandUsingAiTextPrompt" />
 
-## Register a custom command
+## 注册自定义命令
 
-To register your own AI commands, simply extend the Basic AI Generation extension, add your command in `addCommands()` (don't forget to inherit the predefined commands in `this.parent?.()`), and execute `aiTextPrompt()` to run your individual prompt.
+要注册自己的 AI 命令，只需扩展基础 AI 生成扩展，在 `addCommands()` 中添加命令（别忘了通过 `this.parent?.()` 继承预定义命令），然后执行 `aiTextPrompt()` 来运行专属提示词。
 
-Please note that this example uses your prompt on the client-side, which means that users could read it. If you're looking to use a custom Language Model (LLM) or a prompt on your backend, please refer to the [custom LLM guide](/ai/basic/custom-llms).
+请注意，此示例会在客户端使用提示词，这意味着用户可以读取它。如果你想使用自定义语言模型 (LLM)，或在后端使用提示词，请参阅[自定义 LLM 指南](/ai/basic/custom-llms)。
 
 ```js
 import { Ai, getHTMLContentBetween } from '@tiptap-pro/extension-ai'
