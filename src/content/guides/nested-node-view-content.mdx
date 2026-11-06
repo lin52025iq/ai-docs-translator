@@ -1,33 +1,32 @@
 ---
 tags:
   - type: editor
-title: Nested node views
+title: 嵌套节点视图
 meta:
-  title: Nested node views | Tiptap Editor Docs
-  description: Learn how to build parent and child node views with nested NodeViewContent in Vue and React.
-  category: Editor
+  title: 嵌套节点视图 | Tiptap 编辑器文档
+  description: 了解如何在 Vue 和 React 中使用嵌套的 NodeViewContent 构建父子节点视图。
+  category: 编辑器
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-This guide shows how to create a parent node that contains multiple child nodes, each rendered with its own component. This pattern is useful when you need structured content with distinct visual representations inside a single block.
+本指南将介绍如何创建一个包含多个子节点的父节点，并让每个子节点都由自己的组件渲染。当你需要在单个区块中组织结构化内容，并为其不同部分设置不同的视觉呈现时，这种模式非常有用。
 
-If you are new to node views, start with the [Node views overview](/editor/extensions/custom-extensions/node-views) and the framework-specific guides for [React](/editor/extensions/custom-extensions/node-views/react) and [Vue](/editor/extensions/custom-extensions/node-views/vue).
+如果你刚开始接触节点视图，请先阅读[节点视图概览](/editor/extensions/custom-extensions/node-views)，以及针对特定框架的指南：[React](/editor/extensions/custom-extensions/node-views/react) 和 [Vue](/editor/extensions/custom-extensions/node-views/vue)。
 
-## The key idea
+## 核心思路
 
-The most important part of this pattern is defining your schema correctly. The parent node must explicitly declare which child nodes are allowed, and each child node needs its own node view with a `NodeViewContent` component.
+这种模式最重要的是正确地定义 schema。父节点必须明确声明允许包含哪些子节点，并且每个子节点都需要自己的节点视图，其中包含一个 `NodeViewContent` 组件。
 
-In this example, a `multiNode` parent contains two child nodes: `firstNode` and `secondNode`. Each node is rendered by its own component.
+在本例中，`multiNode` 父节点包含两个子节点：`firstNode` 和 `secondNode`。每个节点都由自己的组件渲染。
 
-<Callout variant="info" title="Schema first">
-  If nested `NodeViewContent` does not render as expected, double-check the `content` expression on
-  your parent and child node extensions before debugging your components.
+<Callout variant="info" title="先定义 Schema">
+  如果嵌套的 `NodeViewContent` 未按预期渲染，请先检查父节点和子节点扩展中的 `content` 表达式，再调试组件。
 </Callout>
 
-## Inserting the parent node
+## 插入父节点
 
-When inserting the parent node, create the full structure in one step so the document always contains the expected children:
+插入父节点时，请一次性创建完整结构，以确保文档始终包含预期的子节点：
 
 ```js
 editor
@@ -44,7 +43,7 @@ editor
 
 ## Vue
 
-### Parent node extension
+### 父节点扩展
 
 ```js
 import MultiNode from './MultiNode.vue'
@@ -67,9 +66,9 @@ export default Node.create({
 })
 ```
 
-### Parent node view
+### 父节点视图
 
-The parent component provides the wrapper structure. Use `<node-view-content />` to render the child node views inside it.
+父组件提供外层结构。使用 `<node-view-content />` 在其中渲染子节点视图。
 
 ```html
 <template>
@@ -83,9 +82,9 @@ The parent component provides the wrapper structure. Use `<node-view-content />`
 </script>
 ```
 
-### Child node extension
+### 子节点扩展
 
-Child nodes keep the same group as the parent and define their own editable content.
+子节点与父节点属于同一个 group，并定义自己的可编辑内容。
 
 ```js
 import FirstNode from './FirstNode.vue'
@@ -108,7 +107,7 @@ export default Node.create({
 })
 ```
 
-### Child node view
+### 子节点视图
 
 ```html
 <template>
@@ -122,13 +121,13 @@ export default Node.create({
 </script>
 ```
 
-The `secondNode` extension and view follow the same pattern as `firstNode`.
+`secondNode` 扩展及其视图与 `firstNode` 遵循相同的模式。
 
 ## React
 
-The React implementation follows the same schema rules. The main difference is that you use `ReactNodeViewRenderer`, `NodeViewWrapper`, and `NodeViewContent` from `@tiptap/react`.
+React 实现遵循相同的 schema 规则。主要区别在于，你需要使用来自 `@tiptap/react` 的 `ReactNodeViewRenderer`、`NodeViewWrapper` 和 `NodeViewContent`。
 
-### Parent node extension
+### 父节点扩展
 
 ```js
 import { Node, mergeAttributes } from '@tiptap/core'
@@ -151,7 +150,7 @@ export default Node.create({
 })
 ```
 
-### Parent node view
+### 父节点视图
 
 ```jsx
 import { NodeViewContent, NodeViewWrapper } from '@tiptap/react'
@@ -165,7 +164,7 @@ export default function MultiNode() {
 }
 ```
 
-### Child node extension
+### 子节点扩展
 
 ```js
 import { Node, mergeAttributes } from '@tiptap/core'
@@ -188,7 +187,7 @@ export default Node.create({
 })
 ```
 
-### Child node view
+### 子节点视图
 
 ```jsx
 import { NodeViewContent, NodeViewWrapper } from '@tiptap/react'
@@ -202,11 +201,11 @@ export default function FirstNode() {
 }
 ```
 
-The `secondNode` extension and view follow the same pattern as `firstNode`.
+`secondNode` 扩展及其视图与 `firstNode` 遵循相同的模式。
 
-## Related resources
+## 相关资源
 
-- [Node views overview](/editor/extensions/custom-extensions/node-views)
-- [Node views with React](/editor/extensions/custom-extensions/node-views/react)
-- [Node views with Vue](/editor/extensions/custom-extensions/node-views/vue)
-- [Create a custom node](/editor/extensions/custom-extensions/create-new/node)
+- [节点视图概览](/editor/extensions/custom-extensions/node-views)
+- [使用 React 的节点视图](/editor/extensions/custom-extensions/node-views/react)
+- [使用 Vue 的节点视图](/editor/extensions/custom-extensions/node-views/vue)
+- [创建自定义节点](/editor/extensions/custom-extensions/create-new/node)
