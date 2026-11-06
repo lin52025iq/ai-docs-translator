@@ -1,78 +1,78 @@
 ---
-title: Typography extension
+title: 排版扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-typography?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-typography
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-typography.svg
     url: https://npmcharts.com/compare/@tiptap/extension-typography?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  title: Typography Extension | Tiptap Editor Docs
-  description: Replace common text patterns with typographic characters with the typography extension in your editor. More in the docs!
-  category: Editor
+  title: 排版扩展 | Tiptap 编辑器文档
+  description: 使用排版扩展，将常见文本模式替换为排版字符。更多内容请参阅文档！
+  category: 编辑器
 extension:
   name: Typography
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-typography
-  description: The typography expert for your editor, fixing everything that’s wrong.
+  description: 您的编辑器排版专家，帮您修正各种不规范之处。
   type: extension
   icon: Type
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-This extension tries to help with common text patterns with the correct typographic character. Under the hood all rules are input rules.
+此扩展会尝试将常见文本模式替换为正确的排版字符。所有规则在底层都属于输入规则。
 
 <CodeDemo path="/Extensions/Typography" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-typography
 ```
 
-## Rules
+## 规则
 
 | Name                | Description                                                      |
 | ------------------- | ---------------------------------------------------------------- |
-| emDash              | Converts double dashes `--` to an emdash `—`.                    |
-| ellipsis            | Converts three dots `...` to an ellipsis character `…`           |
-| openDoubleQuote     | `“`Smart” opening double quotes.                                 |
-| closeDoubleQuote    | “Smart`”` closing double quotes.                                 |
-| openSingleQuote     | `‘`Smart’ opening single quotes.                                 |
-| closeSingleQuote    | ‘Smart`’` closing single quotes.                                 |
-| leftArrow           | Converts `<-` to an arrow `←` .                                  |
-| rightArrow          | Converts `->` to an arrow `→`.                                   |
-| copyright           | Converts `(c)` to a copyright sign `©`.                         |
-| registeredTrademark | Converts `(r)` to registered trademark sign `®`.                |
-| trademark           | Converts `(tm)` to registered trademark sign `™`.               |
-| servicemark         | Converts `(sm)` to registered trademark sign `℠`.                |
-| oneHalf             | Converts `1/2` to one half `½`.                                  |
-| oneQuarter          | Converts `1/4` to one quarter `¼`.                               |
-| threeQuarters       | Converts `3/4` to three quarters `¾`.                            |
-| plusMinus           | Converts `+/-` to plus/minus sign `±`.                           |
-| notEqual            | Converts `!=` to a not equal sign `≠`.                           |
-| laquo               | Converts `<<` to left-pointing double angle quotation mark `«`.  |
-| raquo               | Converts `>>` to right-pointing double angle quotation mark `»`. |
-| multiplication      | Converts `2*3` or `2x3` to a multiplcation sign `2×3`.           |
-| superscriptTwo      | Converts `^2` a superscript two `²`.                             |
-| superscriptThree    | Converts `^3` a superscript three `³`.                           |
+| emDash              | 将双连字符 `--` 转换为 em dash `—`。                             |
+| ellipsis            | 将三个点 `...` 转换为省略号 `…`。                                |
+| openDoubleQuote     | 将开双引号转换为弯双引号，例如 `“`Smart”。                       |
+| closeDoubleQuote    | 将闭双引号转换为弯双引号，例如 “Smart`”`。                       |
+| openSingleQuote     | 将开单引号转换为弯单引号，例如 `‘`Smart’。                       |
+| closeSingleQuote    | 将闭单引号转换为弯单引号，例如 ‘Smart`’`。                       |
+| leftArrow           | 将 `<-` 转换为箭头 `←`。                                         |
+| rightArrow          | 将 `->` 转换为箭头 `→`。                                         |
+| copyright           | 将 `(c)` 转换为版权符号 `©`。                                    |
+| registeredTrademark | 将 `(r)` 转换为注册商标符号 `®`。                                |
+| trademark           | 将 `(tm)` 转换为商标符号 `™`。                                   |
+| servicemark         | 将 `(sm)` 转换为服务标记符号 `℠`。                               |
+| oneHalf             | 将 `1/2` 转换为二分之一 `½`。                                    |
+| oneQuarter          | 将 `1/4` 转换为四分之一 `¼`。                                    |
+| threeQuarters       | 将 `3/4` 转换为四分之三 `¾`。                                    |
+| plusMinus           | 将 `+/-` 转换为正负号 `±`。                                      |
+| notEqual            | 将 `!=` 转换为不等号 `≠`。                                       |
+| laquo               | 将 `<<` 转换为左双角引号 `«`。                                   |
+| raquo               | 将 `>>` 转换为右双角引号 `»`。                                   |
+| multiplication      | 将 `2*3` 或 `2x3` 转换为乘号 `2×3`。                             |
+| superscriptTwo      | 将 `^2` 转换为上标二 `²`。                                       |
+| superscriptThree    | 将 `^3` 转换为上标三 `³`。                                       |
 
-## Keyboard shortcuts
+## 键盘快捷键
 
 | Command         | Windows/Linux        | macOS             |
 | --------------- | -------------------- | ----------------- |
 | undoInputRule() | <kbd>Backspace</kbd> | <kbd>Delete</kbd> |
 
-## Source code
+## 源代码
 
 [packages/extension-typography/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-typography/)
 
-### Disabling rules
+### 禁用规则
 
-You can configure the included rules, or even disable a few of them, like shown below.
+您可以配置内置规则，也可以像下面这样禁用其中几项。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -80,7 +80,7 @@ import Typography from '@tiptap/extension-typography'
 
 const editor = new Editor({
   extensions: [
-    // Disable some included rules
+    // 禁用部分内置规则
     Typography.configure({
       oneHalf: false,
       oneQuarter: false,
@@ -90,9 +90,9 @@ const editor = new Editor({
 })
 ```
 
-### Overriding rules
+### 覆盖规则
 
-You can override the output of a rule by passing a string to the option you want to override.
+您可以将字符串传递给要覆盖的选项，以更改规则的输出。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -100,21 +100,21 @@ import Typography from '@tiptap/extension-typography'
 
 const editor = new Editor({
   extensions: [
-    // Disable some included rules
+    // 禁用部分内置规则
     Typography.configure({
-      oneHalf: '1 / 2', // this will insert "1 / 2" instead of the default "½"
+      oneHalf: '1 / 2', // 这会插入“1 / 2”，而不是默认的“½”
     }),
   ],
 })
 ```
 
-### RTL smart quotes
+### RTL 智能引号
 
-The `openDoubleQuote`, `closeDoubleQuote`, `openSingleQuote`, and `closeSingleQuote` rules support RTL-aware quote characters via the `doubleQuotes` and `singleQuotes` options.
+`openDoubleQuote`、`closeDoubleQuote`、`openSingleQuote` 和 `closeSingleQuote` 规则通过 `doubleQuotes` 和 `singleQuotes` 选项支持适用于 RTL（从右向左）文本的引号字符。
 
-Explicit `rtl` configuration takes precedence over `textDirection`. If no explicit config is provided, the extension falls back to `editor.options.textDirection === 'rtl'`. Otherwise, default LTR quotes are used.
+显式配置的 `rtl` 优先级高于 `textDirection`。如果没有显式配置，扩展会回退到 `editor.options.textDirection === 'rtl'`。否则将使用默认的 LTR（从左向右）引号。
 
-> **Note:** Automatic content-based direction detection is intentionally avoided to prevent ambiguity in mixed-direction text.
+> **注意：** 为避免混合方向文本产生歧义，扩展会有意避免根据内容自动检测文本方向。
 
 ```js
 import { Editor } from '@tiptap/core'
