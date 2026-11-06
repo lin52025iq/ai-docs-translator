@@ -1,29 +1,29 @@
 ---
-title: Set up a whiteboard in React
+title: 在 React 中设置白板
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Set up a whiteboard in React | Tiptap Editor Docs
-  description: Set up a whiteboard in React with useEditor, add buttons for its tools, and style the stage and the shapes.
-  category: Editor
+  title: 在 React 中设置白板 | Tiptap 编辑器文档
+  description: 在 React 中使用 useEditor 设置白板，为工具添加按钮，并设置画布和形状的样式。
+  category: 编辑器
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-This guide builds on the [basic setup](/editor/whiteboard/getting-started/overview#basic-setup) and sets up a board in React, with buttons for its tools.
+本指南基于[基础设置](/editor/whiteboard/getting-started/overview#basic-setup)，介绍如何在 React 中设置白板并为其工具添加按钮。
 
-## Install
+## 安装
 
-Next to the Whiteboard extension, install `@tiptap/react`:
+除了 Whiteboard 扩展，还需要安装 `@tiptap/react`：
 
 ```bash
 npm install @tiptap/react
 ```
 
-## Set up the board
+## 设置白板
 
-A board needs three elements: the stage, which takes pointer and wheel events, the viewport inside it, which the camera moves, and the editor inside the viewport. This setup follows the [example](/editor/whiteboard/examples/simple):
+白板需要三个元素：接收指针和滚轮事件的画布、位于画布内部并由摄像机移动的视口，以及视口内部的编辑器。此设置参照了[示例](/editor/whiteboard/examples/simple)：
 
 ```jsx
 import { EditorContent, useEditor } from '@tiptap/react'
@@ -77,19 +77,19 @@ export default function Whiteboard() {
 }
 ```
 
-With `immediatelyRender: false`, `useEditor` creates the editor after the first render, so `editor` is `null` until then. [Next.js](/editor/getting-started/install/nextjs#integrate-tiptap) needs this, also for a board that loads only in the browser with `next/dynamic`.
+设置 `immediatelyRender: false` 后，`useEditor` 会在首次渲染之后创建编辑器，因此在此之前 `editor` 为 `null`。[Next.js](/editor/getting-started/install/nextjs#integrate-tiptap) 需要这样设置；如果白板仅在浏览器中通过 `next/dynamic` 加载，也同样需要。
 
-`attachStage` returns a function that detaches everything again, so the effect cleans up after itself. Its `updateCamera` option takes a function that turns the old camera into the new one, like a React state setter, so `setCamera` fits.
+`attachStage` 会返回一个用于清理所有绑定的函数，因此 effect 会自行清理。它的 `updateCamera` 选项接收一个函数，将旧摄像机状态转换为新状态，例如 React 状态 setter，因此可以传入 `setCamera`。
 
-<Callout title="Stable options" variant="warning">
+<Callout title="保持选项稳定" variant="warning">
 
-Keep the options of `useEditor` the same from render to render. Create a configured kit, like `WhiteboardKit.configure({ docs })`, and the content once, outside the component or with `useMemo`. When an option changes, `useEditor` applies its options again, and the board turns read-only. A kit configured inside the component changes on every render, so the board turns read-only again after `setEditable(true)`.
+每次渲染时都应保持 `useEditor` 的选项不变。配置好 kit（例如 `WhiteboardKit.configure({ docs })`），并在组件外或使用 `useMemo` 创建一次内容。选项发生变化时，`useEditor` 会重新应用这些选项，白板会变为只读。在组件内部配置的 kit 每次渲染都会变化，因此调用 `setEditable(true)` 后，白板又会变为只读。
 
 </Callout>
 
-### Add tools
+### 添加工具
 
-The board starts with the `select` tool. Your buttons choose another tool with `setTool`, and `getActiveTool` tells which tool is active. `toolKeys` holds the default key that chooses each tool:
+白板默认使用 `select` 工具。按钮通过 `setTool` 选择其他工具，而 `getActiveTool` 会告知当前激活的工具。`toolKeys` 保存了用于选择各工具的默认按键：
 
 ```jsx
 import { useEditorState } from '@tiptap/react'
@@ -125,11 +125,11 @@ export function Toolbar({ editor }) {
 }
 ```
 
-The `doc` tool adds doc frames, which need the `docs` option. See [Doc frames](/editor/whiteboard/guides/doc-frames).
+`doc` 工具用于添加文档框，需要配置 `docs` 选项。请参阅[文档框](/editor/whiteboard/guides/doc-frames)。
 
-### Add the stage CSS
+### 添加画布 CSS
 
-The stage clips the board and keeps touches for itself. The viewport sits in the top left corner of the stage and scales from there:
+画布会裁剪白板内容，并拦截触摸事件。视口位于画布的左上角，并以此为基准缩放：
 
 ```css
 .stage {
@@ -152,9 +152,9 @@ The stage clips the board and keeps touches for itself. The viewport sits in the
 }
 ```
 
-### Style the shapes
+### 设置形状样式
 
-The board adds the CSS that it needs to work, like the size of the board and where handles sit. Colors, fonts and cursors are up to your app. A few rules give the shapes a look:
+白板会添加其正常工作所需的 CSS，例如白板的尺寸和控制柄的位置。颜色、字体和光标由你的应用决定。以下几条规则可以为形状设置外观：
 
 ```css
 [data-type='sticky-note'] {
@@ -194,12 +194,12 @@ The board adds the CSS that it needs to work, like the size of the board and whe
 }
 ```
 
-Shapes store the name of their color in `data-color`, like `data-color="blue"`, so your CSS decides how each color looks. See [Styling](/editor/whiteboard/api-reference/styling) for every attribute that the board sets.
+形状会在 `data-color` 中保存颜色名称，例如 `data-color="blue"`，因此每种颜色的具体外观由你的 CSS 决定。请参阅[样式设置](/editor/whiteboard/api-reference/styling)，了解白板设置的所有属性。
 
-## Next steps
+## 后续步骤
 
-- Learn how the [stage and camera](/editor/whiteboard/guides/stage-and-camera) work
-- Add and change [shapes, and choose tools](/editor/whiteboard/guides/shapes-and-tools)
-- Show documents on the board with [doc frames](/editor/whiteboard/guides/doc-frames)
-- Draw React components on the board with [custom shapes](/editor/whiteboard/guides/custom-shapes)
-- Edit a board together with [collaboration](/editor/whiteboard/guides/collaboration)
+- 了解[画布和摄像机](/editor/whiteboard/guides/stage-and-camera)的工作方式
+- 添加和更改[形状并选择工具](/editor/whiteboard/guides/shapes-and-tools)
+- 使用[文档框](/editor/whiteboard/guides/doc-frames)在白板上显示文档
+- 使用[自定义形状](/editor/whiteboard/guides/custom-shapes)在白板上绘制 React 组件
+- 通过[协作](/editor/whiteboard/guides/collaboration)共同编辑白板
