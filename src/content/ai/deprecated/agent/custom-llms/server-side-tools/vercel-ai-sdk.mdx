@@ -1,16 +1,16 @@
 ---
-title: Server-side tools (Vercel AI SDK)
+title: 服务端工具（Vercel AI SDK）
 meta:
-  title: Server-side tools (Vercel AI SDK) | Tiptap Content AI
-  description: Learn how to call server-side tools using the Vercel AI SDK.
+  title: 服务端工具（Vercel AI SDK）| Tiptap Content AI
+  description: 了解如何使用 Vercel AI SDK 调用服务端工具。
   category: Content AI
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-This guide explains how to call server-side tools using the [Vercel AI SDK](https://ai-sdk.dev). It presents an example of a tool that returns the weather in a given location.
+本指南介绍如何使用 [Vercel AI SDK](https://ai-sdk.dev) 调用服务端工具，并演示一个可返回指定位置天气信息的工具。
 
-First, define the tool in the [Vercel AI SDK tool format](https://ai-sdk.dev/docs/ai-sdk-core/tools-and-tool-calling):
+首先，按照 [Vercel AI SDK 工具格式](https://ai-sdk.dev/docs/ai-sdk-core/tools-and-tool-calling)定义工具：
 
 ```ts
 import { z } from 'zod'
@@ -29,13 +29,13 @@ const weatherTool = tool({
 })
 ```
 
-Then, when you call the Vercel AI SDK, include the tool in the `tools` object.
+然后，调用 Vercel AI SDK 时，将该工具包含在 `tools` 对象中。
 
-Do not forget to set `maxSteps` to a value greater than 1, to enable [multi-step tool calls](https://ai-sdk.dev/docs/ai-sdk-core/tools-and-tool-calling#multi-step-calls-using-maxsteps). This parameter lets the AI call multiple tools in sequence. For example, it can call the tool to get the weather report, and then call a tool to edit the document with that information.
+请务必将 `maxSteps` 设置为大于 1 的值，以启用[多步工具调用](https://ai-sdk.dev/docs/ai-sdk-core/tools-and-tool-calling#multi-step-calls-using-maxsteps)。此参数允许 AI 按顺序调用多个工具。例如，它可以先调用工具获取天气报告，再调用另一个工具将相关信息写入文档。
 
-<Callout title="Use with Vercel AI SDK v4" variant="info">
-  To use the Vercel AI SDK v4 instead of v5, import the `vercelAiSdkV4Adapter` instead of
-  `vercelAiSdkAdapter`.
+<Callout title="与 Vercel AI SDK v4 搭配使用" variant="info">
+  若要使用 Vercel AI SDK v4 而非 v5，请导入 `vercelAiSdkV4Adapter`，而不是
+  `vercelAiSdkAdapter`。
 </Callout>
 
 ```ts
@@ -84,16 +84,16 @@ ${toolkit.getSystemPrompt()}
 })
 ```
 
-Then, add the response to the formatter so that it is included in the conversation.
+然后，将响应添加到格式化器中，使其包含在对话中。
 
 ```ts
 formatter.addAiResponse(response)
 ```
 
-Finally, use the `formatter` to convert the response to the format expected by the AI Agent extension.
+最后，使用 `formatter` 将响应转换为 AI Agent 扩展所需的格式。
 
 ```ts
 const response = formatter.getResolverResponse()
 ```
 
-The value returned from `formatter.getResolverResponse()` should be the response of your API endpoint and the return value of the resolver function.
+`formatter.getResolverResponse()` 返回的值应作为 API 端点的响应，也是 resolver 函数的返回值。
