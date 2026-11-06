@@ -1,47 +1,47 @@
 ---
-title: ListItem extension
+title: ListItem 扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-list?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-list
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-list.svg
     url: https://npmcharts.com/compare/@tiptap/extension-list?minimal=true
-    label: Downloads
+    label: 下载量
 extension:
-  name: List Item
+  name: 列表项
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-list
-  description: 'Simply does its job. Doesn’t even care if it’s part of a bullet list or an ordered list.'
+  description: '只负责做好自己的事。它甚至不在意自己属于项目符号列表还是有序列表。'
   type: node
   icon: List
 meta:
-  title: ListItem Extension | Tiptap Editor Docs
-  description: Use the List Item extension in Tiptap to add support for the `<li>` tag used in bullet and ordered lists. Learn more in our docs!
-  category: Editor
+  title: ListItem 扩展 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 List Item 扩展，添加对项目符号列表和有序列表中使用的 `<li>` 标签的支持。了解更多信息，请参阅我们的文档！
+  category: 编辑器
 ---
 
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-The ListItem extension adds support for the `<li>` HTML tag. It’s used for bullet lists and ordered lists and can’t really be used without them.
+ListItem 扩展添加了对 `<li>` HTML 标签的支持。该标签用于项目符号列表和有序列表，通常不能脱离它们单独使用。
 
 <CodeDemo path="/Nodes/ListItem" />
 
-<Callout title="Modify backspace behavior" variant="info">
-  If you want to modify the standard behavior of backspace and delete functions for lists, you
-  should read about the [ListKeymap](/editor/extensions/functionality/listkeymap) extension.
+<Callout title="修改退格键行为" variant="info">
+  如果你想修改列表中退格键和删除键的标准行为，
+  请阅读 [ListKeymap](/editor/extensions/functionality/listkeymap) 扩展的相关说明。
 </Callout>
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-list
 ```
 
-This extension requires the [`BulletList`](/editor/extensions/nodes/bullet-list) or [`OrderedList`](/editor/extensions/nodes/ordered-list) node.
+此扩展需要 [`BulletList`](/editor/extensions/nodes/bullet-list) 或 [`OrderedList`](/editor/extensions/nodes/ordered-list) 节点。
 
-## Usage
+## 用法
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -52,7 +52,7 @@ new Editor({
 })
 ```
 
-This extension is installed by default with the `ListKit` extension, so you don’t need to install it separately.
+此扩展默认随 `ListKit` 扩展一同安装，因此无需单独安装。
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -63,11 +63,11 @@ new Editor({
 })
 ```
 
-## Settings
+## 设置
 
 ### HTMLAttributes
 
-Custom HTML attributes that should be added to the rendered HTML tag.
+要添加到渲染后 HTML 标签上的自定义 HTML 属性。
 
 ```js
 ListItem.configure({
@@ -77,19 +77,19 @@ ListItem.configure({
 })
 ```
 
-## Keyboard shortcuts
+## 键盘快捷键
 
-| Command         | Windows/Linux                     | macOS                             |
+| 命令            | Windows/Linux                     | macOS                             |
 | --------------- | --------------------------------- | --------------------------------- |
 | splitListItem() | <kbd>Enter</kbd>                  | <kbd>Enter</kbd>                  |
 | sinkListItem()  | <kbd>Tab</kbd>                    | <kbd>Tab</kbd>                    |
 | liftListItem()  | <kbd>Shift</kbd> + <kbd>Tab</kbd> | <kbd>Shift</kbd> + <kbd>Tab</kbd> |
 
-## Source code
+## 源代码
 
 [packages/extension-list/src/item/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-list/src/item/)
 
-## Minimal Install
+## 最小化安装
 
 ```js
 import { Editor } from '@tiptap/core'
