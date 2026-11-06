@@ -1,13 +1,13 @@
 ---
-title: 'Options'
-intro: 'You pass the options of the extension to <code>Diagrams.configure()</code>. The options of the <code>chart</code> node go under <code>chart</code>.'
+title: '选项'
+intro: '将扩展的选项传入 <code>Diagrams.configure()</code>。<code>chart</code> 节点的选项放在 <code>chart</code> 下。'
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Options | Tiptap Diagrams Docs'
-  description: 'Every option of the Diagrams extension and of its chart Node, by topic.'
-  category: Diagrams
+  title: '选项 | Tiptap Diagrams 文档'
+  description: '按主题介绍 Diagrams 扩展及其 chart 节点的所有选项。'
+  category: 图表
 ---
 
 ```ts
@@ -18,90 +18,79 @@ Diagrams.configure({
 })
 ```
 
-| Topic                                                            | Options                                                                                                          |
-| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| [Renderers](/diagrams/api-reference/options#renderers)           | `renderers`, `diagramRenderers`, `defaultRenderer`, `chartTypes`, `rendererRules`                                |
-| [Data](/diagrams/api-reference/options#data)                     | `sources`, `formats`, `fetch`, `allowSourceUrl`, `onSourceError`                                                 |
-| [Input](/diagrams/api-reference/options#input)                   | `trigger`, `codeBlockShortcut`                                                                                   |
-| [Display](/diagrams/api-reference/options#display)               | `resizable`, `lazyRendering`, `animation`, `sourceHighlighting`, `styles`, `colorScheme`, `unavailable`          |
-| [Export](/diagrams/api-reference/options#export)                 | `docxImages`, `uploadImage`, `imageNodeName`                                                                     |
-| [Nodes](/diagrams/api-reference/options#nodes)                   | `chart`, `flowDiagram`                                                                                           |
-| [The chart node](/diagrams/api-reference/options#the-chart-node) | `defaultType`, `placeholder`, `delimiters`, `decimalSeparator`, `linkTables`, `minRenderWidth`, `HTMLAttributes` |
+| 主题                                                               | 选项                                                                                                            |
+| ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| [渲染器](/diagrams/api-reference/options#renderers)                | `renderers`、`diagramRenderers`、`defaultRenderer`、`chartTypes`、`rendererRules`                                |
+| [数据](/diagrams/api-reference/options#data)                       | `sources`、`formats`、`fetch`、`allowSourceUrl`、`onSourceError`                                                 |
+| [输入](/diagrams/api-reference/options#input)                       | `trigger`、`codeBlockShortcut`                                                                                  |
+| [显示](/diagrams/api-reference/options#display)                     | `resizable`、`lazyRendering`、`animation`、`sourceHighlighting`、`styles`、`colorScheme`、`unavailable`          |
+| [导出](/diagrams/api-reference/options#export)                      | `docxImages`、`uploadImage`、`imageNodeName`                                                                     |
+| [节点](/diagrams/api-reference/options#nodes)                       | `chart`、`flowDiagram`                                                                                           |
+| [chart 节点](/diagrams/api-reference/options#the-chart-node)        | `defaultType`、`placeholder`、`delimiters`、`decimalSeparator`、`linkTables`、`minRenderWidth`、`HTMLAttributes` |
 
-## Renderers
+## 渲染器
 
 ### renderers
 
-`ChartRenderer[]` · Default `[]`
+`ChartRenderer[]` · 默认值 `[]`
 
-The Renderers that can draw a chart. See [Renderers](/diagrams/renderers/overview). Without a Renderer,
-a chart shows what [`unavailable`](/diagrams/api-reference/options#unavailable) returns.
+可用于绘制图表的渲染器。请参阅[渲染器](/diagrams/renderers/overview)。如果没有渲染器，图表会显示 [`unavailable`](/diagrams/api-reference/options#unavailable) 返回的内容。
 
 ### diagramRenderers
 
-`DiagramRenderer[]` · Default `[]`
+`DiagramRenderer[]` · 默认值 `[]`
 
-The Diagram Renderers that can draw a diagram. See [Diagrams](/diagrams/flow-diagrams/overview). Without a
-Diagram Renderer, a diagram shows what [`unavailable`](/diagrams/api-reference/options#unavailable) returns.
+可用于绘制示意图的渲染器。请参阅[示意图](/diagrams/flow-diagrams/overview)。如果没有示意图渲染器，示意图会显示 [`unavailable`](/diagrams/api-reference/options#unavailable) 返回的内容。
 
-| Diagram Renderer         | Imported from                            |
-| ------------------------ | ---------------------------------------- |
-| `mermaidDiagramRenderer` | `@tiptap-pro/extension-diagrams/mermaid` |
-| `drawioDiagramRenderer`  | `@tiptap-pro/extension-diagrams/drawio`  |
-| `bpmnDiagramRenderer`    | `@tiptap-pro/extension-diagrams/bpmn`    |
+| 示意图渲染器             | 导入路径                                  |
+| ------------------------ | ----------------------------------------- |
+| `mermaidDiagramRenderer` | `@tiptap-pro/extension-diagrams/mermaid`  |
+| `drawioDiagramRenderer`  | `@tiptap-pro/extension-diagrams/drawio`   |
+| `bpmnDiagramRenderer`    | `@tiptap-pro/extension-diagrams/bpmn`     |
 
 ### defaultRenderer
 
-`string | null` · Default `null`
+`string | null` · 默认值 `null`
 
-The id of the Renderer that draws a chart that names no Renderer. Without it, the chart gets the
-first registered Renderer that draws its type.
+用于绘制未指定渲染器的图表的渲染器 ID。如果未设置，图表将使用第一个能够绘制其类型的已注册渲染器。
 
 ### chartTypes
 
-`{ id, label, shape, word, description? }[]` · Default `[]`
+`{ id, label, shape, word, description? }[]` · 默认值 `[]`
 
-Chart types you add to the built-in ones. A type with the id of a built-in type replaces it. See
-[Register your own chart type](/diagrams/renderers/custom-chart-types).
+添加到内置图表类型中的类型。若新增类型的 ID 与某个内置类型相同，则会替换该内置类型。请参阅[注册自定义图表类型](/diagrams/renderers/custom-chart-types)。
 
 ### rendererRules
 
-`Record<string, { attribution?, exports? }>` · Default `{}`
+`Record<string, { attribution?, exports? }>` · 默认值 `{}`
 
-Rules you add to the rules a Renderer declares, keyed by Renderer id. They can only make a
-Renderer stricter. See [Adding rules](/diagrams/renderers/custom#adding-rules).
+按渲染器 ID 指定要添加到渲染器声明规则中的规则。这些规则只能让渲染器受到更多限制。请参阅[添加规则](/diagrams/renderers/custom#adding-rules)。
 
-## Data
+## 数据
 
 ### sources
 
-`ChartSourceProvider[]` · Default `[]`
+`ChartSourceProvider[]` · 默认值 `[]`
 
-Data Source providers you add to the built-in `url-csv`, `url-json` and `document-table`. See
-[Data Sources](/diagrams/data/sources).
+添加到内置 `url-csv`、`url-json` 和 `document-table` 中的数据源提供程序。请参阅[数据源](/diagrams/data/sources)。
 
 ### formats
 
-`ChartFormat[]` · Default `[]`
+`ChartFormat[]` · 默认值 `[]`
 
-Text formats you add to `chart-json`, `chart-syntax` and `mermaid`. A format is
-`{ id, description, mediaType, schema?, example, parse, serialize }`. A format with the id of a
-built-in format replaces it.
+添加到 `chart-json`、`chart-syntax` 和 `mermaid` 中的文本格式。格式的结构为 `{ id, description, mediaType, schema?, example, parse, serialize }`。若新增格式的 ID 与某个内置格式相同，则会替换该内置格式。
 
 ### fetch
 
-`typeof globalThis.fetch | null` · Default `globalThis.fetch`
+`typeof globalThis.fetch | null` · 默认值 `globalThis.fetch`
 
-The `fetch` function the URL providers read with. Pass your own to add credentials or to go
-through a proxy.
+URL 提供程序用于读取数据的 `fetch` 函数。可以传入自定义函数以添加凭据或通过代理访问。
 
 ### allowSourceUrl
 
-`((url: URL) => boolean) | null` · Default `null`
+`((url: URL) => boolean) | null` · 默认值 `null`
 
-Decides which URLs `url-csv` and `url-json` may read. Without it, they read any absolute `http:`
-or `https:` URL, and the AI tool `insertLinkedChart` refuses URL sources. See
-[Reading a URL](/diagrams/data/sources#reading-a-url).
+决定 `url-csv` 和 `url-json` 可以读取哪些 URL。如果未设置，它们可以读取任何绝对 `http:` 或 `https:` URL，而 AI 工具 `insertLinkedChart` 会拒绝 URL 数据源。请参阅[读取 URL](/diagrams/data/sources#reading-a-url)。
 
 ```ts
 Diagrams.configure({
@@ -111,81 +100,67 @@ Diagrams.configure({
 
 ### onSourceError
 
-`((error, { provider, address }) => void) | null` · Default `null`
+`((error, { provider, address }) => void) | null` · 默认值 `null`
 
-Called when a Data Source cannot be read. The chart keeps its last snapshot. See
-[Data Sources](/diagrams/data/sources).
+数据源无法读取时调用。图表会保留上一次的快照。请参阅[数据源](/diagrams/data/sources)。
 
-## Input
+## 输入
 
 ### trigger
 
-`string` · Default `':::'`
+`string` · 默认值 `':::'`
 
-The text that opens the Quick Input when you type it at the start of an empty paragraph.
+在空段落开头输入此文本时，会打开快速输入。
 
 ### codeBlockShortcut
 
-`string | false` · Default `'Mod-Enter'`
+`string | false` · 默认值 `'Mod-Enter'`
 
-The key that turns Mermaid source in the code block at the selection into a chart or a diagram,
-and confirms the Quick Input. `false` adds no key. See
-[Mod-Enter in a code block](/diagrams/data/quick-input#mod-enter-in-a-code-block).
+按下此键可将光标所在代码块中的 Mermaid 源码转换为图表或示意图，也可确认快速输入。设为 `false` 则不添加快捷键。请参阅[在代码块中使用 Mod-Enter](/diagrams/data/quick-input#mod-enter-in-a-code-block)。
 
-## Display
+## 显示
 
 ### resizable
 
-`boolean` · Default `false`
+`boolean` · 默认值 `false`
 
-`true` puts resize handles on a selected chart or diagram while the editor is editable. What each
-handle does is under [Resize handles](/diagrams/guides/size-and-view#resize-handles).
+设为 `true` 后，在编辑器可编辑时，选中的图表或示意图上会显示缩放手柄。各手柄的功能请参阅[缩放手柄](/diagrams/guides/size-and-view#resize-handles)。
 
 ### lazyRendering
 
-`boolean` · Default `true`
+`boolean` · 默认值 `true`
 
-`true` draws a chart or a diagram only once it comes within half a screen of the viewport. It
-starts drawing at most one chart or diagram per animation frame.
+设为 `true` 后，只有当图表或示意图进入视口半个屏幕范围内时才会绘制。每个动画帧最多开始绘制一个图表或示意图。
 
-- A change to a chart or diagram far from the viewport, such as an edit, a synchronized Data
-  Source or a new theme, is drawn when it comes near again.
-- Until it is drawn, a chart keeps its height and a diagram is a few lines tall.
-- Exports draw on their own and are not affected.
-- Without `IntersectionObserver`, every chart and diagram is drawn as with `false`.
+- 对远离视口的图表或示意图所做的更改（例如编辑、同步数据源或更换主题）会等到其再次接近视口时才绘制。
+- 绘制之前，图表会保留其高度，示意图则只有几行高。
+- 导出会自行绘制，不受此选项影响。
+- 如果没有 `IntersectionObserver`，则会像设为 `false` 一样绘制所有图表和示意图。
 
-`false` draws every chart and diagram as the document opens, still one per frame. Use it for a
-page that is printed or captured as a whole, and in tests whose DOM implementation has an
-`IntersectionObserver` that never reports.
+设为 `false` 后，文档打开时会绘制所有图表和示意图，但仍然每帧绘制一个。适用于需要整体打印或截取的页面，以及 DOM 实现中的 `IntersectionObserver` 始终不触发的测试。
 
 ### animation
 
-`boolean` · Default `true`
+`boolean` · 默认值 `true`
 
-`true` lets a Renderer animate a chart when it is first drawn and when its data or spec changes.
-`false` draws every chart in its final state at once.
+设为 `true` 后，渲染器可以在首次绘制图表，以及图表数据或规格发生变化时播放动画。设为 `false` 后，所有图表都会直接绘制为最终状态。
 
-- The ECharts Renderer animates.
-- The D3 and Mermaid Renderers never animate. Diagrams never animate either.
-- When the viewer's system asks for reduced motion (`prefers-reduced-motion: reduce`), nothing
-  animates, whatever this option says.
-- Exports are never animated.
+- ECharts 渲染器会播放动画。
+- D3 和 Mermaid 渲染器不会播放动画，示意图也不会播放动画。
+- 如果查看者的系统要求减少动态效果（`prefers-reduced-motion: reduce`），则无论此选项如何设置，都不会播放动画。
+- 导出内容不会播放动画。
 
 ### sourceHighlighting
 
-`boolean` · Default `true`
+`boolean` · 默认值 `true`
 
-Colors the parts of the text in the Quick Input and in a Mermaid diagram's code view: keywords,
-labels, numbers, arrows and delimiters, and comments. `false` leaves the text in one color. The
-colors and their classes are under [Highlighted source](/diagrams/api-reference/selectors#highlighted-source).
-A text field of your own can show them with [`highlightSource`](/diagrams/guides/split-view).
+为快速输入中的文本以及 Mermaid 示意图代码视图中的文本着色，包括关键字、标签、数字、箭头、分隔符和注释。设为 `false` 后，文本将统一显示为一种颜色。颜色及其对应的类请参阅[高亮源码](/diagrams/api-reference/selectors#highlighted-source)。你自己的文本字段也可以通过 [`highlightSource`](/diagrams/guides/split-view) 显示这些高亮效果。
 
 ### styles
 
-`ChartStyle[]` · Default `[]`
+`ChartStyle[]` · 默认值 `[]`
 
-Styles a chart may name in `spec.style`, in addition to the built-in ones. A style with the id
-of a built-in one replaces it. See [Styles](/diagrams/guides/styling#styles).
+除内置样式外，图表还可以在 `spec.style` 中指定这些样式。若新增样式的 ID 与某个内置样式相同，则会替换该内置样式。请参阅[样式](/diagrams/guides/styling#styles)。
 
 ```ts
 Diagrams.configure({
@@ -202,36 +177,28 @@ Diagrams.configure({
 
 ### colorScheme
 
-`'auto' | 'light'` · Default `'auto'`
+`'auto' | 'light'` · 默认值 `'auto'`
 
-The color scheme charts and diagrams are drawn in. `'auto'` uses the color scheme of the web page,
-as described under [Dark color scheme](/diagrams/guides/styling#dark-color-scheme). `'light'` draws them
-light on any page.
+图表和示意图的绘制配色方案。`'auto'` 使用网页的配色方案，详见[深色配色方案](/diagrams/guides/styling#dark-color-scheme)。`'light'` 则无论页面配色如何，始终使用浅色绘制。
 
 ### unavailable
 
-`(figure) => string | HTMLElement | null` · Default: a sentence saying the chart or the diagram
-can't be drawn here
+`(figure) => string | HTMLElement | null` · 默认值：一条说明图表或示意图无法在此处绘制的句子
 
-What a chart or a diagram shows in its place when no registered Renderer draws its chart type,
-its diagram format or the kind of its Mermaid source. Return a string, an element, or `null` to
-show nothing. The data stays in the document unchanged, and none of it is shown unless you show
-it.
+没有已注册的渲染器能够绘制图表类型、示意图格式或 Mermaid 源码类型时，用于指定图表或示意图的替代显示内容。返回字符串、元素或 `null`，即可分别显示相应内容或不显示任何内容。数据会原样保留在文档中，除非你主动显示，否则不会显示。
 
-The function receives `figure`, `{ kind, reason, pos, title, type?, format? }`:
+此函数接收 `figure` 和 `{ kind, reason, pos, title, type?, format? }`：
 
-| Field    | Value                                                                                                                        |
-| -------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `kind`   | `'chart'` or `'flowDiagram'`                                                                                                 |
-| `reason` | `'no-renderer'`, or `'unsupported-kind'` for a kind no registered Renderer draws                                             |
-| `pos`    | Its position, for a command or a [storage function](/diagrams/api-reference/storage). `null` while it is not in the document |
-| `title`  | Its title, or `null`                                                                                                         |
-| `type`   | A chart's type                                                                                                               |
-| `format` | A diagram's format                                                                                                           |
+| 字段     | 值                                                                                                                         |
+| -------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `kind`   | `'chart'` 或 `'flowDiagram'`                                                                                               |
+| `reason` | `'no-renderer'`；如果没有已注册的渲染器能够绘制该类型，则为 `'unsupported-kind'`                                            |
+| `pos`    | 其位置，可用于命令或[存储函数](/diagrams/api-reference/storage)。不在文档中时为 `null`                                      |
+| `title`  | 标题，或 `null`                                                                                                            |
+| `type`   | 图表的类型                                                                                                                 |
+| `format` | 示意图的格式                                                                                                               |
 
-To let a user open the data, return a button that reads it when pressed: a chart's data with
-[`read`](/diagrams/api-reference/storage) or `readTable`, a diagram's source with `listDiagrams`. Here, `openDialog`
-is a dialog of your own. You can also show the data in place.
+若要让用户打开数据，可返回一个按钮，在用户按下时读取数据：使用 [`read`](/diagrams/api-reference/storage) 或 `readTable` 读取图表数据，使用 `listDiagrams` 读取示意图源码。此处的 `openDialog` 是你自己的对话框。你也可以直接在原位置显示数据。
 
 ```ts
 Diagrams.configure({
@@ -251,67 +218,57 @@ Diagrams.configure({
 })
 ```
 
-## Export
+## 导出
 
 ### docxImages
 
-`'auto' | 'always'` · Default `'auto'`
+`'auto' | 'always'` · 默认值 `'auto'`
 
-How `exportDocx` writes charts when the call does not pass `images`. `'auto'` writes a Word chart
-or a Word table where Word shows the chart correctly, and an image otherwise. `'always'` writes
-every chart as an image. See [Charts as images](/diagrams/export#charts-as-images).
+调用时未传入 `images` 参数的情况下，`exportDocx` 如何写入图表。`'auto'` 会在 Word 能正确显示图表时写入 Word 图表或 Word 表格，否则写入图像。`'always'` 会将所有图表写为图像。请参阅[将图表导出为图像](/diagrams/export#charts-as-images)。
 
 ### uploadImage
 
-`((blob, { alt, width, height, format }) => Promise<string>) | null` · Default `null`
+`((blob, { alt, width, height, format }) => Promise<string>) | null` · 默认值 `null`
 
-Uploads an image made by `convertChartToImage` and returns its URL. Without it, the image is
-stored as a data URL.
+上传由 `convertChartToImage` 创建的图像并返回其 URL。如果未设置，图像将以 data URL 的形式存储。
 
 ### imageNodeName
 
-`string` · Default `'image'`
+`string` · 默认值 `'image'`
 
-The name of the image node that `convertChartToImage` creates.
+`convertChartToImage` 创建的图像节点名称。
 
-## Nodes
+## 节点
 
 ### chart
 
-`Partial<ChartOptions> | false` · Default `{}`
+`Partial<ChartOptions> | false` · 默认值 `{}`
 
-The options of the `chart` node, listed under [The chart node](/diagrams/api-reference/options#the-chart-node). `false` leaves
-charts out.
+`chart` 节点的选项，详见 [chart 节点](/diagrams/api-reference/options#the-chart-node)。设为 `false` 可禁用图表。
 
 ### flowDiagram
 
-`Partial<FlowDiagramOptions> | false` · Default `{}`
+`Partial<FlowDiagramOptions> | false` · 默认值 `{}`
 
-The options of the `flowDiagram` node. `FlowDiagramOptions` is `{ HTMLAttributes }`, the HTML
-attributes on the diagram's root element, with the default `{}`. `false` leaves diagrams out.
+`flowDiagram` 节点的选项。`FlowDiagramOptions` 的结构为 `{ HTMLAttributes }`，用于设置示意图根元素的 HTML 属性，默认值为 `{}`。设为 `false` 可禁用示意图。
 
-In a shared document, a client with `false` deletes the diagrams of every client, unless it sets
-`enableContentCheck: true` with `@tiptap/extension-collaboration` 3.33.0 and `@tiptap/y-tiptap`
-3.2.0 or later. See
-[A client without `Diagrams`](/diagrams/guides/collaboration#a-client-without-diagrams).
+在共享文档中，如果某个客户端将此选项设为 `false`，它会删除所有客户端的示意图；除非该客户端将 `@tiptap/extension-collaboration` 3.33.0 和 `@tiptap/y-tiptap` 3.2.0 或更高版本中的 `enableContentCheck: true` 设为启用。请参阅[未安装 `Diagrams` 的客户端](/diagrams/guides/collaboration#a-client-without-diagrams)。
 
-## The chart node
+## chart 节点
 
-These options go under `chart`.
+这些选项放在 `chart` 下。
 
 ### defaultType
 
-`ChartType` · Default `'line'`
+`ChartType` · 默认值 `'line'`
 
-The type a new chart gets when nothing names another type, for example in the Quick Input or
-in a converted table.
+新图表的默认类型，适用于未指定其他类型的情况，例如在快速输入中或将表格转换为图表时。
 
 ### placeholder
 
-`string | (({ type, shape, delimiter }) => string) | false` · Default: example rows for the
-Quick Input's chart type, and the line `Enter twice to finish`
+`string | (({ type, shape, delimiter }) => string) | false` · 默认值：快速输入中与图表类型对应的示例行，以及提示 `Enter twice to finish`
 
-The hint an empty Quick Input shows.
+快速输入为空时显示的提示。
 
 ```ts
 Diagrams.configure({
@@ -321,63 +278,55 @@ Diagrams.configure({
 })
 ```
 
-- A function is called again when the chart type of the Quick Input changes.
-- `shape` is the layout of rows the chart type reads, also for a type registered with
-  `chartTypes`. See [Register your own chart type](/diagrams/renderers/custom-chart-types).
-- Line breaks in the hint are kept.
-- `false` shows no hint.
+- 快速输入的图表类型发生变化时，会再次调用此函数。
+- `shape` 是图表类型读取的行布局，使用 `chartTypes` 注册的类型也适用。请参阅[注册自定义图表类型](/diagrams/renderers/custom-chart-types)。
+- 提示中的换行会保留。
+- 设为 `false` 则不显示提示。
 
 ### delimiters
 
-`string[]` · Default `[',', ';', '|', '\t']`
+`string[]` · 默认值 `[',', ';', '|', '\t']`
 
-The delimiters the Chart syntax may use to separate cells.
+图表语法可用于分隔单元格的分隔符。
 
 ### decimalSeparator
 
-`'auto' | '.' | ','` · Default `'auto'`
+`'auto' | '.' | ','` · 默认值 `'auto'`
 
-How numbers in the rows of a chart are read. See [Numbers](/diagrams/data/chart-syntax#numbers).
+图表行中的数字的读取方式。请参阅[数字](/diagrams/data/chart-syntax#numbers)。
 
 ### linkTables
 
-`boolean` · Default `false`
+`boolean` · 默认值 `false`
 
-Allows a chart to follow a table in the same document, with `insertLinkedChart`,
-`linkChartToTable` and `setChartLayout`. It adds the attribute `chartTableId` to the table node.
-See [Tables](/diagrams/data/tables).
+允许图表关联同一文档中的表格，支持使用 `insertLinkedChart`、`linkChartToTable` 和 `setChartLayout`。此选项会向表格节点添加 `chartTableId` 属性。请参阅[表格](/diagrams/data/tables)。
 
 ### minRenderWidth
 
-`number | null` · Default `null`
+`number | null` · 默认值 `null`
 
-When the editor's text is narrower than this many pixels, a chart is drawn this wide and scaled
-down to fit, text included.
+当编辑器文本宽度小于此像素值时，图表会以此宽度绘制，再缩小以适应可用空间，文本也会随之缩小。
 
 ```ts
 Diagrams.configure({ chart: { minRenderWidth: 560 } })
 ```
 
-On a phone, the chart keeps its wide-screen layout instead of crowding into the narrow width.
+在手机上，图表会保留宽屏布局，而不会挤进狭窄空间。
 
-- The scale goes no lower than 60 %. Below that, the chart is laid out more densely and leaves
-  out category labels that would overlap, unless `axes.x.labels` chooses them.
-- `null` always draws at the width shown.
-- A maximized chart and an export are drawn at their own size.
+- 缩放比例不会低于 60%。若低于此比例，图表布局会更加紧凑，并省略会发生重叠的类别标签；除非 `axes.x.labels` 指定了要显示的标签。
+- 设为 `null` 时，始终按显示宽度绘制。
+- 最大化的图表和导出内容会按各自的尺寸绘制。
 
 ### HTMLAttributes
 
-`Record<string, unknown>` · Default `{}`
+`Record<string, unknown>` · 默认值 `{}`
 
-HTML attributes on the chart's root element.
+图表根元素的 HTML 属性。
 
-## Requirements on the schema
+## 对 schema 的要求
 
-The table commands and the table view of the Quick Input use the nodes registered as `table`,
-`tableRow`, `tableHeader` and `tableCell`, such as those of `@tiptap/extension-table`. Without
-those nodes, those commands return `false`.
+表格命令和快速输入中的表格视图会使用注册为 `table`、`tableRow`、`tableHeader` 和 `tableCell` 的节点，例如 `@tiptap/extension-table` 提供的节点。如果没有这些节点，相应命令会返回 `false`。
 
-`convertChartToImage` needs the image node named by `imageNodeName`.
+`convertChartToImage` 需要使用由 `imageNodeName` 指定名称的图像节点。
 
-The extension adds attributes to these nodes. It never registers nodes of its own under their
-names.
+此扩展会向这些节点添加属性，但不会以这些名称注册自己的节点。
