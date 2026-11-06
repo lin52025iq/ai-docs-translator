@@ -1,16 +1,16 @@
 ---
-title: Page formats constants
+title: 页面格式常量
 meta:
-  title: Page formats constants | Tiptap Pages Docs
-  description: Predefined page formats and their pixel dimensions for Tiptap Pages.
-  category: Pages
+  title: 页面格式常量 | Tiptap Pages 文档
+  description: Tiptap Pages 的预定义页面格式及其像素尺寸。
+  category: 页面
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-The `PAGE_FORMATS` constant provides a set of predefined page formats (such as A4, A3, Letter, etc.) with real-world dimensions and recommended margins, already converted to pixels. This is useful for quickly setting up the `pageFormat` option or custom layouts in the Tiptap Pages extension.
+`PAGE_FORMATS` 常量提供了一组预定义的页面格式（如 A4、A3、Letter 等），包含实际尺寸和推荐页边距，并已转换为像素。这有助于快速设置 Tiptap Pages 扩展中的 `pageFormat` 选项或自定义布局。
 
-## Import
+## 导入
 
 ```js
 import { PAGE_FORMATS } from '@tiptap-pro/extension-pages'
@@ -34,17 +34,17 @@ PAGE_FORMATS: {
 }
 ```
 
-## Available Formats
+## 可用格式
 
-Pixel values use standard CSS pixels (one inch is 96 pixels). The constants preserve fractional pixel precision internally; the integers below are rounded for readability.
+像素值采用标准 CSS 像素（1 英寸等于 96 像素）。这些常量在内部保留小数精度；下表中的整数为便于阅读而四舍五入后的值。
 
-| Format      | Width (px) | Height (px) | Margins (px: top / right / bottom / left) |
-| ----------- | ---------- | ----------- | ----------------------------------------- |
-| **A4**      | 794        | 1123        | 95 / 76 / 95 / 76                         |
-| **A3**      | 1123       | 1587        | 95 / 76 / 95 / 76                         |
-| **A5**      | 559        | 794         | 76 / 57 / 76 / 57                         |
-| **Letter**  | 816        | 1056        | 96 / 96 / 96 / 96                         |
-| **Legal**   | 816        | 1345        | 96 / 96 / 96 / 96                         |
-| **Tabloid** | 1056       | 1633        | 96 / 96 / 96 / 96                         |
+| 格式        | 宽度 (px) | 高度 (px) | 页边距 (px：上 / 右 / 下 / 左) |
+| ----------- | --------- | --------- | ------------------------------ |
+| **A4**      | 794       | 1123      | 95 / 76 / 95 / 76              |
+| **A3**      | 1123      | 1587      | 95 / 76 / 95 / 76              |
+| **A5**      | 559       | 794       | 76 / 57 / 76 / 57              |
+| **Letter**  | 816       | 1056      | 96 / 96 / 96 / 96              |
+| **Legal**   | 816       | 1345      | 96 / 96 / 96 / 96              |
+| **Tabloid** | 1056      | 1633      | 96 / 96 / 96 / 96              |
 
-For the underlying real-world measurements in centimetres, see [Page format](/pages/core-concepts/page-format).
+如需了解以厘米为单位的实际尺寸，请参阅[页面格式](/pages/core-concepts/page-format)。
