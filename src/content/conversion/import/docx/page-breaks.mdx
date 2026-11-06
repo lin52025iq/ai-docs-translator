@@ -1,12 +1,12 @@
 ---
-title: Page breaks in DOCX import
+title: DOCX 导入中的分页符
 tags:
   - type: start
   - type: beta
 meta:
-    title: Page breaks in DOCX import | Tiptap Conversion
-    description: Learn how to preserve page breaks when importing DOCX files into your Tiptap editor using the PageBreak extension.
-    category: Conversion
+    title: DOCX 导入中的分页符 | Tiptap 转换
+    description: 了解如何使用 PageBreak 扩展，在将 DOCX 文件导入 Tiptap 编辑器时保留分页符。
+    category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
@@ -17,27 +17,27 @@ import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 <EnterpriseCalloutAuto variant="docx" renderMode="sidebar" disableWaitlist />
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 开通试用或订阅">
+        在账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 计划](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Install from private registry">
-        To install this frontend extensions, authenticate to Tiptap's private npm registry by following the [setup guide](/guides/pro-extensions).
+    <RequirementItem label="2. 从私有注册表安装">
+        要安装这些前端扩展，请按照[设置指南](/guides/pro-extensions)进行操作，以通过 Tiptap 的私有 npm 注册表完成身份验证。
     </RequirementItem>
 </Requirements>
 
-When importing `.docx` files that contain page breaks, the conversion service emits `pageBreak` nodes in the Tiptap JSON output. To render and interact with these page breaks in your editor, register the `@tiptap-pro/extension-pagebreak` extension.
+导入包含分页符的 `.docx` 文件时，转换服务会在 Tiptap JSON 输出中生成 `pageBreak` 节点。若要在编辑器中渲染这些分页符并与之交互，请注册 `@tiptap-pro/extension-pagebreak` 扩展。
 
 <CodeDemo isPro path="/Extensions/PageBreak" />
 
-## Install the PageBreak extension
+## 安装 PageBreak 扩展
 
 ```bash
 npm install @tiptap-pro/extension-pagebreak
 ```
 
-## Set up your editor
+## 设置编辑器
 
-Register the PageBreak extension alongside the Import extension. No additional configuration is needed for page break support during import.
+将 PageBreak 扩展与 Import 扩展一同注册。导入时支持分页符无需额外配置。
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -59,24 +59,24 @@ const editor = new Editor({
 })
 ```
 
-When you import a `.docx` file, any page breaks in the document are preserved as `pageBreak` nodes in the editor.
+导入 `.docx` 文件时，文档中的分页符都会在编辑器中保留为 `pageBreak` 节点。
 
 ```ts
 editor.chain().focus().importDocx({ file }).run()
 ```
 
-## How it works
+## 工作原理
 
-1. The conversion service detects page break elements (`<w:br w:type="page"/>`) in the `.docx` file.
-2. Each page break is emitted as a `{ type: "pageBreak" }` node in the Tiptap JSON output.
-3. The PageBreak extension renders these nodes as visual dashed dividers with a centered "Page break" label.
+1. 转换服务会检测 `.docx` 文件中的分页符元素（`<w:br w:type="page"/>`）。
+2. 每个分页符都会在 Tiptap JSON 输出中生成为 `{ type: "pageBreak" }` 节点。
+3. PageBreak 扩展会将这些节点渲染为可视的虚线分隔线，并在中央显示“分页符”标签。
 
-<Callout title="Without the PageBreak extension">
-  If the PageBreak extension is not registered, imported `pageBreak` nodes require a [custom extension](/editor/extensions/custom-extensions/extend-existing) to render. Without one, the editor schema does not recognize the node type. See the [invalid schema guide](/guides/invalid-schema) for strategies.
+<Callout title="未使用 PageBreak 扩展时">
+  如果未注册 PageBreak 扩展，导入的 `pageBreak` 节点需要通过[自定义扩展](/editor/extensions/custom-extensions/extend-existing)才能渲染。否则，编辑器架构将无法识别该节点类型。有关应对方法，请参阅[无效架构指南](/guides/invalid-schema)。
 </Callout>
 
-## Learn more
+## 了解更多
 
-- [PageBreak extension reference](/pages/core-concepts/page-break-node) for full options, commands, and keyboard shortcuts
-- [DOCX import guide](/conversion/import/docx/editor-extension) for general import setup
-- [Page breaks in DOCX export](/conversion/export/docx/page-breaks) for export support
+- [PageBreak 扩展参考](/pages/core-concepts/page-break-node)：了解完整选项、命令和键盘快捷键
+- [DOCX 导入指南](/conversion/import/docx/editor-extension)：了解常规导入设置
+- [DOCX 导出中的分页符](/conversion/export/docx/page-breaks)：了解导出支持
