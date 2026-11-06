@@ -1,44 +1,43 @@
 ---
-title: Text extension
+title: Text 扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-text?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-text
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-text.svg
     url: https://npmcharts.com/compare/@tiptap/extension-text?minimal=true
-    label: Downloads
+    label: 下载量
 extension:
   name: Text
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-text
-  description: 'No text editor without text, so better make sure to install this one.'
+  description: '没有文本就谈不上文本编辑器，所以最好确保安装此扩展。'
   type: node
   icon: Type
 meta:
-  title: Text extension | Tiptap Editor Docs
-  description: It's very likely that you want text in your text editor. Enable plain text support with the Text extension. More in the docs!
-  category: Editor
+  title: Text 扩展 | Tiptap 编辑器文档
+  description: 你很可能希望在文本编辑器中使用文本。安装 Text 扩展即可启用纯文本支持。更多内容请参阅文档！
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-The `Text` extension is required, at least if you want to work with text of any kind and that’s very likely. This extension is a little bit different, it doesn’t even render HTML. It’s plain text, that’s all.
+`Text` 扩展是必需的，至少当你想处理任何类型的文本时是这样，而你很可能会这么做。这个扩展有些特别，它甚至不会渲染 HTML。它就是纯文本，仅此而已。
 
-<Callout title="Breaking Change" variant="info">
-  Tiptap v1 tried to hide that node from you, but it has always been there. You have to explicitly
-  import it from now on (or use [StarterKit](/editor/extensions/functionality/starterkit)).
+<Callout title="重大变更" variant="info">
+  Tiptap v1 曾试图向你隐藏这个节点，但它一直都存在。从现在起，你必须显式导入它（或使用 [StarterKit](/editor/extensions/functionality/starterkit)）。
 </Callout>
 
 <CodeDemo path="/Nodes/Text" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-text
 ```
 
-## Source code
+## 源代码
 
 [packages/extension-text/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-text/)
