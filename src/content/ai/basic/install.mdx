@@ -1,43 +1,43 @@
 ---
-title: Install the Basic AI Generation extension
-tags:
+title: 安装基础 AI 生成扩展
+ tags:
   - type: start
 meta:
-  title: Install Basic AI Generation | Tiptap Basic AI Generation
-  description: Set up Tiptap Basic AI Generation in your editor, including configuring OpenAI keys and JWT authentication for secure AI integration.
-  category: Basic AI Generation
+  title: 安装基础 AI 生成 | Tiptap 基础 AI 生成
+  description: 在编辑器中设置 Tiptap 基础 AI 生成，包括配置 OpenAI 密钥和 JWT 身份验证，以实现安全的 AI 集成。
+  category: 基础 AI 生成
 ---
 import { Requirements, RequirementItem } from '@/components/Requirements'
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 激活试用或订阅">
+        在账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 方案](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Integrate an AI provider">
-        Configure OpenAI in your [AI settings](https://cloud.tiptap.dev/v2/cloud/ai) or review the [Custom LLM guide](/ai/basic/custom-llms).
+    <RequirementItem label="2. 集成 AI 提供商">
+        在[AI 设置](https://cloud.tiptap.dev/v2/cloud/ai)中配置 OpenAI，或查看[自定义 LLM 指南](/ai/basic/custom-llms)。
     </RequirementItem>
-    <RequirementItem label="3. Install from private registry">
-        To install the frontend extensions, authenticate to Tiptap’s private npm registry by following the [setup guide](/guides/pro-extensions).
+    <RequirementItem label="3. 从私有注册表安装">
+        如需安装前端扩展，请按照[设置指南](/guides/pro-extensions)进行身份验证，以访问 Tiptap 的私有 npm 注册表。
     </RequirementItem>
 </Requirements>
 
-This installation guide relies on using the [Tiptap AI backend service](https://cloud.tiptap.dev/v2/cloud/ai). If you want to configure it with your own custom LLM you need to follow [this guide](/ai/basic/custom-llms) instead.
+本安装指南使用 [Tiptap AI 后端服务](https://cloud.tiptap.dev/v2/cloud/ai)。如果你想使用自己的自定义 LLM 进行配置，请改为参阅[本指南](/ai/basic/custom-llms)。
 
-## Start your Basic AI Generation app
-1. **Activate a plan:** Begin a [free trial or choose a subscription](https://cloud.tiptap.dev/v2/billing).
-2. **Configure your AI app.** Add your OpenAI API key to [your app](https://cloud.tiptap.dev/v2/cloud/ai).
-3. **Set up authentication:** Sign a token with `aud: "AI"` and the `AI:Generation` permission, then pass it to the extension. See [Authentication](/authentication) for how to sign a token.
+## 启动基础 AI 生成应用
+1. **激活方案：** 开始[免费试用或选择订阅方案](https://cloud.tiptap.dev/v2/billing)。
+2. **配置 AI 应用。** 将 OpenAI API 密钥添加到[你的应用](https://cloud.tiptap.dev/v2/cloud/ai)中。
+3. **设置身份验证：** 使用 `aud: "AI"` 和 `AI:Generation` 权限对令牌进行签名，然后将其传递给扩展。有关令牌签名方法，请参阅[身份验证](/authentication)。
 
-## Access the private registry
-The Basic AI Generation extension is published in Tiptap’s private npm registry. Integrate the extension by following the [private registry guide](/guides/pro-extensions). If you already authenticated your Tiptap account you can go straight to [#Install](#install).
+## 访问私有注册表
+基础 AI 生成扩展发布在 Tiptap 的私有 npm 注册表中。请按照[私有注册表指南](/guides/pro-extensions)集成此扩展。如果你已完成 Tiptap 账户身份验证，可以直接跳转到 [#安装](#install)。
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap-pro/extension-ai
 ```
 
-The integration into your editor instance is done like every other Tiptap extension. This is an example on how it could look like:
+将扩展集成到编辑器实例中的方式与其他 Tiptap 扩展相同。示例如下：
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -58,10 +58,10 @@ const editor = new Editor({
 })
 ```
 
-At this point you're good to go to use OpenAI in your Tiptap editor. Have a look at the [configuration options](/ai/basic/configure) to customize your experience.
+现在，你可以在 Tiptap 编辑器中使用 OpenAI 了。请查看[配置选项](/ai/basic/configure)，根据需要自定义使用体验。
 
-The previous App ID and secret (HS256) flow still works and is documented under [Legacy authentication](/authentication/legacy).
+之前使用 App ID 和密钥（HS256）的流程仍然有效，相关说明请参阅[旧版身份验证](/authentication/legacy)。
 
-## Privacy and data handling
+## 隐私与数据处理
 
-Learn how Tiptap processes AI requests and handles your content data in our [privacy documentation](/ai/basic/privacy). This covers data retention, security practices, and compliance information for using Basic AI Generation features.
+请查看我们的[隐私文档](/ai/basic/privacy)，了解 Tiptap 如何处理 AI 请求以及如何处理你的内容数据。文档涵盖使用基础 AI 生成功能时的数据保留、安全实践和合规信息。
