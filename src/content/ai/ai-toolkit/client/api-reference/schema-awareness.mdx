@@ -1,70 +1,68 @@
 ---
-title: Schema awareness
+title: Schema 感知
 meta:
-  title: Schema awareness | Tiptap AI Toolkit
-  description: Provide schema awareness to AI models so they understand nodes, marks, and attributes.
-  category: AI Toolkit
+  title: Schema 感知 | Tiptap AI 工具包
+  description: 为 AI 模型提供 Schema 感知能力，帮助它们理解节点、标记和属性。
+  category: AI 工具包
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-A Tiptap [schema](/editor/core-concepts/schema) describes the elements the document can (and cannot) contain. Tiptap's **schema awareness** capabilities allow AI models to understand the document better.
+Tiptap [Schema](/editor/core-concepts/schema) 描述了文档可以（或不可以）包含哪些元素。Tiptap 的 **Schema 感知**功能可以帮助 AI 模型更好地理解文档。
 
-<Callout title="Why schema awareness?" variant="default">
-  Without schema awareness, the AI model might generate content that the Tiptap editor does not
-  support. For example, it might generate a table in a document that does not support tables. With
-  schema awareness enabled, the AI model will know that table nodes are not supported and will
-  refuse to generate them.
+<Callout title="为什么需要 Schema 感知？" variant="default">
+  如果没有 Schema 感知，AI 模型可能会生成 Tiptap 编辑器不支持的内容。例如，它可能会在不支持表格的文档中生成表格。启用
+  Schema 感知后，AI 模型会知道不支持表格节点，并拒绝生成表格。
 </Callout>
 
-For a step-by-step guide on integrating schema awareness, see the [Schema awareness guide](/ai/ai-toolkit/client/agents/schema-awareness).
+如需了解如何逐步集成 Schema 感知，请参阅 [Schema 感知指南](/ai/ai-toolkit/client/agents/schema-awareness)。
 
-## API Reference
+## API 参考
 
 ## `getHtmlSchemaAwareness`
 
-Returns a string describing the document's schema. This string should be added to the end of the system prompt that is sent to the AI model.
+返回一个描述文档 Schema 的字符串。此字符串应添加到发送给 AI 模型的系统提示末尾。
 
-Currently, the `getHtmlSchemaAwareness` method only supports AI models that generate HTML content. We plan to add support for other formats in the future.
+目前，`getHtmlSchemaAwareness` 方法仅支持生成 HTML 内容的 AI 模型。我们计划在未来支持其他格式。
 
-### Parameters (`GetHtmlSchemaAwarenessOptions`)
+### 参数（`GetHtmlSchemaAwarenessOptions`）
 
-- `customNodes?` (`HtmlItem[]`): Custom schema awareness items to include in addition to the default ones. The values defined in this option will override the schema awareness data defined in the `addHtmlSchemaAwareness` configuration option of custom extensions. They will also override the schema awareness data of official Tiptap extensions. Default: `[]`.
+- `customNodes?`（`HtmlItem[]`）：除默认项目外，还要包含的自定义 Schema 感知项目。此选项中定义的值会覆盖自定义扩展 `addHtmlSchemaAwareness` 配置项中定义的 Schema 感知数据，也会覆盖 Tiptap 官方扩展的 Schema 感知数据。默认值：`[]`。
 
-Every `HtmlItem` object contains these properties:
+每个 `HtmlItem` 对象都包含以下属性：
 
-- `extensionName` (`string`): The [name of the extension](/editor/extensions/custom-extensions/create-new/extension#name) that provides this element
-- `tag` (`string`): The HTML tag name for this element
-- `name` (`string`): The human-readable name of the element in English
-- `description?` (`string | null`): Explanation of what the element is and how it is displayed
-- `attributes?` (`HtmlAttribute[]`): Possible attributes of the HTML tag. If `undefined`, there are no attributes. Each `HtmlAttribute` object contains these properties:
-  - `attr` (`string`): The name of the attribute in the HTML code
-  - `value?` (`string`): If `value` is not `undefined`, the attribute always has that value for this element. This is used for attributes that have fixed values
-  - `description?` (`string | null`): Explanation of the attribute in English for AI model understanding
+- `extensionName`（`string`）：提供此元素的[扩展名称](/editor/extensions/custom-extensions/create-new/extension#name)
+- `tag`（`string`）：此元素对应的 HTML 标签名
+- `name`（`string`）：此元素易于理解的英文名称
+- `description?`（`string | null`）：对该元素是什么以及它如何显示的说明
+- `attributes?`（`HtmlAttribute[]`）：HTML 标签可能包含的属性。如果为 `undefined`，则表示没有属性。每个 `HtmlAttribute` 对象都包含以下属性：
+  - `attr`（`string`）：HTML 代码中的属性名称
+  - `value?`（`string`）：如果 `value` 不是 `undefined`，则该元素的此属性始终具有该值。此项用于值固定的属性
+  - `description?`（`string | null`）：用英文编写的属性说明，帮助 AI 模型理解
 
-### Returns
+### 返回值
 
-`string`: Human-readable schema awareness text suitable for system prompts
+`string`：适用于系统提示的易读 Schema 感知文本
 
-### Example
+### 示例
 
 ```ts
-// Retrieve the schema awareness string
+// 获取 Schema 感知字符串
 const schemaAwareness = toolkit.getHtmlSchemaAwareness()
 ```
 
-## `addHtmlSchemaAwareness` (extension configuration option)
+## `addHtmlSchemaAwareness`（扩展配置项）
 
-Add schema awareness information about a custom Node or Mark. This option is used to configure custom nodes and marks for the AI model to know about them.
+添加有关自定义 Node 或 Mark 的 Schema 感知信息。此选项用于配置自定义节点和标记，让 AI 模型了解它们。
 
-This configuration option is available for [custom Node and Mark extensions](/editor/extensions/custom-extensions/create-new/node).
+此配置项适用于[自定义 Node 和 Mark 扩展](/editor/extensions/custom-extensions/create-new/node)。
 
-### Parameters (`HtmlItem`)
+### 参数（`HtmlItem`）
 
-- `tag` (`string`): The HTML tag name for this element
-- `name` (`string`): The human-readable name of the element in English
-- `description?` (`string | null`): Explanation of what the element is and how it is displayed
-- `attributes?` (`HtmlAttribute[]`): Possible attributes of the HTML tag. If `undefined`, there are no attributes. Each `HtmlAttribute` object contains these properties:
-  - `attr` (`string`): The name of the attribute in the HTML code
-  - `value?` (`string`): If `value` is not `undefined`, the attribute always has that value for this element. This is used for attributes that have fixed values
-  - `description?` (`string | null`): Explanation of the attribute in English for AI model understanding
+- `tag`（`string`）：此元素对应的 HTML 标签名
+- `name`（`string`）：此元素易于理解的英文名称
+- `description?`（`string | null`）：对该元素是什么以及它如何显示的说明
+- `attributes?`（`HtmlAttribute[]`）：HTML 标签可能包含的属性。如果为 `undefined`，则表示没有属性。每个 `HtmlAttribute` 对象都包含以下属性：
+  - `attr`（`string`）：HTML 代码中的属性名称
+  - `value?`（`string`）：如果 `value` 不是 `undefined`，则该元素的此属性始终具有该值。此项用于值固定的属性
+  - `description?`（`string | null`）：用英文编写的属性说明，帮助 AI 模型理解
