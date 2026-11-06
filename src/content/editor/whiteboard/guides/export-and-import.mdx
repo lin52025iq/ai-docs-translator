@@ -1,19 +1,19 @@
 ---
-title: Whiteboard export and import
+title: 白板导出与导入
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Whiteboard export and import | Tiptap Editor Docs
-  description: Save a whiteboard to a JSON file and open it again, and export its shapes as an SVG, PNG or JPEG image.
-  category: Editor
+  title: 白板导出与导入 | Tiptap 编辑器文档
+  description: 将白板保存为 JSON 文件并重新打开，也可将其中的图形导出为 SVG、PNG 或 JPEG 图片。
+  category: 编辑器
 ---
 
-Save a board to a JSON file and open it again, in the same app or in another one, and open the boards that Excalidraw and tldraw save. Export the board, or some of its shapes, as an SVG, PNG or JPEG image. The functions give you the file, and your app saves it, for example as a download.
+将白板保存为 JSON 文件，然后在同一应用或其他应用中重新打开；也可以打开 Excalidraw 和 tldraw 保存的白板。将整个白板或其中的一些图形导出为 SVG、PNG 或 JPEG 图片。这些函数会生成文件，之后由你的应用保存，例如将其作为下载文件。
 
-## Save a board to a file
+## 将白板保存为文件
 
-`exportBoard` returns a board file: the JSON of the board, and the documents that its doc frames show. Turn it into a file with `JSON.stringify`:
+`exportBoard` 返回一个白板文件，其中包含白板的 JSON 数据，以及文档框所显示的文档。使用 `JSON.stringify` 将其转换为文件：
 
 ```js
 import { exportBoard } from '@tiptap-pro/extension-whiteboard'
@@ -22,9 +22,9 @@ const json = JSON.stringify(exportBoard({ editor }))
 const file = new Blob([json], { type: 'application/json' })
 ```
 
-## Open a board file
+## 打开白板文件
 
-`importBoard` opens the parsed JSON of a board file. By default, the board of the file replaces the shapes on the board. With `mode: 'insert'`, it adds copies of the file's shapes in front of the other shapes, like a paste, and selects them:
+`importBoard` 会打开经过解析的白板文件 JSON。默认情况下，文件中的白板会替换当前白板中的图形。使用 `mode: 'insert'` 时，则会像粘贴一样，将文件中的图形副本添加到其他图形前面，并选中这些副本：
 
 ```js
 import { importBoard, scrollShapesIntoView } from '@tiptap-pro/extension-whiteboard'
@@ -34,15 +34,15 @@ const { ids } = importBoard({ editor, file: JSON.parse(text), mode: 'insert' })
 scrollShapesIntoView({ stage, editor, ids, updateCamera: setCamera })
 ```
 
-Like pasted shapes, the copies keep their positions from the file, and move 24 board units down and to the right while the first of them would start at the same point as a shape on the board. `scrollShapesIntoView` moves the camera to them. One undo takes an import back.
+与粘贴的图形一样，这些副本会保留文件中的位置；如果第一个副本原本会与白板上的某个图形位于同一点，它们就会整体向右下方移动 24 个白板单位。`scrollShapesIntoView` 会移动摄像机，使其显示这些图形。执行一次撤销即可撤销导入。
 
-`importBoard` returns the ids of the shapes that it added. In `skipped`, it returns the shapes that it left out, because the editor can't show them: a custom shape whose extension the editor doesn't have, or a shape with an attribute of the wrong type, like a position that is not a number. Inside the shapes, marks that the editor doesn't have are removed, and nodes that it doesn't have become paragraphs or are removed. Shapes without an id, or with the id of another shape in the file, get a new one.
+`importBoard` 会返回它添加的图形 ID。在 `skipped` 中，它会返回被省略的图形，因为编辑器无法显示它们：例如，编辑器没有相应扩展的自定义图形，或属性类型错误的图形（如位置不是数字）。对于图形内部的内容，编辑器不支持的标记会被移除，不支持的节点会转换为段落或被移除。没有 ID，或 ID 与文件中其他图形重复的图形会获得新 ID。
 
-Each shape in `skipped` says why it was left out in `reason`. When the file says, it also has `detail`, what it held, like a frame's name, a link or text, and `box`, where it would be on the board. So an app can list what is missing, and move the camera to it with [`fitCameraToRect`](/editor/whiteboard/api-reference/utilities#fitcameratorect).
+`skipped` 中的每个图形都会在 `reason` 中说明被省略的原因。如果文件中包含相关信息，还会提供 `detail`（例如文档框名称、链接或文本）以及 `box`（图形在白板上的位置）。这样，应用就可以列出缺失内容，并使用 [`fitCameraToRect`](/editor/whiteboard/api-reference/utilities#fitcameratorect) 将摄像机移动到对应位置。
 
-### Files that can't be opened
+### 无法打开的文件
 
-`importBoard` throws a `BoardFileError` when the JSON is none of the files that it opens, or has a newer file format of the whiteboard or of tldraw. Its `code` tells which, and the board stays as it was:
+如果 JSON 不属于它支持的文件类型，或者白板或 tldraw 文件格式版本过新，`importBoard` 就会抛出 `BoardFileError`。其 `code` 会指出具体原因，且白板会保持原样：
 
 ```js
 import { BoardFileError, importBoard } from '@tiptap-pro/extension-whiteboard'
@@ -51,53 +51,53 @@ try {
   importBoard({ editor, file: JSON.parse(text) })
 } catch (error) {
   if (error instanceof BoardFileError && error.code === 'version-too-new') {
-    showMessage('Update the app to open this board.')
+    showMessage('请更新应用以打开此白板。')
   } else {
-    showMessage('This file is not a board.')
+    showMessage('此文件不是白板文件。')
   }
 }
 ```
 
-## Open Excalidraw and tldraw files
+## 打开 Excalidraw 和 tldraw 文件
 
-`importBoard` also opens the files that Excalidraw (`.excalidraw`) and tldraw (`.tldr`) save. Pass their parsed JSON like a board file, and give the file input their extensions, like `accept=".json,.excalidraw,.tldr"`.
+`importBoard` 也可以打开 Excalidraw（`.excalidraw`）和 tldraw（`.tldr`）保存的文件。像传入白板文件一样传入解析后的 JSON，并在文件输入框中指定这些扩展名，例如 `accept=".json,.excalidraw,.tldr"`。
 
-The shapes of the file become board shapes:
+文件中的图形会转换为白板图形：
 
-- Rectangles, ellipses, diamonds and triangles become geometric shapes with their text. Other geometries, like stars, become rectangles.
-- Notes become sticky notes, and text becomes free text. Images show when the file holds them as a data URL or an `http` or `https` URL.
-- Arrows keep the shapes that they connect, their label, heads and dash, and their straight, curved or elbow line.
-- Drawings and lines of three or more points become pen lines, and lines of two points become arrows without heads.
-- Colors become the nearest board color, and font sizes the nearest board size.
+- 矩形、椭圆、菱形和三角形会转换为带文本的几何图形。星形等其他几何图形会转换为矩形。
+- 便笺会转换为便利贴，文本会转换为自由文本。如果文件中包含数据 URL 或 `http`、`https` URL，图片就会显示。
+- 箭头会保留其连接的图形、标签、箭头端和虚线样式，以及直线、曲线或折线形状。
+- 绘图和由三个或更多点组成的线条会转换为画笔线条；由两个点组成的线条会转换为没有箭头端的箭头。
+- 颜色会转换为最接近的白板颜色，字号会转换为最接近的白板字号。
 
-What the board doesn't have stays out or changes:
+白板不支持的内容会被省略或改变：
 
-- Shapes lose their rotation, and groups are undone. Frames, embeds, bookmarks, videos and the shapes that an app built on tldraw adds are left out, but not the shapes in them. `skipped` lists them, with their name, link or text and where they would be.
-- Of a tldraw file, the first page of its page list opens, not the page that was open last. `skipped` lists the shapes of the other pages, with the name of their page.
-- Arrows run straight, in one curve or as an elbow between their ends, so an Excalidraw arrow loses the points between its ends.
-- Images lose their crop and their flip, and fill their box.
-- Board shapes have no vertical alignment, so text at the top or bottom of a shape becomes free text there.
-- Apps usually fill board shapes, which other apps don't by default, so larger shapes go behind smaller ones.
+- 图形会失去旋转效果，组会被拆分。文档框、嵌入内容、书签、视频以及基于 tldraw 构建的应用添加的图形会被省略，但其中的图形不会被省略。`skipped` 会列出这些内容及其名称、链接或文本，以及它们原本所在的位置。
+- 对于 tldraw 文件，会打开页面列表中的第一页，而不是上次打开的页面。`skipped` 会列出其他页面中的图形，并标明其所属页面名称。
+- 箭头只能在两端之间呈直线、单段曲线或折线，因此 Excalidraw 箭头中两端之间的点会丢失。
+- 图片会失去裁剪和翻转效果，并填满其边界框。
+- 白板图形不支持垂直对齐，因此位于图形顶部或底部的文本会转换为相应位置的自由文本。
+- 应用通常会填充白板图形，而其他应用默认不会这样做，因此较大的图形会置于较小图形的后方。
 
-Excalidraw libraries (`.excalidrawlib`) and the files of tldraw 1 don't open, and throw a `BoardFileError` with the code `not-a-board-file`. Files of newer tldraw versions open as far as the board knows their shapes. tldraw still writes version 1 of its file format, and `importBoard` throws `version-too-new` only for a file of a higher version.
+Excalidraw 库（`.excalidrawlib`）和 tldraw 1 的文件无法打开，并会抛出 `code` 为 `not-a-board-file` 的 `BoardFileError`。较新版本的 tldraw 文件会尽可能打开白板所支持的图形。tldraw 仍会写入版本 1 的文件格式，只有文件版本更高时，`importBoard` 才会抛出 `version-too-new`。
 
-## Doc frames
+## 文档框
 
-A board file holds the documents of its doc frames. Each doc frame that `importBoard` adds gets a new document id, so it never shares a document with a frame on another board. Fill the new documents with the `load` member of [`docs`](/editor/whiteboard/guides/doc-frames#provide-the-documents):
+白板文件包含其文档框中的文档。`importBoard` 添加的每个文档框都会获得一个新的文档 ID，因此不会与其他白板上的文档框共用文档。使用 [`docs`](/editor/whiteboard/guides/doc-frames#provide-the-documents) 的 `load` 成员填充新文档：
 
 ```js
 load: ({ docId, content }) => documents.set(docId, content),
 ```
 
-`load` runs before the frame shows, and before `start`. Without `load`, imported frames start with empty documents.
+`load` 会在文档框显示之前、`start` 运行之前执行。如果没有 `load`，导入的文档框将从空文档开始。
 
-## Images
+## 图片
 
-A board file holds the URL of each [image](/editor/whiteboard/guides/images), like the board does, but not the image's file. So an imported image shows only while its URL works.
+白板文件会保存每张[图片](/editor/whiteboard/guides/images)的 URL，与白板本身的行为相同，但不会保存图片文件。因此，只有在 URL 有效时，导入的图片才会显示。
 
-## Export an image
+## 导出图片
 
-`exportBoardImage` draws shapes of the board as a PNG or JPEG file, and `exportBoardSvg` as SVG markup with its size. They draw the shapes as the page shows them, with your app's CSS and fonts, but without selections, handles and carets:
+`exportBoardImage` 会将白板图形绘制为 PNG 或 JPEG 文件，`exportBoardSvg` 则会生成带有尺寸的 SVG 标记。它们会按照页面上的显示效果绘制图形，使用应用的 CSS 和字体，但不包含选区、控制柄和光标：
 
 ```js
 import { exportBoardImage, exportBoardSvg } from '@tiptap-pro/extension-whiteboard'
@@ -106,23 +106,23 @@ const png = await exportBoardImage({ editor, background: '#fff' })
 const image = await exportBoardSvg({ editor, ids: ['note-1'] })
 ```
 
-- Without `ids`, they draw every shape. They return `null` when there are no shapes to draw.
-- `padding` is the space around the shapes, 16 board units by default. Without a `background`, the image is transparent there, except for a JPEG, which gets white.
-- A PNG or JPEG has 2 pixels per board unit by default, set with `pixelRatio`. Large images get fewer, since browsers can't draw canvases beyond a certain size.
+- 如果未指定 `ids`，就会绘制所有图形。如果没有可绘制的图形，则返回 `null`。
+- `padding` 指图形周围的留白，默认值为 16 个白板单位。如果没有指定 `background`，留白区域会透明；但 JPEG 图片的留白区域会是白色。
+- PNG 或 JPEG 默认每个白板单位对应 2 个像素，可通过 `pixelRatio` 设置。对于较大的图片，由于浏览器无法绘制超过特定尺寸的画布，每个白板单位对应的像素会减少。
 
-The image comes from the board in the page, so the board's editor must be mounted. Otherwise the functions throw.
+图片取自页面中的白板，因此白板编辑器必须已挂载，否则这些函数会抛出错误。
 
-- Fonts come along from the page's `@font-face` rules, also from imported style sheets and from style sheets of other origins, like Google Fonts. A font whose files can't load falls back to another font. Fonts that the `FontFace` API adds don't come along.
-- Images in shapes come along when their file is an image. An image that the page can't fetch, like one from another origin without CORS headers, shows nothing.
-- Files that don't load within 10 seconds are left out.
-- Text is HTML inside a `foreignObject`. Browsers show it, but some vector editors don't.
-- CSS background images, `canvas` elements and pseudo-elements like `::before` don't show.
-- In Safari, PNG and JPEG images have no box shadows, which Safari would draw as gray boxes.
-- The export reads the styles of every element, so large boards take a while: about a second for 1,000 notes.
+- 页面 `@font-face` 规则中的字体也会一并导出，包括导入的样式表和其他来源（例如 Google Fonts）的样式表中的字体。无法加载字体文件时，会回退到其他字体。通过 `FontFace` API 添加的字体不会一并导出。
+- 如果图形中的图片文件是图片格式，就会一并导出。页面无法获取的图片（例如来自没有 CORS 标头的其他来源的图片）不会显示。
+- 10 秒内未加载的文件会被省略。
+- 文本是 `foreignObject` 中的 HTML。浏览器可以显示它，但某些矢量编辑器不支持。
+- CSS 背景图片、`canvas` 元素和 `::before` 等伪元素不会显示。
+- 在 Safari 中，PNG 和 JPEG 图片没有阴影，因为 Safari 会将阴影绘制为灰色方框。
+- 导出时会读取每个元素的样式，因此大型白板需要一些时间：导出 1,000 条便笺约需一秒。
 
-## Copy an image
+## 复制图片
 
-Safari writes to the clipboard only while it handles the click or key press that asks for it. So call `write` at once, and give `ClipboardItem` the promise of the image:
+Safari 仅会在处理触发复制操作的点击或按键时写入剪贴板。因此，请立即调用 `write`，并将图片的 Promise 传给 `ClipboardItem`：
 
 ```js
 const png = exportBoardImage({ editor }).then(
@@ -132,7 +132,7 @@ const png = exportBoardImage({ editor }).then(
 await navigator.clipboard.write([new ClipboardItem({ 'image/png': png })])
 ```
 
-## Next steps
+## 后续步骤
 
-- Keep the documents of doc frames with [`docs`](/editor/whiteboard/guides/doc-frames)
-- See all options of [`importBoard`](/editor/whiteboard/api-reference/utilities#importboard) and [`exportBoardImage`](/editor/whiteboard/api-reference/utilities#exportboardimage)
+- 使用 [`docs`](/editor/whiteboard/guides/doc-frames) 保留文档框中的文档
+- 查看 [`importBoard`](/editor/whiteboard/api-reference/utilities#importboard) 和 [`exportBoardImage`](/editor/whiteboard/api-reference/utilities#exportboardimage) 的所有选项
