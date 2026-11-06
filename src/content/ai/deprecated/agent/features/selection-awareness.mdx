@@ -1,14 +1,14 @@
 ---
-title: Selection awareness
+title: 选区感知
 meta:
-  title: Selection awareness | Tiptap Content AI
-  description: Make the AI agent aware of the selected content in the editor.
-  category: Content AI
+  title: 选区感知 | Tiptap Content AI
+  description: 让 AI 代理能够感知编辑器中选中的内容。
+  category: 内容 AI
 ---
 
-Selection awareness allows the AI agent to know the selected content in the editor. It helps the AI agent understand the user's request and make precise edits to the selection only.
+选区感知功能可让 AI 代理了解编辑器中选中的内容，帮助它理解用户的请求，并仅对选区进行精准编辑。
 
-To activate selection awareness, set the `addSelection` option to `true`. This will send the selected content as [context](/ai/deprecated/agent/features/context) to the AI agent.
+要启用选区感知功能，请将 `addSelection` 选项设为 `true`。这样会将选中的内容作为[上下文](/ai/deprecated/agent/features/context)发送给 AI 代理。
 
 ```ts
 provider.addUserMessage('Summarize the selected document', {
