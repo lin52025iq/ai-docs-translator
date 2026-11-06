@@ -1,0 +1,88 @@
+---
+title: 验证 Slot 值
+meta:
+  description: 在应用需要时，使用内置规则和自定义规则检查 Slot 值。
+---
+
+import { CodeDemo } from '@/components/CodeDemo'
+
+Slot 可以包含规则，用于描述哪些内容有效。
+
+<CodeDemo isPro path="/Examples/SlotValidation" />
+
+当应用需要检查内容时（例如保存或提交表单之前），请调用 `validateEditorSlots`。提交是应用层操作，并非内置的 Slot 事件。
+
+校验会读取快照并返回校验结果；它不会解析或改写 Slot 值。只有调用校验 API 时，才会运行内置检查和已注册的异步校验器。编辑会使先前的结果失效，并取消待处理的编辑器校验任务，但不会自动启动新的校验任务。
+
+如需在输入时进行校验，请注册编辑器的 `update` 监听器，并对 `validateEditorSlots` 的调用进行防抖处理。请处理已取消的任务，只显示当前结果，并在 UI 卸载时移除监听器和待处理的计时器。自动调度由宿主负责；系统没有内置的自动校验选项。
+
+```ts
+import { isSlotValidationCurrent, validateEditorSlots } from '@tiptap-pro/extension-slot'
+
+try {
+  const result = await validateEditorSlots({ editor })
+  if (!isSlotValidationCurrent({ editor, result })) {
+    showMessage('The document changed. Please submit again to validate the latest values.')
+  } else if (result.valid) {
+    save(editor.getJSON())
+  } else {
+    showIssues(result.issues)
+  }
+} catch (error) {
+  if (error instanceof Error && error.name === 'AbortError') {
+    showMessage('Validation was cancelled. Please submit again.')
+  } else {
+    throw error
+  }
+}
+```
+
+`isSlotValidationCurrent` 会检查结果是否仍与编辑器当前文档及校验设置相匹配。
+
+在 `attrs.config` 中定义必填要求、长度、内容类型和模式：
+
+```ts
+const config = {
+  required: true,
+  constraints: {
+    pattern: { source: '^ORD-\\d{4}$', message: 'Use ORD-0000' },
+  },
+}
+
+editor.commands.insertSlot({ config })
+```
+
+对于特定于应用的检查，请持久化校验器名称并注册其实现：
+
+```ts
+Slot.configure({
+  validators: {
+    registeredPerson: async ({ slot, signal }) => {
+      const found = await directory.find(slot.text, { signal })
+      return found
+        ? []
+        : [
+            {
+              code: 'custom.person',
+              message: 'Choose a registered person.',
+            },
+          ]
+    },
+  },
+})
+
+// When the slot is created, include the custom validator
+editor.commands.insertSlot({
+  config: {
+    validators: [{ name: 'registeredPerson' }],
+  },
+})
+```
+
+校验可以是异步的，因此会传入 AbortSignal（`signal` 字段），以便在校验期间文档发生编辑时取消校验过程。
+
+对于涉及多个字段的检查，请在所属 Slot 中添加 `crossFieldRules` 条目，并注册一个 `crossFieldValidators` 函数。[了解详情，请参阅 API 参考](/composable-docs/slots/api-reference/validation#crossfieldvalidator)。
+
+如果部分校验器缺失或执行失败，`validateEditorSlots` 会返回 `status: 'unavailable'`。
+
+有关校验的更多信息，请参阅 [API 参考](/composable-docs/slots/api-reference/validation#slotvalidator)。
