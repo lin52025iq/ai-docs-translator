@@ -1,19 +1,19 @@
 ---
-title: Whiteboard editor events
+title: 白板编辑器事件
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Whiteboard editor events | Tiptap Editor Docs
-  description: The editor events of the Tiptap Whiteboard extension.
-  category: Editor
+  title: 白板编辑器事件 | Tiptap 编辑器文档
+  description: Tiptap 白板扩展的编辑器事件。
+  category: 编辑器
 ---
 
-The board's editor emits these events. Listen with `editor.on()`, and stop with `editor.off()`.
+白板的编辑器会触发以下事件。使用 `editor.on()` 监听，使用 `editor.off()` 停止监听。
 
 ## `docChange`
 
-Fired when the editor of a doc frame's document has a transaction, also one that only moves the caret, when its editing starts or stops, and when the editor is created or destroyed. Use it to update a toolbar that also works in documents, but not to save documents.
+当文档框中文档的编辑器发生事务（包括仅移动光标的事务）、开始或停止编辑，以及编辑器创建或销毁时触发。可用它更新同时适用于文档的工具栏，但不要用它保存文档。
 
 ```js
 import { getEditedDocEditor } from '@tiptap-pro/extension-whiteboard'
@@ -24,15 +24,15 @@ editor.on('docChange', ({ docId }) => {
 })
 ```
 
-### Payload
+### 负载
 
-- `docId` (`string`): The id of the document that changed.
+- `docId` (`string`)：发生变化的文档 ID。
 
 ## `shapesMove`
 
-Fired while a drag moves shapes, with how far it moved them as `delta`, in board units. `delta` is `null` once the drag ends. When a drag ends, the drop changes the document before this event reports the end.
+拖动形状时会触发此事件，`delta` 表示形状移动的距离，单位为白板单位。拖动结束后，`delta` 为 `null`。拖动结束时，放置操作会先更改文档，然后此事件才会报告拖动结束。
 
-Share it with other users, so [`createRemoteMoves`](/editor/whiteboard/api-reference/utilities#createremotemoves) or [`createRemoteCursors`](/editor/whiteboard/api-reference/utilities#createremotecursors) shows the drag on their boards:
+将此事件分享给其他用户，这样 [`createRemoteMoves`](/editor/whiteboard/api-reference/utilities#createremotemoves) 或 [`createRemoteCursors`](/editor/whiteboard/api-reference/utilities#createremotecursors) 就能在他们的白板上显示拖动：
 
 ```js
 editor.on('shapesMove', ({ ids, delta }) => {
@@ -40,9 +40,9 @@ editor.on('shapesMove', ({ ids, delta }) => {
 })
 ```
 
-### Payload
+### 负载
 
-- `ids` (`readonly string[]`): The ids of the dragged shapes.
-- `delta` (`Point | null`): How far the drag has moved the shapes since it began, or `null` once it ends.
+- `ids` (`readonly string[]`)：被拖动形状的 ID。
+- `delta` (`Point | null`)：从拖动开始到当前为止形状移动的距离；拖动结束后为 `null`。
 
-See [Collaboration](/editor/whiteboard/guides/collaboration#show-what-others-select-and-drag).
+参见[协作](/editor/whiteboard/guides/collaboration#show-what-others-select-and-drag)。
