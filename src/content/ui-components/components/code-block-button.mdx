@@ -1,12 +1,12 @@
 ---
-title: Code Block Button
+title: 代码块按钮
 meta:
-  title: Code Block Button | Tiptap UI Components
-  description: Toggle through block-level nodes like code blocks with the code block button. More in the docs.
-  category: UI Components
+  title: 代码块按钮 | Tiptap UI 组件
+  description: 使用代码块按钮切换代码块等块级节点。更多信息请参阅文档。
+  category: UI 组件
 component:
-  name: Code Block Button
-  description: Add a button that toggles through block-level nodes like blockquotes.
+  name: 代码块按钮
+  description: 添加一个可在代码块、引用块等块级节点之间切换的按钮。
   type: component
   isFree: true
   isCloud: false
@@ -19,25 +19,25 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A fully accessible code block button for Tiptap editors. Easily toggle selected content into a `<codeBlock>` with keyboard shortcut support and flexible customization options.
+一款完全无障碍的 Tiptap 编辑器代码块按钮。可轻松将选中的内容切换为 `<codeBlock>`，并支持键盘快捷键和灵活的自定义选项。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui/code-block-button" />
 
-## Installation
+## 安装
 
-Add the component via the Tiptap CLI:
+通过 Tiptap CLI 添加此组件：
 
 ```bash
 npx @tiptap/cli@latest add code-block-button
 ```
 
-## Components
+## 组件
 
 ### `<CodeBlockButton />`
 
-A prebuilt React component that toggles code block formatting.
+一个预构建的 React 组件，可切换代码块格式。
 
-#### Usage
+#### 用法
 
 ```tsx
 import { useEditor, EditorContent, EditorContext } from '@tiptap/react'
@@ -69,23 +69,23 @@ export default function MyEditor() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type             | Default     | Description                                        |
-| --------------------- | ---------------- | ----------- | -------------------------------------------------- |
-| `editor`              | `Editor \| null` | `undefined` | The Tiptap editor instance                         |
-| `text`                | `string`         | `undefined` | Optional text label for the button                 |
-| `hideWhenUnavailable` | `boolean`        | `false`     | Hides the button when code block is not applicable |
-| `onToggled`           | `() => void`     | `undefined` | Callback fired after a successful toggle           |
-| `showShortcut`        | `boolean`        | `false`     | Shows a keyboard shortcut badge (if available)     |
+| 名称                  | 类型             | 默认值      | 说明                                         |
+| --------------------- | ---------------- | ----------- | -------------------------------------------- |
+| `editor`              | `Editor \| null` | `undefined` | Tiptap 编辑器实例                            |
+| `text`                | `string`         | `undefined` | 按钮的可选文本标签                           |
+| `hideWhenUnavailable` | `boolean`        | `false`     | 代码块不适用时隐藏按钮                       |
+| `onToggled`           | `() => void`     | `undefined` | 成功切换后触发的回调                         |
+| `showShortcut`        | `boolean`        | `false`     | 显示键盘快捷键徽标（如果有）                 |
 
 ## Hooks
 
 ### `useCodeBlock()`
 
-A custom hook to build your own code block toggle button with full control over rendering and behavior.
+一个自定义 hook，可让你完全控制渲染和行为，从而构建自己的代码块切换按钮。
 
-#### Usage
+#### 用法
 
 ```tsx
 import { useCodeBlock } from '@/components/tiptap-ui/code-block-button'
@@ -111,56 +111,56 @@ function MyCodeBlockButton() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type             | Default     | Description                                      |
-| --------------------- | ---------------- | ----------- | ------------------------------------------------ |
-| `editor`              | `Editor \| null` | `undefined` | The Tiptap editor instance                       |
-| `hideWhenUnavailable` | `boolean`        | `false`     | Hides the button if code block cannot be applied |
-| `onToggled`           | `() => void`     | `undefined` | Callback fired after toggling code block         |
+| 名称                  | 类型             | 默认值      | 说明                                     |
+| --------------------- | ---------------- | ----------- | ---------------------------------------- |
+| `editor`              | `Editor \| null` | `undefined` | Tiptap 编辑器实例                        |
+| `hideWhenUnavailable` | `boolean`        | `false`     | 无法应用代码块时隐藏按钮                 |
+| `onToggled`           | `() => void`     | `undefined` | 切换代码块后触发的回调                   |
 
-#### Return Values
+#### 返回值
 
-| Name           | Type            | Description                                   |
-| -------------- | --------------- | --------------------------------------------- |
-| `isVisible`    | `boolean`       | Whether the button should be rendered         |
-| `isActive`     | `boolean`       | If the code block is currently active         |
-| `canToggle`    | `boolean`       | If the code block toggle is currently allowed |
-| `handleToggle` | `() => boolean` | Function to toggle code block formatting      |
-| `label`        | `string`        | Accessible label text for the button          |
-| `shortcutKeys` | `string`        | Keyboard shortcut (Cmd/Ctrl + Alt + C)        |
-| `Icon`         | `React.FC`      | Icon component for the code block button      |
+| 名称           | 类型            | 说明                                      |
+| -------------- | --------------- | ----------------------------------------- |
+| `isVisible`    | `boolean`       | 是否应渲染此按钮                          |
+| `isActive`     | `boolean`       | 代码块当前是否处于激活状态                |
+| `canToggle`    | `boolean`       | 当前是否允许切换代码块                    |
+| `handleToggle` | `() => boolean` | 切换代码块格式的函数                      |
+| `label`        | `string`        | 按钮的无障碍标签文本                      |
+| `shortcutKeys` | `string`        | 键盘快捷键（Cmd/Ctrl + Alt + C）          |
+| `Icon`         | `React.FC`      | 代码块按钮的图标组件                      |
 
-## Utilities
+## 实用工具
 
 ### `canToggle(editor, turnInto?)`
 
-Checks if code block can be toggled in the current editor state.
+检查当前编辑器状态下是否可以切换代码块。
 
-**Parameters:**
+**参数：**
 
-- `editor`: `Editor | null` - The Tiptap editor instance
-- `turnInto`: `boolean` - Whether to check for convertible node types (default: `true`)
+- `editor`：`Editor | null` - Tiptap 编辑器实例
+- `turnInto`：`boolean` - 是否检查可转换的节点类型（默认值：`true`）
 
-**Returns:** `boolean` - Whether the code block can be toggled
+**返回值：**`boolean` - 是否可以切换代码块
 
 ```tsx
 import { canToggle } from '@/components/tiptap-ui/code-block-button'
 
-const canToggleBlock = canToggle(editor) // Check if can toggle
-const canTurnInto = canToggle(editor, true) // Explicit: check if selection can be turned into a code block
-const canToggleDirect = canToggle(editor, false) // Check if can toggle directly
+const canToggleBlock = canToggle(editor) // 检查是否可以切换
+const canTurnInto = canToggle(editor, true) // 显式检查所选内容是否可以转换为代码块
+const canToggleDirect = canToggle(editor, false) // 检查是否可以直接切换
 ```
 
 ### `toggleCodeBlock(editor)`
 
-Programmatically toggles code block formatting for the current selection.
+以编程方式切换当前选区的代码块格式。
 
-**Parameters:**
+**参数：**
 
-- `editor`: `Editor | null` - The Tiptap editor instance
+- `editor`：`Editor | null` - Tiptap 编辑器实例
 
-**Returns:** `boolean` - Whether the toggle was successful
+**返回值：**`boolean` - 切换是否成功
 
 ```tsx
 import { toggleCodeBlock } from '@/components/tiptap-ui/code-block-button'
@@ -173,15 +173,15 @@ if (success) {
 
 ### `shouldShowButton(props)`
 
-Determines if the code block button should be shown based on editor state and configuration.
+根据编辑器状态和配置，判断是否应显示代码块按钮。
 
-**Parameters:**
+**参数：**
 
-- `props`: `object`
-  - `editor`: `Editor | null` - The Tiptap editor instance
-  - `hideWhenUnavailable`: `boolean` - Whether to hide when unavailable
+- `props`：`object`
+  - `editor`：`Editor | null` - Tiptap 编辑器实例
+  - `hideWhenUnavailable`：`boolean` - 是否在不可用时隐藏
 
-**Returns:** `boolean` - Whether the button should be shown
+**返回值：**`boolean` - 是否应显示按钮
 
 ```tsx
 import { shouldShowButton } from '@/components/tiptap-ui/code-block-button'
@@ -192,26 +192,26 @@ const shouldShow = shouldShowButton({
 })
 ```
 
-## Keyboard Shortcuts
+## 键盘快捷键
 
-The code block button supports the following keyboard shortcut:
+代码块按钮支持以下键盘快捷键：
 
-- **Cmd/Ctrl + Alt + C**: Toggle code block formatting
+- **Cmd/Ctrl + Alt + C**：切换代码块格式
 
-The shortcut is automatically registered when using either the `<CodeBlockButton />` component or the `useCodeBlock()` hook.
+使用 `<CodeBlockButton />` 组件或 `useCodeBlock()` hook 时，系统会自动注册此快捷键。
 
-## Requirements
+## 要求
 
-### Dependencies
+### 依赖项
 
-- `@tiptap/react` - Core Tiptap React integration
-- `@tiptap/starter-kit` - Basic Tiptap extensions including code block support
-- `react-hotkeys-hook` - Keyboard shortcut management
+- `@tiptap/react` - Tiptap React 核心集成
+- `@tiptap/starter-kit` - Tiptap 基础扩展，包含代码块支持
+- `react-hotkeys-hook` - 键盘快捷键管理
 
-### Referenced Components
+### 引用的组件
 
-- `use-tiptap-editor` (hook)
-- `button` (primitive)
-- `badge` (primitive)
-- `tiptap-utils` (lib)
-- `code-block-icon` (icon)
+- `use-tiptap-editor`（hook）
+- `button`（基础组件）
+- `badge`（基础组件）
+- `tiptap-utils`（库）
+- `code-block-icon`（图标）
