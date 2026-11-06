@@ -1,14 +1,14 @@
 ---
-title: Export DOC from your editor
+title: 从编辑器导出 DOC
 tags:
   - type: start
   - type: beta
   - type: version
     label: v0.6.2
 meta:
-  title: Export DOC | Tiptap Conversion
-  description: Learn how to export Tiptap editor content to DOC (legacy Word) files using the Export DOC extension in our docs.
-  category: Conversion
+  title: 导出 DOC | Tiptap Conversion
+  description: 在文档中了解如何使用 Export DOC 扩展，将 Tiptap 编辑器内容导出为 DOC（旧版 Word）文件。
+  category: 转换
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
@@ -20,33 +20,30 @@ import RegionalEndpoints from '../../_shared/_regional-endpoints.mdx'
 <EnterpriseCalloutAuto variant="doc" renderMode="sidebar" disableWaitlist />
 
 <Requirements>
-  <RequirementItem label="1. Activate trial or subscribe">
-    Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start
-    plan](https://cloud.tiptap.dev/v2/billing) in your account.
+  <RequirementItem label="1. 激活试用或订阅">
+    在账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start
+    套餐](https://cloud.tiptap.dev/v2/billing)。
   </RequirementItem>
-  <RequirementItem label="2. Install from private registry">
-    To install this frontend extensions, authenticate to Tiptap's private npm registry by following
-    the [setup guide](/guides/pro-extensions).
+  <RequirementItem label="2. 从私有仓库安装">
+    若要安装这些前端扩展，请按照[设置指南](/guides/pro-extensions)完成身份验证，以访问 Tiptap 的私有 npm 仓库。
   </RequirementItem>
 </Requirements>
 
 <CodeDemo isPro path="/Extensions/ExportDoc" />
 
-<Callout title="Consider using DOCX instead" variant="info">
-  The DOC format is a legacy format from Microsoft Word 97-2003. For modern use, we recommend
-  exporting to [DOCX](/conversion/export/docx/editor-extension) instead. Use DOC only when
-  compatibility with older systems requires it.
+<Callout title="建议改用 DOCX" variant="info">
+  DOC 格式是 Microsoft Word 97–2003 使用的旧版格式。对于现代用途，我们建议改为导出为 [DOCX](/conversion/export/docx/editor-extension)。只有在需要兼容旧系统时，才使用 DOC。
 </Callout>
 
-Use Tiptap's `@tiptap-pro/extension-export-doc` to export your editor's content as a `.doc` file. This extension integrates DOC export functionality into your editor by sending the document to the Tiptap convert service for conversion.
+使用 Tiptap 的 `@tiptap-pro/extension-export-doc`，可将编辑器内容导出为 `.doc` 文件。此扩展会将文档发送到 Tiptap 转换服务进行转换，从而将 DOC 导出功能集成到编辑器中。
 
-You can also use the [REST API](/conversion/export/doc/rest-api) instead if you'd prefer to handle the conversion on your end.
+如果希望自行处理转换，也可以改用 [REST API](/conversion/export/doc/rest-api)。
 
-## Install the DOC Export extension
+## 安装 DOC 导出扩展
 
-The Conversion extensions are published in Tiptap's private npm registry. Integrate the extensions by following the [private registry guide](/guides/pro-extensions).
+Conversion 扩展发布在 Tiptap 的私有 npm 仓库中。请按照[私有仓库指南](/guides/pro-extensions)集成这些扩展。
 
-Once done you can install and import the **Export DOC** extension package.
+完成后，即可安装并导入 **Export DOC** 扩展包。
 
 ```bash
 npm i @tiptap-pro/extension-export-doc
@@ -56,9 +53,9 @@ npm i @tiptap-pro/extension-export-doc
 import { ExportDoc } from '@tiptap-pro/extension-export-doc'
 ```
 
-## Configuring the extension
+## 配置扩展
 
-The `ExportDoc` extension can be configured with an `ExportDocOptions` (`object`) as an argument to the `configure` method with the following properties:
+`ExportDoc` 扩展可通过 `configure` 方法接收 `ExportDocOptions`（`object`）作为参数，并使用以下属性进行配置：
 
 ```ts
 import { ExportDoc } from '@tiptap-pro/extension-export-doc'
@@ -84,60 +81,60 @@ const editor = new Editor({
 })
 ```
 
-| Parameter          | Type                     | Description                                                                                      | Default                               |
-| ------------------ | ------------------------ | ------------------------------------------------------------------------------------------------ | ------------------------------------- |
-| `endpoint`         | `string`                 | The Tiptap API endpoint for conversion. When set, it overrides `region`                          | `undefined`                           |
-| `region`           | `'eu' \| 'us'`           | The Tiptap Cloud region used when `endpoint` is not set                                          | `'eu'`                                |
-| `token`            | `string`                 | The Tiptap JWT for authentication, see [Authentication](/authentication)                                                                | `''`                                  |
-| `styleOverrides`   | `Record<string, string>` | Style overrides to apply to the export                                                           | `undefined`                           |
-| `headers`          | `HeaderConfig`           | Header configuration for the exported document                                                   | `undefined`                           |
-| `footers`          | `FooterConfig`           | Footer configuration for the exported document                                                   | `undefined`                           |
-| `pageSize`         | `PageSize`               | Page size configuration                                                                          | `undefined`                           |
-| `pageMargins`      | `PageMargins`            | Page margins configuration                                                                       | `undefined`                           |
-| `customNodes`      | `CustomNodeDefinition[]` | Custom node definitions for DOCX-based conversion (requires `@tiptap-pro/extension-export-docx`) | `undefined`                           |
-| `onCompleteExport` | `(result: Blob) => void` | Callback that receives the exported file as a Blob                                               | Throws error if not provided          |
+| 参数                 | 类型                     | 说明                                                                                          | 默认值                     |
+| -------------------- | ------------------------ | --------------------------------------------------------------------------------------------- | -------------------------- |
+| `endpoint`           | `string`                 | 用于转换的 Tiptap API 端点。设置后会覆盖 `region`                                              | `undefined`                |
+| `region`             | `'eu' \| 'us'`           | 未设置 `endpoint` 时使用的 Tiptap Cloud 区域                                                   | `'eu'`                     |
+| `token`              | `string`                 | 用于身份验证的 Tiptap JWT，参见[身份验证](/authentication)                                   | `''`                       |
+| `styleOverrides`     | `Record<string, string>` | 应用于导出的样式覆盖                                                                          | `undefined`                |
+| `headers`            | `HeaderConfig`           | 导出文档的页眉配置                                                                            | `undefined`                |
+| `footers`            | `FooterConfig`           | 导出文档的页脚配置                                                                            | `undefined`                |
+| `pageSize`           | `PageSize`               | 页面大小配置                                                                                  | `undefined`                |
+| `pageMargins`        | `PageMargins`            | 页边距配置                                                                                    | `undefined`                |
+| `customNodes`        | `CustomNodeDefinition[]` | 用于基于 DOCX 的转换的自定义节点定义（需要 `@tiptap-pro/extension-export-docx`）               | `undefined`                |
+| `onCompleteExport`   | `(result: Blob) => void` | 接收导出文件 Blob 的回调                                                                      | 未提供时抛出错误           |
 
 <RegionalEndpoints />
 
 ### HeaderConfig
 
-| Property             | Type      | Description                                                                                                                                                                              |
-| -------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `evenAndOddHeaders`  | `boolean` | Whether to use different headers for odd and even pages                                                                                                                                  |
-| `differentFirstPage` | `boolean` | Whether to use a different header on the first page. When `true`, the `first` value is used on page one instead of `default`.                                                            |
-| `default`            | `string`  | The standard default header on every page, or header on odd pages when `evenAndOddHeaders` is active. Accepts a plain text string or stringified Tiptap JSONContent for rich formatting. |
-| `first`              | `string`  | The header on the first page. Only used when `differentFirstPage` is set to `true`. Accepts a plain text string or stringified Tiptap JSONContent for rich formatting.                   |
-| `even`               | `string`  | The header on even pages when the `evenAndOddHeaders` option is activated. Accepts a plain text string or stringified Tiptap JSONContent for rich formatting.                            |
+| 属性                 | 类型      | 说明                                                                                                                                                   |
+| -------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `evenAndOddHeaders`  | `boolean` | 是否为奇数页和偶数页使用不同的页眉                                                                                                                     |
+| `differentFirstPage` | `boolean` | 是否为首页使用不同的页眉。设为 `true` 时，第一页使用 `first` 值，而不是 `default`。                                                                     |
+| `default`            | `string`  | 每页使用的标准默认页眉；启用 `evenAndOddHeaders` 时，则作为奇数页页眉。可接受纯文本字符串，或序列化为字符串的 Tiptap JSONContent，以实现富文本格式。       |
+| `first`              | `string`  | 首页页眉。仅在 `differentFirstPage` 设为 `true` 时使用。可接受纯文本字符串，或序列化为字符串的 Tiptap JSONContent，以实现富文本格式。                   |
+| `even`               | `string`  | 启用 `evenAndOddHeaders` 选项时使用的偶数页页眉。可接受纯文本字符串，或序列化为字符串的 Tiptap JSONContent，以实现富文本格式。                         |
 
 ### FooterConfig
 
-| Property             | Type      | Description                                                                                                                                                                              |
-| -------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `evenAndOddFooters`  | `boolean` | Whether to use different footers for odd and even pages                                                                                                                                  |
-| `differentFirstPage` | `boolean` | Whether to use a different footer on the first page. When `true`, the `first` value is used on page one instead of `default`.                                                            |
-| `default`            | `string`  | The standard default footer on every page, or footer on odd pages when `evenAndOddFooters` is active. Accepts a plain text string or stringified Tiptap JSONContent for rich formatting. |
-| `first`              | `string`  | The footer on the first page. Only used when `differentFirstPage` is set to `true`. Accepts a plain text string or stringified Tiptap JSONContent for rich formatting.                   |
-| `even`               | `string`  | The footer on even pages when the `evenAndOddFooters` option is activated. Accepts a plain text string or stringified Tiptap JSONContent for rich formatting.                            |
+| 属性                 | 类型      | 说明                                                                                                                                                   |
+| -------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `evenAndOddFooters`  | `boolean` | 是否为奇数页和偶数页使用不同的页脚                                                                                                                     |
+| `differentFirstPage` | `boolean` | 是否为首页使用不同的页脚。设为 `true` 时，第一页使用 `first` 值，而不是 `default`。                                                                     |
+| `default`            | `string`  | 每页使用的标准默认页脚；启用 `evenAndOddFooters` 时，则作为奇数页页脚。可接受纯文本字符串，或序列化为字符串的 Tiptap JSONContent，以实现富文本格式。       |
+| `first`              | `string`  | 首页页脚。仅在 `differentFirstPage` 设为 `true` 时使用。可接受纯文本字符串，或序列化为字符串的 Tiptap JSONContent，以实现富文本格式。                   |
+| `even`               | `string`  | 启用 `evenAndOddFooters` 选项时使用的偶数页页脚。可接受纯文本字符串，或序列化为字符串的 Tiptap JSONContent，以实现富文本格式。                         |
 
 ### PageSize
 
-| Property | Type     | Description                                                                                          | Default    |
-| -------- | -------- | ---------------------------------------------------------------------------------------------------- | ---------- |
-| `width`  | `string` | The width of the page. Must be a positive number followed by a valid unit (cm, in, pt, pc, mm, px).  | `"21cm"`   |
-| `height` | `string` | The height of the page. Must be a positive number followed by a valid unit (cm, in, pt, pc, mm, px). | `"29.7cm"` |
+| 属性     | 类型     | 说明                                                                                      | 默认值   |
+| -------- | -------- | ----------------------------------------------------------------------------------------- | -------- |
+| `width`  | `string` | 页面宽度。必须为正数，后接有效单位（cm、in、pt、pc、mm、px）。                            | `"21cm"`   |
+| `height` | `string` | 页面高度。必须为正数，后接有效单位（cm、in、pt、pc、mm、px）。                            | `"29.7cm"` |
 
 ### PageMargins
 
-| Property | Type     | Description                                                                                                         | Default |
-| -------- | -------- | ------------------------------------------------------------------------------------------------------------------- | ------- |
-| `top`    | `string` | The top margin of the page. Can be negative. Must be a number followed by a valid unit (cm, in, pt, pc, mm, px).    | `"1cm"` |
-| `bottom` | `string` | The bottom margin of the page. Can be negative. Must be a number followed by a valid unit (cm, in, pt, pc, mm, px). | `"1cm"` |
-| `left`   | `string` | The left margin of the page. Must be a positive number followed by a valid unit (cm, in, pt, pc, mm, px).           | `"1cm"` |
-| `right`  | `string` | The right margin of the page. Must be a positive number followed by a valid unit (cm, in, pt, pc, mm, px).          | `"1cm"` |
+| 属性     | 类型     | 说明                                                                                                         | 默认值  |
+| -------- | -------- | ------------------------------------------------------------------------------------------------------------ | ------- |
+| `top`    | `string` | 页面上边距。可以为负数。必须为数字，后接有效单位（cm、in、pt、pc、mm、px）。                                | `"1cm"` |
+| `bottom` | `string` | 页面下边距。可以为负数。必须为数字，后接有效单位（cm、in、pt、pc、mm、px）。                                | `"1cm"` |
+| `left`   | `string` | 页面左边距。必须为正数，后接有效单位（cm、in、pt、pc、mm、px）。                                             | `"1cm"` |
+| `right`  | `string` | 页面右边距。必须为正数，后接有效单位（cm、in、pt、pc、mm、px）。                                             | `"1cm"` |
 
-## Export a DOC file
+## 导出 DOC 文件
 
-With the extension installed, you can export your editor's content to `.doc` using the `exportDoc` command.
+安装扩展后，可以使用 `exportDoc` 命令将编辑器内容导出为 `.doc` 文件。
 
 ```ts
 /**
@@ -149,20 +146,20 @@ With the extension installed, you can export your editor's content to `.doc` usi
 exportDoc: (options?: ExportDocCommandOptions) => ReturnType
 ```
 
-The `ExportDocCommandOptions` interface extends `ExportDocOptions`, so every configuration option can be overridden per-command invocation:
+`ExportDocCommandOptions` 接口扩展了 `ExportDocOptions`，因此可以在每次调用命令时覆盖所有配置选项：
 
-| Property           | Type                     | Description                                               |
-| ------------------ | ------------------------ | --------------------------------------------------------- |
-| `endpoint`         | `string`                 | Override the API endpoint for this specific export        |
-| `region`           | `'eu' \| 'us'`           | Override the region for this specific export              |
-| `token`            | `string`                 | Override the JWT token for this specific export           |
-| `styleOverrides`   | `Record<string, string>` | Override style overrides for this specific export         |
-| `headers`          | `HeaderConfig`           | Override header configuration for this specific export    |
-| `footers`          | `FooterConfig`           | Override footer configuration for this specific export    |
-| `pageSize`         | `PageSize`               | Override page size for this specific export               |
-| `pageMargins`      | `PageMargins`            | Override page margins for this specific export            |
-| `customNodes`      | `CustomNodeDefinition[]` | Override custom node definitions for this specific export |
-| `onCompleteExport` | `(result: Blob) => void` | Override the callback for this specific export            |
+| 属性                 | 类型                     | 说明                                  |
+| -------------------- | ------------------------ | ------------------------------------- |
+| `endpoint`           | `string`                 | 覆盖本次导出的 API 端点               |
+| `region`             | `'eu' \| 'us'`           | 覆盖本次导出的区域                    |
+| `token`              | `string`                 | 覆盖本次导出的 JWT 令牌               |
+| `styleOverrides`     | `Record<string, string>` | 覆盖本次导出的样式覆盖                |
+| `headers`            | `HeaderConfig`           | 覆盖本次导出的页眉配置                |
+| `footers`            | `FooterConfig`           | 覆盖本次导出的页脚配置                |
+| `pageSize`           | `PageSize`               | 覆盖本次导出的页面大小                |
+| `pageMargins`        | `PageMargins`            | 覆盖本次导出的页边距                  |
+| `customNodes`        | `CustomNodeDefinition[]` | 覆盖本次导出的自定义节点定义          |
+| `onCompleteExport`   | `(result: Blob) => void` | 覆盖本次导出的回调                    |
 
 ```js
 import { ExportDoc } from '@tiptap-pro/extension-export-doc'
@@ -205,46 +202,45 @@ editor
   .run()
 ```
 
-### How it works
+### 工作原理
 
-When you call `exportDoc`, the extension sends the editor's document and any configured options (style overrides, page layout, headers, footers) to the Convert service, which returns the resulting `.doc` file as a binary blob. The `onCompleteExport` callback receives the blob directly. Errors are thrown as exceptions rather than passed through the callback.
+调用 `exportDoc` 时，扩展会将编辑器文档及配置的选项（样式覆盖、页面布局、页眉、页脚）发送到 Convert 服务。服务会返回生成的 `.doc` 文件（二进制 Blob）。`onCompleteExport` 回调会直接接收此 Blob。发生错误时会抛出异常，而不会通过回调传递。
 
-## What to expect
+## 预期情况
 
-- **Authentication required** (`token` JWT). Generate JWTs server-side. See the [Conversion install guide](/conversion/getting-started/install).
-- **HTTP responses to handle:** `401` (missing or invalid JWT), `403` (operation not permitted for your app — typically a format your plan doesn't include), `5xx` (transient server-side error; retry with backoff).
-- **Each request is processed end-to-end before responding.** Plan for longer round-trips on large documents.
+- **需要身份验证**（`token` JWT）。请在服务器端生成 JWT。参见[转换安装指南](/conversion/getting-started/install)。
+- **需要处理的 HTTP 响应：** `401`（缺少或无效的 JWT）、`403`（应用无权执行此操作，通常是因为套餐不包含该格式）、`5xx`（临时服务器错误；请采用退避策略重试）。
+- **每个请求都会在响应前完成端到端处理。** 处理较大的文档时，请预留较长的往返时间。
 
-## What not to expect
+## 不支持的情况
 
-- **Round-trip identity.** DOC is a 1997–2003 binary format with rendering quirks of its own; we aim for faithful, not byte-identical, output.
-- **Modern Word features.** DOC predates many Word features; advanced layout, comments, revisions, and styled metadata are simplified or dropped. Use [DOCX](/conversion/export/docx/editor-extension) when targeting modern Word versions.
+- **往返转换后完全一致。** DOC 是 1997–2003 年间使用的二进制格式，本身存在渲染差异；我们力求忠实还原，但不保证逐字节一致。
+- **现代 Word 功能。** DOC 早于许多 Word 功能；高级布局、批注、修订和带样式的元数据可能会被简化或舍弃。若目标是现代 Word 版本，请使用 [DOCX](/conversion/export/docx/editor-extension)。
 
-## Support & Limitations
+## 支持情况与限制
 
-| **Feature**                      | **Support**                                                                 |
-| -------------------------------- | --------------------------------------------------------------------------- |
-| **Text content**                 | ✓ Basic text, spacing, punctuation                                          |
-| **Text formatting**              | ✓ Bold, italic, underline, strikethrough, alignment, line height            |
-| **Block elements**               | ✓ Paragraphs, headings (1–6), blockquotes, ordered and unordered lists      |
-| **Tables**                       | ✓ Basic structure, header rows, colspan                                     |
-| **Links**                        | ✓ Hyperlinks                                                                |
-| **Media (Images)**               | ✓ Embedded images, size preserved                                           |
-| **Styles**                       | ✓ Font families\*, Font colors, font sizes, background colors, line heights |
-| **Headers & Footers**            | ✓                                                                           |
-| **Math**                         | ✓                                                                           |
-| **Page Breaks**                  | ✓                                                                           |
-| **Sections**                     | ✗                                                                           |
-| **Footnotes & Endnotes**         | ✗                                                                           |
-| **Comments & Revisions**         | ✗                                                                           |
-| **Table of Contents**            | ✗                                                                           |
-| **Advanced Formatting**          | ✗ Columns, text direction, forms, macros, embedded scripts                  |
-| **Metadata**                     | ✗                                                                           |
-| **Text Boxes, Shapes, SmartArt** | ✗                                                                           |
+| **功能**                 | **支持情况**                                                           |
+| ------------------------ | ---------------------------------------------------------------------- |
+| **文本内容**             | ✓ 基本文本、间距、标点                                                   |
+| **文本格式**             | ✓ 粗体、斜体、下划线、删除线、对齐方式、行高                             |
+| **块级元素**             | ✓ 段落、标题（1–6 级）、引用块、有序和无序列表                           |
+| **表格**                 | ✓ 基本结构、标题行、跨列                                                 |
+| **链接**                 | ✓ 超链接                                                                |
+| **媒体（图像）**         | ✓ 嵌入式图像，保留尺寸                                                   |
+| **样式**                 | ✓ 字体系列*、字体颜色、字号、背景颜色、行高                              |
+| **页眉和页脚**           | ✓                                                                      |
+| **数学公式**             | ✓                                                                      |
+| **分页符**               | ✓                                                                      |
+| **分节**                 | ✗                                                                      |
+| **脚注和尾注**           | ✗                                                                      |
+| **批注和修订**           | ✗                                                                      |
+| **目录**                 | ✗                                                                      |
+| **高级格式**             | ✗ 分栏、文字方向、表单、宏、嵌入式脚本                                   |
+| **元数据**               | ✗                                                                      |
+| **文本框、形状、SmartArt** | ✗                                                                    |
 
 <span style={{ fontSize: '1rem' }}>
-  * Font families are supported as long as the target font is installed on the operative system when
-  the exported file is opened.
+  * 只要在打开导出文件时，目标字体已安装在操作系统中，就支持相应字体系列。
 </span>
 
-For a detailed per-feature breakdown, see the [Supported features](/conversion/getting-started/feature-support-matrix) matrix. Note that element overrides (`paragraphOverrides`, `textRunOverrides`, `tableOverrides`, `tableCellOverrides`, `imageOverrides`) available in the [DOCX export extension](/conversion/export/docx/editor-extension) are not passed through to the DOC conversion.
+如需查看各项功能的详细支持情况，请参阅[支持的功能](/conversion/getting-started/feature-support-matrix)矩阵。请注意，[DOCX 导出扩展](/conversion/export/docx/editor-extension)中的元素覆盖选项（`paragraphOverrides`、`textRunOverrides`、`tableOverrides`、`tableCellOverrides`、`imageOverrides`）不会传递到 DOC 转换中。
