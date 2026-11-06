@@ -1,9 +1,9 @@
 ---
-title: Tiptap Docs
+title: Tiptap 文档
 meta:
-  title: Tiptap Docs
-  description: Tiptap provides a framework to create custom content editors. Explore countless extensible features and handy cloud services.
-  category: Editor
+  title: Tiptap 文档
+  description: Tiptap 提供了一个用于创建自定义内容编辑器的框架。探索丰富的可扩展功能和便捷的云服务。
+  category: 编辑器
 ---
 
 import { ArrowRightIcon } from 'lucide-react'
@@ -33,67 +33,67 @@ import XIcon from '@/assets/images/x.svg?url'
 import cardCoverSimpleEditorTemplate from '@/assets/card-covers/examples/simple-editor-template-preview.jpg'
 import cardCoverUIComponents from '@/assets/card-covers/examples/components-preview.jpg'
 
-Build exactly the editor your product needs, start with a lightweight open-source core and expand with fully managed Cloud services and AI extensions.
+构建产品所需的编辑器：从轻量级开源核心开始，随需扩展全托管云服务和 AI 扩展。
 
-Use the headless editor and more than 100 extensions directly in your app and add real-time collaboration, comments, AI integrations, file conversion, etc.
+直接在应用中使用无头编辑器和 100 多个扩展，并添加实时协作、评论、AI 集成、文件转换等功能。
 
 <div className="grid gap-20">
   <Section
-    title="Browse by feature"
-    description="Review our docs and examples to learn how to incorporate more advanced Tiptap features into your tech stack."
+    title="按功能浏览"
+    description="查看我们的文档和示例，了解如何将更高级的 Tiptap 功能集成到你的技术栈中。"
   >
     <div className="grid sm:grid-cols-2 gap-5">
       <ProductCard
-        title="Editor"
-        description="Headless and framework-agnostic rich text editor based on ProseMirror."
-        tags={["Open source"]}
+        title="编辑器"
+        description="基于 ProseMirror、无头且与框架无关的富文本编辑器。"
+        tags={["开源"]}
         documentationUrl="/editor/getting-started/overview"
         secondaryUrl="/examples/basics/default-text-editor"
         icon={editorIcon.src}
       />
       <ProductCard
-        title="Collaboration"
-        description="Real-time document editing with offline-first support."
-        tags={["Cloud", "On premises"]}
+        title="协作"
+        description="支持离线优先的实时文档编辑。"
+        tags={["云端", "本地部署"]}
         documentationUrl="/collaboration/getting-started/overview"
         secondaryUrl="/collaboration/getting-started/install"
         icon={collabIcon.src}
       />
       <ProductCard
-        title="Basic AI Generation"
-        description="Smart autocompletion, custom commands, and image generation with OpenAI or your own LLM."
-        tags={["Custom LLM", "Cloud"]}
+        title="基础 AI 生成"
+        description="借助 OpenAI 或你自己的 LLM，实现智能自动补全、自定义命令和图像生成。"
+        tags={["自定义 LLM", "云端"]}
         documentationUrl="/ai/basic/overview"
         secondaryUrl="/ai/basic/overview#example"
-        secondaryButtonText="View example"
+        secondaryButtonText="查看示例"
         icon={aiGenerationIcon.src}
       />
       <ProductCard
-        title="AI Toolkit"
-        description="Build AI agents that can read, insert, and edit documents with tool definitions or primitives."
-        tags={["Custom LLM"]}
+        title="AI 工具包"
+        description="通过工具定义或基础原语构建 AI 代理，让它们能够读取、插入和编辑文档。"
+        tags={["自定义 LLM"]}
         documentationUrl="/ai/ai-toolkit/overview"
         icon={aiToolkitIcon.src}
       />
       <ProductCard
-        title="Comments"
-        description="Add comments to your editor and moderate them with the Comments REST API."
-        tags={["Cloud", "On premises"]}
+        title="评论"
+        description="为编辑器添加评论，并使用 Comments REST API 对其进行管理。"
+        tags={["云端", "本地部署"]}
         documentationUrl="/comments/getting-started/overview"
         secondaryUrl="/comments/getting-started/overview#comments-example"
         icon={commentsIcon.src}
       />
       <ProductCard
-        title="Documents"
-        description="Manage and manipulate documents in your frontend or server-side."
-        tags={["Cloud", "On premises"]}
+        title="文档"
+        description="在前端或服务器端管理和处理文档。"
+        tags={["云端", "本地部署"]}
         documentationUrl="/collaboration/documents"
         icon={documentsIcon.src}
       />
       <ProductCard
-        title="Conversion"
-        description="Import and export DOCX and other file types in your Editor or REST API"
-        tags={["Cloud", "On premises"]}
+        title="转换"
+        description="在编辑器或 REST API 中导入和导出 DOCX 及其他文件类型。"
+        tags={["云端", "本地部署"]}
         documentationUrl="/conversion/getting-started/overview"
         icon={conversionIcon.src}
       />
@@ -103,8 +103,8 @@ Use the headless editor and more than 100 extensions directly in your app and ad
 {' '}
 
 <Section
-  title="Get started with a template"
-  description="Integrate the Tiptap Editor into your application with our editor templates or pick and choose your own UI components. Once integrated you can extend it with more headless Tiptap extensions and custimze it to your liking."
+  title="从模板开始"
+  description="使用我们的编辑器模板将 Tiptap 编辑器集成到你的应用中，也可以按需选择 UI 组件。集成后，你可以通过更多无头 Tiptap 扩展来扩展它，并按自己的喜好进行自定义。"
 >
   <CardGrid.Wrapper>
     <CardGrid.Item asChild>
@@ -114,12 +114,12 @@ Use the headless editor and more than 100 extensions directly in your app and ad
           src={cardCoverSimpleEditorTemplate.src}
           width={cardCoverSimpleEditorTemplate.width}
           height={cardCoverSimpleEditorTemplate.height}
-          alt="Image"
+          alt="图片"
         />
         <div>
-          <CardGrid.ItemTitle>Templates</CardGrid.ItemTitle>
+          <CardGrid.ItemTitle>模板</CardGrid.ItemTitle>
           <CardGrid.ItemParagraph>
-            Get started fast with a prebuilt editor that includes commonly used features.
+            使用包含常用功能的预构建编辑器，快速开始。
           </CardGrid.ItemParagraph>
         </div>
       </Link>
@@ -131,12 +131,12 @@ Use the headless editor and more than 100 extensions directly in your app and ad
           src={cardCoverUIComponents.src}
           width={cardCoverUIComponents.width}
           height={cardCoverUIComponents.height}
-          alt="Image"
+          alt="图片"
         />
         <div>
-          <CardGrid.ItemTitle>Components</CardGrid.ItemTitle>
+          <CardGrid.ItemTitle>组件</CardGrid.ItemTitle>
           <CardGrid.ItemParagraph>
-            Already using Tiptap? Drop in just the pieces you need.
+            已在使用 Tiptap？只需引入你需要的部分。
           </CardGrid.ItemParagraph>
         </div>
       </Link>
@@ -147,8 +147,8 @@ Use the headless editor and more than 100 extensions directly in your app and ad
 {' '}
 
 <Section
-  title="Integrate or deploy Tiptap Cloud"
-  description="Integrate Tiptap Cloud services into your environment or deploy our on-premises variant within your own infrastructure. Choose the solution that best fits your performance, management, and scalability requirements."
+  title="集成或部署 Tiptap Cloud"
+  description="将 Tiptap Cloud 服务集成到你的环境中，或在自己的基础设施中部署本地版本。选择最符合你对性能、管理和可扩展性要求的方案。"
 >
   <Grid.Wrapper className="sm:grid-cols-2 lg:grid-cols-3">
     <Grid.Item>
@@ -156,9 +156,9 @@ Use the headless editor and more than 100 extensions directly in your app and ad
         <img src={CloudIcon.src} alt="" aria-hidden="true" className="w-6 h-6" />
       </Grid.ItemHeader>
       <Grid.ItemContent>
-        <Grid.ItemTitle>Cloud</Grid.ItemTitle>
+        <Grid.ItemTitle>云端</Grid.ItemTitle>
         <Grid.ItemParagraph>
-          Integrate our cloud service tested everyday by hundreds of thousands of users.
+          集成我们的云服务。每天都有数十万用户使用并验证其可靠性。
         </Grid.ItemParagraph>
       </Grid.ItemContent>
     </Grid.Item>
@@ -167,9 +167,9 @@ Use the headless editor and more than 100 extensions directly in your app and ad
         <img src={DedicatedCloudIcon.src} alt="" aria-hidden="true" className="w-6 h-6" />
       </Grid.ItemHeader>
       <Grid.ItemContent>
-        <Grid.ItemTitle>Dedicated Cloud</Grid.ItemTitle>
+        <Grid.ItemTitle>专属云</Grid.ItemTitle>
         <Grid.ItemParagraph>
-          Access a dedicated server, optimized for handling larger projects and higher loads.
+          使用专属服务器，针对处理大型项目和高负载进行了优化。
         </Grid.ItemParagraph>
       </Grid.ItemContent>
     </Grid.Item>
@@ -178,121 +178,120 @@ Use the headless editor and more than 100 extensions directly in your app and ad
         <img src={OnPremisesIcon.src} alt="" aria-hidden="true" className="w-6 h-6" />
       </Grid.ItemHeader>
       <Grid.ItemContent>
-        <Grid.ItemTitle>On-Premises</Grid.ItemTitle>
+        <Grid.ItemTitle>本地部署</Grid.ItemTitle>
         <Grid.ItemParagraph>
-          Implement Tiptap Cloud using Docker Images on your own servers.
+          使用 Docker 镜像在自己的服务器上部署 Tiptap Cloud。
         </Grid.ItemParagraph>
       </Grid.ItemContent>
     </Grid.Item>
   </Grid.Wrapper>
 </Section>
 <CtaBox.Wrapper variant="light">
-  <CtaBox.Title>Try every Tiptap feature free for 30 days</CtaBox.Title>
+  <CtaBox.Title>免费体验 Tiptap 的所有功能，时长 30 天</CtaBox.Title>
   <CtaBox.Description>
-    Create a Tiptap Cloud account, open your dashboard, and start the 30 day trial to test every
-    paid feature Tiptap has to offer.
+    创建 Tiptap Cloud 账号，打开控制面板并开始 30 天试用，体验 Tiptap 提供的所有付费功能。
   </CtaBox.Description>
   <CtaBox.List>
-    <CtaBox.ListItem title="30 day trial: ">No credit card required</CtaBox.ListItem>
-    <CtaBox.ListItem title="Editor features: ">
-      Integrate all Pro and Cloud Extensions.
+    <CtaBox.ListItem title="30 天试用：">无需信用卡</CtaBox.ListItem>
+    <CtaBox.ListItem title="编辑器功能：">
+      集成所有 Pro 和 Cloud 扩展。
     </CtaBox.ListItem>
-    <CtaBox.ListItem title="All paid features: ">
-      Test Collaboration, Comments, Version history and more.
+    <CtaBox.ListItem title="所有付费功能：">
+      体验协作、评论、版本历史等功能。
     </CtaBox.ListItem>
-    <CtaBox.ListItem title="AI features: ">Integrate AI features in your editor.</CtaBox.ListItem>
+    <CtaBox.ListItem title="AI 功能：">将 AI 功能集成到编辑器中。</CtaBox.ListItem>
   </CtaBox.List>
   <CtaBox.Actions className="-mx-3">
     <Button variant="tertiary" asChild>
       <Link href="https://cloud.tiptap.dev/register">
-        Start trial
+        开始试用
         <ArrowRightIcon className="w-4 h-4" />
       </Link>
     </Button>
   </CtaBox.Actions>
 </CtaBox.Wrapper>
 
-        <Section title="Examples" moreLink={{ label: 'Browse examples', url: '/docs/examples' }}>
+        <Section title="示例" moreLink={{ label: '浏览示例', url: '/docs/examples' }}>
     <CardGrid.Wrapper>
       <CardGrid.Item asChild>
         <Link href="/examples/basics/default-text-editor">
-          <CardGrid.ItemImage asNextImage src={cardCoverDefaultEditor.src} width={cardCoverDefaultEditor.width} height={cardCoverDefaultEditor.height} alt="Image" />
+          <CardGrid.ItemImage asNextImage src={cardCoverDefaultEditor.src} width={cardCoverDefaultEditor.width} height={cardCoverDefaultEditor.height} alt="图片" />
           <div>
-            <CardGrid.ItemTitle>Text editor</CardGrid.ItemTitle>
-            <CardGrid.ItemParagraph>Develop a rich text editor using Tiptap with minimal code.</CardGrid.ItemParagraph>
+            <CardGrid.ItemTitle>文本编辑器</CardGrid.ItemTitle>
+            <CardGrid.ItemParagraph>用最少的代码，使用 Tiptap 开发富文本编辑器。</CardGrid.ItemParagraph>
           </div>
           <CardGrid.ItemFooter>
-            <Tag>Editor</Tag>
+            <Tag>编辑器</Tag>
           </CardGrid.ItemFooter>
         </Link>
       </CardGrid.Item>
       <CardGrid.Item asChild>
         <Link href="/examples/advanced/collaborative-editing">
-          <CardGrid.ItemImage asNextImage src={cardCoverCollaborativeEditing.src} width={cardCoverCollaborativeEditing.width} height={cardCoverCollaborativeEditing.height} alt="Image" />
+          <CardGrid.ItemImage asNextImage src={cardCoverCollaborativeEditing.src} width={cardCoverCollaborativeEditing.width} height={cardCoverCollaborativeEditing.height} alt="图片" />
           <div>
-            <CardGrid.ItemTitle>Collaborative editing</CardGrid.ItemTitle>
-            <CardGrid.ItemParagraph>Build a text editor featuring multi-user collaboration.</CardGrid.ItemParagraph>
+            <CardGrid.ItemTitle>协作编辑</CardGrid.ItemTitle>
+            <CardGrid.ItemParagraph>构建支持多用户协作的文本编辑器。</CardGrid.ItemParagraph>
           </div>
           <CardGrid.ItemFooter>
-            <Tag>Editor</Tag>
-            <Tag>Collaboration</Tag>
+            <Tag>编辑器</Tag>
+            <Tag>协作</Tag>
           </CardGrid.ItemFooter>
         </Link>
       </CardGrid.Item>
     </CardGrid.Wrapper>
 
   </Section>
-  <Section title="Guides" moreLink={{ label: 'Browse guides', url: '/docs/guides' }}>
+  <Section title="指南" moreLink={{ label: '浏览指南', url: '/docs/guides' }}>
     <CardGrid.Wrapper>
       <CardGrid.Item asChild>
           <Link href="/editor/getting-started/configure">
-          <CardGrid.Subtitle size="sm">First Steps</CardGrid.Subtitle>
+          <CardGrid.Subtitle size="sm">入门</CardGrid.Subtitle>
           <div>
-            <CardGrid.ItemTitle>How to set up and configure the Tiptap editor?</CardGrid.ItemTitle>
+            <CardGrid.ItemTitle>如何设置和配置 Tiptap 编辑器？</CardGrid.ItemTitle>
           </div>
           <CardGrid.ItemFooter>
-            <Tag>Editor</Tag>
+            <Tag>编辑器</Tag>
           </CardGrid.ItemFooter>
         </Link>
       </CardGrid.Item>
       <CardGrid.Item asChild>
           <Link href="/guides/pro-extensions">
-          <CardGrid.Subtitle size="sm">First Steps</CardGrid.Subtitle>
+          <CardGrid.Subtitle size="sm">入门</CardGrid.Subtitle>
           <div>
-            <CardGrid.ItemTitle>How to integrate Pro Extensions?</CardGrid.ItemTitle>
+            <CardGrid.ItemTitle>如何集成 Pro 扩展？</CardGrid.ItemTitle>
           </div>
           <CardGrid.ItemFooter>
-            <Tag>Editor</Tag>
-            <Tag>Collaboration</Tag>
+            <Tag>编辑器</Tag>
+            <Tag>协作</Tag>
           </CardGrid.ItemFooter>
         </Link>
       </CardGrid.Item>
       <CardGrid.Item asChild>
           <Link href="/collaboration/getting-started/install">
-          <CardGrid.Subtitle size="sm">First Steps</CardGrid.Subtitle>
+          <CardGrid.Subtitle size="sm">入门</CardGrid.Subtitle>
           <div>
-              <CardGrid.ItemTitle>How to make your Editor collaborative?</CardGrid.ItemTitle>
+              <CardGrid.ItemTitle>如何让编辑器支持协作？</CardGrid.ItemTitle>
           </div>
           <CardGrid.ItemFooter>
-            <Tag>Editor</Tag>
-            <Tag>Collaboration</Tag>
+            <Tag>编辑器</Tag>
+            <Tag>协作</Tag>
           </CardGrid.ItemFooter>
         </Link>
       </CardGrid.Item>
       <CardGrid.Item asChild>
           <Link href="/editor/getting-started/style-editor">
-            <CardGrid.Subtitle size="sm">Styling</CardGrid.Subtitle>
+            <CardGrid.Subtitle size="sm">样式</CardGrid.Subtitle>
           <div>
-              <CardGrid.ItemTitle>How to apply styling to the headless Tiptap Editor</CardGrid.ItemTitle>
+              <CardGrid.ItemTitle>如何为无头 Tiptap 编辑器应用样式</CardGrid.ItemTitle>
           </div>
           <CardGrid.ItemFooter>
-            <Tag>Editor</Tag>
+            <Tag>编辑器</Tag>
           </CardGrid.ItemFooter>
         </Link>
       </CardGrid.Item>
     </CardGrid.Wrapper>
   </Section>
-  <Section title="Community">
+  <Section title="社区">
     <Grid.Wrapper className="sm:grid-cols-2 lg:grid-cols-3">
       <Grid.Item asChild>
         <Link href="https://x.com/tiptap_editor" target="_blank" rel="nofollow noreferrer">
@@ -301,7 +300,7 @@ Use the headless editor and more than 100 extensions directly in your app and ad
           </Grid.ItemHeader>
           <Grid.ItemContent>
             <Grid.ItemTitle><span className="line-through">Twitter</span> X</Grid.ItemTitle>
-            <Grid.ItemParagraph>Follow us on X for the latest news and updates.</Grid.ItemParagraph>
+            <Grid.ItemParagraph>在 X 上关注我们，获取最新消息和动态。</Grid.ItemParagraph>
           </Grid.ItemContent>
           <div className="mt-4">
             <Button className="inline-block" size="small" variant="secondary">
@@ -317,7 +316,7 @@ Use the headless editor and more than 100 extensions directly in your app and ad
           </Grid.ItemHeader>
           <Grid.ItemContent>
             <Grid.ItemTitle>Discord</Grid.ItemTitle>
-            <Grid.ItemParagraph>Connect with the Tiptap community.</Grid.ItemParagraph>
+            <Grid.ItemParagraph>与 Tiptap 社区交流。</Grid.ItemParagraph>
           </Grid.ItemContent>
           <div className="mt-4">
             <Button className="inline-block" size="small" variant="secondary">
@@ -333,7 +332,7 @@ Use the headless editor and more than 100 extensions directly in your app and ad
           </Grid.ItemHeader>
           <Grid.ItemContent>
             <Grid.ItemTitle>GitHub</Grid.ItemTitle>
-            <Grid.ItemParagraph>Follow progress and contribute to the codebase.</Grid.ItemParagraph>
+            <Grid.ItemParagraph>关注项目进展，并为代码库贡献力量。</Grid.ItemParagraph>
           </Grid.ItemContent>
           <div className="mt-4">
             <Button className="inline-block" size="small" variant="secondary">
