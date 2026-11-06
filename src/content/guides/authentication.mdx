@@ -2,21 +2,21 @@
 tags:
   - type: collaboration
 meta:
-  title: JWT Authentication with Collaboration | Tiptap Collaboration Docs
-  description: Generate and manage Collaboration tokens server-side with the unified Tiptap authentication model.
+  title: 使用 Collaboration 进行 JWT 身份验证 | Tiptap Collaboration 文档
+  description: 使用统一的 Tiptap 身份验证模型，在服务器端生成和管理 Collaboration 令牌。
   category: Collaboration
-title: Authentication with Collaboration
+title: 使用 Collaboration 进行身份验证
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Your application signs its own tokens on the server with your environment's private key, which never leaves your server.
+应用应在服务器上使用环境的私钥为自己的令牌签名，私钥绝不能离开服务器。
 
-This is a quick setup. For the full reference, see [Authentication](/authentication) and [Authenticate and authorize in Collaboration](/collaboration/getting-started/authenticate).
+以下是快速设置指南。完整参考请参阅[身份验证](/authentication)和[在 Collaboration 中进行身份验证和授权](/collaboration/getting-started/authenticate)。
 
-## Sign a token
+## 为令牌签名
 
-Sign tokens on your server with your environment's private key, which must never leave your server. Collaboration tokens set `aud: "Documents"` and carry `permissions` that say which documents the user can reach.
+在服务器上使用环境的私钥为令牌签名，私钥绝不能离开服务器。Collaboration 令牌会设置 `aud: "Documents"`，并携带 `permissions`，用于指定用户可以访问哪些文档。
 
 ```typescript
 import { SignJWT, importPKCS8 } from 'jose'
@@ -32,14 +32,14 @@ const jwt = await new SignJWT({
   .setAudience(['Documents'])
   .setExpirationTime('30m')
   .sign(privateKey)
-// Send this token in the `token` field of the provider. Never expose your private key to a frontend.
+// 将此令牌放入 provider 的 `token` 字段中。切勿向前端公开私钥。
 ```
 
-See [Signing the token](/authentication#signing-the-token) for examples in other languages, and [Handle token expiry](/collaboration/getting-started/authenticate#handle-token-expiry) for short-lived tokens and revocation.
+其他语言的示例请参阅[为令牌签名](/authentication#signing-the-token)；有关短期令牌和撤销，请参阅[处理令牌过期](/collaboration/getting-started/authenticate#handle-token-expiry)。
 
-## Limit access to specific documents
+## 限制对特定文档的访问
 
-To scope a token to specific documents, set the permission's `resource` to a document name, or use a `prefix` constraint to match a group:
+若要将令牌的访问范围限定为特定文档，请将权限的 `resource` 设置为文档名称，或使用 `prefix` 约束匹配一组文档：
 
 ```typescript
 const jwt = await new SignJWT({
@@ -58,4 +58,4 @@ const jwt = await new SignJWT({
   .sign(privateKey)
 ```
 
-This grants access to every document under that user's prefix. For the previous `allowedDocumentNames` model, see [Legacy authentication](/authentication/legacy).
+这将授予用户访问其前缀下所有文档的权限。关于此前的 `allowedDocumentNames` 模型，请参阅[旧版身份验证](/authentication/legacy)。
