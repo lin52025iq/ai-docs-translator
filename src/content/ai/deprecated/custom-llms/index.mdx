@@ -1,8 +1,8 @@
 ---
-title: Integrate a custom LLM
+title: 集成自定义 LLM
 meta:
-  title: Custom LLM | Tiptap AI Toolkit
-  description: Integrate the Tiptap AI extensions with your custom backend and AI models. Read about it in our docs.
+  title: 自定义 LLM | Tiptap AI Toolkit
+  description: 将 Tiptap AI 扩展与您的自定义后端和 AI 模型集成。请参阅我们的文档了解详情。
   category: AI Toolkit
 ---
 
@@ -11,31 +11,31 @@ import aiToolkitIcon from '@/assets/ai-toolkit.svg?url'
 import aiGenerationIcon from '@/assets/ai-generation.svg?url'
 import { ProductCard } from '@/components/ProductCard'
 
-Our AI extensions are designed to work with your custom LLMs. You can integrate them with your backend to provide advanced AI features to your users: AI agents, RAG pipelines, custom models, and more.
+我们的 AI 扩展专为与您的自定义 LLM 配合使用而设计。您可以将它们与后端集成，为用户提供高级 AI 功能，例如 AI 智能体、RAG 流水线、自定义模型等。
 
-## Extensions
+## 扩展
 
-We provide detailed guides on how to integrate your backend and LLMs in each of our extensions.
+我们为每个扩展都提供了详细指南，介绍如何集成您的后端和 LLM。
 
 <div className="grid sm:grid-cols-2 gap-5">
   <ProductCard
-    title="Basic AI Generation"
-    description="Generate content, make simple inline edits, or autocomplete a text."
-    tags={['Cloud', 'On premises']}
+    title="基础 AI 生成"
+    description="生成内容、进行简单的行内编辑，或自动补全文本。"
+    tags={['云端', '本地部署']}
     documentationUrl="/ai/basic/custom-llms"
     icon={aiGenerationIcon.src}
   />
   <ProductCard
-    title="AI Suggestion"
-    description="Generate proofreadeing suggestions with your custom AI models."
-    tags={['Beta', 'Cloud', 'On premises']}
+    title="AI 建议"
+    description="使用您的自定义 AI 模型生成校对建议。"
+    tags={['测试版', '云端', '本地部署']}
     documentationUrl="/ai/deprecated/suggestion/custom-llms"
     icon={contentAIIcon.src}
   />
   <ProductCard
     title="AI Toolkit"
-    description="Give your AI text-editing superpowers. Build AI agents and custom AI integrations."
-    tags={['Closed Beta']}
+    description="为 AI 赋予强大的文本编辑能力。构建 AI 智能体并实现自定义 AI 集成。"
+    tags={['封闭测试版']}
     documentationUrl="/ai/ai-toolkit/client/overview"
     icon={aiToolkitIcon.src}
   />
