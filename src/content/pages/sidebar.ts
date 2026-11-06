@@ -3,76 +3,76 @@ import type { SidebarConfig } from '@/types'
 export const sidebarConfig: SidebarConfig = {
   id: 'pages',
   rootHref: '/pages/getting-started/overview',
-  title: 'Pages',
+  title: '分页',
   items: [
     {
       type: 'group',
       href: '/pages/getting-started',
-      title: 'Getting started',
+      title: '快速入门',
       children: [
         {
-          title: 'Overview',
+          title: '概览',
           href: '/pages/getting-started/overview',
         },
         {
-          title: 'Install',
+          title: '安装',
           href: '/pages/getting-started/install',
         },
         {
-          title: 'Live demo',
+          title: '在线演示',
           href: '/pages/getting-started/live-demo',
-          tags: ['New'],
+          tags: ['新'],
         },
       ],
     },
     {
       type: 'group',
       href: '/pages/core-concepts',
-      title: 'Core concepts',
+      title: '核心概念',
       children: [
         {
-          title: 'Options',
+          title: '选项',
           href: '/pages/core-concepts/options',
         },
         {
-          title: 'Page format',
+          title: '页面格式',
           href: '/pages/core-concepts/page-format',
         },
         {
-          title: 'Headers & Footers',
+          title: '页眉和页脚',
           href: '/pages/core-concepts/page-header-footer',
         },
         {
-          title: 'Footnotes',
+          title: '脚注',
           href: '/pages/core-concepts/footnotes',
-          tags: ['New'],
+          tags: ['新'],
         },
         {
-          title: 'Endnotes',
+          title: '尾注',
           href: '/pages/core-concepts/endnotes',
-          tags: ['New'],
+          tags: ['新'],
         },
         {
-          title: 'Page gap & background',
+          title: '页面间距和背景',
           href: '/pages/core-concepts/page-gap',
         },
         {
-          title: 'Zoom',
+          title: '缩放',
           href: '/pages/core-concepts/zoom',
-          tags: ['New'],
+          tags: ['新'],
         },
         {
-          title: 'PageBreak node',
+          title: 'PageBreak 节点',
           href: '/pages/core-concepts/page-break-node',
-          tags: ['New'],
+          tags: ['新'],
         },
         {
-          title: 'Layout participants',
+          title: '布局参与者',
           href: '/pages/core-concepts/layout-participants',
-          tags: ['New'],
+          tags: ['新'],
         },
         {
-          title: 'Limitations',
+          title: '限制',
           href: '/pages/core-concepts/limitations',
         },
       ],
@@ -80,10 +80,10 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/pages/utilities',
-      title: 'Utilities',
+      title: '工具',
       children: [
         {
-          title: 'Page formats',
+          title: '页面格式',
           href: '/pages/utilities/page-formats',
         },
         {
@@ -99,32 +99,32 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/pages/guides',
-      title: 'Guides',
+      title: '指南',
       children: [
         {
-          title: 'From zero to print-ready',
+          title: '从零开始，制作可供印刷的页面',
           href: '/pages/guides/zero-to-print-ready',
         },
         {
-          title: 'Pages with tables',
+          title: '带表格的页面',
           href: '/pages/guides/table-with-pages',
         },
         {
           title: 'PagesTableKit',
           href: '/pages/guides/pages-tablekit',
-          tags: ['Experimental'],
+          tags: ['实验性'],
         },
         {
-          title: 'Rows that span a page break',
+          title: '跨页断点的行',
           href: '/pages/guides/row-fragmentation',
-          tags: ['Experimental'],
+          tags: ['实验性'],
         },
         {
           title: 'PageKit',
           href: '/pages/guides/pagekit-usage',
         },
         {
-          title: 'Adding collaboration to Pages',
+          title: '为 Pages 添加协作功能',
           href: '/pages/guides/collaboration-with-pages',
         },
       ],
