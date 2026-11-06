@@ -1,11 +1,11 @@
 ---
-title: Build AI-powered documents
+title: 构建 AI 驱动的文档
 tags:
   - type: addon
   - type: beta
 meta:
   title: Tiptap AI Toolkit
-  description: Build AI agents that read and edit Tiptap documents in real time.
+  description: 构建能够实时读取和编辑 Tiptap 文档的 AI 智能体。
   category: AI Toolkit
 ---
 
@@ -17,23 +17,22 @@ import { Link } from '@/components/Link'
 import { CodeDemo } from '@/components/CodeDemo'
 
 <Requirements>
-  <RequirementItem label="1. Get access">
-    Access AI Toolkit by purchasing the paid AI Toolkit add-on.{' '}
-    <a href="https://tiptap.dev/contact-sales?form=ai-toolkit">Contact our team</a>.
+  <RequirementItem label="1. 获取访问权限">
+    购买付费版 AI Toolkit 插件即可获得访问权限。{' '}
+    <a href="https://tiptap.dev/contact-sales?form=ai-toolkit">联系我们的团队</a>。
   </RequirementItem>
-  <RequirementItem label="2. Install the package">
-    The AI Toolkit package is open source. Install it from the public npm registry using npm or your
-    preferred package manager.
+  <RequirementItem label="2. 安装软件包">
+    AI Toolkit 软件包是开源的。使用 npm 或你偏好的包管理器，从公共 npm 注册表安装。
   </RequirementItem>
-  <RequirementItem label="3. Authenticate to the service">
-    Configure a <a href="/ai/ai-toolkit/install#set-up-authorization">Tiptap Access Control JWT</a>{' '}
-    to access the AI Toolkit service.
+  <RequirementItem label="3. 验证服务身份">
+    配置 <a href="/ai/ai-toolkit/install#set-up-authorization">Tiptap Access Control JWT</a>{' '}
+    以访问 AI Toolkit 服务。
   </RequirementItem>
 </Requirements>
 
 <EnterpriseCalloutAuto variant="server-ai-toolkit" renderMode="sidebar" />
 
-Tiptap's **AI Toolkit** gives AI agents the tools they need to read and edit Tiptap documents directly in the browser or on the server.
+Tiptap 的 **AI Toolkit** 为 AI 智能体提供所需工具，使其能够直接在浏览器中或服务器上读取和编辑 Tiptap 文档。
 
 <CodeDemo
   isLarge
@@ -42,60 +41,60 @@ Tiptap's **AI Toolkit** gives AI agents the tools they need to read and edit Tip
   src="https://ai-toolkit-demos.vercel.app/server-ai-agent-chatbot"
 />
 
-### Use your own AI model & infrastructure
+### 使用你自己的 AI 模型和基础设施
 
-The AI Toolkit is framework-agnostic. It works with Vercel AI SDK, LangChain, OpenAI SDK, Anthropic SDK, or your own implementation.
+AI Toolkit 与框架无关。它可与 Vercel AI SDK、LangChain、OpenAI SDK、Anthropic SDK 或你自己的实现配合使用。
 
-### Built with efficiency in mind
+### 高效设计
 
-The AI Toolkit adapts to cost-sensitive use cases. The available tools, like `tiptapEdit` and `proofread`, use an efficient format that allows AI to apply edits fast and keep token consumption low.
+AI Toolkit 适用于对成本敏感的使用场景。`tiptapEdit` 和 `proofread` 等可用工具采用高效格式，让 AI 能够快速应用编辑，同时减少 token 消耗。
 
-[Tiptap Shorthand](/ai/ai-toolkit/advanced-guides/tiptap-shorthand) (beta) is a token-efficient format used for encoding Tiptap documents. It reduces AI token costs by up to 50% without sacrificing accuracy.
+[Tiptap Shorthand](/ai/ai-toolkit/advanced-guides/tiptap-shorthand)（测试版）是一种用于编码 Tiptap 文档的高效 token 格式。在不牺牲准确性的前提下，它最多可降低 50% 的 AI token 成本。
 
-### Flexible deployment options
+### 灵活的部署选项
 
-The AI Toolkit can be used as a cloud service, deployed on-premise on your infrastructure, or [embedded in your client-side codebase](/ai/ai-toolkit/client).
+AI Toolkit 可作为云服务使用，也可部署在你自己的基础设施上，或[嵌入客户端代码库](/ai/ai-toolkit/client)。
 
 {/*
 
-### Explore use cases
+### 探索使用场景
 
-Explore technical implementations for AI-powered editing. Build AI agents with document-editing capabilities like chatbots, inline edits, and proofreading, or add simple AI commands like autocompletion, translation, and summarization.
+了解 AI 驱动编辑的技术实现。构建具备文档编辑能力的 AI 智能体，例如聊天机器人、行内编辑和校对工具；也可以添加自动补全、翻译和摘要等简单的 AI 命令。
 
 <Link
   href="/ai/use-cases"
   className="font-semibold text-blue-600 hover:text-blue-700 inline-flex items-center gap-1.5"
 >
   <ArrowRightIcon className="size-3.5" />
-  View use cases
+  查看使用场景
 </Link>
 */}
 
 <EnterpriseCalloutAuto variant="server-ai-toolkit" renderMode="inline" />
 
 {/* <div className="grid md:grid-cols-2 gap-6 mt-6 md:items-start">
-Learn more and start implementing with these guides:
+了解更多并通过以下指南开始实施：
 
   <Link
     href="/ai/ai-toolkit/install"
     className="flex flex-col p-4 border border-grayAlpha-200 rounded-lg hover:border-grayAlpha-300 transition-colors cursor-pointer no-underline"
   >
     <div className="flex items-center justify-between mb-2">
-      <h4 className="font-semibold text-black">Installation guide</h4>
-      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">More →</span>
+      <h4 className="font-semibold text-black">安装指南</h4>
+      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">更多 →</span>
     </div>
-    <div className="text-sm text-grayAlpha-700">Set up AI Toolkit in your app</div>
+    <div className="text-sm text-grayAlpha-700">在你的应用中设置 AI Toolkit</div>
   </Link>
   <Link
     href="/ai/ai-toolkit/agents/ai-agent-chatbot"
     className="flex flex-col p-4 border border-grayAlpha-200 rounded-lg hover:border-grayAlpha-300 transition-colors cursor-pointer no-underline"
   >
     <div className="flex items-center justify-between mb-2">
-      <h4 className="font-semibold text-black">AI Agent Chatbot</h4>
-      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">More →</span>
+      <h4 className="font-semibold text-black">AI 智能体聊天机器人</h4>
+      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">更多 →</span>
     </div>
     <div className="text-sm text-grayAlpha-700">
-      Build a conversational AI capable of editing documents and interacting through chat.
+      构建能够编辑文档并通过聊天进行交互的对话式 AI。
     </div>
   </Link>
 </div>
