@@ -7,54 +7,51 @@ tags:
   - type: image
     src: https://img.shields.io/npm/v/@hocuspocus/extension-sqlite.svg?label=version
     url: https://www.npmjs.com/package/@hocuspocus/extension-sqlite
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@hocuspocus/extension-sqlite.svg
     url: https://npmcharts.com/compare/@hocuspocus/extension-sqlite?minimal=true
-    label: Downloads
+    label: 下载量
   - type: image
     src: https://img.shields.io/npm/l/@hocuspocus/extension-sqlite.svg
     url: https://www.npmjs.com/package/@hocuspocus/extension-sqlite
-    label: License
+    label: 许可证
   - type: image
     src: https://img.shields.io/badge/chat-on%20discord-7289da.svg?sanitize=true
     url: https://discord.gg/WtJ49jGshW
-    label: Chat
+    label: 聊天
 ---
 
-## Introduction
+## 简介
 
-For local development purposes it’s nice to have a database ready to go with a few lines of code. That’s what the SQLite
-extension is for.
+对于本地开发，只需几行代码就能快速准备好一个数据库，非常方便。这正是 SQLite 扩展的用途。
 
-## Installation
+## 安装
 
-Install the SQLite extension like this:
+按如下方式安装 SQLite 扩展：
 
 ```bash
 npm install @hocuspocus/extension-sqlite better-sqlite3
 npm install -D @types/better-sqlite3
 ```
 
-Since v4, the extension uses [`better-sqlite3`](https://github.com/WiseLibs/better-sqlite3) instead of the unmaintained `sqlite3` package. If you're upgrading from v3, uninstall the old dependency with `npm uninstall sqlite3`. Existing SQLite database files are fully compatible — no data migration needed.
+从 v4 开始，该扩展使用 [`better-sqlite3`](https://github.com/WiseLibs/better-sqlite3) 替代已停止维护的 `sqlite3` 包。如果你要从 v3 升级，请运行 `npm uninstall sqlite3` 卸载旧依赖。现有 SQLite 数据库文件完全兼容，无需迁移数据。
 
-## Configuration
+## 配置
 
 **database**
 
-Valid values are filenames, ":memory:" for an anonymous in-memory database and an empty
-string for an anonymous disk-based database. Anonymous databases are not persisted and
-when closing the database handle, their contents are lost.
+有效值包括文件名、表示匿名内存数据库的 `":memory:"`，以及表示匿名磁盘数据库的空字符串。匿名数据库不会持久化，关闭数据库句柄时其中的内容会丢失。
 
 https://github.com/mapbox/node-sqlite3/wiki/API#new-sqlite3databasefilename-mode-callback
 
-Default: `:memory:`
+默认值：`:memory:`
 
 **schema**
 
-The SQLite schema that’s created for you.
+为你创建的 SQLite 架构。
 
-Default:
+默认值：
 
 ```sql
 CREATE TABLE IF NOT EXISTS "documents" (
@@ -64,20 +61,19 @@ CREATE TABLE IF NOT EXISTS "documents" (
 )
 ```
 
-If you wrote a **custom schema** under v3, note that v4's `better-sqlite3` uses named parameters without the `$` prefix — rename `$name` to `name` and `$data` to `data` in your queries.
+如果你在 v3 中编写了**自定义架构**，请注意，v4 的 `better-sqlite3` 使用不带 `$` 前缀的命名参数——请在查询中将 `$name` 改为 `name`，将 `$data` 改为 `data`。
 
 **fetch**
 
-An async function to retrieve data from SQLite. If you change the schema, you probably want to override the query.
+用于从 SQLite 获取数据的异步函数。如果你更改了架构，可能需要覆盖查询语句。
 
 **store**
 
-An async function to store data in SQLite. If you change the schema, you probably want to override the query.
+用于将数据存储到 SQLite 的异步函数。如果你更改了架构，可能需要覆盖查询语句。
 
-**Usage**
+**用法**
 
-By default, data is just “stored” in `:memory:`, so it’s wiped when you stop the server. You can pass a file name to
-persist data on the disk.
+默认情况下，数据只会“存储”在 `:memory:` 中，因此停止服务器时数据就会被清除。你可以传入文件名，将数据持久化到磁盘。
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -94,14 +90,14 @@ const server = new Server({
 server.listen();
 ```
 
-## Troubleshooting
+## 故障排除
 
 ### `Could not locate the bindings file`
 
-`better-sqlite3` ships prebuilt native bindings, but they don't always match fresh Node.js versions on day one. If the server throws `Error: Could not locate the bindings file` on start-up, rebuild the binding from source in your server project:
+`better-sqlite3` 附带预编译的原生绑定，但它们未必能立即适配最新版本的 Node.js。如果服务器启动时抛出错误 `Error: Could not locate the bindings file`，请在服务器项目中从源代码重新构建绑定：
 
 ```bash
 npm rebuild better-sqlite3 --build-from-source
 ```
 
-This compiles the native addon for your exact Node.js + OS + architecture combo. Requires a working C++ toolchain (Xcode Command Line Tools on macOS, `build-essential` on Debian/Ubuntu, or the Visual Studio Build Tools on Windows).
+此命令会针对你使用的 Node.js、操作系统和处理器架构组合编译原生插件。你需要准备可用的 C++ 工具链（macOS 上的 Xcode Command Line Tools、Debian/Ubuntu 上的 `build-essential`，或 Windows 上的 Visual Studio Build Tools）。
