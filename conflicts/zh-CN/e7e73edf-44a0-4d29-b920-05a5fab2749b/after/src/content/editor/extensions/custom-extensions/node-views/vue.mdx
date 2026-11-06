@@ -1,0 +1,268 @@
+---
+title: 使用 Vue 构建节点视图
+meta:
+  title: Vue 节点视图 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 Vue 构建自定义节点视图。直接操作节点属性并创建交互式内容。
+  category: 编辑器
+---
+
+import { CodeDemo } from '@/components/CodeDemo'
+
+如果你习惯使用 Vue，那么使用原生 JavaScript 可能会让你觉得有些复杂。好消息是，你也可以在节点视图中使用常规 Vue 组件。只需要了解一些要点，下面我们逐一介绍。
+
+## 渲染 Vue 组件
+
+要在编辑器中渲染 Vue 组件，请按以下步骤操作：
+
+1. [创建节点扩展](/editor/extensions/custom-extensions)
+2. 创建一个 Vue 组件
+3. 将该组件传递给提供的 `VueNodeViewRenderer`
+4. 使用 `addNodeView()` 注册它
+5. [配置 Tiptap 以使用新的节点扩展](/editor/getting-started/configure)
+
+节点扩展可以这样编写：
+
+```js
+import { Node } from '@tiptap/core'
+import { VueNodeViewRenderer } from '@tiptap/vue-2'
+import Component from './Component.vue'
+
+export default Node.create({
+  // configuration …
+
+  addNodeView() {
+    return VueNodeViewRenderer(Component)
+  },
+})
+```
+
+要让它正常工作，需要一些特殊处理。不过不用担心，我们提供了一个包装组件，方便你快速上手。别忘了将它添加到自定义 Vue 组件中，如下所示：
+
+```html
+<template>
+  <node-view-wrapper> Vue Component </node-view-wrapper>
+</template>
+```
+
+明白了吗？下面来看看实际效果。你可以复制以下示例开始尝试。
+
+<CodeDemo path="/GuideNodeViews/VueComponent" />
+
+不过，这个组件还无法与编辑器交互。现在就来连接它们。
+
+## 访问节点属性
+
+在节点扩展中使用的 `VueNodeViewRenderer` 会向自定义 Vue 组件传递一些非常实用的 props。其中之一是 `node` prop。将以下代码添加到 Vue 组件中，即可直接访问节点：
+
+```js
+props: {
+  node: {
+    type: Object,
+    required: true,
+  },
+},
+```
+
+这样就能在 Vue 组件中访问节点属性了。假设你已为节点扩展[添加了一个名为 `count` 的属性](/editor/extensions/custom-extensions/extend-existing#attributes)（就像上面的示例一样），就可以这样访问它：
+
+```js
+this.node.attrs.count
+```
+
+## 更新节点属性
+
+你还可以通过传递给组件的 `updateAttributes` prop 来更新节点属性。只需将以下代码添加到组件中：
+
+```js
+props: {
+  updateAttributes: {
+    type: Function,
+    required: true,
+  },
+},
+```
+
+向该函数传入包含更新后属性的对象：
+
+```js
+this.updateAttributes({
+  count: this.node.attrs.count + 1,
+})
+```
+
+没错，这些操作也都是响应式的。通信相当顺畅，对吧？
+
+## 添加可编辑内容
+
+还有一个名为 `NodeViewContent` 的组件，可帮助你在节点视图中添加可编辑内容。示例如下：
+
+```html
+<template>
+  <node-view-wrapper class="dom">
+    <node-view-content class="content-dom" />
+  </node-view-wrapper>
+</template>
+
+<script>
+  import { NodeViewWrapper, NodeViewContent } from '@tiptap/vue-2'
+
+  export default {
+    components: {
+      NodeViewWrapper,
+      NodeViewContent,
+    },
+  }
+</script>
+```
+
+无需添加这些 `class` 属性，可以直接删除它们，也可以传入其他类名。试试下面的示例：
+
+<CodeDemo path="/GuideNodeViews/VueComponentContent" />
+
+请注意，这部分内容由 Tiptap 渲染。这意味着你需要指定允许使用的内容类型，例如在节点扩展中设置 `content: 'inline*'`（上面的示例就是这样设置的）。
+
+`NodeViewWrapper` 和 `NodeViewContent` 组件会渲染 `<div>` HTML 标签（行内节点则渲染 `<span>`），不过你可以更改标签。例如，`<node-view-content as="p">` 应该会渲染一个段落。但有一点限制：运行时不能更改该标签。
+
+## 在文本选区中更新 `selected`
+
+默认情况下，只有使用 `NodeSelection` 选中节点本身时，`selected` prop 才会变为 `true`。这对于原子节点很有用，但当光标只是位于包含文本内容的节点内部时，不会触发。如果你希望此时 `selected` 也能反映选中状态，请在 `VueNodeViewRenderer` 上启用 `selectedOnTextSelection` 选项：
+
+```js
+return VueNodeViewRenderer(Component, { selectedOnTextSelection: true })
+```
+
+启用此选项后，只要 `TextSelection` 完全位于节点范围内，`selected` 也会变为 `true`——例如，光标位于节点内容中的某处时。仅与节点部分重叠的选区不会被视为选中。
+
+## 跟踪节点位置
+
+如果装饰或位置发生变化，但内容没有变化，节点视图不会重新渲染。ProseMirror 会在 `contentDOM` 上原生处理装饰，而 `getPos()` 闭包在每次调用时都会返回当前位置，即使没有重新渲染也是如此。
+
+如果组件需要在渲染结果中响应式地使用 `getPos()`（例如，拖动手柄显示 `pos: 42`），请启用 `trackNodeViewPosition`：
+
+```js
+return VueNodeViewRenderer(Component, { trackNodeViewPosition: true })
+```
+
+启用后，每次位置发生变化，组件都会重新渲染。请谨慎使用——频繁重新渲染可能会影响性能。
+
+## 所有可用的 props
+
+对于高级用法，我们还会向组件传递一些其他 props。
+
+### editor
+
+编辑器实例。
+
+### node
+
+访问当前节点。
+
+### decorations
+
+装饰数组。
+
+### selected
+
+当当前节点视图处于 `NodeSelection` 中时为 `true`。启用 [`selectedOnTextSelection`](#updating-selected-on-a-text-selection) 选项后，如果 `TextSelection` 完全位于节点内部，该值也为 `true`。
+
+### extension
+
+访问节点扩展，例如用于获取选项。
+
+### getPos()
+
+获取当前节点在文档中的位置。
+
+### updateAttributes()
+
+更新当前节点的属性。
+
+### deleteNode()
+
+删除当前节点。
+
+以下是你可能会用到的所有 props：
+
+```html
+<template>
+  <node-view-wrapper />
+</template>
+
+<script>
+  import { NodeViewWrapper } from '@tiptap/vue-2'
+
+  export default {
+    components: {
+      NodeViewWrapper,
+    },
+
+    props: {
+      // the editor instance
+      editor: {
+        type: Object,
+      },
+
+      // the current node
+      node: {
+        type: Object,
+      },
+
+      // an array of decorations
+      decorations: {
+        type: Array,
+      },
+
+      // `true` when there is a `NodeSelection` at the current node view, or
+      // when the `selectedOnTextSelection` option is enabled and a `TextSelection`
+      // is fully inside the node
+      selected: {
+        type: Boolean,
+      },
+
+      // access to the node extension, for example to get options
+      extension: {
+        type: Object,
+      },
+
+      // get the document position of the current node
+      getPos: {
+        type: Function,
+      },
+
+      // update attributes of the current node
+      updateAttributes: {
+        type: Function,
+      },
+
+      // delete the current node
+      deleteNode: {
+        type: Function,
+      },
+    },
+  }
+</script>
+```
+
+如果你想一次性导入所有 props（并获得 TypeScript 支持），可以这样做：
+
+```js
+// Vue 3
+import { defineComponent } from 'src/content/editor/extensions/custom-extensions/node-views/vue.mdx'
+import { nodeViewProps } from '@tiptap/vue-3'
+export default defineComponent({
+  props: nodeViewProps,
+})
+
+// Vue 2
+import Vue from 'src/content/editor/extensions/custom-extensions/node-views/vue.mdx'
+import { nodeViewProps } from '@tiptap/vue-2'
+export default Vue.extend({
+  props: nodeViewProps,
+})
+```
+
+## 拖动
+
+要使节点视图可拖动，请在扩展中设置 `draggable: true`，并将 `data-drag-handle` 添加到用作拖动手柄的 DOM 元素上。
+
+<CodeDemo path="/GuideNodeViews/DragHandle" />
