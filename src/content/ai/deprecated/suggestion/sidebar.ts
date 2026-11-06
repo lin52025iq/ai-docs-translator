@@ -3,24 +3,24 @@ import { SidebarConfig } from '@/types'
 export const sidebarConfig: SidebarConfig = {
   id: 'ai-suggestion',
   rootHref: '/ai/deprecated/suggestion/overview',
-  title: 'AI Suggestion (Legacy)',
+  title: 'AI 建议（旧版）',
   items: [
     {
       type: 'link',
-      title: '← Back to Content AI',
+      title: '← 返回内容 AI',
       href: '/ai/ai-toolkit/overview',
     },
     {
       type: 'group',
       href: '/ai/deprecated/suggestion/overview',
-      title: 'Get started',
+      title: '开始使用',
       children: [
         {
-          title: 'Overview',
+          title: '概览',
           href: '/ai/deprecated/suggestion/overview',
         },
         {
-          title: 'Install',
+          title: '安装',
           href: '/ai/deprecated/suggestion/install',
         },
       ],
@@ -28,34 +28,34 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/ai/deprecated/suggestion/features/define-rules',
-      title: 'Features',
+      title: '功能',
       children: [
         {
-          title: 'Define rules',
+          title: '定义规则',
           href: '/ai/deprecated/suggestion/features/define-rules',
         },
         {
-          title: 'Configure when to load suggestions',
+          title: '配置建议的加载时机',
           href: '/ai/deprecated/suggestion/features/configure-when-to-load-suggestions',
         },
         {
-          title: 'Display suggestions',
+          title: '显示建议',
           href: '/ai/deprecated/suggestion/features/display-suggestions',
         },
         {
-          title: 'Apply and reject suggestions',
+          title: '应用和拒绝建议',
           href: '/ai/deprecated/suggestion/features/apply-suggestions',
         },
         {
-          title: 'Lock content',
+          title: '锁定内容',
           href: '/ai/deprecated/suggestion/features/lock-content',
         },
         {
-          title: 'Provide LLM context',
+          title: '提供 LLM 上下文',
           href: '/ai/deprecated/suggestion/features/provide-llm-context',
         },
         {
-          title: 'Diff view',
+          title: '差异视图',
           href: '/ai/deprecated/suggestion/features/diff-view',
         },
       ],
@@ -63,18 +63,18 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/ai/deprecated/suggestion/use-with-content-ai-cloud',
-      title: 'Integration',
+      title: '集成',
       children: [
         {
-          title: 'Use with Content AI Cloud',
+          title: '与 Content AI Cloud 搭配使用',
           href: '/ai/deprecated/suggestion/use-with-content-ai-cloud',
         },
         {
-          title: 'Integrate your LLM',
+          title: '集成自己的 LLM',
           href: '/ai/deprecated/suggestion/custom-llms',
         },
         {
-          title: 'Configure',
+          title: '配置',
           href: '/ai/deprecated/suggestion/configure',
         },
       ],
@@ -82,14 +82,14 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/ai/deprecated/suggestion/api-reference',
-      title: 'Reference',
+      title: '参考',
       children: [
         {
-          title: 'API Reference',
+          title: 'API 参考',
           href: '/ai/deprecated/suggestion/api-reference',
         },
         {
-          title: 'Changelog',
+          title: '更新日志',
           href: '/ai/deprecated/suggestion/changelog',
         },
       ],
