@@ -1,9 +1,9 @@
 ---
-title: AI Agent extension for Tiptap
+title: 适用于 Tiptap 的 AI Agent 扩展
 meta:
-  title: AI Agent | Tiptap Content AI
-  description: Build AI Agents that edit rich text documents - from simple chatbot assistants to complex document editing workflows.
-  category: Content AI
+  title: AI Agent | Tiptap 内容 AI
+  description: 构建可编辑富文本内容的 AI Agent——从简单的聊天机器人助手到复杂的文档编辑工作流。
+  category: 内容 AI
 tags:
   - type: beta
   - type: deprecated
@@ -15,15 +15,14 @@ import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 
-<Callout title="Deprecated" variant="warning">
-  This extension is being phased out in favor of the AI Toolkit, which offers enhanced capabilities
-  and a modernized API. While you can continue using this extension, we recommend exploring the AI
-  Toolkit for new implementations.
+<Callout title="已弃用" variant="warning">
+  此扩展正在逐步淘汰，取而代之的是功能更强、API 更现代的 AI Toolkit。虽然你仍可继续使用此扩展，但我们建议在新项目中探索使用 AI
+  Toolkit。
 </Callout>
 
 <EnterpriseCalloutAuto variant="deprecated" renderMode="sidebar" />
 
-Integrate the AI Agent extension and build agents that edit rich‑text documents. Integrate a ready‑made assistant or add editing tools to your own agent.
+集成 AI Agent 扩展，构建可编辑富文本文档的 Agent。你可以集成现成的助手，也可以为自己的 Agent 添加编辑工具。
 
 <CodeDemo
   isPro
@@ -32,50 +31,50 @@ Integrate the AI Agent extension and build agents that edit rich‑text document
   src="https://feature-beta-ai-extensions--tiptap-pro.netlify.app/preview/Extensions/AiAgent"
 />
 
-The AI Agent extension lets you build an AI Assistant that can read, answer questions, and edit your document based on a user-defined task.
+AI Agent 扩展可帮助你构建 AI 助手，让它根据用户定义的任务阅读和编辑文档，并回答问题。
 
-<Callout title="Already have an AI agent?" variant="info">
-  Give it text-editing superpowers with Tiptap&apos;s AI Agent extension. It provides it the tools
-  to read and edit rich text documents fast and efficiently.
+<Callout title="已经有 AI Agent 了吗？" variant="info">
+  借助 Tiptap&apos;s AI Agent 扩展，为它赋予强大的文本编辑能力。该扩展提供相应工具，帮助它快速、高效地读取和编辑富文本。
 </Callout>
 
-## Key features
+## 主要功能
 
-- Edits large documents fast and efficiently.
-- Understands your document's structure, including custom elements.
-- Integrates with external data sources and RAG pipelines.
-- Is aware of the editor's selected content.
-- Let your users review and accept/reject AI-generated changes.
+- 快速、高效地编辑大型文档。
+- 理解文档结构，包括自定义元素。
+- 集成外部数据源和 RAG 流程。
+- 感知编辑器中当前选中的内容。
+- 让用户检查并接受或拒绝 AI 生成的更改。
 
-## Use Tiptap's AI agent — or build your own
+## 使用 Tiptap 的 AI Agent，或构建自己的 Agent
 
-There are two ways to use the AI Agent extension:
+使用 AI Agent 扩展有两种方式：
 
-- [Use it with Tiptap Cloud](/ai/deprecated/agent/use-with-content-ai-cloud), which provides a managed, ready-to-use AI agent.
-- [Add it to your existing AI agent](/ai/deprecated/agent/custom-llms/overview), that's hosted in your backend.
+- [与 Tiptap Cloud 搭配使用](/ai/deprecated/agent/use-with-content-ai-cloud)，使用托管的现成 AI Agent。
+- [将其添加到现有 AI Agent 中](/ai/deprecated/agent/custom-llms/overview)，该 Agent 托管在你的后端。
 
-The AI Agent extension provides tool definitions for popular AI provider libraries:
+AI Agent 扩展为常见的 AI 服务提供商库提供工具定义：
 
-- [AI SDK by Vercel](/ai/ai-toolkit/client/agents/tools/ai-sdk)
+- [Vercel 的 AI SDK](/ai/ai-toolkit/client/agents/tools/ai-sdk)
 - [LangChain.js](/ai/ai-toolkit/client/agents/tools/langchain-js)
 - [OpenAI](/ai/ai-toolkit/client/agents/tools/openai)
 
-## What are AI Agents?
+## 什么是 AI Agent？
 
-AI Agents are systems that can accomplish a complex task by making independent decisions. Unlike simple chatbot assistants, AI Agents can not only respond with text, but also call "tools" that let them interact with the environment.
+AI Agent 是一种能够通过自主决策完成复杂任务的系统。与简单的聊天机器人助手不同，AI Agent 不仅能用文本回复，还能调用与环境交互的“工具”。
 
-The Tiptap AI Agent extension provides AI Agents the tools to perform these actions:
+Tiptap AI Agent 扩展为 AI Agent 提供了执行以下操作的工具：
 
-- Read the document
-- Re-write the document's contents
-- Make a plan, interact with the user, and create a summary of the changes it made.
+- 读取文档
+- 重写文档内容
+- 制定计划、与用户交互，并总结所做的更改。
 
-These built-in tools are optimized for rich text editing and follow LLM best practices, allowing you to focus on your application's core logic. You can combine them with custom tools for data retrieval.
+这些内置工具针对富文本编辑进行了优化，并遵循 LLM 最佳实践，让你能够专注于应用的核心逻辑。你还可以将它们与用于检索数据的自定义工具结合使用。
 
-When an LLM is called with these tools, it selects one to execute. Then, the Tiptap AI Agent extension applies it to the editor, modifying the document or reading its content in an efficient way. In a typical implementation, the LLM is called on the server, while the document editing happens in the browser.
+使用这些工具调用 LLM 时，LLM 会选择一个工具执行。随后，Tiptap AI Agent 扩展会在编辑器中执行该工具，以高效地修改文档或读取其内容。典型实现中，LLM 在服务器端调用，而文档编辑则在浏览器中进行。
 
-Think of the LLM as the "brain" of the AI agent, making decisions about which tools to call. The Tiptap AI Agent extension acts as the "hands" and "eyes," enabling the agent to read and interact with the document.
+可以把 LLM 看作 AI Agent 的“大脑”，负责决定调用哪些工具。Tiptap AI Agent 扩展则充当它的“双手”和“眼睛”，让 Agent 能够读取文档并与之交互。
 
-By using the AI Agent extension with Tiptap Cloud, you don't need to worry about the server — we have it built for you. However, if you want to customize the LLM and the tools that the AI agent has available (so that it can perform other actions, like searching an external data source), you can integrate the AI Agent extension with your own backend.
+将 AI Agent 扩展与 Tiptap Cloud 搭配使用时，无需操心服务器——我们已为你搭建好。不过，如果你想自定义 LLM 及 AI Agent 可用的工具（例如，让它执行搜索外部数据源等操作），可以将 AI Agent 扩展集成到自己的后端。
 
 <EnterpriseCalloutAuto variant="ai-agent" renderMode="inline" />
+
