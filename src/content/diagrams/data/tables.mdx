@@ -1,6 +1,6 @@
 ---
-title: 'Tables'
-intro: 'You can turn a table into a chart and a chart into a table. A chart or a diagram can also follow a table in the same document, and change whenever you edit the table.'
+title: '表格'
+intro: '可以将表格转换为图表，也可以将图表转换为表格。还可以让图表或示意图在同一文档中跟随表格，并在编辑表格时同步更新。'
 headerDemo:
   path: '/Extensions/DiagramsTables'
   isPro: true
@@ -8,98 +8,93 @@ tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Tables | Tiptap Diagrams Docs'
-  description: 'You can turn a table into a chart and a chart into a table.'
-  category: Diagrams
+  title: '表格 | Tiptap 图表文档'
+  description: '可以将表格转换为图表，也可以将图表转换为表格。'
+  category: 图表
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-## Quick start
+## 快速入门
 
-With [`chart.linkTables`](/diagrams/data/tables#following-a-table) on, place the selection in a table and call:
+启用 [`chart.linkTables`](/diagrams/data/tables#following-a-table) 后，将选区放在表格中并调用：
 
 ```ts
 editor.commands.insertLinkedChart({ type: 'bar' })
 ```
 
-## Following a table
+## 跟随表格
 
-To let charts and diagrams follow tables, turn on the option
-[`chart.linkTables`](/diagrams/api-reference/options#linktables). It gives each table a `chartTableId` attribute,
-so a chart can find its table again. Without it, `insertLinkedChart`, `linkChartToTable`, and
-`setChartLayout` with a table return `false`.
+若要让图表和示意图跟随表格，请启用选项
+[`chart.linkTables`](/diagrams/api-reference/options#linktables)。此选项会为每个表格添加 `chartTableId` 属性，
+以便图表之后能重新找到对应表格。未启用时，使用表格调用 `insertLinkedChart`、`linkChartToTable` 和
+`setChartLayout` 会返回 `false`。
 
-A chart that follows a table changes in the same undo step as your edit of the table, so one undo
-takes back both. The table can be anywhere in the document, and `listTables()` lists the tables
-a chart can follow. The chart's data comes from the table through the `document-table`
-[Data Source](/diagrams/data/sources).
+跟随表格的图表会与表格编辑一起纳入同一个撤销步骤，因此一次撤销即可同时还原两者。表格可以位于文档中的任意位置，而 `listTables()` 会列出图表可跟随的表格。图表数据通过
+[数据源](/diagrams/data/sources) `document-table` 从表格中读取。
 
-## How the table is read
+## 表格的读取方式
 
-`insertLinkedChart`, `linkChartToTable` and `updateLinkedTable` take `header` and `range`.
+`insertLinkedChart`、`linkChartToTable` 和 `updateLinkedTable` 接受 `header` 和 `range`。
 
-| Option          | Type                                 | Description                                                                                              |
-| --------------- | ------------------------------------ | -------------------------------------------------------------------------------------------------------- |
-| `header`        | `'auto' \| 'first-row' \| 'none'`    | Where the column names are. Default `'auto'`                                                             |
-| `range.rows`    | `{ from?, to? }` or an array of them | The data rows read, counted from 0 below the header                                                      |
-| `range.columns` | `(number \| { from?, to? })[]`       | The columns read, counted from 0, such as `[0, { from: 2 }]`. The first column read names the categories |
+| 选项             | 类型                                 | 说明                                                                                              |
+| ---------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------- |
+| `header`         | `'auto' \| 'first-row' \| 'none'`    | 列名所在位置。默认为 `'auto'`                                                                      |
+| `range.rows`     | `{ from?, to? }` 或其数组            | 要读取的数据行，从表头下方的第 0 行开始计数                                                        |
+| `range.columns`  | `(number \| { from?, to? })[]`       | 要读取的列，从第 0 列开始计数，例如 `[0, { from: 2 }]`。读取的第一列用于命名类别                    |
 
-| `header`      | The column names                                                                           |
-| ------------- | ------------------------------------------------------------------------------------------ |
-| `'auto'`      | The first row, when it is made of header cells or holds no number outside the first column |
-| `'first-row'` | The first row, whatever it holds                                                           |
-| `'none'`      | Every row is data. The columns get default names                                           |
+| `header`      | 列名所在位置                                                                                     |
+| ------------- | ------------------------------------------------------------------------------------------------ |
+| `'auto'`      | 第一行；当该行由表头单元格组成，或除第一列外不含数字时使用                                        |
+| `'first-row'` | 第一行，无论其中包含什么                                                                         |
+| `'none'`      | 每一行都是数据。列名使用默认值                                                                   |
 
-- Both ends of a range are included.
-- A negative number counts from the end. `-1` is the last row, so `{ to: -2 }` leaves out a
-  total row.
-- Empty rows are not counted.
-- Several ranges are read in the order given.
-- A row or a column named twice is read once.
-- Without `range`, a selection of cells in the table is the range: the rows and columns it covers,
-  with the first column of the table as the label.
-- `header` and `range` are stored in the chart's Data Source address. They apply to every later
-  edit of the table.
+- 范围的起止位置均包含在内。
+- 负数从末尾开始计数。`-1` 表示最后一行，因此 `{ to: -2 }` 会排除汇总行。
+- 空行不计入。
+- 多个范围按给定顺序读取。
+- 重复指定的行或列只读取一次。
+- 未指定 `range` 时，表格中的单元格选区就是范围：读取选区覆盖的行和列，并将表格的第一列作为标签。
+- `header` 和 `range` 会存储在图表的数据源地址中，并应用于之后对表格的每次编辑。
 
-## Commands
+## 命令
 
-Turn a table into a chart and back, or a chart into an image that keeps its data:
+可将表格转换为图表，或将图表转换回表格；也可以将图表转换为保留其数据的图片：
 
 <CodeDemo isPro viewer view="preview" path="/Extensions/DiagramsConversions" />
 
 ### convertTableToChart
 
-Replaces the table at the selection with a chart of its data.
+将选区中的表格替换为使用其数据生成的图表。
 
 ```ts
 editor.commands.convertTableToChart({ type: 'bar' })
 ```
 
-| Option | Type        | Description                                            |
-| ------ | ----------- | ------------------------------------------------------ |
-| `type` | `ChartType` | The chart type. Defaults to `chart.defaultType`        |
-| `pos`  | `number`    | A position inside the table. Defaults to the selection |
+| 选项   | 类型        | 说明                                      |
+| ------ | ----------- | ----------------------------------------- |
+| `type` | `ChartType` | 图表类型。默认为 `chart.defaultType`       |
+| `pos`  | `number`    | 表格中的位置。默认为当前选区               |
 
-Returns `false` without a table.
+没有表格时返回 `false`。
 
 ### convertChartToTable
 
-Replaces a chart with a plain table of its data.
+将图表替换为包含其数据的普通表格。
 
 ```ts
 editor.commands.convertChartToTable()
 ```
 
-| Option | Type     | Description                                          |
-| ------ | -------- | ---------------------------------------------------- |
-| `pos`  | `number` | The chart's position. Defaults to the selected chart |
+| 选项  | 类型     | 说明                     |
+| ----- | -------- | ------------------------ |
+| `pos` | `number` | 图表的位置。默认为选中的图表 |
 
-Returns `false` without a table in the schema.
+schema 中没有表格时返回 `false`。
 
 ### insertLinkedChart
 
-Inserts a chart that follows a table.
+插入一个跟随表格的图表。
 
 ```ts
 editor.commands.insertLinkedChart({
@@ -108,7 +103,7 @@ editor.commands.insertLinkedChart({
   columns: { label: 'Month', series: ['Retail'] },
 })
 
-// A table without a header, without its last row
+// 不带表头且排除最后一行的表格
 editor.commands.insertLinkedChart({
   table,
   header: 'none',
@@ -116,129 +111,113 @@ editor.commands.insertLinkedChart({
   columns: { label: 0, series: [2] },
 })
 
-// The first and the last two rows, and only the columns 0, 3 and 4
+// 仅读取第一行、最后两行，以及第 0、3、4 列
 editor.commands.insertLinkedChart({
   table,
   range: { rows: [{ to: 0 }, { from: -2 }], columns: [0, { from: 3, to: 4 }] },
 })
 ```
 
-| Option    | Type                                                          | Description                                                                       |
-| --------- | ------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| `type`    | `ChartType`                                                   | The chart type. Defaults to `chart.defaultType`                                   |
-| `table`   | `number`                                                      | The table's position, from `listTables()`. Defaults to the table at the selection |
-| `columns` | `{ label?: string \| number, series?: (string \| number)[] }` | Columns by the text of their header cell or by their position from 0              |
-| `header`  | `'auto' \| 'first-row' \| 'none'`                             | See [How the table is read](/diagrams/data/tables#how-the-table-is-read)          |
-| `range`   | `{ rows?, columns? }`                                         | See [How the table is read](/diagrams/data/tables#how-the-table-is-read)          |
-| `title`   | `string`                                                      | The chart's title                                                                 |
-| `below`   | `boolean`                                                     | `false` places the chart above the table. Default `true`                          |
+| 选项      | 类型                                                          | 说明                                                                  |
+| --------- | ------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `type`    | `ChartType`                                                   | 图表类型。默认为 `chart.defaultType`                                  |
+| `table`   | `number`                                                      | 表格在 `listTables()` 中对应的位置。默认为选区所在的表格               |
+| `columns` | `{ label?: string \| number, series?: (string \| number)[] }` | 按表头单元格中的文本或从 0 开始的位置指定列                           |
+| `header`  | `'auto' \| 'first-row' \| 'none'`                             | 参见[表格的读取方式](/diagrams/data/tables#how-the-table-is-read)     |
+| `range`   | `{ rows?, columns? }`                                         | 参见[表格的读取方式](/diagrams/data/tables#how-the-table-is-read)     |
+| `title`   | `string`                                                      | 图表标题                                                              |
+| `below`   | `boolean`                                                     | `false` 会将图表放在表格上方。默认为 `true`                           |
 
-`columns.label` names the categories and `columns.series` are drawn. Without `columns`, the
-first column is the label and every other column is drawn. Positions also work for a table
-without a header, and count among the columns that `range` reads.
+`columns.label` 用于命名类别，`columns.series` 指定要绘制的列。未指定 `columns` 时，第一列作为标签，其余列都会绘制。对于不带表头的表格，也可以按位置指定列；位置按 `range` 读取的列计数。
 
-The chart's data is read-only while it is linked.
+图表处于链接状态时，其数据为只读。
 
-Returns `false` without a table, without `chart.linkTables`, or when a name is not in the header
-or a position is not in the table.
+没有表格、未启用 `chart.linkTables`，或指定的列名不在表头中、列位置不在表格范围内时，返回 `false`。
 
 ### updateLinkedTable
 
-Changes how a chart or a diagram reads the table it follows, and reads the table again.
+更改图表或示意图读取其所跟随表格的方式，并重新读取表格。
 
 ```ts
 editor.commands.updateLinkedTable({ header: 'none' })
 editor.commands.updateLinkedTable({ header: undefined, range: { rows: { from: 1 } } })
 ```
 
-| Option   | Type                              | Description                                                              |
-| -------- | --------------------------------- | ------------------------------------------------------------------------ |
-| `header` | `'auto' \| 'first-row' \| 'none'` | See [How the table is read](/diagrams/data/tables#how-the-table-is-read) |
-| `range`  | `{ rows?, columns? }`             | See [How the table is read](/diagrams/data/tables#how-the-table-is-read) |
-| `pos`    | `number`                          | The chart's or diagram's position. Defaults to the selected one          |
+| 选项     | 类型                              | 说明                                                                  |
+| -------- | --------------------------------- | --------------------------------------------------------------------- |
+| `header` | `'auto' \| 'first-row' \| 'none'` | 参见[表格的读取方式](/diagrams/data/tables#how-the-table-is-read)     |
+| `range`  | `{ rows?, columns? }`             | 参见[表格的读取方式](/diagrams/data/tables#how-the-table-is-read)     |
+| `pos`    | `number`                          | 图表或示意图的位置。默认为当前选中的对象                              |
 
-- A key given as `undefined` goes back to the default.
-- A key left out keeps its value.
-- A chart's label and series stay on the same columns. They stay on the column itself while it
-  is still read, otherwise on the column at the same position. So they survive a new header.
-- `listCharts()` reports the current values as `tableRead`, and `listDiagrams()` as part of
-  `link`.
+- 将某个键设为 `undefined` 会使其恢复默认值。
+- 未提供某个键时，会保留其当前值。
+- 图表的标签列和系列列会保持不变：只要原列仍在读取范围内，就继续使用该列；否则改用相同位置的列。因此，更换表头后，这些列设置仍会保留。
+- `listCharts()` 会通过 `tableRead` 报告当前值，`listDiagrams()` 则会在 `link` 中报告这些值。
 
-Returns `false` for a chart or a diagram that follows no table or whose table is gone. For a
-diagram, it also returns `false` when a column the diagram names is no longer there.
+图表或示意图未跟随表格，或其表格已不存在时，返回 `false`。对于示意图，如果它引用的列已不存在，也会返回 `false`。
 
 ### setChartLayout
 
-Decides whether a chart's table is in the document, and whether the chart shows.
+决定图表的表格是否位于文档中，以及是否显示图表。
 
 ```ts
 editor.commands.setChartLayout({ layout: 'with-table' })
 ```
 
-| Option   | Type                                 | Description                                          |
-| -------- | ------------------------------------ | ---------------------------------------------------- |
-| `layout` | `'chart' \| 'with-table' \| 'table'` | What you see in the document, see below              |
-| `pos`    | `number`                             | The chart's position. Defaults to the selected chart |
+| 选项     | 类型                                 | 说明                           |
+| -------- | ------------------------------------ | ------------------------------ |
+| `layout` | `'chart' \| 'with-table' \| 'table'` | 文档中显示的内容，见下文       |
+| `pos`    | `number`                             | 图表的位置。默认为选中的图表   |
 
-| `layout`       | What you see                                                                                                     |
-| -------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `'chart'`      | The chart. It holds its own data and follows no table                                                            |
-| `'with-table'` | The chart and the table it follows. Each stands where you put it                                                 |
-| `'table'`      | Only the table. The chart is still in the document, hidden directly below the table, and still follows the table |
+| `layout`       | 文档中显示的内容                                                                                             |
+| -------------- | ------------------------------------------------------------------------------------------------------------ |
+| `'chart'`      | 图表。图表包含自己的数据，不跟随任何表格                                                                     |
+| `'with-table'` | 图表及其所跟随的表格。两者各自保留在文档中的原位置                                                           |
+| `'table'`      | 仅显示表格。图表仍在文档中，隐藏在表格正下方，并继续跟随该表格                                               |
 
-What the command does depends on the chart's current layout:
+命令的行为取决于图表当前的布局：
 
-| From           | To             | What happens                                                                                                                 |
+| 当前布局       | 目标布局       | 行为                                                                                                                         |
 | -------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `'chart'`      | `'with-table'` | Inserts a table of the chart's data directly above the chart. The chart follows it, as with `insertLinkedChart`              |
-| `'chart'`      | `'table'`      | Inserts that table, and hides the chart directly below it                                                                    |
-| `'with-table'` | `'table'`      | Hides the chart. If the chart stands elsewhere, it moves directly below its table                                            |
-| `'table'`      | `'with-table'` | Shows the chart again, where it stands                                                                                       |
-| any            | `'chart'`      | Keeps the data the table last gave, and follows nothing. Removes the table, unless another chart or diagram still follows it |
+| `'chart'`      | `'with-table'` | 在图表正上方插入包含图表数据的表格。图表随之跟随该表格，类似 `insertLinkedChart`                                      |
+| `'chart'`      | `'table'`      | 插入该表格，并将图表隐藏在表格正下方                                                                                         |
+| `'with-table'` | `'table'`      | 隐藏图表。如果图表位于其他位置，则将其移至所跟随表格的正下方                                                                   |
+| `'table'`      | `'with-table'` | 在图表原位置重新显示图表                                                                                                     |
+| 任意布局       | `'chart'`      | 保留表格上次提供的数据，并取消跟随任何表格。移除该表格，除非仍有其他图表或示意图跟随它                                     |
 
-- Where the chart and its table stand is not part of the layout. Move either node to move it.
-- The title, the Renderer and the rest of the spec are kept, also while the chart is hidden. Any
-  other layout shows the chart again as it was.
-- The change is one undo step.
-- A hidden chart is left out of `exportAll` and `exportDocx`. In HTML, its `<figure>` has the
-  `hidden` attribute.
-- Deleting or moving its table shows the chart again.
-- To keep only a table and no chart, use `convertChartToTable`.
-- `listCharts()` reports the current layout as `layout`.
+- 图表和表格的位置不属于布局的一部分。移动任一节点即可移动它。
+- 标题、渲染器及其余规格都会保留，即使图表处于隐藏状态也不例外。切换到其他布局后，图表会按原样重新显示。
+- 此更改只需一个撤销步骤即可还原。
+- 隐藏的图表不会包含在 `exportAll` 和 `exportDocx` 中。在 HTML 中，其 `<figure>` 带有 `hidden` 属性。
+- 删除或移动表格会重新显示图表。
+- 若只保留表格而不保留图表，请使用 `convertChartToTable`。
+- `listCharts()` 会通过 `layout` 报告当前布局。
 
-Returns `true` when the chart has the layout afterwards, also when it had it already. Returns
-`false` in these cases:
+如果操作完成后图表具有指定布局，则返回 `true`，即使它原本就已是该布局。以下情况会返回 `false`：
 
-- For `'with-table'` and `'table'`, without table nodes in the schema or without the option
-  `chart.linkTables`.
-- For `'with-table'` and `'table'`, on a chart that follows no table and is linked to another
-  read-only source, such as a read-only CSV URL.
-- For `'table'`, when another hidden chart already stands directly below the table, or when the
-  chart cannot stand there.
+- 设置为 `'with-table'` 或 `'table'` 时，schema 中没有表格节点，或未启用 `chart.linkTables`。
+- 设置为 `'with-table'` 或 `'table'` 时，图表未跟随表格，而是链接到其他只读数据源，例如只读 CSV URL。
+- 设置为 `'table'` 时，表格正下方已经有另一个隐藏图表，或该图表无法放置在此处。
 
 ### linkChartToTable
 
-Makes a chart follow a table that is already in the document, wherever that table stands.
+让图表跟随文档中已有的表格，无论该表格位于何处。
 
 ```ts
 const [table] = editor.storage.diagrams.listTables()
 if (table) editor.commands.linkChartToTable({ table: table.pos })
 ```
 
-| Option     | Type                              | Description                                                           |
+| 选项       | 类型                              | 说明                                                                  |
 | ---------- | --------------------------------- | --------------------------------------------------------------------- |
-| `table`    | `number`                          | The table's position, as `listTables()` reports it                    |
-| `pos`      | `number`                          | The chart's position. Defaults to the selected chart                  |
-| `readOnly` | `boolean`                         | `false` keeps the chart's data editable while linked. Default `true`  |
-| `header`   | `'auto' \| 'first-row' \| 'none'` | As for [`insertLinkedChart`](/diagrams/data/tables#insertlinkedchart) |
-| `range`    | `{ rows?, columns? }`             | As for [`insertLinkedChart`](/diagrams/data/tables#insertlinkedchart) |
+| `table`    | `number`                          | 表格的位置，与 `listTables()` 报告的位置一致                         |
+| `pos`      | `number`                          | 图表的位置。默认为选中的图表                                          |
+| `readOnly` | `boolean`                         | `false` 会使图表在链接期间仍可编辑数据。默认为 `true`                 |
+| `header`   | `'auto' \| 'first-row' \| 'none'` | 与 [`insertLinkedChart`](/diagrams/data/tables#insertlinkedchart) 相同 |
+| `range`    | `{ rows?, columns? }`             | 与 [`insertLinkedChart`](/diagrams/data/tables#insertlinkedchart) 相同 |
 
-The table gets an id if it has none. The chart takes the table's data at once.
+如果表格没有 id，则会为其分配一个。图表会立即读取表格数据。
 
-The chart ends with layout `'with-table'`, as with `setChartLayout({ layout: 'with-table' })`.
-The difference is that `linkChartToTable` replaces the chart's data with an existing table's
-data, while `setChartLayout` creates a new table from the chart's data, directly above the
-chart.
+操作后，图表的布局为 `'with-table'`，与 `setChartLayout({ layout: 'with-table' })` 相同。两者的区别在于，`linkChartToTable` 会用已有表格的数据替换图表数据，而 `setChartLayout` 会根据图表数据创建一个新表格，并将其放在图表正上方。
 
-Returns `false` without `chart.linkTables`, for a position that holds no table, and for a table
-that is a Quick Input shown as a table.
+未启用 `chart.linkTables`、指定位置上没有表格，或表格是以表格形式显示的 Quick Input 时，返回 `false`。
