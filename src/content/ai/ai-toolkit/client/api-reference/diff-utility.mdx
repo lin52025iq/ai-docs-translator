@@ -1,59 +1,58 @@
 ---
-title: Diff utility
+title: 差异比较工具
 meta:
-  title: Diff utility | Tiptap AI Toolkit
-  description: Compute changes between two documents programmatically.
+  title: 差异比较工具 | Tiptap AI Toolkit
+  description: 以编程方式计算两个文档之间的更改。
   category: AI Toolkit
 ---
 
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-<Callout title="Deprecated" variant="warning">
-  Use [Tiptap Compare](/compare/getting-started/overview) to compare two documents or two versions
-  of the same document.
+<Callout title="已弃用" variant="warning">
+  请使用 [Tiptap Compare](/compare/getting-started/overview) 比较两个文档，或比较同一文档的两个版本。
 </Callout>
 
 ## `diffUtility`
 
-Compares two documents and returns a list of changes between them.
+比较两个文档，并返回它们之间的更改列表。
 
-### Supported formats
+### 支持的格式
 
-The Diff Utility can be used to compare entire documents or parts of them.
+Diff Utility 可用于比较整个文档或文档的一部分。
 
-To compare entire documents, you can provide them in [Tiptap JSON format](/editor/core-concepts/introduction#content) or as a [ProseMirror Node](https://prosemirror.net/docs/ref/#model.Node).
+若要比较整个文档，可以使用 [Tiptap JSON 格式](/editor/core-concepts/introduction#content)或 [ProseMirror Node](https://prosemirror.net/docs/ref/#model.Node) 提供文档。
 
-To compare parts of the document, you can provide them as a Tiptap JSON fragment (a list of Tiptap JSON nodes) or as a [ProseMirror Fragment](https://prosemirror.net/docs/ref/#model.Fragment).
+若要比较文档的一部分，可以将其作为 Tiptap JSON 片段（Tiptap JSON 节点列表）或 [ProseMirror Fragment](https://prosemirror.net/docs/ref/#model.Fragment) 提供。
 
-### Parameters (`DiffUtilityOptions`)
+### 参数（`DiffUtilityOptions`）
 
-- `schema` (`Schema`): The ProseMirror schema used in the editor. Can be obtained from the editor instance: `editor.schema`
-- `docA` (`Node | Fragment | JSONContent | JSONContent[]`): Original document. Can be a ProseMirror Node/Fragment or Tiptap JSON
-- `docB` (`Node | Fragment | JSONContent | JSONContent[]`): Modified document. Can be a ProseMirror Node/Fragment or Tiptap JSON
-- `simplifyChanges?` (`boolean`): Whether to simplify the changes so that if there are multiple changes in the same word, they are merged into one change. Does not apply when mode is `'block'`. Default: `true`
-- `ignoreAttributes?` (`string[]`): The attributes to ignore. Default: `['id', 'data-thread-id']`
-- `ignoreMarks?` (`string[]`): The marks to ignore. Default: `['inlineThread']`
-- `nodeComparators?` (`Record<string, (nodeA: Node, nodeB: Node) => boolean | undefined>`): *Experimental. We recommend using this feature only when strictly necessary. Prefer modeling your document so that equal content has the same markup.* Attribute comparators keyed by node type, supported in all diff modes, including nested nodes. Callbacks receive ProseMirror nodes after `ignoreAttributes` and `ignoreMarks` are applied, and run only when types and marks match but attributes differ. Return `true` to allow the attribute difference; `false` or `undefined` keeps it. Types, marks, text, and children still compare normally. Callbacks must be synchronous and deterministic. This changes comparison only, not metadata preservation when applying replacements.
-- `changeMergeDistance?` (`number | null`): Minimum length for an unchanged range to be considered significant. Unchanged ranges shorter than this value will be absorbed into adjacent changes, merging them into a single change. Set to `null` or `undefined` to use the auto-calculated default. Does not apply when mode is 'block'. Default: `10`
-- `groupInlineChanges?` (`number`): Controls when inline edits are grouped into one block-level change in `smart` mode. Use `1` (default) to group only when all inline content changed, `0` to always group, and `2` to never group.
-- `mode?` (`'smart' | 'inline' | 'block'`): The diff mode to use for comparison.
-  - `'smart'` (default) balances block-level and inline-level output for readable review suggestions.
-  - `'inline'` performs character-level diff that identifies precise changes within text.
-  - `'block'` performs block-level diff that treats each top-level node as a single unit. In block mode, `simplifyChanges` and `changeMergeDistance` are ignored.
+- `schema`（`Schema`）：编辑器中使用的 ProseMirror schema。可从编辑器实例获取：`editor.schema`
+- `docA`（`Node | Fragment | JSONContent | JSONContent[]`）：原始文档。可以是 ProseMirror Node/Fragment 或 Tiptap JSON
+- `docB`（`Node | Fragment | JSONContent | JSONContent[]`）：修改后的文档。可以是 ProseMirror Node/Fragment 或 Tiptap JSON
+- `simplifyChanges?`（`boolean`）：是否简化更改：如果同一个词中有多个更改，则将它们合并为一项更改。`mode` 为 `'block'` 时不适用。默认值：`true`
+- `ignoreAttributes?`（`string[]`）：要忽略的属性。默认值：`['id', 'data-thread-id']`
+- `ignoreMarks?`（`string[]`）：要忽略的标记。默认值：`['inlineThread']`
+- `nodeComparators?`（`Record<string, (nodeA: Node, nodeB: Node) => boolean | undefined>`）：*实验性功能。仅在确有必要时使用。建议对文档进行建模，使相同内容具有相同的标记。* 按节点类型指定的属性比较器，支持所有差异比较模式，包括嵌套节点。回调接收应用 `ignoreAttributes` 和 `ignoreMarks` 后的 ProseMirror 节点；仅当类型和标记相同而属性不同时才会运行。返回 `true` 表示允许属性差异；返回 `false` 或 `undefined` 则保留该差异。类型、标记、文本和子节点仍按常规方式比较。回调必须同步且具有确定性。这只会更改比较方式，不会影响应用替换时的元数据保留。
+- `changeMergeDistance?`（`number | null`）：将未更改范围视为重要内容的最小长度。短于此值的未更改范围会并入相邻更改，合并为一项更改。设为 `null` 或 `undefined` 时使用自动计算的默认值。`mode` 为 `'block'` 时不适用。默认值：`10`
+- `groupInlineChanges?`（`number`）：控制在 `smart` 模式下，何时将内联编辑合并为一项块级更改。使用 `1`（默认值）仅在所有内联内容都已更改时合并；使用 `0` 始终合并；使用 `2` 则从不合并。
+- `mode?`（`'smart' | 'inline' | 'block'`）：要使用的差异比较模式。
+  - `'smart'`（默认值）平衡块级和内联级输出，以便清晰地查看建议。
+  - `'inline'` 执行字符级差异比较，精确识别文本中的更改。
+  - `'block'` 执行块级差异比较，将每个顶层节点视为一个整体。在块模式下，`simplifyChanges` 和 `changeMergeDistance` 不起作用。
 
-In the playground below, click on the "Show diff options" button and see how each option affects the diff:
+在下方的 Playground 中，点击“显示差异比较选项”按钮，查看各选项对差异比较结果的影响：
 
 <CodeDemo isPro isLarge path="/Extensions/AiToolkitCompareDocuments/React/" />
 
-### Returns (`Change[]`)
+### 返回值（`Change[]`）
 
-Returns a list of changes. Each `Change` item contains:
+返回更改列表。每个 `Change` 项包含：
 
-- `rangeA` (`Range`): The range in the original document that has changed
-- `rangeB` (`Range`): The range in the modified document that has changed
+- `rangeA`（`Range`）：原始文档中发生更改的范围
+- `rangeB`（`Range`）：修改后文档中发生更改的范围
 
-### Example
+### 示例
 
 ```ts
 import { diffUtility } from '@tiptap-pro/client-ai-toolkit'
@@ -82,33 +81,32 @@ const inlineChanges = diffUtility({
 })
 ```
 
-# Compare documents in real-time
+# 实时比较文档
 
-Compare two documents in real-time and show the diff in the editor.
+实时比较两个文档，并在编辑器中显示差异。
 
-<Callout title="Works in non-AI use cases">
-  This feature does not need AI to work. It can compare any two documents, regardless of whether
-  they are AI-generated or not.
+<Callout title="适用于非 AI 场景">
+  此功能无需 AI 即可使用。它可以比较任意两个文档，无论文档是否由 AI 生成。
 </Callout>
 
-For a step-by-step guide on comparing documents, see the [Compare documents guide](/ai/ai-toolkit/client/advanced-guides/compare-documents).
+如需逐步了解如何比较文档，请参阅[比较文档指南](/ai/ai-toolkit/client/advanced-guides/compare-documents)。
 
 ## `startComparingDocuments`
 
-Starts real-time comparison with another document. Differences are displayed as suggestions in an inline diff view where the old and the new content are displayed in the editor.
+开始与另一个文档进行实时比较。差异会以建议的形式显示在内联差异视图中，编辑器会同时展示旧内容和新内容。
 
-### Parameters (`StartComparingDocumentsOptions`)
+### 参数（`StartComparingDocumentsOptions`）
 
-- `otherDoc?` (`Node`): The document to compare against. It is a [ProseMirror Node object](https://prosemirror.net/docs/ref/#model.Node). Defaults to a snapshot of the current document if omitted
-- `displayOptions?` (`DisplayOptions`): Controls how differences are rendered as suggestions. [See available options](/ai/ai-toolkit/client/api-reference/suggestions#the-suggestion-object).
-- `debounceTimeout?` (`number`): Milliseconds to wait before recomputing diffs. A low value will make the app seem more responsive, but it might cause performance issues in large documents. Default: `500`
-- `diffUtilityOptions?` ([`ExternalDiffUtilityOptions`](/ai/ai-toolkit/client/api-reference/diff-utility#parameters-diffutilityoptions)): Options for comparing the documents with the diff utility. [See available options](/ai/ai-toolkit/client/api-reference/diff-utility#parameters-diffutilityoptions).
+- `otherDoc?`（`Node`）：要与之比较的文档，是一个 [ProseMirror Node 对象](https://prosemirror.net/docs/ref/#model.Node)。如果省略，则默认为当前文档的快照
+- `displayOptions?`（`DisplayOptions`）：控制如何将差异渲染为建议。[查看可用选项](/ai/ai-toolkit/client/api-reference/suggestions#the-suggestion-object)。
+- `debounceTimeout?`（`number`）：重新计算差异前等待的毫秒数。值较低会让应用看起来响应更快，但可能导致大型文档出现性能问题。默认值：`500`
+- `diffUtilityOptions?`（[`ExternalDiffUtilityOptions`](/ai/ai-toolkit/client/api-reference/diff-utility#parameters-diffutilityoptions)）：使用差异比较工具比较文档时的选项。[查看可用选项](/ai/ai-toolkit/client/api-reference/diff-utility#parameters-diffutilityoptions)。
 
-### Returns
+### 返回值
 
 `void`
 
-### Example
+### 示例
 
 ```ts
 // Start comparing changes with another document
@@ -119,26 +117,26 @@ toolkit.startComparingDocuments({
 
 ## `stopComparingDocuments`
 
-Stops the real-time comparison and clears all suggestions, so the diff view is no longer visible.
+停止实时比较并清除所有建议，使差异视图不再显示。
 
-### Returns
+### 返回值
 
 `void`
 
-### Example
+### 示例
 
 ```ts
 // Stop comparison and clear decorations
 toolkit.stopComparingDocuments()
 ```
 
-## Accepting and rejecting changes
+## 接受和拒绝更改
 
-When comparing documents, changes are displayed as suggestions. To accept or reject individual changes or all changes at once, use the suggestion methods:
+比较文档时，更改会以建议的形式显示。若要接受或拒绝单项更改，或一次性接受或拒绝所有更改，请使用建议相关方法：
 
-- [`acceptSuggestion`](/ai/ai-toolkit/client/api-reference/suggestions#acceptsuggestion): Accept a specific change
-- [`rejectSuggestion`](/ai/ai-toolkit/client/api-reference/suggestions#rejectsuggestion): Reject a specific change
-- [`acceptAllSuggestions`](/ai/ai-toolkit/client/api-reference/suggestions#acceptallsuggestions): Accept all changes
-- [`rejectAllSuggestions`](/ai/ai-toolkit/client/api-reference/suggestions#rejectallsuggestions): Reject all changes
+- [`acceptSuggestion`](/ai/ai-toolkit/client/api-reference/suggestions#acceptsuggestion)：接受指定更改
+- [`rejectSuggestion`](/ai/ai-toolkit/client/api-reference/suggestions#rejectsuggestion)：拒绝指定更改
+- [`acceptAllSuggestions`](/ai/ai-toolkit/client/api-reference/suggestions#acceptallsuggestions)：接受所有更改
+- [`rejectAllSuggestions`](/ai/ai-toolkit/client/api-reference/suggestions#rejectallsuggestions)：拒绝所有更改
 
-See the [Compare documents guide](/ai/ai-toolkit/client/advanced-guides/compare-documents) for a usage example.
+如需查看使用示例，请参阅[比较文档指南](/ai/ai-toolkit/client/advanced-guides/compare-documents)。
