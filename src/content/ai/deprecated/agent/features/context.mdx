@@ -1,16 +1,16 @@
 ---
-title: Provide context
+title: 提供上下文
 meta:
-  title: Provide context | Tiptap Content AI
-  description: Learn how to add context to user messages
+  title: 提供上下文 | Tiptap Content AI
+  description: 了解如何为用户消息添加上下文
   category: Content AI
 ---
 
-In AI Agents, context is data that complements the user's request. Sometimes, it's essential to help it complete the task.
+在 AI 智能体中，上下文是补充用户请求的数据。有时，它对于完成任务至关重要。
 
-For example, in a multi-document AI agent, if the user mentions a document, the document's ID should be sent as context, too.
+例如，在多文档 AI 智能体中，如果用户提到了某个文档，也应将该文档的 ID 作为上下文发送。
 
-Provide context when you create a user message by using the `context` option.
+创建用户消息时，可以使用 `context` 选项提供上下文。
 
 ```ts
 provider.addUserMessage('Summarize the selected document', {
@@ -18,21 +18,20 @@ provider.addUserMessage('Summarize the selected document', {
 })
 ```
 
-## Insert context with mentions
+## 使用提及插入上下文
 
-In many AI chatbots, users can reference files and other users by mentioning them: `@John`, `#file-123`, etc. You can implement this behaviour with Tiptap by defining
-the prompt input as a Tiptap text editor, and installing the [Mention extension](/editor/extensions/nodes/mention).
+在许多 AI 聊天机器人中，用户可以通过提及来引用文件和其他用户，例如：`@John`、`#file-123` 等。你可以将提示词输入框定义为 Tiptap 文本编辑器，并安装 [Mention 扩展](/editor/extensions/nodes/mention)，以便在 Tiptap 中实现此功能。
 
-## Add files and URLs to context
+## 将文件和 URL 添加到上下文
 
-The `context` option only accepts strings, not file objects. To add files as context, follow the steps below:
+`context` 选项只接受字符串，不接受文件对象。要将文件作为上下文添加，请按以下步骤操作：
 
-1. Upload the file to your server. Obtain an identifier for it.
-2. Add the file identifier to the `context` option.
-3. In [your backend](/ai/deprecated/agent/custom-llms/overview), define a [custom server-side tool](/ai/deprecated/agent/custom-llms/server-side-tools) that lets your AI agent read the contents of the file.
+1. 将文件上传到服务器，并获取其标识符。
+2. 将文件标识符添加到 `context` 选项中。
+3. 在[后端](/ai/deprecated/agent/custom-llms/overview)定义一个[自定义服务器端工具](/ai/deprecated/agent/custom-llms/server-side-tools)，让 AI 智能体能够读取文件内容。
 
-The same applies to URLs. If the user provides a URL, you can include it as a string in the `context` option and define a [custom tool](/ai/deprecated/agent/custom-llms/server-side-tools) to search the web and retrieve the content of that URL.
+URL 也是如此。如果用户提供了 URL，你可以将其作为字符串添加到 `context` 选项中，并定义一个[自定义工具](/ai/deprecated/agent/custom-llms/server-side-tools)，用于搜索网络并获取该 URL 的内容。
 
-## Add the editor's selection to context
+## 将编辑器中的选区添加到上下文
 
-To make the AI agent aware of the selected content in the editor, activate [selection awareness](/ai/deprecated/agent/features/selection-awareness).
+要让 AI 智能体了解编辑器中选中的内容，请启用[选区感知](/ai/deprecated/agent/features/selection-awareness)。
