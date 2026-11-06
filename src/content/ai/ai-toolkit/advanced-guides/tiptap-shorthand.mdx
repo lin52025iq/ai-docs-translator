@@ -2,7 +2,7 @@
 title: Tiptap Shorthand
 meta:
   title: Tiptap Shorthand | Tiptap AI Toolkit
-  description: Reduce AI token costs by up to 50% with Tiptap Shorthand, a token-efficient document format for the Server AI Toolkit.
+  description: 使用 Tiptap Shorthand 这一适用于 Server AI Toolkit 的高效文档格式，最多可降低 50% 的 AI token 成本。
   category: AI Toolkit
 tags:
   - type: beta
@@ -10,22 +10,21 @@ tags:
 
 import { Callout } from '@/components/ui/Callout'
 
-Tiptap Shorthand is a token-efficient format for representing Tiptap documents. It reduces AI token costs by up to 50% compared to Tiptap JSON, without sacrificing accuracy.
+Tiptap Shorthand 是一种用于表示 Tiptap 文档的高效 token 格式。与 Tiptap JSON 相比，它最多可降低 50% 的 AI token 成本，同时不牺牲准确性。
 
-<Callout title="Beta" variant="info">
+<Callout title="测试版" variant="info">
 
-Tiptap Shorthand is currently in beta. If you're interested in the benefits that Tiptap
-Shorthand provides, [contact us](https://tiptap.dev/contact-sales).
+Tiptap Shorthand 目前处于测试阶段。如果您想了解 Tiptap Shorthand 带来的优势，请[联系我们](https://tiptap.dev/contact-sales)。
 
 </Callout>
 
-## Set up Tiptap Shorthand
+## 设置 Tiptap Shorthand
 
-Define the format in which the AI reads and edits the document by setting the `format` parameter of the JSON body. This parameter is available on all Server AI Toolkit endpoints.
+通过设置 JSON 请求体中的 `format` 参数，定义 AI 读取和编辑文档时使用的格式。所有 Server AI Toolkit 端点都支持此参数。
 
-The default value of `format` is `"json"`. To enable Tiptap Shorthand, pass the `format: "shorthandV2"` parameter to **all** your API requests. The `shorthandV2` format can be used anywhere the `shorthand` format is supported.
+`format` 的默认值为 `"json"`。若要启用 Tiptap Shorthand，请在**所有** API 请求中传入 `format: "shorthandV2"` 参数。在支持 `shorthand` 格式的所有场景中，都可以使用 `shorthandV2` 格式。
 
-For example, to get the tool definitions:
+例如，获取工具定义：
 
 ```bash
 curl -X POST https://api.tiptap.dev/v4/ai/toolkit/fetch-tools \
@@ -37,19 +36,19 @@ curl -X POST https://api.tiptap.dev/v4/ai/toolkit/fetch-tools \
   }'
 ```
 
-No additional changes are required.
+无需进行其他更改。
 
-<Callout title="Format consistency" variant="warning">
-  Use the same `format` value across all API calls in a conversation. Do not mix the `json`,
-  `shorthand`, and `shorthandV2` formats within a single AI interaction.
+<Callout title="格式一致性" variant="warning">
+  在一次对话中的所有 API 调用中使用相同的 `format` 值。请勿在一次 AI 交互中混用 `json`、
+  `shorthand` 和 `shorthandV2` 格式。
 </Callout>
 
-## How Tiptap Shorthand works
+## Tiptap Shorthand 的工作原理
 
-The `/v4/ai/toolkit/fetch-tools` endpoint returns a prompt that tells the AI about the document's structure and the format in which it should be generated. This includes an explanation of the format in which the AI should generate the document content. The prompt teaches the AI model about the language rules and syntax.
+`/v4/ai/toolkit/fetch-tools` 端点会返回一段提示词，向 AI 说明文档的结构以及生成文档时应使用的格式。其中包括对 AI 生成文档内容时所用格式的说明。该提示词会向 AI 模型介绍相应的语言规则和语法。
 
-Tiptap Shorthand content is encoded as a text string. It takes up significantly less space than Tiptap JSON, in both characters and tokens. This results in a speed increase and cost reduction, without changing the AI model.
+Tiptap Shorthand 内容以文本字符串编码。与 Tiptap JSON 相比，它占用的空间要少得多，无论是字符数还是 token 数都是如此。因此，无需更改 AI 模型，即可提升速度并降低成本。
 
-## Next steps
+## 后续步骤
 
-- Read the [API reference](/ai/ai-toolkit/api-reference/rest-api) to see all available endpoints and their parameters.
+- 阅读 [API 参考](/ai/ai-toolkit/api-reference/rest-api)，了解所有可用端点及其参数。
