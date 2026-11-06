@@ -1,0 +1,349 @@
+---
+title: 类型
+tags:
+  - type: addon
+meta:
+  title: 类型 | Tiptap Tracked Changes 文档
+  description: Tiptap Tracked Changes 扩展的 TypeScript 类型定义。
+  category: Tracked Changes
+---
+
+该扩展导出用于处理建议的 TypeScript 类型。
+
+## WithoutTrackedChangesOptions
+
+[`withoutTrackedChanges()`](/tracked-changes/api-reference/utilities#withouttrackedchanges) 的选项。此函数会在副本上拒绝待处理的建议，从而导出基础文档 JSON。
+
+```ts
+import type { JSONContent } from '@tiptap/core'
+import type { Schema } from '@tiptap/pm/model'
+
+interface WithoutTrackedChangesOptions {
+	content: string | JSONContent
+	schema: Schema
+}
+```
+
+两个字段均为必填项。`content` 可以是 HTML，也可以是完整的文档 JSON 对象。`schema` 是源文档的 schema，其中包含 `TrackedChanges` 以及所有自定义节点和标记。
+
+## SuggestionType
+
+查询 API 返回的面向用户的建议类型：
+
+```ts
+type SuggestionType =
+  | 'add'
+  | 'delete'
+  | 'replace'
+  | 'markChange'
+  | 'attributeChange'
+  | 'sink'
+  | 'lift'
+  | 'split'
+```
+
+- `sink` 和 `lift` 表示待处理的列表项嵌套层级变更（Tab 和 Shift-Tab）
+- `split` 表示建议的[块拆分](/tracked-changes/usage/advanced-usage#block-splits)。使用 `splitKind` 区分在末尾拆分和在中间拆分。
+
+## SuggestionSplitKind
+
+描述 `split` 建议如何更改文档：
+
+```ts
+type SuggestionSplitKind = 'insertion' | 'structural'
+```
+
+- 当按 Enter 在现有块末尾添加新块时，会创建 `insertion`。拒绝后会移除新块。
+- 当按 Enter 拆分现有内容时，会创建 `structural`。拒绝后会重新合并这两个块。
+
+## SuggestionMarkType
+
+存储在建议标记上的内部标记级类型。替换建议会分别为删除部分和插入部分使用不同的标记类型：
+
+```ts
+type SuggestionMarkType = 'add' | 'delete' | 'replaceDeletion' | 'replaceInsertion' | 'markChange'
+```
+
+## SuggestionNodeType
+
+存储在节点属性中的内部类型。涵盖所有标记级类型，以及仅存在于节点级别的结构变体：
+
+```ts
+type SuggestionNodeType = SuggestionMarkType | 'attributeChange' | 'sink' | 'lift' | 'blockSplit'
+```
+
+`blockSplit` 是公开 `split` 类型在节点级别的对应类型。它会出现在 `suggestionType` 节点属性和 `data-suggestion-type` DOM 属性中，因此在 CSS 选择器中使用 `blockSplit`，在筛选或判断 `suggestion.type` 时使用 `split`。
+
+使用 `nodeSuggestionTypeToSuggestionType` 进行转换（参见[类型辅助函数](#type-helpers)）。
+
+## SuggestionMarkChangeOperation
+
+存储在标记变更建议中的操作：
+
+```ts
+type SuggestionMarkChangeOperation = 'added' | 'removed'
+```
+
+## SuggestionMarkChange
+
+描述存储在 `markChange` 建议中的一项标记变更：
+
+```ts
+type SuggestionMarkChange = {
+  operation: SuggestionMarkChangeOperation
+  markName: string
+  markAttrs: Record<string, unknown> | null
+}
+```
+
+## SuggestionAttributeChange
+
+描述存储在 `attributeChange` 建议中的一项属性变更：
+
+```ts
+type SuggestionAttributeChange = {
+  attributeName: string
+  oldValue: unknown
+  newValue: unknown
+}
+```
+
+`oldValue` 是建议提出前的值。`newValue` 是建议待处理期间文档中显示的拟议值。
+
+## SuggestionNodeTypeChange
+
+描述 `attributeChange` 建议中原始和拟议的 schema 节点类型：
+
+```ts
+interface SuggestionNodeTypeChange {
+  oldValue: string
+  newValue: string
+}
+```
+
+## Suggestion
+
+表示在文档中找到的建议：
+
+```ts
+type Suggestion = {
+  id: string
+  type: SuggestionType
+  // Only present for 'split' suggestions:
+  splitKind?: SuggestionSplitKind
+  userId: string
+  createdAt: string
+  updatedAt: string
+  userMetadata: Record<string, unknown> | null
+  from: number
+  to: number
+  text: string
+  fullText: string
+  // Only present for 'replace' suggestions:
+  deletionRange?: { from: number; to: number }
+  insertionRange?: { from: number; to: number }
+  replacedText?: string
+  // Only present for 'markChange' suggestions:
+  markChanges?: SuggestionMarkChange[]
+  // Only present for 'attributeChange' suggestions:
+  attributeChanges?: SuggestionAttributeChange[]
+  nodeTypeChange?: SuggestionNodeTypeChange
+  // Only present for 'attributeChange' and 'split' suggestions:
+  nodeType?: string
+  // Only present when the suggestion affects block-level nodes:
+  insertedNodes?: JSONContent[]
+  deletedNodes?: JSONContent[]
+}
+```
+
+- `createdAt` — 首次创建建议时的 ISO 8601 时间戳
+- `updatedAt` — 最近一次编辑建议内容的 ISO 8601 时间戳。对于早于此字段的旧版数据，该值回退为 `createdAt`。
+
+### `text` 与 `fullText`
+
+- `text` — **仅**由此建议创作的文本，不包括叠加在其上的嵌套（堆叠）建议插入的文本。对于 `replace` 建议，此字段是新（插入的）文本。
+- `fullText` — 此建议的标记覆盖的完整连续文本，**包括**其他作者通过嵌套建议插入的文本。对于 `replace` 建议，此字段是新（插入的）文本。
+
+绝大多数建议（没有堆叠）都满足 `text === fullText`。只有当其他作者通过[嵌套建议](/tracked-changes/usage/advanced-usage#nested-and-stacked-suggestions)在此建议中**插入**文本时，两者才会不同。
+
+请注意，`text` 只会排除嵌套建议**插入**的文本。嵌套删除或标记变更不会插入内容，因此不会减少外层作者的 `text`。例如，作者 A 插入了 `"hello"`，作者 B 随后在其中删除了 `"ll"`，那么 A 的 `text` 仍然是 `"hello"`——B 的删除没有添加任何属于 B 的文本。
+
+#### 示例
+
+作者 A 插入 `"Hello world"`，然后作者 B 在 `"world"` 前插入 `"great "`（嵌套在 A 的添加建议中）：
+
+| 建议            | `text`          | `fullText`            |
+| --------------- | --------------- | --------------------- |
+| A (add, user-1) | `"Hello world"` | `"Hello great world"` |
+| B (add, user-2) | `"great "`      | `"great "`            |
+
+```ts
+import { findSuggestions } from '@tiptap-pro/extension-tracked-changes'
+
+const suggestions = findSuggestions(editor)
+const outer = suggestions.find((s) => s.userId === 'user-1')
+
+outer.text // "Hello world"        → show this in a review sidebar
+outer.fullText // "Hello great world"  → use when you need the literal span
+```
+
+显示“此人做了哪些更改”（审阅面板、评论线程、活动日志）时，优先使用 `text`。只有在需要标记在文档中实际覆盖的连续文本时，才使用 `fullText`。
+
+对于 `replace` 建议：
+
+- `text` 包含**新**（插入的）文本
+- `replacedText` 包含**旧**（删除的）文本
+- `deletionRange` 和 `insertionRange` 给出各部分的准确位置
+- `from` 和 `to` 覆盖两部分的完整范围
+
+对于 `markChange` 建议：
+
+- `text` 包含受影响的文本内容
+- `markChanges` 包含已跟踪的标记操作，包括标记名称和属性
+
+对于 `attributeChange` 建议：
+
+- `nodeType` 是已更新节点当前的 schema 名称
+- 如果存在 `nodeTypeChange`，则包含[节点类型变更](/tracked-changes/usage/advanced-usage#node-type-changes)的原始和拟议 schema 名称。这类提议使用 `attributeChange`；`SuggestionType` 不变。
+- `attributeChanges` 列出每个属性变更前后的值
+- 接受后保留拟议值；拒绝后恢复原值
+
+对于块级节点建议（例如插入或删除段落或标题）：
+
+- `text` 始终包含受影响节点的实际文本内容——绝不会是 `[nodeName]` 占位符
+- `insertedNodes` 包含每个插入节点的完整 JSON 表示
+- `deletedNodes` 包含每个删除节点的完整 JSON 表示
+
+构建更丰富的 UI 时，可使用 `insertedNodes` 和 `deletedNodes` 检查节点类型和属性，例如在建议文本旁显示节点类型徽标。
+
+对于 `split` 建议：
+
+- 末尾拆分时，`splitKind` 为 `'insertion'`；中间拆分时为 `'structural'`
+- `nodeType` 是受影响块的名称，例如 `paragraph`、`heading` 或 `listItem`
+- `text` 包含受影响块中的当前文本。末尾拆分后输入的文本也包含在此字段中。
+- `fullText` 包含受影响块中的完整当前文本。对于拆分建议，它通常与 `text` 相同。
+- `from` 和 `to` 覆盖拆分后的块
+
+使用 `splitKind` 和 `nodeType` 来呈现诸如 `new paragraph` 或 `split heading` 的标签。不要使用无法区分插入拆分和结构拆分的通用标签。
+
+## SuggestionMarkAttrs
+
+存储在建议标记上的属性：
+
+```ts
+type SuggestionMarkAttrs = {
+  id: string
+  type: SuggestionMarkType
+  userId: string
+  createdAt: string
+  updatedAt: string
+  userMetadata: Record<string, unknown> | null
+  markChanges?: SuggestionMarkChange[] | null
+}
+```
+
+## SuggestionChangedEventPayload
+
+`trackedChanges:suggestionChanged` 事件的载荷。只要建议的任何内容字段发生变化（包括范围位置、文本、标记变更或类型），就会触发此事件。
+
+```ts
+type SuggestionChangedEventPayload = {
+  suggestionId: string
+  oldSuggestion: Suggestion
+  suggestion: Suggestion
+  transaction: Transaction
+}
+```
+
+- `oldSuggestion` — 变更前的建议快照
+- `suggestion` — 当前（已更新的）建议
+- `transaction` — 导致变更的 ProseMirror 事务
+
+## SuggestionRangeChangedEventPayload
+
+`trackedChanges:suggestionRangeChanged` 事件的载荷。仅当建议在文档中的位置发生偏移时触发。
+
+```ts
+type SuggestionRangeChangedEventPayload = {
+  suggestionId: string
+  oldRange: { from: number; to: number }
+  newRange: { from: number; to: number }
+  suggestion: Suggestion
+  transaction: Transaction
+}
+```
+
+## BlockSplitMarkerRenderer
+
+创建块拆分处显示的标记元素。每个标记调用一次，因此每次都必须返回一个新元素：
+
+```ts
+type BlockSplitMarkerRenderer = () => HTMLElement
+```
+
+## TrackedChangesOptions
+
+扩展的配置选项：
+
+```ts
+type TrackedChangesOptions = {
+  enabled: boolean
+  userId: string
+  userMetadata?: Record<string, unknown> | null
+  ignoredTrackingMarks: string[]
+  nodeTypeChangeTypes: string[]
+  onSuggestionCreate?: (suggestion: Suggestion) => void
+  onSuggestionAccept?: (id: string) => void
+  onSuggestionReject?: (id: string) => void
+  blockSplitMarker?: string | HTMLElement | BlockSplitMarkerRenderer | null
+}
+```
+
+- `nodeTypeChangeTypes` — 可参与类型建议的文本块名称。源类型和目标类型都必须列出。默认值为 `[]`。使用 Tiptap Collaboration（Y.js 文档）时，请保留此默认值，以便将类型转换跟踪为替换；不支持非空列表。参见 [nodeTypeChangeTypes](/tracked-changes/getting-started/install#nodetypechangetypes)。
+- `blockSplitMarker` — 建议块拆分处显示的标记。默认为 `'¶'`。设为 `null` 可不显示标记。参见 [blockSplitMarker](/tracked-changes/getting-started/install#blocksplitmarker)。
+
+## 类型辅助函数
+
+该扩展导出用于处理建议类型的常量和辅助函数：
+
+```ts
+import {
+  SUGGESTION_TYPES,
+  isAddLikeType,
+  isDeleteLikeType,
+  isReplaceMarkType,
+  markTypeToSuggestionType,
+  nodeSuggestionTypeToSuggestionType,
+} from '@tiptap-pro/extension-tracked-changes'
+
+// Constants
+SUGGESTION_TYPES.ADD // 'add'
+SUGGESTION_TYPES.DELETE // 'delete'
+SUGGESTION_TYPES.REPLACE_DELETION // 'replaceDeletion'
+SUGGESTION_TYPES.REPLACE_INSERTION // 'replaceInsertion'
+SUGGESTION_TYPES.MARK_CHANGE // 'markChange'
+SUGGESTION_TYPES.ATTRIBUTE_CHANGE // 'attributeChange'
+SUGGESTION_TYPES.SINK // 'sink'
+SUGGESTION_TYPES.LIFT // 'lift'
+SUGGESTION_TYPES.BLOCK_SPLIT // 'blockSplit' (node-level)
+SUGGESTION_TYPES.SPLIT // 'split' (query API)
+
+// Check if a mark type represents added content (matches 'add' and 'replaceInsertion')
+isAddLikeType('add') // true
+isAddLikeType('replaceInsertion') // true
+
+// Check if a mark type represents deleted content (matches 'delete' and 'replaceDeletion')
+isDeleteLikeType('delete') // true
+isDeleteLikeType('replaceDeletion') // true
+
+// Check if a mark type is one of the replace sub-types
+isReplaceMarkType('replaceDeletion') // true
+
+// Convert a mark-level type to the public-facing suggestion type
+markTypeToSuggestionType('replaceDeletion') // 'replace'
+markTypeToSuggestionType('add') // 'add'
+
+// Convert a node-level type to the public-facing suggestion type
+nodeSuggestionTypeToSuggestionType('blockSplit') // 'split'
+nodeSuggestionTypeToSuggestionType('replaceInsertion') // 'replace'
+```
