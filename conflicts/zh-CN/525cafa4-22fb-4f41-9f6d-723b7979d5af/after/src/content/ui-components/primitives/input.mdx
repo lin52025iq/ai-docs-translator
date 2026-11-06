@@ -1,0 +1,68 @@
+---
+title: 集成 Input UI 组件
+meta:
+  title: Input | Tiptap UI 组件
+  description: 集成一个用于输入文本的简单输入框组件。非常适用于表单、搜索框和用户输入。了解详情，请参阅文档。
+  category: UI 组件
+component:
+  name: Input
+  description: 一个用于输入文本的简单输入框组件，具有一致的样式和无障碍功能。
+  type: primitive
+  isFree: true
+  isCloud: false
+  isOpen: true
+  isNew: false
+  icon: TextIcon
+---
+
+import { CodeDemo } from '@/components/CodeDemo'
+
+这是一个简单的输入框组件，用于输入文本，具有一致的样式和行为，并充分考虑了无障碍需求。
+
+<CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui-primitive/input" />
+
+## 安装
+
+你可以通过 Tiptap CLI 添加此基础组件
+
+```bash
+npx @tiptap/cli@latest add input
+```
+
+## 使用
+
+```tsx
+import { Input } from '@/components/tiptap-ui-primitive/input'
+import { InputGroup } from '@/components/tiptap-ui-primitive/input-group'
+
+export default function MyComponent() {
+  const [value, setValue] = React.useState('')
+
+  return (
+    <div className="space-y-4">
+      {/* Basic Input */}
+      <Input
+        type="text"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="Enter your text..."
+      />
+
+      {/* Input with Group */}
+      <InputGroup>
+        <Input type="email" placeholder="Enter your email..." />
+      </InputGroup>
+
+      {/* Input with different types */}
+      <Input type="password" placeholder="Enter password..." />
+
+      {/* Input with clamp styling */}
+      <Input
+        type="text"
+        placeholder="This text will be clamped..."
+        className="tiptap-input-clamp"
+      />
+    </div>
+  )
+}
+```
