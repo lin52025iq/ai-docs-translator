@@ -1,43 +1,43 @@
 ---
-title: TaskList extension
+title: TaskList 扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-list?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-list
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-list.svg
     url: https://npmcharts.com/compare/@tiptap/extension-list?minimal=true
-    label: Downloads
+    label: 下载量
 extension:
-  name: Task List
+  name: 任务列表
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-list
-  description: 'Adds support for tasks (though it won’t make sure you actually complete them).'
+  description: '添加任务支持（但不会确保你真的完成任务）。'
   type: node
   icon: ListChecks
 meta:
-  title: TaskList extension | Tiptap Editor Docs
-  description: Use the Task List extension in Tiptap to add support for task lists rendered as <ul data-type="taskList">. More in our docs!
-  category: Editor
+  title: TaskList 扩展 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 Task List 扩展，以支持将任务列表渲染为 <ul data-type="taskList">。更多内容请参阅我们的文档！
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-This extension enables you to use task lists in the editor. They are rendered as `<ul data-type="taskList">`. This implementation doesn’t require any framework, it’s using Vanilla JavaScript only.
+此扩展可让你在编辑器中使用任务列表。任务列表会渲染为 `<ul data-type="taskList">`。此实现无需任何框架，仅使用原生 JavaScript。
 
-Type <code>[ ] </code> or <code>[x] </code> at the beginning of a new line and it will magically transform to a task list.
+在新行开头输入 <code>[ ] </code> 或 <code>[x] </code>，它就会自动转换为任务列表。
 
 <CodeDemo path="/Nodes/TaskList" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-list
 ```
 
-This extension requires the [`TaskItem`](/editor/extensions/nodes/task-item) extension.
+此扩展依赖 [`TaskItem`](/editor/extensions/nodes/task-item) 扩展。
 
-## Usage
+## 用法
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -48,7 +48,7 @@ new Editor({
 })
 ```
 
-This extension is installed by default with the `ListKit` extension, so you don’t need to install it separately.
+此扩展默认包含在 `ListKit` 扩展中，因此无需单独安装。
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -59,11 +59,11 @@ new Editor({
 })
 ```
 
-## Settings
+## 设置
 
 ### HTMLAttributes
 
-Custom HTML attributes that should be added to the rendered HTML tag.
+要添加到渲染后 HTML 标签上的自定义 HTML 属性。
 
 ```js
 TaskList.configure({
@@ -75,9 +75,9 @@ TaskList.configure({
 
 ### itemTypeName
 
-Specify the list item name.
+指定列表项的名称。
 
-Default: `'taskItem'`
+默认值：`'taskItem'`
 
 ```js
 TaskList.configure({
@@ -85,27 +85,27 @@ TaskList.configure({
 })
 ```
 
-## Commands
+## 命令
 
 # toggleTaskList()
 
-Toggle a task list.
+切换任务列表。
 
 ```js
 editor.commands.toggleTaskList()
 ```
 
-## Keyboard shortcuts
+## 键盘快捷键
 
-| Command          | Windows/Linux                                        | macOS                                            |
+| 命令             | Windows/Linux                                        | macOS                                            |
 | ---------------- | ---------------------------------------------------- | ------------------------------------------------ |
 | toggleTaskList() | <kbd>Control</kbd> + <kbd>Shift</kbd> + <kbd>9</kbd> | <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>9</kbd> |
 
-## Source code
+## 源代码
 
 [packages/extension-list/src/task-list/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-list/src/task-list/)
 
-## Minimal Install
+## 最简安装
 
 ```js
 import { Editor } from '@tiptap/core'
