@@ -1,67 +1,67 @@
 ---
-title: Tables
+title: 表格
 tags:
   - type: beta
 meta:
-  title: Tables | Tiptap Conversion
-  description: How tables, merged cells, header rows, column widths, and cell styling convert between DOCX and Tiptap.
+  title: 表格 | Tiptap 转换
+  description: 了解表格、合并单元格、标题行、列宽和单元格样式如何在 DOCX 与 Tiptap 之间转换。
   category: Conversion
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Tables convert between DOCX and Tiptap using the `table`, `tableRow`, `tableCell`, and `tableHeader` node types. Basic structure, colspan, column widths, and cell- and table-level styling (borders, backgrounds, vertical alignment, row height) round-trip. Header rows import correctly and export as repeating header rows when you turn on `repeatTableHeaderRows`.
+DOCX 与 Tiptap 之间的表格通过 `table`、`tableRow`、`tableCell` 和 `tableHeader` 节点类型进行转换。基本结构、colspan、列宽以及单元格和表格级样式（边框、背景、垂直对齐、行高）均可往返转换。标题行可正确导入；启用 `repeatTableHeaderRows` 后，也可导出为重复标题行。
 
-## What you need
+## 所需内容
 
-The right table extension depends on whether you also use the Pages extension and whether you want DOCX-specific cell formatting (backgrounds, borders, vertical alignment, row height).
+合适的表格扩展取决于你是否同时使用 Pages 扩展，以及是否需要 DOCX 专属的单元格格式（背景、边框、垂直对齐、行高）。
 
-- **Recommended (DOCX-aware, no pagination):** [`ConvertKit`](/conversion/import/docx/convertkit). Its bundled `ConvertTableKit` provides `Table`, `TableRow`, `TableCell`, `TableHeader` with DOCX attributes (`width`, `indent`, `height`, `heightRule`, `background`, `verticalAlign`, per-side borders) preconfigured.
-- **DOCX-aware with pagination:** [`@tiptap-pro/extension-pages-tablekit`](/pages/guides/pages-tablekit). Its table extensions internally extend ConvertKit's, so the same DOCX cell attributes (background, vertical alignment, per-side borders, height, height rule) flow through, this time rendered via CSS Grid so tables can split across page breaks. Use this stack instead of (not in addition to) ConvertKit's table overrides; see the [PagesTableKit guide](/pages/guides/pages-tablekit) "Scenario B" for the composition.
-- **Minimum (no DOCX cell formatting):** [`@tiptap/extension-table`](/editor/extensions/nodes/table) (open source TableKit, not in StarterKit). Renders the basic table structure; cell backgrounds, borders, vertical alignment, and row height are stripped on schema validation.
+- **推荐（支持 DOCX，不分页）：** [`ConvertKit`](/conversion/import/docx/convertkit)。其内置的 `ConvertTableKit` 提供 `Table`、`TableRow`、`TableCell`、`TableHeader`，并预先配置了 DOCX 属性（`width`、`indent`、`height`、`heightRule`、`background`、`verticalAlign`、各边边框）。
+- **支持 DOCX 和分页：** [`@tiptap-pro/extension-pages-tablekit`](/pages/guides/pages-tablekit)。其表格扩展在内部扩展了 ConvertKit，因此同样支持 DOCX 单元格属性（背景、垂直对齐、各边边框、高度、行高规则），并通过 CSS Grid 渲染，使表格能够跨页拆分。请使用此方案替代 ConvertKit 的表格覆盖配置，而不是与其同时使用；组合方式请参阅 [PagesTableKit 指南](/pages/guides/pages-tablekit)中的“场景 B”。
+- **最低配置（不支持 DOCX 单元格格式）：** [`@tiptap/extension-table`](/editor/extensions/nodes/table)（开源 TableKit，不包含在 StarterKit 中）。它负责渲染基本表格结构；在 schema 校验时，单元格背景、边框、垂直对齐和行高都会被剥除。
 
-All three setups register the same node names (`table`, `tableRow`, `tableCell`, `tableHeader`), so the import JSON shape is the same. The difference is which attributes survive the editor schema. Do not install more than one table stack at a time.
+这三种配置都会注册相同的节点名称（`table`、`tableRow`、`tableCell`、`tableHeader`），因此导入 JSON 的结构相同。区别在于哪些属性能通过编辑器 schema 保留下来。请勿同时安装多个表格方案。
 
-## Support overview
+## 支持情况概览
 
-The editor column below assumes ConvertKit (or PagesTableKit, which inherits ConvertKit's table overrides). With the minimum setup, every row marked "Supported" for cell- and row-level attributes drops to "Attributes dropped by schema."
+下表中的编辑器列以 ConvertKit（或继承 ConvertKit 表格覆盖配置的 PagesTableKit）为前提。使用最低配置时，单元格和行级属性中每个标为“支持”的项目都会变为“属性被 schema 丢弃”。
 
-<Callout title="Attributes in context.content but not rendering?" variant="info">
-  If you inspect `context.content` after import and see `background`, `borderTopWidth`, `height`, `heightRule`, etc. on cells and rows, but the editor renders a plain table without those styles, you are almost certainly using `@tiptap/extension-table` directly. Switch to [ConvertKit](/conversion/import/docx/convertkit) (or PagesTableKit if you also use the Pages extension); only their table extensions declare these attributes in the schema.
+<Callout title="context.content 中有属性，但没有渲染出来？" variant="info">
+  如果你检查导入后的 `context.content`，发现单元格和行上有 `background`、`borderTopWidth`、`height`、`heightRule` 等属性，但编辑器渲染出的表格没有这些样式，那么你几乎可以确定是直接使用了 `@tiptap/extension-table`。请切换到 [ConvertKit](/conversion/import/docx/convertkit)（如果你还使用 Pages 扩展，也可以使用 PagesTableKit）；只有它们的表格扩展会在 schema 中声明这些属性。
 </Callout>
 
-| Feature | Import | Editor (with ConvertKit) | Export | Notes |
+| 功能 | 导入 | 编辑器（使用 ConvertKit） | 导出 | 备注 |
 | --- | --- | --- | --- | --- |
-| Basic tables | Supported | Supported | Supported | Full width (fluid) by default; a table with an explicit width exports at that fixed width |
-| Header rows | Detected only when source DOCX has explicit `<w:tblHeader/>` markup | Renders as `tableHeader` nodes | Supported with `repeatTableHeaderRows` | Word users who only visually format the first row (bold, shaded) without applying the "Repeat as header row" property get no `tableHeader` nodes on import. Without `repeatTableHeaderRows`, export writes no header rows |
-| Colspan | Supported | Supported | Supported | Full round-trip |
-| Rowspan | Supported | Supported | Supported | A pre-scan across all rows builds a complete rowspan map before processing cells |
-| Column widths | Supported | Supported | Supported | Stored as `colwidth` array in pixels, converted to twips on export. Resized columns keep their proportions on a fluid table |
-| Table borders | Supported | Supported (outer edges plus the inside grid) | Supported | A table's own outer and inside borders round-trip; a borderless table stays borderless |
-| Cell backgrounds | Supported | Supported | Supported | `background` round-trips as cell shading |
-| Cell borders | Supported | Supported (per-side `borderTop/Bottom/Left/Right` × `Width/Style/Color`) | Supported | Per-cell borders round-trip; a cell border that differs from the table's is kept as an override |
-| Cell vertical alignment | Supported | Supported | Supported | `verticalAlign` (`top`, `middle`, `bottom`) round-trips |
-| Row height | Supported | Supported (`exact` clips via `.cell-content` wrapper; `atLeast` grows) | Supported | `height` and `heightRule` round-trip |
-| Cell margins | Supported | Supported | Supported | The table's own cell margins (`cellMarginTop`, `cellMarginRight`, `cellMarginBottom`, `cellMarginLeft` on the `table` node) round-trip. A table without them uses Word's default spacing |
-| Global table styling | N/A | N/A | Supported | Via `tableOverrides` and `tableCellOverrides` |
+| 基本表格 | 支持 | 支持 | 支持 | 默认占满宽度（流式布局）；指定宽度的表格会按该固定宽度导出 |
+| 标题行 | 仅当源 DOCX 中包含显式的 `<w:tblHeader/>` 标记时检测 | 渲染为 `tableHeader` 节点 | 启用 `repeatTableHeaderRows` 后支持 | 在 Word 中仅对第一行进行视觉格式设置（加粗、添加底纹），但未应用“重复标题行”属性的文档，导入时不会生成 `tableHeader` 节点。未启用 `repeatTableHeaderRows` 时，导出不会写入标题行 |
+| Colspan | 支持 | 支持 | 支持 | 可完整往返转换 |
+| Rowspan | 支持 | 支持 | 支持 | 处理单元格前会预扫描所有行，构建完整的 rowspan 映射 |
+| 列宽 | 支持 | 支持 | 支持 | 以像素数组形式存储在 `colwidth` 中，导出时转换为 twips。流式表格中的调整后列宽会保持原有比例 |
+| 表格边框 | 支持 | 支持（外边框及内部网格线） | 支持 | 表格自身的外边框和内部边框可往返转换；无边框表格仍保持无边框 |
+| 单元格背景 | 支持 | 支持 | 支持 | `background` 可往返转换为单元格底纹 |
+| 单元格边框 | 支持 | 支持（各边的 `borderTop/Bottom/Left/Right` × `Width/Style/Color`） | 支持 | 单元格边框可往返转换；与表格边框不同的单元格边框会作为覆盖值保留 |
+| 单元格垂直对齐 | 支持 | 支持 | 支持 | `verticalAlign`（`top`、`middle`、`bottom`）可往返转换 |
+| 行高 | 支持 | 支持（`exact` 通过 `.cell-content` 包装元素裁切；`atLeast` 则会增高） | 支持 | `height` 和 `heightRule` 可往返转换 |
+| 单元格边距 | 支持 | 支持 | 支持 | 表格自身的单元格边距（`table` 节点上的 `cellMarginTop`、`cellMarginRight`、`cellMarginBottom`、`cellMarginLeft`）可往返转换。未设置这些属性的表格使用 Word 的默认间距 |
+| 全局表格样式 | 不适用 | 不适用 | 支持 | 通过 `tableOverrides` 和 `tableCellOverrides` 设置 |
 
-## Import
+## 导入
 
-Import tables using the [editor extension](/conversion/import/docx/editor-extension) or the [REST API](/conversion/import/docx/rest-api). Both produce identical output.
+使用[编辑器扩展](/conversion/import/docx/editor-extension)或 [REST API](/conversion/import/docx/rest-api)导入表格。两者生成的结果相同。
 
-The conversion service reads DOCX tables and produces `table`, `tableRow`, and `tableCell` or `tableHeader` nodes. Column widths are stored in the `colwidth` attribute as an array of pixel values. Cell backgrounds, borders, and vertical alignment are captured as cell attributes. Row height and height rule are captured as row attributes. The table's own borders and cell margins are captured as table attributes.
+转换服务会读取 DOCX 表格，并生成 `table`、`tableRow`、`tableCell` 或 `tableHeader` 节点。列宽以像素值数组的形式存储在 `colwidth` 属性中。单元格背景、边框和垂直对齐会作为单元格属性捕获。行高和行高规则会作为行属性捕获。表格自身的边框和单元格边距会作为表格属性捕获。
 
-A row is emitted as `tableHeader` only when the source DOCX explicitly carries `<w:tblHeader/>` inside the row's `<w:trPr>`. This is the markup Word writes when the user enables "Repeat as header row at the top of each page" on a table. Documents whose first row is only visually formatted as a header (bold, shaded, larger font) without that property arrive as plain `tableCell` rows. To mark the first row as a header from the application side, walk the imported JSON in your `onImport` callback before `setEditorContent()` and convert each cell's `type` from `tableCell` to `tableHeader`.
+只有当源 DOCX 在行的 `<w:trPr>` 中显式包含 `<w:tblHeader/>` 时，该行才会生成为 `tableHeader`。用户在表格上启用“在每页顶部重复标题行”时，Word 会写入此标记。若文档的第一行仅通过视觉格式（加粗、添加底纹、使用较大字体）设置为标题，而没有启用该属性，导入后会成为普通的 `tableCell` 行。若要在应用程序端将第一行标记为标题，请在调用 `setEditorContent()` 前，在 `onImport` 回调中遍历导入的 JSON，并将每个单元格的 `type` 从 `tableCell` 改为 `tableHeader`。
 
-Merged cells using colspan convert reliably. Rowspan is also fully supported. The converter performs a pre-scan across all rows to build a complete rowspan map before processing cells, correctly resolving Word's `vMerge` "continue" markers.
+使用 colspan 合并的单元格可以可靠转换。Rowspan 也完全支持。转换器会在处理单元格前预扫描所有行，构建完整的 rowspan 映射，从而正确解析 Word 的 `vMerge`“continue”标记。
 
-If your editor schema does not include table nodes, imported table content will be dropped. See the [invalid schema guide](/guides/invalid-schema) for handling strategies.
+如果你的编辑器 schema 不包含表格节点，导入的表格内容将被丢弃。处理方法请参阅[无效 schema 指南](/guides/invalid-schema)。
 
-## Editor rendering
+## 编辑器渲染
 
-ConvertKit's `ConvertTableKit` is the recommended renderer for DOCX-imported tables: it extends the base table stack with the DOCX-specific cell and row attributes (backgrounds, borders, vertical alignment, height, height rule) and configures `cellMinWidth: 1` so DOCX spacer columns (1–15 px narrow columns used for layout) do not get inflated into visible gaps. See [the ConvertKit page](/conversion/import/docx/convertkit) for the full attribute set.
+对于从 DOCX 导入的表格，推荐使用 ConvertKit 的 `ConvertTableKit` 进行渲染：它在基础表格方案上扩展了 DOCX 专属的单元格和行属性（背景、边框、垂直对齐、高度、行高规则），并将 `cellMinWidth` 配置为 `1`，避免 DOCX 中用作布局的窄间隔列（宽度为 1–15 px）被扩大成明显的空隙。完整属性列表请参阅 [ConvertKit 页面](/conversion/import/docx/convertkit)。
 
-Install the setup that matches your needs:
+请根据需求安装对应配置：
 
 ```bash
 # Recommended: ConvertKit (DOCX-aware, no pagination)
@@ -104,15 +104,15 @@ new Editor({
 })
 ```
 
-Tables render as HTML `<table>`, `<tr>`, `<td>` (or `<td><div class="cell-content">` with ConvertKit), and `<th>` elements. Column resizing is supported when `resizable: true` is set on the Table extension. The `colwidth` attribute from import controls initial column widths.
+表格会渲染为 HTML `<table>`、`<tr>`、`<td>`（使用 ConvertKit 时为 `<td><div class="cell-content">`）和 `<th>` 元素。在 Table 扩展上设置 `resizable: true` 后，即可调整列宽。导入时的 `colwidth` 属性用于控制初始列宽。
 
-## Export
+## 导出
 
-Export tables using the [editor extension](/conversion/export/docx/editor-extension) or the [REST API](/conversion/export/docx/rest-api). The extension supports [`tableOverrides` and `tableCellOverrides`](/conversion/export/docx/styles#element-overrides) for global table styling defaults. The REST API does not accept these overrides.
+使用[编辑器扩展](/conversion/export/docx/editor-extension)或 [REST API](/conversion/export/docx/rest-api)导出表格。编辑器扩展支持使用 [`tableOverrides` 和 `tableCellOverrides`](/conversion/export/docx/styles#element-overrides)设置全局表格样式默认值。REST API 不接受这些覆盖配置。
 
-A table with an explicit width exports at that fixed width; a table with no width set exports full width (fluid) so it reflows to the page. Column widths come from each cell's `colwidth`, or are split evenly when none is set. On a fluid table, resized columns keep their proportions.
+指定宽度的表格会按该固定宽度导出；未设置宽度的表格会以全宽（流式布局）导出，以便随页面重新排布。列宽取自各单元格的 `colwidth`；未设置时则平均分配。在流式表格中，调整后的列宽会保持原有比例。
 
-Header rows export when you turn on `repeatTableHeaderRows` on the editor extension. The rows at the top of a table that hold only `tableHeader` cells get Word's "Repeat as header row" property, so they repeat on every page, also in nested tables. A header column, or a row of header cells below a body row, does not repeat, because Word repeats only the rows that start the table. A `tableHeader` value from `tableRowOverrides` still wins for a row. The option is off by default: without it, every row exports the same way. The REST API does not accept this option.
+在编辑器扩展上启用 `repeatTableHeaderRows` 后，标题行即可导出。表格顶部仅包含 `tableHeader` 单元格的行会获得 Word 的“重复标题行”属性，因此这些行会在每一页重复显示，嵌套表格中也一样。标题列或位于正文行下方的标题单元格行不会重复，因为 Word 只会重复表格开头的行。对于某一行，`tableRowOverrides` 中的 `tableHeader` 值仍具有优先权。此选项默认关闭：未启用时，所有行的导出方式相同。REST API 不接受此选项。
 
 ```ts
 ExportDocx.configure({
@@ -120,15 +120,15 @@ ExportDocx.configure({
 })
 ```
 
-Merged cells (colspan and rowspan) export correctly.
+合并单元格（colspan 和 rowspan）可以正确导出。
 
-<Callout title="Cell and table styling round-trips on export" variant="info">
-  Table borders (outer edges and the inside grid), cell margins, cell backgrounds, per-cell borders, vertical alignment, and row height are written to the DOCX on export. A borderless table stays borderless. A table without its own cell margins uses Word's default spacing. You can still set document-wide defaults with [`tableOverrides` and `tableCellOverrides`](/conversion/export/docx/styles#element-overrides) on the editor extension; these are not available via the REST API.
+<Callout title="导出时单元格和表格样式可往返转换" variant="info">
+  导出时，表格边框（外边框和内部网格线）、单元格边距、单元格背景、各单元格边框、垂直对齐和行高都会写入 DOCX。无边框表格仍保持无边框。未设置自身单元格边距的表格会使用 Word 的默认间距。你仍可以在编辑器扩展上通过 [`tableOverrides` 和 `tableCellOverrides`](/conversion/export/docx/styles#element-overrides) 设置文档级默认值；REST API 不支持这些配置。
 </Callout>
 
-### Override system
+### 覆盖配置系统
 
-The export extension accepts two options for global table styling:
+导出扩展接受两个用于设置全局表格样式的选项：
 
 ```ts
 ExportDocx.configure({
@@ -148,4 +148,4 @@ ExportDocx.configure({
 })
 ```
 
-These overrides apply document-wide as defaults. Each cell's own styling (background, per-side borders, vertical alignment) and the table's own borders and cell margins are exported from the node attributes on top of those defaults.
+这些覆盖配置会作为默认值应用于整个文档。每个单元格自身的样式（背景、各边边框、垂直对齐）以及表格自身的边框和单元格边距，都会根据节点属性导出，并覆盖这些默认值。
