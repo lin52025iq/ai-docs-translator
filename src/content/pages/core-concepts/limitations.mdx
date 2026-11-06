@@ -1,80 +1,80 @@
 ---
-title: Limitations
+title: 限制
 meta:
-  title: Limitations | Tiptap Pages Docs
-  description: Known limitations of the Tiptap Pages extension, with workarounds.
+  title: 限制 | Tiptap Pages 文档
+  description: Tiptap Pages 扩展的已知限制及其解决方法。
   category: Pages
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-The Pages extension has a small number of explicit limitations. Each one below is intentional (not a bug), and most have a documented workaround.
+Pages 扩展有少量明确的限制。以下每项限制都是有意为之（并非 bug），且大多数都有记录在案的解决方法。
 
-## Oversized non-splittable blocks cause an infinite layout loop
+## 超大的不可拆分块会导致无限布局循环
 
-This is the single most important limitation to know about before adopting Pages.
+这是采用 Pages 前最需要了解的一项限制。
 
-### What happens
+### 会发生什么
 
-Tiptap Pages splits content across pages on natural break points. There is one kind of content it **cannot** split: blocks that establish a [Block Formatting Context (BFC)](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_display/Block_formatting_context), such as figures, positioned containers, nested tables, and many styled containers (anything with `display: inline-block` or `flex`, `overflow: hidden`, certain `contain` values, or floats). When the page-flow encounters one of these blocks and it doesn't fit on the current page, the only thing it can do is move the entire block to the next page.
+Tiptap Pages 会在自然断点处分割内容并将其排布到不同页面。有一种内容**无法**拆分：会建立[块格式化上下文（BFC）](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_display/Block_formatting_context)的块，例如图示、定位容器、嵌套表格，以及许多经过样式设置的容器（任何使用 `display: inline-block` 或 `flex`、`overflow: hidden`、特定 `contain` 值或浮动的容器）。如果页面流遇到这类块，而它无法放入当前页面，唯一的处理方式就是将整个块移到下一页。
 
-Table rows are the exception. With [row fragmentation](/pages/guides/row-fragmentation), PagesTableKit splits table rows across pages, including rows with merged cells or nested tables. A row that holds text inside another BFC block, such as a task item, can't be split. Nested table rows don't count as such a block.
+表格行是例外。借助[行分片](/pages/guides/row-fragmentation)，PagesTableKit 可以将表格行拆分到多个页面，包括含有合并单元格或嵌套表格的行。若某一行在另一个 BFC 块（例如任务项）中包含文本，则无法拆分。嵌套表格行不属于这类块。
 
-### Why this becomes a hard failure
+### 为什么这会导致严重故障
 
-If the block is taller than the page itself, moving it forward doesn't help, since it still won't fit on the next page either. The layout will keep trying to push it forward, page after page, and never reach a stable state. The result is an infinite layout loop and an unresponsive editor. This is the most common way to render Pages unusable.
+如果块比页面本身还高，将它移到下一页也无济于事，因为它仍然无法放入下一页。布局会不断尝试将它往后移，一页接一页，始终无法达到稳定状态。结果就是布局陷入无限循环，编辑器也会失去响应。这是导致 Pages 无法使用的最常见原因。
 
-### Why we don't auto-recover
+### 为什么我们不会自动恢复
 
-This is a hard limit of the way Pages currently divides content between pages, not a bug we plan to silently work around. There is no graceful "give up" point we can ship without making the layout silently lose content. We may revisit the underlying approach in a future major version; for now, treat oversized BFC blocks as a developer-side responsibility.
+这是 Pages 当前在页面之间划分内容方式所固有的硬性限制，并非我们打算悄悄绕过的 bug。若不让布局静默丢失内容，我们就无法提供一个优雅的“放弃处理”节点。未来的重大版本中，我们可能会重新审视底层方案；目前，请将超大的 BFC 块视为开发者需要自行负责的问题。
 
-### What to watch for
+### 需要留意的情况
 
-Most often:
+最常见的情况包括：
 
-- Table rows whose `heightRule: "atLeast"` allows them to grow beyond the page, where row fragmentation is off or cannot split the row.
-- DOCX-imported tables authored on much larger paper than the editor's page format.
-- Nested tables that make a table row taller than the page, with row fragmentation off.
-- Figures or positioned containers with intrinsic content larger than the page content area.
+- `heightRule: "atLeast"` 允许行高超出页面的表格行，且行分片已关闭或无法拆分该行。
+- 从 DOCX 导入的表格，其原始纸张尺寸远大于编辑器的页面格式。
+- 嵌套表格导致表格行高于页面，且行分片已关闭。
+- 内容的固有尺寸超出页面内容区域的图示或定位容器。
 
-### How to avoid it
+### 如何避免
 
-1. **Cap heights.** Apply `max-height` to non-splittable blocks. The Pages extension exposes the available content height as a CSS variable: use `max-height: var(--page-max-height)` to keep any block within a single page.
-2. **Split content manually.** Where a single block needs to span multiple pages, break it into smaller adjacent blocks at authoring time: a long table into several smaller tables, a tall image into smaller images, nested tables into flat tables.
-3. **Constrain `atLeast` rows.** For DOCX-imported tables, prefer `heightRule: "exact"` when the row's content is bounded; `atLeast` rows with unbounded content are the most common trigger.
-4. **Choose a page format that fits the content.** A document authored for Tabloid will not lay out on A5; pick a page format whose content area exceeds your tallest non-splittable block.
-5. **Handle it in your own NodeView with a layout participant.** For custom nodes, a [layout participant](/pages/core-concepts/layout-participants) can measure the page boundaries after each pagination pass and adjust its own block - for example pushing a block below the next page break instead of letting it straddle one, or applying its own height cap.
-6. **Turn on row fragmentation for tall table rows.** [Row fragmentation](/pages/guides/row-fragmentation) splits table rows across pages, including rows with merged cells or nested tables.
+1. **限制高度。** 为不可拆分的块设置 `max-height`。Pages 扩展会通过 CSS 变量公开可用的内容高度：使用 `max-height: var(--page-max-height)`，确保任何块都不会超出单页范围。
+2. **手动拆分内容。** 如果单个块需要跨越多个页面，请在创作时将其拆成相邻的较小块：将长表格拆成几个较小的表格，将高图像拆成较小的图像，将嵌套表格改为扁平表格。
+3. **限制 `atLeast` 行。** 对于从 DOCX 导入的表格，如果行内容有明确上限，优先使用 `heightRule: "exact"`；内容没有上限的 `atLeast` 行是最常见的触发原因。
+4. **选择适合内容的页面格式。** 为 Tabloid 纸张尺寸编写的文档无法在 A5 页面上正常排版；请选择内容区域大于最高不可拆分块的页面格式。
+5. **在自己的 NodeView 中通过布局参与者处理。** 对于自定义节点，[布局参与者](/pages/core-concepts/layout-participants)可以在每次分页后测量页面边界，并调整自身块的位置，例如将块推到下一个分页符之后，而不是让它跨越分页符，或者为其设置高度上限。
+6. **为较高的表格行启用行分片。** [行分片](/pages/guides/row-fragmentation)可以将表格行拆分到多个页面，包括含有合并单元格或嵌套表格的行。
 
-### Detection
+### 检测
 
-The Pages extension logs a console warning when it detects this scenario before the loop fully runs away. Watch for it during development. Production code that imports user-supplied DOCX should treat the warning as a signal to reject the document or programmatically split tall rows before insertion.
+在循环完全失控之前，Pages 扩展会在检测到此情况时输出控制台警告。开发过程中请留意该警告。导入用户提供的 DOCX 的生产代码应将此警告视为拒绝文档的信号，或在插入前以编程方式拆分较高的行。
 
-For the table-specific treatment of this limitation, see [PagesTableKit's Known issues](/pages/guides/pages-tablekit#known-issues).
+关于此限制针对表格的具体处理方式，请参阅 [PagesTableKit 的已知问题](/pages/guides/pages-tablekit#known-issues)。
 
-## Tables require PagesTableKit, not the open-source Table extension
+## 表格需要使用 PagesTableKit，而非开源 Table 扩展
 
-Use the `TableKit` from `@tiptap-pro/extension-pages-tablekit` for any tables inside Pages. The open-source `@tiptap/extension-table` and ConvertKit's bundled `ConvertTableKit` are not pagination-safe: tables built on either will overflow page boundaries and break the layout. See [Using TableKit with Pages](/pages/guides/table-with-pages) for setup, and [PagesTableKit](/pages/guides/pages-tablekit) for the deeper dive.
+在 Pages 中使用表格时，请使用 `@tiptap-pro/extension-pages-tablekit` 中的 `TableKit`。开源的 `@tiptap/extension-table` 和 ConvertKit 捆绑的 `ConvertTableKit` 都不支持安全分页：使用它们构建的表格会溢出页面边界并破坏布局。有关设置方法，请参阅[在 Pages 中使用 TableKit](/pages/guides/table-with-pages)；深入了解请参阅 [PagesTableKit](/pages/guides/pages-tablekit)。
 
-## Footnotes don't continue across pages
+## 脚注不会延续到下一页
 
-When a page accumulates more footnotes than fit within the configured cap (`footnotes.maxHeightRatio`, default 50% of the page content height), the footnotes area clips the overflow. Microsoft Word instead continues overflowing footnotes on the next page; Pages does not do this yet. In practice this only matters for documents with many long footnotes referenced from the same page; keep footnotes concise or raise `maxHeightRatio` if you hit the cap. See [Footnotes → What not to expect](/pages/core-concepts/footnotes#what-not-to-expect) for the full list of footnote-specific limitations (numbering formats, tables in exported footnotes), and [Endnotes → What not to expect](/pages/core-concepts/endnotes#what-not-to-expect) for the endnote-specific ones.
+当一页累积的脚注超出配置的上限（`footnotes.maxHeightRatio`，默认为页面内容高度的 50%）时，脚注区域会裁切溢出的部分。Microsoft Word 会将溢出的脚注延续到下一页；Pages 目前还不支持此功能。实际上，只有当同一页面引用了许多较长的脚注时，这才会成为问题；请尽量保持脚注简短，达到上限时也可以提高 `maxHeightRatio`。有关脚注特有限制（编号格式、导出脚注中的表格）的完整列表，请参阅[脚注 → 不应期待的功能](/pages/core-concepts/footnotes#what-not-to-expect)；有关尾注特有限制，请参阅[尾注 → 不应期待的功能](/pages/core-concepts/endnotes#what-not-to-expect)。
 
-## No per-page styling
+## 不支持按页设置样式
 
-All pages share the same layout and visual styling. Page-specific CSS rules or backgrounds are not supported.
+所有页面共用相同的布局和视觉样式。不支持针对单页设置 CSS 规则或背景。
 
-## No page templates
+## 不支持页面模板
 
-Every page uses the same structure. Multi-column layouts, alternating page templates, and per-page customization are not supported.
+每页都使用相同的结构。不支持多栏布局、交替使用不同页面模板或按页自定义。
 
-## No browser-print integration
+## 不支持与浏览器打印功能集成
 
-Pages does not implement the browser print dialog. For print-ready output, use the Tiptap Conversion extensions and REST endpoints. See the [Conversion overview](/conversion/getting-started/overview), or for end-to-end setup, [From zero to print-ready](/pages/guides/zero-to-print-ready).
+Pages 不会实现浏览器的打印对话框。若要生成可直接打印的输出，请使用 Tiptap Conversion 扩展和 REST 端点。请参阅 [Conversion 概览](/conversion/getting-started/overview)，或查看端到端设置指南[从零开始生成可打印内容](/pages/guides/zero-to-print-ready)。
 
-<Callout title="Help us prioritise" variant="info">
-  If you need a feature that's not supported yet, let us know. Your feedback helps us prioritise.
+<Callout title="帮助我们确定优先级" variant="info">
+  如果您需要尚未支持的功能，请告诉我们。您的反馈有助于我们确定优先级。
   <a href="https://tiptap-suite.notion.site/1b601ffa3ebc80a281a8ea0b03b19bdd">
-    Share your use case with Tiptap
+    向 Tiptap 分享您的使用场景
   </a>
 </Callout>
