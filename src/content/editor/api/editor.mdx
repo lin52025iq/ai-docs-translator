@@ -1,20 +1,20 @@
 ---
-title: Editor Instance API
+title: Editor 实例 API
 meta:
-  title: Editor Class | Tiptap Editor Docs
-  description: Learn how to use methods, getters and settings with the Editor class. Discover all you need to know in our detailed guide.
+  title: Editor 类 | Tiptap 编辑器文档
+  description: 了解如何使用 Editor 类的方法、getter 和设置。通过我们的详细指南，全面了解相关内容。
   category: Editor
 ---
 
-The editor instance is a central building block of Tiptap. It does most of the heavy lifting of creating a working [ProseMirror](https://ProseMirror.net/) editor such as creating the [`EditorView`](https://ProseMirror.net/docs/ref/#view.EditorView), setting the initial [`EditorState`](https://ProseMirror.net/docs/ref/#state.Editor_State) and so on.
+编辑器实例是 Tiptap 的核心组成部分。它负责完成创建可用的 [ProseMirror](https://ProseMirror.net/) 编辑器所需的大部分工作，例如创建 [`EditorView`](https://ProseMirror.net/docs/ref/#view.EditorView)、设置初始 [`EditorState`](https://ProseMirror.net/docs/ref/#state.Editor_State) 等。
 
-## Settings
+## 设置
 
-The `Editor` class accepts a bunch of settings. Here is a list of all available settings:
+`Editor` 类接受多种设置。以下是所有可用设置的列表：
 
 ### element
 
-The `element` specifies the HTML element the editor will be binded to. The following code will integrate Tiptap with an element with the `.element` class:
+`element` 用于指定编辑器所绑定的 HTML 元素。以下代码会将 Tiptap 集成到具有 `.element` 类的元素中：
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -26,7 +26,7 @@ const editor = new Editor({
 })
 ```
 
-You can even initiate your editor before mounting it to an element. This is useful when your DOM is not yet available or in a server-side rendering environment. Just initialize the editor with null and mount it later.
+你甚至可以先初始化编辑器，再将它挂载到元素上。当 DOM 尚不可用或处于服务器端渲染环境时，这种方式很有用。只需先将 `null` 传给编辑器进行初始化，之后再挂载即可。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -43,7 +43,7 @@ editor.mount(document.querySelector('.element'))
 
 ### extensions
 
-It’s required to pass a list of extensions to the `extensions` property, even if you only want to allow paragraphs.
+必须为 `extensions` 属性传入扩展列表，即使你只想启用段落也是如此。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -67,19 +67,19 @@ new Editor({
 
 ### schemaSpec
 
-The optional `schemaSpec` setting accepts a complete ProseMirror `SchemaSpec`. Import the type from `@tiptap/pm/model`.
+可选的 `schemaSpec` 设置接受完整的 ProseMirror `SchemaSpec`。请从 `@tiptap/pm/model` 导入该类型。
 
-It defines the editor's document structure while local extensions provide parsing, rendering, commands, node views, and plugins. If you omit it, Tiptap builds the schema from your extensions.
+它定义编辑器的文档结构，而本地扩展则提供解析、渲染、命令、节点视图和插件。如果省略此设置，Tiptap 会根据你的扩展构建 schema。
 
-Every node and mark in `schemaSpec` must have a local extension with the same name and type. Every local node and mark must also appear in the spec.
+`schemaSpec` 中的每个节点和标记都必须有一个名称和类型相同的本地扩展。每个本地节点和标记也必须出现在该规范中。
 
-The spec is applied when the editor is created. Changing `schemaSpec` through `setOptions()` does not rebuild the schema. Create a new editor to use a different spec.
+创建编辑器时会应用此规范。通过 `setOptions()` 更改 `schemaSpec` 不会重建 schema。若要使用不同的规范，请创建新的编辑器。
 
-See [Use an external schema spec](/editor/core-concepts/schema#use-an-external-schema-spec) for an example and the structure and attribute rules.
+有关示例、结构和属性规则，请参阅[使用外部 schema 规范](/editor/core-concepts/schema#use-an-external-schema-spec)。
 
 ### content
 
-With the `content` property you can provide the initial content for the editor. This can be HTML or JSON.
+通过 `content` 属性，你可以为编辑器提供初始内容。内容可以是 HTML 或 JSON。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -93,7 +93,7 @@ new Editor({
 
 ### editable
 
-The `editable` property determines if users can write into the editor.
+`editable` 属性用于确定用户是否可以在编辑器中输入内容。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -108,9 +108,9 @@ new Editor({
 
 ### coreExtensionOptions
 
-The `coreExtensionOptions` property configures Tiptap's built-in core extensions.
+`coreExtensionOptions` 属性用于配置 Tiptap 内置的核心扩展。
 
-Use `tabindex.value` to set the `tabindex` attribute on the editor element. When `value` is undefined, editable editors default to `tabindex="0"` and non-editable editors do not get a `tabindex` attribute.
+使用 `tabindex.value` 可设置编辑器元素的 `tabindex` 属性。当 `value` 未定义时，可编辑的编辑器默认使用 `tabindex="0"`，不可编辑的编辑器则不会添加 `tabindex` 属性。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -130,14 +130,14 @@ new Editor({
 
 ### textDirection
 
-The `textDirection` property sets the text direction for all content in the editor. This is useful for right-to-left (RTL) languages like Arabic and Hebrew, or for bidirectional text content.
+`textDirection` 属性用于设置编辑器中所有内容的文本方向。对于阿拉伯语和希伯来语等从右向左（RTL）书写的语言，或包含双向文本的内容，这项设置很有用。
 
-| Value       | Description                                                   |
-| ----------- | ------------------------------------------------------------- |
-| `'ltr'`     | Sets left-to-right direction for all content.                |
-| `'rtl'`     | Sets right-to-left direction for all content.                |
-| `'auto'`    | Automatically detects direction based on content.             |
-| `undefined` | No direction attribute is added (default).                    |
+| 值          | 说明                         |
+| ----------- | ---------------------------- |
+| `'ltr'`     | 将所有内容设为从左向右。     |
+| `'rtl'`     | 将所有内容设为从右向左。     |
+| `'auto'`    | 根据内容自动检测方向。       |
+| `undefined` | 不添加方向属性（默认值）。   |
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -150,21 +150,21 @@ new Editor({
 })
 ```
 
-You can also override direction for specific nodes using the `setTextDirection` and `unsetTextDirection` commands. See the [commands documentation](/editor/api/commands) for more details.
+你也可以使用 `setTextDirection` 和 `unsetTextDirection` 命令覆盖特定节点的方向。更多详情请参阅[命令文档](/editor/api/commands)。
 
 ### autofocus
 
-With `autofocus` you can force the cursor to jump in the editor on initialization.
+使用 `autofocus` 可以在初始化时让光标跳转到编辑器中。
 
-| Value    | Description                                            |
-| -------- | ------------------------------------------------------ |
-| `start`  | Sets the focus to the beginning of the document.       |
-| `end`    | Sets the focus to the end of the document.             |
-| `all`    | Selects the whole document.                            |
-| `Number` | Sets the focus to a specific position in the document. |
-| `true`   | Enables autofocus.                                     |
-| `false`  | Disables autofocus.                                    |
-| `null`   | Disables autofocus.                                    |
+| 值       | 说明                         |
+| -------- | ---------------------------- |
+| `start`  | 将焦点设在文档开头。         |
+| `end`    | 将焦点设在文档末尾。         |
+| `all`    | 选中整个文档。               |
+| `Number` | 将焦点设在文档中的指定位置。 |
+| `true`   | 启用自动聚焦。               |
+| `false`  | 禁用自动聚焦。               |
+| `null`   | 禁用自动聚焦。               |
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -178,7 +178,7 @@ new Editor({
 
 ### enableInputRules
 
-By default, Tiptap enables all [input rules](/editor/api/input-rules). With `enableInputRules` you can control that.
+默认情况下，Tiptap 会启用所有[输入规则](/editor/api/input-rules)。你可以通过 `enableInputRules` 控制这一行为。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -191,7 +191,7 @@ new Editor({
 })
 ```
 
-Alternatively you can allow only specific input rules.
+你也可以只允许特定的输入规则。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -209,7 +209,7 @@ new Editor({
 
 ### enablePasteRules
 
-By default, Tiptap enables all [paste rules](/editor/api/paste-rules). With `enablePasteRules` you can control that.
+默认情况下，Tiptap 会启用所有[粘贴规则](/editor/api/paste-rules)。你可以通过 `enablePasteRules` 控制这一行为。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -222,7 +222,7 @@ new Editor({
 })
 ```
 
-Alternatively you can allow only specific paste rules.
+你也可以只允许特定的粘贴规则。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -240,7 +240,7 @@ new Editor({
 
 ### injectCSS
 
-By default, Tiptap injects [a little bit of CSS](https://github.com/ueberdosis/tiptap/tree/main/packages/core/src/style.ts). With `injectCSS` you can disable that.
+默认情况下，Tiptap 会注入[少量 CSS](https://github.com/ueberdosis/tiptap/tree/main/packages/core/src/style.ts)。你可以通过 `injectCSS` 禁用此功能。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -254,7 +254,7 @@ new Editor({
 
 ### injectNonce
 
-When you use a [Content-Security-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy) with `nonce`, you can specify a `nonce` to be added to dynamically created elements. Here is an example:
+如果你使用带有 `nonce` 的[内容安全策略（Content Security Policy）](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy)，可以指定要添加到动态创建元素中的 `nonce`。示例如下：
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -269,9 +269,9 @@ new Editor({
 
 ### enableExtensionDispatchTransaction
 
-Whether to enable extension-level dispatching of transactions. If `false`, extensions cannot define their own `dispatchTransaction` hook.
+是否启用扩展级别的事务分发。如果设为 `false`，扩展将无法定义自己的 `dispatchTransaction` 钩子。
 
-- **Default**: `true`
+- **默认值**：`true`
 
 ```js
 new Editor({
@@ -281,7 +281,7 @@ new Editor({
 
 ### editorProps
 
-For advanced use cases, you can pass `editorProps` which will be handled by [ProseMirror](https://prosemirror.net/docs/ref/#view.EditorProps). You can use it to override various editor events or change editor DOM element attributes, for example to add some Tailwind classes. Here is an example:
+对于高级用例，你可以传入 `editorProps`，由 [ProseMirror](https://prosemirror.net/docs/ref/#view.EditorProps) 处理。你可以用它覆盖各种编辑器事件，或更改编辑器 DOM 元素的属性，例如添加一些 Tailwind 类。示例如下：
 
 ```js
 new Editor({
@@ -297,13 +297,13 @@ new Editor({
 })
 ```
 
-You can use that to hook into event handlers and pass - for example - a custom paste handler, too.
+你也可以用它接入事件处理程序，例如传入自定义的粘贴处理程序。
 
-Set `editorProps.attributes.spellcheck` to `'true'` to enable browser spellcheck. See the [spellcheck guide](/guides/spellcheck) for examples, language settings, and custom spell checkers.
+将 `editorProps.attributes.spellcheck` 设为 `'true'` 可启用浏览器拼写检查。示例、语言设置和自定义拼写检查器请参阅[拼写检查指南](/guides/spellcheck)。
 
 ### parseOptions
 
-Passed content is parsed by ProseMirror. To hook into the parsing, you can pass `parseOptions` which are then handled by [ProseMirror](https://prosemirror.net/docs/ref/#model.ParseOptions).
+传入的内容由 ProseMirror 解析。若要接入解析过程，可以传入 `parseOptions`，由 [ProseMirror](https://prosemirror.net/docs/ref/#model.ParseOptions) 处理。
 
 ```js
 new Editor({
@@ -314,15 +314,15 @@ new Editor({
 })
 ```
 
-## Methods
+## 方法
 
-The editor instance will provide a bunch of public methods. Methods are regular functions and can return anything. They’ll help you to work with the editor.
+编辑器实例会提供多种公共方法。方法是常规函数，可以返回任意内容，可用于操作编辑器。
 
-Don’t confuse methods with [commands](/editor/api/commands). Commands are used to change the state of editor (content, selection, and so on) and only return `true` or `false`.
+不要将方法与[命令](/editor/api/commands)混淆。命令用于更改编辑器状态（内容、选区等），且只返回 `true` 或 `false`。
 
 ### can()
 
-Check if a command or a command chain can be executed – without actually executing it. Can be very helpful to enable/disable or show/hide buttons.
+检查某个命令或命令链是否可以执行，而不实际执行它。这对于启用/禁用或显示/隐藏按钮非常有用。
 
 ```js
 // Returns `true` if the undo command can be executed
@@ -331,7 +331,7 @@ editor.can().undo()
 
 ### chain()
 
-Create a command chain to call multiple commands at once.
+创建命令链，以便一次调用多个命令。
 
 ```js
 // Execute two commands at once
@@ -340,7 +340,7 @@ editor.chain().focus().toggleBold().run()
 
 ### destroy()
 
-Stops the editor instance and unbinds all events.
+停止编辑器实例并解除所有事件绑定。
 
 ```js
 // Hasta la vista, baby!
@@ -349,7 +349,7 @@ editor.destroy()
 
 ### getHTML()
 
-Returns the current editor document as HTML
+以 HTML 格式返回当前编辑器文档。
 
 ```js
 editor.getHTML()
@@ -357,7 +357,7 @@ editor.getHTML()
 
 ### getJSON()
 
-Returns the current editor document as JSON.
+以 JSON 格式返回当前编辑器文档。
 
 ```js
 editor.getJSON()
@@ -365,11 +365,11 @@ editor.getJSON()
 
 ### getText()
 
-Returns the current editor document as plain text.
+以纯文本格式返回当前编辑器文档。
 
-| Parameter | Type                                                                     | Description                    |
-| --------- | ------------------------------------------------------------------------ | ------------------------------ |
-| options   | blockSeparator?: string, textSerializers?: Record;string, TextSerializer | Options for the serialization. |
+| 参数    | 类型                                                                       | 说明         |
+| ------- | -------------------------------------------------------------------------- | ------------ |
+| options | blockSeparator?: string, textSerializers?: Record;string, TextSerializer | 序列化选项。 |
 
 ```js
 // Give me plain text!
@@ -380,11 +380,11 @@ editor.getText({ blockSeparator: '\n\n' })
 
 ### getAttributes()
 
-Get attributes of the currently selected node or mark.
+获取当前选中节点或标记的属性。
 
-| Parameter  | Type                           | Description              |
-| ---------- | ------------------------------ | ------------------------ |
-| typeOrName | string \| NodeType \| MarkType | Name of the node or mark |
+| 参数       | 类型                           | 说明         |
+| ---------- | ------------------------------ | ------------ |
+| typeOrName | string \| NodeType \| MarkType | 节点或标记的名称 |
 
 ```js
 editor.getAttributes('link').href
@@ -392,12 +392,12 @@ editor.getAttributes('link').href
 
 ### isActive()
 
-Returns if the currently selected node or mark is active.
+返回当前选中的节点或标记是否处于激活状态。
 
-| Parameter  | Type                      | Description                    |
-| ---------- | ------------------------- | ------------------------------ |
-| name       | string \| null            | Name of the node or mark       |
-| attributes | Record&lt;string, any&gt; | Attributes of the node or mark |
+| 参数       | 类型                      | 说明             |
+| ---------- | ------------------------- | ---------------- |
+| name       | string \| null            | 节点或标记的名称 |
+| attributes | Record&lt;string, any&gt; | 节点或标记的属性 |
 
 ```js
 // Check if it’s a heading
@@ -410,7 +410,7 @@ editor.isActive({ textAlign: 'justify' })
 
 ### mount()
 
-Mount the editor to an element. This is useful when you want to mount the editor to an element that is not yet available in the DOM.
+将编辑器挂载到某个元素上。当你想将编辑器挂载到尚未出现在 DOM 中的元素时，这种方式很有用。
 
 ```js
 editor.mount(document.querySelector('.element'))
@@ -418,7 +418,7 @@ editor.mount(document.querySelector('.element'))
 
 ### unmount()
 
-Unmount the editor from an element. This is useful when you want to unmount the editor from an element, but later want to re-mount it to another element.
+将编辑器从某个元素上卸载。当你想先卸载编辑器，之后再将它重新挂载到另一个元素上时，这种方式很有用。
 
 ```js
 editor.unmount()
@@ -426,20 +426,20 @@ editor.unmount()
 
 ### registerPlugin()
 
-Register a ProseMirror plugin.
+注册 ProseMirror 插件。
 
-| Parameter      | Type                                                 | Description                                               |
-| -------------- | ---------------------------------------------------- | --------------------------------------------------------- |
-| plugin         | `Plugin`                                             | A ProseMirror plugin                                      |
-| handlePlugins? | `(newPlugin: Plugin, plugins: Plugin[]) => Plugin[]` | Control how to merge the plugin into the existing plugins |
+| 参数            | 类型                                                 | 说明                               |
+| --------------- | ---------------------------------------------------- | ---------------------------------- |
+| plugin          | `Plugin`                                             | ProseMirror 插件                   |
+| handlePlugins?  | `(newPlugin: Plugin, plugins: Plugin[]) => Plugin[]` | 控制如何将插件合并到现有插件中     |
 
 ### setOptions()
 
-Update editor options.
+更新编辑器选项。
 
-| Parameter | Type                     | Description       |
-| --------- | ------------------------ | ----------------- |
-| options   | `Partial<EditorOptions>` | A list of options |
+| 参数    | 类型                     | 说明       |
+| ------- | ------------------------ | ---------- |
+| options | `Partial<EditorOptions>` | 选项列表。 |
 
 ```js
 // Add a class to an existing editor instance
@@ -454,12 +454,12 @@ editor.setOptions({
 
 ### setEditable()
 
-Update editable state of the editor.
+更新编辑器的可编辑状态。
 
-| Parameter  | Type      | Description                                                     |
-| ---------- | --------- | --------------------------------------------------------------- |
-| editable   | `boolean` | `true` when the user should be able to write into the editor.   |
-| emitUpdate | `boolean` | Defaults to `true`. Determines whether `onUpdate` is triggered. |
+| 参数       | 类型      | 说明                                                   |
+| ---------- | --------- | ------------------------------------------------------ |
+| editable   | `boolean` | 如果用户应能在编辑器中输入内容，则为 `true`。         |
+| emitUpdate | `boolean` | 默认为 `true`。用于确定是否触发 `onUpdate`。           |
 
 ```js
 // Make the editor read-only
@@ -468,21 +468,21 @@ editor.setEditable(false)
 
 ### unregisterPlugin()
 
-Unregister a ProseMirror plugin.
+取消注册 ProseMirror 插件。
 
-| Parameter       | Type                  | Description      |
-| --------------- | --------------------- | ---------------- |
-| nameOrPluginKey | `string \| PluginKey` | The plugins name |
+| 参数           | 类型                  | 说明       |
+| -------------- | --------------------- | ---------- |
+| nameOrPluginKey | `string \| PluginKey` | 插件名称   |
 
 ### $node()
 
-See the [NodePos class](/editor/api/node-positions).
+请参阅 [NodePos 类](/editor/api/node-positions)。
 
-## Properties
+## 属性
 
 ### isEditable
 
-Returns whether the editor is editable or read-only.
+返回编辑器是否可编辑或处于只读状态。
 
 ```js
 editor.isEditable
@@ -490,7 +490,7 @@ editor.isEditable
 
 ### isEmpty
 
-Check if there is content.
+检查是否有内容。
 
 ```js
 editor.isEmpty
@@ -498,7 +498,7 @@ editor.isEmpty
 
 ### isFocused
 
-Check if the editor is focused.
+检查编辑器是否处于焦点状态。
 
 ```js
 editor.isFocused
@@ -506,7 +506,7 @@ editor.isFocused
 
 ### isDestroyed
 
-Check if the editor is destroyed.
+检查编辑器是否已销毁。
 
 ```js
 editor.isDestroyed
@@ -514,7 +514,7 @@ editor.isDestroyed
 
 ### isCapturingTransaction
 
-Check if the editor is capturing a transaction.
+检查编辑器是否正在捕获事务。
 
 ```js
 editor.isCapturingTransaction
