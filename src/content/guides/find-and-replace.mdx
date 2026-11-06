@@ -1,22 +1,22 @@
 ---
 tags:
   - type: editor
-title: Build a custom find-and-replace UI
+title: 构建自定义查找和替换界面
 meta:
-  title: Build a custom find-and-replace UI | Tiptap Editor Docs
-  description: Learn how to connect a React or Vue search-and-replace interface to Tiptap's Find and Replace extension.
+  title: 构建自定义查找和替换界面 | Tiptap 编辑器文档
+  description: 了解如何将 React 或 Vue 查找和替换界面连接到 Tiptap 的 Find and Replace 扩展。
   category: Editor
 ---
 
-The [Find and Replace extension](/editor/extensions/functionality/find-and-replace) is headless. It searches, highlights, navigates, and replaces text, but it does not render an interface. You decide where the controls belong: in a toolbar, modal, sidebar, floating panel, or a keyboard-driven workflow.
+[Find and Replace 扩展](/editor/extensions/functionality/find-and-replace)是无头扩展。它可以搜索、高亮、导航和替换文本，但不会渲染界面。控件放在哪里由你决定：工具栏、模态框、侧边栏、浮动面板，或由键盘驱动的工作流。
 
-This guide builds a small interface with search and replacement inputs, matching options, result navigation, and replacement actions.
+本指南将构建一个简洁的界面，其中包含搜索和替换输入框、匹配选项、结果导航和替换操作。
 
-## How the UI connects to the extension
+## UI 如何连接到扩展
 
-The extension exposes commands to update the search and perform actions. Its current state is available through `editor.storage.findAndReplace`.
+该扩展提供用于更新搜索内容和执行操作的命令。当前状态可通过 `editor.storage.findAndReplace` 访问。
 
-Use commands for input and button events:
+使用命令处理输入和按钮事件：
 
 ```js
 editor.commands.setSearchTerm('Tiptap')
@@ -24,7 +24,7 @@ editor.commands.goToNextResult()
 editor.commands.replaceAll()
 ```
 
-Read storage to show the selected result and disable actions when there are no matches:
+读取存储内容，以显示当前选中的结果，并在没有匹配项时禁用操作：
 
 ```js
 const { currentIndex, results } = editor.storage.findAndReplace
@@ -34,7 +34,7 @@ const resultLabel =
 
 ## React
 
-Use `useEditorState` to subscribe only to the Find and Replace storage values that the controls need. This keeps the UI in sync without re-rendering it for unrelated editor changes.
+使用 `useEditorState` 订阅控件所需的 Find and Replace 存储值。这样 UI 能保持同步，同时避免因编辑器中无关的更改而重新渲染。
 
 ```jsx
 import { EditorContent, useEditor, useEditorState } from '@tiptap/react'
@@ -149,7 +149,7 @@ export default function FindAndReplaceEditor() {
 
 ## Vue
 
-The same interface can read from the editor storage in the template and call commands from event handlers. This example uses Vue's Options API, but the commands and storage work the same way with the Composition API.
+同样的界面可以在模板中读取编辑器存储，并在事件处理程序中调用命令。本示例使用 Vue 的 Options API，但这些命令和存储在 Composition API 中的用法也相同。
 
 ```vue
 <template>
@@ -248,13 +248,11 @@ export default {
 </script>
 ```
 
-## Combine matching options
+## 组合匹配选项
 
-The extension supports using Match case, Whole word, and Regex at the same time.
-This behavior belongs to the headless extension and does not depend on React, Vue, or a particular
-interface.
+该扩展支持同时使用“区分大小写”“全字匹配”和“正则表达式”。这种行为由无头扩展提供，不依赖 React、Vue 或特定界面。
 
-For example, this search enables all three options:
+例如，下面的搜索启用了全部三个选项：
 
 ```js
 editor.commands.setCaseSensitive(true)
@@ -263,20 +261,17 @@ editor.commands.setUseRegex(true)
 editor.commands.setSearchTerm('cat|catalog')
 ```
 
-In `Catalog catalog cat cats`, it finds `catalog` and `cat`:
+在 `Catalog catalog cat cats` 中，会找到 `catalog` 和 `cat`：
 
-- `Catalog` is excluded because Match case is enabled.
-- `cats` is excluded because Whole word is enabled.
-- `cat|catalog` still matches the complete `catalog` alternative. The shorter `cat` alternative is
-  not accepted inside the longer word.
+- 启用了“区分大小写”，因此不匹配 `Catalog`。
+- 启用了“全字匹配”，因此不匹配 `cats`。
+- `cat|catalog` 仍会匹配完整的 `catalog` 分支。较短的 `cat` 分支不会在较长单词内部匹配。
 
-Whole-word matching uses Unicode letters, combining marks, numbers, and connector punctuation such
-as `_` as word characters. It also works for consecutive matches separated by punctuation.
+全字匹配会将 Unicode 字母、组合标记、数字和连接标点（例如 `_`）视为单词字符。它也适用于由标点分隔的连续匹配项。
 
-## Reuse regex capture groups
+## 重用正则表达式捕获组
 
-When regex mode is enabled, replacement terms can reuse the complete match, numbered capture
-groups, or named capture groups.
+启用正则表达式模式后，替换内容可以重用完整匹配项、编号捕获组或命名捕获组。
 
 ```js
 editor.commands.setUseRegex(true)
@@ -286,11 +281,8 @@ editor.commands.replaceAll()
 // "color and colour" becomes "[color] and [colour]"
 ```
 
-Replacement tokens are expanded only in regex mode. In literal mode, a replacement such as `$1`
-inserts the literal characters `$1`. See the
-[Find and Replace extension reference](/editor/extensions/functionality/find-and-replace#regex-replacement-tokens)
-for the complete token list and unmatched-group behavior.
+替换标记仅在正则表达式模式下展开。在字面匹配模式下，像 `$1` 这样的替换内容会插入字面字符 `$1`。完整的标记列表以及未匹配组的处理方式，请参阅 [Find and Replace 扩展参考](/editor/extensions/functionality/find-and-replace#regex-replacement-tokens)。
 
-## Adapt the interface
+## 调整界面
 
-The controls in these examples are only one option. You can render the same commands and storage in a dialog opened with `Cmd/Ctrl+F`, a persistent sidebar, or a compact toolbar.
+这些示例中的控件只是其中一种选择。你可以在通过 `Cmd/Ctrl+F` 打开的对话框、常驻侧边栏或紧凑工具栏中，渲染同样的命令和存储状态。
