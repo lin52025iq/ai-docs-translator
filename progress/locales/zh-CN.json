@@ -2,11 +2,11 @@
     "schemaVersion": 1,
     "projectId": "awesome-test",
     "locale": "zh-CN",
-    "evaluatedAt": "2026-11-06T12:47:46.276Z",
+    "evaluatedAt": "2026-11-06T12:47:54.642Z",
     "total": 6,
     "completed": 4,
     "summary": {
-        "pending": 2,
+        "pending": 1,
         "translated": 4,
         "manually_modified": 0,
         "retryable_failed": 0,
@@ -15,7 +15,7 @@
         "deleted": 0,
         "out_of_scope": 0,
         "not_text": 0,
-        "conflict": 0
+        "conflict": 1
     },
     "files": [
         {
@@ -48,8 +48,8 @@
         },
         {
             "path": "curl.sh",
-            "status": "pending",
-            "shouldTranslate": true,
+            "status": "conflict",
+            "shouldTranslate": false,
             "sourceBlobSha": "ed3a91fd1c7b1698876f6a11b3e98fb689593e9a",
             "targetBlobSha": "ed3a91fd1c7b1698876f6a11b3e98fb689593e9a"
         },
