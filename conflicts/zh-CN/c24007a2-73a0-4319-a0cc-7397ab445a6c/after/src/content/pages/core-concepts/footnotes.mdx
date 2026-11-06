@@ -1,0 +1,420 @@
+---
+title: 脚注
+meta:
+  title: 脚注 | Tiptap Pages 文档
+  description: 为 Tiptap Pages 添加类似 Word 的脚注，支持按页显示脚注区域、自动编号、原位编辑和 DOCX 往返转换。
+  category: Pages
+sidebars:
+  hideSecondary: true
+---
+
+import { Callout } from '@/components/ui/Callout'
+import { CodeDemo } from '@/components/CodeDemo'
+
+脚注让读者可以为文本添加带编号的注释，并将其显示在页面底部、页脚上方，效果与 Microsoft Word 完全一致。每条脚注都锚定在正文中的上标引用标记上。脚注区域会占用页面的可用空间，因此页面上的脚注越多，正文可用的空间就越少。
+
+脚注始终与其引用标记保持在一起：如果编辑导致含有引用标记的文本移到另一页，相应的脚注也会自动移至该页的脚注区域。
+
+<Callout title="想了解尾注？" variant="hint">
+  汇集在文档末尾单个列表中的注释称为
+  [尾注](/pages/core-concepts/endnotes)。脚注和尾注彼此独立，可以在同一文档中同时使用。
+</Callout>
+
+<Callout title="从 DOCX 导入" variant="hint">
+  使用 [DOCX 导入扩展](/conversion/import/docx/editor-extension#footnotes--endnotes)导入 `.docx` 文件时，文档中的脚注会自动应用到 Pages：包括引用标记、内容和编号。无需额外配置。
+</Callout>
+
+<CodeDemo isPro path="/Extensions/PagesFootnotes" />
+
+## 启用脚注
+
+脚注默认处于禁用状态。通过 `footnotes` 选项组启用：
+
+```js
+import { Pages } from '@tiptap-pro/extension-pages'
+
+Pages.configure({
+  pageFormat: 'A4',
+  footer: 'Page {page} of {total}',
+  footnotes: {
+    enabled: true,
+  },
+})
+```
+
+完成这些设置即可：脚注引用节点会自动注册；文档中出现脚注后，各页的脚注区域也会随之显示。
+
+## 脚注的行为
+
+其工作方式与 Microsoft Word 相同：
+
+- **一个标记对应一条注释。** 每条脚注都是正文中的一个上标数字，并对应含有该标记的页面脚注区域中的编号条目。
+- **脚注显示在页脚上方。** 每页都会显示自己的脚注区域，位于正文和页脚之间，并带有一条短分隔线。
+- **脚注会占用页面空间。** 脚注区域随内容增加而扩大，正文区域则相应缩小。因此，在已排满内容的页面中添加脚注，会将正文推到下一页。
+- **脚注跟随其引用标记。** 脚注区域只显示标记位于该页的脚注。文本在页面间重新流动时，脚注也会随之移动；你无需手动管理脚注的位置。
+- **编号自动连续。** 脚注按文档顺序编号为 `1, 2, 3…`。在两条已有脚注之间插入新脚注后，其后的编号都会更新；删除脚注后，编号间的空缺会自动补齐。编号是动态计算的，不会存储，因此始终准确。
+
+## 插入脚注
+
+调用 `insertFootnote()`，即可在当前选区添加脚注：
+
+```js
+editor.commands.insertFootnote()
+```
+
+这会在选区**之后**插入引用标记（与 Word 一样，保留选中的文本），创建一条空脚注，并打开脚注编辑器，将光标置于新脚注中，以便用户立即输入内容。
+
+```jsx
+<button onClick={() => editor.commands.insertFootnote()}>插入脚注</button>
+```
+
+## 编辑脚注
+
+用户只需双击页面的脚注区域，即可直接编辑脚注。这会打开一个功能完整、作用范围限于该页面的 Tiptap 编辑器：其中按编号顺序显示属于该页的脚注，每条脚注都可以像普通富文本一样编辑。双击某条脚注，会将光标置于该脚注中。
+
+按 <kbd>Escape</kbd>、点击关闭按钮或双击编辑器外部即可关闭编辑器。脚注编辑器打开时，主文档编辑器会暂时变为不可编辑，行为与页眉和页脚编辑器相同。
+
+### 自定义扩展
+
+脚注编辑器默认使用 `ConvertKit`。你可以通过 `footnotes.extensions` 传入自己的扩展组合，使其架构与主编辑器保持一致：
+
+```ts
+import { ConvertKit } from '@tiptap-pro/extension-convert-kit'
+
+Pages.configure({
+  footnotes: {
+    enabled: true,
+    extensions: [ConvertKit.configure({ table: false })],
+  },
+})
+```
+
+<Callout title="协作场景请使用回调形式" variant="info">
+  `footnotes.extensions` 也接受 `(ctx) => Extensions` 回调，并会接收脚注编辑器需要绑定的 Y 字段名称和 Y.Doc。配置协作功能时请使用这种形式。请参阅下文的[脚注与协作](#footnotes-and-collaboration)。
+</Callout>
+
+### 活动编辑器状态
+
+脚注编辑器打开时，扩展会通过 storage 暴露该编辑器，方式与页眉和页脚相同，因此统一工具栏可以同时适用于三者：
+
+- `activeEditor` – 当前打开的脚注编辑器的 Tiptap Editor 实例（或 `null`）
+- `activeEditorType` – 编辑脚注时为 `'footnotes'`（现有值还包括 `'header'`、`'footer'` 和 `null`）
+- `activePageNumber` – 当前正在编辑脚注的页面
+- `footnotesEditorOn` / `footnotesEditorOff` – 订阅/取消订阅脚注编辑器上的事件
+
+```tsx
+useEffect(() => {
+  if (!editor) return
+
+  const syncActiveEditorState = () => {
+    const { activeEditor, activeEditorType } = editor.storage.pages
+    // activeEditorType === 'footnotes' while the footnotes editor is open
+  }
+
+  editor.on('update', syncActiveEditorState)
+  return () => {
+    editor.off('update', syncActiveEditorState)
+  }
+}, [editor])
+```
+
+如需查看会跟随当前焦点编辑器的完整自定义工具栏示例，请参阅[页眉和页脚 → 构建自定义工具栏](/pages/core-concepts/page-header-footer#building-a-custom-toolbar)。要让它支持脚注，只需额外处理 `activeEditorType` 的 `'footnotes'` 值。
+
+可以通过 `overlayLabels` 翻译脚注覆盖层标签和关闭按钮。请参阅[翻译覆盖层标签](/pages/core-concepts/page-header-footer#translating-overlay-labels)。
+
+### 锁定脚注
+
+将 `footnotes.editable` 设为 `false`，即可显示脚注但禁用双击编辑；也可以在运行时切换：
+
+```js
+Pages.configure({
+  footnotes: { enabled: true, editable: false },
+})
+
+// Runtime
+editor.commands.setFootnotesEditable(false) // lock
+editor.commands.setFootnotesEditable(true) // unlock
+```
+
+锁定后，脚注仍会正常显示，只是无法编辑。`openFootnoteEditor` 会返回 `false`，双击不会产生效果，并且已打开的脚注编辑器会关闭。
+
+### 防止双击时关闭
+
+与页眉和页脚一样，你可以让用户在编辑器外部双击时，脚注编辑器仍保持打开。这在工具栏位于编辑器外部时很有用：
+
+```js
+Pages.configure({
+  footnotes: { enabled: true },
+  onDblClickFootnotesPreventClose: (event) => {
+    const toolbar = document.querySelector('.my-toolbar')
+    return toolbar?.contains(event.target)
+  },
+})
+```
+
+如果没有提供脚注专用回调，则会使用通用的 `onDblClickHeaderFooterPreventClose` 回调作为后备。
+
+### 以编程方式打开和关闭
+
+```js
+// Open the footnotes editor for page 2
+editor.commands.openFootnoteEditor({ pageNumber: 2 })
+
+// Open it with the caret placed in a specific footnote
+editor.commands.openFootnoteEditor({ pageNumber: 2, focusNoteId: '3' })
+
+// Close it
+editor.commands.closeFootnoteEditor()
+```
+
+脚注已禁用、已锁定或页面没有脚注时，`openFootnoteEditor` 会返回 `false`。
+
+## 删除脚注和清理
+
+从正文中删除引用标记后，其脚注会立即从页面中移除，其余脚注会重新编号。脚注的**内容会在后台保留**，因此只需执行普通撤销操作，就能连同文本一起恢复引用标记。这是为了确保撤销操作安全而刻意采用的方式，与 Word（会立即删除内容）有所不同。
+
+如果要永久丢弃已没有引用标记的内容，请调用：
+
+```js
+editor.commands.cleanupOrphanFootnotes()
+```
+
+至少移除一条孤立脚注时，此命令会返回 `true`。
+
+## 复制和粘贴
+
+复制包含脚注标记的文本并粘贴到其他位置时，会像 Word 一样复制脚注：粘贴的标记会拥有自己的脚注，其中包含原脚注内容的副本，整个文档的编号也会相应更新。从此之后，两条脚注互不相关。
+
+## 没有内容的引用标记
+
+引用标记始终会生成可见的脚注，即使目前没有对应内容（例如，使用 `setContent()` 设置了含有标记的文档，但尚未提供任何脚注内容）。这类脚注会显示为空的编号条目；打开脚注编辑器后即可立即编辑。
+
+## 从标记导航
+
+点击正文中的脚注标记，页面会滚动到相应脚注所在的位置，方便在较长的文档中查看。
+
+## 屏幕阅读器名称
+
+Pages 会为正文中的每个脚注标记设置屏幕阅读器名称，例如“脚注 3”。页面上的标记仍只显示数字。设置 `noteReferenceLabel` 可更改名称，例如将其翻译：
+
+```ts
+Pages.configure({
+  footnotes: { enabled: true },
+  noteReferenceLabel: ({ type, number }) =>
+    type === 'footnote'
+      ? t('pages.footnoteReference', { number })
+      : t('pages.endnoteReference', { number }),
+})
+```
+
+`noteReferenceLabel` 是顶层选项，也用于命名[尾注标记](/pages/core-concepts/endnotes#screen-reader-names)。该函数接收一个对象，其中包含：
+
+- `type`：`'footnote'` 或 `'endnote'`。
+- `number`：注释的编号，按文档顺序从 1 开始计数。
+- `marker`：读者看到的文本。脚注的标记是数字，尾注的标记是罗马数字。
+
+添加、删除或重新排序注释时，Pages 会更新名称。这些名称只存在于编辑器视图中，因此 `getHTML()`、`getJSON()` 和 DOCX 导出内容中都不会包含它们。
+
+Pages 会将名称作为标记的 CSS 替代文本提供给屏幕阅读器。如果你自己的 CSS 替换了 `.tiptap-footnote-ref::after` 的 `content`，请使用 `content: attr(data-footnote-number) / attr(data-footnote-label)` 保留名称。
+
+脚注覆盖层标签有单独的选项。请参阅[翻译覆盖层标签](/pages/core-concepts/page-header-footer#translating-overlay-labels)。
+
+## 配置
+
+所有脚注设置都位于 `footnotes` 选项组中：
+
+```ts
+Pages.configure({
+  footnotes: {
+    enabled: true, // master switch (default: false)
+    extensions: [ConvertKit], // editor extensions (or a collab-aware callback)
+    initialContent: undefined, // seed content, keyed by note id
+    separator: true, // the short rule above the area (default: true)
+    maxHeightRatio: 0.5, // max fraction of page content height (default: 0.5)
+    editable: true, // double-click editing (default: true)
+    accentColor: '#6366f1', // footnotes editor accent (defaults to accentColor)
+  },
+})
+```
+
+### 设置初始内容
+
+`initialContent` 接受按注释 ID 索引的脚注内容，每个 ID 都对应文档内容中 `footnoteReference` 节点的 `noteId` 属性。值为 Tiptap `JSONContent` 文档：
+
+```js
+Pages.configure({
+  footnotes: {
+    enabled: true,
+    initialContent: {
+      1: {
+        type: 'doc',
+        content: [
+          {
+            type: 'paragraph',
+            content: [{ type: 'text', text: 'The first footnote.' }],
+          },
+        ],
+      },
+    },
+  },
+})
+```
+
+这与 [DOCX 导入 REST API](/conversion/import/docx/rest-api) 在 `footnotes` 字段中返回的数据结构完全一致，因此可以直接用服务器导入的文档设置初始内容。
+
+<Callout title="协作" variant="info">
+  `initialContent` 仅在未启用协作时生效。在协作文档中，脚注内容由共享文档维护。若要通过明确的用户操作将脚注载入协作文档（例如 DOCX 导入后），请改用 `setFootnotes` 命令。
+</Callout>
+
+### 分隔线
+
+Word 会在正文和脚注之间绘制一条短水平线。默认启用；设置 `separator: false` 即可禁用。
+
+### 区域最大高度
+
+`maxHeightRatio` 限制脚注区域最多可占用的页面正文高度比例（默认值为 `0.5`，即页面的一半）。脚注超出上限时，区域内容会被裁切。有关此行为与 Word 的区别，请参阅[预期之外的功能](#what-not-to-expect)。
+
+### 强调色
+
+脚注编辑器默认使用共享的 `accentColor`；可以通过 `footnotes.accentColor` 覆盖，也可以在运行时设置：
+
+```js
+editor.commands.setFootnotesAccentColor('#10b981')
+```
+
+强调色会影响正文中标记的颜色、光标、编辑器工具栏边框以及“脚注 – 第 N 页”标签。
+
+## 访问脚注内容
+
+脚注内容可通过 `editor.storage.pages` 获取，并按注释 ID 索引：
+
+```js
+// Tiptap JSON per footnote, use this for persistence and DOCX export
+const footnotesJSON = editor.storage.pages.footnotesJSON
+// { '1': { type: 'doc', content: [...] }, 'fn-abc123': { ... } }
+
+// Rendered HTML per footnote, matches what the page previews show
+const footnotesHTML = editor.storage.pages.footnotesHTML
+
+// Current numbering (note id → 1-based number)
+const numbers = editor.storage.pages.footnoteNumbers
+```
+
+### 保存和恢复
+
+与页眉和页脚一样，脚注内容需要由你负责持久化。请将 `footnotesJSON` 与文档一同保存，并在加载内容后使用 `setFootnotes` 命令恢复：
+
+```js
+// Save
+await saveDocument({
+  content: editor.getJSON(),
+  footnotes: editor.storage.pages.footnotesJSON,
+})
+
+// Restore
+editor.commands.setContent(savedDocument.content)
+editor.commands.setFootnotes(savedDocument.footnotes)
+```
+
+`setFootnotes` 会根据 ID → 文档的映射替换所有脚注内容。正文中的引用会继续生效，因为它们通过 ID 匹配。
+
+## DOCX 导入和导出
+
+脚注默认支持与 Word 文档往返转换：
+
+- **导入**：使用 [DOCX 导入编辑器扩展](/conversion/import/docx/editor-extension#footnotes--endnotes)时，导入文件中的脚注会自动应用：标记显示在正文中，内容放入页面区域，编号与源文档一致。导入上下文也会提供原始的 `footnotes` / `endnotes` 数据，供你自行处理。
+- **导出**：使用 [DOCX 导出编辑器扩展](/conversion/export/docx/editor-extension)时，脚注内容会从 Pages 自动提取，并写入真正的 Word 脚注：标记会成为有效的脚注引用，Word 会原生显示并重新编号。
+
+<CodeDemo isPro path="/Extensions/PagesFootnotesImportExportDocx" />
+
+导入和导出两端都无需额外配置。只需在 Pages 旁安装导入/导出扩展，即可包含脚注。
+
+## 脚注与协作
+
+脚注与主文档共同参与协作：多位用户可以实时看到彼此对脚注所做的编辑；插入或删除脚注后，各客户端也会达成一致，包括编号。
+
+要启用协作，请将 `footnotes.extensions` 设为一个**回调函数**，以便为脚注编辑器附加 `Collaboration` 扩展，方式与页眉和页脚相同：
+
+```ts
+Pages.configure({
+  footnotes: {
+    enabled: true,
+    extensions: (ctx) => {
+      const base = [ConvertKit.configure({ undoRedo: false })]
+      if (!ctx.isCollaborative || !ctx.ydoc) {
+        return base
+      }
+      return [...base, Collaboration.configure({ document: ctx.ydoc, field: ctx.field })]
+    },
+  },
+})
+```
+
+回调会接收预先计算的 Y 字段名称（`ctx.field`）和父编辑器的 Y.Doc（`ctx.ydoc`）。完整的协作设置（包括页眉和页脚的对应配置）请参阅[为 Pages 添加协作功能](/pages/guides/collaboration-with-pages)。
+
+<CodeDemo isPro path="/Extensions/PagesFootnotesCollaboration" />
+
+## 预期功能
+
+- 类似 Word 的布局：脚注位于含有其标记的页面底部、页脚上方，并带有分隔线。
+- 每次插入、删除、粘贴或重新排版时，编号都会自动连续更新。
+- 脚注增加时页面正文区域会缩小，因此分页会将脚注占用的空间考虑在内。
+- 脚注支持富文本内容，并可使用你配置的扩展。
+- 渲染后的脚注与编辑视图外观一致：字体排版、编号和间距都相同，包括用于增加垂直间距的空段落。
+- 无需额外配置即可与 DOCX 往返转换。
+
+## 目前不支持的功能
+
+- **脚注不会跨页续排。** 当某页的脚注超出 `maxHeightRatio` 时，超出的内容会被裁切，而不会像 Word 那样延续到下一页。
+- **仅支持十进制编号。** 脚注在整个文档中连续编号为 `1, 2, 3…`。目前尚不支持每页重新开始编号，也不支持其他编号格式（罗马数字、字母、符号）。
+- **脚注中的表格不会导出。** 表格可以在编辑器中显示，但 Word 的脚注格式仅支持段落，因此导出 DOCX 时会丢弃表格。
+
+<Callout title="帮助我们确定优先级" variant="info">
+  如果这些限制妨碍了你的使用场景，请告诉我们。你的反馈将帮助我们规划路线图。
+  <a href="https://tiptap-suite.notion.site/1b601ffa3ebc80a281a8ea0b03b19bdd">
+    与 Tiptap 分享你的使用场景
+  </a>
+</Callout>
+
+## 完整选项参考
+
+除非另有说明，所有选项都位于 `Pages.configure()` 的 `footnotes` 键下。
+
+| 选项                              | 类型                                                | 默认值              | 说明                                                                    |
+| --------------------------------- | --------------------------------------------------- | ------------------- | ----------------------------------------------------------------------- |
+| `enabled`                         | `boolean`                                           | `false`             | 脚注功能的总开关                                                        |
+| `extensions`                      | `Extensions \| (ctx) => Extensions`                 | `ConvertKit`        | 脚注编辑器使用的扩展。协作场景请使用回调形式。                          |
+| `initialContent`                  | `Record<string, JSONContent>`                       | `undefined`         | 按注释 ID 设置的初始脚注内容（仅适用于非协作文档）                      |
+| `separator`                       | `boolean`                                           | `true`              | 是否在区域上方显示 Word 风格的分隔线                                    |
+| `maxHeightRatio`                  | `number`                                            | `0.5`               | 脚注区域最多可占用的页面正文高度比例                                    |
+| `editable`                        | `boolean`                                           | `true`              | 双击区域是否打开脚注编辑器                                              |
+| `accentColor`                     | `string`                                            | `accentColor` 值    | 标记和脚注编辑器的强调色                                                |
+| `onDblClickFootnotesPreventClose` | `(event: MouseEvent) => boolean`（顶层选项）        | `undefined`         | 防止在外部双击时关闭脚注编辑器                                          |
+| `noteReferenceLabel`              | `NoteReferenceLabel`（顶层选项）                    | `undefined`         | 每个脚注和尾注标记的屏幕阅读器名称                                      |
+
+## 命令参考
+
+| 命令                      | 参数                                            | 说明                                                                    |
+| ------------------------- | ---------------------------------------------- | ----------------------------------------------------------------------- |
+| `insertFootnote`          | 无                                             | 在选区插入脚注并打开脚注编辑器                                          |
+| `setFootnotes`            | `footnotes: Record<string, JSONContent>`       | 根据 ID → 文档映射替换所有脚注内容                                      |
+| `openFootnoteEditor`      | `{ pageNumber: number, focusNoteId?: string }` | 打开指定页面的脚注编辑器，可选择聚焦某条脚注                            |
+| `closeFootnoteEditor`     | 无                                             | 关闭已打开的脚注编辑器                                                  |
+| `setFootnotesEditable`    | `enabled: boolean`                             | 锁定或解锁脚注编辑                                                      |
+| `cleanupOrphanFootnotes`  | 无                                             | 永久移除已失去引用标记的脚注内容                                        |
+| `setFootnotesAccentColor` | `color: string`                                | 设置脚注强调色                                                          |
+
+## Storage 参考
+
+从 `editor.storage.pages` 读取以下属性：
+
+| 属性                  | 类型                                          | 说明                                                              |
+| --------------------- | --------------------------------------------- | ----------------------------------------------------------------- |
+| `footnotesJSON`       | `Record<string, JSONContent>`                 | 每条脚注的内容；用于持久化和 DOCX 导出                            |
+| `footnotesHTML`       | `Record<string, string>`                      | 每条脚注渲染后的 HTML，与页面预览一致                              |
+| `footnoteNumbers`     | `Record<string, number>`                      | 当前编号（注释 ID → 从 1 开始的编号）                             |
+| `footnotesEnabled`    | `boolean`                                     | 是否启用了脚注                                                    |
+| `editableFootnotes`   | `boolean`                                     | 是否已解锁编辑（只读；请使用 `setFootnotesEditable`）             |
+| `activeEditorType`    | `'header' \| 'footer' \| 'footnotes' \| null` | 脚注编辑器打开时为 `'footnotes'`                                   |
+| `footnotesEditorOn`   | `Editor['on'] \| null`                        | 已预先绑定的脚注编辑器事件订阅函数                                |
+| `footnotesEditorOff`  | `Editor['off'] \| null`                       | 已预先绑定的脚注编辑器事件取消订阅函数                            |
