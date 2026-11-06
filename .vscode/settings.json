@@ -1,0 +1,33 @@
+{
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.expand": false,
+    "explorer.fileNesting.patterns": {
+        "tsconfig.json": "tsconfig.*.json, auto-*.d.ts, tsconfig.*.tsbuildinfo",
+        "package.json": "pnpm*, eslint*, .npmrc, .prettierrc.json, uno.config.ts, .prettierignore, .editorconfig",
+        "README.md": "*.md"
+    },
+    "js/ts.tsdk.path": "node_modules/typescript/lib",
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "eslint.format.enable": true,
+    "files.eol": "\n",
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "prettier.enable": false,
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "json",
+        "jsonc",
+        "css",
+        "scss",
+        "html",
+        "markdown",
+        "yaml"
+    ],
+    "editor.tabSize": 4,
+    "editor.indentSize": 4,
+    "editor.detectIndentation": false
+}

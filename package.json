@@ -1,0 +1,49 @@
+{
+    "name": "ai-docs-translator",
+    "private": true,
+    "version": "0.0.0",
+    "description": "配置驱动的 GitHub 多项目、多语言 AI 文档翻译工具",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "pnpm typecheck && vite build",
+        "preview": "vite preview",
+        "typecheck": "tsc --noEmit",
+        "lint": "eslint . --max-warnings=0 && prettier . --check",
+        "lint:fix": "eslint . --fix && prettier . --write",
+        "format": "prettier --write .",
+        "format:check": "prettier . --check",
+        "prepare": "simple-git-hooks"
+    },
+    "devDependencies": {
+        "@eslint/js": "10.0.1",
+        "@types/node": "24.19.2",
+        "eslint": "10.12.0",
+        "eslint-config-prettier": "10.1.8",
+        "eslint-plugin-format": "2.0.1",
+        "eslint-plugin-prettier": "5.5.7",
+        "eslint-plugin-simple-import-sort": "14.0.0",
+        "globals": "17.12.0",
+        "lint-staged": "17.6.0",
+        "prettier": "3.9.10",
+        "simple-git-hooks": "2.14.0",
+        "typescript": "5.9.3",
+        "typescript-eslint": "8.70.1",
+        "vite": "8.3.6"
+    },
+    "engines": {
+        "node": ">=24.14.0 <25",
+        "pnpm": ">=12.4.2 <13"
+    },
+    "packageManager": "pnpm@12.16.1",
+    "simple-git-hooks": {
+        "pre-commit": "pnpm exec lint-staged"
+    },
+    "lint-staged": {
+        "*.{js,mjs,cjs,ts,mts,cts,tsx}": [
+            "eslint --fix --max-warnings=0 --no-warn-ignored",
+            "prettier --write"
+        ],
+        "*.{json,css,scss,html,md,yaml,yml}": "prettier --write"
+    }
+}
