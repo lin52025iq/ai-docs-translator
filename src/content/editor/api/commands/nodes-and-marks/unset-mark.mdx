@@ -1,29 +1,29 @@
 ---
-title: unsetMark command
+title: unsetMark 命令
 meta:
-  title: unsetMark command | Tiptap Editor Docs
-  description: Use the unsetMark command in Tiptap to remove a specific mark from the current or across a selection. Learn more in our docs!
-  category: Editor
+  title: unsetMark 命令 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 unsetMark 命令移除当前选区或整个选区中的特定标记。详情请参阅文档！
+  category: 编辑器
 ---
 
-`unsetMark` will remove the mark from the current selection. Other mark types are preserved.
+`unsetMark` 会移除当前选区中的标记。其他类型的标记会保留。
 
-## Parameters
+## 参数
 
 `typeOrName: string | MarkType`
 
-The type of mark that should be removed.
+要移除的标记类型。
 
 `options?: Record<string, any>`
 
-- `extendEmptyMarkRange?: boolean` - Removes the mark even across the current selection. Defaults to `false`
+- `extendEmptyMarkRange?: boolean` - 即使跨越当前选区，也会移除标记。默认值为 `false`
 
-## Use the unsetMark command
+## 使用 unsetMark 命令
 
 ```js
-// removes a bold mark
+// 移除粗体标记
 editor.commands.unsetMark('bold')
 
-// removes a bold mark across the current selection
+// 移除跨越当前选区的粗体标记
 editor.commands.unsetMark('bold', { extendEmptyMarkRange: true })
 ```
