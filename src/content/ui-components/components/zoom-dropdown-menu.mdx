@@ -1,12 +1,12 @@
 ---
-title: Zoom Dropdown Menu
+title: 缩放下拉菜单
 meta:
-  title: Zoom dropdown menu | Tiptap UI Components
-  description: Add a controlled zoom control with steppers, presets, a numeric input, and fit-to-page to your editor UI. More in the documentation!
-  category: UI Components
+  title: 缩放下拉菜单 | Tiptap UI 组件
+  description: 为编辑器 UI 添加受控缩放控件，包含步进按钮、预设、数字输入框和适合页面选项。更多内容请参阅文档！
+  category: UI 组件
 component:
-  name: Zoom dropdown menu
-  description: A headless, fully controlled zoom control with stepper buttons, presets, a numeric input, and an optional fit-to-page action.
+  name: 缩放下拉菜单
+  description: 无头且完全受控的缩放控件，包含步进按钮、预设、数字输入框，以及可选的适合页面操作。
   type: component
   isFree: true
   isCloud: false
@@ -19,27 +19,27 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A controlled zoom control for paginated or canvas-style editors. It pairs zoom-out / zoom-in stepper buttons with a percentage trigger whose popover offers a numeric input, preset levels, and an optional “Fit to page” action.
+适用于分页式或画布式编辑器的受控缩放控件。它将缩小/放大步进按钮与百分比触发按钮组合在一起；触发按钮的弹出层提供数字输入框、预设缩放级别，以及可选的“适合页面”操作。
 
-The component is fully **headless and presentational** — it holds no zoom state of its own and has **no Tiptap editor dependency**. You own the zoom value and pass it in through `currentZoom` / `onZoomChange`, so it works with any zoom implementation. All of the control logic lives in the `useZoomDropdownMenu` hook, making the built-in UI just one possible renderer.
+该组件完全**无头且仅负责呈现**——它不保存自身的缩放状态，也**不依赖 Tiptap 编辑器**。缩放值由你管理，并通过 `currentZoom` / `onZoomChange` 传入，因此可以配合任何缩放实现使用。所有控件逻辑都封装在 `useZoomDropdownMenu` Hook 中，内置 UI 只是其中一种渲染方式。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui/zoom-dropdown-menu" />
 
-## Installation
+## 安装
 
-Add the component via the Tiptap CLI:
+使用 Tiptap CLI 添加此组件：
 
 ```bash
 npx @tiptap/cli@latest add zoom-dropdown-menu
 ```
 
-## Components
+## 组件
 
 ### `<ZoomDropdownMenu />`
 
-A prebuilt React component that renders the stepper buttons, the percentage trigger, and the popover with input, presets, and fit-to-page.
+预构建的 React 组件，可渲染步进按钮、百分比触发按钮，以及包含输入框、预设和适合页面选项的弹出层。
 
-#### Usage
+#### 用法
 
 ```tsx
 import { useState } from 'react'
@@ -54,26 +54,26 @@ export default function MyToolbar() {
 }
 ```
 
-#### Props
+#### 属性
 
-The component also forwards any extra `Button` props (except `type`) to the percentage trigger.
+组件还会将额外的 `Button` 属性（`type` 除外）转发给百分比触发按钮。
 
-| Name           | Type                     | Default        | Description                                                         |
+| 名称           | 类型                     | 默认值         | 说明                                                                 |
 | -------------- | ------------------------ | -------------- | ------------------------------------------------------------------- |
-| `currentZoom`  | `number`                 | `100`          | The current zoom level (percentage). Controlled by you.             |
-| `onZoomChange` | `(zoom: number) => void` | `undefined`    | Called with the next zoom level whenever the user changes it.       |
-| `onFitToPage`  | `() => void`             | `undefined`    | Called when “Fit to page” is triggered. Omit to hide that action.   |
-| `min`          | `number`                 | `40`           | Smallest selectable zoom level.                                     |
-| `max`          | `number`                 | `200`          | Largest selectable zoom level.                                      |
-| `presets`      | `readonly number[]`      | `ZOOM_PRESETS` | Preset levels offered in the picker and used when stepping up/down. |
+| `currentZoom`  | `number`                 | `100`          | 当前缩放级别（百分比）。由你控制。                                   |
+| `onZoomChange` | `(zoom: number) => void` | `undefined`    | 用户更改缩放级别时，会使用新的缩放级别调用此回调。                   |
+| `onFitToPage`  | `() => void`             | `undefined`    | 触发“适合页面”时调用。省略此属性即可隐藏该操作。                     |
+| `min`          | `number`                 | `40`           | 可选的最小缩放级别。                                                 |
+| `max`          | `number`                 | `200`          | 可选的最大缩放级别。                                                 |
+| `presets`      | `readonly number[]`      | `ZOOM_PRESETS` | 选择器中提供的预设级别，也用于增大或减小缩放时的步进。               |
 
 ## Hooks
 
 ### `useZoomDropdownMenu()`
 
-A headless hook that derives everything a zoom UI needs. The consumer owns the value (`currentZoom` / `onZoomChange`); the hook computes the clamped value, min/max flags, the text field state with parse-and-commit, keyboard handling, preset stepping, and the fit-to-page passthrough.
+无头 Hook，可计算缩放 UI 所需的所有内容。当前值由使用者管理（`currentZoom` / `onZoomChange`）；Hook 会计算限制范围后的值、最小值/最大值标记、支持解析并提交的文本字段状态、键盘操作、预设步进，以及适合页面回调。
 
-#### Usage
+#### 用法
 
 ```tsx
 function MyZoomControl(props) {
@@ -93,44 +93,44 @@ function MyZoomControl(props) {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name           | Type                     | Default        | Description                                             |
-| -------------- | ------------------------ | -------------- | ------------------------------------------------------- |
-| `currentZoom`  | `number`                 | `100`          | The current zoom level (percentage). Controlled by you. |
-| `onZoomChange` | `(zoom: number) => void` | `undefined`    | Called with the next zoom level whenever it changes.    |
-| `onFitToPage`  | `() => void`             | `undefined`    | Called when fit-to-page is triggered. Omit to hide it.  |
-| `min`          | `number`                 | `40`           | Smallest selectable zoom level.                         |
-| `max`          | `number`                 | `200`          | Largest selectable zoom level.                          |
-| `presets`      | `readonly number[]`      | `ZOOM_PRESETS` | Preset levels offered and used for stepping.            |
+| 名称           | 类型                     | 默认值         | 说明                                             |
+| -------------- | ------------------------ | -------------- | ----------------------------------------------- |
+| `currentZoom`  | `number`                 | `100`          | 当前缩放级别（百分比）。由你控制。               |
+| `onZoomChange` | `(zoom: number) => void` | `undefined`    | 缩放级别更改时，会使用新的缩放级别调用此回调。   |
+| `onFitToPage`  | `() => void`             | `undefined`    | 触发适合页面操作时调用。省略此属性即可隐藏该操作。|
+| `min`          | `number`                 | `40`           | 可选的最小缩放级别。                             |
+| `max`          | `number`                 | `200`          | 可选的最大缩放级别。                             |
+| `presets`      | `readonly number[]`      | `ZOOM_PRESETS` | 提供的预设级别，也用于步进。                     |
 
-#### Return Values
+#### 返回值
 
-| Name                 | Type                                                 | Description                                                            |
+| 名称                 | 类型                                                 | 说明                                                                    |
 | -------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------- |
-| `zoom`               | `number`                                             | The clamped current zoom level.                                        |
-| `min`                | `number`                                             | The effective minimum zoom.                                            |
-| `max`                | `number`                                             | The effective maximum zoom.                                            |
-| `presets`            | `readonly number[]`                                  | The preset levels.                                                     |
-| `isMinZoom`          | `boolean`                                            | Whether the current zoom is at (or below) `min`.                       |
-| `isMaxZoom`          | `boolean`                                            | Whether the current zoom is at (or above) `max`.                       |
-| `canFitToPage`       | `boolean`                                            | Whether a fit-to-page action is available (`onFitToPage` provided).    |
-| `zoomIn`             | `() => void`                                         | Step to the next preset above the current zoom.                        |
-| `zoomOut`            | `() => void`                                         | Step to the next preset below the current zoom.                        |
-| `setZoom`            | `(zoom: number) => void`                             | Apply an arbitrary level (clamped to `min`/`max`).                     |
-| `inputValue`         | `string`                                             | Controlled value for a percentage text field.                          |
-| `setInputValue`      | `(value: string) => void`                            | Setter for the text field value.                                       |
-| `commitInput`        | `() => void`                                         | Parse and apply the text field (reverts if invalid). Wire to `onBlur`. |
-| `handleInputKeyDown` | `(e: React.KeyboardEvent<HTMLInputElement>) => void` | Enter/Escape handling for the text field. Wire to `onKeyDown`.         |
-| `fitToPage`          | `() => void`                                         | Invoke the consumer’s fit-to-page handler.                             |
+| `zoom`               | `number`                                             | 限制在有效范围内的当前缩放级别。                                        |
+| `min`                | `number`                                             | 实际的最小缩放级别。                                                    |
+| `max`                | `number`                                             | 实际的最大缩放级别。                                                    |
+| `presets`            | `readonly number[]`                                  | 预设缩放级别。                                                         |
+| `isMinZoom`          | `boolean`                                            | 当前缩放级别是否达到或低于 `min`。                                      |
+| `isMaxZoom`          | `boolean`                                            | 当前缩放级别是否达到或高于 `max`。                                      |
+| `canFitToPage`       | `boolean`                                            | 是否提供适合页面操作（即是否传入 `onFitToPage`）。                      |
+| `zoomIn`             | `() => void`                                         | 增大到高于当前缩放级别的下一个预设值。                                  |
+| `zoomOut`            | `() => void`                                         | 减小到低于当前缩放级别的下一个预设值。                                  |
+| `setZoom`            | `(zoom: number) => void`                             | 设置任意缩放级别（限制在 `min` / `max` 范围内）。                      |
+| `inputValue`         | `string`                                             | 百分比文本字段的受控值。                                                |
+| `setInputValue`      | `(value: string) => void`                            | 设置文本字段的值。                                                     |
+| `commitInput`        | `() => void`                                         | 解析并应用文本字段内容（无效时恢复原值）。绑定到 `onBlur`。              |
+| `handleInputKeyDown` | `(e: React.KeyboardEvent<HTMLInputElement>) => void` | 处理文本字段中的 Enter/Escape 按键。绑定到 `onKeyDown`。                |
+| `fitToPage`          | `() => void`                                         | 调用使用者提供的适合页面处理函数。                                      |
 
-## Utilities
+## 工具函数
 
-The component module also exports a few pure helpers and constants for building custom zoom logic.
+组件模块还导出了几个纯辅助函数和常量，可用于构建自定义缩放逻辑。
 
 ### `clampZoom(value, min?, max?)`
 
-Clamps a zoom value to the supported range, rounded to the nearest integer.
+将缩放值限制在支持的范围内，并四舍五入到最接近的整数。
 
 ```tsx
 import { clampZoom } from '@/components/tiptap-ui/zoom-dropdown-menu'
@@ -141,7 +141,7 @@ clampZoom(999) // 200
 
 ### `parsePercent(input)`
 
-Parses a percentage string (e.g. `"100%"` or `"100"`) to a number, or returns `null` for invalid input.
+将百分比字符串（例如 `"100%"` 或 `"100"`）解析为数字；输入无效时返回 `null`。
 
 ```tsx
 import { parsePercent } from '@/components/tiptap-ui/zoom-dropdown-menu'
@@ -152,7 +152,7 @@ parsePercent('abc') // null
 
 ### `getNextPresetZoom(currentZoom, direction, presets?, min?, max?)`
 
-Returns the next preset level above or below the current zoom.
+返回当前缩放级别上方或下方的下一个预设级别。
 
 ```tsx
 import { getNextPresetZoom } from '@/components/tiptap-ui/zoom-dropdown-menu'
@@ -161,26 +161,26 @@ getNextPresetZoom(100, 'up') // 125
 getNextPresetZoom(100, 'down') // 90
 ```
 
-### Constants
+### 常量
 
-- `ZOOM_MIN` (`40`), `ZOOM_MAX` (`200`), `ZOOM_DEFAULT` (`100`)
+- `ZOOM_MIN` (`40`)、`ZOOM_MAX` (`200`)、`ZOOM_DEFAULT` (`100`)
 - `ZOOM_PRESETS` — `[40, 50, 75, 90, 100, 125, 150, 175, 200]`
-- `ZoomLevel` — the exported `number` type alias used across the API
+- `ZoomLevel` — 在整个 API 中使用的导出 `number` 类型别名
 
-## Requirements
+## 要求
 
-### Dependencies
+### 依赖项
 
-- `react` — the control is presentational and does not depend on Tiptap.
+- `react` — 此控件仅负责呈现，不依赖 Tiptap。
 
-### Referenced Components
+### 引用的组件
 
-- `button` (primitive)
-- `button-group` (primitive)
-- `card` (primitive)
-- `input` (primitive)
-- `popover` (primitive)
-- `separator` (primitive)
-- `fullscreen-icon` (icon)
-- `minus-icon` (icon)
-- `plus-icon` (icon)
+- `button`（基础组件）
+- `button-group`（基础组件）
+- `card`（基础组件）
+- `input`（基础组件）
+- `popover`（基础组件）
+- `separator`（基础组件）
+- `fullscreen-icon`（图标）
+- `minus-icon`（图标）
+- `plus-icon`（图标）
