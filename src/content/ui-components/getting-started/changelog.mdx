@@ -1,139 +1,139 @@
-# Changelog
+# 更新日志
 
-All notable changes to this project will be documented in this file.
+本文件将记录此项目的所有重要变更。
 
 ## [2026-08-01]
 
-### Added
+### 新增
 
-- **Search and Replace**: Added an open-source search and replace panel with debounced live highlighting, a one-based result counter, wrap-around navigation, match-case and whole-word options, regular expression search with example patterns, controlled placement and open state, replace and replace-all actions, and `Mod+F`, arrow-key, and `Enter` shortcuts. Moving between results updates only the highlight, so the editor selection and the toolbar state stay where the user left them. Install it with `npx @tiptap/cli@latest add search-and-replace`.
-- **Button**: Added a reusable `check` variant, a checkbox-style toggle that supplies `role="checkbox"`, its own check indicator, and the ghost style at small size by default. Control its state with `aria-checked`, which also accepts `mixed`.
-- **Simple editor template**: The template now ships search and replace, with a toolbar trigger and a panel docked below the toolbar.
+- **搜索和替换**：新增开源的搜索和替换面板，支持防抖实时高亮、从 1 开始的结果计数、循环导航、区分大小写和全字匹配选项、带示例模式的正则表达式搜索、可控的面板位置和打开状态、替换及全部替换操作，以及 `Mod+F`、方向键和 `Enter` 快捷键。在结果间切换时只更新高亮，因此编辑器选区和工具栏状态会保持原样。运行 `npx @tiptap/cli@latest add search-and-replace` 即可安装。
+- **按钮**：新增可复用的 `check` 变体，这是一种复选框样式的切换按钮，会提供 `role="checkbox"`、自身的勾选指示器，并在小尺寸下默认使用 ghost 样式。通过 `aria-checked` 控制其状态，该属性也接受 `mixed`。
+- **简单编辑器模板**：模板现已内置搜索和替换功能，包含工具栏触发按钮和停靠在工具栏下方的面板。
 
-### Fixed
+### 修复
 
-- **Toolbar roving focus**: The toolbar now restores focus to its items only while focus is already inside the toolbar, so panels and popovers opened from the toolbar keep the focus they requested.
-- **Link popover**: `autoOpenOnLinkActive` now also requires the editor to be focused, so an active link no longer opens the popover after a programmatic selection change, such as one made from a search panel.
+- **工具栏焦点循环**：现在只有当焦点已位于工具栏内时，工具栏才会将焦点恢复到其中的项目，因此从工具栏打开的面板和弹出框可以保留它们所请求的焦点。
+- **链接弹出框**：`autoOpenOnLinkActive` 现在还要求编辑器处于聚焦状态，因此在程序化更改选区（例如通过搜索面板进行的更改）后，即使链接处于激活状态，也不会再打开弹出框。
 
-Existing installations can refresh the changed components with `npx @tiptap/cli@latest add button toolbar link-popover -o`. Add `search-and-replace` to that list if you installed the panel on 2026-07-31, the day before this entry, so it picks up the result-navigation behavior. The `-o` flag overwrites installed component files, so review local customizations first.
+现有安装可运行 `npx @tiptap/cli@latest add button toolbar link-popover -o` 来更新已变更的组件。如果你在 2026-07-31（即本条目发布的前一天）安装了搜索和替换面板，请将 `search-and-replace` 也加入列表，以获取结果导航行为。`-o` 标志会覆盖已安装的组件文件，因此请先检查本地自定义内容。
 
 ## [2026-07-24]
 
-### Fixed
+### 修复
 
-- **Image Node Pro**: Fixed image selection becoming stale after surrounding document edits, prevented native caret navigation from entering hidden captions, and hardened repeated clicks, caption lifecycle, deletion, resizing, and read-only transitions across Chromium, Firefox, and WebKit.
-- **Image Node Pro HTML**: Preserved configured HTML attributes for bare and captioned images, normalized valid image dimensions, applied `allowBase64` consistently, and prevented multi-image figures from being collapsed into a single image node.
-- **Image floating toolbar**: Refreshed selection-driven visibility after image clicks so the toolbar reliably reopens for an already-selected image.
+- **Image Node Pro**：修复了周边文档编辑后图像选区过期的问题，阻止原生光标导航进入隐藏标题，并增强了 Chromium、Firefox 和 WebKit 中对重复点击、标题生命周期、删除、调整大小及只读状态切换的处理。
+- **Image Node Pro HTML**：保留了无标题和带标题图像的已配置 HTML 属性，规范化有效的图像尺寸，一致地应用 `allowBase64`，并防止多个图像组成的 figure 被合并为单个图像节点。
+- **图像浮动工具栏**：在点击图像后刷新由选区驱动的可见状态，使工具栏在图像已选中时也能可靠地重新打开。
 
-### Changed
+### 变更
 
-- **Image Node Pro keyboard and undo behavior**: Added predictable arrow navigation, caption boundary handling for `Enter`, `Backspace`, `Delete`, and `Escape`, progressive select-all, and separate undo boundaries for image deletion and resizing.
-- **Toolbar keyboard navigation**: Added horizontal roving focus, wrapped arrow navigation, first/last navigation with `Home` and `End`, disabled-control tracking, and normal `Tab` and `Shift+Tab` exit behavior.
-- **Delete Node Button**: Preserved extension-owned Backspace handling, prevented browser behavior only after a successful shared deletion, and isolated node deletion into its own undo step.
+- **Image Node Pro 键盘和撤销行为**：新增可预测的方向键导航、对标题边界处 `Enter`、`Backspace`、`Delete` 和 `Escape` 的处理、逐步全选，以及图像删除和调整大小各自独立的撤销边界。
+- **工具栏键盘导航**：新增水平焦点循环、循环方向键导航、使用 `Home` 和 `End` 导航至首项或末项、禁用控件跟踪，以及正常的 `Tab` 和 `Shift+Tab` 退出行为。
+- **删除节点按钮**：保留由扩展处理的 Backspace 行为，仅在共享删除操作成功后阻止浏览器默认行为，并将节点删除隔离为独立的撤销步骤。
 
-Existing installations can update the complete set of copied source files with `npx @tiptap/cli@latest add image-node-pro floating-element toolbar -o`. The `-o` flag overwrites installed component files, so review local customizations first.
+现有安装可运行 `npx @tiptap/cli@latest add image-node-pro floating-element toolbar -o`，更新整套已复制的源文件。`-o` 标志会覆盖已安装的组件文件，因此请先检查本地自定义内容。
 
 ## [2026-07-09]
 
-### Added
+### 新增
 
-- **Table node**: Pages extension support. When the Pages extension is registered on the editor, tables now split across page boundaries row by row — preserving column widths, merged cells, and borders — with rowspan cells continuing across breaks and oversized cells becoming scrollable so pagination stays stable. Requires no configuration, and behavior is unchanged without Pages.
+- **表格节点**：支持 Pages 扩展。当编辑器注册了 Pages 扩展时，表格现在会按行跨页拆分，同时保留列宽、合并单元格和边框；跨分页符的 rowspan 单元格会继续延伸，而超大单元格则会变为可滚动，以保持分页稳定。无需配置；未启用 Pages 时，行为保持不变。
 
-### Fixed
+### 修复
 
-- **Table selection overlay**: The `cellMenu` prop must now be a stable component reference. Passing an inline arrow gave the menu a new component identity on every render, remounting its subtree and potentially throwing "Maximum update depth exceeded". Define the cell menu at module scope (or memoize it); the overlay and cell menu also guard against redundant menu open-state updates.
-- **Editor lifecycle**: Hardened the `comment`, `text-align`, and `undo-redo` components and `tiptap-utils` against destroyed or unmounted editors — added `isDestroyed`/mounted-view checks and error handling around `editor.can()` to prevent exceptions during teardown.
+- **表格选区叠层**：`cellMenu` 属性现在必须传入稳定的组件引用。传入内联箭头函数会导致菜单在每次渲染时都获得新的组件身份，从而重新挂载其子树，并可能抛出“Maximum update depth exceeded”错误。请在模块作用域中定义单元格菜单（或对其进行记忆化）；叠层和单元格菜单也会避免冗余更新菜单打开状态。
+- **编辑器生命周期**：增强了 `comment`、`text-align` 和 `undo-redo` 组件及 `tiptap-utils` 对已销毁或已卸载编辑器的处理；新增 `isDestroyed`/已挂载视图检查，并在调用 `editor.can()` 时加入错误处理，以防止在销毁过程中发生异常。
 
 ## [2026-03-26]
 
-### Added
+### 新增
 
-- **TOC**: Added support to find the closest scrollable parent element for the Table of Contents (TOC) node preview.
+- **TOC**：新增支持，可为目录（TOC）节点预览查找最近的可滚动父元素。
 
-### Changed
+### 变更
 
-- **TOC**: Improve heading organization in the Table of Contents (TOC) for better performance and readability.
+- **TOC**：优化目录（TOC）中的标题组织方式，提升性能和可读性。
 
 ## [2026-03-25]
 
-### Added
+### 新增
 
-- **Indentation support**: Added `indent` and `outdent` commands to the editor, allowing users to adjust block indentation levels. Currently this feature only available for Notion-like template.
+- **缩进支持**：为编辑器新增 `indent` 和 `outdent` 命令，允许用户调整块级内容的缩进级别。目前此功能仅适用于类 Notion 模板。
 
 ## [2026-02-19]
 
-### Changed
+### 变更
 
-- **AI menu**: Added `anchorToSelection` prop to `<AiMenu>` for anchoring the menu to the current text selection at full editor width.
+- **AI 菜单**：为 `<AiMenu>` 新增 `anchorToSelection` 属性，可将菜单锚定到当前文本选区，并使菜单占满编辑器宽度。
 
 ## [2026-02-10]
 
-### Fixed
+### 修复
 
-- **Toolbar buttons**: Fixed button visibility logic where buttons were incorrectly hidden when `hideWhenUnavailable` was not set. Buttons now always show by default and only hide when `hideWhenUnavailable={true}` and the required extension/schema is unavailable.
-- **Link popover**: Added error handling around `setMark("link")` to prevent uncaught exceptions in certain editor states.
-- **Turn-into dropdown**: Added missing `!editor.isEditable` guard to prevent showing the dropdown on read-only editors.
-- **Heading node**: Fixed `margin-top` removal to properly target first headings and headings preceded by ProseMirror widgets (e.g., decorations, node views).
-- **Color highlight**: Switched from `toggleMark("highlight", { color })` to the proper `toggleHighlight({ color })` command for correct toggle behavior.
+- **工具栏按钮**：修复了按钮可见性逻辑的问题：未设置 `hideWhenUnavailable` 时，按钮会被错误地隐藏。现在按钮默认始终显示；只有当 `hideWhenUnavailable={true}` 且所需扩展或 schema 不可用时，才会隐藏。
+- **链接弹出框**：在 `setMark("link")` 外添加错误处理，以防编辑器处于某些状态时出现未捕获异常。
+- **转换为下拉菜单**：补上缺失的 `!editor.isEditable` 检查，防止在只读编辑器中显示下拉菜单。
+- **标题节点**：修复 `margin-top` 的移除逻辑，使其能正确作用于首个标题以及前面有 ProseMirror widget（例如装饰或节点视图）的标题。
+- **颜色高亮**：将 `toggleMark("highlight", { color })` 改为正确的 `toggleHighlight({ color })` 命令，以确保切换行为正确。
 
-### Changed
+### 变更
 
-- **CLI auth check on `-c` flag**: The CLI now verifies `.npmrc` authentication when using the `-c` (component) flag, preventing silent failures for unauthenticated users.
-- **Auto-generate `scss.d.ts`**: SCSS type declarations are now automatically created whenever a component with SCSS files is installed via the CLI.
-- **Nested list styles**: Added style cycling for deeply nested lists (up to 8 levels):
-  - Ordered lists: `decimal → lower-alpha → lower-roman → decimal → ...`
-  - Unordered lists: `disc → circle → square → disc → ...`
-- **Color highlight `useColorValue` prop**: Added support for using raw hex color values instead of CSS variables, enabling highlight compatibility in environments where CSS custom properties aren't available.
-- **Heading dropdown menu**: Added support for custom `children` prop, allowing consumers to override the default icon + chevron rendering.
-- **Inline images**: Images inside paragraphs now display as `inline-block`.
+- **`-c` 标志的 CLI 身份验证检查**：CLI 现在会在使用 `-c`（组件）标志时验证 `.npmrc` 身份验证，避免未通过身份验证的用户遇到无提示失败。
+- **自动生成 `scss.d.ts`**：通过 CLI 安装包含 SCSS 文件的组件时，现在会自动创建 SCSS 类型声明。
+- **嵌套列表样式**：新增对深层嵌套列表（最多 8 层）的样式循环：
+  - 有序列表：`decimal → lower-alpha → lower-roman → decimal → ...`
+  - 无序列表：`disc → circle → square → disc → ...`
+- **颜色高亮的 `useColorValue` 属性**：新增支持使用原始十六进制颜色值代替 CSS 变量，使高亮功能可在不支持 CSS 自定义属性的环境中使用。
+- **标题下拉菜单**：新增对自定义 `children` 属性的支持，允许使用方覆盖默认的图标加箭头渲染方式。
+- **行内图像**：段落中的图像现在会以 `inline-block` 方式显示。
 
-### Removed
+### 移除
 
-- **Comment page demo**: Removed the `/comments` and `/preview/templates/comments` routes and all associated components.
+- **评论页面演示**：移除了 `/comments` 和 `/preview/templates/comments` 路由及所有相关组件。
 
 ## [2026-02-03]
 
-- Update CLI version to 3.18.0. Fix `-p` flag for custom paths.
+- 将 CLI 版本更新至 3.18.0。修复自定义路径下的 `-p` 标志。
 
 ## [2026-01-15]
 
-### Fixed
+### 修复
 
-- Prevent block “turn into” actions from running when multiple blocks are selected, ensuring node toggles only apply to a single selected block.
-  update existing code by running `pnpm dlx @tiptap/cli@latest add heading-button blockquote-button list-button text-button code-block-button -o`
+- 多个块被选中时，阻止执行块“转换为”操作，确保节点切换仅应用于单个选中的块。
+  运行 `pnpm dlx @tiptap/cli@latest add heading-button blockquote-button list-button text-button code-block-button -o` 更新现有代码。
 
 ## [2026-01-09]
 
-### Added
+### 新增
 
-- Table of Contents (TOC) feature with node preview
-- Update CLI version to 3.11.1
+- 新增带节点预览的目录（TOC）功能
+- 将 CLI 版本更新至 3.11.1
 
 ## [2026-01-05]
 
-### Added
+### 新增
 
-- Add `resetTextSelectionOnClose` prop to `FloatingElement` to add an option to preserve the current editor selection when the editor loses focus
+- 为 `FloatingElement` 添加 `resetTextSelectionOnClose` 属性，以便在编辑器失去焦点时选择保留当前编辑器选区。
 
 ## [2025-12-15]
 
-### Fixed
+### 修复
 
-- Remove stopEvent from image to fix copy and paste an inline image
+- 移除图像中的 stopEvent，以修复行内图像的复制和粘贴问题。
 
 ## [2025-12-04]
 
-### Added
+### 新增
 
-- Merge adjacent lists on backspace to prevent stuck vertical spacing
+- 按 Backspace 时合并相邻列表，避免垂直间距卡住。
 
 ---
 
-## Legend
+## 图例
 
-- **Added**: New features
-- **Changed**: Changes in existing functionality
-- **Deprecated**: Soon-to-be removed features
-- **Removed**: Removed features
-- **Fixed**: Bug fixes
-- **Security**: Security fixes and improvements
+- **新增**：新功能
+- **变更**：现有功能的变更
+- **弃用**：即将移除的功能
+- **移除**：已移除的功能
+- **修复**：错误修复
+- **安全**：安全修复和改进
