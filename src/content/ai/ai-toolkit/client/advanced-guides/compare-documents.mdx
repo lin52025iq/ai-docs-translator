@@ -1,26 +1,25 @@
 ---
-title: Compare documents
+title: 比较文档
 meta:
-  title: Compare documents | Tiptap AI Toolkit
-  description: Compare two documents and visualize differences in real-time.
+  title: 比较文档 | Tiptap AI Toolkit
+  description: 实时比较两份文档并可视化显示差异。
   category: AI Toolkit
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-<Callout title="Deprecated" variant="warning">
-  Use [Tiptap Compare](/compare/getting-started/overview) to compare two documents or two versions
-  of the same document.
+<Callout title="已弃用" variant="warning">
+  请使用 [Tiptap Compare](/compare/getting-started/overview) 比较两份文档，或比较同一文档的两个版本。
 </Callout>
 
-Compare two documents in real-time and show the diff in the editor.
+实时比较两份文档，并在编辑器中显示差异。
 
 <CodeDemo isPro isLarge path="/Extensions/AiToolkitCompareDocuments/React/" />
 
-## Guide: compare two documents
+## 指南：比较两份文档
 
-Start by calling the `startComparingDocuments` method. It compares the current document of the editor with another document of your choice. The method takes one parameter: `otherDoc`, the document to compare against.
+首先调用 `startComparingDocuments` 方法。该方法会将编辑器中的当前文档与您选择的另一份文档进行比较。该方法接受一个参数：`otherDoc`，即要比较的文档。
 
 ```ts
 const toolkit = getAiToolkit(editor)
@@ -31,9 +30,9 @@ toolkit.startComparingDocuments({
 })
 ```
 
-If `otherDoc` is not provided, the AI Toolkit will start tracking the changes in the current document from the moment that `startComparingDocuments` was called, and display a diff of the document before and after the changes.
+如果未提供 `otherDoc`，AI Toolkit 会从调用 `startComparingDocuments` 的那一刻起开始跟踪当前文档中的更改，并显示更改前后的文档差异。
 
-The diff is displayed as [suggestions](/ai/ai-toolkit/client/api-reference/suggestions) in the editor. Add this CSS file to your app to format suggestions as a red and green diff:
+差异会以[建议](/ai/ai-toolkit/client/api-reference/suggestions)的形式显示在编辑器中。在应用中添加以下 CSS 文件，即可将建议显示为红绿差异：
 
 ```css
 /* Highlight inserted text in green */
@@ -83,21 +82,21 @@ The diff is displayed as [suggestions](/ai/ai-toolkit/client/api-reference/sugge
 }
 ```
 
-When comparing documents, changes are displayed as suggestions. To accept or reject individual changes or all changes at once, use the suggestion methods:
+比较文档时，更改会以建议的形式显示。若要接受或拒绝单项更改，或一次性接受或拒绝所有更改，请使用以下建议方法：
 
-- [`acceptSuggestion`](/ai/ai-toolkit/client/api-reference/suggestions#acceptsuggestion): Accept a specific change
-- [`rejectSuggestion`](/ai/ai-toolkit/client/api-reference/suggestions#rejectsuggestion): Reject a specific change
-- [`acceptAllSuggestions`](/ai/ai-toolkit/client/api-reference/suggestions#acceptallsuggestions): Accept all changes
-- [`rejectAllSuggestions`](/ai/ai-toolkit/client/api-reference/suggestions#rejectallsuggestions): Reject all changes
+- [`acceptSuggestion`](/ai/ai-toolkit/client/api-reference/suggestions#acceptsuggestion)：接受特定更改
+- [`rejectSuggestion`](/ai/ai-toolkit/client/api-reference/suggestions#rejectsuggestion)：拒绝特定更改
+- [`acceptAllSuggestions`](/ai/ai-toolkit/client/api-reference/suggestions#acceptallsuggestions)：接受所有更改
+- [`rejectAllSuggestions`](/ai/ai-toolkit/client/api-reference/suggestions#rejectallsuggestions)：拒绝所有更改
 
-Call `getSuggestions` to get a list of changes between the documents, stored as [suggestions](/ai/ai-toolkit/client/api-reference/suggestions).
+调用 `getSuggestions` 可获取文档之间的更改列表，这些更改以[建议](/ai/ai-toolkit/client/api-reference/suggestions)的形式存储。
 
 ```ts
 // Get all changes (as suggestions)
 const suggestions = toolkit.getSuggestions()
 ```
 
-Then, call `acceptSuggestion` or `rejectSuggestion` to accept or reject the changes.
+然后调用 `acceptSuggestion` 或 `rejectSuggestion`，以接受或拒绝更改。
 
 ```ts
 // Accept the first change
@@ -113,18 +112,18 @@ toolkit.acceptAllSuggestions()
 toolkit.rejectAllSuggestions()
 ```
 
-To stop comparing documents, use the `stopComparingDocuments` method. It hides the diff view and clears the suggestions.
+若要停止比较文档，请使用 `stopComparingDocuments` 方法。该方法会隐藏差异视图并清除建议。
 
 ```ts
 toolkit.stopComparingDocuments()
 ```
 
-## Example demo
+## 示例演示
 
-Below is a demo of how to compare two documents in real-time.
+下面的演示展示了如何实时比较两份文档。
 
 <CodeDemo isPro isLarge path="/Extensions/AiToolkitCompareDocuments" />
 
-## Next steps
+## 后续步骤
 
-- [Compare documents API reference](/ai/ai-toolkit/client/api-reference/diff-utility)
+- [比较文档 API 参考](/ai/ai-toolkit/client/api-reference/diff-utility)
