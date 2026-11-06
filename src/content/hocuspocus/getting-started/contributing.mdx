@@ -1,54 +1,54 @@
 ---
-title: Contributing to Hocuspocus
+title: 为 Hocuspocus 做贡献
 meta:
-  title: Contributing to Hocuspocus | Tiptap Collaboration Docs
-  description: Contributing to Hocuspocus
+  title: 为 Hocuspocus 做贡献 | Tiptap 协作文档
+  description: 为 Hocuspocus 做贡献
   category: Hocuspocus
 ---
 
-Hocuspocus would be nothing without its lively community. Contributions have always been and will always be welcome. Here is a little bit you should know, before you send your contribution:
+没有活跃的社区，Hocuspocus 将一事无成。我们一直欢迎大家贡献，今后也会如此。在提交贡献之前，有几点需要了解：
 
-## Welcome examples
+## 欢迎提交的内容
 
-- Failing regression tests as bug reports
-- Documentation improvements, e. g. fix a typo, add a section
-- New features for existing extensions, e. g. a new configurable option
-- Well explained, non-breaking changes to the core
+- 作为 bug 报告提交的失败回归测试
+- 改进文档，例如修正错别字、添加章节
+- 为现有扩展添加新功能，例如增加可配置选项
+- 说明充分且不破坏兼容性的核心代码更改
 
-## Won’t merge
+## 不会合并的内容
 
-- New extensions, which we then need to support and maintain
+- 我们之后需要支持和维护的新扩展
 
-## Submit ideas
+## 提交想法
 
-Make sure to open an issue and outline your idea first. We’ll get back to you quickly and let you know if there is a chance we can merge your contribution.
+请先创建一个 issue，概述你的想法。我们会尽快回复，并告知你的贡献是否有机会被合并。
 
-## Set up the development environment
+## 设置开发环境
 
-It’s not too hard to tinker around with the official repository. You’ll need [Git](https://github.com/git-guides/install-git), [Node and NPM](https://nodejs.org/en/download/) installed. Here is what you need to do then:
+在官方仓库中进行试验并不难。你需要安装 [Git](https://github.com/git-guides/install-git) 和 [Node 与 NPM](https://nodejs.org/en/download/)。接下来按以下步骤操作：
 
-1. Copy the code to your local machine: `$ git clone git@github.com:ueberdosis/hocuspocus.git`
-3. Install dependencies: `$ npm install`
-4. Build packages `$ npm run build:packages`
-3. Start the development environment: `$ npm run start`
-4. Open http://localhost:3000 in your favorite browser.
-5. Start playing around!
+1. 将代码克隆到本地：`$ git clone git@github.com:ueberdosis/hocuspocus.git`
+3. 安装依赖：`$ npm install`
+4. 构建软件包 `$ npm run build:packages`
+3. 启动开发环境：`$ npm run start`
+4. 在你喜欢的浏览器中打开 http://localhost:3000。
+5. 开始动手试试吧！
 
-Compile and watch for changes:
+编译并监视更改：
 
 ```sh
 npm run build:watch
 ```
 
-## How to include local hocuspocus packages in your development project
+## 如何在开发项目中使用本地 hocuspocus 软件包
 
-If you want to include a local hocuspocus package in your project, you'll need to follow the following steps. I have tried using `npm link`, but haven't managed to make it work reliably because of duplicated yjs imports. The following is the only way I made it work:
+如果想在项目中使用本地 hocuspocus 软件包，请按以下步骤操作。我试过使用 `npm link`，但由于重复导入 yjs，始终无法稳定运行。以下是我目前唯一成功的方法：
 
-Execute the following command in this (hocupsocus) repo to compile the sources:
+在此（hocupsocus）仓库中执行以下命令来编译源代码：
 
 `$ rollup -c -w`
 
-Then ..
+然后……
 
 ```bash
 $ cd other_project # execute the following commands within the other project that should include local
@@ -59,17 +59,17 @@ $ ln -s HOCUSPOCUS_LOCAL_REPO_PATH/packages/provider node_modules/@hocuspocus/pr
 $ ln -s HOCUSPOCUS_LOCAL_REPO_PATH/node_modules/yjs ./node_modules/yjs
 ```
 
-Still doesn't work? -> rm -Rf node_modules && npm install ; then try again
+还是不行？→ 执行 `rm -Rf node_modules && npm install`，然后再试一次。
 
 
-## Testing for errors
-Your pull request will automatically execute all our existing tests. Make sure they all pass before sending a pull request. Your pull request will automatically execute all tests via the GitHub Workflow.
+## 错误测试
+你的拉取请求会自动运行所有现有测试。提交拉取请求前，请确保所有测试均通过。你的拉取请求会通过 GitHub Workflow 自动运行所有测试。
 
-- Start a redis server: `$ docker run -d --name hocuspocus-redis -p 6379:6379 redis:7`
-- Run all tests locally: `$ npm run test`
-- Run all tests of a single package: `$ npm run test -- tests/PACKAGE_NAME`
+- 启动 Redis 服务器：`$ docker run -d --name hocuspocus-redis -p 6379:6379 redis:7`
+- 在本地运行所有测试：`$ npm run test`
+- 运行单个软件包的所有测试：`$ npm run test -- tests/PACKAGE_NAME`
 
 
-## Further questions
+## 更多问题
 
-Any further questions? Create a new issue or discussion in the repository. We’ll get back to you.
+还有其他问题？请在仓库中创建新的 issue 或讨论帖。我们会尽快回复。
