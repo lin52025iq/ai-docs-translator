@@ -1,8 +1,8 @@
 ---
-title: Tracked changes with comments
+title: 带评论的跟踪更改
 meta:
-  title: Tracked changes with comments | Tiptap AI Toolkit
-  description: Combine AI-generated tracked changes with comment threads that explain each change.
+  title: 带评论的跟踪更改 | Tiptap AI Toolkit
+  description: 将 AI 生成的跟踪更改与说明每项更改的评论线程结合起来。
   category: AI Toolkit
 sidebars:
   hideSecondary: true
@@ -11,24 +11,23 @@ sidebars:
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-<Callout title="Separate product" variant="info">
-  [Tracked Changes](/tracked-changes/getting-started/overview) is a separate Tiptap product from the AI Toolkit, sold separately. It handles user edits by default and can review AI edits when integrated with the AI Toolkit.
+<Callout title="独立产品" variant="info">
+  [Tracked Changes](/tracked-changes/getting-started/overview) 是 Tiptap 的独立产品，与 AI Toolkit 分开销售。它默认处理用户编辑；与 AI Toolkit 集成后，也可以审核 AI 编辑。
 </Callout>
 
-<Callout title="Continuation from the Use with Tracked Changes guide" variant="info">
-  This guide continues the [Use with Tracked Changes
-  guide](/ai/ai-toolkit/client/agents/review-changes/tracked-changes). Read it first.
+<Callout title="延续《配合 Tracked Changes 使用》指南" variant="info">
+  本指南是 [《配合 Tracked Changes 使用》指南](/ai/ai-toolkit/client/agents/review-changes/tracked-changes) 的延续内容。请先阅读该指南。
 </Callout>
 
-You can ask the AI to provide a justification for each change. Each justification becomes a comment thread linked to its tracked change, using the [Comments](/comments/getting-started/overview) extension. This guide builds on the [Use with Tracked Changes](/ai/ai-toolkit/client/agents/review-changes/tracked-changes) integration and requires the separately licensed Tracked Changes extension.
+你可以让 AI 为每项更改提供理由。借助 [Comments](/comments/getting-started/overview) 扩展，每条理由都会成为一个与对应跟踪更改关联的评论线程。本指南基于[配合 Tracked Changes 使用](/ai/ai-toolkit/client/agents/review-changes/tracked-changes)的集成方式，并且需要单独购买许可的 Tracked Changes 扩展。
 
 <CodeDemo isLarge path="" isScrollable src="https://ai-toolkit-demos.vercel.app/tracked-changes-comments" />
 
-See the [source code on GitHub](https://github.com/ueberdosis/ai-toolkit-demos).
+请参阅 GitHub 上的[源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
 
-## API endpoint
+## API 端点
 
-On the server, pass the `operationMeta` option to `toolDefinitions` to add a `meta` field to edit operations. Then instruct the AI to provide a justification in the `meta` field.
+在服务器端，将 `operationMeta` 选项传递给 `toolDefinitions`，即可为编辑操作添加 `meta` 字段。然后指示 AI 在 `meta` 字段中提供理由。
 
 ```ts
 // app/api/tracked-changes-comments/route.ts
@@ -57,9 +56,9 @@ Rule: When editing the document, ALWAYS provide a brief justification for each c
 }
 ```
 
-## Client-side setup
+## 客户端设置
 
-On the client, add the `CommentsKit` extension and pass `commentsOptions` to the `executeTool` method. The `commentsOptions` property configures the thread and comment metadata for the AI-generated comments.
+在客户端添加 `CommentsKit` 扩展，并将 `commentsOptions` 传递给 `executeTool` 方法。`commentsOptions` 属性用于配置 AI 生成的评论所对应的线程和评论元数据。
 
 ```tsx
 import { AiToolkit, getAiToolkit } from '@tiptap-pro/client-ai-toolkit'
@@ -95,17 +94,17 @@ const result = toolkit.executeTool({
 })
 ```
 
-Each non-empty `meta` field in the edit operations becomes a comment thread linked to its tracked change. Users can review the change and read the AI's justification in the comments sidebar.
+编辑操作中每个非空的 `meta` 字段都会生成一个与对应跟踪更改关联的评论线程。用户可以在评论侧边栏中查看更改并阅读 AI 给出的理由。
 
-## End result
+## 最终效果
 
 <CodeDemo isLarge path="" isScrollable src="https://ai-toolkit-demos.vercel.app/tracked-changes-comments" />
 
-See the [source code on GitHub](https://github.com/ueberdosis/ai-toolkit-demos).
+请参阅 GitHub 上的[源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
 
-## Next steps
+## 后续步骤
 
-- Learn more about [review options](/ai/ai-toolkit/client/api-reference/review-options) in the API reference.
-- Add real-time streaming with the [streaming guide](/ai/ai-toolkit/client/agents/streaming).
-- Learn about the [Tracked Changes](/tracked-changes/getting-started/overview) extension for styling and configuration options.
-- Learn about the [Comments](/comments/getting-started/overview) extension for comments configuration and styling.
+- 在 API 参考中详细了解[审核选项](/ai/ai-toolkit/client/api-reference/review-options)。
+- 通过[流式传输指南](/ai/ai-toolkit/client/agents/streaming)添加实时流式传输。
+- 了解 [Tracked Changes](/tracked-changes/getting-started/overview) 扩展的样式和配置选项。
+- 了解 [Comments](/comments/getting-started/overview) 扩展的评论配置和样式选项。
