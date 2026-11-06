@@ -1,30 +1,30 @@
 ---
-title: Custom Markdown Serializing
+title: 自定义 Markdown 序列化
 tags:
   - type: beta
 meta:
-  title: Custom Markdown Serializing | Tiptap Editor Docs
-  description: Learn how to create custom Markdown serialization in Tiptap.
+  title: 自定义 Markdown 序列化 | Tiptap 编辑器文档
+  description: 了解如何在 Tiptap 中创建自定义 Markdown 序列化。
   category: Editor
 ---
 
-This guide will walk you through the process of implementing custom Markdown serialization in Tiptap Editor. By the end of this tutorial, you'll be able to serialize [Tiptap JSON](../glossary#tiptap-json) to Markdown content.
+本指南将带你了解如何在 Tiptap Editor 中实现自定义 Markdown 序列化。完成本教程后，你将能够将 [Tiptap JSON](../glossary#tiptap-json) 序列化为 Markdown 内容。
 
-Serializing Tiptap JSON content to Markdown is done through the `markdown.render` handler.
+通过 `markdown.render` 处理器，可以将 Tiptap JSON 内容序列化为 Markdown。
 
-## Understanding Render Handlers
+## 了解渲染处理器
 
-The process of turning Tiptap JSON nodes into Markdown strings is handled by the `renderMarkdown` function defined in the config of an extension.
+将 Tiptap JSON 节点转换为 Markdown 字符串的过程由扩展配置中定义的 `renderMarkdown` 函数处理。
 
-This function can range in complexity from a simple string return to more complex logic that takes into account the node's attributes, its children, nesting and the context in which it appears.
+该函数的复杂程度可以从简单地返回字符串，到根据节点的属性、子节点、嵌套关系及其所在上下文执行更复杂的逻辑。
 
-The following parameters are passed to the render function:
+渲染函数会接收以下参数：
 
-- `node`: The Tiptap JSON node to be serialized.
-- `helpers`: An object containing utility functions to assist in rendering (see [Render Helper Functions](#render-helper-functions) for details).
-- `context`: An object providing additional context about the node's position in the document tree (see [Render Context](#render-context) for details).
+- `node`：要序列化的 Tiptap JSON 节点。
+- `helpers`：包含渲染辅助工具函数的对象（详情请参阅[渲染辅助函数](#render-helper-functions)）。
+- `context`：提供节点在文档树中位置信息的对象（详情请参阅[渲染上下文](#render-context)）。
 
-The returned value of the render function should be a string representing the Markdown equivalent of the node that will be concatenated with other strings to form the complete Markdown document.
+渲染函数应返回一个字符串，表示该节点对应的 Markdown 内容。该字符串会与其他字符串拼接，组成完整的 Markdown 文档。
 
 ```typescript
 const CustomHeading = Node.create({
@@ -39,16 +39,16 @@ const CustomHeading = Node.create({
 })
 ```
 
-## Render Helper Functions
+## 渲染辅助函数
 
-As described above, the `helpers` object provides utility functions for rendering child nodes and formatting content.
-Let us go through each helper and see how they can be used.
+如上所述，`helpers` 对象提供了用于渲染子节点和格式化内容的辅助函数。
+下面我们逐一了解这些辅助函数及其用法。
 
 ### `helpers.renderChildren(nodes, separator)`
 
-The `helpers.renderChildren` function will take a list of Tiptap JSON nodes and render each of them to a Markdown string using their respective render handlers.
+`helpers.renderChildren` 函数会接收一个 Tiptap JSON 节点列表，并使用各节点对应的渲染处理器，将每个节点渲染为 Markdown 字符串。
 
-It accepts an optional `separator` parameter that can be used to join the rendered child nodes with a specific string (defaults to `''`).
+它接受可选参数 `separator`，用于指定连接渲染后子节点的字符串（默认为 `''`）。
 
 ```typescript
 render: (node, helpers) => {
@@ -59,7 +59,7 @@ render: (node, helpers) => {
 }
 ```
 
-or with a custom separator:
+也可以使用自定义分隔符：
 
 ```typescript
 render: (node, helpers) => {
@@ -72,9 +72,9 @@ render: (node, helpers) => {
 
 ### `helpers.indent(content)`
 
-The `helpers.indent(content)` function will add indentation to each line of the provided content string based on the current context level and the configured indentation style (spaces or tabs).
+`helpers.indent(content)` 函数会根据当前上下文层级和配置的缩进样式（空格或制表符），为所提供内容字符串的每一行添加缩进。
 
-This is helpful for example when rendering nested structures like lists.
+例如，在渲染列表等嵌套结构时，这个函数会很有用。
 
 ```typescript
 render: (node, helpers) => {
@@ -86,7 +86,7 @@ render: (node, helpers) => {
 
 ### `helpers.wrapInBlock(prefix, content)`
 
-The `helpers.wrapInBlock` function will wrap content with a prefix on each line which is useful for block-level elements like blockquotes or code blocks.
+`helpers.wrapInBlock` 函数会在内容的每一行前添加前缀，适用于引用块或代码块等块级元素。
 
 ```typescript
 render: (node, helpers) => {
@@ -97,11 +97,11 @@ render: (node, helpers) => {
 }
 ```
 
-## Serializing Marks
+## 序列化标记
 
-Marks are handled differently because they wrap inline content and need to be applied to the text within a node.
+标记的处理方式有所不同，因为它们会包裹行内内容，需要应用于节点中的文本。
 
-When rendering marks, you typically want to render the children of the node first and then wrap that content with the appropriate Markdown syntax for the mark.
+渲染标记时，通常应先渲染节点的子节点，再用该标记对应的 Markdown 语法包裹渲染后的内容。
 
 ```typescript
 const Bold = Mark.create({
@@ -114,7 +114,7 @@ const Bold = Mark.create({
 })
 ```
 
-### Marks with Attributes
+### 带属性的标记
 
 ```typescript
 const Link = Mark.create({
@@ -145,9 +145,9 @@ const Link = Mark.create({
 })
 ```
 
-## Render Context
+## 渲染上下文
 
-The third parameter to render handlers is a context object that holds information about the current node's position in the document tree, like index, level, parent type and custom metadata.
+渲染处理器的第三个参数是一个上下文对象，包含当前节点在文档树中的位置信息，例如索引、层级、父节点类型和自定义元数据。
 
 ```typescript
 renderMarkdown: (node, helpers, context) => {
@@ -162,9 +162,9 @@ renderMarkdown: (node, helpers, context) => {
 }
 ```
 
-## Rendering with Indentation
+## 使用缩进进行渲染
 
-The `isIndenting` flag tells the MarkdownManager that a node increases the nesting level:
+`isIndenting` 标志会告知 MarkdownManager，该节点会增加嵌套层级：
 
 ```typescript
 const CustomNode = Node.create({
@@ -184,11 +184,11 @@ const CustomNode = Node.create({
 })
 ```
 
-This is important for proper indentation of nested lists and code blocks.
+这对于正确缩进嵌套列表和代码块非常重要。
 
-### Custom Indentation Logic
+### 自定义缩进逻辑
 
-You can implement custom indentation:
+你可以实现自定义缩进：
 
 ```typescript
 render: (node, helpers, context) => {
@@ -203,9 +203,9 @@ render: (node, helpers, context) => {
 }
 ```
 
-## Debug Serialization
+## 调试序列化
 
-Log the JSON structure before serialization:
+在序列化之前记录 JSON 结构：
 
 ```typescript
 const json = editor.getJSON()
@@ -215,7 +215,7 @@ const markdown = editor.markdown.serialize(json)
 console.log(markdown)
 ```
 
-### Debug Serialization in Isolation
+### 单独调试序列化
 
 ```typescript
 const node = {
@@ -233,11 +233,11 @@ const markdown = myExtension.options.markdown.render(node, renderHelpers, {})
 console.log(markdown)
 ```
 
-## Performance Considerations
+## 性能注意事项
 
-### Caching Serialization
+### 缓存序列化结果
 
-Cache Markdown serialization results:
+缓存 Markdown 序列化结果：
 
 ```typescript
 let markdownCache = null
@@ -260,9 +260,9 @@ function getMarkdown() {
 }
 ```
 
-## Examples
+## 示例
 
-### Custom Heading Renderer
+### 自定义标题渲染器
 
 ```typescript
 const CustomHeading = Node.create({
@@ -278,11 +278,11 @@ const CustomHeading = Node.create({
 })
 ```
 
-### YouTube Embed Renderer
+### YouTube 嵌入渲染器
 
-In this scenario we want to serialize a `youtubeEmbed` node back to a Markdown string that could be parsed by our custom YouTube tokenizer.
+在此示例中，我们要将 `youtubeEmbed` 节点序列化回 Markdown 字符串，使其能够由自定义 YouTube 分词器解析。
 
-For this example, the syntax will be `![youtube](videoId?start=60&width=800&height=450)`
+本示例使用的语法为 `![youtube](videoId?start=60&width=800&height=450)`。
 
 ```typescript
 const YouTubeEmbed = Node.create({
@@ -301,9 +301,9 @@ const YouTubeEmbed = Node.create({
 })
 ```
 
-### Rendering list items with indentation
+### 带缩进渲染列表项
 
-For this example we want to render a custom list node that contains list items, each list items syntax should look like `=> item`.
+在此示例中，我们要渲染一个包含列表项的自定义列表节点，每个列表项的语法应为 `=> item`。
 
 ```typescript
 const CustomList = Node.create({
@@ -357,7 +357,7 @@ const CustomListItem = Node.create({
 })
 ```
 
-Because this is very verbose, Tiptap exports a `renderNestedMarkdownContent()` helper from the `@tiptap/markdown` package that can be used to simplify this:
+由于上述实现较为冗长，Tiptap 在 `@tiptap/markdown` 包中导出了 `renderNestedMarkdownContent()` 辅助函数，可用于简化实现：
 
 ```typescript
 import { Node } from '@tiptap/core'
@@ -374,4 +374,4 @@ const CustomListItem = Node.create({
 })
 ```
 
-Read more on our [utilities](../api/utilities#rendernestedmarkdowncontent) page.
+更多信息请参阅[工具函数](../api/utilities#rendernestedmarkdowncontent)页面。
