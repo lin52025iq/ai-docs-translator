@@ -1,169 +1,169 @@
 ---
-title: Commands
+title: 命令
 tags:
   - type: addon
-    tooltip: Contact our team to add Compare to your plan
+    tooltip: 联系我们的团队，将 Compare 添加到您的套餐中
 meta:
-  title: Commands | Tiptap Compare Docs
-  description: Editor commands provided by the Tiptap Compare extension.
+  title: 命令 | Tiptap Compare 文档
+  description: Tiptap Compare 扩展提供的编辑器命令。
   category: Compare
 ---
 
-Add the `Compare` extension to the editor before using these commands.
+使用这些命令前，请先将 `Compare` 扩展添加到编辑器中。
 
 ## `compareDocuments`
 
-Compares two Tiptap JSON documents and displays the changes.
+比较两个 Tiptap JSON 文档并显示差异。
 
-This command is equivalent to calling [`compareDocuments`](/compare/api-reference/utilities#comparedocuments) and [`displayChangeset`](/compare/api-reference/commands#displaychangeset) immediately after.
+此命令等同于依次调用 [`compareDocuments`](/compare/api-reference/utilities#comparedocuments) 和 [`displayChangeset`](/compare/api-reference/commands#displaychangeset)。
 
-### Parameters (`CompareDocumentsOptions`)
+### 参数 (`CompareDocumentsOptions`)
 
-- `docA` (`JSONContent`): The original document.
-- `docB` (`JSONContent`): The changed document.
-- `diffOptions?` (`DiffOptions`): Options that control the comparison.
-- `displayOptions?` (`DisplayOptions`): Options that control the rendered diff.
+- `docA` (`JSONContent`)：原始文档。
+- `docB` (`JSONContent`)：已更改的文档。
+- `diffOptions?` (`DiffOptions`)：控制比较行为的选项。
+- `displayOptions?` (`DisplayOptions`)：控制渲染差异的选项。
 
-### Returns (`boolean`)
+### 返回值 (`boolean`)
 
-- `boolean`: `true` after comparing the documents and creating the diff suggestions.
+- `boolean`：比较文档并创建差异建议后返回 `true`。
 
 ## `compareFragments`
 
-Compares two Tiptap JSON fragments and displays the changes.
+比较两个 Tiptap JSON 片段并显示差异。
 
-This command is equivalent to calling [`compareFragments`](/compare/api-reference/utilities#comparefragments) and [`displayChangeset`](/compare/api-reference/commands#displaychangeset) immediately after.
+此命令等同于依次调用 [`compareFragments`](/compare/api-reference/utilities#comparefragments) 和 [`displayChangeset`](/compare/api-reference/commands#displaychangeset)。
 
-### Parameters (`CompareFragmentsOptions`)
+### 参数 (`CompareFragmentsOptions`)
 
-- `fragmentA` (`JSONContent[] | null`): The original fragment.
-- `fragmentB` (`JSONContent[] | null`): The changed fragment.
-- `diffOptions?` (`DiffOptions`): Options that control the comparison.
-- `displayOptions?` (`DisplayOptions`): Options that control the rendered diff.
+- `fragmentA` (`JSONContent[] | null`)：原始片段。
+- `fragmentB` (`JSONContent[] | null`)：已更改的片段。
+- `diffOptions?` (`DiffOptions`)：控制比较行为的选项。
+- `displayOptions?` (`DisplayOptions`)：控制渲染差异的选项。
 
-### Returns (`boolean`)
+### 返回值 (`boolean`)
 
-- `boolean`: `true` after comparing the fragments and creating the diff suggestions.
+- `boolean`：比较片段并创建差异建议后返回 `true`。
 
 ## `compareSteps`
 
-Compares a sequence of document steps and displays the changes.
+比较一系列文档步骤并显示差异。
 
-This command is equivalent to calling [`compareSteps`](/compare/api-reference/utilities#comparesteps) and [`displayChangeset`](/compare/api-reference/commands#displaychangeset) immediately after.
+此命令等同于依次调用 [`compareSteps`](/compare/api-reference/utilities#comparesteps) 和 [`displayChangeset`](/compare/api-reference/commands#displaychangeset)。
 
-### Parameters (`CompareStepsOptions`)
+### 参数 (`CompareStepsOptions`)
 
-- `stepSequence` (`StepSequence`): The sequence of steps to compare. Each step can have associated metadata, such as the user who completed that step.
-- `compareMetadata?` (`(a: ChangeMetadata, b: ChangeMetadata) => boolean`): Decides whether adjacent steps can be grouped.
-- `diffOptions?` (`DiffOptions`): Options that control the comparison.
-- `displayOptions?` (`DisplayOptions`): Options that control the rendered diff.
+- `stepSequence` (`StepSequence`)：要比较的步骤序列。每个步骤都可以包含关联元数据，例如完成该步骤的用户。
+- `compareMetadata?` (`(a: ChangeMetadata, b: ChangeMetadata) => boolean`)：决定相邻步骤是否可以分组。
+- `diffOptions?` (`DiffOptions`)：控制比较行为的选项。
+- `displayOptions?` (`DisplayOptions`)：控制渲染差异的选项。
 
-### Returns (`boolean`)
+### 返回值 (`boolean`)
 
-- `boolean`: `true` after comparing the steps and creating the diff suggestions.
+- `boolean`：比较步骤并创建差异建议后返回 `true`。
 
 ## `compareVersions`
 
-Compares two Yjs version updates and displays the changes.
+比较两个 Yjs 版本更新并显示差异。
 
-This command is equivalent to calling [`compareVersions`](/compare/api-reference/utilities#compareversions) and [`displayChangeset`](/compare/api-reference/commands#displaychangeset) immediately after.
+此命令等同于依次调用 [`compareVersions`](/compare/api-reference/utilities#compareversions) 和 [`displayChangeset`](/compare/api-reference/commands#displaychangeset)。
 
-### Parameters (`CompareVersionsOptions`)
+### 参数 (`CompareVersionsOptions`)
 
-- `versionA` (`Uint8Array`): The older Yjs v2 update.
-- `versionB` (`Uint8Array`): The newer Yjs v2 update.
-- `diffOptions?` (`DiffOptions`): Options that control the comparison.
-- `compareMetadata?` (`(a: ChangeMetadata, b: ChangeMetadata) => boolean`): Decides whether adjacent changes can be grouped.
-- `field?` (`string`): The Yjs document field. Default: `'default'`.
-- `permanentUserDataMapField?` (`string`): The shared user-data map field. Default: `'__tiptapcollab__users'`.
-- `enableDebugging?` (`boolean`): Enables extraction logging. Default: `false`.
-- `displayOptions?` (`DisplayOptions`): Options that control the rendered diff.
+- `versionA` (`Uint8Array`)：较早的 Yjs v2 更新。
+- `versionB` (`Uint8Array`)：较新的 Yjs v2 更新。
+- `diffOptions?` (`DiffOptions`)：控制比较行为的选项。
+- `compareMetadata?` (`(a: ChangeMetadata, b: ChangeMetadata) => boolean`)：决定相邻更改是否可以分组。
+- `field?` (`string`)：Yjs 文档字段。默认值：`'default'`。
+- `permanentUserDataMapField?` (`string`)：共享用户数据映射字段。默认值：`'__tiptapcollab__users'`。
+- `enableDebugging?` (`boolean`)：启用提取日志。默认值：`false`。
+- `displayOptions?` (`DisplayOptions`)：控制渲染差异的选项。
 
-### Returns (`boolean`)
+### 返回值 (`boolean`)
 
-- `boolean`: `true` after comparing the versions and creating the diff suggestions.
+- `boolean`：比较版本并创建差异建议后返回 `true`。
 
 ## `displayChangeset`
 
-Displays a changeset as review suggestions in the editor. The editor displays the current document (`Changeset.docB`), with each suggestion offering the corresponding content from the original document (`Changeset.docA`).
+在编辑器中将变更集显示为审阅建议。编辑器显示当前文档（`Changeset.docB`），每条建议都会提供原始文档（`Changeset.docA`）中对应的内容。
 
-### Parameters (`DisplayChangesetOptions`)
+### 参数 (`DisplayChangesetOptions`)
 
-- `changeset` (`Changeset`): The comparison result to display.
-- `displayOptions?` (`DisplayOptions`): Options that control the rendered diff.
+- `changeset` (`Changeset`)：要显示的比较结果。
+- `displayOptions?` (`DisplayOptions`)：控制渲染差异的选项。
 
-### Returns (`boolean`)
+### 返回值 (`boolean`)
 
-- `boolean`: `true` after loading the changeset and creating the diff suggestions.
+- `boolean`：加载变更集并创建差异建议后返回 `true`。
 
 ## `displayChangesetAsTrackedChanges`
 
-Loads a changeset as [Tracked Changes](/tracked-changes/getting-started/overview) suggestions. The editor displays the changed document (`Changeset.docB`) with additions, deletions, replacements, and formatting changes encoded as tracked changes. Any displayed diff suggestions are cleared.
+将变更集作为[修订](/tracked-changes/getting-started/overview)建议加载。编辑器显示已更改的文档（`Changeset.docB`），并将新增、删除、替换和格式更改编码为修订。任何已显示的差异建议都会被清除。
 
-### Parameters (`DisplayChangesetAsTrackedChangesOptions`)
+### 参数 (`DisplayChangesetAsTrackedChangesOptions`)
 
-- `changeset` (`Changeset`): The comparison result to display.
+- `changeset` (`Changeset`)：要显示的比较结果。
 
-### Returns (`boolean`)
+### 返回值 (`boolean`)
 
-- `boolean`: `true` after loading the document and creating the tracked changes.
+- `boolean`：加载文档并创建修订后返回 `true`。
 
 ## `setDiffSuggestions`
 
-Sets the list of displayed diff suggestions.
+设置要显示的差异建议列表。
 
-### Parameters
+### 参数
 
-- `diffSuggestions` (`DiffSuggestion[]`): The suggestions to display. Pass an empty array to clear them.
+- `diffSuggestions` (`DiffSuggestion[]`)：要显示的建议。传入空数组即可清除建议。
 
-### Returns (`boolean`)
+### 返回值 (`boolean`)
 
-- `boolean`: `true` after replacing the active suggestions.
+- `boolean`：替换当前活动建议后返回 `true`。
 
 ## `acceptDiffSuggestion`
 
-Accepts a diff suggestion. Stops displaying the suggestion and leaves the document as it is.
+接受一条差异建议。停止显示该建议，并保持文档当前状态不变。
 
-### Parameters
+### 参数
 
-- `diffSuggestionId` (`string`): The ID of the suggestion to accept.
+- `diffSuggestionId` (`string`)：要接受的建议 ID。
 
-### Returns (`boolean`)
+### 返回值 (`boolean`)
 
-- `boolean`: `true` when the suggestion was found and accepted; otherwise `false`.
+- `boolean`：找到并接受建议时返回 `true`；否则返回 `false`。
 
 ## `rejectDiffSuggestion`
 
-Rejects a diff suggestion. Applies the suggestion's replacement content to the document to restore the previous version.
+拒绝一条差异建议。将建议中的替换内容应用到文档，以恢复到之前的版本。
 
-### Parameters
+### 参数
 
-- `diffSuggestionId` (`string`): The ID of the suggestion to reject.
+- `diffSuggestionId` (`string`)：要拒绝的建议 ID。
 
-### Returns (`boolean`)
+### 返回值 (`boolean`)
 
-- `boolean`: `true` when the suggestion was found and rejected; otherwise `false`.
+- `boolean`：找到并拒绝建议时返回 `true`；否则返回 `false`。
 
 ## `acceptAllDiffSuggestions`
 
-Accepts all active suggestions, or a filtered set of them.
+接受所有活动建议，或接受经过筛选的一组建议。
 
-### Parameters (`AllDiffSuggestionsOptions`)
+### 参数 (`AllDiffSuggestionsOptions`)
 
-- `filter?` (`(diffSuggestion: DiffSuggestion) => boolean`): Selects which suggestions to accept. By default, all suggestions are accepted.
+- `filter?` (`(diffSuggestion: DiffSuggestion) => boolean`)：选择要接受的建议。默认接受所有建议。
 
-### Returns (`boolean`)
+### 返回值 (`boolean`)
 
-- `boolean`: `true` after processing the selected suggestions.
+- `boolean`：处理所选建议后返回 `true`。
 
 ## `rejectAllDiffSuggestions`
 
-Rejects all active suggestions, or a filtered set of them.
+拒绝所有活动建议，或拒绝经过筛选的一组建议。
 
-### Parameters (`AllDiffSuggestionsOptions`)
+### 参数 (`AllDiffSuggestionsOptions`)
 
-- `filter?` (`(diffSuggestion: DiffSuggestion) => boolean`): Selects which suggestions to reject. By default, all suggestions are rejected.
+- `filter?` (`(diffSuggestion: DiffSuggestion) => boolean`)：选择要拒绝的建议。默认拒绝所有建议。
 
-### Returns (`boolean`)
+### 返回值 (`boolean`)
 
-- `boolean`: `true` after processing the selected suggestions.
+- `boolean`：处理所选建议后返回 `true`。
