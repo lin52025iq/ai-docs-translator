@@ -1,12 +1,12 @@
 ---
-title: Copy to Clipboard Button
+title: 复制到剪贴板按钮
 meta:
-  title: Copy to Clipboard Button | Tiptap UI Components
-  description: Copy selected content or entire nodes from Tiptap editors to clipboard with formatting preservation, keyboard shortcuts, and accessibility support.
-  category: UI Components
+  title: 复制到剪贴板按钮 | Tiptap UI 组件
+  description: 将 Tiptap 编辑器中选定的内容或整个节点复制到剪贴板，并保留格式、支持键盘快捷键和无障碍功能。
+  category: UI 组件
 component:
-  name: Copy to Clipboard Button
-  description: A prebuilt React component that copies editor content to the clipboard.
+  name: 复制到剪贴板按钮
+  description: 一个预构建的 React 组件，可将编辑器内容复制到剪贴板。
   type: component
   isFree: false
   isCloud: false
@@ -19,28 +19,28 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A fully accessible copy to clipboard button for Tiptap editors. Copy selected content or entire nodes to the clipboard with optional formatting preservation and keyboard shortcut support.
+这是一款完全支持无障碍访问的 Tiptap 编辑器复制到剪贴板按钮。可将选定内容或整个节点复制到剪贴板，并可选择保留格式和启用键盘快捷键。
 
 <CodeDemo
   isScrollable
   src="https://template.tiptap.dev/preview/tiptap-ui/copy-to-clipboard-button"
 />
 
-## Installation
+## 安装
 
-Add the component via the Tiptap CLI:
+通过 Tiptap CLI 添加此组件：
 
 ```bash
 npx @tiptap/cli@latest add copy-to-clipboard-button
 ```
 
-## Components
+## 组件
 
 ### `<CopyToClipboardButton />`
 
-A prebuilt React component that copies editor content to the clipboard.
+一个预构建的 React 组件，可将编辑器内容复制到剪贴板。
 
-#### Usage
+#### 用法
 
 ```tsx
 export default function MyEditor() {
@@ -57,24 +57,24 @@ export default function MyEditor() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type             | Default     | Description                                      |
-| --------------------- | ---------------- | ----------- | ------------------------------------------------ |
-| `editor`              | `Editor \| null` | `undefined` | The Tiptap editor instance                       |
-| `text`                | `string`         | `undefined` | Optional text label for the button               |
-| `copyWithFormatting`  | `boolean`        | `true`      | Whether to preserve formatting when copying      |
-| `hideWhenUnavailable` | `boolean`        | `false`     | Hides the button when copying is not available   |
-| `onCopied`            | `() => void`     | `undefined` | Callback fired after a successful copy operation |
-| `showShortcut`        | `boolean`        | `false`     | Shows a keyboard shortcut badge (if available)   |
+| 名称                  | 类型             | 默认值      | 说明                                           |
+| --------------------- | ---------------- | ----------- | ---------------------------------------------- |
+| `editor`              | `Editor \| null` | `undefined` | Tiptap 编辑器实例                              |
+| `text`                | `string`         | `undefined` | 按钮的可选文本标签                             |
+| `copyWithFormatting`  | `boolean`        | `true`      | 复制时是否保留格式                             |
+| `hideWhenUnavailable` | `boolean`        | `false`     | 无法复制时隐藏按钮                             |
+| `onCopied`            | `() => void`     | `undefined` | 成功复制后触发的回调                           |
+| `showShortcut`        | `boolean`        | `false`     | 显示键盘快捷键徽标（如果有）                   |
 
 ## Hooks
 
 ### `useCopyToClipboard()`
 
-A custom hook to build your own copy to clipboard button with full control over rendering and behavior.
+自定义 hook，可完全控制渲染和行为，以便构建自己的复制到剪贴板按钮。
 
-#### Usage
+#### 用法
 
 ```tsx
 function MyCopyToClipboardButton() {
@@ -98,31 +98,31 @@ function MyCopyToClipboardButton() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type             | Default     | Description                                     |
-| --------------------- | ---------------- | ----------- | ----------------------------------------------- |
-| `editor`              | `Editor \| null` | `undefined` | The Tiptap editor instance                      |
-| `copyWithFormatting`  | `boolean`        | `true`      | Whether to preserve formatting when copying     |
-| `hideWhenUnavailable` | `boolean`        | `false`     | Hides the button if copying cannot be performed |
-| `onCopied`            | `() => void`     | `undefined` | Callback fired after successful copy operation  |
+| 名称                  | 类型             | 默认值      | 说明                                           |
+| --------------------- | ---------------- | ----------- | ---------------------------------------------- |
+| `editor`              | `Editor \| null` | `undefined` | Tiptap 编辑器实例                              |
+| `copyWithFormatting`  | `boolean`        | `true`      | 复制时是否保留格式                             |
+| `hideWhenUnavailable` | `boolean`        | `false`     | 无法执行复制时隐藏按钮                         |
+| `onCopied`            | `() => void`     | `undefined` | 成功复制后触发的回调                           |
 
-#### Return Values
+#### 返回值
 
-| Name                    | Type                     | Description                           |
-| ----------------------- | ------------------------ | ------------------------------------- |
-| `isVisible`             | `boolean`                | Whether the button should be rendered |
-| `canCopyToClipboard`    | `boolean`                | If content can be copied to clipboard |
-| `handleCopyToClipboard` | `() => Promise<boolean>` | Function to copy content to clipboard |
-| `label`                 | `string`                 | Accessible label text for the button  |
-| `shortcutKeys`          | `string`                 | Keyboard shortcut (Cmd/Ctrl + C)      |
-| `Icon`                  | `React.FC`               | Icon component for the copy button    |
+| 名称                    | 类型                     | 说明                                    |
+| ----------------------- | ------------------------ | --------------------------------------- |
+| `isVisible`             | `boolean`                | 是否应渲染按钮                          |
+| `canCopyToClipboard`    | `boolean`                | 是否可以将内容复制到剪贴板              |
+| `handleCopyToClipboard` | `() => Promise<boolean>` | 将内容复制到剪贴板的函数                |
+| `label`                 | `string`                 | 按钮的无障碍标签文本                    |
+| `shortcutKeys`          | `string`                 | 键盘快捷键（Cmd/Ctrl + C）               |
+| `Icon`                  | `React.FC`               | 复制按钮的图标组件                      |
 
-## Utilities
+## 工具函数
 
 ### `canCopyToClipboard(editor)`
 
-Checks if content can be copied in the current editor state.
+检查当前编辑器状态下是否可以复制内容。
 
 ```tsx
 import { canCopyToClipboard } from '@/components/tiptap-ui/copy-to-clipboard-button'
@@ -132,7 +132,7 @@ const canCopy = canCopyToClipboard(editor)
 
 ### `copyToClipboard(editor, copyWithFormatting?)`
 
-Programmatically copies content to the clipboard.
+以编程方式将内容复制到剪贴板。
 
 ```tsx
 import { copyToClipboard } from '@/components/tiptap-ui/copy-to-clipboard-button'
@@ -143,7 +143,7 @@ const plainSuccess = await copyToClipboard(editor, false) // Plain text only
 
 ### `writeToClipboard(textContent, htmlContent?)`
 
-Low-level utility to write content directly to the clipboard.
+用于将内容直接写入剪贴板的底层工具函数。
 
 ```tsx
 import { writeToClipboard } from '@/components/tiptap-ui/copy-to-clipboard-button'
@@ -154,7 +154,7 @@ await writeToClipboard('Plain text', '<p>HTML content</p>')
 
 ### `extractContent(editor, copyWithFormatting?)`
 
-Extracts content from the current selection or node.
+从当前选区或节点中提取内容。
 
 ```tsx
 import { extractContent } from '@/components/tiptap-ui/copy-to-clipboard-button'
@@ -164,25 +164,25 @@ console.log('Text:', textContent)
 console.log('HTML:', htmlContent)
 ```
 
-## Keyboard Shortcuts
+## 键盘快捷键
 
-The copy to clipboard button supports the following keyboard shortcut:
+复制到剪贴板按钮支持以下键盘快捷键：
 
-- **Cmd/Ctrl + C**: Copy selected content to clipboard
+- **Cmd/Ctrl + C**：将选定内容复制到剪贴板
 
-The shortcut is automatically registered when using either the `<CopyToClipboardButton />` component or the `useCopyToClipboard()` hook. Note that this overrides the browser's default copy behavior when the editor is focused.
+使用 `<CopyToClipboardButton />` 组件或 `useCopyToClipboard()` hook 时，都会自动注册此快捷键。请注意，当编辑器处于焦点状态时，此快捷键会覆盖浏览器默认的复制行为。
 
-## Requirements
+## 要求
 
-### Dependencies
+### 依赖项
 
-- `@tiptap/react` - Core Tiptap React integration
-- `react-hotkeys-hook` - Keyboard shortcut management
+- `@tiptap/react` - Tiptap React 核心集成
+- `react-hotkeys-hook` - 键盘快捷键管理
 
-### Referenced Components
+### 引用的组件
 
-- `use-tiptap-editor` (hook)
-- `button` (primitive)
-- `badge` (primitive)
-- `tiptap-utils` (lib)
-- `sun-icon` (icon)
+- `use-tiptap-editor`（hook）
+- `button`（基础组件）
+- `badge`（基础组件）
+- `tiptap-utils`（库）
+- `sun-icon`（图标）
