@@ -1,19 +1,19 @@
 ---
-title: Types
+title: 类型
 tags:
   - type: addon
-    tooltip: Contact our team to add Compare to your plan
+    tooltip: 联系我们的团队，将 Compare 添加到您的套餐中
 meta:
-  title: Types | Tiptap Compare Docs
-  description: TypeScript type definitions for the Tiptap Compare package.
+  title: 类型 | Tiptap Compare 文档
+  description: Tiptap Compare 软件包的 TypeScript 类型定义。
   category: Compare
 ---
 
-The Compare package exports TypeScript types for working with changesets, changes, diff suggestions, document history, and serialized schemas. Parameter interfaces for utilities and commands are documented alongside their respective APIs.
+Compare 软件包导出用于处理变更集、变更、差异建议、文档历史记录和序列化模式的 TypeScript 类型。实用工具和命令的参数接口与各自的 API 一并说明。
 
 ## `TrackedChangeMetadata`
 
-Metadata stored on a tracked change created from a changeset.
+存储在由变更集创建的跟踪变更上的元数据。
 
 ```ts
 interface TrackedChangeMetadata extends ChangeMetadata {
@@ -27,11 +27,11 @@ interface TrackedChangeMetadata extends ChangeMetadata {
 }
 ```
 
-`TrackedChangeMarkMutation` describes a formatting change with `operation` (`'added' | 'removed'`), `markName`, and `markAttrs`.
+`TrackedChangeMarkMutation` 描述格式变更，其中包含 `operation`（`'added' | 'removed'`）、`markName` 和 `markAttrs`。
 
 ## `TrackedChangeData`
 
-Pairs the metadata for an encoded tracked change with its range in the generated document.
+将已编码跟踪变更的元数据与其在生成文档中的范围关联起来。
 
 ```ts
 interface TrackedChangeData {
@@ -42,7 +42,7 @@ interface TrackedChangeData {
 
 ## `TrackedChangesDocumentFactoryResult`
 
-The result returned by `TrackedChangesDocumentFactory.fromChangeset`.
+`TrackedChangesDocumentFactory.fromChangeset` 返回的结果。
 
 ```ts
 interface TrackedChangesDocumentFactoryResult {
@@ -53,7 +53,7 @@ interface TrackedChangesDocumentFactoryResult {
 
 ## `JSONFragment`
 
-A JSON representation of a ProseMirror fragment.
+ProseMirror 片段的 JSON 表示。
 
 ```ts
 type JSONFragment = JSONContent[] | null
@@ -61,7 +61,7 @@ type JSONFragment = JSONContent[] | null
 
 ## `ChangesetJSON`
 
-JSON-serializable representation of a `Changeset`.
+`Changeset` 的可序列化为 JSON 的表示。
 
 ```ts
 interface ChangesetJSON {
@@ -73,44 +73,44 @@ interface ChangesetJSON {
 
 ## `ChangeMetadata`
 
-Arbitrary metadata attached to a change or document step.
+附加到变更或文档步骤的任意元数据。
 
 ```ts
 /**
- * Arbitrary non-null metadata attached to a step.
+ * 附加到步骤的任意非空元数据。
  *
- * The metadata is treated as a shallow object when comparing adjacent steps.
+ * 比较相邻步骤时，元数据会被视为浅层对象。
  */
 type ChangeMetadata = Record<string, unknown>
 ```
 
 ## `Change`
 
-Represents one difference between two documents.
+表示两个文档之间的一处差异。
 
 ```ts
 /**
- * Represents a single change between two documents.
+ * 表示两个文档之间的一处变更。
  */
 interface Change {
-  /** The range in the original document (`docA`) that changed. */
+  /** 原始文档 (`docA`) 中发生变更的范围。 */
   rangeA: Range
-  /** The matching range in the changed document (`docB`). */
+  /** 已变更文档 (`docB`) 中与之对应的范围。 */
   rangeB: Range
-  /** The content scope. Default: `'inline'`. */
+  /** 内容范围。默认值：`'inline'`。 */
   scope?: ChangeScope
-  /** Whether multiple inline changes were grouped into one block-level change. */
+  /** 是否将多个行内变更合并为一个块级变更。 */
   isInlineGroup?: boolean
-  /** Metadata associated with the step that produced this change. */
+  /** 与产生此变更的步骤相关联的元数据。 */
   metadata?: ChangeMetadata
-  /** Later changes contained inside this change. */
+  /** 包含在此变更中的后续变更。 */
   nestedChanges?: NestedChange[]
 }
 ```
 
 ## `ChangeScope`
 
-Whether a change covers inline or block content.
+变更覆盖行内内容还是块级内容。
 
 ```ts
 type ChangeScope = 'inline' | 'block'
@@ -118,7 +118,7 @@ type ChangeScope = 'inline' | 'block'
 
 ## `NestedChange`
 
-Later change contained in a parent `Change`. Its range is an absolute position in the final document (`docB`).
+包含在父级 `Change` 中的后续变更。其范围是最终文档 (`docB`) 中的绝对位置。
 
 ```ts
 interface NestedChange {
@@ -130,59 +130,59 @@ interface NestedChange {
 
 ## `DiffOptions`
 
-Controls how document and fragment comparisons are calculated.
+控制文档和片段比较的计算方式。
 
 ```ts
-/** Options that control filtering and diff behavior. */
+/** 控制筛选和差异计算行为的选项。 */
 type DiffOptions = {
-  /** Simplify nearby changes in inline mode. Default: `false`. */
+  /** 在行内模式下简化相邻变更。默认值：`false`。 */
   simplifyChanges?: boolean
-  /** Attributes to remove before comparison. Default: `['id', 'data-thread-id', '_hash']`. */
+  /** 比较前要移除的属性。默认值：`['id', 'data-thread-id', '_hash']`。 */
   ignoreAttributes?: string[]
-  /** Marks to remove before comparison. Default: `['inlineThread']`. */
+  /** 比较前要移除的标记。默认值：`['inlineThread']`。 */
   ignoreMarks?: string[]
-  /** Node types to unwrap or remove before comparison. */
+  /** 比较前要展开或移除的节点类型。 */
   ignoreNodes?: string[]
-  /** Minimum unchanged range that separates changes. Default: `5`. */
+  /** 分隔变更的最小未变更范围。默认值：`5`。 */
   changeMergeDistance?: number | null
-  /** Threshold for grouping inline changes into a block-level change in smart mode. Default: `2`. */
+  /** 在智能模式下将行内变更归为块级变更的阈值。默认值：`2`。 */
   groupInlineChanges?: number
-  /** Comparison mode. Default: `'smart'`. */
+  /** 比较模式。默认值：`'smart'`。 */
   mode?: 'inline' | 'block' | 'smart'
-  /** Node types whose full inline changes should become block changes. */
+  /** 应将其完整行内变更转换为块级变更的节点类型。 */
   expandBlockChanges?: string[]
 }
 ```
 
 ## `DiffSuggestion`
 
-Represents a proposed replacement displayed in the editor.
+表示在编辑器中显示的替换建议。
 
 ```ts
-/** A proposed change to a range of editor content. */
+/** 对一段编辑器内容提出的变更建议。 */
 interface DiffSuggestion {
-  /** A unique identifier for the suggestion. */
+  /** 建议的唯一标识符。 */
   id: string
-  /** The range of editor content affected by the suggestion. */
+  /** 建议影响的编辑器内容范围。 */
   range: Range
-  /** The replacement content. */
+  /** 替换内容。 */
   content: Slice
-  /** Optional custom metadata. */
+  /** 可选的自定义元数据。 */
   metadata?: Record<string, any>
-  /** Options for rendering the suggestion. */
+  /** 建议的渲染选项。 */
   displayOptions?: DisplayOptions
-  /** Whether the suggestion groups multiple inline changes. */
+  /** 此建议是否将多个行内变更归为一组。 */
   isInlineGroup?: boolean
-  /** A range that can be mapped through document transactions. */
+  /** 可通过文档事务映射的范围。 */
   mappableRange?: MappableRange
-  /** Informational changes displayed inside this suggestion. */
+  /** 在此建议中显示的信息性变更。 */
   nestedChanges?: DiffSuggestionNestedChange[]
 }
 ```
 
 ## `DiffSuggestionNestedChange`
 
-A nested change contained inside a diff suggestion.
+包含在差异建议中的嵌套变更。
 
 ```ts
 interface DiffSuggestionNestedChange extends NestedChange {
@@ -192,31 +192,31 @@ interface DiffSuggestionNestedChange extends NestedChange {
 
 ## `DisplayOptions`
 
-Controls the default rendering of a diff suggestion.
+控制差异建议的默认渲染方式。
 
 ```ts
-/** Options for how to display a diff suggestion in the editor. */
+/** 在编辑器中显示差异建议的选项。 */
 interface DisplayOptions {
-  /** Whether to show replacement content. Default: `true`. */
+  /** 是否显示替换内容。默认值：`true`。 */
   showReplacement?: boolean
-  /** Whether to show sub-changes in inline groups. Default: `true`. */
+  /** 是否显示行内分组中的子变更。默认值：`true`。 */
   showSubChanges?: boolean
-  /** Extra HTML attributes for the original-content decoration. */
+  /** 原始内容装饰的额外 HTML 属性。 */
   attributes?: Record<string, any>
-  /** Extra HTML attributes for the replacement decoration. */
+  /** 替换内容装饰的额外 HTML 属性。 */
   replacementAttributes?: Record<string, any>
-  /** Extra HTML attributes for inline sub-change decorations. */
+  /** 行内子变更装饰的额外 HTML 属性。 */
   subChangeAttributes?: Record<string, any>
-  /** Extra HTML attributes for sub-changes inside replacement content. */
+  /** 替换内容中子变更的额外 HTML 属性。 */
   replacementSubChangeAttributes?: Record<string, any>
-  /** Returns HTML attributes for an explicit nested change. */
+  /** 返回显式嵌套变更的 HTML 属性。 */
   getNestedChangeAttributes?: (options: NestedChangeAttributesOptions) => Record<string, string>
-  /** A function that renders the suggestion as ProseMirror decorations. */
+  /** 将建议渲染为 ProseMirror 装饰的函数。 */
   renderDecorations?: RenderDecorations
 }
 ```
 
-`getNestedChangeAttributes` receives the nested change, its actionable parent suggestion, and whether that parent is selected. If it returns a `class`, Compare appends it to the default nested-change classes.
+`getNestedChangeAttributes` 会接收嵌套变更、其可执行操作的父级建议，以及该父级建议是否处于选中状态。如果返回值中包含 `class`，Compare 会将其追加到默认的嵌套变更类名中。
 
 ```ts
 interface NestedChangeAttributesOptions {
@@ -226,81 +226,81 @@ interface NestedChangeAttributesOptions {
 }
 ```
 
-## Custom decoration rendering
+## 自定义装饰渲染
 
-Use these types with `DisplayOptions.renderDecorations` to replace or adjust the default rendering.
+使用这些类型和 `DisplayOptions.renderDecorations`，以替换或调整默认渲染方式。
 
 ```ts
-/** Options passed to `defaultRenderDecorations`. */
+/** 传递给 `defaultRenderDecorations` 的选项。 */
 interface DefaultRenderDecorationsOptions {
-  /** Whether to render the main content and sub-change decorations. Default: `true`. */
+  /** 是否渲染主要内容和子变更装饰。默认值：`true`。 */
   showMainDecorations?: boolean
-  /** Whether to render replacement content. Default: `true`. */
+  /** 是否渲染替换内容。默认值：`true`。 */
   showReplacement?: boolean
-  /** Whether to render sub-changes in inline groups. Default: `true`. */
+  /** 是否渲染行内分组中的子变更。默认值：`true`。 */
   showSubChanges?: boolean
-  /** Extra HTML attributes for the original-content decoration. */
+  /** 原始内容装饰的额外 HTML 属性。 */
   attributes?: Record<string, any>
-  /** Extra HTML attributes for the replacement decoration. */
+  /** 替换内容装饰的额外 HTML 属性。 */
   replacementAttributes?: Record<string, any>
-  /** Extra HTML attributes for inline sub-change decorations. */
+  /** 行内子变更装饰的额外 HTML 属性。 */
   subChangeAttributes?: Record<string, any>
-  /** Extra HTML attributes for sub-changes inside replacement content. */
+  /** 替换内容中子变更的额外 HTML 属性。 */
   replacementSubChangeAttributes?: Record<string, any>
 }
 
-/** Values passed to a custom diff-suggestion renderer. */
+/** 传递给自定义差异建议渲染器的值。 */
 interface RenderDecorationsOptions {
-  /** The range occupied by the suggestion. */
+  /** 建议占据的范围。 */
   range: Range
-  /** Whether the suggestion is selected. */
+  /** 建议是否处于选中状态。 */
   isSelected: boolean
-  /** The suggestion being rendered. */
+  /** 正在渲染的建议。 */
   suggestion: DiffSuggestion
-  /** Renders the default decorations, optionally with overridden options. */
+  /** 使用可选的覆盖选项渲染默认装饰。 */
   defaultRenderDecorations: (options?: DefaultRenderDecorationsOptions) => Decoration[]
 }
 
-/** A function that renders a suggestion as ProseMirror decorations. */
+/** 将建议渲染为 ProseMirror 装饰的函数。 */
 type RenderDecorations = (options: RenderDecorationsOptions) => Decoration[]
 ```
 
 ## `Step`
 
-Represents one transition in a `StepSequence`.
+表示 `StepSequence` 中的一次状态转换。
 
 ```ts
-/** One document transition in a step sequence. */
+/** 步骤序列中的一次文档状态转换。 */
 interface Step {
-  /** Document state before the step was applied. */
+  /** 应用步骤前的文档状态。 */
   before: Node
-  /** Document state after the step was applied. */
+  /** 应用步骤后的文档状态。 */
   after: Node
-  /** Metadata associated with the step. */
+  /** 与步骤相关联的元数据。 */
   metadata: ChangeMetadata
-  /** Cached changes, or `null` when they need to be computed. */
+  /** 缓存的变更；如果需要计算，则为 `null`。 */
   changes: Change[] | null
-  /** Cached affected area, or `null` when unavailable. */
+  /** 缓存的受影响区域；如果不可用，则为 `null`。 */
   changedArea: Change | null
 }
 ```
 
 ## `StepSequenceJSON`
 
-JSON-serializable state for a `StepSequence`.
+`StepSequence` 的可序列化为 JSON 的状态。
 
 ```ts
-/** JSON-serializable state for a step sequence. */
+/** 步骤序列的可序列化为 JSON 的状态。 */
 type StepSequenceJSON = {
-  /** Document state before any steps were applied. */
+  /** 应用任何步骤之前的文档状态。 */
   before: ReturnType<Node['toJSON']>
-  /** Document states after each recorded step. */
+  /** 每个已记录步骤之后的文档状态。 */
   docs: Array<ReturnType<Node['toJSON']>>
-  /** Metadata for each recorded step. */
+  /** 每个已记录步骤的元数据。 */
   metadata: ChangeMetadata[]
-  /** Cached changes for each recorded step. */
+  /** 每个已记录步骤的缓存变更。 */
   changes: Array<Change[] | null>
-  /** Cached affected areas for each recorded step. */
+  /** 每个已记录步骤的缓存受影响区域。 */
   changedAreas: Array<Change | null>
 }
 ```
