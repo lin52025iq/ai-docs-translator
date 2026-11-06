@@ -1,50 +1,50 @@
 ---
-title: Link extension
+title: 链接扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-link?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-link
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-link.svg
     url: https://npmcharts.com/compare/@tiptap/extension-link?minimal=true
-    label: Downloads
+    label: 下载量
 extension:
   name: Link
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-link
-  description: 'Link it, link it good, link it real good (and don’t forget the href).'
+  description: '链接，链接，链接得真棒（别忘了 href）。'
   type: mark
   icon: Link
 meta:
-  title: Link extension | Tiptap Editor Docs
-  description: Learn how to use the Link extension in Tiptap to add support for <a> tags. Discover more in our docs!
-  category: Editor
+  title: 链接扩展 | Tiptap 编辑器文档
+  description: 了解如何在 Tiptap 中使用链接扩展来支持 <a> 标签。更多内容请参阅我们的文档！
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-The Link extension adds support for `<a>` tags to the editor. The extension is headless too, there is no actual UI to add, modify or delete links. The usage example below uses the native JavaScript prompt to show you how that could work.
+链接扩展为编辑器添加了对 `<a>` 标签的支持。该扩展也是无头的，也就是说没有实际的 UI 用于添加、修改或删除链接。下面的用法示例使用原生 JavaScript prompt，演示了如何实现这一功能。
 
-In a real world application, you would probably add a more sophisticated user interface.
+在实际应用中，你可能会添加更完善的用户界面。
 
-Pasted URLs will be transformed to links automatically.
+粘贴的 URL 会自动转换为链接。
 
 <CodeDemo path="/Marks/Link" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-link
 ```
 
-## Settings
+## 设置
 
 ### protocols
 
-Additional custom protocols you would like to be recognized as links.
+你希望识别为链接的其他自定义协议。
 
-Default: `[]`
+默认值：`[]`
 
 ```js
 Link.configure({
@@ -52,7 +52,7 @@ Link.configure({
 })
 ```
 
-By default, [linkify](https://linkify.js.org/docs/) adds `//` to the end of a protocol however this behavior can be changed by passing `optionalSlashes` option
+默认情况下，[linkify](https://linkify.js.org/docs/) 会在协议后添加 `//`，但你可以通过传入 `optionalSlashes` 选项来更改此行为。
 
 ```js
 Link.configure({
@@ -67,9 +67,9 @@ Link.configure({
 
 ### autolink
 
-If enabled, it adds links as you type.
+启用后，输入时会自动添加链接。
 
-Default: `true`
+默认值：`true`
 
 ```js
 Link.configure({
@@ -79,9 +79,9 @@ Link.configure({
 
 ### openOnClick
 
-If enabled, links will be opened on click.
+启用后，点击链接时会打开链接。
 
-Default: `true`
+默认值：`true`
 
 ```js
 Link.configure({
@@ -91,9 +91,9 @@ Link.configure({
 
 ### enableClickSelection
 
-If enabled, clicking on a link will select the link.
+启用后，点击链接时会选中该链接。
 
-Default: `false`
+默认值：`false`
 
 ```js
 Link.configure({
@@ -103,9 +103,9 @@ Link.configure({
 
 ### linkOnPaste
 
-Adds a link to the current selection if the pasted content only contains an url.
+如果粘贴的内容仅包含 URL，则为当前选区添加链接。
 
-Default: `true`
+默认值：`true`
 
 ```js
 Link.configure({
@@ -115,11 +115,11 @@ Link.configure({
 
 ### defaultProtocol
 
-The default protocol used by `linkOnPaste` and `autolink` when no protocol is defined.
+未指定协议时，`linkOnPaste` 和 `autolink` 使用的默认协议。
 
-By default, the href generated for example.com is http://example.com and this option allows that protocol to be customized.
+例如，默认情况下，example.com 生成的 href 为 http://example.com。此选项可用于自定义该协议。
 
-Default: `http`
+默认值：`http`
 
 ```js
 Link.configure({
@@ -129,7 +129,7 @@ Link.configure({
 
 ### HTMLAttributes
 
-Custom HTML attributes that should be added to the rendered HTML tag.
+要添加到渲染后 HTML 标签的自定义 HTML 属性。
 
 ```js
 Link.configure({
@@ -139,19 +139,19 @@ Link.configure({
 })
 ```
 
-#### Removing and overriding existing html attributes
+#### 移除和覆盖现有 HTML 属性
 
-You can add `rel: null` to HTMLAttributes to remove the default `rel="noopener noreferrer nofollow"`. You can also override the default by using `rel: "your-value"`.
+你可以在 HTMLAttributes 中设置 `rel: null`，以移除默认的 `rel="noopener noreferrer nofollow"`。也可以通过设置 `rel: "your-value"` 来覆盖默认值。
 
-This can also be used to change the `target` from the default value of `_blank`.
+此选项也可用于更改 `target` 的默认值 `_blank`。
 
 ```js
 Link.configure({
   HTMLAttributes: {
-    // Change rel to different value
-    // Allow search engines to follow links(remove nofollow)
+    // 将 rel 更改为其他值
+    // 允许搜索引擎跟踪链接（移除 nofollow）
     rel: 'noopener noreferrer',
-    // Remove target entirely so links open in current tab
+    // 完全移除 target，使链接在当前标签页中打开
     target: null,
   },
 })
@@ -159,55 +159,55 @@ Link.configure({
 
 ### isAllowedUri
 
-A function that allows customization of link validation, modifying the default verification logic. This function accepts the URL and a context object with additional properties.
+用于自定义链接验证并修改默认验证逻辑的函数。此函数接收 URL 和一个包含其他属性的上下文对象。
 
-**Parameters:**
+**参数：**
 
-- `url`: The URL to validate.
-- `ctx`: An object containing:
-  - `defaultValidate`: A function that performs the default URL validation.
-  - `protocols`: An array of allowed protocols for the URL, e.g., `["http", "https"]`.
-  - `defaultProtocol`: The default protocol (e.g., `'http'`).
+- `url`：要验证的 URL。
+- `ctx`：包含以下内容的对象：
+  - `defaultValidate`：执行默认 URL 验证的函数。
+  - `protocols`：URL 允许使用的协议数组，例如 `["http", "https"]`。
+  - `defaultProtocol`：默认协议（例如 `'http'`）。
 
-**Returns:** `boolean` - `true` if the URL is valid, `false` otherwise.
+**返回值：** `boolean` - 如果 URL 有效则为 `true`，否则为 `false`。
 
-This function enables you to enforce rules on allowed protocols or domains when autolinking URLs.
+此函数可用于在 URL 自动链接时，强制执行允许的协议或域名规则。
 
 ```js
-// Validate URLs to only accept non-relative URLs
+// 验证 URL，仅接受非相对 URL
 Link.configure({
   isAllowedUri: (url, ctx) => ctx.defaultValidate(url) && !url.startsWith('./'),
 })
 ```
 
-### validate (deprecated)
+### validate（已弃用）
 
-This function has been deprecated in favor of the more descriptive `shouldAutoLink` function. If provided, the `validate` function will replace the `shouldAutoLink` function.
+此函数已弃用，建议改用名称更明确的 `shouldAutoLink` 函数。如果提供了 `validate` 函数，它将替代 `shouldAutoLink` 函数。
 
 ### shouldAutoLink
 
-Defines whether a valid link should be automatically linked within the editor content.
+定义编辑器内容中的有效链接是否应自动转换为链接。
 
-**Parameters:**
+**参数：**
 
-- `url`: The URL that has already passed validation.
+- `url`：已通过验证的 URL。
 
-**Returns:** `boolean` - `true` if the link should be auto-linked, `false` if it should not.
+**返回值：** `boolean` - 如果应自动链接则为 `true`，否则为 `false`。
 
-Use this function to control autolinking behavior based on the URL.
+使用此函数可根据 URL 控制自动链接行为。
 
 ```js
-// Example: Auto-link only if the URL is secure
+// 示例：仅在 URL 使用安全协议时自动链接
 Link.configure({
   shouldAutoLink: (url) => url.startsWith('https://'),
 })
 ```
 
-## Commands
+## 命令
 
 ### setLink()
 
-Links the selected text.
+为选中的文本添加链接。
 
 ```js
 editor.commands.setLink({ href: 'https://example.com' })
@@ -216,7 +216,7 @@ editor.commands.setLink({ href: 'https://example.com', target: '_blank' })
 
 ### toggleLink()
 
-Adds or removes a link from the selected text.
+为选中的文本添加或移除链接。
 
 ```js
 editor.commands.toggleLink({ href: 'https://example.com' })
@@ -225,27 +225,26 @@ editor.commands.toggleLink({ href: 'https://example.com', target: '_blank' })
 
 ### unsetLink()
 
-Removes a link.
+移除链接。
 
 ```js
 editor.commands.unsetLink()
 ```
 
-## Keyboard shortcuts
+## 键盘快捷键
 
-<Callout title="No keyboard shortcut" variant="default">
-  This extension doesn’t bind a specific keyboard shortcut. You would probably open your custom UI
-  on `Mod-k` though.
+<Callout title="没有键盘快捷键" variant="default">
+  此扩展未绑定特定的键盘快捷键。不过，你可能会希望在按下 `Mod-k` 时打开自定义 UI。
 </Callout>
 
-## Get the current value
+## 获取当前值
 
-Did you know that you can use [`getAttributes`](/editor/api/editor#getattributes) to find out which attributes, for example which href, is currently set? Don’t confuse it with a [command](/editor/api/commands) (which changes the state), it’s just a method. Here is how that could look like:
+你知道可以使用 [`getAttributes`](/editor/api/editor#getattributes) 来查看当前设置的属性（例如 href）吗？不要把它和 [命令](/editor/api/commands)（会更改状态）混淆；它只是一个方法。用法如下：
 
 ```js
 this.editor.getAttributes('link').href
 ```
 
-## Source code
+## 源代码
 
 [packages/extension-link/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-link/)
