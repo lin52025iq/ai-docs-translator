@@ -2,10 +2,10 @@
     "compilerOptions": {
         "strict": true,
         "target": "ES2023",
-        "module": "ESNext",
-        "lib": ["ES2023", "DOM", "DOM.Iterable"],
-        "types": ["vite/client", "node"],
-        "moduleResolution": "Bundler",
+        "module": "NodeNext",
+        "lib": ["ES2023"],
+        "types": ["node"],
+        "moduleResolution": "NodeNext",
         "allowImportingTsExtensions": true,
         "verbatimModuleSyntax": true,
         "moduleDetection": "force",
@@ -16,5 +16,5 @@
         "erasableSyntaxOnly": true,
         "noFallthroughCasesInSwitch": true
     },
-    "include": ["src", "vite.config.ts"]
+    "include": ["src"]
 }

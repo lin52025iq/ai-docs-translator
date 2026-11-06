@@ -1,0 +1,42 @@
+schemaVersion: 1
+
+project:
+    id: awesome-test
+    name: Awesome Test 英文转中文
+
+source:
+    repository: lin52025iq/awesome-test
+    ref: master
+    branch: awesome-test-source
+    language: en
+
+targets:
+    - locale: zh-CN
+      branch: awesome-test-zh-cn
+      frameworkLanguage: zh-CN
+      prompt: prompts/zh-CN.md
+
+translation:
+    model: gpt-6-luna
+    scope:
+        include:
+            - README.md
+            - compaction.mdx
+            - button-group.ts
+            - demo.json
+            - curl.sh
+        exclude:
+            - check.mjs
+    glossary: glossary.yml
+    prompts:
+        frameworkLanguage: zh-CN
+        frameworks: {}
+        common: prompts/common.md
+    retranslateOnContextChange: false
+    review:
+        enabled: true
+        model: gpt-6-luna
+        minimumProbability: 0.95
+        draftBranch: awesome-test-draft
+        pushDraft: false
+        remote: origin

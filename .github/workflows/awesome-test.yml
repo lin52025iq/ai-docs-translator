@@ -1,0 +1,114 @@
+name: Awesome Test 文档翻译
+
+on:
+    workflow_dispatch: {}
+
+permissions:
+    contents: write
+
+concurrency:
+    group: translation-awesome-test
+    cancel-in-progress: false
+
+jobs:
+    translate:
+        runs-on: ubuntu-latest
+        env:
+            PROJECT_CONFIG: projects/awesome-test/config.yml
+        steps:
+            - name: 检出翻译管理仓库
+              uses: actions/checkout@v7
+              with:
+                  ref: ${{ github.event.repository.default_branch }}
+                  fetch-depth: 0
+
+            - name: 配置 Node.js
+              uses: actions/setup-node@v7
+              with:
+                  node-version: '24'
+                  package-manager-cache: false
+
+            - name: 配置 pnpm
+              uses: pnpm/action-setup@v6
+
+            - name: 安装管理仓库依赖
+              run: pnpm install --frozen-lockfile
+
+            - name: 校验项目配置
+              run: pnpm translator validate --project "$PROJECT_CONFIG"
+
+            - name: 读取上游仓库配置
+              id: source
+              run: |
+                  node --input-type=module <<'NODE'
+                  import { appendFile } from 'node:fs/promises'
+                  import { loadProject } from './src/project/config.ts'
+                  const { config } = await loadProject(process.env.PROJECT_CONFIG)
+                  await appendFile(process.env.GITHUB_OUTPUT, `repository=${config.source.repository}\nref=${config.source.ref}\n`)
+                  NODE
+
+            - name: 检查运行凭据
+              env:
+                  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+                  SOURCE_REPO_TOKEN: ${{ secrets.AWESOME_TEST_SOURCE_REPO_TOKEN }}
+              run: |
+                  if [ -z "$OPENAI_API_KEY" ] || [ -z "$SOURCE_REPO_TOKEN" ]; then
+                      echo '请在仓库 Secrets 中配置 OPENAI_API_KEY 和 AWESOME_TEST_SOURCE_REPO_TOKEN。' >&2
+                      exit 1
+                  fi
+
+            - name: 检出上游文档仓库
+              uses: actions/checkout@v7
+              with:
+                  repository: ${{ steps.source.outputs.repository }}
+                  ref: ${{ steps.source.outputs.ref }}
+                  path: .translation-source
+                  fetch-depth: 0
+                  token: ${{ secrets.AWESOME_TEST_SOURCE_REPO_TOKEN }}
+                  persist-credentials: false
+
+            - name: 顺序执行 Awesome Test 文档翻译
+              id: translate
+              env:
+                  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+              run: |
+                  mkdir -p .translation-drafts/awesome-test
+                  pnpm --silent translator run-project \
+                      --project "$PROJECT_CONFIG" \
+                      --source-root .translation-source \
+                      --repository . \
+                      --push \
+                      > .translation-drafts/awesome-test/result.json
+
+            - name: 输出翻译结果汇总
+              if: ${{ always() }}
+              run: |
+                  node --input-type=module <<'NODE'
+                  import { appendFile, readFile } from 'node:fs/promises'
+                  const content = await readFile('.translation-drafts/awesome-test/result.json', 'utf8').catch((error) => {
+                      if (error.code === 'ENOENT') return ''
+                      throw error
+                  })
+                  let summary = '## Awesome Test 文档翻译\n\n任务未完成，请查看前序步骤日志。\n'
+                  if (content?.trim()) {
+                      const result = JSON.parse(content)
+                      const rows = Object.entries(result.locales).map(([locale, progress]) =>
+                          `| ${locale} | ${progress.completed}/${progress.total} | ${progress.summary.conflict} | ${progress.summary.failed + progress.summary.retryable_failed + progress.summary.blocked} |`
+                      )
+                      summary = `## Awesome Test 文档翻译\n\n${result.status === 'success' ? '翻译完成' : '部分完成，仍有未完成文件'}\n\n| 语言 | 已完成/总数 | 冲突 | 失败或阻塞 |\n| --- | --- | --- | --- |\n${rows.join('\n')}\n`
+                  }
+                  await appendFile(process.env.GITHUB_STEP_SUMMARY, summary)
+                  console.log(summary)
+                  NODE
+
+            - name: 上传项目报告和进度
+              if: ${{ always() }}
+              uses: actions/upload-artifact@v7
+              with:
+                  name: awesome-test-${{ github.run_id }}-${{ github.run_attempt }}
+                  path: |
+                      .translation-drafts/awesome-test/
+                      projects/awesome-test/progress/
+                  include-hidden-files: true
+                  if-no-files-found: ignore
+                  retention-days: 7

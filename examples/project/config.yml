@@ -1,0 +1,52 @@
+schemaVersion: 1
+
+project:
+    id: your-project
+    name: 示例文档项目
+
+# 上游仓库及原文镜像分支。
+source:
+    repository: owner/docs
+    ref: main
+    branch: your-project-source
+    # 指定语言（如 en），或使用 auto 自动识别；省略时默认 auto。
+    language: auto
+
+# 按配置顺序翻译。
+targets:
+    - locale: zh-CN
+      branch: your-project-zh-cn
+      enabled: true
+      # 提示词书写语言；目标语言由 locale 决定。
+      frameworkLanguage: zh-CN
+      prompt: prompts/zh-CN.md
+
+translation:
+    model: gpt-6-luna
+    # 仓库相对路径，exclude 优先。
+    scope:
+        include:
+            - '**/*.md'
+            - '**/*.mdx'
+            - src/**/*.{js,jsx,ts,tsx,vue}
+        exclude:
+            - '**/node_modules/**'
+            - '**/dist/**'
+            - '**/*.{test,spec}.{js,jsx,ts,tsx}'
+    # 文件路径相对于本配置。
+    glossary: glossary.yml
+    prompts:
+        frameworkLanguage: zh-CN
+        # 可增加其他语言框架，缺失时回退中文。
+        frameworks: {}
+        common: prompts/common.md
+    retranslateOnContextChange: false
+    # 结构审查不通过时归档到 draft 分支。
+    review:
+        enabled: true
+        model: gpt-6-luna
+        minimumProbability: 0.95
+        draftBranch: your-project-draft
+        # 单文件命令默认不推送；项目命令使用 --push 统一发布。
+        pushDraft: false
+        remote: origin

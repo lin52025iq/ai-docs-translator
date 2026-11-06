@@ -21,7 +21,7 @@ export default defineConfig(
     js.configs.recommended,
     tseslint.configs.recommended,
     eslintConfigPrettier,
-    { languageOptions: { globals: { ...globals.node, ...globals.browser } } },
+    { languageOptions: { globals: globals.node } },
     {
         files: ['**/*.{ts,tsx,mts,cts}'],
         rules: {
@@ -44,9 +44,6 @@ export default defineConfig(
     },
     formatWithPrettier(['**/*.json'], 'json'),
     formatWithPrettier(['package.json'], 'json-stringify'),
-    formatWithPrettier(['**/*.css'], 'css'),
-    formatWithPrettier(['**/*.scss'], 'scss'),
-    formatWithPrettier(['**/*.html'], 'html'),
     formatWithPrettier(['**/*.md'], 'markdown'),
     formatWithPrettier(['**/*.{yaml,yml}'], 'yaml')
 )

@@ -3,7 +3,7 @@
     "explorer.fileNesting.expand": false,
     "explorer.fileNesting.patterns": {
         "tsconfig.json": "tsconfig.*.json, auto-*.d.ts, tsconfig.*.tsbuildinfo",
-        "package.json": "pnpm*, eslint*, .npmrc, .prettierrc.json, uno.config.ts, .prettierignore, .editorconfig",
+        "package.json": "pnpm*, eslint*, .npmrc, .prettierrc.json, .prettierignore, .editorconfig",
         "README.md": "*.md"
     },
     "js/ts.tsdk.path": "node_modules/typescript/lib",
@@ -21,9 +21,6 @@
         "typescriptreact",
         "json",
         "jsonc",
-        "css",
-        "scss",
-        "html",
         "markdown",
         "yaml"
     ],

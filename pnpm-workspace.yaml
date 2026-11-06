@@ -1,6 +1,9 @@
 allowBuilds:
     simple-git-hooks: true
 
+minimumReleaseAgeExclude:
+    - openai@7.53.0
+
 # oxfmt 间接依赖的 tinypool 2.1.0 存在已披露漏洞，固定到修复版本。
 overrides:
     tinypool@<2.1.2: 2.1.2
