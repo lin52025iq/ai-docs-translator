@@ -1,12 +1,12 @@
 ---
-title: Integrate the Avatar UI component
+title: 集成 Avatar UI 组件
 meta:
   title: Avatar | Tiptap UI Components
-  description: Integrate a visual representation of a user or entity into your editor. Learn more in the docs.
-  category: UI Components
+  description: 将用户或实体的视觉形象集成到编辑器中。请参阅文档了解详情。
+  category: UI 组件
 component:
   name: Avatar
-  description: Integrate a visual representation of a user or entity into your Tiptap editor.
+  description: 将用户或实体的视觉形象集成到 Tiptap 编辑器中。
   type: primitive
   isFree: false
   isCloud: false
@@ -17,19 +17,19 @@ component:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A visual representation of a user or entity, typically used in user interfaces to represent a person.
+用于展示用户或实体的视觉形象，通常在用户界面中代表某个人。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui-primitive/avatar" />
 
-## Install
+## 安装
 
-You can add the primitive via Tiptap CLI
+你可以通过 Tiptap CLI 添加此基础组件
 
 ```bash
 npx @tiptap/cli@latest add avatar
 ```
 
-## Usage
+## 用法
 
 ```tsx
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/tiptap-ui-primitive/avatar'
@@ -44,7 +44,7 @@ export default function MyComponent() {
 }
 ```
 
-## Avatar Group
+## 头像组
 
 ```tsx
 import {
@@ -78,29 +78,29 @@ export default function MyComponent() {
 }
 ```
 
-## Props
+## 属性
 
 ### Avatar
 
-| Name | Type                      | Default   | Description |
-| ---- | ------------------------- | --------- | ----------- |
-| size | 'default' \| 'sm' \| 'lg' | 'default' | Avatar size |
+| 名称 | 类型                      | 默认值    | 说明 |
+| ---- | ------------------------- | --------- | ---- |
+| size | 'default' \| 'sm' \| 'lg' | 'default' | 头像尺寸 |
 
 ### AvatarImage
 
-| Name | Type   | Default  | Description                         |
-| ---- | ------ | -------- | ----------------------------------- |
-| src  | string | required | Image source URL                    |
-| alt  | string | required | Alternative text for screen readers |
+| 名称 | 类型   | 默认值 | 说明                       |
+| ---- | ------ | ------ | -------------------------- |
+| src  | string | 必填   | 图片源 URL                 |
+| alt  | string | 必填   | 屏幕阅读器使用的替代文本   |
 
 ### AvatarFallback
 
-| Name    | Type   | Default | Description                                 |
-| ------- | ------ | ------- | ------------------------------------------- |
-| delayMs | number | 0       | Delay in ms before showing fallback content |
+| 名称    | 类型   | 默认值 | 说明                     |
+| ------- | ------ | ------ | ------------------------ |
+| delayMs | number | 0      | 显示备用内容前的延迟（毫秒） |
 
 ### AvatarGroup
 
-| Name       | Type   | Default   | Description                                  |
-| ---------- | ------ | --------- | -------------------------------------------- |
-| maxVisible | number | undefined | Maximum avatars to display before collapsing |
+| 名称       | 类型   | 默认值    | 说明                     |
+| ---------- | ------ | --------- | ------------------------ |
+| maxVisible | number | undefined | 折叠前显示的头像数量上限 |
