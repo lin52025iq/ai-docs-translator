@@ -1,0 +1,287 @@
+---
+title: 标记 API
+meta:
+  title: 标记 API | Tiptap 编辑器文档
+  description: 为 Tiptap 编辑器创建新标记，从零开始打造独特的编辑体验。更多信息请参阅文档！
+  category: 编辑器
+---
+
+import { Callout } from '@/components/ui/Callout'
+
+Tiptap 的强大之处在于其灵活性。你可以从零开始创建自己的扩展，打造满足需求的独特编辑体验。
+
+## 创建标记
+
+在 Tiptap 中，标记用于为文本添加行内格式。常见示例包括粗体、斜体和下划线格式。
+
+标记继承了[扩展 API](/editor/extensions/custom-extensions/create-new/extension)中的所有选项和方法，并添加了一些标记专用的选项和方法。
+
+下面创建一个简单的标记扩展，看看它是如何工作的。
+
+```typescript
+import { Mark } from '@tiptap/core'
+
+const HighlightMark = Mark.create({
+  name: 'highlight',
+
+  addOptions() {
+    return {
+      HTMLAttributes: {},
+    }
+  },
+
+  parseHTML() {
+    return [
+      {
+        tag: 'mark',
+      },
+    ]
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return ['mark', HTMLAttributes, 0]
+  },
+})
+```
+
+你也可以使用回调函数来创建标记。如果想封装扩展逻辑，例如定义事件处理程序或其他自定义逻辑，这种方式会很有用。
+
+```js
+import { Mark } from '@tiptap/core'
+
+const CustomMark = Mark.create(() => {
+  // Define variables or functions to use inside your extension
+  const customVariable = 'foo'
+
+  function onCreate() {}
+  function onUpdate() {}
+
+  return {
+    name: 'customMark',
+    onCreate,
+    onUpdate,
+
+    // Your code goes here.
+  }
+})
+```
+
+这段代码创建了一个名为 `HighlightMark` 的新标记扩展。它添加了 `addOptions` 方法来定义标记选项，用户可以对这些选项进行配置。此外，它还添加了 `parseHTML` 和 `renderHTML` 方法，用于定义标记如何解析为 HTML，以及如何渲染为 HTML。
+
+与其他扩展一样，只需将它添加到 `extensions` 数组中，即可安装到编辑器中。
+
+```typescript
+import { Editor } from '@tiptap/core'
+
+new Editor({
+  extensions: [HighlightMark],
+})
+
+// Or if using React or Vue
+
+const editor = useEditor({
+  extensions: [HighlightMark],
+})
+```
+
+接下来，我们详细了解标记可用的选项和方法。
+
+## 标记选项
+
+创建标记扩展时，你可以定义用户可配置的选项。这些选项可用于自定义标记的行为或外观。
+
+### `parseHTML`
+
+`parseHTML` 方法用于定义如何从 HTML 中解析标记。它应返回一个数组，其中的对象表示标记的属性。
+
+对应于 [ProseMirror 架构](https://prosemirror.net/docs/ref/#model.MarkSpec.parseDOM)中的 `parseDOM` 属性。
+
+```typescript
+const CustomMark = Mark.create({
+  name: 'customMark',
+
+  parseHTML() {
+    return [
+      {
+        tag: 'span',
+        getAttrs: (node) => {
+          return {
+            class: node.getAttribute('class'),
+          }
+        },
+      },
+    ]
+  },
+})
+```
+
+粘贴内容时，会使用此方法将 HTML 内容解析为标记。
+
+### `renderHTML`
+
+`renderHTML` 方法用于定义如何将标记渲染为 HTML。它应返回一个数组，表示标记的 HTML 形式。
+
+对应于 [ProseMirror 架构](https://prosemirror.net/docs/ref/#model.MarkSpec.toDOM)中的 `toDOM` 属性。
+
+```typescript
+const CustomMark = Mark.create({
+  name: 'customMark',
+
+  renderHTML({ HTMLAttributes }) {
+    return ['span', HTMLAttributes, 0]
+  },
+})
+```
+
+复制内容时，会使用此方法将标记渲染为 HTML。更多详情请参阅[扩展现有扩展](/editor/extensions/custom-extensions/extend-existing#render-html)指南。
+
+### `addAttributes`
+
+`addAttributes` 方法用于为标记定义自定义属性。它应返回一个对象，其中包含属性名称及其默认值。
+
+对应于 [ProseMirror 架构](https://prosemirror.net/docs/ref/#model.MarkSpec.attrs)中的 `attrs` 属性。
+
+```typescript
+const CustomMark = Mark.create({
+  name: 'customMark',
+
+  addAttributes() {
+    return {
+      customAttribute: {
+        default: 'value',
+        parseHTML: (element) => element.getAttribute('data-custom-attribute'),
+      },
+    }
+  },
+})
+```
+
+更多详情请参阅[扩展现有扩展](/editor/extensions/custom-extensions/extend-existing#attributes)指南。
+
+### `keepOnSplit`
+
+默认情况下，拆分节点时，内容中的标记会被移除。你可以将 `keepOnSplit` 设为 `true`，以便在新节点上保留标记。
+
+```typescript
+const CustomMark = Mark.create({
+  name: 'customMark',
+
+  keepOnSplit: true,
+})
+```
+
+### `inclusive`
+
+默认情况下，标记不具有包容性，也就是说，不能将标记应用于节点的开头或结尾。你可以将 `inclusive` 设为 `true`，以允许将标记应用于节点的开头或结尾。
+
+对应于 [ProseMirror 架构](https://prosemirror.net/docs/ref/#model.MarkSpec.inclusive)中的 `inclusive` 属性。
+
+```typescript
+const CustomMark = Mark.create({
+  name: 'customMark',
+
+  inclusive: true,
+})
+```
+
+### `excludes`
+
+默认情况下，标记不会排斥其他标记。你可以定义一个标记列表，当应用此标记时，列表中的标记将被排斥。
+
+对应于 [ProseMirror 架构](https://prosemirror.net/docs/ref/#model.MarkSpec.excludes)中的 `excludes` 属性。
+
+```typescript
+const CustomMark = Mark.create({
+  name: 'customMark',
+
+  excludes: ['bold', 'italic'],
+})
+```
+
+### `exitable`
+
+默认情况下，标记不可退出，也就是说，在标记开头按 Backspace 键无法移除标记。你可以将 `exitable` 设为 `true`，以允许通过这种方式移除标记。
+
+对应于 [ProseMirror 架构](https://prosemirror.net/docs/ref/#model.MarkSpec.exitable)中的 `exitable` 属性。
+
+```typescript
+const CustomMark = Mark.create({
+  name: 'customMark',
+
+  exitable: true,
+})
+```
+
+### `group`
+
+默认情况下，标记不分组，也就是说，它们会单独应用。你可以为标记定义一个分组，以确保同一时间只能应用该组中的一个标记。
+
+对应于 [ProseMirror 架构](https://prosemirror.net/docs/ref/#model.MarkSpec.group)中的 `group` 属性。
+
+```typescript
+const CustomMark = Mark.create({
+  name: 'customMark',
+
+  group: 'textStyle',
+})
+```
+
+### `spanning`
+
+默认情况下，标记不会跨越多个节点。你可以将 `spanning` 设为 `true`，以允许标记跨越多个节点。
+
+对应于 [ProseMirror 架构](https://prosemirror.net/docs/ref/#model.MarkSpec.spanning)中的 `spanning` 属性。
+
+```typescript
+const CustomMark = Mark.create({
+  name: 'customMark',
+
+  spanning: true,
+})
+```
+
+### `code`
+
+默认情况下，标记不会被视为代码标记。你可以将 `code` 设为 `true`，以将标记作为代码标记处理。
+
+对应于 [ProseMirror 架构](https://prosemirror.net/docs/ref/#model.MarkSpec.code)中的 `code` 属性。
+
+```typescript
+const CustomMark = Mark.create({
+  name: 'customMark',
+
+  code: true,
+})
+```
+
+### `clearable`
+
+默认情况下，可以使用 `unsetAllMarks` 命令移除标记。你可以将 `clearable` 设为 `false`，以防止标记被 `unsetAllMarks` 移除。`unsetMark` 命令不受影响——只有 `unsetAllMarks` 会遵循此选项。
+
+你还可以使用回调函数，根据编辑器状态动态判断是否可以清除标记。
+
+```typescript
+const CustomMark = Mark.create({
+  name: 'customMark',
+
+  // This mark will not be removed by unsetAllMarks
+  clearable: false,
+})
+```
+
+```typescript
+const CustomMark = Mark.create({
+  name: 'customMark',
+
+  // Dynamically determine whether the mark can be cleared
+  clearable: () => {
+    return editor.state.doc.textContent.length < 100
+  },
+})
+```
+
+默认为 `true`。
+
+### `addDecorations`
+
+标记继承了[扩展 API](/editor/extensions/custom-extensions/create-new/extension#adddecorations)中的 `addDecorations` 钩子。使用它可以添加**仅用于视图**的[装饰](/editor/core-concepts/decorations)，例如高亮、搜索结果、注释和轻量级小部件。这些内容会在编辑器中渲染，但不会修改或序列化文档。详情请参阅[装饰指南](/editor/core-concepts/decorations)和 [API 参考](/editor/api/decorations)。
