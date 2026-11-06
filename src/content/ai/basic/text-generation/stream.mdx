@@ -1,60 +1,58 @@
 ---
-title: Stream content into the editor
+title: 将内容流式传输到编辑器
 tags:
   - type: start
 meta:
-  title: Stream Content | Tiptap Basic AI Generation
-  description: Low-level API for streaming content directly into the editor content. Learn more in our docs.
-  category: Basic AI Generation
+  title: 流式内容 | Tiptap 基础 AI 生成
+  description: 用于将内容直接流式传输到编辑器内容中的底层 API。了解更多信息，请参阅我们的文档。
+  category: 基础 AI 生成
 ---
 
 import { Callout } from '@/components/ui/Callout'
 import { Requirements, RequirementItem } from '@/components/Requirements'
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 激活试用或订阅">
+        在你的账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 计划](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-  <RequirementItem label="2. Integrate an AI provider">
-    Configure OpenAI in your [AI settings](https://cloud.tiptap.dev/v2/cloud/ai) or review the
-    [Custom LLM guides](/ai/basic/custom-llms).
+  <RequirementItem label="2. 集成 AI 提供商">
+    在[AI 设置](https://cloud.tiptap.dev/v2/cloud/ai)中配置 OpenAI，或查看
+    [自定义 LLM 指南](/ai/basic/custom-llms)。
   </RequirementItem>
-  <RequirementItem label="3. Install from private registry">
-    To install the frontend extensions, authenticate to Tiptap’s private npm registry by following
-    the [setup guide](/guides/pro-extensions).
+  <RequirementItem label="3. 从私有注册表安装">
+    若要安装前端扩展，请按照[设置指南](/guides/pro-extensions)进行操作，以通过身份验证访问 Tiptap 的私有 npm 注册表。
   </RequirementItem>
 </Requirements>
 
-The `streamContent` command is a low-level API to stream content into the editor. It supports both appending content and replacing a specified range of content. This command is useful when you need to stream something like an LLM model response into the editor.
+`streamContent` 命令是一个用于将内容流式传输到编辑器的底层 API。它既支持追加内容，也支持替换指定范围的内容。当你需要将某些内容（例如大语言模型（LLM）的响应）流式传输到编辑器时，这个命令会很有用。
 
-<Callout title="Advanced Integration">
-  This command is useful for advanced integrations where you need to stream content into the editor
-  from a URL or a response body.
+<Callout title="高级集成">
+  当你需要从 URL 或响应体向编辑器流式传输内容时，这个命令适用于高级集成场景。
 </Callout>
 
-### Parameters
+### 参数
 
-**range**: Either a single position to insert from or an object specifying the range to replace, with `from` and `to` properties. <br/>
-**callback**: An asynchronous function that receives a write function to stream content into the editor.
+**range**：可以是开始插入内容的单个位置，也可以是指定待替换范围的对象，该对象包含 `from` 和 `to` 属性。 <br/>
+**callback**：一个异步函数，接收用于向编辑器流式传输内容的写入函数。
 
-### `callback` Arguments
+### `callback` 参数
 
-**getWritableStream**: A function that returns a writable stream object that can be used to write chunks of data into the editor. <br/>
-**write**: A function that takes an object with the following properties:
+**getWritableStream**：返回可写流对象的函数，可用于向编辑器写入数据块。 <br/>
+**write**：接收一个包含以下属性的对象的函数：
 
-- `partial`: The content to insert into the editor.
-- `transform`: An optional function that takes an object with the following properties:
-  - `buffer`: The accumulated content of the stream.
-  - `partial`: The current partial content.
-  - `editor`: The editor instance.
-  - `defaultTransform`: The default transform function. This function takes the accumulated content and inserts it into the editor.
-- `appendToChain`: An optional function which can be used to append commands to the chain.
+- `partial`：要插入编辑器的内容。
+- `transform`：可选函数，接收一个包含以下属性的对象：
+  - `buffer`：流中累积的内容。
+  - `partial`：当前的部分内容。
+  - `editor`：编辑器实例。
+  - `defaultTransform`：默认转换函数。此函数会将累积的内容插入编辑器。
+- `appendToChain`：可选函数，可用于向命令链追加命令。
 
-## Example Usage
+## 使用示例
 
-### Using the `write` API
+### 使用 `write` API
 
-This example shows the flexibility of the `streamContent` command by fetching a large data stream from a URL and streaming it chunk-by-chunk into the editor.
+此示例展示了 `streamContent` 命令的灵活性：从 URL 获取大型数据流，并将数据逐块流式传输到编辑器中。
 
 ```ts
 editor.commands.streamContent({ from: 0, to: 10 }, async ({ write }) => {
@@ -76,9 +74,9 @@ editor.commands.streamContent({ from: 0, to: 10 }, async ({ write }) => {
 })
 ```
 
-### Using the `getWritableStream` API
+### 使用 `getWritableStream` API
 
-This example demonstrates an alternative way to stream content using a `WritableStream` object which can be used to write chunks of data into the editor.
+此示例展示了另一种流式传输内容的方式：使用 `WritableStream` 对象向编辑器写入数据块。
 
 ```ts
 editor.commands.streamContent({ from: 0, to: 10 }, async ({ getWritableStream }) => {
@@ -88,9 +86,9 @@ editor.commands.streamContent({ from: 0, to: 10 }, async ({ getWritableStream })
 })
 ```
 
-### Using transformations
+### 使用转换函数
 
-You can also use the `transform` function to modify the content before streaming it into the editor. This example demonstrates how to transform the content before streaming it into the editor.
+你还可以使用 `transform` 函数，在内容流式传输到编辑器之前对其进行修改。此示例展示了如何在流式传输内容之前对其进行转换。
 
 ```ts
 editor.commands.streamContent({ from: 0, to: 10 }, async ({ write }) => {
@@ -119,7 +117,7 @@ editor.commands.streamContent({ from: 0, to: 10 }, async ({ write }) => {
 })
 ```
 
-**Use case:** Parsing markdown content from a URL and streaming it into the editor.
+**使用场景：**从 URL 解析 Markdown 内容并将其流式传输到编辑器。
 
 ```ts
 import { marked } from 'marked'
@@ -150,9 +148,9 @@ editor.commands.streamContent({ from: 0, to: 10 }, async ({ write }) => {
 })
 ```
 
-### Using `appendToChain` option
+### 使用 `appendToChain` 选项
 
-The `appendToChain` function allows you to append commands to the chain before it is executed. This example demonstrates how to append a command to the chain before it is executed.
+`appendToChain` 函数允许你在命令链执行前向其中追加命令。此示例展示了如何在命令链执行前追加命令。
 
 ```ts
 import { selectionToInsertionEnd } from '@tiptap/core'
@@ -173,9 +171,9 @@ editor.commands.streamContent({ from: 0, to: 10 }, async ({ write }) => {
 })
 ```
 
-### Using `respondInline` option of `streamContent`
+### 使用 `streamContent` 的 `respondInline` 选项
 
-By default `respondInline` is `true`. When inserting block content into the editor, sometimes you may want to insert it as a sibling instead of as a block directly. You can use the `respondInline` option to insert the content at the same depth as the `from` position.
+`respondInline` 默认为 `true`。向编辑器插入块级内容时，有时你可能希望将其作为同级节点插入，而不是直接作为一个块插入。你可以使用 `respondInline` 选项，将内容插入到与 `from` 位置相同的深度。
 
 ```ts
 editor.commands.setContent('<p>123</p>')
@@ -197,9 +195,9 @@ editor.commands.streamContent(
 // As opposed to: <p>123</p><p>hello work</p><p>ok</p> when `respondInline` is `false`
 ```
 
-## Technical details
+## 技术细节
 
-Here is the full TypeScript definition for the `streamContent` command:
+以下是 `streamContent` 命令的完整 TypeScript 定义：
 
 ```ts
 declare module '@tiptap/core' {
