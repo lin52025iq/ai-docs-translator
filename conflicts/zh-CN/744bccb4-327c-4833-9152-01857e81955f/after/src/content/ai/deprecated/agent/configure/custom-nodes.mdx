@@ -1,0 +1,207 @@
+---
+title: 配置自定义节点和标记
+meta:
+  title: 自定义节点/标记 | Tiptap Content AI
+  description: 了解如何配置 AI Agent 扩展，使其能够生成并理解自定义节点和标记。
+  category: Content AI
+---
+
+import { CodeDemo } from '@/components/CodeDemo'
+
+AI Agent 扩展能够理解文档内容，以及文档中可能包含的元素（节点和标记）。
+
+例如，AI Agent 扩展可以检测到 [Table](/editor/extensions/nodes/table) 扩展，并知道如何生成表格。如果未启用 Table 扩展，而用户要求生成表格，AI Agent 会告知用户文档不支持此类元素。
+
+所有内置 Tiptap 扩展都会自动完成此项配置。不过，如果你的编辑器使用了[自定义节点和标记](/editor/extensions/custom-extensions)，则需要配置 AI Agent 扩展，使其能够生成并理解这些元素。
+
+<CodeDemo
+  isPro
+  isLarge
+  path="/Extensions/AiAgentCustomElements"
+  src="https://feature-beta-ai-extensions--tiptap-pro.netlify.app/preview/Extensions/AiAgentCustomElements"
+/>
+
+## 配置自定义节点
+
+要为 AI Agent 配置自定义节点，请按以下步骤操作：
+
+1. 定义自定义 Tiptap 节点扩展
+2. 使用架构感知信息配置 AI Agent
+
+下面通过一个实际示例逐步说明。
+
+### 步骤 1：定义自定义 Tiptap 节点扩展
+
+首先，创建自定义节点扩展。下面是一个自定义“Alert”节点的示例：
+
+```ts
+import { Node, mergeAttributes } from '@tiptap/core'
+
+export const AlertNode = Node.create({
+  name: 'alert',
+
+  addOptions() {
+    return {
+      HTMLAttributes: {},
+    }
+  },
+
+  addAttributes() {
+    return {
+      type: {
+        default: 'info',
+        parseHTML: (element) => element.getAttribute('data-type'),
+        renderHTML: (attributes) => {
+          if (!attributes.type) {
+            return {}
+          }
+          return {
+            'data-type': attributes.type,
+          }
+        },
+      },
+    }
+  },
+
+  parseHTML() {
+    return [
+      {
+        tag: 'div[data-alert]',
+      },
+    ]
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return [
+      'div',
+      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
+        'data-alert': '',
+      }),
+      0,
+    ]
+  },
+})
+```
+
+将此扩展添加到编辑器中：
+
+```ts
+import { Editor } from '@tiptap/core'
+import { AlertNode } from './AlertNode'
+
+const editor = new Editor({
+  extensions: [
+    // ... other extensions
+    AlertNode,
+  ],
+})
+```
+
+### 步骤 2：配置 AI Agent 扩展
+
+现在，使用有关自定义节点的架构感知信息配置 AI Agent 扩展：
+
+```ts
+const provider = new AiAgentProvider({
+  schemaAwarenessCustomElements: [
+    {
+      extensionName: 'alert',
+      tag: 'div[data-alert]',
+      name: 'Alert Box',
+      description:
+        'A highlighted box used to display important information, warnings, or tips to the user',
+      // Describe the HTML attributes of the node as it is rendered in HTML
+      attributes: [
+        {
+          name: 'data-alert',
+          // Specify the "value" property if the attribute always has that value
+          value: '',
+          description: 'Indicates that this is an alert box',
+        },
+        {
+          name: 'data-type',
+          description: 'The type of alert: info, warning, error, or success',
+        },
+      ],
+    },
+  ],
+})
+```
+
+## 多个自定义元素
+
+你可以一次配置多个自定义节点和标记。以下示例同时配置了 Alert 节点和自定义高亮标记：
+
+```ts
+const provider = new AiAgentProvider({
+  schemaAwarenessCustomElements: [
+    {
+      extensionName: 'alert',
+      tag: 'div[data-alert]',
+      name: 'Alert Box',
+      description: 'A highlighted box used to display important information, warnings, or tips',
+      attributes: [
+        {
+          name: 'data-alert',
+          value: '',
+          description: 'Indicates that this is an alert box',
+        }
+        {
+          name: 'data-type',
+          description: 'The type of alert: info, warning, error, or success',
+        },
+      ],
+    },
+    // Custom marks are also configured in the same way
+    {
+      extensionName: 'customHighlight',
+      tag: 'span',
+      name: 'Custom Highlight',
+      description: 'Highlights text with a special background',
+      attributes: [
+        {
+          name: 'data-custom-highlight',
+          value: '',
+          description: 'Indicates that this is a custom highlight',
+        }
+      ],
+    },
+  ],
+})
+```
+
+## 最佳实践
+
+为 AI Agent 扩展配置自定义节点和标记时，请遵循以下最佳实践：
+
+1. **使用描述性名称**：选择清晰、具体的名称，帮助 AI 模型理解元素代表的含义。
+
+2. **提供详细描述**：全面说明元素是什么，以及它如何显示或使用。
+
+3. **记录所有属性**：列出所有可能的 HTML 属性，并说明其用途和预期值。
+
+4. **使用一致的命名**：确保 `extensionName` 与实际的 Tiptap 扩展名称一致。
+
+5. **指定 HTML 结构**：确保 `tag` 和 `atributes` 与扩展实际渲染出的 HTML 完全一致。
+
+## API 参考
+
+`schemaAwarenessCustomElements` 选项接受一个由 `SchemaAwarenessItem` 对象组成的数组，这些对象包含以下属性：
+
+| 属性 | 类型 | 必填 | 描述 |
+| --------------- | -------------------------------- | -------- | --------------------------------------------------------- |
+| `extensionName` | `string` | 是 | Tiptap 扩展的名称（必须完全匹配） |
+| `tag` | `string` | 是 | 表示此元素的 HTML 标签或选择器 |
+| `name` | `string` | 是 | 易于理解的元素名称 |
+| `description` | `string \| null` | 否 | 对元素是什么以及如何显示的说明 |
+| `attributes` | `SchemaAwarenessItemAttribute[]` | 否 | 此元素可能包含的 HTML 属性数组 |
+
+### SchemaAwarenessItemAttribute
+
+`attributes` 数组中的每个属性对象都包含以下属性：
+
+| 属性 | 类型 | 必填 | 描述 |
+| ------------- | ---------------- | -------- | ---------------------------------------------------------- |
+| `name` | `string` | 是 | HTML 代码中的属性名称 |
+| `value` | `string` | 否 | 如果指定，该属性始终具有此确切值 |
+| `description` | `string \| null` | 否 | 对属性用途和预期值的说明 |
