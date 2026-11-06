@@ -1,28 +1,28 @@
 ---
-title: Paste Rules
+title: 粘贴规则
 meta:
-  title: Paste Rules in Tiptap | Tiptap Editor Docs
-  description: Create paste rules to automatically transform pasted content in Tiptap. Learn how to use and create paste rules in the docs!
-  category: Editor
+  title: Tiptap 中的粘贴规则 | Tiptap 编辑器文档
+  description: 创建粘贴规则，在 Tiptap 中自动转换粘贴的内容。通过文档了解如何使用和创建粘贴规则！
+  category: 编辑器
 ---
 
-Paste rules are a powerful feature in Tiptap that allow you to automatically transform content as it is pasted into the editor. They can be used to create shortcuts for formatting, inserting content, or triggering commands based on specific patterns in pasted text.
+粘贴规则是 Tiptap 的一项强大功能，可在内容粘贴到编辑器时自动转换内容。它们可用于创建格式快捷方式、插入内容，或根据粘贴文本中的特定模式触发命令。
 
-## What are paste rules?
+## 什么是粘贴规则？
 
-Paste rules are pattern-based triggers that watch for specific text or content when it is pasted into the editor, and automatically transform it into something else. For example, pasting `**bold**` can automatically turn the text into bold formatting, or pasting an image URL can create an image node. Paste rules are especially useful for implementing Markdown-like shortcuts and improving the user experience when pasting content from external sources.
+粘贴规则是基于模式的触发器，用于监视粘贴到编辑器中的特定文本或内容，并自动将其转换为其他内容。例如，粘贴 `**粗体**` 可以自动将文本转换为粗体格式，粘贴图片 URL 则可以创建图片节点。粘贴规则特别适合实现类似 Markdown 的快捷方式，并改善从外部来源粘贴内容时的用户体验。
 
-## How do paste rules work in Tiptap?
+## Tiptap 中的粘贴规则如何工作？
 
-Tiptap uses paste rules to provide many of its default shortcuts and behaviors for pasted content. Paste rules are defined as regular expressions or custom matchers that match pasted text. When the pattern is detected, the rule executes a transformation—such as applying a mark, inserting a node, or running a command.
+Tiptap 使用粘贴规则实现许多默认快捷方式和粘贴内容行为。粘贴规则通过正则表达式或自定义匹配器定义，用于匹配粘贴的文本。检测到符合模式的内容后，规则就会执行转换，例如应用标记、插入节点或运行命令。
 
-Paste rules are typically registered inside extensions (nodes, marks, or generic extensions) using the `addPasteRules()` method. Tiptap provides helper functions like `markPasteRule` and `nodePasteRule` to simplify the creation of paste rules for marks and nodes.
+粘贴规则通常使用 `addPasteRules()` 方法在扩展（节点、标记或通用扩展）中注册。Tiptap 提供了 `markPasteRule` 和 `nodePasteRule` 等辅助函数，以简化标记和节点粘贴规则的创建。
 
-## Creating a paste rule in an extension
+## 在扩展中创建粘贴规则
 
-To add a custom paste rule, define the `addPasteRules()` method in your extension. This method should return an array of paste rules.
+要添加自定义粘贴规则，请在扩展中定义 `addPasteRules()` 方法。此方法应返回一个粘贴规则数组。
 
-### Example: Creating a highlight mark with a paste rule
+### 示例：使用粘贴规则创建高亮标记
 
 ```ts
 import { Mark, markPasteRule } from '@tiptap/core'
@@ -41,7 +41,7 @@ const HighlightMark = Mark.create({
 })
 ```
 
-### Example: Creating a custom figure node with a paste rule
+### 示例：使用粘贴规则创建自定义图形节点
 
 ```ts
 import { Node, nodePasteRule } from '@tiptap/core'
@@ -64,25 +64,25 @@ const FigureNode = Node.create({
 })
 ```
 
-## Understanding `markPasteRule` and `nodePasteRule`
+## 了解 `markPasteRule` 和 `nodePasteRule`
 
-Tiptap provides two helper functions to simplify the creation of paste rules:
+Tiptap 提供了两个辅助函数，以简化粘贴规则的创建：
 
-- **`markPasteRule`**: For applying marks (like bold, italic, highlight) based on a pattern in pasted content.
-- **`nodePasteRule`**: For inserting or transforming nodes (like images, figures, custom blocks) based on a pattern in pasted content.
+- **`markPasteRule`**：根据粘贴内容中的模式应用标记（如粗体、斜体、高亮）。
+- **`nodePasteRule`**：根据粘贴内容中的模式插入或转换节点（如图片、图形、自定义块）。
 
-Both functions accept a configuration object with at least these properties:
+这两个函数都接受一个配置对象，其中至少包含以下属性：
 
-- `find`: A regular expression or matcher function to match the pasted pattern.
-- `type`: The mark or node type to apply/insert.
-- `getAttributes` (optional): A function to extract and return attributes from the regex match.
-- `getContent` (nodePasteRule only, optional): A function or value to provide the node's content.
+- `find`：用于匹配粘贴内容模式的正则表达式或匹配器函数。
+- `type`：要应用或插入的标记或节点类型。
+- `getAttributes`（可选）：用于从正则表达式匹配结果中提取并返回属性的函数。
+- `getContent`（仅适用于 `nodePasteRule`，可选）：用于提供节点内容的函数或值。
 
-### Extracting information with `getAttributes`
+### 使用 `getAttributes` 提取信息
 
-The `getAttributes` function allows you to extract data from the matched input and pass it as attributes to the node or mark. This is especially useful for nodes like images or figures, where you want to capture values like `src`, `alt`, or `title` from the pasted content.
+`getAttributes` 函数可以从匹配的输入中提取数据，并将其作为属性传递给节点或标记。这对于图片或图形等节点特别有用，因为你可能需要从粘贴的内容中提取 `src`、`alt` 或 `title` 等值。
 
-#### Example: Using `getAttributes` in a node paste rule
+#### 示例：在节点粘贴规则中使用 `getAttributes`
 
 ```ts
 addPasteRules() {
@@ -99,9 +99,9 @@ addPasteRules() {
 },
 ```
 
-In this example, when a user pastes something like `![Alt text](image.png "Optional title")`, the paste rule extracts the `alt`, `src`, and `title` from the match and passes them as attributes to the node.
+在此示例中，当用户粘贴类似 `![替代文本](image.png "可选标题")` 的内容时，粘贴规则会从匹配结果中提取 `alt`、`src` 和 `title`，并将它们作为属性传递给节点。
 
-#### Example: Using `getAttributes` in a mark paste rule
+#### 示例：在标记粘贴规则中使用 `getAttributes`
 
 ```ts
 addPasteRules() {
@@ -118,9 +118,9 @@ addPasteRules() {
 },
 ```
 
-### Tips
+### 提示
 
-- The `match` parameter in `getAttributes` is the result of the regular expression, so you can destructure it to get the captured groups.
-- You can use `getAttributes` to set any attributes your node or mark supports, such as `href` for links, `src` for images, or custom data fields.
-- If you don’t need to extract attributes, you can omit `getAttributes`.
-- Use the `g` (global) flag in your regex to match all occurrences in the pasted content.
+- `getAttributes` 中的 `match` 参数是正则表达式的匹配结果，因此可以通过解构获取捕获组。
+- 你可以使用 `getAttributes` 设置节点或标记支持的任意属性，例如链接的 `href`、图片的 `src` 或自定义数据字段。
+- 如果不需要提取属性，可以省略 `getAttributes`。
+- 在正则表达式中使用 `g`（全局）标志，以匹配粘贴内容中的所有匹配项。
