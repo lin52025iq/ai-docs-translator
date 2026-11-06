@@ -1,43 +1,43 @@
 ---
-title: HardBreak extension
+title: HardBreak 扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-hard-break?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-hard-break
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-hard-break.svg
     url: https://npmcharts.com/compare/@tiptap/extension-hard-break?minimal=true
-    label: Downloads
+    label: 下载量
 extension:
-  name: Hard break
+  name: 硬换行
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-hard-break
-  description: Sometimes we all need a break, even if it’s just a line break.
+  description: 有时我们都需要换行，即使只是简单地换到下一行。
   type: node
   icon: WrapText
 meta:
-  title: HardBreak extension | Tiptap Editor Docs
-  description: Use the Hard Break extension in Tiptap to add support for the <br> HTML tag for line breaks. Learn more in our docs!
-  category: Editor
+  title: HardBreak 扩展 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 Hard Break 扩展，为换行添加对 HTML `<br>` 标签的支持。了解更多信息，请参阅我们的文档！
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-The HardBreak extensions adds support for the `<br>` HTML tag, which forces a line break.
+HardBreak 扩展支持 `<br>` HTML 标签，可用于强制换行。
 
 <CodeDemo path="/Nodes/HardBreak" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-hard-break
 ```
 
-## Settings
+## 设置
 
 ### HTMLAttributes
 
-Custom HTML attributes that should be added to the rendered HTML tag.
+要添加到渲染后 HTML 标签中的自定义 HTML 属性。
 
 ```js
 HardBreak.configure({
@@ -49,9 +49,9 @@ HardBreak.configure({
 
 ### keepMarks
 
-Decides whether to keep marks after a line break. Based on the `keepOnSplit` option for marks.
+决定换行后是否保留标记。此选项基于标记的 `keepOnSplit` 选项。
 
-Default: `true`
+默认值：`true`
 
 ```js
 HardBreak.configure({
@@ -59,22 +59,22 @@ HardBreak.configure({
 })
 ```
 
-## Commands
+## 命令
 
 ### setHardBreak()
 
-Add a line break.
+添加换行符。
 
 ```js
 editor.commands.setHardBreak()
 ```
 
-## Keyboard shortcuts
+## 键盘快捷键
 
-| Command      | Windows/Linux                                                               | macOS                                                                   |
+| 命令         | Windows/Linux                                                               | macOS                                                                   |
 | ------------ | --------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
 | setHardBreak | <kbd>Shift</kbd> + <kbd>Enter</kbd> + <kbd>Control</kbd> + <kbd>Enter</kbd> | <kbd>Shift</kbd> + <kbd>Enter</kbd> + <kbd>Cmd</kbd> + <kbd>Enter</kbd> |
 
-## Source code
+## 源代码
 
 [packages/extension-hard-break/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-hard-break/)
