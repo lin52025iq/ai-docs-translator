@@ -1,14 +1,14 @@
 ---
-title: API Reference
+title: API 参考
 meta:
-  title: API Reference | Tiptap AI Toolkit
-  description: Complete API reference for the AI Toolkit methods.
+  title: API 参考 | Tiptap AI Toolkit
+  description: AI Toolkit 方法的完整 API 参考。
   category: AI Toolkit
 ---
 
 import { Link } from '@/components/Link'
 
-The AI Toolkit provides a set of methods that are the building blocks for your AI integrations. You can call these methods from the AI Toolkit instance:
+AI Toolkit 提供了一组方法，它们是构建 AI 集成的基础。你可以通过 AI Toolkit 实例调用这些方法：
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -22,7 +22,7 @@ const toolkit = getAiToolkit(editor)
 const text = toolkit.getTextRange({ from: 0, to: 100 })
 ```
 
-Below is a list of the available methods:
+以下是可用方法的列表：
 
 <div className="grid md:grid-cols-2 gap-4 mt-6 md:items-start">
   <Link
@@ -30,12 +30,11 @@ Below is a list of the available methods:
     className="flex flex-col p-4 border border-grayAlpha-200 rounded-lg hover:border-grayAlpha-300 transition-colors cursor-pointer no-underline"
   >
     <div className="flex items-center justify-between mb-2">
-      <h4 className="font-semibold text-black">Read the document</h4>
-      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">More →</span>
+      <h4 className="font-semibold text-black">读取文档</h4>
+      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">更多 →</span>
     </div>
     <div className="text-sm text-grayAlpha-700">
-      Extract document content in JSON, HTML, or text formats with support for selections, ranges,
-      and chunked reads.
+      提取 JSON、HTML 或文本格式的文档内容，并支持选区、范围和分块读取。
     </div>
   </Link>
   <Link
@@ -43,12 +42,11 @@ Below is a list of the available methods:
     className="flex flex-col p-4 border border-grayAlpha-200 rounded-lg hover:border-grayAlpha-300 transition-colors cursor-pointer no-underline"
   >
     <div className="flex items-center justify-between mb-2">
-      <h4 className="font-semibold text-black">Edit the document</h4>
-      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">More →</span>
+      <h4 className="font-semibold text-black">编辑文档</h4>
+      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">更多 →</span>
     </div>
     <div className="text-sm text-grayAlpha-700">
-      Insert, stream, and patch AI-generated content in text, HTML, or JSON formats with review
-      options.
+      以文本、HTML 或 JSON 格式插入、流式传输和修补 AI 生成的内容，并提供审核选项。
     </div>
   </Link>
   <Link
@@ -56,11 +54,11 @@ Below is a list of the available methods:
     className="flex flex-col p-4 border border-grayAlpha-200 rounded-lg hover:border-grayAlpha-300 transition-colors cursor-pointer no-underline"
   >
     <div className="flex items-center justify-between mb-2">
-      <h4 className="font-semibold text-black">Execute tool</h4>
-      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">More →</span>
+      <h4 className="font-semibold text-black">执行工具</h4>
+      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">更多 →</span>
     </div>
     <div className="text-sm text-grayAlpha-700">
-      Execute AI agent tool calls against a Tiptap editor using the AI Toolkit.
+      使用 AI Toolkit 在 Tiptap 编辑器中执行 AI 代理的工具调用。
     </div>
   </Link>
   <Link
@@ -68,11 +66,11 @@ Below is a list of the available methods:
     className="flex flex-col p-4 border border-grayAlpha-200 rounded-lg hover:border-grayAlpha-300 transition-colors cursor-pointer no-underline"
   >
     <div className="flex items-center justify-between mb-2">
-      <h4 className="font-semibold text-black">Workflows</h4>
-      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">More →</span>
+      <h4 className="font-semibold text-black">工作流</h4>
+      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">更多 →</span>
     </div>
     <div className="text-sm text-grayAlpha-700">
-      API reference for the built-in workflows of the AI Toolkit.
+      AI Toolkit 内置工作流的 API 参考。
     </div>
   </Link>
   <Link
@@ -80,11 +78,11 @@ Below is a list of the available methods:
     className="flex flex-col p-4 border border-grayAlpha-200 rounded-lg hover:border-grayAlpha-300 transition-colors cursor-pointer no-underline"
   >
     <div className="flex items-center justify-between mb-2">
-      <h4 className="font-semibold text-black">Suggestions</h4>
-      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">More →</span>
+      <h4 className="font-semibold text-black">建议</h4>
+      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">更多 →</span>
     </div>
     <div className="text-sm text-grayAlpha-700">
-      Manage and render AI suggestions with preview and review modes.
+      管理和呈现 AI 建议，并支持预览和审核模式。
     </div>
   </Link>
   <Link
@@ -92,11 +90,11 @@ Below is a list of the available methods:
     className="flex flex-col p-4 border border-grayAlpha-200 rounded-lg hover:border-grayAlpha-300 transition-colors cursor-pointer no-underline"
   >
     <div className="flex items-center justify-between mb-2">
-      <h4 className="font-semibold text-black">Schema awareness</h4>
-      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">More →</span>
+      <h4 className="font-semibold text-black">Schema 感知</h4>
+      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">更多 →</span>
     </div>
     <div className="text-sm text-grayAlpha-700">
-      Provide schema awareness to AI models so they understand nodes, marks, and attributes.
+      为 AI 模型提供 Schema 信息，使其理解节点、标记和属性。
     </div>
   </Link>
   <Link
@@ -104,11 +102,11 @@ Below is a list of the available methods:
     className="flex flex-col p-4 border border-grayAlpha-200 rounded-lg hover:border-grayAlpha-300 transition-colors cursor-pointer no-underline"
   >
     <div className="flex items-center justify-between mb-2">
-      <h4 className="font-semibold text-black">Diff utility</h4>
-      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">More →</span>
+      <h4 className="font-semibold text-black">差异工具</h4>
+      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">更多 →</span>
     </div>
     <div className="text-sm text-grayAlpha-700">
-      Compute changes between two documents programmatically.
+      以编程方式计算两个文档之间的更改。
     </div>
   </Link>
   <Link
@@ -116,11 +114,11 @@ Below is a list of the available methods:
     className="flex flex-col p-4 border border-grayAlpha-200 rounded-lg hover:border-grayAlpha-300 transition-colors cursor-pointer no-underline"
   >
     <div className="flex items-center justify-between mb-2">
-      <h4 className="font-semibold text-black">Split view</h4>
-      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">More →</span>
+      <h4 className="font-semibold text-black">分屏视图</h4>
+      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">更多 →</span>
     </div>
     <div className="text-sm text-grayAlpha-700">
-      API reference for createSplitView and the SplitView instance methods.
+      createSplitView 和 SplitView 实例方法的 API 参考。
     </div>
   </Link>
 </div>
