@@ -1,0 +1,945 @@
+---
+title: 页面页眉和页脚
+meta:
+  title: 页面页眉和页脚 | Tiptap Pages 文档
+  description: 了解如何在 Tiptap Pages 中配置页眉和页脚，包括首页不同、奇偶页不同，以及由 Tiptap 驱动的实时编辑。
+  category: Pages
+sidebars:
+  hideSecondary: true
+---
+
+import { Callout } from '@/components/ui/Callout'
+import { CodeDemo } from '@/components/CodeDemo'
+
+页眉和页脚可用于在每页的顶部和底部显示一致的内容。Pages 扩展支持静态文本、HTML 标记、使用占位符动态显示页码、通过 JSONContent 进行富文本格式设置、为首页或奇偶页设置不同的页眉/页脚，以及双击页眉或页脚区域进行交互式编辑。
+
+<Callout title="从 DOCX 导入" variant="hint">
+  使用 [DOCX 导入扩展](/conversion/import/docx/editor-extension#headers--footers) 导入 `.docx` 文件时，文档中的页眉和页脚会自动应用到 Pages，包括首页不同以及奇偶页不同的版本。无需额外配置。
+</Callout>
+
+<CodeDemo isPro path="/Extensions/PagesHeaderFooter" />
+
+## 内容类型
+
+`PagesHeaderFooter` 类型接受 HTML 字符串或 Tiptap `JSONContent`，以支持富文本格式：
+
+```typescript
+type PagesHeaderFooter = string | JSONContent
+```
+
+### HTML 字符串
+
+页眉和页脚可以使用纯文本或 HTML 标记：
+
+```js
+Pages.configure({
+  header: 'My Document Title',
+  footer: '<strong>Confidential</strong> - Internal Use Only',
+})
+```
+
+### HTML 字符串中的空白
+
+页眉和页脚 HTML 中的连续空格会保留。`<p>Ref.   2026-09</p>` 会保持三个空格；无论是 `header` 和 `footer` 选项、`setHeader` 和 `setFooter`，还是内联编辑器，都是如此。以 JSON 形式提供的内容不会重新解析，因此也会保留空格。打开和关闭内联编辑器不会更改存储的内容。
+
+若要恢复浏览器默认的空白处理规则（连续空格合并为一个），请传入自定义解析选项：
+
+```js
+Pages.configure({
+  header: '<p>Ref.   2026-09</p>',
+  headerFooterParseOptions: { preserveWhitespace: false },
+})
+```
+
+### 模板占位符
+
+使用 `{page}` 和 `{total}` 占位符动态显示页码。这些占位符适用于 HTML 字符串和 JSONContent，并会在渲染时替换：
+
+```js
+Pages.configure({
+  header: 'Company Report',
+  footer: 'Page {page} of {total}',
+})
+```
+
+通过 [`ExportDocx` 编辑器扩展](/conversion/export/docx/editor-extension)将文档导出为 `.docx` 时，每个 `{page}` / `{total}` 都会转换为 Word 的动态 `PAGE` / `NUMPAGES` 字段，因此 Word 会在打印或重新分页时重新计算页码。
+
+#### 重命名或禁用占位符
+
+使用 `placeholders` 选项重命名内置标记，或完全关闭替换功能。支持以下三种形式：
+
+```js
+// Rename {total} to {pages} (keeps {page} working)
+Pages.configure({
+  placeholders: { total: 'pages' },
+  footer: 'Page {page} of {pages}',
+})
+
+// Rename both built-ins
+Pages.configure({
+  placeholders: { page: 'p', total: 'pages' },
+  footer: '{p} / {pages}',
+})
+
+// Disable substitution; {page} and {total} render as literal text
+Pages.configure({
+  placeholders: false,
+  footer: 'Page {page} of {total}',
+})
+```
+
+重命名内置标记后，原标记名称将不再被识别。替换只会作用于页眉/页脚内容；正文中包含的 `{page}` / `{total}` 始终按字面文本处理。
+
+<Callout title="DOCX 导入" variant="info">
+  `importDocx` 将 Word 的 `PAGE` 和 `NUMPAGES` 字段转换为文本标记时，标记名称取决于 Pages 配置：
+
+- **默认配置。** 导入时不会传递名称，因此字段会转换为 `{page}` 和 `{numpages}`。Pages 会渲染 `{page}`，但 `{numpages}` 在编辑器中以及通过 `ExportDocx` 扩展导出的内容中都会保持为字面文本。设置 `placeholders: { total: 'numpages' }` 即可渲染并导出该标记。REST DOCX 导出已会将 `{numpages}` 视为总页数。
+- **重命名。** 导入时会传递你的 `placeholders` 映射，因此 `{ total: 'pages' }` 会将 `NUMPAGES` 转回 `{pages}`，并将其动态渲染、导出为动态字段。未指定的键会使用导入时的默认值，因此要获得动态总页数，请重命名 `total`。
+- **`placeholders: false`。** 导入时会将 Word 缓存的数字保留为纯文本。
+
+向 `importDocx` 传入 `placeholders: true` 会强制启用转换，即使 Pages 设置了 `placeholders: false` 也一样。如果 Pages 中定义了重命名，则使用该名称；否则使用导入默认名称。
+
+简单 `w:fldSimple` 字段中的页码不会被转换，无论 `placeholders` 设置为何值；导入时也会丢弃其缓存数字。有关导入所识别的字段布局，请参阅 [REST 导入页面](/conversion/import/docx/rest-api#page-number-fields)；完整说明请参阅 [DOCX 导入 → 页码字段](/conversion/import/docx/editor-extension#page-number-fields)。
+
+</Callout>
+
+### JSONContent
+
+如需富文本格式，请使用 Tiptap 的 JSONContent 结构：
+
+```js
+Pages.configure({
+  header: {
+    type: 'doc',
+    content: [
+      {
+        type: 'paragraph',
+        content: [{ type: 'text', text: 'Document Title', marks: [{ type: 'bold' }] }],
+      },
+    ],
+  },
+})
+```
+
+## 配置与命令
+
+使用 `Pages.configure()` 设置编辑器的初始默认内容。使用 `setHeader()` 等编辑器命令可在运行时动态更新内容。
+
+设置内容时，这两种方式都有效：
+
+**使用 configure 进行初始设置：**
+
+```js
+Pages.configure({
+  header: 'My Document Title',
+  footer: 'Page {page} of {total}',
+})
+```
+
+**使用命令在运行时更新：**
+
+```js
+// Update header after editor is initialized
+editor.commands.setHeader('Updated Header')
+```
+
+## 页眉配置
+
+### 默认页眉
+
+`header` 选项用于设置每页页眉区域显示的内容。
+
+**初始配置：**
+
+```js
+Pages.configure({
+  header: '<strong>Tiptap</strong> – Document Header',
+})
+```
+
+**编辑器命令：**
+
+```js
+editor.commands.setHeader('My New Header')
+// or with HTML
+editor.commands.setHeader('<em>Updated</em> Header')
+```
+
+### 页眉边距
+
+`headerTopMargin` 选项用于控制页面顶部边缘到页眉内容起始位置的距离（单位为像素）。如果未指定，默认值为上边距的 50%。
+
+**初始配置：**
+
+```js
+Pages.configure({
+  headerTopMargin: 30,
+})
+```
+
+**编辑器命令：**
+
+```js
+// Override the header top margin
+editor.commands.setHeaderTopMargin(40)
+
+// Clear the override and fall back to the active format's default
+// (50% of the format's top margin)
+editor.commands.resetHeaderTopMargin()
+```
+
+<Callout title="输入验证" variant="info">
+    `setHeaderTopMargin` 不接受负值和 `NaN`；在这些情况下，命令会返回 `false` 并记录警告。
+</Callout>
+
+## 页脚配置
+
+### 默认页脚
+
+`footer` 选项用于设置每页页脚区域显示的内容。
+
+**初始配置：**
+
+```js
+Pages.configure({
+  footer: 'Page {page} of {total}',
+})
+```
+
+**编辑器命令：**
+
+```js
+editor.commands.setFooter('Powered by Tiptap')
+// or with placeholders
+editor.commands.setFooter('{page}/{total}')
+```
+
+### 页脚边距
+
+`footerBottomMargin` 选项用于控制页脚内容底部到页面底边的距离（单位为像素）。如果未指定，默认值为下边距的 50%。
+
+**初始配置：**
+
+```js
+Pages.configure({
+  footerBottomMargin: 30,
+})
+```
+
+**编辑器命令：**
+
+```js
+// Override the footer bottom margin
+editor.commands.setFooterBottomMargin(40)
+
+// Clear the override and fall back to the active format's default
+// (50% of the format's bottom margin)
+editor.commands.resetFooterBottomMargin()
+```
+
+<Callout title="输入验证" variant="info">
+    `setFooterBottomMargin` 不接受负值和 `NaN`；在这些情况下，命令会返回 `false` 并记录警告。
+</Callout>
+
+## 清除页眉或页脚
+
+`unsetHeader` 和 `unsetFooter` 会清空对应插槽，并释放为其预留的页面空间。不带参数时会清除默认插槽。传入 `'first'`、`'odd'` 或 `'even'` 可指定变体。
+
+```js
+editor.commands.unsetHeader()
+editor.commands.unsetFooter('first')
+```
+
+在协作模式下，被清除的插槽会像 `setHeader` 一样同步到所有已连接的客户端。DOCX 导入会对导入文件中没有携带内容的每个插槽调用这些命令。
+
+## 首页不同
+
+启用首页专用的页眉和/或页脚，类似于 Microsoft Word 的“首页不同”选项。
+
+<Callout title="注意" variant="info">
+  `setDifferentFirstPage()` 命令会同时启用首页不同的页眉和页脚，与 Microsoft Word 的行为一致。
+</Callout>
+
+<Callout title="首页插槽初始为空" variant="info">
+  调用 `setDifferentFirstPage(true)` **不会**将默认页眉/页脚复制到首页插槽。首页插槽初始为空，与 Microsoft Word 的行为一致。若要预先填入首页页眉或页脚，请在启用该标志后调用 `setHeaderFirstPage` / `setFooterFirstPage`，或在 `Pages.configure()` 中设置 `headerFirstPage` / `footerFirstPage`。
+</Callout>
+
+### 配置
+
+```js
+Pages.configure({
+  header: 'Default Header',
+  footer: 'Page {page}',
+  differentFirstPage: true,
+  headerFirstPage: 'Title Page',
+  footerFirstPage: '', // No footer on first page
+})
+```
+
+### 命令
+
+```js
+// Enable different first page (affects both header and footer)
+editor.commands.setDifferentFirstPage(true)
+
+// Set first page header and footer content
+editor.commands.setHeaderFirstPage('Welcome to My Document')
+editor.commands.setFooterFirstPage('')
+```
+
+## 奇偶页不同
+
+为奇数页（1、3、5……）和偶数页（2、4、6……）启用不同的页眉和/或页脚，类似于 Microsoft Word 的“奇偶页不同”选项。
+
+<Callout title="注意" variant="info">
+  `setDifferentOddEven()` 命令会同时启用奇数页和偶数页不同的页眉和页脚，与 Microsoft Word 的行为一致。
+</Callout>
+
+<Callout title="启用时，奇数页插槽会继承默认内容" variant="info">
+  调用 `setDifferentOddEven(true)` 时，如果奇数页插槽为空，现有默认页眉/页脚内容会复制到**奇数页**插槽。这与 Microsoft Word 保持内容连续的行为一致：切换该标志前页面 1、3、5……显示的内容会继续保留，而偶数页插槽初始为空，可供你填写。如果关闭后再重新开启该标志，之前输入到奇数页插槽的内容会保留（仅当奇数页插槽为空时才会复制）。
+</Callout>
+
+### 配置
+
+```js
+Pages.configure({
+  differentOddEven: true,
+  headerOdd: 'Chapter Title – Odd Page',
+  headerEven: 'Book Title – Even Page',
+  footerOdd: 'Page {page}',
+  footerEven: 'Page {page}',
+})
+```
+
+### 命令
+
+```js
+// Enable different odd/even (affects both header and footer)
+editor.commands.setDifferentOddEven(true)
+
+// Set odd and even page headers
+editor.commands.setHeaderOdd('Odd Page Header')
+editor.commands.setHeaderEven('Even Page Header')
+
+// Set odd and even page footers
+editor.commands.setFooterOdd('Page {page}')
+editor.commands.setFooterEven('Page {page}')
+```
+
+## 同时设置首页不同和奇偶页不同
+
+同时启用 `differentFirstPage` 和 `differentOddEven` 时，第 1 页优先使用首页页眉/页脚，而不是奇偶页设置。
+
+**优先级顺序：**
+
+1. 首页（启用 `differentFirstPage` 时）——适用于第 1 页
+2. 奇偶页（启用 `differentOddEven` 时）——适用于第 2 页及之后的页面
+3. 默认页眉/页脚——回退选项（仅在相应区域未启用 `differentFirstPage` 或 `differentOddEven` 时使用）
+
+<Callout title="类型专用的空插槽会渲染为空" variant="info">
+  启用 `differentFirstPage` 或 `differentOddEven` 后，对应插槽会决定其适用页面的显示内容，即使插槽为空也是如此。例如，设置 `differentFirstPage: true` 且 `headerFirstPage` 为空时，第 1 页的页眉将为空（不会悄悄回退到默认页眉）。这与 Microsoft Word 和 Google Docs 的行为一致。只有在相关标志（`differentFirstPage` 或 `differentOddEven`）**关闭**时，才会将默认页眉/页脚作为回退内容。
+</Callout>
+
+```js
+Pages.configure({
+  header: 'Default Header', // Fallback
+  differentFirstPage: true,
+  headerFirstPage: 'Title Page', // Page 1
+  differentOddEven: true,
+  headerOdd: 'Odd Page Header', // Pages 3, 5, 7...
+  headerEven: 'Even Page Header', // Pages 2, 4, 6...
+})
+```
+
+## 可编辑的页眉和页脚
+
+用户可以双击页眉或页脚直接进行编辑。这会打开功能完整的 Tiptap 编辑器，支持富文本编辑。
+
+### 自定义扩展
+
+页眉/页脚编辑器使用与主编辑器相同的扩展配置。若要确保架构一致（使相同的标记、节点和表格行为在页眉和页脚中生效），请通过 `headerFooterExtensions` 传入 `ConvertKit` 和 `TableKit`：
+
+```ts
+import { ConvertKit } from '@tiptap-pro/extension-convert-kit'
+import { TableKit } from '@tiptap-pro/extension-pages-tablekit'
+
+Pages.configure({
+  header: 'My header',
+  headerFooterExtensions: [ConvertKit.configure({ table: false }), TableKit],
+})
+```
+
+可以通过 `headerFooterExtensions` 选项向页眉/页脚编辑器添加任何 Tiptap 扩展。与主编辑器使用相同的扩展集，可确保文档正文与页眉、页脚的架构、键盘快捷键和渲染效果保持一致。
+
+<Callout title="协作模式请使用回调形式" variant="info">
+  `headerFooterExtensions` 也接受 `(ctx) => Extensions` 回调；该回调会针对每种页眉/页脚子类型各执行一次，并提供子编辑器应绑定的 Y 字段名称和 Y.Doc。配置协作时请使用此形式。请参阅[为 Pages 添加协作功能](/pages/guides/collaboration-with-pages)。
+</Callout>
+
+### 活动编辑器状态
+
+用户双击页眉或页脚进行编辑时，扩展会通过 storage 暴露当前活动编辑器。你可以据此构建适用于页眉/页脚编辑器的自定义工具栏。
+
+**Storage 属性：**
+
+- `activeEditor` – 当前打开的页眉或页脚编辑器对应的 Tiptap Editor 实例（若无则为 `null`）
+- `activeEditorType` – `'header'`、`'footer'` 或 `null`
+- `activePageNumber` – 正在编辑的页码（若无则为 `null`）
+- `headerEditorOn` / `headerEditorOff` – 订阅/取消订阅默认页眉编辑器的事件（未启用协作时为 `null`）
+- `footerEditorOn` / `footerEditorOff` – 订阅/取消订阅默认页脚编辑器的事件（未启用协作时为 `null`）
+
+扩展还会监听页眉和页脚内部编辑器的 `focus` 事件，包括首页、奇数页和偶数页变体。用户将焦点移到另一个已打开的页眉或页脚编辑器时，`activeEditor`、`activeEditorType` 和 `activePageNumber` 会根据活动浮层刷新，主编辑器也会触发 `update`。在 `update` 事件中读取 `editor.storage.pages` 的工具栏会跟随当前获得焦点的编辑器。
+
+### 锁定页眉或页脚
+
+将 `editableHeader` 或 `editableFooter` 设为 `false`，即可渲染页眉/页脚而不显示双击编辑提示。锁定后，用户和代码都无法打开浮层：`cursor: pointer` 提示会移除，`openHeaderEditor` / `openFooterEditor` 命令会返回 `false`，已经打开的浮层也会关闭（并恢复主编辑器的 `editable` 状态）。
+
+```ts
+Pages.configure({
+  header: 'Page {page} of {total}',
+  editableHeader: false, // locked at editor creation
+})
+```
+
+使用 `setHeaderEditable` / `setFooterEditable` 可在运行时切换：
+
+```ts
+editor.commands.setHeaderEditable(false) // lock
+editor.commands.setHeaderEditable(true) // unlock
+
+editor.commands.setFooterEditable(false)
+editor.commands.setFooterEditable(true)
+```
+
+<Callout title="锁定不会隐藏内容" variant="info">
+  锁定后，页眉和页脚仍会正常渲染；移除的只是内联编辑功能。若要清空内容，请使用 `setHeader('')` / `setFooter('')`。
+</Callout>
+
+### 监听页眉/页脚编辑器事件
+
+页眉和页脚各自拥有独立的编辑器。
+
+若要显示当前正在编辑哪个页眉或页脚，请在主编辑器的 `update` 事件中读取 storage。焦点在不同的页眉/页脚变体之间切换时也会触发此事件，而默认编辑器无法监听这种变化：
+
+```tsx
+import { useEffect, useState } from 'react'
+
+function HeaderFooterStatus({ editor }) {
+  const [activeEditorType, setActiveEditorType] = useState(null)
+  const [activePageNumber, setActivePageNumber] = useState(null)
+
+  useEffect(() => {
+    if (!editor) return
+
+    const syncActiveEditorState = () => {
+      const { activeEditorType, activePageNumber } = editor.storage.pages
+      setActiveEditorType(activeEditorType)
+      setActivePageNumber(activePageNumber)
+    }
+
+    editor.on('update', syncActiveEditorState)
+
+    return () => {
+      editor.off('update', syncActiveEditorState)
+    }
+  }, [editor])
+
+  if (!activeEditorType || !activePageNumber) {
+    return <span>Editing document</span>
+  }
+
+  return (
+    <span>
+      Editing {activeEditorType} on page {activePageNumber}
+    </span>
+  )
+}
+```
+
+启用协作时，使用 `headerEditorOn` 和 `footerEditorOn` 监听默认页眉或页脚编辑器本身的事件，例如 `focus`、`update`、`selectionUpdate`、`blur` 或 `transaction` 等任何 Tiptap 编辑器事件。未启用协作时，这些属性为 `null`：Pages 会在创建编辑器时绑定它们，而页眉和页脚编辑器只会在首次打开时创建。
+
+### 构建自定义工具栏
+
+下面示例展示了一个 React 组件，它为主编辑器和页眉/页脚编辑器提供统一的工具栏：
+
+```tsx
+import { useEditor, useEditorState, EditorContent } from '@tiptap/react'
+import { useEffect, useState } from 'react'
+
+function DocumentEditor() {
+  const [headerFooterEditor, setHeaderFooterEditor] = useState(null)
+  const [activeEditorType, setActiveEditorType] = useState(null)
+  const [activePageNumber, setActivePageNumber] = useState(null)
+
+  const editor = useEditor({
+    extensions: [
+      ConvertKit.configure({ table: false }),
+      TableKit,
+      Pages.configure({
+        header: 'Document Header',
+        footer: 'Page {page}',
+      }),
+    ],
+  })
+
+  // Listen for changes to active header/footer editor
+  useEffect(() => {
+    if (!editor) return
+
+    const syncActiveHeaderFooterEditor = () => {
+      const { activeEditor, activeEditorType, activePageNumber } = editor.storage.pages
+      setHeaderFooterEditor(activeEditor)
+      setActiveEditorType(activeEditorType)
+      setActivePageNumber(activePageNumber)
+    }
+
+    editor.on('update', syncActiveHeaderFooterEditor)
+
+    return () => {
+      editor.off('update', syncActiveHeaderFooterEditor)
+    }
+  }, [editor])
+
+  // Use the active editor (header/footer or main)
+  const activeEditor = activeEditorType ? headerFooterEditor : editor
+
+  const { isBoldActive } = useEditorState({
+    editor: activeEditor,
+    selector: ({ editor: e }) => ({
+      isBoldActive: e?.isActive('bold') ?? false,
+    }),
+  })
+
+  return (
+    <div>
+      <div className="toolbar">
+        <span>
+          Editing:{' '}
+          {activeEditorType && activePageNumber
+            ? `${activeEditorType} on page ${activePageNumber}`
+            : 'Document'}
+        </span>
+        <button
+          className={isBoldActive ? 'is-active' : ''}
+          onClick={() => activeEditor?.chain().focus().toggleBold().run()}
+        >
+          Bold
+        </button>
+      </div>
+      <EditorContent editor={editor} />
+    </div>
+  )
+}
+```
+
+### 自定义浮层工具栏
+
+有两种方式可以添加控件，请根据控件的用途选择。
+
+- 对于也适用于文档正文的格式控件，可采用上面的模式，使用外部工具栏跟随 `editor.storage.pages.activeEditor`。
+- 对于应放在页眉或页脚浮层内、关闭按钮旁边的控件，请使用 `renderOverlayActions`。
+
+每次创建浮层工具栏时，都会运行 `renderOverlayActions`：浮层打开、缩放比例变化或页眉类型变化时都会运行。返回一个元素；若需要清理钩子（例如卸载 React portal），则返回 `{ element, destroy }`。返回 `null` 表示不渲染任何内容。
+
+```ts
+Pages.configure({
+  renderOverlayActions: ({ innerEditor }) => {
+    const button = document.createElement('button')
+    button.type = 'button'
+    button.textContent = 'Insert date'
+    button.onclick = () => {
+      innerEditor.chain().focus().insertContent(new Date().toLocaleDateString()).run()
+    }
+    return button
+  },
+})
+```
+
+上下文中包含父级 `editor`、正在编辑的 `innerEditor`、`kind`（`'header'` 或 `'footer'`）、`subType`（`'default'`、`'first'`、`'odd'` 或 `'even'`）、`pageNumber` 和 `close()`。
+
+请将状态保存在返回元素之外。每次重新构建时，当前插槽都会销毁并重新渲染。
+
+### 翻译浮层标签
+
+所有浮层标签都通过 `overlayLabels` 设置。每个标签项都是一个函数，因此可配合任何国际化库使用。缺少的标签项会使用英文默认值。`close` 是一个字符串，会用作每个“关闭”按钮的无障碍名称和工具提示。
+
+```ts
+Pages.configure({
+  overlayLabels: {
+    header: ({ subType, pageNumber }) =>
+      subType === 'first' ? t('pages.header.first') : t('pages.header.page', { pageNumber }),
+    footer: ({ subType, pageNumber }) => t('pages.footer', { subType, pageNumber }),
+    footnotes: ({ pageNumber }) => t('pages.footnotes', { pageNumber }),
+    endnotes: () => t('pages.endnotes'),
+    close: t('common.close'),
+  },
+})
+```
+
+正文中的脚注和尾注标记，其屏幕阅读器名称由单独的选项 `noteReferenceLabel` 设置。请参阅[屏幕阅读器名称](/pages/core-concepts/footnotes#screen-reader-names)。
+
+## 访问页眉和页脚内容
+
+用户通过页眉或页脚的 Tiptap 编辑器编辑内容后，内容会存储在扩展的 storage 中。这对于保存文档或导出为 DOCX 等格式很有用。
+
+### HTML 内容
+
+访问编辑后的 HTML 内容：
+
+```js
+// Default header/footer
+const headerHTML = editor.storage.pages.headerHTML
+const footerHTML = editor.storage.pages.footerHTML
+
+// First page
+const headerFirstPageHTML = editor.storage.pages.headerFirstPageHTML
+const footerFirstPageHTML = editor.storage.pages.footerFirstPageHTML
+
+// Odd/even pages
+const headerOddHTML = editor.storage.pages.headerOddHTML
+const headerEvenHTML = editor.storage.pages.headerEvenHTML
+const footerOddHTML = editor.storage.pages.footerOddHTML
+const footerEvenHTML = editor.storage.pages.footerEvenHTML
+```
+
+<Callout title="注意" variant="info">
+  用户通过对应的页眉/页脚编辑器进行编辑之前，这些 storage 值为 `null`。编辑之前使用的是配置中的原始模板。
+</Callout>
+
+### 用于 DOCX 导出的 JSON 内容
+
+导出 DOCX 时，请使用提供结构化 Tiptap 文档格式的 JSON 版本：
+
+```js
+// Default header/footer
+const headerJSON = editor.storage.pages.headerJSON
+const footerJSON = editor.storage.pages.footerJSON
+
+// First page
+const headerFirstPageJSON = editor.storage.pages.headerFirstPageJSON
+const footerFirstPageJSON = editor.storage.pages.footerFirstPageJSON
+
+// Odd/even pages
+const headerOddJSON = editor.storage.pages.headerOddJSON
+const headerEvenJSON = editor.storage.pages.headerEvenJSON
+const footerOddJSON = editor.storage.pages.footerOddJSON
+const footerEvenJSON = editor.storage.pages.footerEvenJSON
+```
+
+<Callout title="注意" variant="info">
+  用户通过对应的页眉/页脚编辑器进行编辑之前，这些 storage 值为 `null`。编辑之前使用的是配置中的原始模板。
+</Callout>
+
+### 保存页眉和页脚内容
+
+页眉和页脚内容需要由你负责持久化。保存文档时从 storage 中获取内容，加载时再恢复。
+
+**保存所有页眉和页脚内容：**
+
+```js
+function getHeaderFooterContent(editor) {
+  const { pages } = editor.storage
+
+  return {
+    // Default header/footer
+    headerHTML: pages.headerHTML,
+    headerJSON: pages.headerJSON,
+    footerHTML: pages.footerHTML,
+    footerJSON: pages.footerJSON,
+
+    // First page
+    headerFirstPageHTML: pages.headerFirstPageHTML,
+    headerFirstPageJSON: pages.headerFirstPageJSON,
+    footerFirstPageHTML: pages.footerFirstPageHTML,
+    footerFirstPageJSON: pages.footerFirstPageJSON,
+
+    // Odd/even pages
+    headerOddHTML: pages.headerOddHTML,
+    headerOddJSON: pages.headerOddJSON,
+    headerEvenHTML: pages.headerEvenHTML,
+    headerEvenJSON: pages.headerEvenJSON,
+    footerOddHTML: pages.footerOddHTML,
+    footerOddJSON: pages.footerOddJSON,
+    footerEvenHTML: pages.footerEvenHTML,
+    footerEvenJSON: pages.footerEvenJSON,
+  }
+}
+
+// Save to your backend
+const headerFooterData = getHeaderFooterContent(editor)
+await saveDocument({ content: editor.getJSON(), headerFooter: headerFooterData })
+```
+
+## 以编程方式打开和关闭编辑器
+
+你可以通过编程方式打开和关闭页眉及页脚编辑器。这在集成自定义 UI 元素、构建导航界面或响应用户操作时很有用。
+
+### 打开编辑器
+
+使用 `openHeaderEditor` 和 `openFooterEditor` 命令，以编程方式打开指定页面的编辑器：
+
+```js
+// Open header editor for page 1
+editor.commands.openHeaderEditor({ pageNumber: 1 })
+
+// Open footer editor for page 3
+editor.commands.openFooterEditor({ pageNumber: 3 })
+```
+
+如果成功打开编辑器，这些命令会返回 `true`；如果指定页面不存在，则返回 `false`。
+
+<Callout title="注意" variant="info">
+  打开编辑器时，任何已打开的页眉或页脚编辑器都会自动关闭。页眉或页脚编辑器打开期间，主文档编辑器将变为不可编辑状态。
+</Callout>
+
+**适用场景：**
+
+- 构建页面导航 UI，让用户可以直接跳转到指定页面并编辑其页眉或页脚
+- 在工具栏中创建“转到页眉/页脚”按钮
+- 实现用于打开页眉或页脚的键盘快捷键
+- 响应外部事件，以编程方式打开编辑器
+
+**示例：页面导航组件**
+
+```tsx
+function PageNavigation({ editor }) {
+  const pageCount = editor.storage.pages.getPageCount?.() ?? 1
+
+  return (
+    <div>
+      {Array.from({ length: pageCount }, (_, i) => (
+        <div key={i + 1}>
+          <span>Page {i + 1}</span>
+          <button onClick={() => editor.commands.openHeaderEditor({ pageNumber: i + 1 })}>
+            Edit Header
+          </button>
+          <button onClick={() => editor.commands.openFooterEditor({ pageNumber: i + 1 })}>
+            Edit Footer
+          </button>
+        </div>
+      ))}
+    </div>
+  )
+}
+```
+
+### 关闭编辑器
+
+使用关闭命令关闭页眉或页脚编辑器：
+
+```js
+// Close whichever editor is currently open
+editor.commands.closeHeaderFooterEditors()
+
+// Close specific editors
+editor.commands.closeHeaderEditor()
+editor.commands.closeFooterEditor()
+```
+
+## 防止双击时关闭编辑器
+
+默认情况下，在已打开的页眉或页脚编辑器外双击会将其关闭。你可以通过回调选项阻止此行为；当用户可能在编辑时双击工具栏按钮或其他 UI 元素时，这会很有用。
+
+### 配置
+
+有三个回调选项可用：
+
+- `onDblClickHeaderFooterPreventClose` —— 同时应用于页眉和页脚（回退选项）
+- `onDblClickHeaderPreventClose` —— 仅应用于页眉（优先级高于回退选项）
+- `onDblClickFooterPreventClose` —— 仅应用于页脚（优先级高于回退选项）
+
+每个回调都会接收 `MouseEvent`，并返回 `true` 以阻止关闭，或返回 `false` 以允许关闭。
+
+**示例：点击工具栏时防止关闭**
+
+```js
+Pages.configure({
+  header: 'My Header',
+  footer: 'Page {page}',
+  onDblClickHeaderFooterPreventClose: (event) => {
+    // Keep editor open if clicking inside the toolbar
+    const toolbar = document.querySelector('.my-toolbar')
+    return toolbar?.contains(event.target)
+  },
+})
+```
+
+**示例：为页眉和页脚设置不同的行为**
+
+```js
+Pages.configure({
+  header: 'My Header',
+  footer: 'Page {page}',
+  // Never close header editor on double-click outside
+  onDblClickHeaderPreventClose: () => true,
+  // Use default behavior for footer (close on double-click outside)
+  onDblClickFooterPreventClose: () => false,
+})
+```
+
+## 强调色
+
+使用强调色自定义页眉和页脚编辑器浮层的视觉外观。强调色会影响三个元素：
+
+- **光标颜色** —— 编辑器中的文本光标
+- **工具栏边框** —— 编辑工具栏的上边框（页眉）或下边框（页脚）
+- **标签背景** —— “页眉”或“页脚”标签的背景
+
+### 配置
+
+配置扩展时设置强调色：
+
+```js
+Pages.configure({
+  header: 'My Header',
+  footer: 'Page {page}',
+  // Set the same color for both header and footer overlays
+  accentColor: '#3b82f6',
+})
+```
+
+也可以分别为页眉和页脚浮层设置不同的颜色：
+
+```js
+Pages.configure({
+  header: 'My Header',
+  footer: 'Page {page}',
+  headerAccentColor: '#3b82f6', // Blue for headers
+  footerAccentColor: '#10b981', // Green for footers
+})
+```
+
+### 运行时更新
+
+使用命令动态更改强调色：
+
+```js
+// Update both header and footer overlay colors
+editor.commands.setAccentColor('#8b5cf6')
+
+// Update header overlay color only
+editor.commands.setHeaderAccentColor('#3b82f6')
+
+// Update footer overlay color only
+editor.commands.setFooterAccentColor('#ef4444')
+```
+
+<Callout title="CSS 颜色值" variant="info">
+  强调色选项接受任何有效的 CSS 颜色值，包括十六进制（`#3b82f6`）、rgb（`rgb(59, 130, 246)`）、hsl（`hsl(217, 91%, 60%)`）、oklch 或 CSS 变量（`var(--primary-color)`）。
+</Callout>
+
+## 工具栏渐变
+
+打开页眉或页脚浮层时出现的编辑工具栏，其标签和关闭按钮背后带有淡淡的白色渐变。使用 `toolbarGradient` 选项可禁用渐变，让工具栏呈现纯色背景：
+
+```js
+Pages.configure({
+  header: 'My Header',
+  footer: 'Page {page}',
+  toolbarGradient: false, // flat toolbars; default is true
+})
+```
+
+这是一个适用于整个文档的统一设置：页眉、页脚、[脚注](/pages/core-concepts/footnotes)和[尾注](/pages/core-concepts/endnotes)编辑工具栏都会应用该设置，从而保持视觉风格一致。
+
+## 浮层背景和 z-index
+
+页眉、页脚、脚注和尾注浮层默认背景为白色，且 `z-index` 为 `1000`。有两个选项可以更改这些设置：
+
+- `overlayBackgroundColor` 设置浮层背景以及工具栏渐变的起始颜色。如果页面带有背景色，可使用此选项让打开的浮层与页面颜色一致，而不是显示白色方框。
+- `overlayZIndex` 设置浮层的堆叠顺序。如果自定义菜单或弹出层的层级低于 1000，而你需要让它们显示在打开的浮层之上，可降低此值。
+
+```js
+Pages.configure({
+  header: 'My Header',
+  footer: 'Page {page}',
+  overlayBackgroundColor: 'var(--page-color)',
+  overlayZIndex: 50,
+})
+```
+
+`overlayBackgroundColor` 接受任何 CSS 颜色，也接受 CSS 变量。浮层会添加到编辑器外部的 `document.body` 中，因此请在 `body` 可继承变量的位置定义它，例如 `:root`。使用变量时，页面颜色发生变化，即使浮层仍处于打开状态，其背景颜色也会同步更新：
+
+```css
+:root {
+  --page-color: #fffbeb;
+  /* Pages also paints the pages with this color. */
+  --pages-page-background-color: var(--page-color);
+}
+```
+
+与 `toolbarGradient` 一样，这两个选项也会同时应用于页眉、页脚、脚注和尾注浮层。
+
+## 限制
+
+### 页眉和页脚编辑器样式
+
+页眉/页脚编辑器使用内置样式。不过，你可以通过 `accentColor`、`headerAccentColor` 和 `footerAccentColor` 选项自定义强调色，也可以通过 `overlayBackgroundColor` 和 `overlayZIndex` 设置浮层背景和堆叠顺序。
+
+### 协作
+
+页眉和页脚编辑器会与主文档一起参与协作。每种子类型（默认、首页、奇数页、偶数页）独立协作；`differentFirstPage` / `differentOddEven` 开关会在客户端之间同步；文档级页面几何设置（`pageFormat`、`pageGap`、`headerTopMargin`、`footerBottomMargin`）也会同步，因此远程调用 `setPageFormat` 或更改边距会让所有客户端重新排版。若要启用此功能，请将 `headerFooterExtensions` 设为一个**回调**，为每个子编辑器附加 `Collaboration` 扩展；静态数组形式不会为子编辑器启用协作。完整设置步骤请参阅[为 Pages 添加协作功能](/pages/guides/collaboration-with-pages)。
+
+<Callout title="协作时请省略页眉/页脚默认值" variant="warning">
+  启用协作时，请勿在 `Pages.configure()` 中传入 `header` / `footer` 默认值；其他客户端清除内容后，这些默认值可能会重新出现。请省略默认值；如果需要初始内容，请等 provider 同步后，通过 `editor.commands.setHeader(...)` 设置一次。
+</Callout>
+
+## 完整选项参考
+
+| 选项                                  | 类型                                | 默认值                 | 说明                                                                       |
+| ------------------------------------- | ----------------------------------- | ---------------------- | -------------------------------------------------------------------------- |
+| `header`                              | `string \| JSONContent`             | `''`                   | 默认页眉内容                                                               |
+| `footer`                              | `string \| JSONContent`             | `''`                   | 默认页脚内容                                                               |
+| `headerTopMargin`                     | `number`                            | 上边距的 50%           | 页面顶部到页眉内容的距离                                                   |
+| `footerBottomMargin`                  | `number`                            | 下边距的 50%           | 页脚内容到底部边缘的距离                                                   |
+| `differentFirstPage`                  | `boolean`                           | `false`                | 启用首页不同的页眉和页脚                                                   |
+| `headerFirstPage`                     | `PagesHeaderFooter`                 | `''`                   | 首页页眉内容                                                               |
+| `footerFirstPage`                     | `PagesHeaderFooter`                 | `''`                   | 首页页脚内容                                                               |
+| `differentOddEven`                    | `boolean`                           | `false`                | 启用奇偶页不同的页眉和页脚                                                 |
+| `headerOdd`                           | `PagesHeaderFooter`                 | `''`                   | 奇数页页眉内容                                                             |
+| `headerEven`                          | `PagesHeaderFooter`                 | `''`                   | 偶数页页眉内容                                                             |
+| `footerOdd`                           | `PagesHeaderFooter`                 | `''`                   | 奇数页页脚内容                                                             |
+| `footerEven`                          | `PagesHeaderFooter`                 | `''`                   | 偶数页页脚内容                                                             |
+| `editableHeader`                      | `boolean`                           | `true`                 | 双击页眉时是否打开内联编辑器                                               |
+| `editableFooter`                      | `boolean`                           | `true`                 | 双击页脚时是否打开内联编辑器                                               |
+| `headerFooterExtensions`              | `Extensions \| (ctx) => Extensions` | `ConvertKit`           | 页眉/页脚子编辑器的扩展。非协作模式下传入静态数组；若要为每种子类型附加 `Collaboration`，请传入回调。请参阅[为 Pages 添加协作功能](/pages/guides/collaboration-with-pages)。 |
+| `onDblClickHeaderFooterPreventClose`  | `(event: MouseEvent) => boolean`    | `undefined`            | 在外部双击时阻止关闭页眉/页脚编辑器的回调                                 |
+| `onDblClickHeaderPreventClose`        | `(event: MouseEvent) => boolean`    | `undefined`            | 在外部双击时阻止关闭页眉编辑器的回调                                       |
+| `onDblClickFooterPreventClose`        | `(event: MouseEvent) => boolean`    | `undefined`            | 在外部双击时阻止关闭页脚编辑器的回调                                       |
+| `accentColor`                         | `string`                            | `'#6366f1'`             | 页眉/页脚编辑器浮层的强调色                                                |
+| `headerAccentColor`                   | `string`                            | `accentColor` 的值     | 页眉编辑器浮层的强调色                                                     |
+| `footerAccentColor`                   | `string`                            | `accentColor` 的值     | 页脚编辑器浮层的强调色                                                     |
+| `toolbarGradient`                     | `boolean`                           | `true`                 | 是否在编辑浮层工具栏（页眉、页脚、脚注、尾注）后显示白色渐变。设为 `false` 可使用纯色工具栏。 |
+| `overlayBackgroundColor`              | `string`                            | `undefined`（白色）    | 页眉、页脚、脚注和尾注浮层及其工具栏渐变的背景。接受任意 CSS 颜色，也接受 CSS 变量。请参阅[浮层背景和 z-index](/pages/core-concepts/page-header-footer#overlay-background-and-z-index)。 |
+| `overlayZIndex`                       | `number`                            | `undefined`（1000）    | 页眉、页脚、脚注和尾注浮层的堆叠顺序。降低此值可让自定义菜单显示在打开的浮层上方。 |
+| `placeholders`                        | `false \| { page?, total? }`        | `undefined`            | 重命名内置 `{page}` / `{total}` 标记或禁用替换。                           |
+
+## 命令参考
+
+| 命令                       | 参数                          | 说明                                                                 |
+| -------------------------- | ----------------------------- | -------------------------------------------------------------------- |
+| `setHeader`                | `header: PagesHeaderFooter`   | 设置默认页眉内容                                                     |
+| `setFooter`                | `footer: PagesHeaderFooter`   | 设置默认页脚内容                                                     |
+| `setHeaderTopMargin`       | `margin: number`              | 设置页眉上边距（像素）。不接受负值和 `NaN`。                         |
+| `resetHeaderTopMargin`     | 无                            | 清除页眉上边距覆盖值，恢复为当前格式的默认值（该格式上边距的 50%）。 |
+| `setFooterBottomMargin`    | `margin: number`              | 设置页脚下边距（像素）。不接受负值和 `NaN`。                         |
+| `resetFooterBottomMargin`  | 无                            | 清除页脚下边距覆盖值，恢复为当前格式的默认值（该格式下边距的 50%）。 |
+| `setDifferentFirstPage`    | `enabled: boolean`            | 切换首页不同（页眉和页脚）。首页插槽初始为空，与 Word 一致。如果有页眉/页脚浮层处于打开状态，会刷新以显示新变体。 |
+| `setHeaderFirstPage`       | `header: PagesHeaderFooter`   | 设置首页页眉内容                                                     |
+| `setFooterFirstPage`       | `footer: PagesHeaderFooter`   | 设置首页页脚内容                                                     |
+| `setDifferentOddEven`      | `enabled: boolean`            | 切换奇偶页不同（页眉和页脚）。启用时，如果奇数页插槽为空，会将默认页眉/页脚复制到该插槽，以保持 Word 中的内容连续。如果有页眉/页脚浮层处于打开状态，会刷新以显示新变体。 |
+| `setHeaderOdd`             | `header: PagesHeaderFooter`   | 设置奇数页页眉内容                                                   |
+| `setHeaderEven`            | `header: PagesHeaderFooter`   | 设置偶数页页眉内容                                                   |
+| `setFooterOdd`             | `footer: PagesHeaderFooter`   | 设置奇数页页脚内容                                                   |
+| `setFooterEven`            | `footer: PagesHeaderFooter`   | 设置偶数页页脚内容                                                   |
+| `unsetHeader`              | `headerType?: HeaderType`     | 清除页眉插槽。不指定时清除默认插槽；也可传入 `'first'`、`'odd'` 或 `'even'`。预留的页眉空间会归零。 |
+| `unsetFooter`              | `footerType?: FooterType`     | 清除页脚插槽。不指定时清除默认插槽；也可传入 `'first'`、`'odd'` 或 `'even'`。预留的页脚空间会归零。 |
+| `setHeaderEditable`        | `enabled: boolean`            | 锁定或解锁页眉浮层。设为 `false` 时，双击不会触发操作，`openHeaderEditor` 会返回 `false`，任何已打开的页眉浮层都会关闭。 |
+| `setFooterEditable`        | `enabled: boolean`            | 锁定或解锁页脚浮层。设为 `false` 时，双击不会触发操作，`openFooterEditor` 会返回 `false`，任何已打开的页脚浮层都会关闭。 |
+| `openHeaderEditor`         | `{ pageNumber: number }`      | 打开指定页面的页眉编辑器（页码从 1 开始）                             |
+| `openFooterEditor`         | `{ pageNumber: number }`      | 打开指定页面的页脚编辑器（页码从 1 开始）                             |
+| `closeHeaderFooterEditors` | 无                            | 关闭当前打开的页眉或页脚编辑器                                       |
+| `closeHeaderEditor`        | 无                            | 如果页眉编辑器已打开，则将其关闭                                     |
+| `closeFooterEditor`        | 无                            | 如果页脚编辑器已打开，则将其关闭                                     |
+| `setAccentColor`           | `color: string`               | 设置两个编辑器浮层的强调色                                           |
+| `setHeaderAccentColor`     | `color: string`               | 设置页眉编辑器浮层的强调色                                           |
+| `setFooterAccentColor`     | `color: string`               | 设置页脚编辑器浮层的强调色                                           |
