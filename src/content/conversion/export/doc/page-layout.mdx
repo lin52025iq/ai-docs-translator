@@ -1,14 +1,14 @@
 ---
-title: Custom page layouts in DOC
+title: DOC 中的自定义页面布局
 tags:
   - type: start
   - type: beta
   - type: version
     label: v0.6.2
 meta:
-  title: Custom page layouts in DOC | Tiptap Conversion
-  description: Learn how to customize your DOC page and margin sizes using the Export DOC extension.
-  category: Conversion
+  title: DOC 中的自定义页面布局 | Tiptap Conversion
+  description: 了解如何使用 DOC 导出扩展自定义 DOC 页面的尺寸和边距。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
@@ -18,47 +18,44 @@ import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 <EnterpriseCalloutAuto variant="doc" renderMode="sidebar" disableWaitlist />
 
 <Requirements>
-  <RequirementItem label="1. Activate trial or subscribe">
-    Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start
-    plan](https://cloud.tiptap.dev/v2/billing) in your account.
+  <RequirementItem label="1. 激活试用或订阅">
+    在账户中开始[免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start
+    套餐](https://cloud.tiptap.dev/v2/billing)。
   </RequirementItem>
-  <RequirementItem label="2. Install from private registry">
-    To install this frontend extension, authenticate to Tiptap's private npm registry by following
-    the [setup guide](/guides/pro-extensions).
+  <RequirementItem label="2. 从私有注册表安装">
+    要安装此前端扩展，请按照[设置指南](/guides/pro-extensions)进行操作，以通过身份验证访问 Tiptap 的私有 npm 注册表。
   </RequirementItem>
 </Requirements>
 
-The DOC Export extension supports custom page sizes and margins, allowing you to create documents with precise layouts that match your requirements. Whether you need A5 pages, custom paper sizes, or specific margin configurations, you can configure these settings directly in the extension.
+DOC 导出扩展支持自定义页面尺寸和边距，让你可以创建布局精准、符合需求的文档。无论你需要 A5 页面、自定义纸张尺寸，还是特定的边距设置，都可以直接在扩展中进行配置。
 
-<Callout title="Consider using DOCX instead" variant="info">
-  The DOC format is a legacy format from Microsoft Word 97-2003. For modern use, we recommend
-  exporting to [DOCX](/conversion/export/docx/page-layout) instead. Use DOC only when compatibility
-  with older systems requires it.
+<Callout title="建议改用 DOCX" variant="info">
+  DOC 是 Microsoft Word 97-2003 使用的旧版格式。对于现代用途，我们建议改为导出为 [DOCX](/conversion/export/docx/page-layout)。只有在需要兼容旧系统时才使用 DOC。
 </Callout>
 
-## Page size configuration
+## 页面尺寸配置
 
-Use the `pageSize` option to define custom page dimensions for your exported DOC files. The page size configuration accepts width and height values with various measurement units.
+使用 `pageSize` 选项为导出的 DOC 文件定义自定义页面尺寸。页面尺寸配置接受采用各种度量单位的宽度和高度值。
 
-### Supported units
+### 支持的单位
 
-All page size and margin measurements support the following units:
+所有页面尺寸和边距的测量值均支持以下单位：
 
-| Unit | Description           |
-| ---- | --------------------- |
-| `cm` | Centimeters (default) |
-| `in` | Inches                |
-| `pt` | Points                |
-| `pc` | Picas                 |
-| `mm` | Millimeters           |
-| `px` | Pixels                |
+| 单位 | 说明         |
+| ---- | ------------ |
+| `cm` | 厘米（默认） |
+| `in` | 英寸         |
+| `pt` | 磅           |
+| `pc` | 派卡         |
+| `mm` | 毫米         |
+| `px` | 像素         |
 
-### Configuration options
+### 配置选项
 
-| Property | Type     | Description                                                                                          | Default    |
-| -------- | -------- | ---------------------------------------------------------------------------------------------------- | ---------- |
-| `width`  | `string` | The width of the page. Must be a positive number followed by a valid unit (cm, in, pt, pc, mm, px).  | `"21cm"`   |
-| `height` | `string` | The height of the page. Must be a positive number followed by a valid unit (cm, in, pt, pc, mm, px). | `"29.7cm"` |
+| 属性     | 类型     | 说明                                                                                 | 默认值     |
+| -------- | -------- | ------------------------------------------------------------------------------------ | ---------- |
+| `width`  | `string` | 页面宽度。必须是一个正数，后接有效单位（cm、in、pt、pc、mm、px）。                    | `"21cm"`   |
+| `height` | `string` | 页面高度。必须是一个正数，后接有效单位（cm、in、pt、pc、mm、px）。                    | `"29.7cm"` |
 
 ```js
 import { ExportDoc } from '@tiptap-pro/extension-export-doc'
@@ -66,26 +63,26 @@ import { ExportDoc } from '@tiptap-pro/extension-export-doc'
 ExportDoc.configure({
   token: 'YOUR_TOKEN',
   pageSize: {
-    width: '14.8cm', // A5 width
-    height: '21cm', // A5 height
+    width: '14.8cm', // A5 宽度
+    height: '21cm', // A5 高度
   },
 })
 ```
 
-## Page margins configuration
+## 页面边距配置
 
-The `pageMargins` option allows you to set custom margins for all sides of your document pages. Unlike page sizes, top and bottom margins can accept negative values.
+`pageMargins` 选项允许你为文档页面的各个方向设置自定义边距。与页面尺寸不同，上边距和下边距可以使用负值。
 
-### Configuration options
+### 配置选项
 
-| Property | Type     | Description                                                                                                                                  | Default    |
-| -------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| `top`    | `string` | The top margin of the page. Can be negative. Must be a number followed by a valid unit (cm, in, pt, pc, mm, px).                             | `"1cm"`    |
-| `bottom` | `string` | The bottom margin of the page. Can be negative. Must be a number followed by a valid unit (cm, in, pt, pc, mm, px).                          | `"1cm"`    |
-| `left`   | `string` | The left margin of the page. Must be a positive number followed by a valid unit (cm, in, pt, pc, mm, px).                                    | `"1cm"`    |
-| `right`  | `string` | The right margin of the page. Must be a positive number followed by a valid unit (cm, in, pt, pc, mm, px).                                   | `"1cm"`    |
-| `header` | `string` | Distance from the top edge of the page to the top of the header. Should be smaller than `top`. Must be a positive number with unit.          | `"1.25cm"` |
-| `footer` | `string` | Distance from the bottom edge of the page to the bottom of the footer. Should be smaller than `bottom`. Must be a positive number with unit. | `"1.25cm"` |
+| 属性     | 类型     | 说明                                                                                                       | 默认值     |
+| -------- | -------- | ---------------------------------------------------------------------------------------------------------- | ---------- |
+| `top`    | `string` | 页面上边距。可以为负值。必须是一个数字，后接有效单位（cm、in、pt、pc、mm、px）。                           | `"1cm"`    |
+| `bottom` | `string` | 页面下边距。可以为负值。必须是一个数字，后接有效单位（cm、in、pt、pc、mm、px）。                           | `"1cm"`    |
+| `left`   | `string` | 页面左边距。必须是一个正数，后接有效单位（cm、in、pt、pc、mm、px）。                                       | `"1cm"`    |
+| `right`  | `string` | 页面右边距。必须是一个正数，后接有效单位（cm、in、pt、pc、mm、px）。                                       | `"1cm"`    |
+| `header` | `string` | 页面顶边到页眉顶部的距离。应小于 `top`。必须是带单位的正数。                                               | `"1.25cm"` |
+| `footer` | `string` | 页面底边到页脚底部的距离。应小于 `bottom`。必须是带单位的正数。                                            | `"1.25cm"` |
 
 ```js
 import { ExportDoc } from '@tiptap-pro/extension-export-doc'
@@ -97,42 +94,36 @@ ExportDoc.configure({
     bottom: '2cm',
     left: '1.5cm',
     right: '1.5cm',
-    // Distance from the page edge to the header/footer
+    // 页面边缘到页眉/页脚的距离
     header: '1cm',
     footer: '1cm',
   },
 })
 ```
 
-<Callout title="Auto-derived from the Pages extension" variant="hint">
-  When the [Pages extension](/editor/extensions/functionality/pages) is configured alongside
-  `ExportDoc`, the `header` and `footer` offsets are automatically derived from the Pages storage
-  values `headerTopMargin` and `footerBottomMargin`. Values you pass to `pageMargins` always take
-  precedence.
+<Callout title="自动从 Pages 扩展派生" variant="hint">
+  将 [Pages 扩展](/editor/extensions/functionality/pages)与 `ExportDoc` 一起配置时，`header` 和 `footer` 偏移量会自动从 Pages 存储值 `headerTopMargin` 和 `footerBottomMargin` 中派生。你传入 `pageMargins` 的值始终优先。
 </Callout>
 
-<Callout title="Convert service requirement" variant="info">
-  End-to-end support for `pageMargins.header` and `pageMargins.footer` requires the Tiptap convert
-  service to be on a version that accepts these fields and ships an updated
-  `@tiptap-pro/extension-export-docx`. On older convert service versions the values are ignored and
-  Word's defaults are used.
+<Callout title="转换服务要求" variant="info">
+  要端到端支持 `pageMargins.header` 和 `pageMargins.footer`，Tiptap 转换服务必须使用能够接受这些字段并附带更新版 `@tiptap-pro/extension-export-docx` 的版本。在较旧版本的转换服务中，这些值会被忽略，并使用 Word 的默认设置。
 </Callout>
 
-## Page background color
+## 页面背景颜色
 
-Use the `pageColor` option to set a background color for every page of the exported DOC.
+使用 `pageColor` 选项为导出 DOC 的每一页设置背景颜色。
 
-### Accepted formats
+### 接受的格式
 
-| Format        | Example                                                   |
-| ------------- | --------------------------------------------------------- |
-| Hex (6-digit) | `"#ff0000"`                                               |
-| Hex (3-digit) | `"#f00"`                                                  |
-| `rgb()`       | `"rgb(255, 0, 0)"`                                        |
-| `rgba()`      | `"rgba(255, 0, 0, 0.5)"`                                  |
-| Named color   | Common CSS named colors (`"red"`, `"blue"`, `"green"`, …) |
+| 格式         | 示例                                                      |
+| ------------ | --------------------------------------------------------- |
+| 十六进制（6 位） | `"#ff0000"`                                               |
+| 十六进制（3 位） | `"#f00"`                                                  |
+| `rgb()`      | `"rgb(255, 0, 0)"`                                        |
+| `rgba()`     | `"rgba(255, 0, 0, 0.5)"`                                  |
+| 命名颜色     | 常见的 CSS 命名颜色（`"red"`、`"blue"`、`"green"` 等） |
 
-Pass `"transparent"` or leave `pageColor` undefined to omit the page color.
+传入 `"transparent"` 或不设置 `pageColor`，即可不指定页面颜色。
 
 ```js
 ExportDoc.configure({
@@ -141,44 +132,42 @@ ExportDoc.configure({
 })
 ```
 
-<Callout title="Word does not print page backgrounds by default" variant="hint">
-  In Microsoft Word, the page background is shown on screen but is **not** included when printing or
-  exporting to PDF. To make it visible in printed output or PDF exports, the reader must enable
-  **File → Options → Display → Print background colors and images** in Word.
+<Callout title="Word 默认不会打印页面背景" variant="hint">
+  在 Microsoft Word 中，页面背景会显示在屏幕上，但**不会**包含在打印内容或导出的 PDF 中。若要让背景显示在打印输出或导出的 PDF 中，读者必须在 Word 中启用**文件 → 选项 → 显示 → 打印背景色和图像**。
 </Callout>
 
-## Complete example
+## 完整示例
 
-Here's a complete example showing how to configure custom page layouts with the DOC Export extension:
+以下是一个完整示例，展示如何使用 DOC 导出扩展配置自定义页面布局：
 
 ```js
 import { ExportDoc } from '@tiptap-pro/extension-export-doc'
 
 const editor = new Editor({
   extensions: [
-    // Other extensions...
+    // 其他扩展...
     ExportDoc.configure({
       token: 'YOUR_TOKEN',
-      // A5 page size
+      // A5 页面尺寸
       pageSize: {
         width: '14.8cm',
         height: '21cm',
       },
-      // Custom margins
+      // 自定义边距
       pageMargins: {
         top: '2cm',
         bottom: '2cm',
         left: '2cm',
         right: '2cm',
       },
-      // Page background color
+      // 页面背景颜色
       pageColor: '#fff8dc',
     }),
-    // Other extensions...
+    // 其他扩展...
   ],
 })
 
-// Export with custom layout
+// 使用自定义布局导出
 editor
   .chain()
   .exportDoc({
@@ -196,11 +185,11 @@ editor
   .run()
 ```
 
-## Common page sizes
+## 常见页面尺寸
 
-Here are some common page sizes you can use as reference:
+以下是一些常见页面尺寸，可供参考：
 
-| Format      | Width    | Height   |
+| 格式        | 宽度     | 高度     |
 | ----------- | -------- | -------- |
 | **A4**      | `21cm`   | `29.7cm` |
 | **A5**      | `14.8cm` | `21cm`   |
@@ -208,29 +197,28 @@ Here are some common page sizes you can use as reference:
 | **Legal**   | `8.5in`  | `14in`   |
 | **Tabloid** | `11in`   | `17in`   |
 
-## Different measurement units
+## 使用不同的度量单位
 
-You can mix and match different units based on your preference:
+你可以根据偏好混合使用不同的单位：
 
 ```js
 ExportDoc.configure({
   token: 'YOUR_TOKEN',
-  // US Letter size in inches
+  // 以英寸为单位的 US Letter 尺寸
   pageSize: {
     width: '8.5in',
     height: '11in',
   },
-  // Margins in different units
+  // 使用不同单位的边距
   pageMargins: {
-    top: '0.75in', // Inches
-    bottom: '72pt', // Points (1 inch = 72 points)
-    left: '2cm', // Centimeters
-    right: '20mm', // Millimeters
+    top: '0.75in', // 英寸
+    bottom: '72pt', // 磅（1 英寸 = 72 磅）
+    left: '2cm', // 厘米
+    right: '20mm', // 毫米
   },
 })
 ```
 
-<Callout title="Unit consistency" variant="hint">
-  While you can mix different units, it's generally recommended to use consistent units throughout
-  your configuration for better maintainability and clarity.
+<Callout title="单位一致性" variant="hint">
+  虽然可以混用不同单位，但通常建议在整个配置中使用统一的单位，以便于维护和理解。
 </Callout>
