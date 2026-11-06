@@ -2,27 +2,27 @@
 tags:
   - type: editor
 meta:
-  title: Invalid schema handling | Tiptap Editor Docs
-  description: Adjust and configure how you handle invalid schemas in Tiptap and Tiptap Collaboration. More in the docs!
-  category: Editor
-title: Invalid schema handling in Tiptap
+  title: 无效 Schema 处理 | Tiptap 编辑器文档
+  description: 调整和配置在 Tiptap 与 Tiptap Collaboration 中处理无效 Schema 的方式。了解更多信息，请参阅文档！
+  category: 编辑器
+title: 在 Tiptap 中处理无效 Schema
 ---
 
-Content integrity can be a significant challenge in collaborative editing environments. Think of a scenario where users with different versions of an app are trying to edit the same document. Or a scenario common to single-page applications: some users keep their browser tabs open for long periods of time without refreshing, while others always have the latest editor version after a recent page load.
+在协作编辑环境中，维护内容完整性可能是一项重大挑战。设想这样的情形：使用不同版本应用的用户尝试编辑同一份文档。或者，在单页应用中常见的情形：一些用户长时间不刷新浏览器标签页，而另一些用户则总是在最近一次加载页面后使用最新版本的编辑器。
 
-In both cases, a user with a newer version is creating content with features that are not available to others. When a user with an older version tries to access this document, how do we prevent data loss, maintain document structure, and ensure a smooth user experience?
+在这两种情况下，使用较新版本的用户都会创建包含某些功能的内容，而其他用户的版本并不支持这些功能。当使用旧版本的用户尝试访问这份文档时，我们该如何防止数据丢失、维护文档结构并确保流畅的用户体验？
 
-This is where invalid schema handling becomes important. It allows developers to gracefully manage situations where the content structure doesn't match the editor's expectations, preventing issues like data corruption, unexpected content stripping, or editor crashes.
+这正是无效 Schema 处理发挥作用的地方。它让开发者能够妥善处理内容结构与编辑器预期不符的情况，从而避免数据损坏、内容被意外剥除或编辑器崩溃等问题。
 
-Whether you're building a note-taking app, a content management system, or any application with rich text editing capabilities, understanding and implementing proper schema handling can significantly improve your application's reliability and user experience.
+无论你是在构建笔记应用、内容管理系统，还是任何具备富文本编辑功能的应用，理解并正确实现 Schema 处理，都能显著提升应用的可靠性和用户体验。
 
-## Introducing content checking
+## 内容检查简介
 
-Tiptap has an option called `enableContentCheck`. When set to `true`, this feature activates a mechanism to validate content against the schema derived from your registered extensions. This is particularly useful for catching and responding to content errors before they cause issues in your application.
+Tiptap 提供了一个名为 `enableContentCheck` 的选项。将其设为 `true` 后，该功能会启用一种机制，根据已注册扩展生成的 Schema 验证内容。这对于在内容错误导致应用出现问题之前及时发现并处理这些错误尤其有用。
 
-### Enable content checking
+### 启用内容检查
 
-To enable this feature, simply add the `enableContentCheck` option when initializing your Tiptap editor:
+要启用此功能，只需在初始化 Tiptap 编辑器时添加 `enableContentCheck` 选项：
 
 ```jsx
 new Editor({
@@ -31,15 +31,15 @@ new Editor({
 })
 ```
 
-## The contentError event
+## contentError 事件
 
-When content checking is enabled, Tiptap will emit a `contentError` event if the initial content provided during editor setup is incompatible with the schema. With the Collaboration extension, it is also emitted when the shared document contains content that doesn't fit the schema. See [For collaborative editing](#for-collaborative-editing). This event provides you with valuable information to handle the error appropriately.
+启用内容检查后，如果初始化编辑器时提供的初始内容与 Schema 不兼容，Tiptap 就会触发 `contentError` 事件。使用 Collaboration 扩展时，如果共享文档中包含不符合 Schema 的内容，也会触发此事件。请参阅[协作编辑](#协作编辑)。此事件会提供有价值的信息，帮助你妥善处理错误。
 
-### Handle contentError events
+### 处理 contentError 事件
 
-You have two options for handling these events:
+你有两种方式处理这些事件：
 
-Either you can use the `onContentError` callback:
+可以使用 `onContentError` 回调：
 
 ```jsx
 new Editor({
@@ -52,7 +52,7 @@ new Editor({
 })
 ```
 
-Or you can attach a listener to the `contentError` event:
+也可以为 `contentError` 事件添加监听器：
 
 ```jsx
 const editor = new Editor({
@@ -66,9 +66,9 @@ editor.on('contentError', ({ editor, error, disableCollaboration }) => {
 })
 ```
 
-## Listen to the contentError event without enabling content checking
+## 不启用内容检查也监听 contentError 事件
 
-If you want to listen to the `contentError` event without enabling content checking, set `emitContentError` to `true` when initializing your Tiptap editor:
+如果你想监听 `contentError` 事件，但不启用内容检查，请在初始化 Tiptap 编辑器时将 `emitContentError` 设为 `true`：
 
 ```jsx
 new Editor({
@@ -78,30 +78,30 @@ new Editor({
 })
 ```
 
-This setting allows you to have invalid content in your editor, but still be notified when the content is invalid.
+此设置允许编辑器中存在无效内容，同时仍会在内容无效时通知你。
 
-## A note on content types
+## 关于内容类型的说明
 
-It's important to note that Tiptap's content checking is 100% accurate for JSON content types. However, when working with HTML content, there may be some limitations. While Tiptap does its best to alert on missing nodes, certain mark-related issues might be missed in some situations.
+需要注意的是，对于 JSON 内容类型，Tiptap 的内容检查完全准确。但处理 HTML 内容时可能存在一些限制。尽管 Tiptap 会尽力提示缺失的节点，在某些情况下仍可能无法发现某些与标记相关的问题。
 
-## Recommended error handling strategies
+## 推荐的错误处理策略
 
-How you handle schema errors will depend on your specific application and requirements. However, here are some general recommendations:
+如何处理 Schema 错误取决于你的具体应用和需求。以下是一些通用建议：
 
-### For non-collaborative editing
+### 非协作编辑
 
-If you're not using collaborative editing features, the default behavior of stripping unknown content may be sufficient. This keeps your content in a known valid state for future editing.
+如果你不使用协作编辑功能，默认的剥除未知内容行为或许就足够了。这样可以确保内容保持在已知的有效状态，以便后续编辑。
 
-### For collaborative editing
+### 协作编辑
 
-A shared document can contain content that your editor can't display. For example, another user's app version added a node that your schema doesn't have. The [Collaboration extension](/editor/extensions/functionality/collaboration) handles this content depending on `enableContentCheck`:
+共享文档中可能包含编辑器无法显示的内容。例如，其他用户使用的应用版本添加了你的 Schema 中不存在的节点。[Collaboration 扩展](/editor/extensions/functionality/collaboration)会根据 `enableContentCheck` 的设置处理这些内容：
 
-- With `enableContentCheck: false` (the default), the editor removes the content it can't display and fills in missing required nodes. These changes are synced, so every other user loses that content too. A read-only user also sends these changes, and your server may reject them.
-- With `enableContentCheck: true`, the editor keeps that content in the shared document. It shows what it can, pauses editing and sends no changes. Then it emits the `contentError` event. Handle that event with `onContentError`, because the default handler throws the error. Editing resumes when a change from another user makes the content fit the schema again.
+- 当 `enableContentCheck: false`（默认值）时，编辑器会移除无法显示的内容，并补齐缺失的必需节点。这些更改会同步，因此其他所有用户也会丢失这些内容。只读用户也会发送这些更改，服务器可能会拒绝它们。
+- 当 `enableContentCheck: true` 时，编辑器会将这些内容保留在共享文档中。它会显示能够显示的内容，暂停编辑且不发送任何更改，然后触发 `contentError` 事件。请使用 `onContentError` 处理此事件，因为默认处理程序会抛出错误。当其他用户所做的更改使内容重新符合 Schema 后，编辑便会恢复。
 
-This needs `@tiptap/extension-collaboration` 3.33.0 and `@tiptap/y-tiptap` 3.2.0 or later. With older versions, the editor removes the content even with `enableContentCheck: true`, and `contentError` isn't emitted. Only `@tiptap/y-tiptap` 3.0.10 and 3.0.11 behave differently: they make the editor read-only in both cases and may show an empty or outdated document, also without `contentError`.
+此功能需要使用 `@tiptap/extension-collaboration` 3.33.0 和 `@tiptap/y-tiptap` 3.2.0 或更高版本。使用较旧版本时，即使设置了 `enableContentCheck: true`，编辑器仍会移除这些内容，也不会触发 `contentError`。只有 `@tiptap/y-tiptap` 3.0.10 和 3.0.11 的行为有所不同：这两个版本在两种情况下都会将编辑器设为只读，并且可能显示空文档或过时的文档，同样不会触发 `contentError`。
 
-For example, you can let users who can edit repair the document, and keep read-only users from sending any change:
+例如，你可以允许有编辑权限的用户修复文档，同时阻止只读用户发送任何更改：
 
 ```jsx
 new Editor({
@@ -120,7 +120,7 @@ new Editor({
 })
 ```
 
-To stop syncing with other users completely, call `disableCollaboration()` in the handler. It destroys the Y.Doc you passed to the Collaboration extension, so other editors that use the same Y.Doc stop syncing too. The editor then no longer receives changes, so it doesn't resume on its own:
+若要完全停止与其他用户同步，请在处理程序中调用 `disableCollaboration()`。它会销毁传递给 Collaboration 扩展的 Y.Doc，因此，其他使用同一 Y.Doc 的编辑器也会停止同步。此后，编辑器不再接收更改，因此不会自动恢复：
 
 ```jsx
 onContentError({ disableCollaboration }) {
