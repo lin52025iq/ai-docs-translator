@@ -1,32 +1,32 @@
 ---
-title: Building custom extensions for conversion
+title: 构建用于转换的自定义扩展
 tags:
   - type: beta
 meta:
-  title: Custom Extensions for Conversion | Tiptap Conversion
-  description: How to build a custom Tiptap extension to render converted content that has no official extension, and wire it up for round-trip export.
-  category: Conversion
+  title: 转换自定义扩展 | Tiptap Conversion
+  description: 了解如何构建自定义 Tiptap 扩展，以渲染没有官方扩展支持的转换内容，并配置往返导出。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-ConvertKit covers the schema for most DOCX content. When the converter produces a node or attribute that ConvertKit doesn't render (a custom mark, a niche attribute, or a domain-specific block), you wire it up yourself with standard Tiptap `extend()` patterns. This guide shows two worked examples: extending an existing extension to surface a dropped attribute, and adding a custom node and routing imported content into it.
+ConvertKit 覆盖了大多数 DOCX 内容的 schema。如果转换器生成的节点或属性（例如自定义 mark、较少见的属性或特定领域的块级内容）无法由 ConvertKit 渲染，你可以使用标准的 Tiptap `extend()` 模式自行接入。本指南通过两个完整示例说明如何操作：扩展现有扩展以呈现被忽略的属性，以及添加自定义节点并将导入的内容映射到该节点。
 
-## The mental model
+## 基本思路
 
-The Conversion service extracts everything it can from the source document and emits Tiptap JSON with the corresponding nodes, marks, and attributes. ConvertKit registers extensions that render most of those, but not all of them. When something is missing, you have three levers:
+Conversion 服务会尽可能提取源文档中的内容，并输出包含相应节点、mark 和属性的 Tiptap JSON。ConvertKit 注册的扩展可以渲染其中大部分内容，但并非全部。遇到缺失内容时，你有三种处理方式：
 
-1. **Extend an existing extension** to render an attribute that the converter produced and ConvertKit didn't.
-2. **Add a custom node or mark** to your schema, and tell the importer to map a DOCX construct to it.
-3. **Tell the exporter how to serialize** your custom node back to DOCX, so the round-trip works.
+1. **扩展现有扩展**，以渲染转换器已生成、但 ConvertKit 未处理的属性。
+2. **向 schema 添加自定义节点或 mark**，并告知导入器将 DOCX 结构映射到该节点或 mark。
+3. **告知导出器如何序列化**自定义节点并将其写回 DOCX，从而实现往返转换。
 
-You'll typically use 1 for missing inline attributes and 2 + 3 together for new block-level constructs.
+通常，缺失的行内属性使用第 1 种方式；新增块级结构则需要结合使用第 2 和第 3 种方式。
 
-## Worked example 1: rendering imported letter-spacing
+## 示例 1：渲染导入的字符间距
 
-The converter extracts character spacing as a `textStyle` mark with a `letterSpacing` attribute. ConvertKit registers `TextStyle` (via its bundled `TextStyleKit`) but does not declare `letterSpacing` as one of its attributes, so the value lives in the JSON but never reaches the rendered DOM.
+转换器会将字符间距提取为带有 `letterSpacing` 属性的 `textStyle` mark。ConvertKit 会注册 `TextStyle`（通过其内置的 `TextStyleKit`），但没有将 `letterSpacing` 声明为其属性之一，因此该值虽然存在于 JSON 中，却不会应用到渲染后的 DOM。
 
-Extend `TextStyle` to declare the attribute and emit it as inline CSS:
+扩展 `TextStyle`，声明该属性并将其输出为行内 CSS：
 
 ```ts
 import { Extension } from '@tiptap/core'
@@ -49,7 +49,7 @@ const TextStyleWithLetterSpacing = TextStyle.extend({
 })
 ```
 
-Disable ConvertKit's stock `textStyleKit` slot and register the extended one:
+禁用 ConvertKit 默认的 `textStyleKit` 插槽，并注册扩展后的版本：
 
 ```ts
 import { ConvertKit } from '@tiptap-pro/extension-convert-kit'
@@ -63,20 +63,17 @@ const editor = new Editor({
 })
 ```
 
-Imported documents that carried letter-spacing will now render with the spacing applied. The same pattern works for any attribute the converter extracts but ConvertKit's defaults don't surface. See the rest of the [feature support matrix](/conversion/getting-started/feature-support-matrix).
+现在，导入的文档中原有的字符间距会在渲染时生效。对于转换器能够提取、但 ConvertKit 默认不呈现的其他属性，也可以采用相同的模式。请参阅其余的[功能支持矩阵](/conversion/getting-started/feature-support-matrix)。
 
-<Callout title="When to extend instead of replace" variant="info">
-  Extending the existing extension preserves the rest of its behaviour and lets you spread
-  <code>...this.parent?.()</code> attributes. Replacing it entirely (with your own Mark from
-  scratch) means re-implementing the parsing rules ConvertKit relies on for round-trip, usually not
-  worth it.
+<Callout title="何时扩展而不是替换" variant="info">
+  扩展现有扩展可以保留其余行为，还能通过 <code>...this.parent?.()</code> 展开原有属性。若完全替换它（从头创建自己的 Mark），则需要重新实现 ConvertKit 为往返转换所依赖的解析规则，这通常不值得。
 </Callout>
 
-## Worked example 2: a custom callout block
+## 示例 2：自定义提示块
 
-Suppose your editor has a `callout` node (a styled block with an icon and a colour) and you want imported DOCX blockquotes to map to it instead of to the default `blockquote`. Three steps: define the custom node, map the import to it, and define the export back to DOCX.
+假设你的编辑器中有一个 `callout` 节点（带图标和颜色样式的块），并且希望导入的 DOCX 引用块映射到它，而不是默认的 `blockquote`。需要三步：定义自定义节点、将导入内容映射到该节点，并定义如何将其导出回 DOCX。
 
-### Define the node
+### 定义节点
 
 ```ts
 import { Node, mergeAttributes } from '@tiptap/core'
@@ -103,9 +100,9 @@ const Callout = Node.create({
 })
 ```
 
-### Map DOCX blockquotes to the callout on import
+### 导入时将 DOCX 引用块映射为提示块
 
-`ImportDocx` accepts a `prosemirrorNodes` map that rewrites incoming node types during import. Tell it to send blockquotes to your `callout` node:
+`ImportDocx` 接受一个 `prosemirrorNodes` 映射，用于在导入过程中重写传入的节点类型。设置该映射，将引用块发送到你的 `callout` 节点：
 
 ```ts
 import { ImportDocx } from '@tiptap-pro/extension-import-docx'
@@ -118,17 +115,14 @@ ImportDocx.configure({
 })
 ```
 
-Imported DOCX blockquotes now arrive in the editor as `callout` nodes, with whatever inline content they carried preserved.
+导入的 DOCX 引用块现在会作为 `callout` 节点进入编辑器，并保留其中的行内内容。
 
-### Serialize the callout back to DOCX on export
+### 导出时将提示块序列化回 DOCX
 
-For exports to round-trip, `ExportDocx` needs to know how to write your custom node out. Pass a `customNodes` entry whose `type` matches the Tiptap node name and whose `render(node)` function returns one (or many) document objects:
+要实现往返转换，`ExportDocx` 必须知道如何写出自定义节点。传入一个 `customNodes` 项，其 `type` 与 Tiptap 节点名称相同，且 `render(node)` 函数返回一个或多个文档对象：
 
-<Callout variant="warning" title="Build these with Docx, not with a direct docx import">
-  `@tiptap-pro/extension-export-docx` re-exports the document library as `Docx`, and that is the
-  copy the exporter recognises. If you build the result with `new Paragraph()` from your own `docx`
-  install instead, the export drops it. Only constructors matter: enums such as `BorderStyle` and
-  `WidthType` are plain strings and work either way.
+<Callout variant="warning" title="请使用 Docx 构建这些对象，不要直接导入 docx">
+  `@tiptap-pro/extension-export-docx` 会将文档库重新导出为 `Docx`，导出器识别的是这个版本。如果改用你自己安装的 `docx` 中的 `new Paragraph()` 构建结果，导出时该结果会被丢弃。只有构造函数有此要求：`BorderStyle` 和 `WidthType` 等枚举是普通字符串，两种方式都可以使用。
 </Callout>
 
 ```ts
@@ -139,9 +133,9 @@ ExportDocx.configure({
     {
       type: 'callout', // matches the Tiptap node name
       render: (node) => {
-        // Flatten the callout's text content for a minimal example.
-        // For richer callouts, walk node.content and emit multiple Paragraphs
-        // (return a Paragraph[]) or whichever shape makes sense for your design.
+        // 为简化示例，展平提示块的文本内容。
+        // 对于更丰富的提示块，可遍历 node.content 并生成多个 Paragraph
+        // （返回 Paragraph[]），或按设计返回合适的结构。
         const text = (node.content ?? [])
           .flatMap((child) => child.content ?? [])
           .map((leaf) => leaf.text ?? '')
@@ -159,23 +153,23 @@ ExportDocx.configure({
 })
 ```
 
-The `render` function is invoked with the Tiptap node and must return one of: `Paragraph`, `Paragraph[]`, `Table`, `TextRun`, `ExternalHyperlink`, `InternalHyperlink`, `Bookmark`, or `null` (returning `null` drops the node from the export). See [Custom node export](/conversion/export/docx/custom-nodes) for the full API and more elaborate examples.
+`render` 函数接收 Tiptap 节点，并且必须返回以下类型之一：`Paragraph`、`Paragraph[]`、`Table`、`TextRun`、`ExternalHyperlink`、`InternalHyperlink`、`Bookmark` 或 `null`（返回 `null` 会在导出时丢弃该节点）。完整 API 和更复杂的示例请参阅[自定义节点导出](/conversion/export/docx/custom-nodes)。
 
-## What to expect
+## 预期情况
 
-- Custom mark/node work is your responsibility once you go beyond ConvertKit. We provide the hooks; the rendering and serialisation logic are application-specific.
-- ConvertKit's bundled extensions can be replaced individually by passing `false` to the corresponding slot in `ConvertKit.configure({…})`.
-- For round-trip fidelity, the import mapping and export serialisation should be symmetric. If you map blockquote → callout on import, define how callout writes back to DOCX on export.
+- 超出 ConvertKit 的支持范围后，自定义 mark/节点的工作就需要由你负责。我们提供了扩展接口；具体的渲染和序列化逻辑取决于应用。
+- 通过在 `ConvertKit.configure({…})` 中将相应插槽设为 `false`，可以逐个替换 ConvertKit 内置的扩展。
+- 为确保往返保真，导入映射和导出序列化应当对称。如果导入时将 blockquote 映射为 callout，就应定义 callout 如何在导出时写回 DOCX。
 
-## What not to expect
+## 不支持的功能
 
-- A schema migration tool. There's no automatic way to upgrade existing stored content from the old node type to your new custom node; that's a one-off transformation you write.
-- Conversion-side attribute extraction beyond what the converter already does. If the source DOCX carries a feature the converter doesn't parse (e.g. multi-column section properties, certain SmartArt graphics), no amount of editor-side extension will reveal it.
+- Schema 迁移工具。没有自动方法可以将已有存储内容从旧节点类型升级为新的自定义节点；你需要自行编写一次性转换程序。
+- 超出转换器现有能力的属性提取。如果源 DOCX 包含转换器无法解析的功能（例如多栏节属性、某些 SmartArt 图形），那么无论编辑器端扩展如何编写，都无法将其提取出来。
 
-## Next steps
+## 后续步骤
 
-- [Custom node mapping](/conversion/import/docx/custom-node-mapping): full reference for `prosemirrorNodes`
-- [Custom mark mapping](/conversion/import/docx/custom-mark-mapping): full reference for `prosemirrorMarks`
-- [Custom node export](/conversion/export/docx/custom-nodes): full reference for `customNodes` on the export side
-- [Styling converted content](/conversion/getting-started/guides/styling-converted-content): patterns for layering CSS on imported content
-- [Debugging](/conversion/getting-started/guides/debugging): diagnose schema mismatches and read conversion warnings
+- [自定义节点映射](/conversion/import/docx/custom-node-mapping)：`prosemirrorNodes` 完整参考
+- [自定义 mark 映射](/conversion/import/docx/custom-mark-mapping)：`prosemirrorMarks` 完整参考
+- [自定义节点导出](/conversion/export/docx/custom-nodes)：导出端 `customNodes` 完整参考
+- [为转换后的内容添加样式](/conversion/getting-started/guides/styling-converted-content)：为导入内容叠加 CSS 的模式
+- [调试](/conversion/getting-started/guides/debugging)：诊断 schema 不匹配并查看转换警告
