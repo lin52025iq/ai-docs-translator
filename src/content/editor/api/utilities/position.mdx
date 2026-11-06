@@ -1,30 +1,30 @@
 ---
-title: Position Utilities
+title: 位置实用工具
 meta:
-  title: Position utilities | Tiptap Editor Docs
-  description: Track and update positions in your editor using MappablePosition and CollaborationMappablePosition. Learn how to serialize and deserialize positions.
-  category: Editor
+  title: 位置实用工具 | Tiptap 编辑器文档
+  description: 使用 MappablePosition 和 CollaborationMappablePosition 跟踪和更新编辑器中的位置。了解如何序列化和反序列化位置。
+  category: 编辑器
 ---
 
-Position utilities help you track and update positions in your editor as the document changes.
+位置实用工具可帮助你在文档发生变化时跟踪和更新编辑器中的位置。
 
-## Creating a position
+## 创建位置
 
-Use `createMappablePosition` to create a position instance.
+使用 `createMappablePosition` 创建一个位置实例。
 
 ```js
 // Create a position at offset 10
 const position = editor.utils.createMappablePosition(10)
 ```
 
-The `createMappablePosition` method returns a `MappablePosition` instance by default. If the [Collaboration extension](/editor/extensions/functionality/collaboration) is active, it will return a `CollaborationMappablePosition` instance.
+`createMappablePosition` 方法默认返回一个 `MappablePosition` 实例。如果启用了 [Collaboration 扩展](/editor/extensions/functionality/collaboration)，则会返回一个 `CollaborationMappablePosition` 实例。
 
-- **`MappablePosition`**: Base class for tracking positions in standard editors
-- **`CollaborationMappablePosition`**: Extended class for tracking positions when collaboration is enabled.
+- **`MappablePosition`**：用于在标准编辑器中跟踪位置的基类
+- **`CollaborationMappablePosition`**：启用协作功能时用于跟踪位置的扩展类。
 
-## Updating a position
+## 更新位置
 
-Use `getUpdatedPosition` to update a position after a transaction. The position is updated to reflect changes in the document.
+使用 `getUpdatedPosition` 在事务执行后更新位置。更新后的位置会反映文档中的变化。
 
 ```js
 // Get the updated position after a transaction
@@ -37,30 +37,30 @@ const { position: updatedPosition, mapResult } = editor.utils.getUpdatedPosition
 const newOffset = updatedPosition.position
 ```
 
-The `getUpdatedPosition` method returns an object with the following properties:
+`getUpdatedPosition` 方法会返回一个包含以下属性的对象：
 
-- `position` (`MappablePosition`): The updated position.
-- `mapResult` (`MapResult | null`): The result of the mapping operation, as a ProseMirror [MapResult](https://prosemirror.net/docs/ref/#transform.MapResult). It contains information about the operation, for example, to see if the position was deleted.
+- `position`（`MappablePosition`）：更新后的位置。
+- `mapResult`（`MapResult | null`）：映射操作的结果，即 ProseMirror [MapResult](https://prosemirror.net/docs/ref/#transform.MapResult)。其中包含有关该操作的信息，例如可用于判断位置是否已被删除。
 
-## Limitations
+## 限制
 
-When a collaborative transaction breaks a paragraph in two, [Y.js](https://docs.yjs.dev/) sees it as the deletion of the second half of the paragraph, followed by the insertion of a new paragraph. Thus, if the original position is after the line break, the updated position will not be placed in the second paragraph, but at the end of the first paragraph. This is a limitation of [Y.js relative positions](https://docs.yjs.dev/api/relative-positions) and we're working on a solution.
+协作事务将一个段落拆分成两个段落时，[Y.js](https://docs.yjs.dev/) 会将其视为删除段落的后半部分，然后插入一个新段落。因此，如果原始位置位于换行符之后，更新后的位置不会落在第二个段落中，而会位于第一个段落的末尾。这是 [Y.js 相对位置](https://docs.yjs.dev/api/relative-positions) 的限制，我们正在寻求解决方案。
 
-## API reference
+## API 参考
 
 ### `MappablePosition`
 
-The base `MappablePosition` class tracks a position in the document.
+`MappablePosition` 基类用于跟踪文档中的位置。
 
-#### Properties
+#### 属性
 
-- `position` (`number`): The current position offset.
+- `position`（`number`）：当前位置偏移量。
 
-#### Methods
+#### 方法
 
 ##### `toJSON`
 
-Serializes the position to a JSON object for storage.
+将位置序列化为 JSON 对象以供存储。
 
 ```js
 const position = editor.utils.createMappablePosition(10)
@@ -72,7 +72,7 @@ localStorage.setItem('savedPosition', JSON.stringify(json))
 
 ##### `fromJSON`
 
-Deserializes a position from a JSON object.
+从 JSON 对象反序列化位置。
 
 ```js
 // Retrieve from storage
@@ -82,7 +82,7 @@ const json = JSON.parse(localStorage.getItem('savedPosition'))
 const position = MappablePosition.fromJSON(json)
 ```
 
-### Example: Storing a Position
+### 示例：存储位置
 
 ```js
 import { MappablePosition } from '@tiptap/core'
@@ -101,18 +101,18 @@ const restoredPosition = MappablePosition.fromJSON(savedJson)
 
 ### `CollaborationMappablePosition`
 
-`CollaborationMappablePosition` extends `MappablePosition` with Y.js relative position support for collaborative editing. It's automatically used when the Collaboration extension is active.
+`CollaborationMappablePosition` 扩展了 `MappablePosition`，为协同编辑提供 Y.js 相对位置支持。启用 Collaboration 扩展时会自动使用此类。
 
-#### Properties
+#### 属性
 
-- `position` (`number`): The current position offset.
-- `yRelativePosition` (`any`): The [Y.js relative position](https://docs.yjs.dev/api/relative-positions) (internal, used for collaboration).
+- `position`（`number`）：当前位置偏移量。
+- `yRelativePosition`（`any`）：[Y.js 相对位置](https://docs.yjs.dev/api/relative-positions)（内部属性，用于协作）。
 
-#### Methods
+#### 方法
 
 ##### `toJSON`
 
-Serializes the collaboration position to a JSON object, including Y.js relative position data.
+将协作位置序列化为 JSON 对象，其中包含 Y.js 相对位置数据。
 
 ```js
 // In a collaborative editor
@@ -126,7 +126,7 @@ localStorage.setItem('collabPosition', JSON.stringify(json))
 
 ##### `fromJSON`
 
-Deserializes a collaboration position from a JSON object.
+从 JSON 对象反序列化协作位置。
 
 ```js
 // Retrieve from storage
@@ -136,7 +136,7 @@ const json = JSON.parse(localStorage.getItem('collabPosition'))
 const position = CollaborationMappablePosition.fromJSON(json)
 ```
 
-### Example: Storing a Collaborative Position
+### 示例：存储协作位置
 
 ```js
 import { CollaborationMappablePosition } from '@tiptap/extension-collaboration'
