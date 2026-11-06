@@ -1,0 +1,70 @@
+---
+title: insertContent 命令
+meta:
+  title: insertContent 命令 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 insertContent 命令，通过纯文本、HTML 或 JSON 向文档添加内容。了解更多信息，请参阅我们的文档！
+  category: 编辑器
+---
+
+`insertContent` 命令会将传入的值添加到文档中。
+
+另请参阅：[setContent](/editor/api/commands/content/set-content)、[clearContent](/editor/api/commands/content/clear-content)
+
+## 参数
+
+`value: Content`
+
+此命令非常灵活，接受纯文本、HTML 甚至 JSON 作为值。
+
+## 使用 insertContent 命令
+
+```js
+// Plain text
+editor.commands.insertContent('Example Text')
+
+// HTML
+editor.commands.insertContent('<h1>Example Text</h1>')
+
+// HTML with trim white space
+editor.commands.insertContent('<h1>Example Text</h1>', {
+  parseOptions: {
+    preserveWhitespace: false,
+  },
+})
+
+// JSON/Nodes
+editor.commands.insertContent({
+  type: 'heading',
+  attrs: {
+    level: 1,
+  },
+  content: [
+    {
+      type: 'text',
+      text: 'Example Text',
+    },
+  ],
+})
+
+// Multiple nodes at once
+editor.commands.insertContent([
+  {
+    type: 'paragraph',
+    content: [
+      {
+        type: 'text',
+        text: 'First paragraph',
+      },
+    ],
+  },
+  {
+    type: 'paragraph',
+    content: [
+      {
+        type: 'text',
+        text: 'Second paragraph',
+      },
+    ],
+  },
+])
+```
