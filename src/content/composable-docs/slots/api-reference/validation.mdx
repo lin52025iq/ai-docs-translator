@@ -1,15 +1,15 @@
 ---
-title: Validation
+title: 验证
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Validation | Tiptap Slots Docs
-  description: Validation functions, custom validators and lifecycle.
-  category: Composable Docs
+  title: 验证 | Tiptap Slots 文档
+  description: 验证函数、自定义验证器和生命周期。
+  category: 可组合文档
 ---
 
-Validation is explicit and does not block edits. Import these functions and types from `@tiptap-pro/extension-slot`; each function accepts one options object.
+验证是显式执行的，不会阻止编辑。从 `@tiptap-pro/extension-slot` 导入这些函数和类型；每个函数都接受一个选项对象。
 
 ```ts
 const result = await validateEditorSlots({ editor })
@@ -20,155 +20,155 @@ if (result.valid && isSlotValidationCurrent({ editor, result })) {
 
 ## `validateSlotConfig`
 
-Checks configuration syntax and optionally schema type names. Does not run validators.
+检查配置语法，并可选择检查 schema 类型名称。不运行验证器。
 
-### Parameters
+### 参数
 
-- `config` (`unknown`): Configuration to check.
-- `mode?` (`SlotMode`): Defaults to `content`. Pass `value` to allow input settings and reject content-only settings.
-- `kind?` (`SlotKind`): Slot kind. For `'inline'`, rejects `allowedBlocks`, `constraints.minChildren` and `constraints.maxChildren`. Omitted: skips kind-specific checks.
-- `schema?` (`Schema`): Schema for type-name checks. Omitted: syntax checks only.
+- `config` (`unknown`)：要检查的配置。
+- `mode?` (`SlotMode`)：默认为 `content`。传入 `value` 可允许输入设置，并拒绝仅适用于内容的设置。
+- `kind?` (`SlotKind`)：槽位类型。对于 `'inline'`，会拒绝 `allowedBlocks`、`constraints.minChildren` 和 `constraints.maxChildren`。省略时：跳过类型专属检查。
+- `schema?` (`Schema`)：用于检查类型名称的 schema。省略时：仅检查语法。
 
-### Returns (`{ valid: boolean; issues: SlotConfigIssue[] }`)
+### 返回值（`{ valid: boolean; issues: SlotConfigIssue[] }`）
 
-- `valid` (`boolean`): Whether configuration checks passed.
-- `issues` (`SlotConfigIssue[]`): Diagnostics; empty when valid.
+- `valid` (`boolean`)：配置检查是否通过。
+- `issues` (`SlotConfigIssue[]`)：诊断信息；有效时为空。
 
 ## `validateSlots`
 
-Validates every Slot in an immutable snapshot without an editor.
+在没有编辑器的情况下，验证不可变快照中的每个槽位。
 
-### Parameters (`ValidateSlotsOptions`)
+### 参数（`ValidateSlotsOptions`）
 
-- `snapshot` (`SlotSnapshot`): Snapshot from `createSlotSnapshot` or editor storage.
-- `validators?` (`Record<string, SlotValidator>`): Field validator registry. Default: `{}`.
-- `crossFieldValidators?` (`Record<string, CrossFieldValidator>`): Cross-field registry. Default: `{}`.
-- `context?` (`unknown`): Application data passed to validators. Default: `undefined`.
-- `expectedIds?` (`string[]`): IDs that must exist. Omitted: no expected-field checks.
-- `signal?` (`AbortSignal`): Cancellation signal. Omitted: no caller-driven cancellation.
-- `onValidationError?` (`(error: SlotValidationError) => void`): Receives validator failures. Omitted: no callback.
+- `snapshot` (`SlotSnapshot`)：来自 `createSlotSnapshot` 或编辑器存储的快照。
+- `validators?` (`Record<string, SlotValidator>`)：字段验证器注册表。默认值：`{}`。
+- `crossFieldValidators?` (`Record<string, CrossFieldValidator>`)：跨字段验证器注册表。默认值：`{}`。
+- `context?` (`unknown`)：传递给验证器的应用数据。默认值：`undefined`。
+- `expectedIds?` (`string[]`)：必须存在的 ID。省略时：不检查必需字段。
+- `signal?` (`AbortSignal`)：取消信号。省略时：调用方无法主动取消。
+- `onValidationError?` (`(error: SlotValidationError) => void`)：接收验证器故障的回调。省略时：不设置回调。
 
-`ValidationOptions` is an alias of `ValidateSlotsOptions`.
+`ValidationOptions` 是 `ValidateSlotsOptions` 的别名。
 
-### Returns (`Promise<SlotValidationResult>`)
+### 返回值（`Promise<SlotValidationResult>`）
 
-Document-scoped results and issues. An empty Slot list is valid unless required by `expectedIds`. Abort rejects with `AbortError`; malformed input rejects with `SlotInputError`. Validator failures resolve with an unavailable result.
+返回文档级结果和问题。如果 `expectedIds` 未要求存在槽位，则空槽位列表也视为有效。中止操作会以 `AbortError` 拒绝；输入格式错误会以 `SlotInputError` 拒绝。验证器故障会返回不可用结果。
 
 ## `validateSlot`
 
-Validates one Slot, its descendants and cross-field rules whose declared fields intersect those IDs.
+验证一个槽位、其后代，以及声明字段与这些 ID 有交集的跨字段规则。
 
-### Parameters (`ValidateSlotsOptions & { id: string }`)
+### 参数（`ValidateSlotsOptions & { id: string }`）
 
-- All [`ValidateSlotsOptions`](#validateslots) properties.
-- `id` (`string`): Slot to validate.
+- 所有 [`ValidateSlotsOptions`](#validateslots) 属性。
+- `id` (`string`)：要验证的槽位。
 
-### Returns (`Promise<SlotValidationResult>`)
+### 返回值（`Promise<SlotValidationResult>`）
 
-Slot-scoped result. Missing or ambiguous IDs produce unavailable issues. Does not certify the rest of the document. Cancellation and input errors follow `validateSlots`.
+返回槽位级结果。ID 缺失或不唯一时会产生不可用问题。此结果不能证明文档其余部分有效。取消和输入错误的处理方式与 `validateSlots` 相同。
 
 ## `validateEditorSlots`
 
-Validates the current editor snapshot using the configured validators and context. Requires `Slot`.
+使用已配置的验证器和上下文验证当前编辑器快照。需要 `Slot`。
 
-### Parameters
+### 参数
 
-- `editor` (`Editor`): Editor to validate.
-- `expectedIds?` (`string[]`): IDs that must exist. Omitted: no expected-field checks.
-- `signal?` (`AbortSignal`): Caller cancellation signal. Omitted: cancellation is managed by the editor lifecycle.
+- `editor` (`Editor`)：要验证的编辑器。
+- `expectedIds?` (`string[]`)：必须存在的 ID。省略时：不检查必需字段。
+- `signal?` (`AbortSignal`)：调用方的取消信号。省略时：由编辑器生命周期管理取消。
 
-### Returns (`Promise<SlotValidationResult>`)
+### 返回值（`Promise<SlotValidationResult>`）
 
-Document-scoped result. Sets storage to `pending`, then `current` if the snapshot is still current. A newer request supersedes the previous one. Aborted requests reject with `AbortError`.
+返回文档级结果。将存储状态设为 `pending`；如果快照仍为最新状态，则随后设为 `current`。较新的请求会取代之前的请求。中止的请求会以 `AbortError` 拒绝。
 
 ## `isSlotValidationCurrent`
 
-Checks whether a result matches the editor's current snapshot and revisions. Requires `Slot`.
+检查结果是否与编辑器当前的快照和修订版本相符。需要 `Slot`。
 
-### Parameters
+### 参数
 
-- `editor` (`Editor`): Editor to compare.
-- `result` (`SlotValidationResult`): Result to check.
+- `editor` (`Editor`)：要进行比对的编辑器。
+- `result` (`SlotValidationResult`)：要检查的结果。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-`true` if snapshot ID, document revision and context revision match. Results from standalone snapshots return `false`.
+如果快照 ID、文档修订版本和上下文修订版本相符，则返回 `true`。独立快照的结果会返回 `false`。
 
 ## `SlotValidator`
 
-Type: `(input: SlotValidatorInput) => ValidationFinding[] | Promise<ValidationFinding[]>`.
+类型：`(input: SlotValidatorInput) => ValidationFinding[] | Promise<ValidationFinding[]>`。
 
-### Parameters (`SlotValidatorInput`)
+### 参数（`SlotValidatorInput`）
 
-- `slot` (`SlotEntry`): Immutable field entry.
-- `params` (`JsonValue`): Configured parameters, or `null`.
-- `context` (`unknown`): Captured application context.
-- `signal` (`AbortSignal`): Cancellation signal.
+- `slot` (`SlotEntry`)：不可变的字段条目。
+- `params` (`JsonValue`)：已配置的参数，或 `null`。
+- `context` (`unknown`)：捕获的应用上下文。
+- `signal` (`AbortSignal`)：取消信号。
 
-### Returns (`ValidationFinding[] | Promise<ValidationFinding[]>`)
+### 返回值（`ValidationFinding[] | Promise<ValidationFinding[]>`）
 
-Findings for this Slot. `[]` means the check passed. Runs even when the Slot is empty.
+此槽位的验证结果。`[]` 表示检查通过。即使槽位为空，也会运行。
 
 ## `CrossFieldValidator`
 
-Type: `(input: CrossFieldValidatorInput) => CrossFieldFinding[] | Promise<CrossFieldFinding[]>`.
+类型：`(input: CrossFieldValidatorInput) => CrossFieldFinding[] | Promise<CrossFieldFinding[]>`。
 
-### Parameters (`CrossFieldValidatorInput`)
+### 参数（`CrossFieldValidatorInput`）
 
-- `owner` (`SlotEntry`): Slot holding the rule.
-- `fields` (`ReadonlyMap<string, SlotEntry>`): Declared fields indexed by ID.
-- `params` (`JsonValue`): Configured parameters, or `null`.
-- `context` (`unknown`): Captured application context.
-- `signal` (`AbortSignal`): Cancellation signal.
+- `owner` (`SlotEntry`)：包含该规则的槽位。
+- `fields` (`ReadonlyMap<string, SlotEntry>`)：按 ID 索引的已声明字段。
+- `params` (`JsonValue`)：已配置的参数，或 `null`。
+- `context` (`unknown`)：捕获的应用上下文。
+- `signal` (`AbortSignal`)：取消信号。
 
-### Returns (`CrossFieldFinding[] | Promise<CrossFieldFinding[]>`)
+### 返回值（`CrossFieldFinding[] | Promise<CrossFieldFinding[]>`）
 
-Findings targeting declared fields only. `[]` means the check passed. Each rule runs once at its owner.
+仅针对已声明字段的验证结果。`[]` 表示检查通过。每条规则在其所属槽位处运行一次。
 
 ## `ValidationFinding`
 
-### Properties
+### 属性
 
-- `code` (`string`): Application code beginning with `custom.`.
-- `message` (`string`): Display message.
-- `severity?` (`'error' | 'warning'`): Default: `'error'`. Warnings do not fail validation.
-- `details?` (`Record<string, JsonValue>`): Application diagnostic data. Omitted: no details.
+- `code` (`string`)：以 `custom.` 开头的应用代码。
+- `message` (`string`)：显示给用户的消息。
+- `severity?` (`'error' | 'warning'`)：默认值：`'error'`。警告不会导致验证失败。
+- `details?` (`Record<string, JsonValue>`)：应用诊断数据。省略时：不包含详细信息。
 
 ## `CrossFieldFinding`
 
-Extends `ValidationFinding` with:
+扩展 `ValidationFinding`，新增：
 
-- `slotId` (`string`): Target ID from the rule's declared fields.
+- `slotId` (`string`)：规则已声明字段中的目标 ID。
 
 ## `SlotValidationError`
 
-### Properties
+### 属性
 
-- `snapshotId` (`string`): Snapshot whose check failed.
-- `validator` (`string`): Validator name.
-- `ownerId` (`string | null`): Rule owner; `null` when no valid ID is available.
-- `error` (`unknown`): Original application error or malformed-result error.
+- `snapshotId` (`string`)：检查失败的快照。
+- `validator` (`string`)：验证器名称。
+- `ownerId` (`string | null`)：规则所属槽位；没有有效 ID 时为 `null`。
+- `error` (`unknown`)：原始应用错误或结果格式错误。
 
-## Measurements
+## 度量方式
 
-- `empty`: Only whitespace, hard breaks and empty containers; meaningful non-text leaves or atoms make a Slot nonempty. Nested content is included.
-- `text`: Text projection including nested Slots. Hard breaks and textblock boundaries become `\n`; other leaf/atom Nodes become `U+FFFC`. No trailing newline.
-- Length: Unicode code points, including whitespace and separators. Labels and placeholders are excluded.
-- Child count: Direct children of block Slots, including nested Slots and empty paragraphs.
-- `values`: Exact text match, without trimming or case folding.
-- `pattern`: JavaScript regular-expression test over the complete text projection.
+- `empty`：仅包含空白、硬换行和空容器；有意义的非文本叶子节点或原子节点会使槽位变为非空。包含嵌套内容。
+- `text`：包含嵌套槽位的文本投影。硬换行和文本块边界会转换为 `\n`；其他叶子节点/原子节点会转换为 `U+FFFC`。末尾不添加换行符。
+- 长度：Unicode 码点数，包含空白和分隔符。不包含标签和占位符。
+- 子节点数：块级槽位的直接子节点数，包含嵌套槽位和空段落。
+- `values`：精确匹配文本，不会去除空白或忽略大小写。
+- `pattern`：对完整文本投影执行 JavaScript 正则表达式测试。
 
-Empty Slots skip value constraints. Required empty Slots receive a `required` issue. Type, nesting, identity, configuration and custom checks still run.
+空槽位会跳过值约束。必填的空槽位会产生 `required` 问题。类型、嵌套、标识、配置和自定义检查仍会运行。
 
-## Lifecycle and results
+## 生命周期和结果
 
-- `unavailable` takes precedence over `invalid`; warnings alone remain `valid`.
-- Missing validators, missing or duplicate cross-field targets, exceptions and malformed findings make checks unavailable.
-- Results follow document and declared-validator order, independent of async completion order.
-- Edits invalidate cached results. Selection changes do not.
-- Call `invalidateSlotValidation()` when application-owned records change.
-- Context is captured once per request. Supply a stable snapshot; the package does not fetch or retry records.
-- Pure functions do not emit editor events or update storage. No validation function saves, submits, repairs or edits content.
-- Results and revision tokens are runtime state, not persisted document attributes.
+- `unavailable` 的优先级高于 `invalid`；仅有警告时仍为 `valid`。
+- 缺少验证器、跨字段目标缺失或重复、发生异常以及验证结果格式错误，都会使检查变为不可用。
+- 结果遵循文档顺序和已声明验证器的顺序，与异步完成顺序无关。
+- 编辑会使缓存结果失效；更改选区不会。
+- 应用自有记录发生变化时，调用 `invalidateSlotValidation()`。
+- 每个请求只捕获一次上下文。请提供稳定的快照；该包不会获取或重试记录。
+- 纯函数不会触发编辑器事件或更新存储。验证函数不会保存、提交、修复或编辑内容。
+- 结果和修订令牌属于运行时状态，不会作为文档属性持久化。
 
-See [result types](/composable-docs/slots/api-reference/types#slotvalidationresult) and [configuration](/composable-docs/slots/api-reference/concepts).
+参见[结果类型](/composable-docs/slots/api-reference/types#slotvalidationresult)和[配置](/composable-docs/slots/api-reference/concepts)。
