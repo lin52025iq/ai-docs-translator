@@ -1,10 +1,10 @@
 ---
 tags:
   - type: editor
-title: Migrate from Lexical to Tiptap
+title: 从 Lexical 迁移到 Tiptap
 meta:
-  title: Migrate from Lexical | Tiptap Editor Docs
-  description: Learn how to migrate your existing Lexical editor to Tiptap. Complete guide covering content migration, setup, and feature mapping.
+  title: 从 Lexical 迁移 | Tiptap 编辑器文档
+  description: 了解如何将现有的 Lexical 编辑器迁移到 Tiptap。本指南涵盖内容迁移、设置和功能映射。
   category: Editor
 ---
 
@@ -12,13 +12,13 @@ import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 
 <EnterpriseCalloutAuto variant="migration" renderMode="sidebar" disableWaitlist/>
 
-Replace your Lexical editor with a better alternative like Tiptap. Migrating from Lexical to Tiptap is straightforward. This guide will help you transition from Lexical's node-based architecture to Tiptap's extension system.
+使用 Tiptap 等更好的替代方案取代 Lexical 编辑器。从 Lexical 迁移到 Tiptap 非常简单。本指南将帮助你从 Lexical 基于节点的架构过渡到 Tiptap 的扩展系统。
 
-## Content migration
+## 内容迁移
 
-### HTML content compatibility
+### HTML 内容兼容性
 
-Lexical uses its own JSON structure that needs to be converted for Tiptap. You can serialize Lexical content to HTML:
+Lexical 使用自己的 JSON 结构，需要转换后才能用于 Tiptap。你可以将 Lexical 内容序列化为 HTML：
 
 ```ts
 // Convert Lexical JSON to HTML
@@ -38,7 +38,7 @@ const tiptapEditor = new Editor({
 })
 ```
 
-If you already have HTML output from Lexical, you can use it directly:
+如果 Lexical 已经生成了 HTML，可以直接使用：
 
 ```ts
 // Your existing Lexical HTML content
@@ -51,23 +51,23 @@ const editor = new Editor({
 })
 ```
 
-While HTML works perfectly, we recommend converting it to Tiptap's JSON format for better performance and readability. For batch conversion of existing content, use the [HTML utility](/editor/api/utilities/html) to convert HTML to JSON programmatically.
+虽然 HTML 完全可用，但我们建议将其转换为 Tiptap 的 JSON 格式，以提升性能和可读性。若要批量转换现有内容，可以使用 [HTML 工具](/editor/api/utilities/html)以编程方式将 HTML 转换为 JSON。
 
-## Editor setup
+## 编辑器设置
 
-### Installation
+### 安装
 
-First, install Tiptap and its dependencies:
+首先，安装 Tiptap 及其依赖项：
 
 ```bash
 npm install @tiptap/core @tiptap/starter-kit
 ```
 
-Tiptap supports all modern frontend UI frameworks like React and Vue. Follow the framework-specific installation instructions in our [installation guides](/editor/getting-started/install).
+Tiptap 支持所有现代前端 UI 框架，例如 React 和 Vue。请参阅我们的[安装指南](/editor/getting-started/install)，按照对应框架的说明进行安装。
 
-### Basic editor setup
+### 基本编辑器设置
 
-Replace your Lexical editor with Tiptap:
+使用 Tiptap 替换 Lexical 编辑器：
 
 ```tsx
 // Lexical (before)
@@ -104,32 +104,32 @@ const editor = new Editor({
 })
 ```
 
-## Extensions
+## 扩展
 
-### Understanding Tiptap's extension system
+### 了解 Tiptap 的扩展系统
 
-Tiptap uses a modular extension system that resembles Lexical's node and plugin architecture. Each feature is an independent extension with clear APIs.
+Tiptap 使用模块化的扩展系统，与 Lexical 的节点和插件架构类似。每项功能都是一个独立扩展，并提供清晰的 API。
 
-The [StarterKit](/editor/extensions/functionality/starterkit) is a bundle of all the basic extensions, and you can add or remove other extensions as needed.
+[StarterKit](/editor/extensions/functionality/starterkit) 包含所有基础扩展，你可以根据需要添加或移除其他扩展。
 
-Explore all available extensions in our [extensions guide](/editor/extensions/overview), or [create your own](/editor/extensions/custom-extensions) to support custom functionality and HTML elements.
+浏览[扩展指南](/editor/extensions/overview)以查看所有可用扩展；你也可以[创建自己的扩展](/editor/extensions/custom-extensions)，以支持自定义功能和 HTML 元素。
 
-### Common Lexical plugin equivalents
+### 常见 Lexical 插件的对应项
 
-| Lexical Plugin/Node  | Tiptap Extension                        | Notes                  |
+| Lexical 插件/节点 | Tiptap 扩展 | 说明 |
 | -------------------- | --------------------------------------- | ---------------------- |
-| `@lexical/rich-text` | `Bold`, `Italic`                        | Included in StarterKit |
-| `@lexical/link`      | `Link`                                  | Included in StarterKit |
-| `@lexical/list`      | `BulletList`, `OrderedList`, `ListItem` | Included in StarterKit |
-| `@lexical/code`      | `Code`, `CodeBlock`                     | Included in StarterKit |
-| `@lexical/table`     | `Table`                                 | Available separately   |
-| `HeadingNode`        | `Heading`                               | Included in StarterKit |
-| `QuoteNode`          | `Blockquote`                            | Included in StarterKit |
-| `ImageNode`          | `Image`                                 | Available separately   |
-| `@lexical/history`   | `History`                               | Included in StarterKit |
-| `@lexical/text`      | `TextStyle`, `Color`                    | Available separately   |
+| `@lexical/rich-text` | `Bold`, `Italic` | 已包含在 StarterKit 中 |
+| `@lexical/link`      | `Link`                                  | 已包含在 StarterKit 中 |
+| `@lexical/list`      | `BulletList`, `OrderedList`, `ListItem` | 已包含在 StarterKit 中 |
+| `@lexical/code`      | `Code`, `CodeBlock`                     | 已包含在 StarterKit 中 |
+| `@lexical/table`     | `Table`                                 | 可单独使用 |
+| `HeadingNode`        | `Heading`                               | 已包含在 StarterKit 中 |
+| `QuoteNode`          | `Blockquote`                            | 已包含在 StarterKit 中 |
+| `ImageNode`          | `Image`                                 | 可单独使用 |
+| `@lexical/history`   | `History`                               | 已包含在 StarterKit 中 |
+| `@lexical/text`      | `TextStyle`, `Color`                    | 可单独使用 |
 
-### Extension configuration
+### 配置扩展
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -163,15 +163,15 @@ const editor = new Editor({
 })
 ```
 
-### Custom extensions
+### 自定义扩展
 
-For Lexical custom nodes or plugins, create custom Tiptap extensions. See our [custom extensions guide](/editor/extensions/custom-extensions) for detailed instructions.
+对于 Lexical 自定义节点或插件，可以创建自定义 Tiptap 扩展。详细说明请参阅我们的[自定义扩展指南](/editor/extensions/custom-extensions)。
 
-## UI implementation
+## UI 实现
 
-### Toolbar implementation
+### 工具栏实现
 
-Lexical's toolbar plugins translate to custom UI components in Tiptap:
+在 Tiptap 中，Lexical 的工具栏插件可替换为自定义 UI 组件：
 
 ```tsx
 // Lexical toolbar (before)
@@ -223,16 +223,16 @@ function Toolbar({ editor }) {
 }
 ```
 
-### Pre-built UI components
+### 预构建 UI 组件
 
-For faster development, use Tiptap's pre-built UI components:
+若要加快开发，可以使用 Tiptap 的预构建 UI 组件：
 
-- Explore our [UI components](/ui-components/getting-started/overview) for ready-to-use components
-- Check out practical examples in our [default text editor example](/examples/basics/default-text-editor)
+- 浏览我们的 [UI 组件](/ui-components/getting-started/overview)，获取可直接使用的组件
+- 查看[默认文本编辑器示例](/examples/basics/default-text-editor)中的实用示例
 
-### Floating toolbar
+### 浮动工具栏
 
-Replicate Lexical's floating toolbar using Tiptap's BubbleMenu:
+使用 Tiptap 的 BubbleMenu 重现 Lexical 的浮动工具栏：
 
 ```tsx
 import { BubbleMenu } from '@tiptap/react'
@@ -275,9 +275,9 @@ function MyEditor() {
 }
 ```
 
-### Node views (custom nodes)
+### 节点视图（自定义节点）
 
-Lexical's custom nodes can be replaced with Tiptap's [Node Views](/editor/extensions/custom-extensions/node-views):
+Lexical 的自定义节点可以替换为 Tiptap 的[节点视图](/editor/extensions/custom-extensions/node-views)：
 
 ```tsx
 // Lexical custom node (before)
@@ -310,27 +310,27 @@ const CustomImage = Node.create({
 })
 ```
 
-## Migration checklist
+## 迁移检查清单
 
 <Checklist>
-  <CheckboxItem>Install Tiptap packages</CheckboxItem>
-  <CheckboxItem>Convert Lexical JSON content to HTML</CheckboxItem>
-  <CheckboxItem>Replace Lexical editor initialization with Tiptap setup</CheckboxItem>
-  <CheckboxItem>Map Lexical plugins to Tiptap extensions</CheckboxItem>
-  <CheckboxItem>Migrate custom nodes to [Node Views](/editor/extensions/custom-extensions/node-views)</CheckboxItem>
-  <CheckboxItem>Migrate toolbar plugins to Tiptap UI components</CheckboxItem>
-  <CheckboxItem>Test content compatibility</CheckboxItem>
-  <CheckboxItem>Convert existing content to JSON format (recommended)</CheckboxItem>
-  <CheckboxItem>Implement custom extensions for any missing functionality</CheckboxItem>
-  <CheckboxItem>Update event handlers and command dispatching</CheckboxItem>
-  <CheckboxItem>Test floating toolbar functionality</CheckboxItem>
-  <CheckboxItem>Verify table functionality if used</CheckboxItem>
-  <CheckboxItem>Test history (undo/redo) functionality</CheckboxItem>
+  <CheckboxItem>安装 Tiptap 软件包</CheckboxItem>
+  <CheckboxItem>将 Lexical JSON 内容转换为 HTML</CheckboxItem>
+  <CheckboxItem>将 Lexical 编辑器初始化替换为 Tiptap 设置</CheckboxItem>
+  <CheckboxItem>将 Lexical 插件映射到 Tiptap 扩展</CheckboxItem>
+  <CheckboxItem>将自定义节点迁移到[节点视图](/editor/extensions/custom-extensions/node-views)</CheckboxItem>
+  <CheckboxItem>将工具栏插件迁移到 Tiptap UI 组件</CheckboxItem>
+  <CheckboxItem>测试内容兼容性</CheckboxItem>
+  <CheckboxItem>将现有内容转换为 JSON 格式（推荐）</CheckboxItem>
+  <CheckboxItem>为缺失的功能实现自定义扩展</CheckboxItem>
+  <CheckboxItem>更新事件处理程序和命令分发逻辑</CheckboxItem>
+  <CheckboxItem>测试浮动工具栏功能</CheckboxItem>
+  <CheckboxItem>如果使用了表格，请验证其功能</CheckboxItem>
+  <CheckboxItem>测试历史记录（撤销/重做）功能</CheckboxItem>
 </Checklist>
 
-## Next steps
+## 后续步骤
 
-- Explore the [extension overview](/editor/extensions/overview) to discover all available extensions
-- Learn about [custom extensions](/editor/extensions/custom-extensions) for advanced customization
-- Check out our [examples](/examples) for implementation inspiration
-- Review the [performance guide](/guides/performance) for optimization tips
+- 浏览[扩展概览](/editor/extensions/overview)，了解所有可用扩展
+- 了解[自定义扩展](/editor/extensions/custom-extensions)，进行高级自定义
+- 查看我们的[示例](/examples)，获取实现灵感
+- 阅读[性能指南](/guides/performance)，了解优化技巧
