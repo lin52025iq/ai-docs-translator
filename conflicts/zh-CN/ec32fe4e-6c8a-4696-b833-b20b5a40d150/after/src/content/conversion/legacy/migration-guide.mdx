@@ -1,0 +1,255 @@
+---
+title: 从旧版导入/导出扩展迁移
+tags:
+  - type: deprecated
+meta:
+  title: 迁移指南 | Tiptap Conversion Legacy
+  description: 分步介绍如何从旧版 `extension-import` / `extension-export` 包及 `/v1/` REST 端点迁移到按格式划分的 Conversion 扩展。
+  category: Conversion
+---
+
+import { Callout } from '@/components/ui/Callout'
+
+本指南将介绍如何从旧版 `@tiptap-pro/extension-import` 和 `@tiptap-pro/extension-export` 包（以及它们使用的 `/v1/` REST 端点）迁移到当前按格式划分的 Conversion 扩展和 `/v2/` 端点。旧版包仍可用于现有集成，但不会再获得新功能，并且最终会被移除；新项目应使用当前 API。
+
+## 为什么要迁移
+
+- **默认端点已不存在。** 旧版包将 `endpoint` 默认设为 `/v1/convert`，但 Conversion 服务已不再托管该端点。现有集成需要显式传入 `endpoint` 覆盖值，或进行迁移。
+- **扩展按格式划分，选项也按格式划分。** 当前 API 按格式拆分（`extension-import-docx`、`extension-export-docx`、`-pdf`、`-odt`、`-epub`、`-doc`、`-markdown`）。每个扩展只提供适用于对应格式的选项，不再有不起作用的 `format` 开关。
+- **DOCX 保真度更高。** 当前 DOCX 流程会保留旧版扩展会丢弃的属性（段落间距、图像裁剪、表格单元格属性）。搭配 [ConvertKit](/conversion/import/docx/convertkit) 即可在编辑器中渲染这些属性。
+- **持续开发。** 旧版包不会再获得新功能。错误修复和新格式支持都会在当前 API 中推出。
+
+## 编辑器套件迁移：StarterKit → ConvertKit
+
+大多数旧版配置会将 `extension-import` / `extension-export` 与 `StarterKit` 搭配使用。对于任何 Conversion 工作流（无论格式如何），目前都建议使用来自 `@tiptap-pro/extension-convert-kit` 的 `ConvertKit`。
+
+```bash
+npm install @tiptap-pro/extension-convert-kit
+```
+
+```ts
+// Before
+import StarterKit from '@tiptap/starter-kit'
+
+new Editor({
+  extensions: [StarterKit /* + legacy import/export */],
+})
+
+// After
+import { ConvertKit } from '@tiptap-pro/extension-convert-kit'
+
+new Editor({
+  extensions: [ConvertKit /* + format-specific extensions */],
+})
+```
+
+ConvertKit 需要单独安装，不会随导入或导出扩展一同打包。请参阅 [ConvertKit 参考文档](/conversion/import/docx/convertkit)，了解它注册的内容。
+
+如果你还要采用 [Pages 扩展](/pages/getting-started/overview)，迁移后的配置需要从 `@tiptap-pro/extension-pages-tablekit` 添加 `TableKit`，并禁用 ConvertKit 自带的表格（这些表格不支持分页）：
+
+```ts
+import { ConvertKit } from '@tiptap-pro/extension-convert-kit'
+import { TableKit } from '@tiptap-pro/extension-pages-tablekit'
+import { Pages } from '@tiptap-pro/extension-pages'
+
+new Editor({
+  extensions: [
+    ConvertKit.configure({ table: false }),
+    TableKit,
+    Pages.configure({
+      /* ... */
+    }),
+    /* + format-specific import/export extensions */
+  ],
+})
+```
+
+## 导入：`extension-import` → `extension-import-docx`
+
+旧版 `extension-import` 包使用一个扩展处理多种输入格式。当前 API 为每种格式提供单独的包。DOCX 对应的包是 `@tiptap-pro/extension-import-docx`。
+
+```bash
+npm uninstall @tiptap-pro/extension-import
+npm install   @tiptap-pro/extension-import-docx
+```
+
+### 代码对比
+
+```ts
+// Before: legacy
+import { Import } from '@tiptap-pro/extension-import'
+
+const editor = new Editor({
+  extensions: [
+    StarterKit,
+    Import.configure({
+      appId: 'YOUR_APP_ID',
+      token: 'YOUR_JWT',
+      imageUploadCallbackUrl: 'https://your-server.com/upload-image',
+      experimentalDocxImport: true,
+    }),
+  ],
+})
+
+editor.chain().focus().import({ file }).run()
+```
+
+```ts
+// After: current
+import { ConvertKit } from '@tiptap-pro/extension-convert-kit'
+import { ImportDocx } from '@tiptap-pro/extension-import-docx'
+
+const editor = new Editor({
+  extensions: [
+    ConvertKit,
+    ImportDocx.configure({
+      appId: 'YOUR_APP_ID',
+      token: 'YOUR_JWT',
+      imageUploadConfig: {
+        url: 'https://your-server.com/upload-image',
+        // method, headers, queryParams all optional
+      },
+    }),
+  ],
+})
+
+editor.chain().focus().importDocx({ file }).run()
+```
+
+### 选项映射
+
+| 旧版选项                 | 当前选项                 | 说明                                                                                                                                             |
+| ------------------------ | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `appId`                  | `appId`                  | 相同。                                                                                                                                           |
+| `token`                  | `token`                  | 相同。                                                                                                                                           |
+| `imageUploadCallbackUrl` | `imageUploadConfig.url`  | 完整的结构化配置还支持 `method`、`headers`、`queryParams`。旧版仅支持字符串的选项已弃用；如果同时设置两者，则以新配置为准，并会在控制台发出警告。 |
+| `experimentalDocxImport` | （已移除）               | 当前包中的 DOCX 导入已不再是实验性功能。                                                                                                         |
+| `endpoint`（自定义）     | `endpoint`（自定义）     | 默认值为 `https://api.tiptap.dev/v2/convert`（无需手动覆盖）。                                                                                   |
+
+### 行为变化
+
+- 命令仍为 `import({ file, onImport? })`。回调签名不变。
+- 如果源 DOCX 包含页眉/页脚，响应现在会包含相应字段（`header`、`footer`、`headerFirstPage`、`footerFirstPage`、`headerOdd`、`footerOdd`、`headerEven`、`footerEven`）。如果已注册 [Pages 扩展](/pages/getting-started/overview)，这些字段会自动应用；否则可以在 `onImport` 中手动应用。
+- 编辑器扩展的回调不会提供脚注和尾注数据。如需访问这些数据，请使用 [REST API](/conversion/import/docx/rest-api)。
+
+### 没有一对一替代项的功能
+
+旧版 `extension-import` 除了 DOCX 和 Markdown，还接受 ODT 和 RTF 输入。当前按格式划分的扩展支持 **DOCX**（`extension-import-docx`）和 **Markdown**（[REST API](/conversion/import/markdown/rest-api)）。当前 API 尚不支持导入 ODT 和 RTF。如果你的项目依赖其中任一种格式，请保留旧版包，并显式传入 `endpoint` 覆盖值，指向旧版 `/v1/` 主机；我们会继续努力添加这些格式。
+
+## 导出：`extension-export` → 按格式划分的扩展
+
+旧版 `extension-export` 接受 `format` 参数（`docx`、`odt`、`md`、`gfm`），并将请求路由到相应的转换器。当前 API 为每种格式提供单独的扩展：
+
+| 旧版 `format` | 当前扩展                                                                                |
+| ------------- | --------------------------------------------------------------------------------------- |
+| `docx`        | [`@tiptap-pro/extension-export-docx`](/conversion/export/docx/editor-extension)         |
+| `odt`         | [`@tiptap-pro/extension-export-odt`](/conversion/export/odt/editor-extension)           |
+| `md` / `gfm`  | [`@tiptap-pro/extension-export-markdown`](/conversion/export/markdown/editor-extension) |
+
+另外，三种新格式（PDF、EPUB 和 DOC）也各自有对应的扩展：
+
+- [`@tiptap-pro/extension-export-pdf`](/conversion/export/pdf/editor-extension)
+- [`@tiptap-pro/extension-export-epub`](/conversion/export/epub/editor-extension)
+- [`@tiptap-pro/extension-export-doc`](/conversion/export/doc/editor-extension)
+
+```bash
+# Pick the formats you need; each is an independent install
+npm uninstall @tiptap-pro/extension-export
+npm install   @tiptap-pro/extension-export-docx \
+              @tiptap-pro/extension-export-pdf
+```
+
+### 代码对比（DOCX 示例）
+
+```ts
+// Before: legacy
+import { Export } from '@tiptap-pro/extension-export'
+
+new Editor({
+  extensions: [
+    StarterKit,
+    Export.configure({
+      appId: 'YOUR_APP_ID',
+      token: 'YOUR_JWT',
+    }),
+  ],
+})
+
+editor.chain().export({ format: 'docx' }).run()
+```
+
+```ts
+// After: current (DOCX)
+import { ConvertKit } from '@tiptap-pro/extension-convert-kit'
+import { ExportDocx } from '@tiptap-pro/extension-export-docx'
+
+new Editor({
+  extensions: [
+    ConvertKit,
+    ExportDocx.configure({
+      onCompleteExport: (result) => {
+        // result is a Blob by default; download / upload / process
+      },
+    }),
+  ],
+})
+
+editor.commands.exportDocx()
+```
+
+现在 DOCX 导出在**客户端**进行，无需 JWT 或 App ID。PDF、ODT、EPUB 和 DOC 导出会通过 Conversion 服务进行，并且需要与你在旧版导出中使用的相同 `appId` 和 `token`。
+
+### 选项映射
+
+| 旧版选项           | 当前选项                                                          | 说明                                                                     |
+| ------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `appId`            | `appId`（PDF、ODT、EPUB、DOC）；DOCX 或 Markdown 无需此项         | DOCX 和 Markdown 导出在客户端运行。                                      |
+| `token`            | `token`（PDF、ODT、EPUB、DOC）；DOCX 或 Markdown 无需此项         | 相同。                                                                   |
+| `format` 参数      | （已移除）                                                        | 格式由你注册的扩展决定。                                                 |
+| `onExport` 回调    | `onCompleteExport`                                                | 签名为 `(result: Blob \| Buffer \| Stream \| string) => void`，具体取决于 `exportType`。 |
+
+### 页眉/页脚、页面布局、自定义节点
+
+这些都是当前导出扩展中的一等选项；在旧版导出中，它们要么是隐式支持，要么不受支持。
+
+- **页眉和页脚。** 请参阅对应格式的文档页面（例如 [导出 DOCX](/conversion/export/docx/editor-extension)、[导出 PDF](/conversion/export/pdf/editor-extension)）。
+- **页面布局**（`pageSize`、`pageMargins`）。PDF、DOC、ODT、EPUB 导出均支持。
+- **自定义节点。** [`extension-export-docx`](/conversion/export/docx/custom-nodes) 接受 `customNodes` 定义；其他二进制格式通过同一扩展继承这些定义。
+- **元素级覆盖**（`paragraphOverrides`、`textRunOverrides`、`tableOverrides`、`tableCellOverrides`、`imageOverrides`）。仅 DOCX 导出支持。
+
+## REST API：`/v1/` → `/v2/`
+
+`/v1/` 端点（`/v1/import`、`/v1/import-docx`、`/v1/export`）已不再托管。当前 REST API 使用 `/v2/`，并按格式拆分：
+
+| 旧版端点               | 当前端点                                                                                                                                               |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `POST /v1/import`      | `POST /v2/import/docx`（[参考文档](/conversion/import/docx/rest-api)）或 `POST /v2/import/markdown`（[参考文档](/conversion/import/markdown/rest-api)） |
+| `POST /v1/import-docx` | `POST /v2/import/docx`（[参考文档](/conversion/import/docx/rest-api)）                                                                                  |
+| `POST /v1/export`      | `POST /v2/export/docx`、`POST /v2/export/pdf`、`POST /v2/export/odt`、`POST /v2/export/epub`、`POST /v2/export/doc`、`POST /v2/export/markdown`        |
+
+所有 `/v2/` 端点都接受与旧版端点相同的 `Authorization: Bearer <jwt>` 和 `X-App-Id` 标头。请求体会因格式而略有不同；具体结构请参阅链接的参考文档。
+
+<Callout title="如果你暂时无法迁移" variant="hint">
+  保留已安装的旧版包，并显式传入指向当前主机的 endpoint 覆盖值：<code>endpoint: 'https://api.tiptap.dev/v2/convert'</code>。旧版包的请求
+  结构是 <code>/v2/</code> 请求结构的子集，但你将无法使用仅在当前扩展中提供的功能（页眉/页脚自动应用、自定义节点映射、按格式划分的
+  选项）。
+</Callout>
+
+## 迁移检查清单
+
+1. 安装 `@tiptap-pro/extension-convert-kit`，并在编辑器的扩展数组中用 `ConvertKit` 替换 `StarterKit`。
+2. 用 `@tiptap-pro/extension-import-docx` 替换 `@tiptap-pro/extension-import`（并将 `imageUploadCallbackUrl` 迁移为 `imageUploadConfig`）。
+3. 用所需的按格式划分的导出扩展替换 `@tiptap-pro/extension-export`。
+4. 更新命令名称：`import({ file })` 不变；`export({ format: 'docx' })` 改为 `exportDocx()`。
+5. 将导出结果处理逻辑从 `onExport` 回调迁移到 `onCompleteExport`。
+6. 如果直接使用 REST API，请将端点 URL 从 `/v1/...` 更新为 `/v2/...`。
+7. （可选）如果需要分页编辑器，可添加 [Pages 扩展](/pages/getting-started/overview)；这需要 Rule-2 配置（ConvertKit + TableKit + Pages）。
+8. 按照[端到端演练](/conversion/getting-started/guides/end-to-end-walkthrough)完成验证，确保新配置端到端正常运行。
+
+## 相关内容
+
+- [Conversion 概览](/conversion/getting-started/overview)：当前产品
+- [安装](/conversion/getting-started/install)：凭据和注册表配置
+- [ConvertKit](/conversion/import/docx/convertkit)：你将在编辑器中注册的 schema
+- [端到端演练](/conversion/getting-started/guides/end-to-end-walkthrough)：使用新 API 完成 DOCX 全流程往返
+- [旧版概览](/conversion/legacy/overview)：供参考，了解旧版包目前仍支持的功能
