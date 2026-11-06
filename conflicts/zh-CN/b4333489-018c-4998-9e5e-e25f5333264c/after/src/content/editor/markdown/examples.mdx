@@ -1,0 +1,310 @@
+---
+title: Markdown 示例
+tags:
+  - type: beta
+meta:
+  title: Markdown 示例 | Tiptap 编辑器文档
+  description: 探索在 Tiptap 中使用 Markdown 扩展的实用示例。了解如何在编辑器中解析、序列化和自定义 Markdown 内容。
+  category: Editor
+---
+
+使用 Markdown 扩展的常见场景实战示例与用法指南。
+
+## 基础示例
+
+### 读取和写入 Markdown
+
+此示例展示了最常见的 Markdown 操作：
+
+```typescript
+import { Editor } from '@tiptap/core'
+import StarterKit from '@tiptap/starter-kit'
+import { Markdown } from '@tiptap/markdown'
+
+const editor = new Editor({
+  element: document.querySelector('#editor'),
+  extensions: [StarterKit, Markdown],
+  content: '# Hello World\n\nStart typing...',
+  contentType: 'markdown', // parse initial content as Markdown
+})
+
+// Read: serialize current editor content to Markdown
+console.log(editor.getMarkdown())
+
+// Write: set editor content from a Markdown string
+editor.commands.setContent('# New title\n\nSome *Markdown* content', { contentType: 'markdown' })
+```
+
+---
+
+### 检测粘贴的 Markdown
+
+自动检测并解析粘贴的 Markdown：
+
+```typescript
+import { Editor } from '@tiptap/core'
+import StarterKit from '@tiptap/starter-kit'
+import { Markdown } from '@tiptap/markdown'
+import { Plugin } from '@tiptap/pm/state'
+
+const PasteMarkdown = Extension.create({
+  name: 'pasteMarkdown',
+
+  addProseMirrorPlugins() {
+    const { editor } = this;
+    return [
+      new Plugin({
+        props: {
+          handlePaste(view, event, slice) {
+            const text = event.clipboardData?.getData('text/plain')
+
+            if (!text) {
+              return false
+            }
+
+            // Check if text looks like Markdown
+            if (editor.markdown && looksLikeMarkdown(text)) {
+              const { state, dispatch } = view
+              // Parse the Markdown text to Tiptap JSON using the Markdown manager
+              const json = editor.markdown.parse(text)
+
+              // Insert the parsed JSON content at cursor position
+              editor.commands.insertContent(json)
+              return true
+            }
+
+            return false
+          },
+        },
+      }),
+    ]
+  },
+})
+
+function looksLikeMarkdown(text: string): boolean {
+  // Simple heuristic: check for Markdown syntax
+  return (
+    /^#{1,6}\s/.test(text) || // Headings
+    /\*\*[^*]+\*\*/.test(text) || // Bold
+    /\[.+\]\(.+\)/.test(text) || // Links
+    /^[-*+]\s/.test(text)
+  ) // Lists
+}
+
+const editor = new Editor({
+  extensions: [StarterKit, Markdown, PasteMarkdown],
+})
+```
+
+## 自定义分词器
+
+### 下标和上标
+
+支持 `~下标~` 和 `^上标^`：
+
+```typescript
+import { Mark } from '@tiptap/core'
+
+export const Subscript = Mark.create({
+  name: 'subscript',
+
+  parseHTML() {
+    return [{ tag: 'sub' }]
+  },
+
+  renderHTML() {
+    return ['sub', 0]
+  },
+
+  markdownTokenName: 'subscript',
+
+  parseMarkdown: (token, helpers) => {
+    const content = helpers.parseInline(token.tokens || [])
+    return helpers.applyMark('subscript', content)
+  },
+
+  renderMarkdown: (node, helpers) => {
+    const content = helpers.renderChildren(node.content || [])
+    return `~${content}~`
+  },
+
+  markdownTokenizer: {
+    name: 'subscript',
+    level: 'inline',
+    start: (src) => src.indexOf('~'),
+    tokenize: (src, tokens, lexer) => {
+      const match = /^~([^~]+)~/.exec(src)
+      if (!match) return undefined
+
+      return {
+        type: 'subscript',
+        raw: match[0], // Full match: ~text~
+        text: match[1], // Content: text
+        tokens: lexer.inlineTokens(match[1]), // Parse nested inline formatting
+      }
+    },
+  },
+})
+
+export const Superscript = Mark.create({
+  name: 'superscript',
+
+  parseHTML() {
+    return [{ tag: 'sup' }]
+  },
+
+  renderHTML() {
+    return ['sup', 0]
+  },
+
+  markdownTokenName: 'superscript',
+
+  parseMarkdown: (token, helpers) => {
+    const content = helpers.parseInline(token.tokens || [])
+    return helpers.applyMark('superscript', content)
+  },
+
+  renderMarkdown: (node, helpers) => {
+    const content = helpers.renderChildren(node.content || [])
+    return `^${content}^`
+  },
+
+  markdownTokenizer: {
+    name: 'superscript',
+    level: 'inline',
+    start: (src) => src.indexOf('^'),
+    tokenize: (src, tokens, lexer) => {
+      const match = /^\^([^^]+)\^/.exec(src)
+      if (!match) return undefined
+
+      return {
+        type: 'superscript',
+        raw: match[0], // Full match: ^text^
+        text: match[1], // Content: text
+        tokens: lexer.inlineTokens(match[1]), // Parse nested inline formatting
+      }
+    },
+  },
+})
+```
+
+用法：
+
+```typescript
+editor.commands.setContent('H~2~O and E = mc^2^', { contentType: 'markdown' })
+```
+
+## 集成示例
+
+### 实时 Markdown 预览
+
+监听编辑器更新，即可创建实时 Markdown 预览：
+
+```typescript
+import { Editor } from '@tiptap/core'
+import StarterKit from '@tiptap/starter-kit'
+import { Markdown } from '@tiptap/markdown'
+
+const editor = new Editor({
+  extensions: [StarterKit, Markdown],
+  content: '# Hello',
+  onUpdate: ({ editor }) => {
+    const markdown = editor.getMarkdown()
+    updatePreview(markdown) // Your preview update function
+  },
+})
+
+function updatePreview(markdown) {
+  document.querySelector('#preview').textContent = markdown
+}
+```
+
+### 保存和加载流程
+
+将内容存储为 Markdown，并在需要时加载：
+
+```typescript
+// Save to database/storage
+async function saveContent() {
+  const markdown = editor.getMarkdown()
+  await fetch('/api/save', {
+    method: 'POST',
+    body: JSON.stringify({ content: markdown }),
+  })
+}
+
+// Load from database/storage
+async function loadContent() {
+  const { content } = await fetch('/api/load').then((r) => r.json())
+  editor.commands.setContent(content, { contentType: 'markdown' })
+}
+```
+
+## 服务端渲染
+
+在服务器上渲染 Markdown：
+
+```typescript
+import StarterKit from '@tiptap/starter-kit'
+import { MarkdownManager } from '@tiptap/markdown'
+import { generateHTML } from '@tiptap/html'
+
+const markdownManager = new MarkdownManager({
+  extensions: [StarterKit, Markdown], // Include Markdown extension
+})
+
+// Parse Markdown to JSON on server
+function parseMarkdown(markdown: string) {
+  return markdownManager.parse(markdown)
+}
+
+// Convert JSON to HTML for rendering
+function renderToHTML(json: JSONContent) {
+  // Generate HTML from Tiptap JSON (no Markdown involved here)
+  return generateHTML(json, [StarterKit])
+}
+
+// Full pipeline: Markdown → JSON → HTML
+function markdownToHTML(markdown: string) {
+  const json = parseMarkdown(markdown) // Parse Markdown to JSON
+  return renderToHTML(json) // Render JSON to HTML
+}
+
+// Express route example
+app.get('/document/:id', async (req, res) => {
+  const doc = await db.getDocument(req.params.id)
+  const json = parseMarkdown(doc.markdown) // Parse stored Markdown
+  const html = renderToHTML(json) // Convert to HTML for display
+
+  res.render('document', { content: html })
+})
+```
+
+---
+
+## 高级模式
+
+### 延迟加载大型文档
+
+逐步加载大型文档：
+
+```typescript
+async function loadLargeDocument(documentId: string) {
+  // Load metadata first
+  const meta = await fetchDocumentMeta(documentId)
+
+  // Show skeleton
+  showSkeleton()
+
+  // Load in chunks
+  const chunks = await fetchDocumentChunks(documentId, meta.chunkCount)
+
+  // Parse each Markdown chunk and insert at correct position
+  for (const chunk of chunks) {
+    const json = editor.markdown.parse(chunk.markdown) // Parse Markdown to JSON
+    editor.commands.insertContentAt(chunk.position, json) // Insert at position
+  }
+
+  hideSkeleton()
+}
+```
