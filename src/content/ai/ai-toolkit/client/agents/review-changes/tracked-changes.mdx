@@ -1,37 +1,37 @@
 ---
-title: Use with Tracked Changes
+title: 与修订模式配合使用
 meta:
-  title: Use with Tracked Changes | Tiptap AI Toolkit
-  description: Display AI-generated changes as tracked changes that users can accept or reject individually.
+  title: 与修订模式配合使用 | Tiptap AI Toolkit
+  description: 将 AI 生成的更改显示为修订内容，供用户逐条接受或拒绝。
   category: AI Toolkit
 ---
 
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-<Callout title="Separate product" variant="info">
-  [Tracked Changes](/tracked-changes/getting-started/overview) is a separate Tiptap product from the AI Toolkit, sold separately. It handles user edits by default and can review AI edits when integrated with the AI Toolkit.
+<Callout title="单独销售的产品" variant="info">
+  [Tracked Changes](/tracked-changes/getting-started/overview) 是 Tiptap 的独立产品，与 AI Toolkit 分开销售。它默认处理用户编辑；与 AI Toolkit 集成后，也可以审核 AI 编辑。
 </Callout>
 
-<Callout title="Continuation from the AI agent chatbot guide" variant="info">
-  This guide continues the [AI agent chatbot
-  guide](/ai/ai-toolkit/client/agents/ai-agent-chatbot). Read it first.
+<Callout title="接续 AI 代理聊天机器人指南" variant="info">
+  本指南接续 [AI 代理聊天机器人
+  指南](/ai/ai-toolkit/client/agents/ai-agent-chatbot)。请先阅读该指南。
 </Callout>
 
-Display AI-generated changes as tracked changes, so your users can review and accept or reject them individually. This guide shows how to connect the AI Toolkit to the separately licensed [Tracked Changes](/tracked-changes/getting-started/overview) extension.
+将 AI 生成的更改显示为修订内容，让用户可以逐条查看并接受或拒绝。本指南将介绍如何把 AI Toolkit 与单独授权的 [Tracked Changes](/tracked-changes/getting-started/overview) 扩展连接起来。
 
 
 <CodeDemo isLarge path="" isScrollable src="https://ai-toolkit-demos.vercel.app/tracked-changes" />
 
-See the [source code on GitHub](https://github.com/ueberdosis/ai-toolkit-demos).
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
 
-## Show tracked changes
+## 显示修订内容
 
-To display AI edits as tracked changes, set `reviewOptions.mode` to `'trackedChanges'` when executing a tool.
+要将 AI 编辑显示为修订内容，请在执行工具时将 `reviewOptions.mode` 设为 `'trackedChanges'`。
 
-### API endpoint
+### API 端点
 
-The API endpoint is the same as in the [AI agent chatbot guide](/ai/ai-toolkit/client/agents/ai-agent-chatbot). No changes are needed on the server side to enable tracked changes.
+API 端点与 [AI 代理聊天机器人指南](/ai/ai-toolkit/client/agents/ai-agent-chatbot)中的相同。无需更改服务器端设置即可启用修订内容。
 
 ```ts
 // app/api/tracked-changes/route.ts
@@ -56,11 +56,11 @@ export async function POST(req: Request) {
 }
 ```
 
-### Client-side setup
+### 客户端设置
 
-On the client, install and add the `TrackedChanges` extension, then pass `reviewOptions` with mode `'trackedChanges'` to the `executeTool` method.
+在客户端安装并添加 `TrackedChanges` 扩展，然后将 `mode` 为 `'trackedChanges'` 的 `reviewOptions` 传给 `executeTool` 方法。
 
-The `TrackedChanges` extension must be configured with `enabled: false` while the AI is making edits.
+AI 执行编辑期间，必须将 `TrackedChanges` 扩展配置为 `enabled: false`。
 
 ```tsx
 import { useChat } from '@ai-sdk/react'
@@ -116,17 +116,17 @@ export default function Page() {
 }
 ```
 
-After the AI edits the document, the changes appear as tracked changes. Users can accept or reject them using the `acceptSuggestion`, `rejectSuggestion`, `acceptAllSuggestions`, and `rejectAllSuggestions` commands from the Tracked Changes extension.
+AI 编辑文档后，更改会以修订内容的形式显示。用户可以使用 Tracked Changes 扩展中的 `acceptSuggestion`、`rejectSuggestion`、`acceptAllSuggestions` 和 `rejectAllSuggestions` 命令接受或拒绝这些更改。
 
-### End result
+### 最终效果
 
 <CodeDemo isLarge path="" isScrollable src="https://ai-toolkit-demos.vercel.app/tracked-changes" />
 
-See the [source code on GitHub](https://github.com/ueberdosis/ai-toolkit-demos).
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
 
-## Next steps
+## 后续步骤
 
-- Learn more about [review options](/ai/ai-toolkit/client/api-reference/review-options) in the API reference.
-- Add real-time streaming with the [streaming guide](/ai/ai-toolkit/client/agents/streaming).
-- Learn about the [Tracked Changes](/tracked-changes/getting-started/overview) extension for styling and configuration options.
-- Combine tracked changes with comments using the [tracked changes with comments](/ai/ai-toolkit/client/agents/review-changes/tracked-changes-with-comments) guide.
+- 在 API 参考中深入了解[审核选项](/ai/ai-toolkit/client/api-reference/review-options)。
+- 阅读[流式传输指南](/ai/ai-toolkit/client/agents/streaming)，添加实时流式传输功能。
+- 了解 [Tracked Changes](/tracked-changes/getting-started/overview) 扩展的样式和配置选项。
+- 阅读[修订内容与批注](/ai/ai-toolkit/client/agents/review-changes/tracked-changes-with-comments)指南，将修订内容与批注结合使用。
