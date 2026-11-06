@@ -1,50 +1,47 @@
 ---
 title: Redis
 meta:
-  title: Redis | Hocuspocus Docs
+  title: Redis | Hocuspocus 文档
   category: Hocuspocus
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@hocuspocus/extension-redis.svg?label=version
     url: https://www.npmjs.com/package/@hocuspocus/extension-redis
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@hocuspocus/extension-redis.svg
     url: https://npmcharts.com/compare/@hocuspocus/extension-redis?minimal=true
-    label: Downloads
+    label: 下载量
   - type: image
     src: https://img.shields.io/npm/l/@hocuspocus/extension-redis.svg
     url: https://www.npmjs.com/package/@hocuspocus/extension-redis
-    label: License
+    label: 许可证
   - type: image
     src: https://img.shields.io/badge/chat-on%20discord-7289da.svg?sanitize=true
     url: https://discord.gg/WtJ49jGshW
-    label: Chat
+    label: 聊天
 ---
 
-Hocuspocus can be scaled horizontally using the Redis extension. You can spawn multiple instances of the server behind a
-load balancer and sync changes and awareness states through Redis. Hocuspocus will propagate all received updates to all other instances
-using Redis and thus forward updates to all clients of all Hocuspocus instances.
+使用 Redis 扩展可以对 Hocuspocus 进行水平扩展。你可以在负载均衡器后启动多个服务器实例，并通过 Redis 同步更改和 Awareness 状态。Hocuspocus 会通过 Redis 将收到的所有更新传播到其他实例，从而将更新转发给所有 Hocuspocus 实例上的所有客户端。
 
-The Redis extension does not persist data; it only syncs data between instances. Use the [Database](/hocuspocus/server/extensions/database) extension to store your documents.
+Redis 扩展不会持久化数据；它只在实例之间同步数据。要存储文档，请使用 [Database](/hocuspocus/server/extensions/database) 扩展。
 
-Please note that all messages will be handled on all instances of Hocuspocus, so if you are trying to reduce cpu load by spawning multiple
-servers, you should not connect them via Redis.
+请注意，所有 Hocuspocus 实例都会处理所有消息。因此，如果你想通过启动多个服务器来降低 CPU 负载，就不应该通过 Redis 将它们连接起来。
 
-Thanks to [@tommoor](https://github.com/tommoor) for writing the initial implementation of that extension.
+感谢 [@tommoor](https://github.com/tommoor) 编写了该扩展的初始实现。
 
-## Installation
+## 安装
 
-Install the Redis extension with:
+使用以下命令安装 Redis 扩展：
 
 ```bash
 npm install @hocuspocus/extension-redis
 ```
 
-## Configuration
+## 配置
 
-For a full documentation on all available Redis and Redis cluster options, check out the
-[ioredis API docs](https://github.com/luin/ioredis/blob/master/API.md).
+有关 Redis 和 Redis 集群所有可用选项的完整文档，请参阅
+[ioredis API 文档](https://github.com/luin/ioredis/blob/master/API.md)。
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -69,16 +66,15 @@ const server = new Server({
 server.listen();
 ```
 
-### Consistent state on load
+### 加载时保持状态一致
 
-When an instance loads a document that is already open on another instance, the Redis extension waits for that instance to send its current state. This ensures that newly connected clients and direct connections receive changes that may not have been persisted yet. If no other instance has the document open, loading is not delayed.
+当某个实例加载的文档已在另一个实例上打开时，Redis 扩展会等待该实例发送当前状态。这样可以确保新连接的客户端和直接连接能够收到尚未持久化的更改。如果没有其他实例打开该文档，加载过程不会延迟。
 
-The `awaitInitialSyncTimeout` option limits how long the extension waits, in milliseconds. It defaults to `1000`. Set it to `0` to disable waiting and use fire-and-forget synchronization instead.
+`awaitInitialSyncTimeout` 选项用于限制扩展等待的最长时间，单位为毫秒。默认值为 `1000`。将其设为 `0` 可禁用等待，改为使用发送后即不再等待的同步方式。
 
-## Usage
+## 用法
 
-The Redis extension works well with the database extension. Once an instance stores a document, it’s blocked for all
-other instances to avoid write conflicts.
+Redis 扩展与数据库扩展配合使用效果良好。某个实例存储文档后，该文档会对其他所有实例锁定，以避免写入冲突。
 
 ```js
 import { Server } from "@hocuspocus/server";
