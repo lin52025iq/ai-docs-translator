@@ -1,6 +1,6 @@
 ---
-title: 'Editing in the diagram'
-intro: "You can change a Mermaid diagram right where it is drawn. Double-click a text to change it, or drag a flowchart's shapes to move them. Both write the source through commands, so each change is one undo step and reaches collaborators like any other change."
+title: '在图表中编辑'
+intro: "你可以直接在 Mermaid 图表的绘制位置进行修改。双击文本即可更改，或拖动流程图中的形状来移动它们。这两种操作都会通过命令写入源代码，因此每次更改都可通过一次撤销恢复，也会像其他更改一样同步给协作者。"
 headerDemo:
   path: '/Extensions/DiagramsEditInPicture'
   isPro: true
@@ -8,94 +8,80 @@ tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Editing in the diagram | Tiptap Diagrams Docs'
-  description: 'You can change a Mermaid diagram right where it is drawn.'
-  category: Diagrams
+  title: '在图表中编辑 | Tiptap Diagrams 文档'
+  description: '你可以直接在 Mermaid 图表的绘制位置进行修改。'
+  category: 图表
 ---
 
-## Text in the diagram
+## 图表中的文本
 
-In an editable editor, a double click on a text in a Mermaid diagram opens a text field over it.
-The field holds that text.
+在可编辑的编辑器中，双击 Mermaid 图表中的文本会在其上方打开文本框。
+文本框中会显示该文本。
 
-- **Enter, or leaving the field,** writes the text into the source through `updateFlowDiagram`.
-- **Escape** closes the field without a change.
-- **Only the text changes.** Shapes and lines come from the source.
-- **A diagram drawn from a table** opens no field. Its text belongs to the table.
+- **按 Enter，或离开文本框时，**文本会通过 `updateFlowDiagram` 写入源代码。
+- **按 Escape** 会关闭文本框，不做任何更改。
+- **只有文本会发生变化。**形状和线条由源代码决定。
+- **由表格绘制的图表**不会打开文本框。其文本属于表格。
 
-A Diagram Renderer of your own needs
-[`editing`](/diagrams/renderers/custom-diagrams#editing-in-the-diagram) for this.
+自定义图表渲染器需要实现
+[`editing`](/diagrams/renderers/custom-diagrams#editing-in-the-diagram)。
 
-### What a double click edits
+### 双击可以编辑什么
 
-| Kind      | What a double click opens               | Written as                                                            |
-| --------- | --------------------------------------- | --------------------------------------------------------------------- |
-| Flowchart | A shape                                 | `id["text"]` at its first mention, or `label:` in `id@{ … }`          |
-| Flowchart | The text on an edge                     | `-->\|"text"\|`, or `-- "text" -->` where the edge has that form      |
-| Sequence  | A participant, at the top or the bottom | `participant id as text`, declared before its first mention if needed |
-| Sequence  | A message                               | The text after the colon                                              |
-| State     | A state                                 | `state "text" as id`, or the first `id : text` line                   |
-| Class     | A class name                            | `class id["text"]`. The id stays, so relations and members keep it    |
-| Any other | A text that appears once in the source  | That text, in its place                                               |
+| 类型      | 双击后打开的内容                       | 写入形式                                                              |
+| --------- | ------------------------------------- | --------------------------------------------------------------------- |
+| 流程图    | 一个形状                               | 首次出现时写为 `id["text"]`，或写为 `id@{ … }` 中的 `label:`           |
+| 流程图    | 边上的文本                             | `-->\|"text"\|`，或在边采用相应形式时写为 `-- "text" -->`             |
+| 时序图    | 顶部或底部的参与者                     | `participant id as text`；必要时会在首次出现前声明                     |
+| 时序图    | 一条消息                               | 冒号后的文本                                                          |
+| 状态图    | 一个状态                               | `state "text" as id`，或首个 `id : text` 行                           |
+| 类图      | 一个类名                               | `class id["text"]`。id 保持不变，因此关系和成员不受影响                |
+| 其他类型  | 源代码中只出现一次的文本               | 在原位置替换该文本                                                    |
 
-In any other kind, the extension looks for the clicked text in the source. That covers a
-timeline's periods and events, a kanban's columns and cards, a mind map's nodes, and a journey's
-or a Gantt chart's tasks and sections.
+对于其他类型，扩展会在源代码中查找被点击的文本。这适用于时间线中的时段和事件、看板中的列和卡片、思维导图中的节点，以及旅程图或甘特图中的任务和分区。
 
-The text must appear in the source exactly once, as a complete item, not as part of a longer
-text. An item starts at the start of a line, after a bracket, a quote, a
-separator such as `:` or `,`, or after `title` or `section`. It ends at a closing bracket, a
-quote, a separator or the end of the line.
+文本必须在源代码中恰好出现一次，且是完整的条目，不能只是较长文本的一部分。条目可以从行首、括号或引号之后、`:` 或 `,` 等分隔符之后，或 `title` 或 `section` 之后开始。条目在右括号、引号、分隔符或行尾结束。
 
-- **A text that appears twice** opens nothing. In a gitGraph, for example, a branch name appears
-  in `branch dev` and in `checkout dev`. A double click on the branch opens no field, and both
-  stay as they are.
-- **A text that Mermaid adds** to the drawn diagram, such as a count, is not in the source. It
-  opens nothing.
-- **A new text with `:`, `;`, `,`, `|`, `%`, `#`, `"`, `<`, `>`, brackets or a line break** is not
-  written in those kinds, because it would change more than the text.
-- **An edge without text** has nothing to double-click. Give it text in the source or with
-  [`renameMermaidLabel`](/diagrams/flow-diagrams/editing#without-an-editor).
-- **Edges written as one statement**, such as `A & B --> C`, share their text.
-- **A straight double quote** in the text becomes a typographic one (“ ”).
+- **重复出现的文本**不会打开任何内容。例如，在 gitGraph 中，分支名称会同时出现在 `branch dev` 和 `checkout dev` 中。双击该分支不会打开文本框，两处文本都保持不变。
+- **Mermaid 添加的文本**（例如计数）不在源代码中，因此不会打开任何内容。
+- **新文本中如果包含 `:`, `;`, `,`, `|`, `%`, `#`, `"`, `<`, `>`, 括号或换行符，**在这些图表类型中不会写入，因为这会导致文本以外的内容发生变化。
+- **没有文本的边**没有可供双击的内容。请在源代码中为其添加文本，或使用
+  [`renameMermaidLabel`](/diagrams/flow-diagrams/editing#without-an-editor)。
+- **写在同一条语句中的边**（例如 `A & B --> C`）共用同一文本。
+- **文本中的直双引号**会转换为弯引号（“ ”）。
 
-## Moving shapes
+## 移动形状
 
-In an editable editor, you can drag a shape of a Mermaid flowchart to move it.
+在可编辑的编辑器中，你可以拖动 Mermaid 流程图中的形状来移动它。
 
-- **Dragging an empty spot** next to the shapes pans a zoomed-in diagram, see
-  [Size and view](/diagrams/guides/size-and-view).
-- **The offset** snaps to steps of 10 units of the diagram.
-- **When you let go of the pointer,** the offset is written once, through
-  [`setDiagramNodePosition`](/diagrams/flow-diagrams/editing#setdiagramnodeposition). One undo puts the shape back.
-- **To put all shapes back,** call [`resetDiagramPositions`](/diagrams/flow-diagrams/editing#resetdiagrampositions).
+- **拖动形状旁边的空白区域**会平移放大的图表，详见[大小和视图](/diagrams/guides/size-and-view)。
+- **偏移量**会按图表单位以 10 为步长对齐。
+- **松开指针时，**偏移量会通过
+  [`setDiagramNodePosition`](/diagrams/flow-diagrams/editing#setdiagramnodeposition) 一次性写入。撤销一次即可将形状移回原位。
+- **要将所有形状移回原位，**请调用 [`resetDiagramPositions`](/diagrams/flow-diagrams/editing#resetdiagrampositions)。
 
-### How moved shapes are drawn
+### 移动后的形状如何绘制
 
-Mermaid first lays out the diagram from its source. Then the moved shapes are drawn at their
-offsets, in the editor and in every export.
+Mermaid 会先根据源代码布局图表，然后在编辑器和所有导出结果中，按偏移量绘制已移动的形状。
 
-- **Lines of a moved shape** are drawn straight from border to border, with their label in the
-  middle.
-- **Lines between shapes that did not move** keep their routing.
-- **A subgraph's frame** stays where the layout put it, even when you move a shape out of it.
-- **The diagram grows** when you move a shape past its edge.
+- **已移动形状的连线**会从边框到边框直线绘制，标签位于中间。
+- **未移动形状之间的连线**会保持原有走向。
+- **子图的边框**会保持在布局确定的位置，即使你将形状移出子图也一样。
+- **当形状移出图表边缘时，**图表会随之扩大。
 
-### Where the offsets are kept
+### 偏移量的保存位置
 
-The offsets are stored per node id in `options.positions`.
+偏移量按节点 id 存储在 `options.positions` 中。
 
-- **Renaming the id** in the source loses the offset.
-- **An id that is gone** from the source moves nothing.
-- **A change of the source** keeps the offsets.
-- **Only flowcharts** can be moved this way. Shapes of other Mermaid kinds, and draw.io and BPMN
-  diagrams, cannot. A Diagram Renderer of your own needs
-  [`nodeAt` and `movePositions`](/diagrams/renderers/custom-diagrams#editing-in-the-diagram).
+- **在源代码中重命名 id** 会导致偏移量丢失。
+- **源代码中已不存在的 id** 不会移动任何内容。
+- **更改源代码**不会清除偏移量。
+- **只有流程图**可以这样移动。其他 Mermaid 类型的形状，以及 draw.io 和 BPMN 图表中的形状，都无法这样移动。自定义图表渲染器需要实现
+  [`nodeAt` 和 `movePositions`](/diagrams/renderers/custom-diagrams#editing-in-the-diagram)。
 
-## Lines in a diagram
+## 图表中的线条
 
-You style the lines of a Mermaid diagram in its source, with `linkStyle`. There is no field for
-them outside the source.
+你可以在 Mermaid 图表的源代码中使用 `linkStyle` 设置线条样式。源代码之外没有可供编辑的文本框。
 
 ```txt
 flowchart LR
@@ -103,53 +89,50 @@ flowchart LR
   linkStyle 0 stroke-dasharray: 5 5, stroke-width: 2px
 ```
 
-## Commands
+## 命令
 
 ### setDiagramNodePosition
 
-Moves one shape of the selected Mermaid flowchart, or the one at `pos`, away from where the
-layout puts it.
+将所选 Mermaid 流程图中的一个形状（或 `pos` 指定位置的图表中的形状）移离布局确定的位置。
 
 ```ts
 editor.commands.setDiagramNodePosition({ nodeId: 'ship', dx: 40, dy: 60 })
 ```
 
-| Option   | Type     | Description                                                             |
+| 选项     | 类型     | 描述                                                                    |
 | -------- | -------- | ----------------------------------------------------------------------- |
-| `nodeId` | `string` | The id the source gives the shape, such as `ship` in `ship[Shipped]`    |
-| `dx`     | `number` | The horizontal offset, in the diagram's units                           |
-| `dy`     | `number` | The vertical offset, in the diagram's units. `0, 0` puts the shape back |
-| `pos`    | `number` | The diagram's position. Defaults to the selected diagram                |
+| `nodeId` | `string` | 源代码中为形状指定的 id，例如 `ship[Shipped]` 中的 `ship`               |
+| `dx`     | `number` | 水平偏移量，单位为图表单位                                              |
+| `dy`     | `number` | 垂直偏移量，单位为图表单位。`0, 0` 会将形状移回原位                     |
+| `pos`    | `number` | 图表的位置。默认为当前选中的图表                                        |
 
-Returns `false` for a diagram that is not a Mermaid flowchart, for an id with a space or
-punctuation other than `-` and `_`, and for an offset that is not a number or is beyond 10,000.
+如果图表不是 Mermaid 流程图、id 中包含空格或除 `-` 和 `_` 以外的标点，或者偏移量不是数字或超出 10,000，则返回 `false`。
 
 ### resetDiagramPositions
 
-Puts every moved shape back where the layout puts it.
+将所有已移动的形状移回布局确定的位置。
 
 ```ts
 editor.commands.resetDiagramPositions()
 ```
 
-| Option | Type     | Description                                              |
-| ------ | -------- | -------------------------------------------------------- |
-| `pos`  | `number` | The diagram's position. Defaults to the selected diagram |
+| 选项  | 类型     | 描述                             |
+| ----- | -------- | -------------------------------- |
+| `pos` | `number` | 图表的位置。默认为当前选中的图表 |
 
-Returns `false` for a diagram without moved shapes.
+如果图表中没有已移动的形状，则返回 `false`。
 
-## Without an editor
+## 不使用编辑器
 
-These functions from `@tiptap-pro/extension-diagrams/core` work on the source, without an editor
-or a drawn diagram:
+`@tiptap-pro/extension-diagrams/core` 中的这些函数可以直接操作源代码，无需编辑器或已绘制的图表：
 
-| Function                                    | Returns                                                                                                                                                               |
-| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `renameMermaidLabel(source, target, label)` | The source with that text replaced, every other character kept, or `null` when the source is not of the target's kind, the target is not in it, or the label is empty |
-| `renameMermaidNode(source, nodeId, label)`  | The same as `renameMermaidLabel` with a target of kind `'node'`                                                                                                       |
-| `renameMermaidText(source, text, label)`    | The same with a target of kind `'text'`                                                                                                                               |
-| `isRenamableMermaidText(source, text)`      | Whether the text appears once in the source, as a complete item, so it can be renamed                                                                                 |
-| `flowDiagramPositions(diagram)`             | The offsets as `{ [nodeId]: { dx, dy } }`, leaving out entries that are not valid                                                                                     |
+| 函数                                        | 返回值                                                                                                                                                      |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `renameMermaidLabel(source, target, label)` | 替换指定文本并保留其他所有字符后的源代码；如果源代码不是目标类型、目标不在源代码中，或标签为空，则返回 `null`                                                |
+| `renameMermaidNode(source, nodeId, label)`  | 等同于将目标类型设为 `'node'` 时调用 `renameMermaidLabel`                                                                                                    |
+| `renameMermaidText(source, text, label)`    | 等同于将目标类型设为 `'text'` 时调用 `renameMermaidLabel`                                                                                                    |
+| `isRenamableMermaidText(source, text)`      | 判断该文本是否在源代码中恰好作为完整条目出现一次，因此可以重命名                                                                                              |
+| `flowDiagramPositions(diagram)`             | 以 `{ [nodeId]: { dx, dy } }` 的形式返回偏移量，并忽略无效条目                                                                                               |
 
 ```ts
 import { renameMermaidLabel } from '@tiptap-pro/extension-diagrams/core'
@@ -162,12 +145,12 @@ const source = renameMermaidLabel(
 // 'flowchart LR\n  A[Order] -->|"placed"| B{Paid?}'
 ```
 
-`target` is `{ kind, id }`:
+`target` 的格式为 `{ kind, id }`：
 
-| `kind`                                | `id`                                                                                                                         |
-| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `'node'`                              | A flowchart shape's id                                                                                                       |
-| `'edge'`                              | A flowchart edge's id as Mermaid gives it: `L_<from>_<to>_<n>`, where `n` counts the edges between the same two nodes from 0 |
-| `'participant'`, `'state'`, `'class'` | Its id                                                                                                                       |
-| `'message'`                           | Its place among the messages, from `'0'`                                                                                     |
-| `'text'`                              | The text itself, in any other kind. It must appear once in the source, as a complete item                                    |
+| `kind`                                | `id`                                                                      |
+| ------------------------------------- | ------------------------------------------------------------------------- |
+| `'node'`                              | 流程图形状的 id                                                           |
+| `'edge'`                              | Mermaid 为流程图边指定的 id：`L_<from>_<to>_<n>`，其中 `n` 从 0 开始，表示同一对节点之间边的序号 |
+| `'participant'`、`'state'`、`'class'` | 对应元素的 id                                                              |
+| `'message'`                           | 消息的位置，从 `'0'` 开始                                                  |
+| `'text'`                              | 其他类型中的文本本身。该文本必须在源代码中恰好作为完整条目出现一次             |
