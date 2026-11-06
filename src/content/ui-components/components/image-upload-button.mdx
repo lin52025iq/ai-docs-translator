@@ -1,12 +1,12 @@
 ---
-title: Image Upload Button
+title: 图片上传按钮
 meta:
-  title: Image Upload Button | Tiptap UI Components
-  description: Add a button that uploads and inserts an image into your Tiptap editor. More in the documentation!
-  category: UI Components
+  title: 图片上传按钮 | Tiptap UI 组件
+  description: 添加一个按钮，将图片上传并插入 Tiptap 编辑器。更多信息请参阅文档！
+  category: UI 组件
 component:
-  name: Image upload button
-  description: Upload an image by triggering a button.
+  name: 图片上传按钮
+  description: 点击按钮上传图片。
   type: component
   isFree: true
   isCloud: false
@@ -19,25 +19,25 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A fully accessible image upload button for Tiptap editors. Easily insert images with keyboard shortcut support and flexible customization options.
+这是一款完全无障碍的 Tiptap 编辑器图片上传按钮。支持键盘快捷键，并提供灵活的自定义选项，轻松插入图片。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui/image-upload-button" />
 
-## Installation
+## 安装
 
-Add the component via the Tiptap CLI:
+通过 Tiptap CLI 添加组件：
 
 ```bash
 npx @tiptap/cli@latest add image-upload-button
 ```
 
-## Components
+## 组件
 
 ### `<ImageUploadButton />`
 
-A prebuilt React component that inserts images into the editor.
+一个预构建的 React 组件，可将图片插入编辑器。
 
-#### Usage
+#### 用法
 
 ```tsx
 import { EditorContent, EditorContext, useEditor } from '@tiptap/react'
@@ -85,23 +85,23 @@ export default function MyEditor() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type             | Default     | Description                                            |
-| --------------------- | ---------------- | ----------- | ------------------------------------------------------ |
-| `editor`              | `Editor \| null` | `undefined` | The Tiptap editor instance                             |
-| `text`                | `string`         | `undefined` | Optional text label for the button                     |
-| `hideWhenUnavailable` | `boolean`        | `false`     | Hides the button when image insertion is not available |
-| `onInserted`          | `() => void`     | `undefined` | Callback fired after a successful image insertion      |
-| `showShortcut`        | `boolean`        | `false`     | Shows a keyboard shortcut badge (if available)         |
+| 名称                  | 类型             | 默认值      | 描述                                           |
+| --------------------- | ---------------- | ----------- | ---------------------------------------------- |
+| `editor`              | `Editor \| null` | `undefined` | Tiptap 编辑器实例                              |
+| `text`                | `string`         | `undefined` | 按钮的可选文本标签                             |
+| `hideWhenUnavailable` | `boolean`        | `false`     | 无法插入图片时隐藏按钮                         |
+| `onInserted`          | `() => void`     | `undefined` | 图片成功插入后触发的回调                       |
+| `showShortcut`        | `boolean`        | `false`     | 显示键盘快捷键徽标（如果有）                   |
 
 ## Hooks
 
 ### `useImageUpload()`
 
-A custom hook to build your own image upload button with full control over rendering and behavior.
+自定义 Hook，可让你完全控制渲染和行为，从而构建自己的图片上传按钮。
 
-#### Usage
+#### 用法
 
 ```tsx
 function MyImageUploadButton() {
@@ -125,31 +125,31 @@ function MyImageUploadButton() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type             | Default     | Description                                          |
-| --------------------- | ---------------- | ----------- | ---------------------------------------------------- |
-| `editor`              | `Editor \| null` | `undefined` | The Tiptap editor instance                           |
-| `hideWhenUnavailable` | `boolean`        | `false`     | Hides the button if image insertion is not available |
-| `onInserted`          | `() => void`     | `undefined` | Callback fired after a successful image insertion    |
+| 名称                  | 类型             | 默认值      | 描述                                           |
+| --------------------- | ---------------- | ----------- | ---------------------------------------------- |
+| `editor`              | `Editor \| null` | `undefined` | Tiptap 编辑器实例                              |
+| `hideWhenUnavailable` | `boolean`        | `false`     | 无法插入图片时隐藏按钮                         |
+| `onInserted`          | `() => void`     | `undefined` | 图片成功插入后触发的回调                       |
 
-#### Return Values
+#### 返回值
 
-| Name           | Type            | Description                                |
-| -------------- | --------------- | ------------------------------------------ |
-| `isVisible`    | `boolean`       | Whether the button should be rendered      |
-| `isActive`     | `boolean`       | If an image is currently selected          |
-| `canInsert`    | `boolean`       | If image insertion is currently allowed    |
-| `handleImage`  | `() => boolean` | Function to insert an image                |
-| `label`        | `string`        | Accessible label text for the button       |
-| `shortcutKeys` | `string`        | Keyboard shortcut (Cmd/Ctrl + Shift + I)   |
-| `Icon`         | `React.FC`      | Icon component for the image upload button |
+| 名称           | 类型            | 描述                                  |
+| -------------- | --------------- | ------------------------------------- |
+| `isVisible`    | `boolean`       | 是否应渲染该按钮                      |
+| `isActive`     | `boolean`       | 当前是否选中了图片                    |
+| `canInsert`    | `boolean`       | 当前是否允许插入图片                  |
+| `handleImage`  | `() => boolean` | 插入图片的函数                        |
+| `label`        | `string`        | 按钮的无障碍标签文本                  |
+| `shortcutKeys` | `string`        | 键盘快捷键（Cmd/Ctrl + Shift + I）     |
+| `Icon`         | `React.FC`      | 图片上传按钮的图标组件                |
 
-## Utilities
+## 工具函数
 
 ### `canInsertImage(editor)`
 
-Checks if an image can be inserted in the current editor state.
+检查当前编辑器状态是否可以插入图片。
 
 ```tsx
 import { canInsertImage } from '@/components/tiptap-ui/image-upload-button'
@@ -159,7 +159,7 @@ const canInsert = canInsertImage(editor) // Check if image can be inserted
 
 ### `insertImage(editor)`
 
-Programmatically inserts an image in the editor.
+以编程方式在编辑器中插入图片。
 
 ```tsx
 import { insertImage } from '@/components/tiptap-ui/image-upload-button'
@@ -172,7 +172,7 @@ if (success) {
 
 ### `isImageActive(editor)`
 
-Checks if an image is currently active/selected in the editor.
+检查编辑器中当前是否激活或选中了图片。
 
 ```tsx
 import { isImageActive } from '@/components/tiptap-ui/image-upload-button'
@@ -180,25 +180,25 @@ import { isImageActive } from '@/components/tiptap-ui/image-upload-button'
 const active = isImageActive(editor)
 ```
 
-## Keyboard Shortcuts
+## 键盘快捷键
 
-The image upload button supports the following keyboard shortcut:
+图片上传按钮支持以下键盘快捷键：
 
-- **Cmd/Ctrl + Shift + I**: Insert an image
+- **Cmd/Ctrl + Shift + I**：插入图片
 
-The shortcut is automatically registered when using either the `<ImageUploadButton />` component or the `useImageUpload()` hook.
+使用 `<ImageUploadButton />` 组件或 `useImageUpload()` Hook 时，都会自动注册此快捷键。
 
-## Requirements
+## 要求
 
-### Dependencies
+### 依赖项
 
-- `@tiptap/react` - Core Tiptap React integration
-- `react-hotkeys-hook` - Keyboard shortcut management
+- `@tiptap/react` - Tiptap React 核心集成
+- `react-hotkeys-hook` - 键盘快捷键管理
 
-### Referenced Components
+### 引用的组件
 
-- `use-tiptap-editor` (hook)
-- `button` (primitive)
-- `badge` (primitive)
-- `tiptap-utils` (lib)
-- `image-plus-icon` (icon)
+- `use-tiptap-editor`（Hook）
+- `button`（基础组件）
+- `badge`（基础组件）
+- `tiptap-utils`（库）
+- `image-plus-icon`（图标）
