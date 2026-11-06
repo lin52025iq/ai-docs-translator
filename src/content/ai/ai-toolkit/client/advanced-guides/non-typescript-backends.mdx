@@ -1,40 +1,40 @@
 ---
-title: Non-TypeScript backends
+title: 非 TypeScript 后端
 meta:
-  title: Non-TypeScript backends | Tiptap AI Toolkit
-  description: Use the AI Toolkit CLI to generate tool definitions and workflow configurations as JSON for non-TypeScript backends like Python, Go, or Ruby.
+  title: 非 TypeScript 后端 | Tiptap AI Toolkit
+  description: 使用 AI Toolkit CLI 为 Python、Go 或 Ruby 等非 TypeScript 后端生成 JSON 格式的工具定义和工作流配置。
   category: AI Toolkit
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Use the AI Toolkit with any backend language. The `@tiptap-pro/client-ai-toolkit-tool-definitions` package includes a CLI that outputs tool definitions and workflow configurations as JSON, so you can use them in Python, Go, Ruby, or any other language.
+AI Toolkit 可搭配任何后端语言使用。`@tiptap-pro/client-ai-toolkit-tool-definitions` 包含一个 CLI，可将工具定义和工作流配置输出为 JSON，因此你可以在 Python、Go、Ruby 或任何其他语言中使用它们。
 
-## Setup
+## 设置
 
-Configure authentication for Tiptap's private npm registry. Follow the [private registry guide](/guides/pro-extensions) to set up your `.npmrc` file with your access token.
+为 Tiptap 的私有 npm 注册表配置身份验证。请按照[私有注册表指南](/guides/pro-extensions)设置 `.npmrc` 文件并添加访问令牌。
 
-<Callout title="Node.js required" variant="hint">
-  The CLI requires Node.js 18 or later. You only need Node.js to run the CLI and generate the JSON files — your backend can use any language.
+<Callout title="需要 Node.js" variant="hint">
+  CLI 需要 Node.js 18 或更高版本。你只需使用 Node.js 运行 CLI 并生成 JSON 文件，后端可以使用任何语言。
 </Callout>
 
-## Generate tool definitions
+## 生成工具定义
 
-Run the CLI to generate a `tool-definitions.json` file with all default tools:
+运行 CLI，生成包含所有默认工具的 `tool-definitions.json` 文件：
 
 ```bash
 npx @tiptap-pro/client-ai-toolkit-tool-definitions@latest tool-definitions > tool-definitions.json
 ```
 
-The output is a JSON array. Each entry contains:
+输出是一个 JSON 数组。每个条目包含：
 
-- `name`: unique identifier of the tool
-- `description`: instructions for the AI model
-- `inputSchema`: [JSON Schema](https://json-schema.org/) describing the tool's input parameters
+- `name`：工具的唯一标识符
+- `description`：提供给 AI 模型的指令
+- `inputSchema`：[JSON Schema](https://json-schema.org/)，用于描述工具的输入参数
 
-### Use in your backend
+### 在后端中使用
 
-Load the JSON file in your backend and convert the tool definitions to your AI provider's format. For example, in Python with the OpenAI SDK:
+在后端加载 JSON 文件，并将工具定义转换为 AI 服务提供商所需的格式。例如，使用 OpenAI SDK 的 Python 示例：
 
 ```python
 import json
@@ -56,64 +56,64 @@ tools = [
 ]
 ```
 
-## Generate workflow configurations
+## 生成工作流配置
 
-Each workflow command outputs a JSON object with a `systemPrompt` (and optionally a `jsonOutputSchema`) that you pass to your AI provider.
+每个工作流命令都会输出一个 JSON 对象，其中包含 `systemPrompt`（以及可选的 `jsonOutputSchema`），供你传递给 AI 服务提供商。
 
-### Insert content workflow
+### 插入内容工作流
 
 ```bash
 npx @tiptap-pro/client-ai-toolkit-tool-definitions@latest insert-content-workflow > insert-content-workflow.json
 ```
 
-Output:
-- `systemPrompt`: instructions for the AI model
+输出：
+- `systemPrompt`：提供给 AI 模型的指令
 
-### Proofreader workflow
+### 校对工作流
 
 ```bash
 npx @tiptap-pro/client-ai-toolkit-tool-definitions@latest proofreader-workflow > proofreader-workflow.json
 ```
 
-Output:
-- `systemPrompt`: instructions for the AI model
-- `jsonOutputSchema`: [JSON Schema](https://json-schema.org/) for validating the AI output
+输出：
+- `systemPrompt`：提供给 AI 模型的指令
+- `jsonOutputSchema`：[JSON Schema](https://json-schema.org/)，用于验证 AI 输出
 
-### Tiptap Edit workflow
+### Tiptap 编辑工作流
 
 ```bash
 npx @tiptap-pro/client-ai-toolkit-tool-definitions@latest tiptap-edit-workflow > tiptap-edit-workflow.json
 ```
 
-Output:
-- `systemPrompt`: instructions for the AI model
-- `jsonOutputSchema`: [JSON Schema](https://json-schema.org/) for validating the AI output
+输出：
+- `systemPrompt`：提供给 AI 模型的指令
+- `jsonOutputSchema`：[JSON Schema](https://json-schema.org/)，用于验证 AI 输出
 
-### Comments workflow
+### 评论工作流
 
 ```bash
 npx @tiptap-pro/client-ai-toolkit-tool-definitions@latest edit-threads-workflow > edit-threads-workflow.json
 ```
 
-Output:
-- `systemPrompt`: instructions for the AI model
-- `jsonOutputSchema`: [JSON Schema](https://json-schema.org/) for validating the AI output
+输出：
+- `systemPrompt`：提供给 AI 模型的指令
+- `jsonOutputSchema`：[JSON Schema](https://json-schema.org/)，用于验证 AI 输出
 
-### Template workflow
+### 模板工作流
 
-The template workflow requires an HTML template as input:
+模板工作流需要 HTML 模板作为输入：
 
 ```bash
 npx @tiptap-pro/client-ai-toolkit-tool-definitions@latest template-workflow --html-template '<p _templateslot="title">Title</p><p _templateslot="body">Body</p>' > template-workflow.json
 ```
 
-Output:
-- `systemPrompt`: instructions for the AI model (includes the template)
-- `jsonOutputSchema`: [JSON Schema](https://json-schema.org/) for validating the AI output
+输出：
+- `systemPrompt`：提供给 AI 模型的指令（包含模板）
+- `jsonOutputSchema`：[JSON Schema](https://json-schema.org/)，用于验证 AI 输出
 
-### Use workflows in your backend
+### 在后端中使用工作流
 
-Load the JSON file and pass the system prompt and schema to your AI provider. For example, in Python with the OpenAI SDK:
+加载 JSON 文件，并将系统提示词和 Schema 传递给 AI 服务提供商。以下是使用 OpenAI SDK 的 Python 示例：
 
 ```python
 import json
@@ -140,73 +140,73 @@ response = client.chat.completions.create(
 )
 ```
 
-## CLI reference
+## CLI 参考
 
 ### `tool-definitions`
 
-Generate tool definitions as JSON.
+以 JSON 格式生成工具定义。
 
 ```bash
 npx @tiptap-pro/client-ai-toolkit-tool-definitions@latest tool-definitions [options]
 ```
 
-| Option | Description |
+| 选项 | 说明 |
 | --- | --- |
-| `--tools <names...>` | Space-separated list of tool names to enable. When omitted, the default set is used. Valid names: `tiptapRead`, `tiptapEdit`, `tiptapReadSelection`, `getThreads`, `editThreads`. |
-| `--operation-meta <description>` | Description for the `meta` field in edit operations. |
+| `--tools <names...>` | 要启用的工具名称列表，以空格分隔。省略时使用默认工具集。有效名称：`tiptapRead`、`tiptapEdit`、`tiptapReadSelection`、`getThreads`、`editThreads`。 |
+| `--operation-meta <description>` | 编辑操作中 `meta` 字段的说明。 |
 
 ### `tiptap-edit-workflow`
 
-Generate the Tiptap Edit workflow configuration as JSON.
+以 JSON 格式生成 Tiptap 编辑工作流配置。
 
 ```bash
 npx @tiptap-pro/client-ai-toolkit-tool-definitions@latest tiptap-edit-workflow [options]
 ```
 
-| Option | Description |
+| 选项 | 说明 |
 | --- | --- |
-| `--operation-meta <description>` | Description for the `meta` field in edit operations. |
+| `--operation-meta <description>` | 编辑操作中 `meta` 字段的说明。 |
 
 ### `proofreader-workflow`
 
-Generate the Proofreader workflow configuration as JSON.
+以 JSON 格式生成校对工作流配置。
 
 ```bash
 npx @tiptap-pro/client-ai-toolkit-tool-definitions@latest proofreader-workflow [options]
 ```
 
-| Option | Description |
+| 选项 | 说明 |
 | --- | --- |
-| `--operation-meta <description>` | Description for the `meta` field in operations. |
+| `--operation-meta <description>` | 操作中 `meta` 字段的说明。 |
 
 ### `template-workflow`
 
-Generate the Template workflow configuration as JSON.
+以 JSON 格式生成模板工作流配置。
 
 ```bash
 npx @tiptap-pro/client-ai-toolkit-tool-definitions@latest template-workflow --html-template <html>
 ```
 
-| Option | Description |
+| 选项 | 说明 |
 | --- | --- |
-| `--html-template <html>` | **(Required)** The HTML template string. |
+| `--html-template <html>` | **（必填）** HTML 模板字符串。 |
 
 ### `edit-threads-workflow`
 
-Generate the Comments workflow configuration as JSON.
+以 JSON 格式生成评论工作流配置。
 
 ```bash
 npx @tiptap-pro/client-ai-toolkit-tool-definitions@latest edit-threads-workflow
 ```
 
-No options.
+无选项。
 
 ### `insert-content-workflow`
 
-Generate the Insert content workflow configuration as JSON.
+以 JSON 格式生成插入内容工作流配置。
 
 ```bash
 npx @tiptap-pro/client-ai-toolkit-tool-definitions@latest insert-content-workflow
 ```
 
-No options.
+无选项。
