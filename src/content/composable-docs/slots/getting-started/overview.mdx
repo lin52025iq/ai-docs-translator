@@ -1,25 +1,25 @@
 ---
-title: Slots
+title: 插槽
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Slots | Tiptap Docs
-  description: Build editable document templates with embedded, validated Slot fields.
-  category: Composable Docs
+  title: 插槽 | Tiptap 文档
+  description: 使用嵌入式且经过验证的插槽字段，构建可编辑的文档模板。
+  category: 可组合文档
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-With **Slots**, you can turn your documents into templates and forms with fields that users can fill. Define rules to validate each slot's content, and use Content Protection to control who can edit it.
+借助**插槽**，您可以将文档转换为模板和表单，其中包含供用户填写的字段。您可以定义规则来验证每个插槽的内容，并使用内容保护来控制谁可以编辑插槽。
 
-## Install
+## 安装
 
-First, [contact our team](https://tiptap.dev/contact-sales?form=pilot-program) to join the Tiptap Composable Docs pilot program.
+首先，[联系我们的团队](https://tiptap.dev/contact-sales?form=pilot-program)，加入 Tiptap 可组合文档试点计划。
 
-Then, configure your package manager by following the [private registry guide](/guides/pro-extensions).
+然后，按照[私有注册表指南](/guides/pro-extensions)配置包管理器。
 
-Then, install the package:
+接着，安装软件包：
 
 ```bash
 npm install @tiptap/core @tiptap/starter-kit @tiptap-pro/extension-slot
@@ -50,13 +50,13 @@ const editor = new Editor({
 })
 ```
 
-<Callout title="Client-side only" variant="info">
-  Slots currently work only client-side. If you're interested in filling slots on the server,
-  [contact us](https://tiptap.dev/contact-sales?form=pilot-program).
+<Callout title="仅限客户端" variant="info">
+  插槽目前仅在客户端运行。如果您有兴趣在服务器上填充插槽，
+  [请联系我们](https://tiptap.dev/contact-sales?form=pilot-program)。
 </Callout>
 
-## Next steps
+## 后续步骤
 
-To use a single value across several slots or display a calculated value, [bind slots to variables](/composable-docs/variables/guides/bind-slots).
+如需在多个插槽中使用同一个值，或显示计算得出的值，请[将插槽绑定到变量](/composable-docs/variables/guides/bind-slots)。
 
-Read the [quickstart guide](/composable-docs/slots/guides/add-slots) to learn how to add slots to your document. Then, [set up the document so that users can fill the slots](/composable-docs/slots/guides/fill-only).
+阅读[快速入门指南](/composable-docs/slots/guides/add-slots)，了解如何向文档中添加插槽。然后，[设置文档，让用户能够填写插槽](/composable-docs/slots/guides/fill-only)。
