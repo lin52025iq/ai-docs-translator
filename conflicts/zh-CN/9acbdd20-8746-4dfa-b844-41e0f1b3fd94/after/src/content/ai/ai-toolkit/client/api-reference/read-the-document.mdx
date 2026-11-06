@@ -1,0 +1,249 @@
+---
+title: 阅读文档
+meta:
+  title: 阅读文档 | Tiptap AI Toolkit
+  description: 以 JSON、HTML 或文本格式提取文档内容，并支持选择、范围读取和分块读取，方便与 AI 集成。
+  category: AI 工具包
+---
+
+import { Callout } from '@/components/ui/Callout'
+
+以多种格式读取内容。分块读取有助于处理大型文档。
+
+## `getTextRange`
+
+返回指定范围内的文本内容。
+
+### 参数
+
+- `range` (`Range`)：要获取内容的范围
+  - `from` (`number`)：起始位置
+  - `to` (`number`)：结束位置
+- `options?` (`GetTextRangeOptions`)：`getTextRange` 方法的选项
+  - `doc?` (`Node`)：可选的文档节点，用于替代当前编辑器文档
+
+### 返回值
+
+`string`：纯文本字符串形式的文本内容
+
+### 示例
+
+```ts
+// Read a text slice
+const snippet = toolkit.getTextRange({ from: 0, to: 100 })
+```
+
+## `getHtmlRange`
+
+返回指定范围内的 HTML 内容。
+
+### 参数
+
+- `range` (`Range`)：要获取内容的范围
+  - `from` (`number`)：起始位置
+  - `to` (`number`)：结束位置
+- `options?` (`GetHtmlRangeOptions`)：`getHtmlRange` 方法的选项
+  - `doc?` (`Node`)：可选的文档节点，用于替代当前编辑器文档
+
+### 返回值
+
+`string`：字符串形式的 HTML 内容
+
+### 示例
+
+```ts
+// Read the HTML of the content from position 0 to 100
+const snippet = toolkit.getHtmlRange({ from: 0, to: 100 })
+```
+
+## `getMarkdownRange`
+
+返回指定范围内的 Markdown 内容。
+
+<Callout title="需要 Markdown 扩展" variant="warning">
+  此方法需要安装并配置 [Tiptap Markdown
+  扩展](https://tiptap.dev/docs/editor/markdown/api/editor)。
+</Callout>
+
+### 参数
+
+- `range` (`Range`)：要获取内容的范围
+  - `from` (`number`)：起始位置
+  - `to` (`number`)：结束位置
+- `options?` (`GetMarkdownRangeOptions`)：`getMarkdownRange` 方法的选项
+  - `doc?` (`Node`)：可选的文档节点，用于替代当前编辑器文档
+
+### 返回值
+
+`string`：字符串形式的 Markdown 内容；如果 Markdown 扩展不可用，则返回空字符串
+
+### 示例
+
+```ts
+// Read the Markdown of the content from position 0 to 100
+const snippet = toolkit.getMarkdownRange({ from: 0, to: 100 })
+```
+
+## `getJsonRange`
+
+返回指定范围内的 Tiptap JSON 内容。
+
+### 参数
+
+- `range` (`Range`)：要获取内容的范围
+  - `from` (`number`)：起始位置
+  - `to` (`number`)：结束位置
+- `options?` (`GetJsonRangeOptions`)：`getJsonRange` 方法的选项
+  - `doc?` (`Node`)：可选的文档节点，用于替代当前编辑器文档
+
+### 返回值
+
+`any`：Tiptap JSON 内容
+
+### 示例
+
+```ts
+// Read a Tiptap JSON slice
+const snippet = toolkit.getJsonRange({ from: 0, to: 100 })
+```
+
+## `getTextChunks`
+
+将文档拆分为文本块，以便处理大型内容。
+
+### 参数
+
+- `options?` (`GetTextChunksOptions`)：`getTextChunks` 方法的选项
+  - `chunkSize?` (`number`)：每个块的最大字符数。默认为 32,000 个字符（8000 个 token \\* 每个 token 4 个字符）
+
+### 返回值
+
+`TextChunk[]`：文本块数组，每个块包含：
+
+- `content` (`string`)：块中的文本内容
+- `range` (`Range`)：块在文档中的起止范围
+  - `from` (`number`)：在文档中的起始位置
+  - `to` (`number`)：在文档中的结束位置
+- `nodeRange` (`NodeRange`)：块在文档中的起止节点范围
+  - `from` (`number`)：在文档中的起始节点位置
+  - `to` (`number`)：在文档中的结束节点位置
+
+### 示例
+
+```ts
+// Split the document into chunks of the default size
+const chunks = toolkit.getTextChunks()
+// Split the document into chunks of 1000 characters maximum
+const smallerChunks = toolkit.getTextChunks({ chunkSize: 1000 })
+```
+
+## `getHtmlChunks`
+
+将文档拆分为 HTML 块，以便处理大型内容。
+
+### 参数
+
+- `options?` (`GetHtmlChunksOptions`)：`getHtmlChunks` 方法的选项
+  - `chunkSize?` (`number`)：每个块的最大字符数。默认为 32,000 个字符（8000 个 token \\* 每个 token 4 个字符）
+
+### 返回值
+
+`HtmlChunk[]`：HTML 块数组，每个块包含：
+
+- `content` (`string`)：块中的 HTML 内容
+- `range` (`Range`)：块在文档中的起止范围
+  - `from` (`number`)：在文档中的起始位置
+  - `to` (`number`)`：在文档中的结束位置
+- `nodeRange` (`NodeRange`)：块在文档中的起止节点范围
+  - `from` (`number`)`：在文档中的起始节点位置
+  - `to` (`number`)`：在文档中的结束节点位置
+
+### 示例
+
+```ts
+// Split the document into chunks of the default size
+const chunks = toolkit.getHtmlChunks()
+// Split the document into chunks of 1000 characters maximum
+const smallerChunks = toolkit.getHtmlChunks({ chunkSize: 1000 })
+```
+
+## `getJsonChunks`
+
+将文档拆分为 Tiptap JSON 块，以便处理大型内容。
+
+### 参数
+
+- `options?` (`GetJsonChunksOptions`)：`getJsonChunks` 方法的选项
+  - `chunkSize?` (`number`)：每个块的最大字符数。默认为 32,000 个字符（8000 个 token \\* 每个 token 4 个字符）
+
+### 返回值
+
+`JsonChunk[]`：Tiptap JSON 块数组，每个块包含：
+
+- `content` (`any`)：块中的 Tiptap JSON 内容，即文档某个 Fragment 的 JSON
+- `range` (`Range`)：块在文档中的起止范围
+  - `from` (`number`)：在文档中的起始位置
+  - `to` (`number`)：在文档中的结束位置
+- `nodeRange` (`NodeRange`)：块在文档中的起止节点范围
+  - `from` (`number`)：在文档中的起始节点位置
+  - `to` (`number`)：在文档中的结束节点位置
+
+### 示例
+
+```ts
+// Split the document into chunks of the default size
+const chunks = toolkit.getJsonChunks()
+// Split the document into chunks of 1000 characters maximum
+const smallerChunks = toolkit.getJsonChunks({ chunkSize: 1000 })
+```
+
+## `tiptapRead`
+
+以便于 AI 快速、高效编辑的格式读取文档。
+
+该方法用于[校对工作流](/ai/ai-toolkit/client/workflows/proofreader)及其他工作流。
+
+### 参数
+
+- `range?` (`Range`)：要读取的范围。默认为整个文档。
+  - `from` (`number`)：起始位置
+  - `to` (`number`)：结束位置
+- `ignoreSuggestions?` (`boolean`)：为 `true` 时，不应用预览建议，按文档原样读取。默认为 `false`。
+- `reviewOptions?` ([`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options))：审阅模式选项，用于决定读取哪种文档表示形式。
+  - 当 `mode` 为 `'trackedChanges'` 时，该方法会在应用跟踪更改后读取文档。
+
+### 返回值（`TiptapReadResult`）
+
+- `content` (`string`)：文档内容，采用便于 AI 快速、高效编辑的格式。
+
+## `tiptapReadChunks`
+
+以 Tiptap Read 格式读取文档，并拆分为块，以便处理大型内容。
+
+### 参数
+
+- `options?` (`TiptapReadChunksOptions`)：`tiptapReadChunks` 方法的选项
+  - `chunkSize?` (`number`)：每个块的最大字符数。默认为 32,000 个字符（8000 个 token \\* 每个 token 4 个字符）
+  - `reviewOptions?` ([`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options))：审阅模式选项，用于决定按哪种文档表示形式拆分内容。
+    - 当 `mode` 为 `'trackedChanges'` 时，该方法会在应用跟踪更改后拆分文档。
+
+### 返回值
+
+`TiptapReadChunk[]`：块数组，每个块包含：
+
+- `content` (`string`)：Tiptap Read 格式的 HTML 内容
+- `range` (`Range`)：块在文档中的起止范围
+  - `from` (`number`)：在文档中的起始位置
+  - `to` (`number`)：在文档中的结束位置
+- `nodeRange` (`NodeRange`)`：块在文档中的起止节点范围
+  - `from` (`number`)：在文档中的起始节点位置
+  - `to` (`number`)：在文档中的结束节点位置
+
+### 示例
+
+```ts
+// Split the document into chunks
+const chunks = toolkit.tiptapReadChunks()
+// Split the document into smaller chunks
+const smallerChunks = toolkit.tiptapReadChunks({ chunkSize: 16000 })
+```
