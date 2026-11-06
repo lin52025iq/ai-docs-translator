@@ -1,31 +1,31 @@
 ---
-title: Text direction & RTL support
+title: 文本方向与 RTL 支持
 meta:
-  title: Text direction & RTL support example | Tiptap Editor Docs
-  description: Learn how to use text direction controls for RTL languages and bidirectional content with this comprehensive Tiptap example.
-  category: Examples
+  title: 文本方向与 RTL 支持示例 | Tiptap 编辑器文档
+  description: 通过这个全面的 Tiptap 示例，了解如何使用文本方向控件支持 RTL 语言和双向文本。
+  category: 示例
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-Tiptap includes built-in support for right-to-left (RTL) languages and bidirectional text. This example demonstrates how to set global text direction and control direction on individual nodes.
+Tiptap 内置支持从右向左（RTL）的语言和双向文本。本示例演示如何设置全局文本方向，以及如何控制各个节点的文本方向。
 
-## Features
+## 功能
 
-- **Global direction control**: Set the default text direction for all content (`ltr`, `rtl`, or `auto`)
-- **Per-node direction**: Override direction for specific nodes using commands
-- **Bidirectional text**: Properly render mixed LTR and RTL content
-- **Multiple languages**: Support for English, Arabic, Hebrew, and other languages
+- **全局方向控制**：为所有内容设置默认文本方向（`ltr`、`rtl` 或 `auto`）
+- **逐节点设置方向**：使用命令覆盖特定节点的方向
+- **双向文本**：正确呈现 LTR 和 RTL 混合内容
+- **多语言**：支持英语、阿拉伯语、希伯来语等语言
 
-The `auto` setting is particularly useful for bidirectional content, as it automatically detects the text direction based on the first strong directional character in each node.
+`auto` 设置对双向内容尤其有用，因为它会根据每个节点中的第一个强方向字符自动检测文本方向。
 
 <CodeDemo path="/Examples/TextDirection" />
 
-## How to use
+## 使用方法
 
-### Set global direction
+### 设置全局方向
 
-Configure the editor with a default text direction:
+为编辑器配置默认文本方向：
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -33,28 +33,28 @@ import StarterKit from '@tiptap/starter-kit'
 
 const editor = new Editor({
   extensions: [StarterKit],
-  textDirection: 'auto', // or 'ltr', 'rtl'
+  textDirection: 'auto', // 或 'ltr'、'rtl'
 })
 ```
 
-### Control direction with commands
+### 使用命令控制方向
 
-Override direction for specific content:
+覆盖特定内容的方向：
 
 ```js
-// Set RTL direction on selected text
+// 将所选文本设为 RTL 方向
 editor.commands.setTextDirection('rtl')
 
-// Set LTR direction on selected text
+// 将所选文本设为 LTR 方向
 editor.commands.setTextDirection('ltr')
 
-// Use automatic detection
+// 使用自动检测
 editor.commands.setTextDirection('auto')
 
-// Remove direction override
+// 移除方向覆盖
 editor.commands.unsetTextDirection()
 ```
 
-### Use with frameworks
+### 与框架搭配使用
 
-The text direction can be changed dynamically by recreating the editor with a new `textDirection` option. This is demonstrated in the example above with React's `useEditor` hook.
+通过使用新的 `textDirection` 选项重新创建编辑器，可以动态更改文本方向。上方示例展示了如何通过 React 的 `useEditor` hook 实现这一点。
