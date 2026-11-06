@@ -3,19 +3,19 @@ import { SidebarConfig } from '@/types'
 export const sidebarConfig: SidebarConfig = {
   id: 'ui components',
   rootHref: '/ui-components/getting-started/',
-  title: 'Components',
+  title: '组件',
   items: [
     {
       type: 'group',
       href: '/ui-components/getting-started/overview',
-      title: 'Get started',
+      title: '入门',
       children: [
         {
-          title: 'Overview',
+          title: '概览',
           href: '/ui-components/getting-started/overview',
         },
         {
-          title: 'Install',
+          title: '安装',
           href: '/ui-components/install/next',
           children: [
             {
@@ -39,13 +39,13 @@ export const sidebarConfig: SidebarConfig = {
               href: '/ui-components/install/astro',
             },
             {
-              title: 'Manual',
+              title: '手动安装',
               href: '/ui-components/install/manual',
             },
           ],
         },
         {
-          title: 'Style',
+          title: '样式',
           href: '/ui-components/getting-started/style',
         },
         {
@@ -54,329 +54,329 @@ export const sidebarConfig: SidebarConfig = {
         },
         {
           href: '/ui-components/getting-started/changelog',
-          title: 'Changelog',
+          title: '更新日志',
         },
       ],
     },
     {
       type: 'group',
       href: '/ui-components/templates',
-      title: 'Templates',
+      title: '模板',
       children: [
         {
-          title: 'Simple Editor',
+          title: '简易编辑器',
           href: '/ui-components/templates/simple-editor',
-          tags: ['MIT licensed'],
+          tags: ['MIT 许可'],
         },
         {
-          title: 'Notion Editor',
+          title: 'Notion 风格编辑器',
           href: '/ui-components/templates/notion-like-editor',
-          tags: ['Start'],
+          tags: ['入门版'],
         },
         {
-          title: 'DOCX Editor',
+          title: 'DOCX 编辑器',
           href: '/ui-components/templates/docx-editor',
-          tags: ['Team'],
+          tags: ['团队版'],
         },
       ],
     },
     {
       type: 'group',
       href: '/ui-components/components',
-      title: 'UI Components',
+      title: 'UI 组件',
       children: [
         {
-          title: 'Overview',
+          title: '概览',
           href: '/ui-components/components/overview',
         },
         {
-          title: 'Components',
+          title: '组件',
           href: '/ui-components/components/',
           children: [
             {
-              title: 'Ai ask button',
+              title: 'AI 提问按钮',
               href: '/ui-components/components/ai-ask-button',
             },
             {
-              title: 'Ai menu',
+              title: 'AI 菜单',
               href: '/ui-components/components/ai-menu',
             },
             {
-              title: 'Blockquote button',
+              title: '引用块按钮',
               href: '/ui-components/components/blockquote-button',
             },
             {
-              title: 'Code block button',
+              title: '代码块按钮',
               href: '/ui-components/components/code-block-button',
             },
             {
-              title: 'Color highlight button',
+              title: '颜色高亮按钮',
               href: '/ui-components/components/color-highlight-button',
             },
             {
-              title: 'Color highlight popover',
+              title: '颜色高亮弹出框',
               href: '/ui-components/components/color-highlight-popover',
             },
             {
-              title: 'Color text button',
+              title: '文字颜色按钮',
               href: '/ui-components/components/color-text-button',
             },
             {
-              title: 'Color text popover',
+              title: '文字颜色弹出框',
               href: '/ui-components/components/color-text-popover',
             },
             {
-              title: 'Copy anchor link button',
+              title: '复制锚点链接按钮',
               href: '/ui-components/components/copy-anchor-link-button',
             },
             {
-              title: 'Copy to clipboard button',
+              title: '复制到剪贴板按钮',
               href: '/ui-components/components/copy-to-clipboard-button',
             },
             {
-              title: 'Delete node button',
+              title: '删除节点按钮',
               href: '/ui-components/components/delete-node-button',
             },
             {
-              title: 'Drag context menu',
+              title: '拖动上下文菜单',
               href: '/ui-components/components/drag-context-menu',
             },
             {
-              title: 'Duplicate button',
+              title: '复制按钮',
               href: '/ui-components/components/duplicate-button',
             },
             {
-              title: 'Emoji dropdown menu',
+              title: '表情符号下拉菜单',
               href: '/ui-components/components/emoji-dropdown-menu',
             },
             {
-              title: 'Emoji menu',
+              title: '表情符号菜单',
               href: '/ui-components/components/emoji-menu',
             },
             {
-              title: 'Emoji trigger button',
+              title: '表情符号触发按钮',
               href: '/ui-components/components/emoji-trigger-button',
             },
             {
-              title: 'Font family combobox',
+              title: '字体系列组合框',
               href: '/ui-components/components/font-family-combobox',
             },
             {
-              title: 'Heading button',
+              title: '标题按钮',
               href: '/ui-components/components/heading-button',
             },
             {
-              title: 'Heading dropdown',
+              title: '标题下拉菜单',
               href: '/ui-components/components/heading-dropdown-menu',
             },
             {
-              title: 'Image align button',
+              title: '图片对齐按钮',
               href: '/ui-components/components/image-align-button',
             },
             {
-              title: 'Image upload button',
+              title: '图片上传按钮',
               href: '/ui-components/components/image-upload-button',
             },
             {
-              title: 'Improve dropdown',
+              title: '改进下拉菜单',
               href: '/ui-components/components/improve-dropdown',
             },
             {
-              title: 'Link popover',
+              title: '链接弹出框',
               href: '/ui-components/components/link-popover',
             },
             {
-              title: 'List button',
+              title: '列表按钮',
               href: '/ui-components/components/list-button',
             },
             {
-              title: 'List dropdown',
+              title: '列表下拉菜单',
               href: '/ui-components/components/list-dropdown-menu',
             },
             {
-              title: 'Mark button',
+              title: '标记按钮',
               href: '/ui-components/components/mark-button',
             },
             {
-              title: 'Mention dropdown',
+              title: '提及下拉菜单',
               href: '/ui-components/components/mention-dropdown-menu',
             },
             {
-              title: 'Mention trigger button',
+              title: '提及触发按钮',
               href: '/ui-components/components/mention-trigger-button',
             },
             {
-              title: 'Move node button',
+              title: '移动节点按钮',
               href: '/ui-components/components/move-node-button',
             },
             {
-              title: 'Numbering format dropdown menu',
+              title: '编号格式下拉菜单',
               href: '/ui-components/components/numbering-format-dropdown-menu',
             },
             {
-              title: 'Reset all formatting button',
+              title: '重置所有格式按钮',
               href: '/ui-components/components/reset-all-formatting-button',
             },
             {
-              title: 'Search and replace',
+              title: '查找和替换',
               href: '/ui-components/components/search-and-replace',
             },
             {
-              title: 'Slash trigger button',
+              title: '斜杠命令触发按钮',
               href: '/ui-components/components/slash-command-trigger-button',
             },
             {
-              title: 'Slash dropdown menu',
+              title: '斜杠下拉菜单',
               href: '/ui-components/components/slash-dropdown-menu',
             },
             {
-              title: 'Text align button',
+              title: '文本对齐按钮',
               href: '/ui-components/components/text-align-button',
             },
             {
-              title: 'Text button',
+              title: '文本按钮',
               href: '/ui-components/components/text-button',
             },
             {
-              title: 'Turn into dropdown',
+              title: '转换为下拉菜单',
               href: '/ui-components/components/turn-into-dropdown',
             },
             {
-              title: 'Undo redo button',
+              title: '撤销/重做按钮',
               href: '/ui-components/components/undo-redo-button',
             },
             {
-              title: 'Zoom dropdown menu',
+              title: '缩放下拉菜单',
               href: '/ui-components/components/zoom-dropdown-menu',
             },
           ],
         },
         {
-          title: 'Node components',
+          title: '节点组件',
           href: '/ui-components/node-components',
           children: [
             {
-              title: 'Blockquote node',
+              title: '引用块节点',
               href: '/ui-components/node-components/blockquote-node',
             },
             {
-              title: 'Code block node',
+              title: '代码块节点',
               href: '/ui-components/node-components/code-block-node',
             },
             {
-              title: 'Heading node',
+              title: '标题节点',
               href: '/ui-components/node-components/heading-node',
             },
             {
-              title: 'Horizontal rule node',
+              title: '水平分割线节点',
               href: '/ui-components/node-components/horizontal-rule-node',
             },
             {
-              title: 'Image node',
+              title: '图片节点',
               href: '/ui-components/node-components/image-node',
             },
             {
-              title: 'Image node pro',
+              title: '图片节点 Pro',
               href: '/ui-components/node-components/image-node-pro',
             },
             {
-              title: 'Image upload node',
+              title: '图片上传节点',
               href: '/ui-components/node-components/image-upload-node',
             },
             {
-              title: 'List node',
+              title: '列表节点',
               href: '/ui-components/node-components/list-node',
             },
             {
-              title: 'Paragraph node',
+              title: '段落节点',
               href: '/ui-components/node-components/paragraph-node',
             },
             {
-              title: 'Table node',
+              title: '表格节点',
               href: '/ui-components/node-components/table-node',
             },
             {
-              title: 'Table of contents node',
+              title: '目录节点',
               href: '/ui-components/node-components/table-of-contents-node',
             },
           ],
         },
         {
-          title: 'Primitives',
+          title: '基础组件',
           href: '/ui-components/primitives',
           children: [
             {
-              title: 'Avatar',
+              title: '头像',
               href: '/ui-components/primitives/avatar',
             },
             {
-              title: 'Badge',
+              title: '徽标',
               href: '/ui-components/primitives/badge',
             },
             {
-              title: 'Button',
+              title: '按钮',
               href: '/ui-components/primitives/button',
             },
             {
-              title: 'Card',
+              title: '卡片',
               href: '/ui-components/primitives/card',
             },
             {
-              title: 'Combobox',
+              title: '组合框',
               href: '/ui-components/primitives/combobox',
             },
             {
-              title: 'Dropdown menu',
+              title: '下拉菜单',
               href: '/ui-components/primitives/dropdown-menu',
             },
             {
-              title: 'Input',
+              title: '输入框',
               href: '/ui-components/primitives/input',
             },
             {
-              title: 'Label',
+              title: '标签',
               href: '/ui-components/primitives/label',
             },
             {
-              title: 'Menu',
+              title: '菜单',
               href: '/ui-components/primitives/menu',
             },
             {
-              title: 'Popover',
+              title: '弹出框',
               href: '/ui-components/primitives/popover',
             },
             {
-              title: 'Separator',
+              title: '分隔符',
               href: '/ui-components/primitives/separator',
             },
             {
-              title: 'Spacer',
+              title: '间距组件',
               href: '/ui-components/primitives/spacer',
             },
             {
-              title: 'Textarea Autosize',
+              title: '自适应文本域',
               href: '/ui-components/primitives/textarea-autosize',
             },
             {
-              title: 'Toolbar',
+              title: '工具栏',
               href: '/ui-components/primitives/toolbar',
             },
             {
-              title: 'Tooltip',
+              title: '工具提示',
               href: '/ui-components/primitives/tooltip',
             },
           ],
         },
         {
-          title: 'Utilities',
+          title: '实用组件',
           href: '/ui-components/utils-components',
           children: [
             {
-              title: 'Floating element',
+              title: '浮动元素',
               href: '/ui-components/utils-components/floating-element',
             },
             {
-              title: 'Suggestion menu',
+              title: '建议菜单',
               href: '/ui-components/utils-components/suggestion-menu',
             },
           ],
@@ -385,12 +385,12 @@ export const sidebarConfig: SidebarConfig = {
     },
     {
       type: 'group',
-      title: 'Resources',
+      title: '资源',
       href: '/ui-components/resources',
       children: [
         {
           href: 'https://tiptap.dev/pro-license',
-          title: 'Pro license',
+          title: 'Pro 许可证',
         },
       ],
     },
