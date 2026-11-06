@@ -1,0 +1,314 @@
+---
+title: 浮动元素
+meta:
+  title: 浮动元素 | Tiptap UI 组件
+  description: 面向 Tiptap 编辑器的基础浮动 UI 组件，支持智能定位、跟踪选区并自动管理可见性。
+  category: UI 组件
+component:
+  name: 浮动元素
+  description: 多功能 React 组件，可在 Tiptap 编辑器中创建相对于文本选区定位的浮动 UI 元素。
+  type: utils-component
+  isFree: false
+  isCloud: false
+  isOpen: false
+  isNew: false
+  icon: ArrowUpRightIcon
+---
+
+import { CodeDemo } from '@/components/CodeDemo'
+
+浮动 UI 元素，会根据 Tiptap 编辑器中的当前选区定位。可用于浮动工具栏、菜单以及其他需要显示在文本光标附近，并支持智能定位和交互处理的 UI 元素。
+
+<CodeDemo
+  isScrollable
+  isSmall
+  src="https://template.tiptap.dev/preview/tiptap-ui-utils/floating-element"
+/>
+
+## 安装
+
+通过 Tiptap CLI 添加此组件：
+
+```bash
+npx @tiptap/cli@latest add floating-element
+```
+
+## 组件
+
+### `<FloatingElement />`
+
+多功能 React 组件，可在 Tiptap 编辑器中创建相对于文本选区定位的浮动 UI 元素。
+
+#### 用法
+
+```tsx
+import * as React from 'react'
+import { EditorContent, EditorContext, useEditor } from '@tiptap/react'
+
+// --- Tiptap Core Extensions ---
+import { StarterKit } from '@tiptap/starter-kit'
+
+// --- Tiptap UI ---
+import { FloatingElement } from '@/components/tiptap-ui-utils/floating-element'
+import { MarkButton } from '@/components/tiptap-ui/mark-button'
+
+// --- UI Primitives ---
+import { ButtonGroup } from '@/components/tiptap-ui-primitive/button-group'
+import { Toolbar } from '@/components/tiptap-ui-primitive/toolbar'
+
+// --- Tiptap Node ---
+import '@/components/tiptap-node/paragraph-node/paragraph-node.scss'
+
+export const FloatingElementExample = () => {
+  const editor = useEditor({
+    immediatelyRender: false,
+    content: `<h2>Floating Element Example</h2>
+      <p>Try selecting some text in this editor. A simple formatting toolbar will appear above your selection. 
+      The FloatingElement component positions UI elements relative to the text selection or cursor position. 
+      It's commonly used for contextual toolbars, menus, and other elements that should appear near the current editing context.</p>`,
+    extensions: [StarterKit],
+  })
+
+  return (
+    <EditorContext.Provider value={{ editor }}>
+      <EditorContent editor={editor} role="presentation" />
+
+      <FloatingElement editor={editor}>
+        <Toolbar variant="floating">
+          <ButtonGroup orientation="horizontal">
+            <MarkButton type="bold" />
+            <MarkButton type="italic" />
+          </ButtonGroup>
+        </Toolbar>
+      </FloatingElement>
+    </EditorContext.Provider>
+  )
+}
+```
+
+#### 属性
+
+| 名称                        | 类型                                  | 默认值                     | 说明                                                                                                                   |
+| --------------------------- | ------------------------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `editor`                    | `Editor \| null`                      | `undefined`                | 要附加到的 Tiptap 编辑器实例                                                                                       |
+| `shouldShow`                | `boolean`                             | `undefined`                | 控制浮动元素是否可见                                                                       |
+| `floatingOptions`           | `Partial<UseFloatingOptions>`         | `undefined`                | 传递给 floating UI 的其他选项                                                                                 |
+| `zIndex`                    | `number`                              | `50`                       | 浮动元素的 z-index                                                                                              |
+| `onOpenChange`              | `(open: boolean) => void`             | `undefined`                | 可见状态变化时触发的回调                                                                              |
+| `referenceElement`          | `HTMLElement \| null`                 | `undefined`                | 用作浮动元素定位依据的参考元素。若提供此属性，其优先级高于 getBoundingClientRect |
+| `getBoundingClientRect`     | `(editor: Editor) => DOMRect \| null` | `getSelectionBoundingRect` | 用于确定浮动元素位置的自定义函数。仅在未提供 referenceElement 时使用              |
+| `closeOnEscape`             | `boolean`                             | `true`                     | 按下 Escape 键时是否关闭浮动元素                                                              |
+| `resetTextSelectionOnClose` | `boolean`                             | `true`                     | 为 `true`（默认值）时，关闭浮动元素后重置/清除编辑器的文本选区；为 `false` 时保留选区    |
+| `children`                  | `React.ReactNode`                     | `undefined`                | 要在浮动元素中显示的内容                                                                                |
+
+## 高级用法示例
+
+### 基本浮动工具栏
+
+```tsx
+import { shift, flip, offset } from '@floating-ui/react'
+import { FloatingElement } from '@/components/tiptap-ui-utils/floating-element'
+
+function FloatingToolbar({ editor }) {
+  return (
+    <FloatingElement
+      editor={editor}
+      floatingOptions={{
+        placement: 'top',
+        middleware: [shift(), flip(), offset(8)],
+      }}
+    >
+      {/* Floating content here */}
+    </FloatingElement>
+  )
+}
+```
+
+### 支持移动设备的自定义定位
+
+```tsx
+import { FloatingElement } from '@/components/tiptap-ui-utils/floating-element'
+import { useMobile } from '@/hooks/use-mobile'
+
+function ResponsiveFloatingMenu({ editor, isMenuVisible }) {
+  const isMobile = useMobile()
+
+  const getCustomRect = (editor) => {
+    // Custom positioning logic
+    // Example: position relative to current cursor
+    return editor.view.coordsAtPos(editor.state.selection.from)
+  }
+
+  return (
+    <FloatingElement
+      editor={editor}
+      shouldShow={isMenuVisible}
+      getBoundingClientRect={getCustomRect}
+      {...(isMobile
+        ? {
+            style: {
+              position: 'fixed',
+              left: 0,
+              right: 0,
+              bottom: 0,
+              margin: '.5rem',
+              zIndex: 50,
+            },
+          }
+        : {})}
+    >
+      {/* Floating content here */}
+    </FloatingElement>
+  )
+}
+```
+
+### 自定义浮动菜单的 `shouldShow`
+
+```tsx
+import { useState, useEffect } from 'react'
+import { FloatingElement } from '@/components/tiptap-ui-utils/floating-element'
+import { isSelectionValid } from '@/lib/tiptap-collab-utils'
+
+function SelectionMenu({ editor }) {
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    if (!editor) return
+
+    const updateVisibility = () => {
+      const hasSelection = !editor.state.selection.empty
+      const isValidSelection = isSelectionValid(editor)
+      setIsVisible(hasSelection && isValidSelection)
+    }
+
+    editor.on('selectionUpdate', updateVisibility)
+    return () => editor.off('selectionUpdate', updateVisibility)
+  }, [editor])
+
+  return (
+    <FloatingElement editor={editor} shouldShow={isVisible}>
+      {/* Your floating content here */}
+    </FloatingElement>
+  )
+}
+```
+
+### 使用参考元素
+
+将浮动元素附加到特定 DOM 元素，而不是文本选区：
+
+```tsx
+import { useState } from 'react'
+import { offset, flip, shift } from '@floating-ui/react'
+import { FloatingElement } from '@/components/tiptap-ui-utils/floating-element'
+
+function ButtonWithTooltip() {
+  const [buttonRef, setButtonRef] = useState<HTMLElement | null>(null)
+  const [showTooltip, setShowTooltip] = useState(false)
+
+  return (
+    <>
+      <button
+        ref={setButtonRef}
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
+      >
+        Hover me
+      </button>
+
+      <FloatingElement
+        editor={editor}
+        referenceElement={buttonRef}
+        shouldShow={showTooltip}
+        floatingOptions={{
+          placement: 'top',
+          middleware: [offset(8), flip(), shift()],
+        }}
+      >
+        <div className="tooltip">Helpful tooltip content</div>
+      </FloatingElement>
+    </>
+  )
+}
+```
+
+## 工具函数
+
+### `getSelectionBoundingRect(editor)`
+
+获取编辑器中当前选区的边界矩形。
+
+**参数：**
+
+- `editor` - Tiptap 编辑器实例
+
+**返回值：** `DOMRect | null` - 当前选区的边界矩形
+
+```tsx
+import { getSelectionBoundingRect } from '@/lib/tiptap-collab-utils'
+
+const rect = getSelectionBoundingRect(editor)
+console.log('Selection bounds:', rect)
+```
+
+### `isSelectionValid(editor, selection?, excludedNodeTypes?)`
+
+检查当前选区是否适合显示浮动元素。对于空选区、代码块、排除的节点类型和表格单元格，返回 `false`。
+
+**参数：**
+
+- `editor` - Tiptap 编辑器实例
+- `selection`（可选）- 要验证的选区。默认为 `editor.state.selection`
+- `excludedNodeTypes`（可选）- 要排除的节点类型名称数组。默认为 `['imageUpload', 'horizontalRule']`
+
+**返回值：** `boolean` - 如果选区适合显示浮动元素，则为 `true`
+
+```tsx
+import { isSelectionValid } from '@/lib/tiptap-collab-utils'
+
+const shouldShow = isSelectionValid(editor)
+
+// With custom excluded node types
+const isValid = isSelectionValid(editor, undefined, ['image', 'video'])
+```
+
+### `isTextSelectionValid(editor)`
+
+检查当前文本选区是否适合编辑。对于空选区、代码块和节点选区，返回 `false`。
+
+**参数：**
+
+- `editor` - Tiptap 编辑器实例
+
+**返回值：** `boolean` - 如果文本选区有效，则为 `true`
+
+```tsx
+import { isTextSelectionValid } from '@/lib/tiptap-collab-utils'
+
+const canEdit = isTextSelectionValid(editor)
+if (canEdit) {
+  // Show text editing toolbar
+}
+```
+
+### `isElementWithinEditor(editor, element)`
+
+检查 DOM 元素是否位于编辑器的 DOM 树中。可用于判断点击/焦点事件。
+
+**参数：**
+
+- `editor` - Tiptap 编辑器实例
+- `element` - 要检查的 DOM 元素
+
+**返回值：** `boolean` - 如果该元素位于编辑器中，则为 `true`
+
+```tsx
+import { isElementWithinEditor } from '@/components/tiptap-ui-utils/floating-element'
+
+const handleClick = (event: MouseEvent) => {
+  if (isElementWithinEditor(editor, event.target as Node)) {
+    console.log('Clicked inside editor')
+  }
+}
+```
