@@ -1,9 +1,9 @@
 ---
-title: Preview changes with the AI Suggestion extension
+title: 使用 AI Suggestion 扩展预览更改
 meta:
-  title: Preview changes with AI Suggestion | Tiptap Content AI
-  description: Learn how to integrate the AI agent with the AI Suggestion extension to preview AI-generated changes.
-  category: Content AI
+  title: 使用 AI Suggestion 预览更改 | Tiptap Content AI
+  description: 了解如何将 AI Agent 与 AI Suggestion 扩展集成，以预览 AI 生成的更改。
+  category: 内容 AI
 sidebars:
   hideSecondary: true
 ---
@@ -11,7 +11,7 @@ sidebars:
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-Integrate the AI Agent extension with the AI Suggestion extension to provide a review workflow for AI-generated changes. Allow users to review changes before they are applied to the document.
+将 AI Agent 扩展与 AI Suggestion 扩展集成，为 AI 生成的更改提供审核流程。允许用户在更改应用到文档之前先进行审核。
 
 <CodeDemo
   isPro
@@ -20,17 +20,17 @@ Integrate the AI Agent extension with the AI Suggestion extension to provide a r
   src="https://feature-beta-ai-extensions--tiptap-pro.netlify.app/preview/Extensions/AiAgentPreviewChanges"
 />
 
-## Setting up the AI Suggestion integration
+## 设置 AI Suggestion 集成
 
-This guide walks you through the process of setting up the AI Suggestion extension for previewing, accepting and rejecting changes.
+本指南将介绍如何设置 AI Suggestion 扩展，以预览、接受和拒绝更改。
 
-### Step 1: Install both extensions
+### 第 1 步：安装这两个扩展
 
 ```bash
 npm install @tiptap-pro/extension-ai-agent @tiptap-pro/extension-ai-suggestion
 ```
 
-### Step 2: Configure both extensions in your editor
+### 第 2 步：在编辑器中配置这两个扩展
 
 ```tsx
 import { Editor } from '@tiptap/core'
@@ -41,14 +41,12 @@ import AiSuggestion from '@tiptap-pro/extension-ai-suggestion'
 const provider = new AiAgentProvider({
   token: 'YOUR_JWT_TOKEN',
   reviewOptions: {
-    // Set extension to "aiSuggestion" to use AI Suggestion for previewing
-    // changes
+    // 将 extension 设置为 "aiSuggestion"，以使用 AI Suggestion 预览更改
     extension: 'aiSuggestion',
-    // Optional: Set autoAccept to "never" to always require user review
-    // before changes are applied
+    // 可选：将 autoAccept 设置为 "never"，始终要求用户在应用更改前进行审核
     autoAccept: 'never',
   },
-  // ... other options
+  // ... 其他选项
 })
 
 const editor = new Editor({
@@ -60,11 +58,11 @@ const editor = new Editor({
     AiSuggestion.configure({
       loadOnStart: false,
       reloadOnUpdate: false,
-      // Optional: Customize the appearance of suggestions.
-      // For example, to display a popover when a suggestion is selected.
+      // 可选：自定义建议的外观。
+      // 例如，选中建议时显示弹出框。
       getCustomDecorations({ change, isSelected, getDefaultDecorations }) {
         const decorations = getDefaultDecorations()
-        // Add custom decorations if needed (see the demo above for an example)
+        // 如有需要，可添加自定义装饰（示例请参见上方演示）
         return decorations
       },
     }),
@@ -72,9 +70,9 @@ const editor = new Editor({
 })
 ```
 
-### Step 3: Configure styles
+### 第 3 步：配置样式
 
-Customize how the suggestions are displayed in the editor.
+自定义建议在编辑器中的显示方式。
 
 ```css
 :root {
@@ -99,27 +97,26 @@ Customize how the suggestions are displayed in the editor.
 }
 ```
 
-## How the review workflow works
+## 审核流程的工作方式
 
-1. When the AI agent makes changes to the document, if `autoAccept` is set to `never` or `onlyRead`, the changes are sent to the AI Suggestion extension instead of being directly applied to the document
-2. The AI Suggestion extension displays the changes as suggestions
-3. The user can review the suggestions and decide to accept or reject them
-4. After accepting or rejecting, the changes are applied to the document and the conversation continues
+1. AI Agent 更改文档时，如果 `autoAccept` 设置为 `never` 或 `onlyRead`，更改会发送到 AI Suggestion 扩展，而不是直接应用到文档。
+2. AI Suggestion 扩展会将更改显示为建议。
+3. 用户可以审核这些建议，并决定接受或拒绝。
+4. 接受或拒绝后，更改会应用到文档，并继续对话。
 
-## Accepting and rejecting changes
+## 接受和拒绝更改
 
-You can call these methods to accept or reject changes:
+你可以调用以下方法接受或拒绝更改：
 
 ```tsx
-// Accept all pending changes
+// 接受所有待处理的更改
 provider.acceptToolCall()
 
-// Reject all pending changes
+// 拒绝所有待处理的更改
 provider.rejectToolCall()
 ```
 
-<Callout title="Note" variant="info">
-  The AI Suggestion extension lets users preview changes before they are applied to the document. To
-  review changes after they are applied, integrate the [AI
-  Changes](/ai/deprecated/agent/review/ai-changes) extension.
+<Callout title="注意" variant="info">
+  AI Suggestion 扩展允许用户在更改应用到文档之前预览更改。若要在更改应用后审核，请集成 [AI
+  Changes](/ai/deprecated/agent/review/ai-changes) 扩展。
 </Callout>
