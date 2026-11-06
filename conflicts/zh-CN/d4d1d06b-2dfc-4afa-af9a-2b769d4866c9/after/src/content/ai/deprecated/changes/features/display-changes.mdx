@@ -1,0 +1,186 @@
+---
+title: 自定义变更的显示方式
+meta:
+  title: 显示变更 | Tiptap AI change
+  description: 使用自定义样式和弹出层，自定义 AI 变更在编辑器中的显示方式。
+  category: 内容 AI
+---
+
+AI Changes 扩展的设计注重灵活性。作为一个无头库，它让你可以完全控制变更在编辑器中的显示方式。
+
+## 默认样式
+
+默认情况下，AI Changes 扩展会应用 CSS 类来突出显示修改的内容：
+
+- `tiptap-ai-changes--old` 用于已删除的文本
+- `tiptap-ai-changes--new` 用于已插入的文本
+
+该扩展不包含任何内置样式，因此你需要自行定义 CSS。以下是一个完整的示例，展示了变更高亮的基本样式：
+
+```css
+:root {
+  --color-green-100: oklch(0.962 0.044 156.743);
+  --color-green-700: oklch(0.527 0.154 150.069);
+  --color-red-100: oklch(0.936 0.032 17.717);
+  --color-red-700: oklch(0.505 0.213 27.518);
+}
+
+.tiptap-ai-changes--old,
+.tiptap-ai-changes--old > * {
+  color: var(--color-red-700);
+  background-color: var(--color-red-100);
+}
+
+.tiptap-ai-changes--new,
+.tiptap-ai-changes--new > * {
+  color: var(--color-green-700);
+  background-color: var(--color-green-100);
+}
+```
+
+这会为已删除的文本应用红色背景，为已插入的文本应用绿色背景。
+
+如需更高级的样式，请使用 `getCustomDecorations`[配置选项](/ai/deprecated/changes/configure#custom-styles)。
+
+## 选中的变更
+
+当选区光标位于某项变更上时，该变更即被视为“已选中”。
+
+你可以从扩展的存储对象中获取选中的变更：
+
+```ts
+const storage = editor.extensionStorage.aiChanges
+const selectedChange = storage.getSelectedChange()
+```
+
+如需通过编程方式选中某项变更，请使用 `selectAiChange` 命令。
+
+```ts
+editor.commands.selectAiChange(changeId)
+```
+
+这会将光标移至变更的开头，使其被视为“已选中”。
+
+你可以在 `getCustomDecorations` 函数中引用选中变更的文本，并为其应用自定义样式。
+
+## 自定义变更的外观
+
+`getCustomDecorations` 选项可让你控制变更的外观，并为用户提供视觉提示。
+
+该选项接收以下参数：
+
+- `change`：包含变更信息的变更对象。
+- `changes`：所有已跟踪变更的列表。
+- `isSelected`：用于指示变更是否已选中的布尔值。当光标位于变更上时，该变更即被选中。
+- `getDefaultDecorations`：返回变更默认装饰的函数。如果未提供 `getCustomDecorations` 函数，则会使用默认装饰。
+- `editor`：Tiptap Editor 实例。
+- `previousDoc`：AI 做出变更前的文档。通过将当前文档与此文档进行比较来获取变更。
+- `currentDoc`：AI 做出变更后的文档。
+
+```ts
+AiChanges.configure({
+  getCustomDecorations({ change, isSelected, getDefaultDecorations }) {
+    // You can combine the default decorations of the AI Changes extension with your custom ones
+    const decorations = getDefaultDecorations()
+
+    // Add a custom element after the inserted text of the change
+    decorations.push(
+      Decoration.widget(change.newRange.to, () => {
+        const element = document.createElement('span')
+
+        element.textContent = '✅'
+        return element
+      }),
+    )
+    return decorations
+  },
+})
+```
+
+自定义样式和元素通过 [Prosemirror Decorations API](https://prosemirror.net/docs/ref/#view.Decorations) 实现。
+
+要了解如何在选中变更时显示弹出层，请参阅[本指南](/ai/deprecated/changes/features/display-changes#show-a-popover-when-a-change-is-selected)。
+
+## 选中变更时显示弹出层
+
+在大多数用户审核工作流中，你需要在选中的变更上方显示弹出层或工具提示，并提供接受或拒绝变更的操作。
+
+如需在选中变更时显示弹出层，请使用 `getCustomDecorations` 选项。该选项允许你向变更添加自定义元素，包括弹出层。
+
+下面是一个使用 React 的简化示例：
+
+```tsx
+// First, define a hook to store the HTML element where the popover will be rendered
+const [popoverElement, setPopoverElement] = useState<HTMLElement | null>(null)
+
+AiChanges.configure({
+  getCustomDecorations({ change, isSelected, getDefaultDecorations }) {
+    const decorations = getDefaultDecorations()
+
+    // Then, create a Prosemirror decoration that contains the HTML element
+    // Add a custom element after the inserted text when the change is selected
+    if (isSelected) {
+      decorations.push(
+        Decoration.widget(change.newRange.to, () => {
+          const element = document.createElement('span')
+
+          setPopoverElement(element)
+          return element
+        }),
+      )
+    }
+    return decorations
+  },
+})
+
+const selectedChange = editor.extensionStorage.aiChanges.getSelectedChange()
+if (popoverElement && selectedChange) {
+  // Then, add the HTML content to the custom element. In this example, we use React Portals to render the popover.
+  ReactDOM.createPortal(<Popover change={selectedChange} />, popoverElement)
+}
+```
+
+我们建议使用 [Floating UI](https://floating-ui.com/) 库来显示弹出层。你可以在[演示](/ai/deprecated/changes/overview)中查看示例。
+
+## 在编辑器外部的侧边栏中显示变更
+
+你可以通过扩展的[存储对象](/ai/deprecated/changes/api-reference#extension-storage)访问变更数据：
+
+```ts
+const storage = editor.extensionStorage.aiChanges
+const changes = storage.getChanges()
+```
+
+然后，使用这些数据渲染自定义 UI 组件。以下是一个使用 React 的示例：
+
+```tsx
+// Get the changes from the Editor state.
+const storage = editor.extensionStorage.aichange
+const changes = storage.getchanges()
+
+// Render the changes in the UI
+return (
+  <div>
+    {changes.map((change) => (
+      <div key={change.id}>
+        <button onClick={() => editor.commands.acceptAiChange(change.id)}>Accept</button>
+        <button onClick={() => editor.commands.rejectAiChange(change.id)}>Reject</button>
+      </div>
+    ))}
+  </div>
+)
+```
+
+## 隐藏和显示变更
+
+在某些情况下，你可能希望继续跟踪变更，但在 UI 中将其隐藏。例如，在流式传输 AI 生成内容时。你可以使用 `setShowAiChanges` 命令，以编程方式隐藏或显示变更。
+
+```ts
+// Hide changes
+editor.commands.setShowAiChanges(false)
+
+// Show changes
+editor.commands.setShowAiChanges(true)
+```
+
+这只会影响变更的视觉显示——跟踪机制仍会在后台继续运行，并且你仍可通过扩展的存储方法访问所有变更。
