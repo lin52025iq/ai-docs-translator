@@ -1,50 +1,50 @@
 ---
-title: Live demo
+title: 实时演示
 tags:
   - type: beta
 meta:
-  title: Live Demo | Tiptap Conversion
-  description: Try DOCX import and export in a live Tiptap editor. Upload your own document or explore the pre-loaded content.
-  category: Conversion
+  title: 实时演示 | Tiptap 转换
+  description: 在实时 Tiptap 编辑器中试用 DOCX 导入和导出。上传自己的文档，或探索预加载的内容。
+  category: 转换
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-This demo shows the core DOCX round-trip: import a Word document, edit it in a Tiptap editor configured with basic formatting extensions, and export back to DOCX. It covers text formatting, headings, lists, tables, and images, but does not include paginated layout or multi-format export.
+此演示展示了 DOCX 往返转换的核心流程：导入 Word 文档，在配置了基础格式扩展的 Tiptap 编辑器中进行编辑，然后再导出为 DOCX。演示涵盖文本格式、标题、列表、表格和图像，但不包含分页布局或多格式导出。
 
 <CodeDemo isPro path="/Extensions/ExportImportDocx" isLarge />
 
-## What this demo includes
+## 此演示包含的内容
 
-This demo is configured with the core extensions needed for DOCX conversion:
+此演示配置了 DOCX 转换所需的核心扩展：
 
-- **Text formatting:** Bold, italic, underline, strikethrough, text color, highlight, and font family
-- **Block structure:** Headings (H1-H3), bullet and ordered lists, blockquotes, horizontal rules
-- **Tables:** Basic table support with header rows
-- **Images:** Inline images (via URL)
-- **Text alignment:** Left, center, right, justify
-- **Page breaks:** Imported as visual dividers (no paginated layout)
+- **文本格式：** 粗体、斜体、下划线、删除线、文本颜色、突出显示和字体系列
+- **块结构：** 标题（H1-H3）、项目符号列表和有序列表、引用块、水平分隔线
+- **表格：** 基本表格支持，包含标题行
+- **图像：** 行内图像（通过 URL）
+- **文本对齐：** 左对齐、居中、右对齐、两端对齐
+- **分页符：** 导入为可视分隔线（无分页布局）
 
-You can also load a sample document using the "Use DOCX Template" button to see a pre-built example without uploading your own file.
+你也可以点击“使用 DOCX 模板”按钮加载示例文档，无需上传自己的文件即可查看预先构建的示例。
 
-## What this demo does not include
+## 此演示不包含的内容
 
-This is a focused demo of the DOCX round-trip. It does not cover every feature the conversion pipeline supports:
+这是一个专注于 DOCX 往返转换的演示，并未涵盖转换流程支持的所有功能：
 
-- **No paginated layout:** The [Pages extension](/pages/getting-started/overview) is not included, so there are no visual pages, headers, footers, or page numbers. Page breaks import as dividers but don't flow content across pages.
-- **DOCX only:** The demo exports to DOCX. Other formats ([PDF](/conversion/export/pdf/editor-extension), [ODT](/conversion/export/odt/editor-extension), [EPUB](/conversion/export/epub/editor-extension), [DOC](/conversion/export/doc/editor-extension), [Markdown](/conversion/export/markdown/editor-extension)) are available through separate extensions.
-- **Default export styles:** The export uses Tiptap's default styling (Aptos 11pt, standard heading sizes). Custom `styleOverrides` are not configured. See [Styling converted content](/conversion/getting-started/guides/styling-converted-content) for how to customize this.
-- **Limited toolbar:** The color and font options are hardcoded presets. A production editor would typically include a full color picker and font selector.
+- **无分页布局：** 此演示未包含 [Pages 扩展](/pages/getting-started/overview)，因此没有可视页面、页眉、页脚或页码。分页符会导入为分隔线，但内容不会跨页流动。
+- **仅支持 DOCX：** 此演示导出为 DOCX。其他格式（[PDF](/conversion/export/pdf/editor-extension)、[ODT](/conversion/export/odt/editor-extension)、[EPUB](/conversion/export/epub/editor-extension)、[DOC](/conversion/export/doc/editor-extension)、[Markdown](/conversion/export/markdown/editor-extension)）可通过单独的扩展使用。
+- **默认导出样式：** 导出使用 Tiptap 的默认样式（Aptos 11 磅、标准标题字号）。未配置自定义 `styleOverrides`。有关自定义方式，请参阅[设置转换后内容的样式](/conversion/getting-started/guides/styling-converted-content)。
+- **工具栏功能有限：** 颜色和字体选项是硬编码的预设值。生产环境中的编辑器通常会提供完整的颜色选择器和字体选择器。
 
-<Callout variant="hint" title="Full extension list">
-  For the complete set of extensions needed to render all importable DOCX content, see the [ConvertKit](/conversion/import/docx/convertkit) page.
+<Callout variant="hint" title="完整扩展列表">
+  如需了解渲染所有可导入 DOCX 内容所需的完整扩展集，请参阅 [ConvertKit](/conversion/import/docx/convertkit) 页面。
 </Callout>
 
-## What to look for
+## 请留意
 
-When you import a document, compare the editor output to the original:
+导入文档后，请将编辑器中的内容与原文档进行比较：
 
-- **Text formatting** carries through: bold, italic, underline, strikethrough, text color, highlight, font family, and font size all survive the round-trip.
-- **Document structure** is preserved: headings maintain their hierarchy, lists keep their nesting, tables retain their layout with merged cells and column widths.
-- **What changes:** Paragraph-level styling like spacing, indentation, and Word theme colors are not rendered in the editor. The exported DOCX uses Tiptap's default styles rather than the original document's styles. See [Styling converted content](/conversion/getting-started/guides/styling-converted-content) for how to control the visual appearance.
+- **文本格式**会保留：粗体、斜体、下划线、删除线、文本颜色、突出显示、字体系列和字号都会在往返转换中保留。
+- **文档结构**会保留：标题层级不变，列表嵌套关系保留，表格布局（包括合并单元格和列宽）也会保留。
+- **变化之处：** 段落级样式（如间距、缩进和 Word 主题颜色）不会在编辑器中呈现。导出的 DOCX 使用 Tiptap 的默认样式，而非原文档的样式。有关如何控制视觉效果，请参阅[设置转换后内容的样式](/conversion/getting-started/guides/styling-converted-content)。
