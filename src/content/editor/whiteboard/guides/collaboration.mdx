@@ -1,34 +1,34 @@
 ---
-title: Collaboration on the whiteboard
+title: 白板协作
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Collaboration on the whiteboard | Tiptap Editor Docs
-  description: Edit a whiteboard together in real time through Yjs, and show what other users select, drag and point at.
-  category: Editor
+  title: 白板协作 | Tiptap 编辑器文档
+  description: 通过 Yjs 实时协作编辑白板，并显示其他用户选择、拖动和指向的内容。
+  category: 编辑器
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-A board is one Tiptap document, so users edit it together through Yjs like any other document. The board adds what a whiteboard needs on top: `BoardCollaboration`, and helpers that show what other users select, drag and point at.
+一个白板就是一个 Tiptap 文档，因此用户可以像协作编辑其他文档一样，通过 Yjs 一起编辑白板。白板还提供了白板所需的功能：`BoardCollaboration`，以及用于显示其他用户选择、拖动和指向内容的辅助工具。
 
-## Install
+## 安装
 
-Collaboration lives in its own entry, `@tiptap-pro/extension-whiteboard/collaboration`. Only that entry needs Yjs, so a board without collaboration loads none. Install its peer dependencies, and `y-protocols`, which `@tiptap/y-tiptap` needs:
+协作功能位于单独的入口 `@tiptap-pro/extension-whiteboard/collaboration` 中。只有这个入口需要 Yjs，因此不启用协作的白板不会加载 Yjs。请安装它的 peer dependencies，以及 `@tiptap/y-tiptap` 所需的 `y-protocols`：
 
 ```bash
 npm install @tiptap/extension-collaboration @tiptap/y-tiptap yjs y-protocols
 ```
 
-To sync through Tiptap Collaboration, also install `@tiptap-pro/provider` from the private registry. See [Install Collaboration](/collaboration/getting-started/install).
+若要通过 Tiptap Collaboration 同步，还需要从私有 registry 安装 `@tiptap-pro/provider`。请参阅[安装 Collaboration](/collaboration/getting-started/install)。
 
-## Set up the editor
+## 设置编辑器
 
-<Callout title="Use BoardCollaboration, and turn off the kit's undo" variant="warning">
-  Plain `Collaboration` drops a first change that leaves the document empty, like deleting the last
-  shape, when the editor starts on content from Yjs. `BoardCollaboration` syncs that change too. Set
-  `undoRedo: false` on the kit, so `undoBoard` and `redoBoard` use the undo of the collaboration.
+<Callout title="使用 BoardCollaboration，并关闭 kit 的撤销功能" variant="warning">
+  当编辑器以 Yjs 中的内容启动时，普通的 `Collaboration` 会丢弃导致文档变空的第一项更改，例如删除最后一个
+  形状。`BoardCollaboration` 也会同步这项更改。请在 kit 上设置
+  `undoRedo: false`，这样 `undoBoard` 和 `redoBoard` 就会使用协作功能的撤销机制。
 </Callout>
 
 ```js
@@ -41,8 +41,8 @@ import * as Y from 'yjs'
 const ydoc = new Y.Doc()
 
 const provider = new TiptapCollabProvider({
-  name: 'board-1', // The name of the board's document
-  appId: 'your-app-id', // Your document server ID from the Cloud dashboard
+  name: 'board-1', // 白板文档的名称
+  appId: 'your-app-id', // Cloud 控制面板中的文档服务器 ID
   token: 'your-jwt',
   document: ydoc,
 })
@@ -50,30 +50,30 @@ const provider = new TiptapCollabProvider({
 const editor = new Editor({
   element: viewport,
   extensions: [
-    // Collaboration handles undo, so the kit leaves its own out
+    // 协作功能负责撤销，因此 kit 不使用自身的撤销功能
     WhiteboardKit.configure({ undoRedo: false }),
     BoardCollaboration.configure({ document: ydoc }),
   ],
 })
 ```
 
-In React, create the configured extensions once, outside the component or with `useMemo`. See [Set up a board in React](/editor/whiteboard/guides/react).
+在 React 中，请在组件外部或使用 `useMemo` 创建一次配置好的扩展。请参阅[在 React 中设置白板](/editor/whiteboard/guides/react)。
 
-`BoardCollaboration` takes the options of [Collaboration](/editor/extensions/functionality/collaboration). The content of a collaborative board comes from Yjs. To give a new board its first shapes, see [Initialize content properly](/collaboration/getting-started/install#initialize-content-properly).
+`BoardCollaboration` 使用 [Collaboration](/editor/extensions/functionality/collaboration) 的选项。协作白板的内容来自 Yjs。若要为新白板添加初始形状，请参阅[正确初始化内容](/collaboration/getting-started/install#initialize-content-properly)。
 
-## Show what others select and drag
+## 显示其他用户的选择和拖动
 
-Yjs syncs the document, but not what users select, or a shape while a user drags it. Share those through [awareness](/collaboration/core-concepts/awareness):
+Yjs 会同步文档，但不会同步用户的选择，也不会同步用户拖动形状时的状态。请通过 [awareness（感知）](/collaboration/core-concepts/awareness)共享这些信息：
 
-- `getSelectedShapeIds` returns what this user selects. `setRemoteSelections` shows what the other users select.
-- The board's editor emits `shapesMove` while a drag moves shapes, with `delta: null` once the drag ends. `createRemoteMoves` shows the drags of the other users, without changing the document. The other user's drop changes it.
+- `getSelectedShapeIds` 返回当前用户选择的内容。`setRemoteSelections` 显示其他用户选择的内容。
+- 白板编辑器会在拖动形状时发出 `shapesMove` 事件，拖动结束时 `delta: null`。`createRemoteMoves` 会显示其他用户的拖动操作，但不会更改文档。其他用户放下形状时才会更改文档。
 
 ```js
 import { createRemoteMoves, getSelectedShapeIds } from '@tiptap-pro/extension-whiteboard'
 
 provider.setAwarenessField('user', { name: 'Ada', color: '#be185d' })
 
-// Shares what this user selects, when it changes
+// 选择内容发生变化时，分享当前用户的选择
 let sharedIds = []
 
 editor.on('transaction', () => {
@@ -85,12 +85,12 @@ editor.on('transaction', () => {
   }
 })
 
-// Shares the drags of this user, and `null` once a drag ends
+// 分享当前用户的拖动操作；拖动结束时发送 `null`
 editor.on('shapesMove', ({ ids, delta }) => {
   provider.setAwarenessField('drag', delta ? { ids, delta } : null)
 })
 
-// Shows what the other users select and drag
+// 显示其他用户的选择和拖动
 const moves = createRemoteMoves(editor)
 let dragging = new Set()
 
@@ -109,7 +109,7 @@ provider.on('awarenessChange', ({ states }) => {
     }
   }
 
-  // Ends the drags that stopped, also of users who left
+  // 结束已停止的拖动，也包括已离开的用户
   for (const owner of dragging) {
     if (!stillDragging.has(owner)) {
       moves.end(owner)
@@ -120,7 +120,7 @@ provider.on('awarenessChange', ({ states }) => {
 })
 ```
 
-A shape that another user selects gets `data-remote-selected`, and that user's color in `--remote-selection`. When several users select a shape, the first one with a valid color shows. Only colors in the form `#RRGGBB`, like `#be185d`, pass, because the color goes into the style of the element. A selection with another color, like `red` or `#abc`, doesn't show:
+其他用户选中的形状会获得 `data-remote-selected` 属性，并通过 `--remote-selection` 使用该用户的颜色。多个用户同时选择一个形状时，只显示第一个有效颜色。由于颜色会写入元素样式，因此只接受 `#RRGGBB` 格式的颜色，例如 `#be185d`。如果选择状态使用其他颜色（如 `red` 或 `#abc`），则不会显示：
 
 ```css
 [data-shape][data-remote-selected] {
@@ -128,9 +128,9 @@ A shape that another user selects gets `data-remote-selected`, and that user's c
 }
 ```
 
-## Show the cursors of others
+## 显示其他用户的光标
 
-`createRemoteCursors` shows where the other users point, with their names. It also moves the shapes that a user drags along with their cursor, in place of `createRemoteMoves`. Share the point under the pointer in board units, with the time and the drag, at most ten times a second. The pointer events come from `stage`, the element around the board, see [Stage and camera](/editor/whiteboard/guides/stage-and-camera):
+`createRemoteCursors` 会显示其他用户的指向位置及其名称。它也会让用户拖动的形状跟随其光标移动，可替代 `createRemoteMoves`。请分享指针下方的白板坐标、时间和拖动信息，每秒最多十次。指针事件来自白板外围的 `stage` 元素，详见[舞台与摄像机](/editor/whiteboard/guides/stage-and-camera)：
 
 ```js
 import { clientToBoard, createRemoteCursors } from '@tiptap-pro/extension-whiteboard'
@@ -140,7 +140,7 @@ let point = null
 let drag = null
 let timer = null
 
-// Shares where this user points, and what they drag, ten times a second at most
+// 分享当前用户的指向位置和拖动内容，每秒最多十次
 const share = () => {
   timer ??= setTimeout(() => {
     timer = null
@@ -163,7 +163,7 @@ editor.on('shapesMove', ({ ids, delta }) => {
   share()
 })
 
-// Shows the cursors of the other users
+// 显示其他用户的光标
 const cursors = createRemoteCursors(editor)
 
 provider.on('awarenessChange', ({ states }) => {
@@ -180,9 +180,9 @@ provider.on('awarenessChange', ({ states }) => {
 })
 ```
 
-A cursor moves smoothly through the points of its user, a little late, at the pace they were shared. It fades out when its user stops pointing, or after a minute without moving.
+光标会稍有延迟地沿着用户分享的位置平滑移动，移动速度与分享频率一致。用户停止指向后，或一分钟没有移动后，光标会逐渐淡出。
 
-The cursors are over the shapes and keep their size at every zoom, through `--zoom`. Each cursor has its user's color in `--remote-cursor`, with the same `#RRGGBB` rule as selections. Style its arrow and name:
+光标显示在形状上方，并通过 `--zoom` 在不同缩放级别下保持大小不变。每个光标都通过 `--remote-cursor` 使用对应用户的颜色，颜色规则与选择状态相同，必须符合 `#RRGGBB` 格式。可以为光标箭头和名称设置样式：
 
 ```css
 [data-remote-cursor-arrow] {
@@ -200,21 +200,21 @@ The cursors are over the shapes and keep their size at every zoom, through `--zo
 }
 ```
 
-## Doc frames
+## 文档框架
 
-The board's Y.Doc holds the frames, but not their documents. Your `createEditor` decides where each document lives and how it syncs. See [Doc frames](/editor/whiteboard/guides/doc-frames).
+白板的 Y.Doc 保存框架，但不保存框架中的文档。由你的 `createEditor` 决定每个文档的存放位置及其同步方式。请参阅[文档框架](/editor/whiteboard/guides/doc-frames)。
 
-`start` runs only in the editor whose change brings a frame onto the board. Frames that come through Yjs keep the document that their own editor started. So do frames that an undo with Yjs brings back.
+`start` 只会在导致框架出现在白板上的更改所属的编辑器中运行。通过 Yjs 接收的框架会保留其自身编辑器启动的文档。通过 Yjs 执行撤销操作而恢复的框架也是如此。
 
-## Heights of text
+## 文本高度
 
-Free text and doc frames grow as tall as their content. Each editor measures the changes that it makes, with its own fonts. Changes by other users keep the height that their editor measured.
+自由文本和文档框架会根据内容自动增高。每个编辑器都会使用自己的字体测量其所做更改的高度。其他用户所做的更改则会保留由其编辑器测量的高度。
 
-## Update all editors together
+## 同时更新所有编辑器
 
-Use the same version of the Whiteboard extension in all editors of a board, and update them at the same time. An older editor can't read content that only newer versions have and can delete that content for everyone. An editor on 0.1.0, for example, can't read arrows with labels.
+同一白板的所有编辑器都应使用相同版本的 Whiteboard 扩展，并同时更新。旧版编辑器无法读取仅由新版支持的内容，还可能会将其删除，导致所有人都受影响。例如，0.1.0 版编辑器无法读取带标签的箭头。
 
-## Next steps
+## 后续步骤
 
-- Show suggestions on the board with [Tracked Changes](/editor/whiteboard/guides/tracked-changes)
-- Learn more about [Tiptap Collaboration](/collaboration/getting-started/overview)
+- 使用[修订跟踪](/editor/whiteboard/guides/tracked-changes)在白板上显示建议
+- 了解更多关于 [Tiptap Collaboration](/collaboration/getting-started/overview) 的信息
