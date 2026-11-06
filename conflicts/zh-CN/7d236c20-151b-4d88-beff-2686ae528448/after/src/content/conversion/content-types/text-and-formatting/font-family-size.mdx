@@ -1,0 +1,44 @@
+---
+title: 字体系列和字号
+tags:
+  - type: beta
+meta:
+  title: 字体系列和字号 | Tiptap 转换
+  description: 了解字体系列和字号在 DOCX 与 Tiptap 之间的转换方式，包括单位转换和字体回退处理。
+  category: 转换
+---
+
+import { Callout } from '@/components/ui/Callout'
+
+字体系列和字号是通过 `textStyle` 标记传递的行内文本样式属性。其模式与[文本颜色和高亮](/conversion/content-types/text-and-formatting/text-color-highlight)相同：TextStyle 是基础，特定扩展在此基础上叠加功能。
+
+## 所需内容
+
+- **扩展：**[`ConvertKit`](/conversion/import/docx/convertkit)。其内置的 `TextStyleKit` 在一个扩展中提供 `TextStyle`、`Color`、`BackgroundColor`、`FontFamily`、`FontSize` 和 `LineHeight`。
+- **配置：**无需配置。
+
+```ts
+import { ConvertKit } from '@tiptap-pro/extension-convert-kit'
+
+new Editor({ extensions: [ConvertKit] })
+```
+
+<Callout title="不要使用已弃用的独立字号包" variant="warning">
+  不要单独安装 `@tiptap/extension-font-size`，也不要分别引入
+  `@tiptap/extension-font-family` 和 `@tiptap/extension-font-size`。所有功能都包含在
+  `TextStyleKit` 中，并由 ConvertKit 自动注册。
+</Callout>
+
+## 支持概览
+
+|                | 导入                                      | 编辑器                                                                  | 导出                      |
+| -------------- | ------------------------------------------- | ----------------------------------------------------------------------- | --------------------------- |
+| 字体系列    | 支持（`textStyle.fontFamily`）          | 支持（FontFamily）                                                  | 支持（仅保留第一个字体） |
+| 字号      | 支持（`textStyle.fontSize`，单位为 px）      | 支持（FontSize）                                                    | 支持（px、pt、rem、em） |
+| 字间距 | 支持（`textStyle.letterSpacing`，单位为 px） | 需要扩展 TextStyle（ConvertKit / TextStyleKit 未内置） | 不支持               |
+
+## 导入
+
+使用[编辑器扩展](/conversion/import/docx/editor-extension)或 [REST API](/conversion/import/docx/rest-api)导入字体系列和字号。两者生成的结果完全相同。
+
+转换服务会读取 `<w:rFonts>` 的 `w:ascii` 属性；如果不存在 `w:ascii`，则回退使用 `w:hAnsi`。原始属性值会按原样存储在 `textStyle.fontFamily` 中（例如 `
