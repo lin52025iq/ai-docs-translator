@@ -1,24 +1,24 @@
 ---
 tags:
   - type: editor
-title: Migrate from TinyMCE to Tiptap
+title: 从 TinyMCE 迁移到 Tiptap
 meta:
-  title: Migrate from TinyMCE | Tiptap Editor Docs
-  description: Learn how to migrate your existing TinyMCE editor to Tiptap. Complete guide covering content migration, setup, and feature mapping.
-  category: Editor
+  title: 从 TinyMCE 迁移 | Tiptap 编辑器文档
+  description: 了解如何将现有的 TinyMCE 编辑器迁移到 Tiptap。本指南涵盖内容迁移、设置和功能映射。
+  category: 编辑器
 ---
 
 import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 
 <EnterpriseCalloutAuto variant="migration" renderMode="sidebar" disableWaitlist/>
 
-Tiptap is a powerful alternative to TinyMCE. Migrating from TinyMCE to Tiptap is straightforward. This guide will walk you through the migration process step by step.
+Tiptap 是 TinyMCE 的强大替代方案。从 TinyMCE 迁移到 Tiptap 非常简单。本指南将逐步带你完成迁移过程。
 
-## Content migration
+## 内容迁移
 
-### HTML content compatibility
+### HTML 内容兼容性
 
-TinyMCE typically stores content as HTML, which makes migration to Tiptap seamless. Tiptap can directly use HTML content without any conversion:
+TinyMCE 通常以 HTML 格式存储内容，因此迁移到 Tiptap 十分顺畅。Tiptap 无需转换即可直接使用 HTML 内容：
 
 ```ts
 // Your existing TinyMCE content
@@ -31,23 +31,23 @@ const editor = new Editor({
 })
 ```
 
-While HTML works perfectly, we recommend converting it to Tiptap's JSON format for better performance and readability. For batch conversion of existing content, use the [HTML utility](/editor/api/utilities/html) to convert HTML to JSON programmatically.
+虽然 HTML 完全可用，但我们建议将其转换为 Tiptap 的 JSON 格式，以提升性能和可读性。若要批量转换现有内容，可使用 [HTML 工具](/editor/api/utilities/html)以编程方式将 HTML 转换为 JSON。
 
-## Editor setup
+## 编辑器设置
 
-### Installation
+### 安装
 
-First, install Tiptap and its dependencies:
+首先，安装 Tiptap 及其依赖项：
 
 ```bash
 npm install @tiptap/core @tiptap/starter-kit
 ```
 
-Tiptap supports all modern frontend UI frameworks like React and Vue. Follow the framework-specific installation instructions in our [installation guides](/editor/getting-started/install).
+Tiptap 支持所有现代前端 UI 框架，例如 React 和 Vue。请按照[安装指南](/editor/getting-started/install)中的框架专属说明进行操作。
 
-### Basic editor setup
+### 编辑器基本设置
 
-Replace your TinyMCE initialization with Tiptap:
+将 TinyMCE 初始化代码替换为 Tiptap：
 
 ```ts
 // TinyMCE (before)
@@ -68,30 +68,30 @@ const editor = new Editor({
 })
 ```
 
-## Extensions
+## 扩展
 
-### Understanding Tiptap's extension system
+### 了解 Tiptap 的扩展系统
 
-Tiptap uses a modular extension system that resembles TinyMCE's plugin architecture. Each feature is an extension that can be configured independently.
+Tiptap 使用模块化扩展系统，其架构与 TinyMCE 的插件体系类似。每项功能都是一个可独立配置的扩展。
 
-The [StarterKit](/editor/extensions/functionality/starterkit) is a bundle of all the basic extensions, and you can add or remove other extensions as needed.
+[StarterKit](/editor/extensions/functionality/starterkit) 是一组基础扩展，你可以根据需要添加或移除其他扩展。
 
-Explore all available extensions in our [extensions guide](/editor/extensions/overview), or [create your own](/editor/extensions/custom-extensions) to support custom functionality and HTML elements.
+在[扩展指南](/editor/extensions/overview)中查看所有可用扩展，或[创建自定义扩展](/editor/extensions/custom-extensions)，以支持自定义功能和 HTML 元素。
 
-### Common TinyMCE plugin equivalents
+### 常见 TinyMCE 插件的对应项
 
-| TinyMCE Plugin | Tiptap Extension                        | Notes                  |
+| TinyMCE 插件 | Tiptap 扩展 | 说明 |
 | -------------- | --------------------------------------- | ---------------------- |
-| `lists`        | `BulletList`, `OrderedList`, `ListItem` | Included in StarterKit |
-| `link`         | `Link`                                  | Included in StarterKit |
-| `image`        | `Image`                                 | Available separately   |
-| `table`        | `Table`                                 | Available separately   |
-| `code`         | `Code`, `CodeBlock`                     | Included in StarterKit |
-| `textcolor`    | `TextStyle`, `Color`                    | Available separately   |
-| `fontsize`     | `TextStyle`, `FontSize`                 | Available separately   |
-| `align`        | `TextAlign`                             | Available separately   |
+| `lists`        | `BulletList`, `OrderedList`, `ListItem` | 包含在 StarterKit 中 |
+| `link`         | `Link`                                  | 包含在 StarterKit 中 |
+| `image`        | `Image`                                 | 可单独使用 |
+| `table`        | `Table`                                 | 可单独使用 |
+| `code`         | `Code`, `CodeBlock`                     | 包含在 StarterKit 中 |
+| `textcolor`    | `TextStyle`, `Color`                    | 可单独使用 |
+| `fontsize`     | `TextStyle`, `FontSize`                 | 可单独使用 |
+| `align`        | `TextAlign`                             | 可单独使用 |
 
-### Extension configuration
+### 扩展配置
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -120,15 +120,15 @@ const editor = new Editor({
 })
 ```
 
-### Custom extensions
+### 自定义扩展
 
-For TinyMCE custom plugins, you can create custom Tiptap extensions. See our [custom extensions guide](/editor/extensions/custom-extensions) for detailed instructions.
+对于 TinyMCE 自定义插件，你可以创建自定义 Tiptap 扩展。详细说明请参阅[自定义扩展指南](/editor/extensions/custom-extensions)。
 
-## UI implementation
+## UI 实现
 
-### Toolbar implementation
+### 工具栏实现
 
-TinyMCE's toolbar configuration translates to custom UI components in Tiptap:
+在 Tiptap 中，TinyMCE 的工具栏配置需要转换为自定义 UI 组件：
 
 ```tsx
 // TinyMCE toolbar config
@@ -163,16 +163,16 @@ function Toolbar({ editor }) {
 }
 ```
 
-### Pre-built UI components
+### 预构建 UI 组件
 
-For faster development, consider using Tiptap's pre-built UI components:
+为了加快开发速度，可以考虑使用 Tiptap 的预构建 UI 组件：
 
-- Explore our [UI components](/ui-components/getting-started/overview) for ready-to-use toolbar and menu components
-- Check out practical examples in our [default text editor example](/examples/basics/default-text-editor)
+- 浏览我们的 [UI 组件](/ui-components/getting-started/overview)，获取可直接使用的工具栏和菜单组件
+- 查看[默认文本编辑器示例](/examples/basics/default-text-editor)中的实用示例
 
-### Menu systems
+### 菜单系统
 
-TinyMCE's context menus can be replaced with Tiptap's BubbleMenu and FloatingMenu:
+TinyMCE 的上下文菜单可以替换为 Tiptap 的 BubbleMenu 和 FloatingMenu：
 
 ```tsx
 import { BubbleMenu } from '@tiptap/react'
@@ -204,23 +204,23 @@ function MyEditor() {
 }
 ```
 
-## Migration checklist
+## 迁移清单
 
 <Checklist>
-  <CheckboxItem>Install Tiptap packages</CheckboxItem>
-  <CheckboxItem>Replace TinyMCE initialization with Tiptap setup</CheckboxItem>
-  <CheckboxItem>Map TinyMCE plugins to Tiptap extensions</CheckboxItem>
-  <CheckboxItem>Migrate toolbar configuration to custom UI components</CheckboxItem>
-  <CheckboxItem>Test content compatibility</CheckboxItem>
-  <CheckboxItem>Convert existing content to JSON format (recommended)</CheckboxItem>
-  <CheckboxItem>Implement custom extensions for any missing functionality</CheckboxItem>
-  <CheckboxItem>Update event handlers and API calls</CheckboxItem>
-  <CheckboxItem>Test thoroughly across all use cases</CheckboxItem>
+  <CheckboxItem>安装 Tiptap 软件包</CheckboxItem>
+  <CheckboxItem>将 TinyMCE 初始化代码替换为 Tiptap 设置</CheckboxItem>
+  <CheckboxItem>将 TinyMCE 插件映射到 Tiptap 扩展</CheckboxItem>
+  <CheckboxItem>将工具栏配置迁移到自定义 UI 组件</CheckboxItem>
+  <CheckboxItem>测试内容兼容性</CheckboxItem>
+  <CheckboxItem>将现有内容转换为 JSON 格式（推荐）</CheckboxItem>
+  <CheckboxItem>为缺少的功能实现自定义扩展</CheckboxItem>
+  <CheckboxItem>更新事件处理程序和 API 调用</CheckboxItem>
+  <CheckboxItem>针对所有使用场景进行全面测试</CheckboxItem>
 </Checklist>
 
-## Next steps
+## 后续步骤
 
-- Explore the [extension overview](/editor/extensions/overview) to discover all available extensions
-- Learn about [custom extensions](/editor/extensions/custom-extensions) for advanced customization
-- Check out our [examples](/examples) for implementation inspiration
-- Review the [performance guide](/guides/performance) for optimization tips
+- 浏览[扩展概览](/editor/extensions/overview)，了解所有可用扩展
+- 了解[自定义扩展](/editor/extensions/custom-extensions)，实现高级定制
+- 查看我们的[示例](/examples)，获取实现灵感
+- 阅读[性能指南](/guides/performance)，了解优化技巧
