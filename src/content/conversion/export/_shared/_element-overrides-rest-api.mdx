@@ -1,98 +1,87 @@
 import { Callout } from '@/components/ui/Callout'
 
-The five element override objects let you tune how individual DOCX elements
-(tables, paragraphs, text runs, table cells, images) are rendered. Each
-override is forwarded to the underlying DOCX conversion library as a base
-default; per-node values from the document still win where they are computed.
+这五种元素覆盖对象可用于调整各类 DOCX 元素（表格、段落、文本片段、表格单元格和图像）的呈现方式。每个覆盖项都会作为基础默认值传递给底层 DOCX 转换库；文档中计算出的节点级值仍优先生效。
 
-<Callout title="No deep merging" variant="info">
-    Nested objects inside an override (for example `borders`, `margins`, `transformation`) are **replaced entirely**, not deep-merged. When customizing one side of a border, provide every side you need so undefined values do not slip through.
+<Callout title="不进行深度合并" variant="info">
+    覆盖项中的嵌套对象（例如 `borders`、`margins`、`transformation`）会被**整体替换**，而不是进行深度合并。自定义边框的一侧时，请提供所需的每一侧，以免出现未定义值。
 </Callout>
 
 #### `tableOverrides`
 
-Defaults applied to every table. Most useful properties:
+应用于每个表格的默认值。常用属性：
 
 | Property               | Type      | Description                                                                                                              |
 | ---------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `borders`              | `Object`  | Per-side definitions for `top`, `bottom`, `left`, `right`, `insideHorizontal`, `insideVertical`. Each accepts `{ style, size, color }`. |
-| `margins`              | `Object`  | Default cell margins `{ top, bottom, left, right }` (twentieths of a point).                                              |
-| `width`                | `Object`  | Table width `{ size, type }` where `type` is `"pct"`, `"dxa"`, or `"auto"`.                                              |
-| `layout`               | `string`  | `"fixed"` or `"autofit"`.                                                                                                |
-| `alignment`            | `string`  | `"left" \| "center" \| "right" \| "start" \| "end"`.                                                                     |
-| `cantSplit`            | `boolean` | Prevent the table from splitting across pages.                                                                           |
-| `visuallyRightToLeft`  | `boolean` | Render the table right-to-left.                                                                                          |
+| `borders`              | `Object`  | 各侧边框的定义，包括 `top`、`bottom`、`left`、`right`、`insideHorizontal`、`insideVertical`。每项接受 `{ style, size, color }`。 |
+| `margins`              | `Object`  | 默认单元格边距 `{ top, bottom, left, right }`（单位为二十分之一磅）。                                              |
+| `width`                | `Object`  | 表格宽度 `{ size, type }`，其中 `type` 为 `"pct"`、`"dxa"` 或 `"auto"`。                                              |
+| `layout`               | `string`  | `"fixed"`（固定）或 `"autofit"`（自动适应）。                                                                                                |
+| `alignment`            | `string`  | `"left" \\| "center" \\| "right" \\| "start" \\| "end"`。                                                                     |
+| `cantSplit`            | `boolean` | 防止表格跨页拆分。                                                                           |
+| `visuallyRightToLeft`  | `boolean` | 将表格按从右到左的方向呈现。                                                                                          |
 
 #### `paragraphOverrides`
 
-Defaults applied to every paragraph. Most useful properties:
+应用于每个段落的默认值。常用属性：
 
 | Property            | Type      | Description                                                                                              |
 | ------------------- | --------- | -------------------------------------------------------------------------------------------------------- |
-| `spacing`           | `Object`  | `{ before, after, line, lineRule }` in twentieths of a point. `line` is overwritten by computed line height. |
-| `alignment`         | `string`  | `"left" \| "center" \| "right" \| "justified" \| "start" \| "end"`.                                      |
-| `indent`            | `Object`  | `{ left, right, firstLine, hanging, start, end }` in twentieths of a point.                              |
-| `keepNext`          | `boolean` | Keep this paragraph with the next one.                                                                   |
-| `keepLines`         | `boolean` | Keep all lines in the paragraph together.                                                                |
-| `pageBreakBefore`   | `boolean` | Insert a page break before the paragraph.                                                                |
-| `bidirectional`     | `boolean` | Render paragraph right-to-left.                                                                          |
-| `style`             | `string`  | Reference to a paragraph style id defined in `styleOverrides`.                                           |
+| `spacing`           | `Object`  | `{ before, after, line, lineRule }`，单位为二十分之一磅。`line` 会被计算得出的行高覆盖。 |
+| `alignment`         | `string`  | `"left" \\| "center" \\| "right" \\| "justified" \\| "start" \\| "end"`。                                      |
+| `indent`            | `Object`  | `{ left, right, firstLine, hanging, start, end }`，单位为二十分之一磅。                              |
+| `keepNext`          | `boolean` | 使此段落与下一段保持在一起。                                                                   |
+| `keepLines`         | `boolean` | 使段落中的所有行保持在一起。                                                                |
+| `pageBreakBefore`   | `boolean` | 在段落前插入分页符。                                                                |
+| `bidirectional`     | `boolean` | 将段落按从右到左的方向呈现。                                                                          |
+| `style`             | `string`  | 引用 `styleOverrides` 中定义的段落样式 ID。                                           |
 
 #### `textRunOverrides`
 
-Defaults applied to every text run. Per-mark formatting (bold, italic, color,
-…) still overrides these values. Most useful properties:
+应用于每个文本片段的默认值。各标记的格式（粗体、斜体、颜色等）仍会覆盖这些值。常用属性：
 
 | Property        | Type      | Description                                                            |
 | --------------- | --------- | ---------------------------------------------------------------------- |
-| `font`          | `string`  | Font family name.                                                      |
-| `size`          | `number`  | Font size in half-points (`24` = 12pt).                                |
-| `bold`          | `boolean` | Render bold by default.                                                |
-| `italics`       | `boolean` | Render italic by default.                                              |
-| `underline`     | `Object`  | `{ type, color }`, e.g. `{ type: "single", color: "auto" }`.          |
-| `strike`        | `boolean` | Strikethrough.                                                         |
-| `color`         | `string`  | Hex color without the leading `#` (`"FF0000"`).                        |
-| `highlight`     | `string`  | Predefined highlight color name (`"yellow"`, `"green"`, …).            |
-| `superScript`   | `boolean` | Render as superscript.                                                 |
-| `subScript`     | `boolean` | Render as subscript.                                                   |
+| `font`          | `string`  | 字体系列名称。                                                      |
+| `size`          | `number`  | 字号，单位为半磅（`24` = 12pt）。                                |
+| `bold`          | `boolean` | 默认以粗体呈现。                                                |
+| `italics`       | `boolean` | 默认以斜体呈现。                                              |
+| `underline`     | `Object`  | `{ type, color }`，例如 `{ type: "single", color: "auto" }`。          |
+| `strike`        | `boolean` | 删除线。                                                         |
+| `color`         | `string`  | 不带前导 `#` 的十六进制颜色（`"FF0000"`）。                        |
+| `highlight`     | `string`  | 预定义的高亮颜色名称（`"yellow"`、`"green"` 等）。            |
+| `superScript`   | `boolean` | 以上标形式呈现。                                                 |
+| `subScript`     | `boolean` | 以下标形式呈现。                                                   |
 
 #### `tableCellOverrides`
 
-Defaults applied to every table cell. Most useful properties:
+应用于每个表格单元格的默认值。常用属性：
 
 | Property        | Type      | Description                                                              |
 | --------------- | --------- | ------------------------------------------------------------------------ |
-| `shading`       | `Object`  | `{ fill, type, color }`, e.g. `{ fill: "F0F0F0", type: "clear" }`.       |
-| `verticalAlign` | `string`  | `"top" \| "center" \| "bottom"`.                                         |
-| `borders`       | `Object`  | Per-side cell border definitions, same shape as `tableOverrides.borders`. |
-| `margins`       | `Object`  | Cell padding `{ top, bottom, left, right }` in twentieths of a point.     |
-| `width`         | `Object`  | Cell width `{ size, type }`.                                             |
+| `shading`       | `Object`  | `{ fill, type, color }`，例如 `{ fill: "F0F0F0", type: "clear" }`。       |
+| `verticalAlign` | `string`  | `"top" \\| "center" \\| "bottom"`。                                         |
+| `borders`       | `Object`  | 单元格各侧边框定义，结构与 `tableOverrides.borders` 相同。 |
+| `margins`       | `Object`  | 单元格内边距 `{ top, bottom, left, right }`，单位为二十分之一磅。     |
+| `width`         | `Object`  | 单元格宽度 `{ size, type }`。                                             |
 
 #### `imageOverrides`
 
-Defaults applied to every image. Image dimensions computed from the document
-(intrinsic size or user-resized values) still win where present. Most useful
-properties:
+应用于每张图像的默认值。如果文档中包含图像尺寸（固有尺寸或用户调整后的尺寸），这些尺寸仍优先生效。常用属性：
 
 | Property         | Type      | Description                                                                       |
 | ---------------- | --------- | --------------------------------------------------------------------------------- |
-| `transformation` | `Object`  | `{ width, height, rotation?, flip? }`, in pixels at 96 dpi.                          |
-| `altText`        | `Object`  | `{ title, description, name }`.                                                   |
-| `floating`       | `Object`  | Floating positioning options (anchor, alignment, offset, wrap).                    |
+| `transformation` | `Object`  | `{ width, height, rotation?, flip? }`，单位为 96 dpi 下的像素。                          |
+| `altText`        | `Object`  | `{ title, description, name }`。                                                   |
+| `floating`       | `Object`  | 浮动定位选项（锚点、对齐方式、偏移量、环绕方式）。                    |
 
 #### `headerFooterOverrides`
 
-Scopes the same five element overrides to header/footer content only. Each
-field you omit falls back to the body-wide override of the same name. This
-only applies when a header or footer slot is passed as Tiptap JSON (an object
-or stringified JSONContent); plain-text slots are unaffected. A common use
-case is bordered tables in the document body with borderless tables in the
-header.
+将相同的五种元素覆盖项限定为仅应用于页眉和页脚内容。省略的字段会回退到同名的正文级覆盖项。此设置仅在页眉或页脚槽位以 Tiptap JSON（对象或序列化后的 JSONContent）传入时生效；纯文本槽位不受影响。常见用法是在文档正文中使用带边框的表格，而在页眉中使用无边框表格。
 
 | Property             | Type     | Description                                                            |
 | -------------------- | -------- | ----------------------------------------------------------------------- |
-| `tableOverrides`     | `Object` | Same shape as the top-level override, applied inside headers/footers. |
-| `paragraphOverrides` | `Object` | Same shape as the top-level override, applied inside headers/footers. |
-| `textRunOverrides`   | `Object` | Same shape as the top-level override, applied inside headers/footers. |
-| `tableCellOverrides` | `Object` | Same shape as the top-level override, applied inside headers/footers. |
-| `imageOverrides`     | `Object` | Same shape as the top-level override, applied inside headers/footers. |
+| `tableOverrides`     | `Object` | 与顶层覆盖项结构相同，应用于页眉/页脚内部。 |
+| `paragraphOverrides` | `Object` | 与顶层覆盖项结构相同，应用于页眉/页脚内部。 |
+| `textRunOverrides`   | `Object` | 与顶层覆盖项结构相同，应用于页眉/页脚内部。 |
+| `tableCellOverrides` | `Object` | 与顶层覆盖项结构相同，应用于页眉/页脚内部。 |
+| `imageOverrides`     | `Object` | 与顶层覆盖项结构相同，应用于页眉/页脚内部。 |
