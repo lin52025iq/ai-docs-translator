@@ -1,0 +1,93 @@
+---
+title: 数学与方程
+ tags:
+  - type: beta
+meta:
+  title: 数学与方程 | Tiptap 转换
+  description: 介绍 DOCX 转换流程中如何处理行内和块级数学方程，包括 OMML 导入限制以及基于 LaTeX 的导出。
+  category: 转换
+---
+
+import { Callout } from '@/components/ui/Callout'
+
+Word 使用 OMML（Office Math Markup Language，Office 数学标记语言）存储方程。Tiptap 使用由 KaTeX 渲染的 LaTeX 表示法。目前，转换流程支持导出，但不支持导入。
+
+## 所需内容
+
+- **扩展：** `@tiptap/extension-mathematics`（不包含在 StarterKit 中）
+- **依赖项：** 用于渲染的 `katex`（`^0.16.4`）
+
+```bash
+npm install @tiptap/extension-mathematics katex
+```
+
+## 支持概览
+
+| | 导入 | 编辑器 | 导出 |
+| --- | --- | --- | --- |
+| 行内数学 | 不支持 | 支持（`inlineMath`） | 支持（LaTeX 转 OMML） |
+| 块级数学 | 不支持 | 支持（`blockMath`） | 支持（LaTeX 转 OMML） |
+
+## 导入
+
+无论使用[编辑器扩展](/conversion/import/docx/editor-extension)还是 [REST API](/conversion/import/docx/rest-api)，都无法导入数学方程。
+
+<Callout variant="warning" title="无法从 DOCX 导入数学方程">
+  导入转换器不处理 OMML。解析器无法识别 DOCX XML 中的数学元素，因此不会将其包含在输出中。输出中不会出现数学节点。如果文档中包含方程，这些方程将不会出现在导入的 Tiptap 文档中。
+</Callout>
+
+DOCX 导入转换器不包含任何 OMML 解析逻辑。解析器遇到文档 XML 中的数学标记时，无法识别这些元素，因此会将其完全跳过。不会生成 `inlineMath` 或 `blockMath` 节点。
+
+如果你的工作流需要从 DOCX 导入数学内容，则需要从头构建 OMML 解析和 OMML 到 LaTeX 的转换功能。导入转换器中没有可供扩展的现有数学处理基础设施。
+
+## 编辑器渲染
+
+[`Mathematics`](/editor/extensions/nodes/mathematics) 扩展提供两种节点类型。它不包含在 StarterKit 中。
+
+该扩展提供：
+
+- **`inlineMath`** 在文本中渲染。输入 `$$E = mc^2$$`，即可通过输入规则创建。
+- **`blockMath`** 作为独立块渲染。输入 `$$$\sum_{i=1}^{n} x_i$$$`，即可通过输入规则创建。
+
+这两种节点都将内容以 LaTeX 字符串的形式存储在 `latex` 属性中，并使用 KaTeX 进行渲染。
+
+```ts
+import { Mathematics } from '@tiptap/extension-mathematics'
+import 'katex/dist/katex.min.css'
+
+const editor = new Editor({
+  extensions: [
+    StarterKit,
+    Mathematics,
+  ],
+})
+```
+
+如果没有 Mathematics 扩展，schema 将无法识别数学节点。请参阅[无效 schema 指南](/guides/invalid-schema)。
+
+## 导出
+
+使用[编辑器扩展](/conversion/export/docx/editor-extension)或 [REST API](/conversion/export/docx/rest-api)导出数学方程。两者的处理方式相同，都会将 LaTeX 转换为 OMML。
+
+导出转换器会读取 `inlineMath` 和 `blockMath` 节点中的 `latex` 属性，并将 LaTeX 转换为兼容 OMML 的数学组件，写入 DOCX 文件。
+
+支持的 LaTeX 特性：
+
+| LaTeX | OMML 输出 |
+| --- | --- |
+| `\frac{a}{b}` | 分数 |
+| `\sqrt{x}`, `\sqrt[n]{x}` | 根式 |
+| `x^{2}` | 上标 |
+| `x_{i}` | 下标 |
+| `\begin{matrix}...\end{matrix}` | 矩阵 |
+| 希腊字母、运算符、箭头 | 通过包含 200 多个符号的映射转换为 Unicode |
+
+如果无法解析 LaTeX 字符串，转换器会回退为包含原始 LaTeX 文本的普通数学文本片段。
+
+<Callout variant="info" title="LaTeX 支持范围并非面面俱到">
+  转换器支持常见的数学表示法。超出 `matrix` 范围的自定义环境、自定义宏或复杂对齐等高级 LaTeX 特性，可能无法准确转换。在生产工作流中依赖导出之前，请先测试具体方程。
+</Callout>
+
+`blockMath` 节点会导出为包含数学元素的独立段落。`inlineMath` 节点则会与常规文本片段一起，作为数学元素导出到父段落中。
+
+</translated_document
