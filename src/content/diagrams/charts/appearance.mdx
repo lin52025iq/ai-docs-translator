@@ -1,6 +1,6 @@
 ---
-title: 'Appearance'
-intro: 'The Chart Spec holds a chart''s settings, such as its title, legend, colors and frame. You change them with <code>updateChartSpec</code>. <a href="/docs/diagrams/charts/axes">Axes</a> and <a href="/docs/diagrams/charts/references">reference lines</a> have their own pages.'
+title: '外观'
+intro: '图表规范包含图表的各项设置，例如标题、图例、颜色和外框。使用 <code>updateChartSpec</code> 修改这些设置。<a href="/docs/diagrams/charts/axes">坐标轴</a>和<a href="/docs/diagrams/charts/references">参考线</a>各有单独的介绍页面。'
 headerDemo:
   path: '/Extensions/DiagramsAppearance'
   isPro: true
@@ -8,75 +8,68 @@ tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Appearance | Tiptap Diagrams Docs'
-  description: "The Chart Spec holds a chart's settings, such as its title, legend, colors and frame."
+  title: '外观 | Tiptap Diagrams 文档'
+  description: "图表规范包含图表的各项设置，例如标题、图例、颜色和外框。"
   category: Diagrams
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-## Quick start
+## 快速开始
 
 ```ts
 editor.commands.updateChartSpec({ spec: { title: 'Revenue', border: true, caption: true } })
 ```
 
-## Chart Spec fields
+## 图表规范字段
 
-| Field         | Type                          | Description                                                                                                                                       |
+| 字段          | 类型                          | 说明                                                                                                                                       |
 | ------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `title`       | `string`                      | Written above the chart                                                                                                                           |
-| `description` | `string`                      | Alt text and accessible description                                                                                                               |
-| `caption`     | `boolean`                     | `true` shows the description as a visible caption below the chart                                                                                 |
-| `legend`      | `ChartLegend`                 | `{ show, position }`. `show` is a `boolean`, `position` is `'top'`, `'right'`, `'bottom'` or `'left'`. Without it, the legend shows at the bottom |
-| `palette`     | `string[]`                    | The series colors of this chart, as CSS colors. Without it, the style's colors, then `--tt-chart-series-1` and the following custom properties    |
-| `background`  | `string`                      | A solid CSS color behind the chart, such as a hex, `rgb()`, `hsl()` or named color. Without it, `--tt-chart-background`                           |
-| `border`      | `boolean`                     | `true` frames the chart in `--tt-chart-border-color`                                                                                              |
-| `style`       | `string`                      | A registered style by id, such as `'ocean'`. See [Styles](/diagrams/guides/styling#styles)                                                        |
-| `stacked`     | `boolean`                     | `true` draws bars and areas on top of each other instead of side by side                                                                          |
-| `innerRadius` | `number`                      | The hole of a doughnut, from `0` to `0.9` of the radius. Default `0.55`                                                                           |
-| `orientation` | `'vertical' \| 'horizontal'`  | `'horizontal'` lays the bars on their side. See [Horizontal bars](/diagrams/charts/appearance#horizontal-bars)                                    |
-| `series`      | `Record<string, SeriesStyle>` | Line styles of a line or area chart, by column id. See [Series line styles](/diagrams/charts/appearance#series-line-styles)                       |
-| `encoding`    | `ChartEncoding`               | `{ label?, series?, seriesIn? }`: which columns are drawn. See [Which columns are drawn](/diagrams/charts/appearance#which-columns-are-drawn)     |
-| `size`        | `FigureSize`                  | `{ width, ratio, locked }`, see [`setDiagramSize`](/diagrams/guides/size-and-view#setdiagramsize)                                                 |
-| `hidden`      | `boolean`                     | `true` while only the table the chart follows is shown. `setChartLayout` sets it. It is dropped when that table is gone                           |
+| `title`       | `string`                      | 显示在图表上方                                                                                                                           |
+| `description` | `string`                      | 替代文本和无障碍说明                                                                                                               |
+| `caption`     | `boolean`                     | 为 `true` 时，在图表下方显示说明文字                                                                                 |
+| `legend`      | `ChartLegend`                 | `{ show, position }`。`show` 为 `boolean`，`position` 可为 `'top'`、`'right'`、`'bottom'` 或 `'left'`。未设置时，图例显示在底部 |
+| `palette`     | `string[]`                    | 此图表各数据系列的颜色，使用 CSS 颜色值。未设置时，依次使用样式中的颜色、`--tt-chart-series-1` 及后续自定义属性    |
+| `background`  | `string`                      | 图表背景的纯色 CSS 颜色值，例如十六进制、`rgb()`、`hsl()` 或命名颜色。未设置时使用 `--tt-chart-background`                           |
+| `border`      | `boolean`                     | 为 `true` 时，使用 `--tt-chart-border-color` 为图表添加边框                                                                                              |
+| `style`       | `string`                      | 已注册样式的 ID，例如 `'ocean'`。参见[样式](/diagrams/guides/styling#styles)                                                        |
+| `stacked`     | `boolean`                     | 为 `true` 时，柱形和面积图会相互叠放，而不是并排显示                                                                          |
+| `innerRadius` | `number`                      | 环形图中心孔洞的半径，占圆环半径的 `0` 到 `0.9`。默认值为 `0.55`                                                                           |
+| `orientation` | `'vertical' \| 'horizontal'`  | `'horizontal'` 会将柱形横向显示。参见[横向柱形图](/diagrams/charts/appearance#horizontal-bars)                                    |
+| `series`      | `Record<string, SeriesStyle>` | 按列 ID 设置折线图或面积图的数据系列线条样式。参见[数据系列线条样式](/diagrams/charts/appearance#series-line-styles)                       |
+| `encoding`    | `ChartEncoding`               | `{ label?, series?, seriesIn? }`：指定要绘制的列。参见[要绘制哪些列](/diagrams/charts/appearance#which-columns-are-drawn)     |
+| `size`        | `FigureSize`                  | `{ width, ratio, locked }`，参见 [`setDiagramSize`](/diagrams/guides/size-and-view#setdiagramsize)                                                 |
+| `hidden`      | `boolean`                     | 仅显示图表所跟随的表格时，该值为 `true`。由 `setChartLayout` 设置。表格移除后，此字段也会移除                           |
 
-`type` and `range`, the scale of a gauge, are on [Charts](/diagrams/charts/overview#chart-types). `axes` is on
-[Axes](/diagrams/charts/axes), `references` on [Reference lines and bands](/diagrams/charts/references). `renderer` holds
-options that only one Renderer understands, see
-[When the Renderer changes](/diagrams/renderers/overview#when-the-renderer-changes).
+`type` 和 `range`（仪表图的刻度）请参见[图表](/diagrams/charts/overview#chart-types)。`axes` 请参见
+[坐标轴](/diagrams/charts/axes)，`references` 请参见[参考线和参考带](/diagrams/charts/references)。`renderer` 包含仅某个渲染器支持的选项，参见
+[更换渲染器时](/diagrams/renderers/overview#when-the-renderer-changes)。
 
-- `palette`, `background` and `border` override the `style`.
-- An unknown `style` id is ignored.
-- A `legend` without `show` is shown. A `legend` without a valid `position` stands at the bottom.
-- A color in `palette` or `background` that is not a safe CSS color is dropped. A value that
-  could load a resource, such as `url()`, is never a color.
+- `palette`、`background` 和 `border` 会覆盖 `style` 中的设置。
+- 未知的 `style` ID 会被忽略。
+- 未设置 `show` 的 `legend` 会显示。`legend` 未设置有效的 `position` 时，会显示在底部。
+- `palette` 或 `background` 中不安全的 CSS 颜色值会被丢弃。可能会加载资源的值（例如 `url()`）不属于颜色。
 
-## Horizontal bars
+## 横向柱形图
 
-`spec.orientation: 'horizontal'` lays the bars of a bar or combo chart on their side, with the
-categories down the left. Without it, or with `'vertical'`, bars stand upright.
+`spec.orientation: 'horizontal'` 会将柱形图或组合图中的柱形横向显示，类别沿左侧向下排列。未设置此项或设为 `'vertical'` 时，柱形会竖直显示。
 
 ```ts
 editor.commands.updateChartSpec({ spec: { orientation: 'horizontal' } })
 ```
 
-Not every Renderer lays bars on their side. See the chart types of
-[ECharts](/diagrams/renderers/echarts#chart-types) and [D3](/diagrams/renderers/d3#chart-types),
-and the [limits of Mermaid](/diagrams/renderers/mermaid#limits).
+并非所有渲染器都支持横向柱形图。请参见 [ECharts](/diagrams/renderers/echarts#chart-types) 和 [D3](/diagrams/renderers/d3#chart-types) 支持的图表类型，以及 [Mermaid 的限制](/diagrams/renderers/mermaid#limits)。
 
-Other chart types ignore `orientation`, so it can stay in the spec when you change the type. Long
-category names read better on bars that lie on their side than on labels turned at an angle.
+其他图表类型会忽略 `orientation`，因此更改图表类型时可以保留此项设置。与倾斜显示的标签相比，较长的类别名称在横向柱形图上更易于阅读。
 
-## Series line styles
+## 数据系列线条样式
 
-Give each line its own stroke, width, markers and curve:
+为每条线分别设置描边、宽度、标记和曲线：
 
 <CodeDemo isPro viewer view="preview" path="/Extensions/DiagramsSeriesStyles" />
 
-`spec.series` sets how each series of a line or area chart is drawn, by column id:
-`{ [columnId]: { line?, width?, marker?, smooth? } }`. A column without an entry keeps the
-Renderer's default.
+`spec.series` 按列 ID 设置折线图或面积图中各数据系列的绘制方式：
+`{ [columnId]: { line?, width?, marker?, smooth? } }`。未单独设置的列会采用渲染器的默认值。
 
 ```ts
 editor.commands.updateChartSpec({
@@ -84,67 +77,58 @@ editor.commands.updateChartSpec({
 })
 ```
 
-| Field    | Values                                              |
+| 字段     | 值                                                  |
 | -------- | --------------------------------------------------- |
-| `line`   | `'solid'`, `'dashed'` or `'dotted'`                 |
-| `width`  | The stroke width in CSS pixels, 0.5 to 8. Default 2 |
-| `marker` | `'none'`, `'circle'` or `'square'` at each value    |
-| `smooth` | `true` draws a curve through the values             |
+| `line`   | `'solid'`、`'dashed'` 或 `'dotted'`                 |
+| `width`  | 描边宽度，单位为 CSS 像素，范围为 0.5 到 8。默认值为 2 |
+| `marker` | 每个数据值处显示的标记：`'none'`、`'circle'` 或 `'square'`    |
+| `smooth` | 为 `true` 时，在数据值之间绘制曲线             |
 
-`updateChartSpec` replaces `series` as a whole. Pass every entry you want to keep.
+`updateChartSpec` 会整体替换 `series`。请传入所有需要保留的条目。
 
-The [ECharts](/diagrams/renderers/echarts#chart-types) and
-[D3](/diagrams/renderers/d3#chart-types) Renderers draw every field. The Mermaid Renderer
-declines a line chart with `series`, see its [limits](/diagrams/renderers/mermaid#limits).
-Word draws all four on a line chart, and none on the edges of an area chart.
+[ECharts](/diagrams/renderers/echarts#chart-types) 和 [D3](/diagrams/renderers/d3#chart-types) 渲染器会绘制所有字段。Mermaid 渲染器不支持带有 `series` 的折线图，参见其[限制](/diagrams/renderers/mermaid#limits)。
+Word 在折线图中会绘制全部四种样式，在面积图边缘则不会绘制任何一种。
 
-## Which columns are drawn
+## 要绘制哪些列
 
-`encoding` names the columns a chart draws, by their id. The Chart Data keeps every column. See
-[Which columns are drawn](/diagrams/data/overview#which-columns-are-drawn).
+`encoding` 按列 ID 指定图表要绘制的列。图表数据会保留所有列。参见[要绘制哪些列](/diagrams/data/overview#which-columns-are-drawn)。
 
-## Where the frame shows
+## 外框的呈现位置
 
-The background reaches every Renderer and every export. The border and the caption appear in the
-editor, in HTML and in a Word document. An SVG or image export frames the chart with the same
-padding, border and caption as the editor.
+背景会应用于所有渲染器和所有导出格式。边框和说明文字会显示在编辑器、HTML 和 Word 文档中。导出为 SVG 或图像时，图表会像在编辑器中一样带有内边距、边框和说明文字。
 
-## Choosing the Renderer
+## 选择渲染器
 
-A chart is drawn by one of the registered Renderers. You can name one with `setChartRenderer`.
-Otherwise the extension picks one, see
-[Which Renderer draws a chart](/diagrams/renderers/overview#which-renderer-draws-a-chart). Changing the
-Renderer changes only the drawing, never the Chart Data or the Chart Spec.
+图表由已注册的渲染器之一绘制。可以使用 `setChartRenderer` 指定渲染器。否则，扩展会自动选择一个，参见[哪个渲染器负责绘制图表](/diagrams/renderers/overview#which-renderer-draws-a-chart)。更换渲染器只会改变绘制方式，不会影响图表数据或图表规范。
 
-## Commands
+## 命令
 
 ### updateChartSpec
 
-Changes fields of the Chart Spec and keeps the rest. A field set to `undefined` is removed.
+修改图表规范中的字段，并保留其余字段。将字段设为 `undefined` 会移除该字段。
 
 ```ts
 editor.commands.updateChartSpec({ spec: { title: 'Revenue', stacked: undefined } })
 ```
 
-| Option | Type             | Description                                          |
+| 选项   | 类型             | 说明                                          |
 | ------ | ---------------- | ---------------------------------------------------- |
-| `spec` | `ChartSpecPatch` | The fields to change                                 |
-| `pos`  | `number`         | The chart's position. Defaults to the selected chart |
+| `spec` | `ChartSpecPatch` | 要修改的字段                                 |
+| `pos`  | `number`         | 图表的位置。默认为当前选中的图表 |
 
-A field that is not valid, such as a color that is not one, is dropped. Returns `false` when
-there is no chart at `pos`, or no chart is selected.
+无效字段（例如无效的颜色值）会被丢弃。如果 `pos` 处没有图表，或未选中任何图表，则返回 `false`。
 
 ### setChartRenderer
 
-Sets the Renderer that draws the chart. `null` goes back to the default.
+设置用于绘制图表的渲染器。设为 `null` 则恢复默认值。
 
 ```ts
 editor.commands.setChartRenderer({ renderer: 'd3' })
 ```
 
-| Option     | Type             | Description                                          |
+| 选项       | 类型             | 说明                                          |
 | ---------- | ---------------- | ---------------------------------------------------- |
-| `renderer` | `string \| null` | The id of a registered Renderer, or `null`           |
-| `pos`      | `number`         | The chart's position. Defaults to the selected chart |
+| `renderer` | `string \| null` | 已注册渲染器的 ID，或 `null`           |
+| `pos`      | `number`         | 图表的位置。默认为当前选中的图表 |
 
-Returns `false` when there is no chart at `pos`, or no chart is selected.
+如果 `pos` 处没有图表，或未选中任何图表，则返回 `false`。
