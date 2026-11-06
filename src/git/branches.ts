@@ -20,11 +20,14 @@ export type GitEntry = Omit<z.infer<typeof entrySchema>, 'path'>
 export type BranchChanges = Record<string, string | Buffer | GitEntry | null>
 
 /** 独立 Git 调用配置，不改写用户仓库的身份配置。 */
-export function repositoryGit(repository: string) {
-    return simpleGit({
+export function repositoryGit(repository: string, indexFile?: string) {
+    const git = simpleGit({
         baseDir: resolve(repository),
-        config: ['user.name=AI Docs Translator', 'user.email=ai-docs-translator@users.noreply.github.com']
+        config: ['user.name=AI Docs Translator', 'user.email=ai-docs-translator@users.noreply.github.com'],
+        // simple-git 4 要求显式允许；仅提交实例使用由本程序创建的临时索引。
+        allowEnvironment: indexFile ? ['GIT_INDEX_FILE'] : []
     })
+    return indexFile ? git.env({ ...process.env, GIT_INDEX_FILE: indexFile }) : git
 }
 
 /** 本地不存在时读取远端已有分支；只取回对象，不检出或执行仓库内容。 */
@@ -77,7 +80,7 @@ export async function commitBranchFiles(input: {
 }) {
     const directory = await mkdtemp(join(tmpdir(), 'translation-index-'))
     try {
-        const git = repositoryGit(input.repository).env({ ...process.env, GIT_INDEX_FILE: join(directory, 'index') })
+        const git = repositoryGit(input.repository, join(directory, 'index'))
         const ref = `refs/heads/${input.branch}`
         await git.raw(['check-ref-format', ref])
         if (input.updateLocalRef !== false && (await git.branchLocal()).current === input.branch) {
