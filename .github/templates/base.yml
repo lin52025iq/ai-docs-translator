@@ -60,8 +60,10 @@ jobs:
                   import { loadProject } from './src/project/config.ts'
                   const { config } = await loadProject(process.env.PROJECT_CONFIG)
                   if (config.project.id !== process.env.PROJECT_ID) throw new Error('配置分支与项目 ID 不一致')
-                  const tokenSecret = `${config.project.id.toUpperCase().replaceAll('-', '_')}_SOURCE_REPO_TOKEN`
+                  const secretPrefix = config.project.id.toUpperCase().replaceAll('-', '_')
+                  const tokenSecret = `${secretPrefix}_SOURCE_REPO_TOKEN`
                   await appendFile(process.env.GITHUB_OUTPUT, `token_secret=${tokenSecret}\n`)
+                  await appendFile(process.env.GITHUB_OUTPUT, `deploy_hook_secret=${secretPrefix}_VERCEL_DEPLOY_HOOK\n`)
                   await appendFile(process.env.GITHUB_OUTPUT, `repository=${config.source.repository}\nref=${config.source.ref}\n`)
                   NODE
 
@@ -118,6 +120,32 @@ jobs:
                   }
                   await appendFile(process.env.GITHUB_STEP_SUMMARY, summary)
                   console.log(summary)
+                  NODE
+
+            - name: 翻译结束后触发 Vercel 部署
+              env:
+                  VERCEL_DEPLOY_HOOK: ${{ secrets[steps.source.outputs.deploy_hook_secret] }}
+              run: |
+                  node --input-type=module <<'NODE'
+                  import { appendFile, readFile } from 'node:fs/promises'
+                  const hook = process.env.VERCEL_DEPLOY_HOOK
+                  if (!hook) {
+                      console.log('未配置当前项目的 Vercel Deploy Hook，跳过部署。')
+                  } else {
+                      const result = JSON.parse(await readFile('.translation-drafts/result.json', 'utf8'))
+                      if (result.processed.successful === 0) {
+                          console.log('本次没有发布译文，跳过部署。')
+                      } else {
+                          const response = await fetch(hook, { method: 'POST' }).catch(() => {
+                              throw new Error('Vercel 部署请求失败，请检查项目的 Deploy Hook 配置。')
+                          })
+                          if (!response.ok) throw new Error(`Vercel 部署请求失败：HTTP ${response.status}`)
+                          const { job } = await response.json()
+                          const message = `翻译处理结束，已触发一次 Vercel 部署，任务：${job.id}`
+                          console.log(message)
+                          await appendFile(process.env.GITHUB_STEP_SUMMARY, `${message}\n`)
+                      }
+                  }
                   NODE
 
             - name: 上传项目报告和进度
