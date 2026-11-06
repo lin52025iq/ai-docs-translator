@@ -1,86 +1,86 @@
 ---
-title: Bold, italic, underline, strikethrough
+title: 粗体、斜体、下划线、删除线
 tags:
   - type: beta
 meta:
-  title: Bold, Italic, Underline, Strikethrough | Tiptap Conversion
-  description: How bold, italic, underline, and strikethrough marks convert between DOCX and Tiptap.
-  category: Conversion
+  title: 粗体、斜体、下划线、删除线 | Tiptap 转换
+  description: 了解粗体、斜体、下划线和删除线标记如何在 DOCX 与 Tiptap 之间转换。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-These are inline marks applied to text runs. In Word they come from run properties (`<w:rPr>`). In Tiptap they are marks on text nodes. All four are registered by [ConvertKit](/conversion/import/docx/convertkit) out of the box.
+这些是应用于文本运行的行内标记。在 Word 中，它们来自运行属性（`<w:rPr>`）；在 Tiptap 中，它们是文本节点上的标记。默认情况下，[ConvertKit](/conversion/import/docx/convertkit) 已注册全部四种标记。
 
-## What you need
+## 所需内容
 
-- **Extensions:** [`ConvertKit`](/conversion/import/docx/convertkit), which bundles Bold, Italic, Underline, and Strike.
-- **Configuration:** None required. All four marks work out of the box.
+- **扩展：**[`ConvertKit`](/conversion/import/docx/convertkit)，其中包含 Bold、Italic、Underline 和 Strike。
+- **配置：**无需配置。默认情况下，全部四种标记都可以使用。
 
-## Support overview
+## 支持概览
 
-| Mark | Import | Editor | Export | Notes |
+| 标记 | 导入 | 编辑器 | 导出 | 备注 |
 | --- | --- | --- | --- | --- |
-| Bold | Supported | Supported (ConvertKit) | Supported | Full round-trip |
-| Italic | Supported | Supported (ConvertKit) | Supported | Full round-trip |
-| Underline | Supported (`val="single"` only) | Supported (ConvertKit) | Supported | Other underline styles not converted |
-| Strikethrough | Supported (with a known leak across paragraphs, see below) | Supported (ConvertKit) | Supported | Full round-trip |
-| Double strikethrough | Not supported | Not supported | Not supported | Not converted |
+| 粗体 | 支持 | 支持（ConvertKit） | 支持 | 完整往返转换 |
+| 斜体 | 支持 | 支持（ConvertKit） | 支持 | 完整往返转换 |
+| 下划线 | 支持（仅 `val="single"`） | 支持（ConvertKit） | 支持 | 不转换其他下划线样式 |
+| 删除线 | 支持（存在已知的跨段落延续问题，见下文） | 支持（ConvertKit） | 支持 | 完整往返转换 |
+| 双删除线 | 不支持 | 不支持 | 不支持 | 不会转换 |
 
-## Import
+## 导入
 
-Import these marks using the [editor extension](/conversion/import/docx/editor-extension) or the [REST API](/conversion/import/docx/rest-api). Both produce identical output.
+使用[编辑器扩展](/conversion/import/docx/editor-extension)或 [REST API](/conversion/import/docx/rest-api)导入这些标记。两者生成的输出相同。
 
-The conversion service reads Word run properties and produces the corresponding Tiptap marks:
+转换服务会读取 Word 运行属性，并生成相应的 Tiptap 标记：
 
-| Word element | Tiptap mark |
+| Word 元素 | Tiptap 标记 |
 | --- | --- |
 | `<w:b/>` | `bold` |
 | `<w:i/>` | `italic` |
-| `<w:u val="single"/>` | `underline` (other `val` values not converted) |
+| `<w:u val="single"/>` | `underline`（不会转换其他 `val` 值） |
 | `<w:strike/>` | `strike` |
-| `<w:dstrike/>` | Not handled |
+| `<w:dstrike/>` | 不处理 |
 
-Bold, italic, and strikethrough import cleanly for the runs that carry the marks. Underline is only imported when the Word element has `val="single"`. Other underline styles (double, wavy, dotted, dash) are not converted. Combined marks (bold + italic on the same text) are fully preserved. There is a known issue where strikethrough can leak from one paragraph into the next on import; see [Strikethrough](#strikethrough) below.
+粗体、斜体和删除线会在带有这些标记的文本运行中正常导入。只有当 Word 元素的 `val="single"` 时，才会导入下划线。其他下划线样式（双线、波浪线、点线、虚线）不会转换。组合标记（同一文本同时加粗和斜体）会完整保留。已知一个问题：导入时，删除线可能会从一个段落延续到下一个段落；请参阅下文的[删除线](#strikethrough)部分。
 
-## Editor rendering
+## 编辑器渲染
 
-All four marks ship inside [`ConvertKit`](/conversion/import/docx/convertkit). No separate installation is needed.
+[`ConvertKit`](/conversion/import/docx/convertkit) 已包含全部四种标记，无需单独安装。
 
-| Mark | Extension | Renders as | Keyboard shortcut |
+| 标记 | 扩展 | 渲染为 | 键盘快捷键 |
 | --- | --- | --- | --- |
-| bold | [`Bold`](/editor/extensions/marks/bold) | `<strong>` | Cmd+B |
-| italic | [`Italic`](/editor/extensions/marks/italic) | `<em>` | Cmd+I |
-| underline | [`Underline`](/editor/extensions/marks/underline) | `<u>` | Cmd+U |
-| strike | [`Strike`](/editor/extensions/marks/strike) | `<s>` | Cmd+Shift+S |
+| 粗体 | [`Bold`](/editor/extensions/marks/bold) | `<strong>` | Cmd+B |
+| 斜体 | [`Italic`](/editor/extensions/marks/italic) | `<em>` | Cmd+I |
+| 下划线 | [`Underline`](/editor/extensions/marks/underline) | `<u>` | Cmd+U |
+| 删除线 | [`Strike`](/editor/extensions/marks/strike) | `<s>` | Cmd+Shift+S |
 
-All four marks can be active simultaneously on the same text.
+这四种标记可以同时应用于同一文本。
 
-## Export
+## 导出
 
-Export these marks using the [editor extension](/conversion/export/docx/editor-extension) or the [REST API](/conversion/export/docx/rest-api). Both handle them identically.
+使用[编辑器扩展](/conversion/export/docx/editor-extension)或 [REST API](/conversion/export/docx/rest-api)导出这些标记。两者的处理方式相同。
 
-Each mark maps to a DOCX run property:
+每种标记都会映射到一个 DOCX 运行属性：
 
-| Tiptap mark | DOCX run property |
+| Tiptap 标记 | DOCX 运行属性 |
 | --- | --- |
 | `bold` | `bold = true` |
 | `italic` | `italics = true` |
 | `underline` | `UnderlineType.SINGLE` |
 | `strike` | `strike = true` |
 
-Strikethrough round-trips correctly. The import produces the correct `strike` mark name, so no formatting is lost.
+删除线可以正确往返转换。导入时会生成正确的 `strike` 标记名称，因此不会丢失格式。
 
-## Strikethrough
+## 删除线
 
-<Callout title="Known issue: strikethrough leaks across paragraphs" variant="warning">
-  Importing a paragraph that carries strikethrough formatting can cause the following paragraph to also be rendered as strikethrough, even when the source DOCX did not strike the second paragraph. The import JSON appears to carry the `strike` mark beyond the original paragraph boundary. If you hit this, inspect `context.content` in the `onImport` callback before loading content into the editor and strip stray `strike` marks where appropriate.
+<Callout title="已知问题：删除线会延续到后续段落" variant="warning">
+  导入带有删除线格式的段落时，即使源 DOCX 中的下一段没有删除线，该段也可能被渲染为删除线。导入生成的 JSON 似乎会让 `strike` 标记越过原段落边界。如果遇到此问题，请在将内容载入编辑器之前，检查 `onImport` 回调中的 `context.content`，并在适当的位置移除多余的 `strike` 标记。
 </Callout>
 
-<Callout title="Double strikethrough is not supported" variant="info">
-  Double strikethrough (`<w:dstrike/>`) is not handled. It is not converted on import.
+<Callout title="不支持双删除线" variant="info">
+  不处理双删除线（`<w:dstrike/>`），导入时不会转换。
 </Callout>
 
-<Callout title="Only single underline is imported" variant="warning">
-  Word supports many underline styles (double, wavy, dotted, dash, and others). On import, only `val="single"` produces an `underline` mark. All other styles are not converted and are not downgraded to a plain underline. On export, every underline becomes `UnderlineType.SINGLE`. Text content is preserved, but the underline formatting is lost for non-single styles.
+<Callout title="仅导入单下划线" variant="warning">
+  Word 支持多种下划线样式（双线、波浪线、点线、虚线等）。导入时，只有 `val="single"` 才会生成 `underline` 标记。其他样式不会转换，也不会降级为普通下划线。导出时，所有下划线都会转换为 `UnderlineType.SINGLE`。文本内容会保留，但非单线样式的下划线格式会丢失。
 </Callout>
