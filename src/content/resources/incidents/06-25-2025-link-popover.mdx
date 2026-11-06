@@ -1,49 +1,49 @@
 ---
-title: XSS vulnerability in link popover
+title: 链接弹出框中的 XSS 漏洞
 meta:
-  title: XSS vulnerability in link popover | Tiptap Resources
-  description: The Link Popover UI Component accepted malicious URLs, allowing potential XSS attacks.
-  category: Resources
+  title: 链接弹出框中的 XSS 漏洞 | Tiptap 资源
+  description: 链接弹出框 UI 组件接受恶意 URL，可能导致 XSS 攻击。
+  category: 资源
 incident:
-  product: UI Component
+  product: UI 组件
   date: Jun 25, 2025, 9:39 PM GMT+2
   status: resolved
   severity: high
 ---
 import { Callout } from '@/components/ui/Callout'
 
-The [Link Popover UI Component](/ui-components/components/link-popover) accepted malicious URLs, allowing potential XSS attacks.
+[链接弹出框 UI 组件](/ui-components/components/link-popover)接受恶意 URL，可能导致 XSS 攻击。
 
-**Affected components**
-- [Link popover component](/ui-components/components/link-popover) until Jun 25, 2025, 9:39 PM GMT+2
-- [Simple editor template](/ui-components/templates/simple-editor) until Jun 25, 2025, 9:39 PM GMT+2
+**受影响的组件**
+- [链接弹出框组件](/ui-components/components/link-popover)，截至 Jun 25, 2025, 9:39 PM GMT+2
+- [简单编辑器模板](/ui-components/templates/simple-editor)，截至 Jun 25, 2025, 9:39 PM GMT+2
 
-**Not affected**
+**不受影响**
 
-- Other UI components or templates
-- The Link extension itself
-- Components or templates downloaded after Jun 25, 2025, 9:39 PM GMT+2
+- 其他 UI 组件或模板
+- Link 扩展本身
+- Jun 25, 2025, 9:39 PM GMT+2 之后下载的组件或模板
 
-### Why it happened
-The component skipped `editor.commands.setLink()`, which normally rejects schemes such as `javascript:`, to stay functional even when the Link extension was missing. Because of that shortcut, no validation ran at all. Neither when the link was inserted nor when the user clicked the »Open in new window« button.
+### 漏洞成因
+为了在缺少 Link 扩展时仍能正常工作，该组件绕过了 `editor.commands.setLink()`。这个命令通常会拒绝 `javascript:` 等协议。由于采用了这种捷径，整个过程中都没有进行任何验证：无论是插入链接时，还是用户点击“在新窗口中打开”按钮时。
 
-<Callout title="Note" variant="info">
-The Link extension itself includes proper URL validation (see [isAllowedUri](/editor/extensions/marks/link#isalloweduri)).
+<Callout title="注意" variant="info">
+Link 扩展本身包含适当的 URL 验证（参见 [isAllowedUri](/editor/extensions/marks/link#isalloweduri)）。
 </Callout>
 
-## What's the fix
-We now call `editor.commands.setLink()` for every link insertion and, in addition, run a separate URL check whenever the »open in new window« button is pressed.
+## 修复方案
+现在，每次插入链接时都会调用 `editor.commands.setLink()`；此外，每当用户点击“在新窗口中打开”按钮时，都会单独检查 URL。
 
-## How to update
+## 如何更新
 
-To update the code in your existing project run the following command in your terminal:
+要更新现有项目中的代码，请在终端运行以下命令：
 
 ```bash
 npx @tiptap/cli@latest add link-popover
 ```
 
-This will download the latest version of the link popover UI component.
+此命令会下载最新版本的链接弹出框 UI 组件。
 
-## Credits
+## 致谢
 
-Thanks to [Daniyal Nasir](https://dunicot.com) for reporting this vulnerability.
+感谢 [Daniyal Nasir](https://dunicot.com) 报告此漏洞。
