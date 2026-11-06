@@ -1,22 +1,22 @@
 ---
-title: Persistence
+title: 持久化
 meta:
-  title: Persistence | Hocuspocus Docs
+  title: 持久化 | Hocuspocus 文档
   category: Hocuspocus
 ---
 
-To persist the documents you must instruct the server to:
+要持久化文档，必须让服务器执行以下操作：
 
-1. Store the document in the `onStoreDocument` hook (which is the same as the `onChange` but with debounce already configured).
-2. Load the document from the database using the `onLoadDocument` hook.
+1. 在 `onStoreDocument` 钩子中存储文档（它与 `onChange` 相同，但已配置防抖）。
+2. 使用 `onLoadDocument` 钩子从数据库加载文档。
 
-Actually, you don't even have to use those 2 hooks! We have already created on top of them a simple abstraction in the form of a [database extension](/hocuspocus/server/extensions/database).
+实际上，你甚至不必使用这两个钩子！我们已经基于它们创建了一个简单的抽象，即[数据库扩展](/hocuspocus/server/extensions/database)。
 
-- [Database extension](/hocuspocus/server/extensions/database) - Generic database driver for any database
-- [SQLite extension](/hocuspocus/server/extensions/sqlite) - Ready-to-use SQLite persistence
-- [S3 extension](/hocuspocus/server/extensions/s3) - Store documents in Amazon S3 or S3-compatible services
+- [数据库扩展](/hocuspocus/server/extensions/database) - 适用于任何数据库的通用数据库驱动程序
+- [SQLite 扩展](/hocuspocus/server/extensions/sqlite) - 开箱即用的 SQLite 持久化方案
+- [S3 扩展](/hocuspocus/server/extensions/s3) - 将文档存储在 Amazon S3 或兼容 S3 的服务中
 
-However, in case you are a curious mind, here is an example of what it would be like to do it with hooks (It can be a good way to familiarize yourself with the concepts).
+不过，如果你想深入了解，这里有一个使用钩子的示例（这有助于熟悉相关概念）。
 
 ```ts
 import { debounce } from "debounce";
@@ -44,9 +44,9 @@ function createInitialDocTemplate() {
 }
 ```
 
-## FAQ: In what format should I save my document?
+## 常见问题：应该以什么格式保存文档？
 
-In Uint8Array, [which is the format that Yjs encodes its documents](https://docs.yjs.dev/api/document-updates).
-You can persist your documents **additionally** in another format like JSON if for some reason you want to.
+使用 Uint8Array，[这是 Yjs 编码文档时采用的格式](https://docs.yjs.dev/api/document-updates)。
+如果有需要，你也可以**另外**以 JSON 等其他格式持久化文档。
 
-Note: Do not be tempted to store the Y.Doc as JSON and recreate it as YJS binary when the user connects. This will cause issues with merging of updates and content will duplicate on new connections. The data must be stored as binary to make use of the YJS format.
+注意：不要将 Y.Doc 存储为 JSON，并在用户连接时再将其重新创建为 YJS 二进制格式。这样会导致更新合并出现问题，并且新连接时内容会重复。必须将数据存储为二进制格式，才能使用 YJS 格式。
