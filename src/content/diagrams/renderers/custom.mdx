@@ -1,6 +1,6 @@
 ---
-title: 'Your own Renderer'
-intro: 'You can write a Renderer for any drawing library. The document stores data, never the drawing, so your Renderer draws every existing chart and the documents need no migration. This page shows a chart Renderer. For a diagram format, see <a href="/docs/diagrams/renderers/custom-diagrams">A Diagram Renderer</a>.'
+title: '自定义渲染器'
+intro: '你可以为任何绘图库编写渲染器。文档只存储数据，不存储绘图，因此你的渲染器可以绘制所有现有图表，无需迁移文档。本页介绍图表渲染器。若要了解图示格式，请参阅 <a href="/docs/diagrams/renderers/custom-diagrams">图示渲染器</a>。'
 headerDemo:
   path: '/Extensions/DiagramsCustomRenderer'
   isPro: true
@@ -8,14 +8,14 @@ tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Your own Renderer | Tiptap Diagrams Docs'
-  description: 'You can write a Renderer for any drawing library.'
-  category: Diagrams
+  title: '自定义渲染器 | Tiptap Diagrams 文档'
+  description: '你可以为任何绘图库编写渲染器。'
+  category: 图示
 ---
 
-## A chart Renderer
+## 图表渲染器
 
-This Renderer draws bar charts as plain SVG, without a library:
+此渲染器直接使用 SVG 绘制柱状图，无需依赖库：
 
 ```ts
 import type { ChartRenderer, ChartRenderInput } from '@tiptap-pro/extension-diagrams'
@@ -76,7 +76,7 @@ export const plainBarsRenderer: ChartRenderer = {
 }
 ```
 
-### Registering it
+### 注册渲染器
 
 ```ts
 import { Diagrams } from '@tiptap-pro/extension-diagrams'
@@ -89,110 +89,94 @@ Diagrams.configure({
 editor.commands.setChartRenderer({ renderer: 'plain-bars' })
 ```
 
-A chart that names `plain-bars` is drawn by it. Every other chart keeps its Renderer. See
-[Which Renderer draws a chart](/diagrams/renderers/overview#which-renderer-draws-a-chart).
+指定 `plain-bars` 的图表会由它绘制。其他图表仍使用各自的渲染器。请参阅[哪个渲染器会绘制图表](/diagrams/renderers/overview#which-renderer-draws-a-chart)。
 
-### Members
+### 成员
 
-| Member                  | Type                                                                 | Description                                                                                                                                     |
-| ----------------------- | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `id`                    | `string`                                                             | What a chart stores as its `renderer`                                                                                                           |
-| `label`                 | `string`                                                             | Optional. For a menu                                                                                                                            |
-| `types`                 | `readonly ChartType[]`                                               | The chart types it draws                                                                                                                        |
-| `draws({ data, spec })` | `(chart) => boolean`                                                 | Optional. `false` for a chart of its types that it draws badly, so another Renderer takes it                                                    |
-| `rules`                 | `RendererRules`                                                      | Optional. See [Rules of your Renderer](/diagrams/renderers/custom#rules-of-your-renderer)                                                       |
-| `mount(target, input)`  | `(target, input) => ChartRenderHandle \| Promise<ChartRenderHandle>` | Draws into `target`, an element inside the editor, and returns `{ update, destroy }`                                                            |
-| `toSVG(input)`          | `(input) => Promise<string>`                                         | Returns a standalone SVG string with concrete colors, used by `export`                                                                          |
-| `toImage(input)`        | `(input) => Promise<Blob>`                                           | Returns a PNG at `input.size`. For a library that draws on a canvas, see [A Renderer that draws on a canvas](/diagrams/renderers/custom-canvas) |
+| 成员                    | 类型                                                                  | 说明                                                                                                                                            |
+| ----------------------- | --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`                    | `string`                                                              | 图表将其存储为 `renderer` 的值                                                                                                                  |
+| `label`                 | `string`                                                              | 可选。用于菜单                                                                                                                                |
+| `types`                 | `readonly ChartType[]`                                                | 此渲染器可绘制的图表类型                                                                                                                        |
+| `draws({ data, spec })` | `(chart) => boolean`                                                  | 可选。对于此渲染器无法良好绘制的支持类型图表，返回 `false`，交由其他渲染器处理                                                                   |
+| `rules`                 | `RendererRules`                                                       | 可选。请参阅[渲染器规则](/diagrams/renderers/custom#rules-of-your-renderer)                                                                      |
+| `mount(target, input)`  | `(target, input) => ChartRenderHandle \| Promise<ChartRenderHandle>` | 在 `target`（编辑器内的元素）中绘制，并返回 `{ update, destroy }`                                                                                |
+| `toSVG(input)`          | `(input) => Promise<string>`                                          | 返回带有具体颜色的独立 SVG 字符串，供 `export` 使用                                                                                             |
+| `toImage(input)`        | `(input) => Promise<Blob>`                                            | 返回尺寸为 `input.size` 的 PNG。若绘图所用的库基于 canvas，请参阅[基于 canvas 绘图的渲染器](/diagrams/renderers/custom-canvas)                   |
 
-A Renderer has either `toSVG` or `toImage`, and every exported file is made from what it
-returns. The frame, the attribution and the size are the same either way.
+渲染器必须实现 `toSVG` 或 `toImage` 其中之一；所有导出文件都由其返回值生成。无论使用哪种方式，外框、署名和尺寸都相同。
 
-- **With `toSVG`**, the type is `VectorChartRenderer`. The built-in Renderers are of this kind.
-- **With `toImage`**, the type is `RasterChartRenderer`. An SVG file then holds the PNG, not
-  shapes, and `export` returns `raster: true`.
+- **使用 `toSVG` 时**，类型为 `VectorChartRenderer`。内置渲染器都属于此类型。
+- **使用 `toImage` 时**，类型为 `RasterChartRenderer`。此时 SVG 文件中包含的是 PNG，而不是图形；`export` 返回 `raster: true`。
 
-`mount` returns `{ update, destroy }`. The extension calls `update(input)` with new input when
-the data, the spec, the theme or the size changes. `destroy()` removes what `mount` added.
+`mount` 返回 `{ update, destroy }`。数据、规格、主题或尺寸发生变化时，扩展会用新输入调用 `update(input)`。`destroy()` 会移除 `mount` 添加的内容。
 
-### What a Renderer receives
+### 渲染器接收的内容
 
-`input` is a `ChartRenderInput`:
+`input` 的类型为 `ChartRenderInput`：
 
-| Field     | Type                | Description                                                                     |
-| --------- | ------------------- | ------------------------------------------------------------------------------- |
-| `data`    | `ChartData`         | The Chart Data, with only the columns the spec selected                         |
-| `spec`    | `ChartSpec`         | The Chart Spec                                                                  |
-| `theme`   | `ChartTheme`        | Concrete values to draw with, listed below                                      |
-| `size`    | `{ width, height }` | In pixels                                                                       |
-| `animate` | `boolean`           | `true` when the chart may move as it is drawn and changed. A file never gets it |
+| 字段      | 类型                | 说明                                                               |
+| --------- | ------------------- | ------------------------------------------------------------------ |
+| `data`    | `ChartData`         | 图表数据，仅包含规格所选的列                                       |
+| `spec`    | `ChartSpec`         | 图表规格                                                           |
+| `theme`   | `ChartTheme`        | 用于绘图的具体值，见下文                                           |
+| `size`    | `{ width, height }` | 单位为像素                                                         |
+| `animate` | `boolean`           | 图表绘制或变更时可能会动则为 `true`。文件中不会出现此字段           |
 
-`theme` holds the `series` colors, `background`, `axisColor`, `gridColor`, `labelColor`,
-`titleColor`, `fontFamily`, `fontSize`, `titleSize`, `titleWeight`, `legendGap` and
-`legendMarkerSize`. These are resolved values, also in a dark color scheme. Draw with them, not
-with `var(…)`, so the chart matches the page and exports correctly. `toSVG` and `toImage`
-receive the light colors, unless the caller asked for `scheme: 'dark'`.
+`theme` 包含 `series` 颜色、`background`、`axisColor`、`gridColor`、`labelColor`、`titleColor`、`fontFamily`、`fontSize`、`titleSize`、`titleWeight`、`legendGap` 和 `legendMarkerSize`。这些都是已解析的值，也包括深色配色方案下的值。请使用这些值绘图，而不要使用 `var(…)`，这样图表才能与页面匹配并正确导出。除非调用方指定 `scheme: 'dark'`，否则 `toSVG` 和 `toImage` 接收的是浅色配色。
 
-`animate` is `true` in the editor when the [`animation`](/diagrams/api-reference/options#animation) option is on
-and the user's system does not ask for reduced motion.
+当编辑器中的 [`animation`](/diagrams/api-reference/options#animation) 选项开启，且用户的系统未要求减少动态效果时，`animate` 为 `true`。
 
-A Renderer never reads the document, a table or a Data Source. Typed rows, a table the chart
-follows and a snapshot of a URL all arrive as Chart Data in `input.data`. See
-[Data](/diagrams/data/overview).
+渲染器不会读取文档、表格或数据源。类型化行、图表所跟随的表格，以及 URL 的快照，都会作为图表数据传入 `input.data`。请参阅[数据](/diagrams/data/overview)。
 
-### What a Renderer must not do
+### 渲染器不得执行的操作
 
-- Run code that comes from the document.
-- Insert markup that comes from the document.
-- Set text such as labels and titles as HTML. Text is data, so set it as text.
+- 执行来自文档的代码。
+- 插入来自文档的标记。
+- 将标签、标题等文本作为 HTML 设置。文本是数据，应将其作为文本设置。
 
-### What to honor in the spec
+### 规格中需要遵循的内容
 
-| Spec field           | What to draw                                                                                                                |
-| -------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `type`               | Only the types in `types`. Return `false` from `draws` for a variant you cannot draw                                        |
-| `palette`            | Use it instead of `theme.series`                                                                                            |
-| `stacked`            | Stack the series of a bar or area chart                                                                                     |
-| `orientation`        | `'horizontal'`: lay the bars of a bar chart on their side                                                                   |
-| `axes`, `references` | Grid and axis lines, ticks at every `axes.y.step`, and lines and bands at values. Decline through `draws` if you cannot     |
-| `range`              | `{ min, max }` of a gauge                                                                                                   |
-| `legend`, `title`    | Show or hide the legend and the title                                                                                       |
-| `series`             | Line style, width, marker and smoothing per series of a line or area chart. Decline through `draws` if you cannot draw them |
-| `renderer[id]`       | Options a chart stores for your Renderer only, under your `id`                                                              |
+| 规格字段             | 绘制要求                                                                                                                  |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `type`               | 仅绘制 `types` 中的类型。对于无法绘制的变体，通过 `draws` 返回 `false`                                                     |
+| `palette`            | 使用此字段，而不是 `theme.series`                                                                                          |
+| `stacked`            | 堆叠柱状图或面积图的系列                                                                                                |
+| `orientation`        | `'horizontal'`：将柱状图的柱子横向放置                                                                                    |
+| `axes`, `references` | 绘制网格线和轴线、按 `axes.y.step` 设置刻度，以及指定值处的线和带。若无法绘制，则通过 `draws` 拒绝处理                     |
+| `range`              | 仪表图的 `{ min, max }`                                                                                                    |
+| `legend`, `title`    | 显示或隐藏图例和标题                                                                                                        |
+| `series`             | 折线图或面积图中各系列的线条样式、宽度、标记和曲线平滑设置。若无法绘制，则通过 `draws` 拒绝处理                            |
+| `renderer[id]`       | 图表在 `id` 下为你的渲染器单独存储的选项                                                                                    |
 
-These functions from `@tiptap-pro/extension-diagrams/core` work out the axes as the built-in
-Renderers draw them:
+`@tiptap-pro/extension-diagrams/core` 中的这些函数可用于计算坐标轴，其方式与内置渲染器相同：
 
-| Function                                       | Returns                                                                                                              |
-| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `hasAxisLines(type)`                           | `true` for line, bar, area, scatter and combo, the types whose axis lines `spec.axes` sets                           |
-| `hasRadarLines(type)`                          | `true` for radar, whose rings (`y.grid`) and spokes (`x.line`) `spec.axes` sets                                      |
-| `valueExtent(series, stacked)`                 | The lowest and highest value the value axis must reach, 0 included                                                   |
-| `valueAxisScale(spec, extent)`                 | `{ min, max, ticks, fixed }` of the value axis, with the step and the [reference lines](/diagrams/charts/references) |
-| `resolveAxisStrokes(spec, numericCategories?)` | The grid and axis lines as drawn, every field decided                                                                |
+| 函数                                             | 返回值                                                                                                          |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| `hasAxisLines(type)`                             | 对折线图、柱状图、面积图、散点图和组合图返回 `true`；这些类型的轴线由 `spec.axes` 设置                          |
+| `hasRadarLines(type)`                            | 对雷达图返回 `true`；其环线（`y.grid`）和辐射线（`x.line`）由 `spec.axes` 设置                                   |
+| `valueExtent(series, stacked)`                   | 数值轴必须涵盖的最小值和最大值，包括 0                                                                           |
+| `valueAxisScale(spec, extent)`                   | 数值轴的 `{ min, max, ticks, fixed }`，包含步长和[参考线](/diagrams/charts/references)                           |
+| `resolveAxisStrokes(spec, numericCategories?)`   | 绘制出的网格线和轴线，其中每个字段都已确定                                                                       |
 
-### Text in the chart
+### 图表中的文本
 
-A user can double click a text in a chart, such as its title, and rename it there. See
-[Editing in the chart](/diagrams/charts/editing). The ECharts and D3 Renderers support this. The
-Mermaid Renderer does not, so a double click opens nothing there.
+用户可以双击图表中的文本（例如标题）并直接重命名。请参阅[在图表中编辑](/diagrams/charts/editing)。ECharts 和 D3 渲染器支持此功能。Mermaid 渲染器不支持，因此双击不会打开任何内容。
 
-Your Renderer supports it when the handle that `mount` returns has `onTextDoubleClick`. That
-function takes a listener and returns a function that removes it. Call the listener on a double
-click, with a `ChartTextHit`:
+如果 `mount` 返回的句柄包含 `onTextDoubleClick`，你的渲染器就支持此功能。该函数接收一个监听器，并返回一个用于移除该监听器的函数。双击时，使用 `ChartTextHit` 调用监听器：
 
-| Field    | Type              | Description                                                                    |
-| -------- | ----------------- | ------------------------------------------------------------------------------ |
-| `target` | `ChartTextTarget` | Which text was hit, see below                                                  |
-| `text`   | `string`          | The text as drawn                                                              |
-| `box`    | `ChartTextBox`    | `x`, `y`, `width`, `height` in the page's pixels, from `getBoundingClientRect` |
+| 字段     | 类型              | 说明                                                                      |
+| -------- | ----------------- | ------------------------------------------------------------------------- |
+| `target` | `ChartTextTarget` | 被点击的文本，见下文                                                      |
+| `text`   | `string`          | 绘制出的文本                                                              |
+| `box`    | `ChartTextBox`    | 页面像素坐标中的 `x`、`y`、`width`、`height`，取自 `getBoundingClientRect` |
 
-| Target                               | Text                                                       |
-| ------------------------------------ | ---------------------------------------------------------- |
-| `{ kind: 'title' }`                  | The title                                                  |
-| `{ kind: 'axis', axis: 'x' \| 'y' }` | An axis title. `x` is the category axis, also on its side  |
-| `{ kind: 'series', column }`         | A series name, by the column id in `input.data`            |
-| `{ kind: 'category', row }`          | A category label or a pie part, by the row in `input.data` |
+| 目标                                   | 文本                                                     |
+| -------------------------------------- | -------------------------------------------------------- |
+| `{ kind: 'title' }`                    | 标题                                                     |
+| `{ kind: 'axis', axis: 'x' \| 'y' }`  | 轴标题。`x` 是分类轴，也可以位于侧边                     |
+| `{ kind: 'series', column }`           | 系列名称，由 `input.data` 中的列 ID 标识                 |
+| `{ kind: 'category', row }`            | 分类标签或饼图扇区，由 `input.data` 中的行标识           |
 
 ```ts
 mount(target, input) {
@@ -221,15 +205,11 @@ mount(target, input) {
 }
 ```
 
-The editor opens no text field in a read-only editor, and none for a series or a category of
-read-only data.
+在只读编辑器中，编辑器不会打开文本字段；对于只读数据中的系列或分类，也不会打开文本字段。
 
-## Rules of your Renderer
+## 渲染器规则
 
-A library's license may ask for a visible credit, or limit the file formats you export to. A
-Renderer declares this in `rules`, and the extension applies them wherever its charts or
-diagrams appear. A Diagram Renderer takes the same `rules`, as the
-[BPMN Renderer](/diagrams/renderers/bpmn#the-bpmnio-attribution) does.
+库的许可证可能要求显示署名，也可能限制可导出的文件格式。渲染器通过 `rules` 声明这些规则，扩展会在图表或图示出现的任何位置应用它们。图示渲染器也使用相同的 `rules`，例如 [BPMN 渲染器](/diagrams/renderers/bpmn#the-bpmnio-attribution)。
 
 ```ts
 export const creditedRenderer: ChartRenderer = {
@@ -246,29 +226,25 @@ export const creditedRenderer: ChartRenderer = {
 }
 ```
 
-| Rule          | Type                                                        | Description                                                      |
-| ------------- | ----------------------------------------------------------- | ---------------------------------------------------------------- |
-| `attribution` | `{ label: string, href: string, logo?: string }`            | A credit shown with every chart or diagram, described below      |
-| `exports`     | `readonly ('svg' \| 'png' \| 'webp' \| 'jpeg' \| 'docx')[]` | The formats `export` may produce. Without the list, every format |
+| 规则          | 类型                                                        | 说明                                                      |
+| ------------- | ----------------------------------------------------------- | --------------------------------------------------------- |
+| `attribution` | `{ label: string, href: string, logo?: string }`            | 显示在每个图表或图示上的署名，详见下文                    |
+| `exports`     | `readonly ('svg' \| 'png' \| 'webp' \| 'jpeg' \| 'docx')[]` | `export` 可以生成的格式。不设置列表时，允许所有格式       |
 
-### What attribution does
+### attribution 的作用
 
-- **In the editor**, it is a link below the chart or diagram (`tiptap-chart-attribution`,
-  `tiptap-flow-diagram-attribution`).
-- **In every exported SVG, PNG, WebP, JPEG and Word image**, its label is drawn into the lower
-  right corner.
-- **`logo`** is standalone SVG markup, shown 16 pixels high.
+- **在编辑器中**，它是位于图表或图示下方的链接（`tiptap-chart-attribution`、`tiptap-flow-diagram-attribution`）。
+- **在每个导出的 SVG、PNG、WebP、JPEG 和 Word 图像中**，其标签都会绘制在右下角。
+- **`logo`** 是独立的 SVG 标记，高度为 16 像素。
 
-### What exports does
+### exports 的作用
 
-- **A format that is not in the list** makes `export` throw.
-- **Without `docx`**, `exportDocx` leaves a diagram out with a note, and writes a chart as a
-  native Word chart.
+- **不在列表中的格式**会导致 `export` 抛出异常。
+- **未包含 `docx` 时**，`exportDocx` 会在备注中说明并省略图示，而图表则会导出为原生 Word 图表。
 
-### Adding rules
+### 添加规则
 
-Rules you add can only make a Renderer stricter. `withRendererRules(renderer, rules)` returns the
-Renderer with rules added. The `rendererRules` option adds rules by Renderer id.
+你添加的规则只能让渲染器受到更多限制。`withRendererRules(renderer, rules)` 会返回添加了规则的渲染器。`rendererRules` 选项可按渲染器 ID 添加规则。
 
 ```ts
 import { Diagrams, withRendererRules } from '@tiptap-pro/extension-diagrams'
@@ -281,9 +257,8 @@ Diagrams.configure({
 })
 ```
 
-- **An attribution the Renderer declares** stays. You cannot remove it.
-- **An attribution you add** applies only where the Renderer declares none.
-- **The allowed formats** are those both lists allow.
-- **`editor.storage.diagrams.rulesFor(renderer)`** returns the rules in effect.
-- **The built-in Renderers** for ECharts, D3, Mermaid and draw.io declare no attribution and
-  allow every format.
+- **渲染器声明的署名**会保留，不能移除。
+- **你添加的署名**仅在渲染器未声明署名时生效。
+- **允许的格式**是两个列表都允许的格式。
+- **`editor.storage.diagrams.rulesFor(renderer)`** 会返回当前生效的规则。
+- **ECharts、D3、Mermaid 和 draw.io 的内置渲染器**不声明署名，并允许所有格式。
