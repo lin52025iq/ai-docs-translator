@@ -1,28 +1,28 @@
 # vuejs.org
 
-## Contributing
+## 参与贡献
 
-This site is built with [VitePress](https://github.com/vuejs/vitepress) and depends on [@vue/theme](https://github.com/vuejs/vue-theme). Site content is written in Markdown format located in `src`. For simple edits, you can directly edit the file on GitHub and generate a Pull Request.
+本站使用 [VitePress](https://github.com/vuejs/vitepress) 构建，并依赖 [@vue/theme](https://github.com/vuejs/vue-theme)。站点内容以 Markdown 格式编写，位于 `src` 目录中。对于简单的修改，你可以直接在 GitHub 上编辑文件并创建拉取请求。
 
-For local development, [pnpm](https://pnpm.io/) is preferred as package manager:
+本地开发时，推荐使用 [pnpm](https://pnpm.io/) 作为包管理器：
 
 ```bash
 pnpm i
 pnpm run dev
 ```
 
-This project requires Node.js to be `v20` or higher. And it is recommended to enable corepack:
+本项目要求 Node.js 版本为 `v20` 或更高。建议启用 corepack：
 
 ```bash
 corepack enable
 ```
 
-## Working on the content
+## 编写内容
 
-- See VitePress docs on supported [Markdown Extensions](https://vitepress.dev/guide/markdown) and the ability to [use Vue syntax inside markdown](https://vitepress.dev/guide/using-vue).
+- 请参阅 VitePress 文档，了解支持的 [Markdown 扩展](https://vitepress.dev/guide/markdown)，以及如何[在 Markdown 中使用 Vue 语法](https://vitepress.dev/guide/using-vue)。
 
-- See the [Writing Guide](https://github.com/vuejs/docs/blob/main/.github/contributing/writing-guide.md) for our rules and recommendations on writing and maintaining documentation content.
+- 请参阅[写作指南](https://github.com/vuejs/docs/blob/main/.github/contributing/writing-guide.md)，了解我们编写和维护文档内容的规则与建议。
 
-## Working on the theme
+## 开发主题
 
-If changes need to be made for the theme, check out the [instructions for developing the theme alongside the docs](https://github.com/vuejs/vue-theme#developing-with-real-content).
+如果需要修改主题，请参阅[与文档一同开发主题的说明](https://github.com/vuejs/vue-theme#developing-with-real-content)。
