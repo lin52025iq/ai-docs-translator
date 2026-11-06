@@ -1,8 +1,8 @@
 ---
-title: Migrate from AI Assistant to the AI Toolkit
+title: 从 AI Assistant 迁移到 AI Toolkit
 meta:
-  title: Migrate from AI Assistant to the AI Toolkit | Tiptap AI Toolkit
-  description: Learn how to migrate from the AI Assistant extension to the AI Toolkit.
+  title: 从 AI Assistant 迁移到 AI Toolkit | Tiptap AI Toolkit
+  description: 了解如何从 AI Assistant 扩展迁移到 AI Toolkit。
   category: AI Toolkit
 ---
 
@@ -10,24 +10,24 @@ import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 
 <EnterpriseCalloutAuto variant="deprecated" renderMode="sidebar" />
 
-The AI Assistant extension lets you integrate an AI chatbot that can make edits to the document based on a user-defined task.
+AI Assistant 扩展可帮助你集成 AI 聊天机器人，让它根据用户定义的任务编辑文档。
 
-You can implement the same functionality with the AI Toolkit by following the [AI agent chatbot guide](/ai/ai-toolkit/client/agents/ai-agent-chatbot).
+按照 [AI 代理聊天机器人指南](/ai/ai-toolkit/client/agents/ai-agent-chatbot)，即可使用 AI Toolkit 实现相同的功能。
 
-To review the changes made by the AI chatbot, you can use the [review changes guide](/ai/ai-toolkit/client/agents/review-changes). The AI Toolkit has a built-in system to display suggestions that users can accept or reject, so it is not necessary to combine it with the AI Changes or the AI Suggestion extensions to implement this feature.
+如需查看 AI 聊天机器人所做的更改，请参阅[查看更改指南](/ai/ai-toolkit/client/agents/review-changes)。AI Toolkit 内置了显示建议的系统，用户可以接受或拒绝这些建议，因此无需将其与 AI Changes 或 AI Suggestion 扩展结合使用来实现此功能。
 
-## Implementing checkpoints
+## 实现检查点
 
-The AI Assistant extension has a checkpoint system that allows you to store and restore the state of the document and the conversation at a previous point in time.
+AI Assistant 扩展具有检查点系统，可用于保存文档和对话的状态，并将其恢复到之前的某个时间点。
 
-With Tiptap's editor commands, you can also store a snapshot of the document's content at a specific point in time and restore it later.
+使用 Tiptap 的编辑器命令，你也可以在特定时间点保存文档内容的快照，并在之后恢复。
 
 ```ts
-// Take a snapshot of the document
+// 对文档进行快照
 const document = editor.getJSON()
 
-// Restore that snapshot later
+// 稍后恢复该快照
 editor.setContent(document)
 ```
 
-This system gives you the flexibility to save and restore the document at any point in time. This is an improvement over the AI Assistant extension, where the checkpoints were only created in a few events of the chat conversation.
+此系统让你可以灵活地在任何时间点保存和恢复文档。与 AI Assistant 扩展相比，这是一个改进；后者仅会在聊天对话的少数几个事件中创建检查点。
