@@ -1,22 +1,22 @@
 ---
-title: FloatingMenu extension
+title: FloatingMenu 扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-floating-menu?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-floating-menu
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-floating-menu.svg
     url: https://npmcharts.com/compare/@tiptap/extension-floating-menu?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  title: FloatingMenu extension | Tiptap Editor Docs
-  description: Use the Floating Menu extension in Tiptap to add a menu that appears on empty lines. Learn more in the docs.
-  category: Editor
+  title: FloatingMenu 扩展 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 Floating Menu 扩展，在空行上显示菜单。了解更多信息，请参阅文档。
+  category: 编辑器
 extension:
-  name: Floating Menu
+  name: 浮动菜单
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-floating-menu
-  description: Make a toolbar appear automagically on empty lines.
+  description: 在空行上自动显示工具栏。
   type: extension
   icon: Cloud
 ---
@@ -24,101 +24,101 @@ extension:
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-Use the Floating Menu extension in Tiptap to make a menu appear on an empty line.
+在 Tiptap 中使用 Floating Menu 扩展，即可在空行上显示菜单。
 
 <CodeDemo path="/Extensions/FloatingMenu" />
 
 <Callout variant="warning">
-    If you are using a framework like React or Vue, use the frameworks specific `FloatingMenu` component instead of the extension. The component provides a more convenient API and handles the DOM element for you. You can find more information about the component in the [Usage with frameworks](#usage-with-frameworks) section below.
+    如果你使用 React 或 Vue 等框架，请使用框架专用的 `FloatingMenu` 组件，而不是该扩展。该组件提供了更便捷的 API，并会为你处理 DOM 元素。你可以在下文的[与框架搭配使用](#usage-with-frameworks)部分了解更多信息。
 </Callout>
 
-## Install the extension
+## 安装扩展
 
-Install the Floating Menu extension and the [Floating UI](https://floating-ui.com) library.
+安装 Floating Menu 扩展和 [Floating UI](https://floating-ui.com) 库。
 
 ```bash
 npm install @tiptap/extension-floating-menu @floating-ui/dom@^1.6.0
 ```
 
-## Settings
+## 设置
 
 ### element
 
-The DOM element that contains your menu.
+包含菜单的 DOM 元素。
 
-Type: `HTMLElement`
+类型：`HTMLElement`
 
-Default: `null`
+默认值：`null`
 
 ### updateDelay
 
-The `FloatingMenu` debounces the `update` method to allow the floating menu to not be updated on every selection update. This can be controlled in milliseconds.
-The `FloatingMenuPlugin` will come with a default delay of 250ms. This can be deactivated, by setting the delay to `0` which deactivates the debounce.
+`FloatingMenu` 会对 `update` 方法进行防抖，避免每次选区更新时都更新浮动菜单。你可以通过毫秒数控制此延迟。
+`FloatingMenuPlugin` 的默认延迟为 250ms。将延迟设为 `0` 可停用防抖。
 
-Type: `Number`
+类型：`Number`
 
-Default: `250`
+默认值：`250`
 
 ### resizeDelay
 
-The `FloatingMenu` debounces the resize and scroll event handlers to allow the floating menu to not be updated on every resize or scroll event. This can be controlled in milliseconds.
+`FloatingMenu` 会对调整大小和滚动事件处理程序进行防抖，避免每次调整大小或滚动时都更新浮动菜单。你可以通过毫秒数控制此延迟。
 
-Type: `Number`
+类型：`Number`
 
-Default: `60`
+默认值：`60`
 
 ### appendTo
 
-The element to which the floating menu should be appended to in the DOM. Can be a `HTMLElement` or a callback function that returns a `HTMLElement`.
+浮动菜单在 DOM 中追加到的元素。可以是 `HTMLElement`，也可以是返回 `HTMLElement` 的回调函数。
 
-Type: `HTMLElement | (() => HTMLElement) | undefined`
+类型：`HTMLElement | (() => HTMLElement) | undefined`
 
-Default: `undefined`, the menu will be appended to `document.body`.
+默认值：`undefined`，菜单将追加到 `document.body`。
 
 ### options
 
-Under the hood, the `FloatingMenu` uses [Floating UI](https://floating-ui.com). You can control the middleware and positioning of the floating menu with these options.
+`FloatingMenu` 底层使用 [Floating UI](https://floating-ui.com)。你可以通过这些选项控制浮动菜单的中间件和定位方式。
 
-Type: `Object`
+类型：`Object`
 
-Default: `{ strategy: 'absolute', placement: 'right' }`
+默认值：`{ strategy: 'absolute', placement: 'right' }`
 
-| Option          | Type                                   | Description                                                                                                                                                  |
-| --------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `strategy`      | `string`                               | The positioning strategy. See [here](https://floating-ui.com/docs/computePosition#strategy)                                                                  |
-| `placement`     | `string`                               | The placement of the menu. See [here](https://floating-ui.com/docs/computePosition#placement)                                                                |
-| `offset`        | `number`, `OffsetOptions` or `boolean` | The [offset middleware options](https://floating-ui.com/docs/offset#options). If `true` use default options, if `false` disable the middleware               |
-| `flip`          | `FlipOptions` or `boolean`             | The [flip middleware options](https://floating-ui.com/docs/flip#options). If `true` use default options, if `false` disable the middleware                   |
-| `shift`         | `ShiftOptions` or `boolean`            | The [shift middleware options](https://floating-ui.com/docs/shift#options). If `true` use default options, if `false` disable the middleware                 |
-| `arrow`         | `ArrowOptions` or `false`              | The [arrow middleware options](https://floating-ui.com/docs/arrow#options). If `false` disable the middleware                                                |
-| `size`          | `SizeOptions` or `boolean`             | The [size middleware options](https://floating-ui.com/docs/size#options). If `true` use default options, if `false` disable the middleware                   |
-| `autoPlacement` | `AutoPlacementOptions` or `boolean`    | The [autoPlacement middleware options](https://floating-ui.com/docs/autoPlacement#options). If `true` use default options, if `false` disable the middleware |
-| `hide`          | `HideOptions` or `boolean`             | The [hide middleware options](https://floating-ui.com/docs/hide#options). If `true` use default options, if `false` disable the middleware                   |
-| `inline`        | `InlineOptions` or `boolean`           | The [inline middleware options](https://floating-ui.com/docs/inline#options). If `true` use default options, if `false` disable the middleware               |
-| `onShow`        | `Function` or `undefined`              | A callback that is called when the menu is shown. This can be used to add custom logic or styles when the menu is displayed.                                 |
-| `onHide`        | `Function` or `undefined`              | A callback that is called when the menu is hidden. This can be used to add custom logic or styles when the menu is hidden.                                   |
-| `onUpdate`      | `Function` or `undefined`              | A callback that is called when the menu is updated. This can be used to add custom logic or styles when the menu is updated.                                 |
-| `onDestroy`     | `Function` or `undefined`              | A callback that is called when the menu is destroyed. This can be used to add custom logic or styles when the menu is removed.                               |
+| 选项            | 类型                                   | 描述                                                                                                                                                              |
+| --------------- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `strategy`      | `string`                               | 定位策略。参见[此处](https://floating-ui.com/docs/computePosition#strategy)                                                                                      |
+| `placement`     | `string`                               | 菜单的位置。参见[此处](https://floating-ui.com/docs/computePosition#placement)                                                                                   |
+| `offset`        | `number`、`OffsetOptions` 或 `boolean` | [offset 中间件选项](https://floating-ui.com/docs/offset#options)。设为 `true` 时使用默认选项，设为 `false` 时停用该中间件。                                       |
+| `flip`          | `FlipOptions` 或 `boolean`             | [flip 中间件选项](https://floating-ui.com/docs/flip#options)。设为 `true` 时使用默认选项，设为 `false` 时停用该中间件。                                           |
+| `shift`         | `ShiftOptions` 或 `boolean`            | [shift 中间件选项](https://floating-ui.com/docs/shift#options)。设为 `true` 时使用默认选项，设为 `false` 时停用该中间件。                                          |
+| `arrow`         | `ArrowOptions` 或 `false`              | [arrow 中间件选项](https://floating-ui.com/docs/arrow#options)。设为 `false` 时停用该中间件。                                                                     |
+| `size`          | `SizeOptions` 或 `boolean`             | [size 中间件选项](https://floating-ui.com/docs/size#options)。设为 `true` 时使用默认选项，设为 `false` 时停用该中间件。                                            |
+| `autoPlacement` | `AutoPlacementOptions` 或 `boolean`    | [autoPlacement 中间件选项](https://floating-ui.com/docs/autoPlacement#options)。设为 `true` 时使用默认选项，设为 `false` 时停用该中间件。                         |
+| `hide`          | `HideOptions` 或 `boolean`             | [hide 中间件选项](https://floating-ui.com/docs/hide#options)。设为 `true` 时使用默认选项，设为 `false` 时停用该中间件。                                            |
+| `inline`        | `InlineOptions` 或 `boolean`           | [inline 中间件选项](https://floating-ui.com/docs/inline#options)。设为 `true` 时使用默认选项，设为 `false` 时停用该中间件。                                         |
+| `onShow`        | `Function` 或 `undefined`              | 菜单显示时调用的回调。可用于在菜单显示时添加自定义逻辑或样式。                                                                                                    |
+| `onHide`        | `Function` 或 `undefined`              | 菜单隐藏时调用的回调。可用于在菜单隐藏时添加自定义逻辑或样式。                                                                                                    |
+| `onUpdate`      | `Function` 或 `undefined`              | 菜单更新时调用的回调。可用于在菜单更新时添加自定义逻辑或样式。                                                                                                    |
+| `onDestroy`     | `Function` 或 `undefined`              | 菜单销毁时调用的回调。可用于在菜单移除时添加自定义逻辑或样式。                                                                                                    |
 
 ### pluginKey
 
-The key for the underlying ProseMirror plugin. Make sure to use different keys if you add more than one instance.
+底层 ProseMirror 插件的键。如果添加多个实例，请确保使用不同的键。
 
-Type: `string | PluginKey`
+类型：`string | PluginKey`
 
-Default: `'floatingMenu'`
+默认值：`'floatingMenu'`
 
 ### shouldShow
 
-A callback to control whether the menu should be shown or not.
+用于控制是否显示菜单的回调。
 
-Type: `(props) => boolean`
+类型：`(props) => boolean`
 
-## Source code
+## 源代码
 
 [packages/extension-floating-menu/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-floating-menu/)
 
-## Use in Vanilla JavaScript
+## 在原生 JavaScript 中使用
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -136,7 +136,7 @@ new Editor({
 })
 ```
 
-Add a menu element to your HTML:
+在 HTML 中添加菜单元素：
 
 ```html
 <div id="floating-menu" style="display: none; position: absolute;">
@@ -146,13 +146,13 @@ Add a menu element to your HTML:
 <div id="editor"></div>
 ```
 
-Tiptap will automatically show and position the menu element when the cursor is on an empty line.
+光标位于空行时，Tiptap 会自动显示菜单元素并为其定位。
 
-## Usage with frameworks
+## 与框架搭配使用
 
 ### React
 
-The `@tiptap/react` package comes with a `FloatingMenu` component you can import from `@tiptap/react/menus`. It provides the same functionality as the extension but with a React-friendly API. When using this component, you don't need to add the `FloatingMenu` extension to your editor.
+`@tiptap/react` 包提供了 `FloatingMenu` 组件，可从 `@tiptap/react/menus` 导入。它提供与该扩展相同的功能，同时采用适合 React 的 API。使用此组件时，无需将 `FloatingMenu` 扩展添加到编辑器中。
 
 ```jsx
 import { FloatingMenu } from '@tiptap/react/menus'
@@ -173,7 +173,7 @@ function MyFloatingMenu({ editor }) {
 
 ### Vue
 
-The `@tiptap/vue-3` package comes with a `FloatingMenu` component you can import from `@tiptap/vue-3/menus`. It provides the same functionality as the extension but with a Vue-friendly API. When using this component, you don't need to add the `FloatingMenu` extension to your editor.
+`@tiptap/vue-3` 包提供了 `FloatingMenu` 组件，可从 `@tiptap/vue-3/menus` 导入。它提供与该扩展相同的功能，同时采用适合 Vue 的 API。使用此组件时，无需将 `FloatingMenu` 扩展添加到编辑器中。
 
 ```vue
 <template>
@@ -190,7 +190,7 @@ The `@tiptap/vue-3` package comes with a `FloatingMenu` component you can import
 <script setup>
   import { FloatingMenu } from '@tiptap/vue-3/menus'
 
-  // make sure to pass the editor instance as a prop to the FloatingMenu component
+  // 请确保将 editor 实例作为 prop 传递给 FloatingMenu 组件
   const { editor } = defineProps({
     editor: {
       type: Object,
@@ -200,24 +200,24 @@ The `@tiptap/vue-3` package comes with a `FloatingMenu` component you can import
 </script>
 ```
 
-**Note**: The same menu is also available in the Vue 2 version of Tiptap, you can import it from `@tiptap/vue-2/menus`.
+**注意**：Tiptap 的 Vue 2 版本也提供相同的菜单，可从 `@tiptap/vue-2/menus` 导入。
 
-### Custom logic
+### 自定义逻辑
 
-Customize the logic for showing the menu with the `shouldShow` option. For components, `shouldShow` can be passed as a prop.
+使用 `shouldShow` 选项自定义菜单的显示逻辑。对于组件，可以将 `shouldShow` 作为 prop 传入。
 
 ```js
 FloatingMenu.configure({
   shouldShow: ({ editor, view, state, oldState }) => {
-    // show the floating within any paragraph
+    // 在任意段落中显示浮动菜单
     return editor.isActive('paragraph')
   },
 })
 ```
 
-### Multiple menus
+### 多个菜单
 
-Use multiple menus by setting an unique `pluginKey`.
+设置不同的 `pluginKey`，即可使用多个菜单。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -237,7 +237,7 @@ new Editor({
 })
 ```
 
-Alternatively you can pass a ProseMirror `PluginKey`.
+也可以传入 ProseMirror 的 `PluginKey`。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -258,9 +258,9 @@ new Editor({
 })
 ```
 
-### Force update the position of the floating menu
+### 强制更新浮动菜单的位置
 
-If the floating menu changes size after the initial render, its position will not be adjusted automatically. To fix this, you can force update the position by setting a `pluginKey` on the extension and emitting an `'updatePosition'` event with that key.
+如果浮动菜单在初始渲染后改变了大小，其位置不会自动调整。要解决此问题，可以在扩展上设置 `pluginKey`，并使用该键触发 `'updatePosition'` 事件，强制更新位置。
 
 ```ts
 FloatingMenu.configure({
@@ -271,7 +271,7 @@ FloatingMenu.configure({
 editor.commands.setMeta('myFloatingMenu', 'updatePosition')
 ```
 
-To target a specific floating menu, emit an `'updatePosition'` event via transaction metadata and use that menu's `pluginKey`:
+若要指定某个浮动菜单，请通过事务元数据触发 `'updatePosition'` 事件，并使用该菜单的 `pluginKey`：
 
 ```ts
 FloatingMenu.configure({
@@ -280,24 +280,24 @@ FloatingMenu.configure({
 })
 ```
 
-For example, if you have multiple floating menus:
+例如，如果有多个浮动菜单：
 
 ```ts
 editor.commands.setMeta('floatingMenuOne', 'updatePosition')
 ```
 
-If you use the React or Vue `FloatingMenu` component and want to trigger `updatePosition` externally, pass an explicit `pluginKey` prop to the component first. If you omit `pluginKey`, the component creates its own ProseMirror `PluginKey`, which external code cannot reliably reference later.
+如果你使用 React 或 Vue 的 `FloatingMenu` 组件，并希望从外部触发 `updatePosition`，请先向组件传入显式的 `pluginKey` prop。如果省略 `pluginKey`，组件会创建自己的 ProseMirror `PluginKey`，外部代码之后将无法可靠地引用它。
 
-### Programmatically show or hide the floating menu
+### 以编程方式显示或隐藏浮动菜单
 
-You can programmatically show or hide the floating menu by setting a `pluginKey` on the extension and dispatching a transaction with the `'show'` or `'hide'` meta value using that key.
+你可以在扩展上设置 `pluginKey`，并使用该键分发包含 `'show'` 或 `'hide'` 元值的事务，以编程方式显示或隐藏浮动菜单。
 
 ```ts
-// Show the floating menu
+// 显示浮动菜单
 editor.commands.setMeta('myFloatingMenu', 'show')
 
-// Hide the floating menu
+// 隐藏浮动菜单
 editor.commands.setMeta('myFloatingMenu', 'hide')
 ```
 
-**Note:** dispatching `'show'` or `'hide'` will override the behavior defined in `shouldShow`.
+**注意：**分发 `'show'` 或 `'hide'` 会覆盖 `shouldShow` 中定义的行为。
