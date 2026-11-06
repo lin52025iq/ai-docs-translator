@@ -1,21 +1,21 @@
 ---
-title: Example policies
+title: 示例策略
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Example policies | Tiptap Content Protection Docs
-  description: Simple and combined policies for headings, attributes, hidden content, templates and tables.
-  category: Composable Docs
+  title: 示例策略 | Tiptap 内容保护文档
+  description: 用于标题、属性、隐藏内容、模板和表格的简单及组合策略。
+  category: 可组合文档
 ---
 
-Pass any of these policies to `ContentProtection.configure({ policy })`. The named Nodes, Marks and attributes must exist in your editor's schema.
+将这些策略中的任意一个传递给 `ContentProtection.configure({ policy })`。指定的节点、标记和属性必须存在于编辑器的 schema 中。
 
 ```ts
 import type { ContentProtectionPolicy } from '@tiptap-pro/extension-content-protection'
 ```
 
-## Protect headings
+## 保护标题
 
 ```ts
 const policy = {
@@ -29,9 +29,9 @@ const policy = {
 } satisfies ContentProtectionPolicy
 ```
 
-Protects headings, including their type, text, formatting and attributes. Use `target: 'nodeType'` instead to keep their structure fixed while allowing text and attribute edits.
+保护标题，包括其类型、文本、格式和属性。也可以使用 `target: 'nodeType'`，固定标题结构，同时允许编辑文本和属性。
 
-## Fix heading levels
+## 固定标题级别
 
 ```ts
 const policy = {
@@ -49,9 +49,9 @@ const policy = {
 } satisfies ContentProtectionPolicy
 ```
 
-Prevents changing a heading's `level` attribute. Its text remains editable, and the heading itself can still be removed.
+禁止更改标题的 `level` 属性。标题文本仍可编辑，标题本身也仍可删除。
 
-## Keep headings while allowing text edits
+## 保留标题，同时允许编辑文本
 
 ```ts
 const policy = {
@@ -69,9 +69,9 @@ const policy = {
 } satisfies ContentProtectionPolicy
 ```
 
-Keeps headings in place and prevents level changes while allowing their text and formatting to change. Unlike `target: 'node'`, this does not lock the entire heading.
+保留标题并禁止更改级别，同时允许修改其文本和格式。与 `target: 'node'` 不同，此策略不会锁定整个标题。
 
-## Keep link destinations inside headings
+## 保留标题中的链接目标
 
 ```ts
 const policy = {
@@ -92,11 +92,11 @@ const policy = {
 } satisfies ContentProtectionPolicy
 ```
 
-Prevents adding or removing links in headings and changing their destinations. Their text and other attributes remain editable. Links outside headings are unaffected. The heading is an ancestor condition; this rule does not protect the heading itself.
+禁止在标题中添加或移除链接，也禁止更改链接目标。链接文本和其他属性仍可编辑。标题之外的链接不受影响。标题在此处仅作为祖先条件；此规则不会保护标题本身。
 
-See [nested ancestor matching](/composable-docs/content-protection/api-reference/policy#nested-ancestor-matching) for a target array constrained by several ancestors.
+有关受多个祖先约束的目标数组，请参阅[嵌套祖先匹配](/composable-docs/content-protection/api-reference/policy#nested-ancestor-matching)。
 
-## Hide blockquotes
+## 隐藏引用块
 
 ```ts
 const policy = {
@@ -110,9 +110,9 @@ const policy = {
 } satisfies ContentProtectionPolicy
 ```
 
-Replaces blockquotes with [redacted content](/composable-docs/content-protection/api-reference/rendering) and prevents editing them. The original content remains in the client-side document.
+将引用块替换为[已隐藏内容](/composable-docs/content-protection/api-reference/rendering)，并禁止编辑。原始内容仍保留在客户端文档中。
 
-## Allow edits only inside blockquotes
+## 仅允许编辑引用块内部内容
 
 ```ts
 const policy = {
@@ -136,9 +136,9 @@ const policy = {
 } satisfies ContentProtectionPolicy
 ```
 
-Locks the document, then allows changes inside existing blockquotes. The final rule protects the blockquotes themselves, including nested ones; their attributes remain protected by the document-wide rule.
+先锁定文档，再允许修改现有引用块内部的内容。最后一条规则保护引用块本身，包括嵌套的引用块；其属性则由适用于整个文档的规则保护。
 
-## Protect nested content
+## 保护嵌套内容
 
 ```ts
 const policy = {
@@ -165,9 +165,9 @@ const policy = {
 } satisfies ContentProtectionPolicy
 ```
 
-Allows editing inside outer blockquotes while protecting the contents of nested blockquotes at every depth. The nested deny wins because of its priority, not its selector depth. To protect the nested Nodes' type, existence and attributes too, use `target: 'node'` for the nested deny.
+允许编辑外层引用块内部的内容，同时保护任意嵌套深度的引用块内容。嵌套规则的拒绝权限生效，是因为它的优先级更高，而不是因为选择器深度更深。若还要保护嵌套节点的类型、是否存在及其属性，请在嵌套拒绝规则中使用 `target: 'node'`。
 
-## Protect table columns and headers
+## 保护表格列和表头
 
 ```ts
 const policy = {
@@ -193,6 +193,6 @@ const policy = {
 } satisfies ContentProtectionPolicy
 ```
 
-Protects the cell sequence in existing rows, header text and header cells. It also prevents changing cell spans. Body-cell content stays editable, and whole body rows can be added or removed.
+保护现有行中的单元格顺序、表头文本和表头单元格，并禁止更改单元格跨度。表体单元格中的内容仍可编辑，整个表体行也可以添加或移除。
 
-See the [policy language](/composable-docs/content-protection/api-reference/policy) for selector types and rule precedence, or use the [Slot filling helper](/composable-docs/slots/api-reference/utilities#createslotfillingpolicy) for Slot-only editing.
+有关选择器类型和规则优先级，请参阅[策略语言](/composable-docs/content-protection/api-reference/policy)；若只需编辑 Slot，也可以使用 [Slot 填充辅助工具](/composable-docs/slots/api-reference/utilities#createslotfillingpolicy)。
