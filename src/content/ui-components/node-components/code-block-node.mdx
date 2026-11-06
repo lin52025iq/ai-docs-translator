@@ -1,12 +1,12 @@
 ---
-title: Code Block Node
+title: 代码块节点
 meta:
-  title: Code Block Node | Tiptap UI Components
-  description: Integrate a node component displaying code content in your Tiptap Editor. More in our docs!
-  category: UI Components
+  title: 代码块节点 | Tiptap UI 组件
+  description: 在 Tiptap 编辑器中集成用于显示代码内容的节点组件。更多信息请参阅我们的文档！
+  category: UI 组件
 component:
-  name: Code block UI node
-  description: Add a code block node component to your editor.
+  name: 代码块 UI 节点
+  description: 在编辑器中添加代码块节点组件。
   type: node-component
   isFree: true
   isCloud: false
@@ -19,21 +19,21 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A styled code block node for displaying formatted code snippets in the editor.
+用于在编辑器中显示格式化代码片段的样式化代码块节点。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-node/code-block-node" />
 
-## Installation
+## 安装
 
-You can add the node component via Tiptap CLI
+你可以通过 Tiptap CLI 添加该节点组件
 
 ```bash
 npx @tiptap/cli@latest add code-block-node
 ```
 
-## Usage
+## 用法
 
-The CodeBlockNode is primarily a styling component that enhances the appearance of code blocks in the editor. To use it, simply include it in your project and ensure you're using the CodeBlock extension from Tiptap.
+CodeBlockNode 主要是一个样式组件，用于提升编辑器中代码块的外观。要使用它，只需将其添加到项目中，并确保使用 Tiptap 的 CodeBlock 扩展。
 
 ```tsx
 import { useEditor, EditorContent } from '@tiptap/react'
@@ -61,16 +61,16 @@ console.log(greet("World"));</code></pre>
 }
 ```
 
-## Features
+## 功能
 
-- Syntax highlighting styles for code blocks
-- Dark mode support
-- Proper spacing and margins
-- Enhanced readability with monospace font
+- 代码块语法高亮样式
+- 支持深色模式
+- 合理的间距和外边距
+- 使用等宽字体，提升可读性
 
-## Requirements
+## 要求
 
-Open source feature(s)
+开源功能
 
 - [`@tiptap/extension-code-block`](/editor/extensions/nodes/code-block)
 - [`@tiptap/extension-code-block-lowlight`](/editor/extensions/nodes/code-block-lowlight)
