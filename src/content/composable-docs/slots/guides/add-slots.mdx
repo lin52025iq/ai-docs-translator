@@ -1,24 +1,24 @@
 ---
-title: Add slots to the document
+title: 向文档添加插槽
 meta:
-  description: Insert, configure, fill and dissolve editable Slot fields.
+  description: 插入、配置、填充和解除可编辑的插槽字段。
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-Call the `insertSlot` command to add a new slot to the document.
+调用 `insertSlot` 命令可向文档添加新插槽。
 
 ```ts
 // Inserts new slot at the selection
 editor.commands.insertSlot()
 ```
 
-There are two types of slots:
+插槽有两种类型：
 
-- **Inline slots** can contain inline content like text
-- **Block slots** use a block layout and contain one or more paragraphs, headings or other block Nodes.
+- **行内插槽**可以包含文本等行内内容
+- **块级插槽**采用块布局，可包含一个或多个段落、标题或其他块级节点。
 
-To turn selected text into a slot while keeping its content, call [`wrapInSlot`](/composable-docs/slots/api-reference/commands#wrapinslot). It uses the editor's current selection when `range` is omitted; pass `range: { from, to }` to wrap a specific document range instead:
+若要将选中的文本转换为插槽并保留其内容，请调用 [`wrapInSlot`](/composable-docs/slots/api-reference/commands#wrapinslot)。省略 `range` 时，该命令会使用编辑器当前的选区；若要包裹文档中的特定范围，请传入 `range: { from, to }`：
 
 ```ts
 editor.commands.wrapInSlot({
@@ -28,11 +28,11 @@ editor.commands.wrapInSlot({
 })
 ```
 
-Use `kind: 'block'` when selecting complete blocks. `insertSlot` replaces selected content instead of wrapping it.
+选择完整的块时，请使用 `kind: 'block'`。`insertSlot` 会替换选中的内容，而不是将其包裹起来。
 
-`wrapInSlot` accepts `id` and `config` just like `insertSlot`. Omit `id` to generate one. Wrapping preserves the selected content; there is no callback option to transform it or derive the configuration. Your application can inspect the selection first and supply its chosen configuration to the command.
+`wrapInSlot` 与 `insertSlot` 一样接受 `id` 和 `config`。省略 `id` 可自动生成一个 ID。包裹操作会保留选中的内容；此命令没有用于转换内容或推导配置的回调选项。你的应用可以先检查选区，再将所选配置传给该命令。
 
-When creating a slot, you can define its type and many properties, like a unique ID, a label, and a set of rules to restrict its allowed content.
+创建插槽时，可以定义其类型和多项属性，例如唯一 ID、标签，以及用于限制可接受内容的一组规则。
 
 ```ts
 editor.commands.insertSlot({
@@ -46,7 +46,7 @@ editor.commands.insertSlot({
 })
 ```
 
-Then, a slot can be filled by typing inside it or calling the `fillSlot` command.
+之后，可以在插槽内输入内容，或调用 `fillSlot` 命令来填充插槽。
 
 ```ts
 editor.commands.fillSlot({
@@ -56,20 +56,20 @@ editor.commands.fillSlot({
 })
 ```
 
-Other useful commands:
+其他实用命令：
 
-- `clearSlot({ id })` empties a slot.
-- `dissolveSlot({ id })` removes the slot wrapper and keeps its content, turning it into regular document content.
-- `removeSlot({ id })` removes a slot including its content.
+- `clearSlot({ id })` 清空插槽。
+- `dissolveSlot({ id })` 移除插槽包装并保留其内容，将其转换为普通文档内容。
+- `removeSlot({ id })` 移除插槽及其内容。
 
-Two creation shortcuts are enabled by default:
+默认启用两种快捷创建方式：
 
-- Type `{{{` to immediately create an empty inline Slot and place the cursor inside it.
-- Type `[[[` in an otherwise empty paragraph to immediately create a block Slot and place the cursor in its empty paragraph.
+- 输入 `{{{` 可立即创建一个空的行内插槽，并将光标置于其中。
+- 在空段落中输入 `[[[` 可立即创建一个块级插槽，并将光标置于其空段落中。
 
-No closing delimiter or Enter is required. Set `Slot.configure({ shortcuts: false })` to disable all Slot input rules. The [input-rule resolver](/composable-docs/slots/api-reference/extension#resolveinputruleslot) can configure, fill or decline the new Slot.
+无需输入结束分隔符，也无需按 Enter。设置 `Slot.configure({ shortcuts: false })` 可禁用所有 Slot 输入规则。[输入规则解析器](/composable-docs/slots/api-reference/extension#resolveinputruleslot)可以配置、填充新插槽，或拒绝创建新插槽。
 
-To also convert text between delimiters into an inline Slot, configure a pair:
+若要将分隔符之间的文本也转换为行内插槽，请配置一对分隔符：
 
 ```ts
 Slot.configure({
@@ -77,12 +77,12 @@ Slot.configure({
 })
 ```
 
-Typing `{{Ada}}` creates an inline Slot containing “Ada”. This pair always creates an inline Slot, including in an empty paragraph. The `{{{` and `[[[` creation shortcuts remain enabled. See [shortcut configuration](/composable-docs/slots/api-reference/extension#slotshortcuts) to customize or disable individual rules.
+输入 `{{Ada}}` 会创建一个包含“Ada”的行内插槽。这对分隔符始终会创建行内插槽，即使当前段落为空也是如此。`{{{` 和 `[[[` 创建快捷方式仍保持启用。请参阅[快捷方式配置](/composable-docs/slots/api-reference/extension#slotshortcuts)，了解如何自定义或禁用各项规则。
 
-## Example: Slot editor app
+## 示例：插槽编辑器应用
 
-An example template editor where users can add slots to a document.
+一个示例模板编辑器，用户可以在其中向文档添加插槽。
 
 <CodeDemo isPro path="/Examples/SlotTemplate" />
 
-After that the document can be passed to a different set of users who fill the slots. To do that, configure document permissions so that users are only allowed to fill slots and not other parts of the document. [Read this guide](/composable-docs/slots/guides/fill-only) to set up the editor so that users can fill document slots.
+之后，可以将该文档交给其他用户来填充插槽。为此，请配置文档权限，确保用户只能填充插槽，而不能编辑文档的其他部分。[阅读本指南](/composable-docs/slots/guides/fill-only)，了解如何设置编辑器，以便用户填充文档插槽。
