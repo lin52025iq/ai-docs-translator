@@ -1,9 +1,9 @@
 ---
-title: Simple template
+title: 简易模板
 meta:
-  title: Simple template | Tiptap UI Components
-  description: Integrate the Tiptap open source editor with UI components and open source extensions. More in the docs.
-  category: UI Components
+  title: 简易模板 | Tiptap UI 组件
+  description: 将 Tiptap 开源编辑器与 UI 组件及开源扩展集成。更多信息请参阅文档。
+  category: UI 组件
 sidebars:
   hideSecondary: true
 tags:
@@ -16,7 +16,7 @@ import { Button } from '@/components/ui/Button'
 import { Link } from '@/components/Link'
 import { Callout } from '@/components/ui/Callout'
 
-The Simple Editor Template is a fully working setup for the Tiptap editor. It includes commonly used open source extensions and UI components, all MIT licensed and ready to customize.
+简易编辑器模板是一套可直接运行的 Tiptap 编辑器配置，包含常用的开源扩展和 UI 组件，均采用 MIT 许可证，且可随时自定义。
 
 <div className="flex items-center gap-4 mt-8">
   <Button variant="primary" size="medium">
@@ -24,7 +24,7 @@ The Simple Editor Template is a fully working setup for the Tiptap editor. It in
       href="https://template.tiptap.dev/preview/templates/simple"
       className="flex items-center justify-center gap-2"
     >
-      View in Full Screen
+      全屏查看
       <ArrowRightIcon className="size-3.5" />
     </Link>
   </Button>
@@ -32,27 +32,27 @@ The Simple Editor Template is a fully working setup for the Tiptap editor. It in
 
 <CodeDemo isScrollable isLarge src="https://template.tiptap.dev/preview/templates/simple" />
 
-## Installation
+## 安装
 
-### For existing projects
+### 用于现有项目
 
 ```bash
 npx @tiptap/cli@latest add simple-editor
 ```
 
-### For new projects
+### 用于新项目
 
 ```bash
 npx @tiptap/cli@latest init simple-editor
 ```
 
-## Styling
+## 样式
 
-This template requires styling setup. We stay unopinionated about styling frameworks, so you'll need to integrate it with your setup. Follow the [style setup guide](/ui-components/getting-started/style) to ensure the editor displays correctly.
+此模板需要配置样式。我们不限定样式框架，因此你需要将其集成到自己的项目配置中。请参阅[样式配置指南](/ui-components/getting-started/style)，确保编辑器能够正确显示。
 
-## Usage
+## 用法
 
-After installation, use the SimpleEditor component in your React or Next.js project:
+安装后，可在 React 或 Next.js 项目中使用 SimpleEditor 组件：
 
 ```jsx
 import { SimpleEditor } from '@/components/tiptap-templates/simple/components/simple-editor'
@@ -62,29 +62,29 @@ export default function App() {
 }
 ```
 
-## Features
+## 功能
 
-A fully responsive rich text editor with built-in support for common formatting and layout tools. All components are open source and easy to extend.
+这是一款完全响应式的富文本编辑器，内置支持常见的格式和布局工具。所有组件均为开源，且易于扩展。
 
-- **Responsive design**: Mobile-friendly by default
-- **Dark and light mode**: Supported out-of-the-box
-- **Formatting**: Bold, Italic, Underline
-- **Lists**: Bullet, Ordered, Checkboxes
-- **Text alignment**: Left, Center, Right, Justified
-- **Headings**: Multiple levels via dropdown
-- **Image upload**
-- **Link editing:** UI for adding and editing links
-- **Search and replace:** Find text with match options and replace it, powered by the [Find and Replace extension](/editor/extensions/functionality/find-and-replace)
-- **Undo / Redo:** History management
+- **响应式设计**：默认适配移动设备
+- **深色和浅色模式**：开箱即用
+- **文本格式**：粗体、斜体、下划线
+- **列表**：项目符号列表、有序列表、复选框
+- **文本对齐**：左对齐、居中、右对齐、两端对齐
+- **标题**：通过下拉菜单选择多个级别
+- **图片上传**
+- **链接编辑**：用于添加和编辑链接的界面
+- **查找和替换**：查找文本、选择匹配项并替换，由[查找和替换扩展](/editor/extensions/functionality/find-and-replace)提供支持
+- **撤销/重做**：历史记录管理
 
-### Used reference components
+### 使用的参考组件
 
 #### Hooks
 
 - `use-mobile`
 - `use-window-size`
 
-#### Icons
+#### 图标
 
 - `arrow-left-icon`
 - `highlighter-icon`
@@ -92,17 +92,17 @@ A fully responsive rich text editor with built-in support for common formatting 
 - `moon-star-icon`
 - `sun-icon`
 
-#### Extensions
+#### 扩展
 
 - `selection-extension`
 - `link-extension`
 - `trailing-node-extension`
 
-#### Lib
+#### 库
 
 - `tiptap-utils`
 
-#### UI Components
+#### UI 组件
 
 - `blockquote-button`
 - `code-block-button`
@@ -119,7 +119,7 @@ A fully responsive rich text editor with built-in support for common formatting 
 - `text-align-button`
 - `undo-redo-button`
 
-#### Node Components
+#### 节点组件
 
 - `code-block-node`
 - `image-node`
@@ -127,18 +127,18 @@ A fully responsive rich text editor with built-in support for common formatting 
 - `list-node`
 - `paragraph-node`
 
-#### Primitives
+#### 基础组件
 
 - `button`
 - `spacer`
 - `toolbar`
 
-## License
+## 许可证
 
-The Simple Editor Template and all included components are MIT licensed. You’re free to use, modify, and extend the code as needed.
+简易编辑器模板及其包含的所有组件均采用 MIT 许可证。你可以根据需要自由使用、修改和扩展代码。
 
-## Future compatibility
+## 未来兼容性
 
-You can extend this template with additional features as your needs grow.
+随着需求增长，你可以为此模板添加更多功能。
 
-Paid Tiptap Cloud features will have matching UI components that integrate just as easily! No rework needed.
+付费版 Tiptap Cloud 功能也将提供对应的 UI 组件，并且同样易于集成！无需返工。
