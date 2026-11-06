@@ -2,47 +2,43 @@
 tags:
   - type: editor
   - type: experiment
-title: Tiptap for mobile apps
+title: 面向移动应用的 Tiptap
 meta:
-  title: Tiptap for mobile apps | Tiptap Editor Docs
-  description: Run Tiptap inside mobile and multi-platform apps like iOS, Android, React Native, and Flutter. Control it from native code with a simple JSON message protocol.
+  title: 面向移动应用的 Tiptap | Tiptap 编辑器文档
+  description: 在 iOS、Android、React Native 和 Flutter 等移动及多平台应用中运行 Tiptap。通过简单的 JSON 消息协议，从原生代码控制编辑器。
   category: Editor
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-To run Tiptap in a mobile or multi-platform app, render the editor in a WebView and drive it from your native code. This guide shows a simple protocol that connects the multi-platform app to the Tiptap editor instance running in the WebView. This JSON-based protocol allows the app to send and receive any type of command or event. It works on any platform, including iOS, Android, React Native, and Flutter.
+要在移动或多平台应用中运行 Tiptap，可以在 WebView 中渲染编辑器，并通过原生代码驱动它。本指南介绍一种简单协议，用于连接多平台应用与运行在 WebView 中的 Tiptap 编辑器实例。基于 JSON 的协议允许应用发送和接收各种命令或事件，可在包括 iOS、Android、React Native 和 Flutter 在内的任何平台上使用。
 
-<Callout title="Experimental" variant="warning">
+<Callout title="实验性" variant="warning">
 
-This guide and its reference repository are a usage example, not a product we commit to
-maintaining. Copy the parts you need and own them in your app.
+本指南及其参考仓库仅用于演示用法，并非我们承诺维护的产品。请根据需要复制相关部分，并自行在应用中维护。
 
-This guide explains the pattern with focused snippets. The
-[`tiptap-mobile-bridge`](https://github.com/ueberdosis/tiptap-mobile-bridge) repository has the
-complete, runnable version (the editor bundle plus tested Flutter, iOS, Android, and React Native
-host apps), and its
-[`PROTOCOL.md`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/PROTOCOL.md) and
-[`GUIDE.md`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/GUIDE.md) are the full
-wire contract and setup notes you can refer to alongside this page.
+本指南通过精简的代码片段说明这一模式。参考仓库
+[`tiptap-mobile-bridge`](https://github.com/ueberdosis/tiptap-mobile-bridge) 提供了完整、可运行的版本（编辑器包，以及经过测试的 Flutter、iOS、Android 和 React Native 宿主应用）。此外，仓库中的
+[`PROTOCOL.md`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/PROTOCOL.md) 和
+[`GUIDE.md`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/GUIDE.md) 分别提供完整的通信协议和设置说明，可与本页面配合参考。
 
 </Callout>
 
-## How it works
+## 工作原理
 
-The WebView renders the editor; your native code renders the surrounding UI (toolbars, menus) and talks to the editor over JSON messages in three directions:
+WebView 负责渲染编辑器；原生代码负责渲染周边界面（工具栏、菜单），并通过 JSON 消息与编辑器双向通信，消息分为三类：
 
-- **Commands** flow from your app to the editor. Each carries an `id`, and the editor answers with one response that echoes it, which is how you correlate an async result like "give me the document".
-- **Events** flow from the editor to your app. They carry no `id` and get no reply; they are notifications, like the selection moving or the content changing.
-- **Host requests** flow from the editor to your app and, unlike events, wait for a reply. The editor asks for something only native can do, like uploading a pasted image, and your app answers with one reply correlated by `id`.
+- **命令** 从应用发送到编辑器。每条命令都带有一个 `id`，编辑器会返回一条包含该 `id` 的响应，以便你将异步结果（例如“把文档发给我”）与请求对应起来。
+- **事件** 从编辑器发送到应用。事件不带 `id`，也不需要回复；它们是通知，例如选区移动或内容更改。
+- **宿主请求** 从编辑器发送到应用，与事件不同，这类请求会等待回复。编辑器会请求只有原生端才能完成的操作，例如上传粘贴的图片；应用则返回一条通过 `id` 关联的回复。
 
-These protocol commands are different from Tiptap's own editor commands (`toggleBold`, `setContent`, and so on): both are called "commands", so this guide says "Tiptap command" for the editor's.
+这些协议命令不同于 Tiptap 自身的编辑器命令（`toggleBold`、`setContent` 等）：两者都称为“命令”，因此本指南将编辑器自身的命令称为“Tiptap 命令”。
 
-The protocol is platform-agnostic: the same editor bundle and the same messages work everywhere, and only the transport that carries the JSON differs per platform.
+该协议与平台无关：所有平台使用相同的编辑器包和消息，只有传输 JSON 的方式因平台而异。
 
-## Try the reference app
+## 试用参考应用
 
-Before wiring your own app, clone the reference repository and run a host app end-to-end, the fastest way to see the protocol working:
+在接入自己的应用之前，可以先克隆参考仓库并端到端运行一个宿主应用，这是了解协议如何工作的最快方式：
 
 ```bash
 git clone https://github.com/ueberdosis/tiptap-mobile-bridge
@@ -50,13 +46,13 @@ cd tiptap-mobile-bridge/web && npm install && npm run build  # builds the editor
 cd ../flutter_example && flutter run                         # or ../ios_example, ../android_example, ../react_native_example
 ```
 
-The rest of this guide walks through the same architecture so you can build it into your own app.
+本指南其余部分将介绍相同的架构，帮助你将其构建到自己的应用中。
 
-## Set up the editor
+## 设置编辑器
 
-Build the editor to a single, self-contained HTML file (for example with [vite-plugin-singlefile](https://www.npmjs.com/package/vite-plugin-singlefile)) and load it into the WebView from the device filesystem, so it works offline. The quickest start is to copy the [`web/`](https://github.com/ueberdosis/tiptap-mobile-bridge/tree/main/web) project from the reference repository and change its extension list to match your web editor. That schema parity is the point, so your documents render in the app exactly as they do on the web.
+将编辑器构建为单个、自包含的 HTML 文件（例如使用 [vite-plugin-singlefile](https://www.npmjs.com/package/vite-plugin-singlefile)），并从设备文件系统将其加载到 WebView 中，以便离线使用。最快的入门方式是复制参考仓库中的 [`web/`](https://github.com/ueberdosis/tiptap-mobile-bridge/tree/main/web) 项目，并修改扩展列表，使其与 Web 编辑器一致。保持 Schema 一致正是关键，这样文档在应用中的呈现效果就会与网页上完全相同。
 
-Alongside the editor, add a small bridge: an entry point the native side calls to send commands in, and a `send` helper to post messages back out. The editor is created by the first command the host sends, `init`, so your app can open a saved document by passing its content:
+在编辑器旁边添加一个小型桥接层：原生端通过一个入口发送命令，并通过 `send` 辅助函数回传消息。宿主发送的第一条命令 `init` 会创建编辑器，因此应用可以通过传入文档内容来打开已保存的文档：
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -92,11 +88,11 @@ function onCommand(command) {
 }
 ```
 
-The `content` can be an HTML string or ProseMirror JSON: pass your saved document to open it, and set `editable: false` for a read-only view. To swap the document later (for example after fetching it from your API), send a `setContent` command that calls `editor.commands.setContent(content)`.
+`content` 可以是 HTML 字符串或 ProseMirror JSON：传入已保存的文档即可打开它；设置 `editable: false` 可创建只读视图。之后若要切换文档（例如从 API 获取文档后），发送一条 `setContent` 命令，调用 `editor.commands.setContent(content)` 即可。
 
-## Run any command
+## 执行任意命令
 
-You don't need a bridge method per Tiptap command. Send the generic `exec` command with a Tiptap command name and its arguments, and run it on the editor's [command chain](/editor/api/commands). Add an `exec` branch to the `onCommand` from the previous step:
+你不需要为每个 Tiptap 命令都创建一个桥接方法。发送通用的 `exec` 命令，附上 Tiptap 命令名称及其参数，然后在编辑器的[命令链](/editor/api/commands)上执行。将 `exec` 分支添加到上一步的 `onCommand` 中：
 
 ```json
 {
@@ -125,13 +121,13 @@ if (command.name === 'exec') {
 }
 ```
 
-`args` is encoded as a positional array in JSON and spread into the command, so `{ "args": [{ "level": 2 }] }` calls `toggleHeading({ level: 2 })`, and `{ "args": ["left"] }` calls `setTextAlign('left')`.
+`args` 在 JSON 中以位置参数数组的形式编码，并展开后传给命令。因此，`{ "args": [{ "level": 2 }] }` 会调用 `toggleHeading({ level: 2 })`，而 `{ "args": ["left"] }` 会调用 `setTextAlign('left')`。
 
-Responses carry an `ok` flag. The handler above answers an unknown command name with `ok: false` and an `error: { code, message }`; a real one also catches a command that throws and answers the same way, so the host never waits for a response that won't come. Check `ok` on every response instead of assuming success.
+响应包含一个 `ok` 标记。上面的处理程序会对未知命令名称返回 `ok: false` 和 `error: { code, message }`；实际应用中也应捕获命令抛出的异常，并以相同方式回复，避免宿主一直等待一个永远不会到来的响应。每次都要检查响应中的 `ok`，不要默认操作一定成功。
 
-## Receive any event
+## 接收任意事件
 
-The editor [emits events](/editor/api/events) like `focus`, `blur`, `update`, `selectionUpdate`, and `transaction`. Let your app subscribe to the ones it needs, then forward each as a JSON message. Track subscriptions and register the forwarders when you create the editor (inside the `init` branch, right after `editor = new Editor(...)`):
+编辑器会[触发事件](/editor/api/events)，例如 `focus`、`blur`、`update`、`selectionUpdate` 和 `transaction`。让应用订阅所需的事件，然后将每个事件转发为 JSON 消息。跟踪订阅情况，并在创建编辑器时注册转发器（在 `init` 分支中，紧接着 `editor = new Editor(...)` 之后）：
 
 ```js
 const subscriptions = new Set()
@@ -152,7 +148,7 @@ for (const name of ['focus', 'blur', 'update', 'selectionUpdate', 'transaction']
 }
 ```
 
-A raw event payload holds live objects (the `Editor`, a `Transaction`) that can't cross a JSON boundary, so forward a small projection instead, returning the selection for the document and selection events and an empty object for `focus` and `blur`:
+原始事件负载包含实时对象（`Editor`、`Transaction`），无法通过 JSON 边界传输，因此应改为转发简化后的数据。对于文档和选区事件，返回选区信息；对于 `focus` 和 `blur`，则返回空对象：
 
 ```js
 function project(name) {
@@ -164,7 +160,7 @@ function project(name) {
 }
 ```
 
-The reference [`PROTOCOL.md`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/PROTOCOL.md) lists every forwarded event and its projected payload. When you need the full document after a change, ask for it with a command that returns `editor.getJSON()` or `editor.getHTML()`:
+参考 [`PROTOCOL.md`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/PROTOCOL.md) 列出了所有转发事件及其投影后的负载。若要在内容更改后获取完整文档，可发送一条命令，返回 `editor.getJSON()` 或 `editor.getHTML()`：
 
 ```js
 // getJSON / getHTML are commands like any other: run, then reply with the document
@@ -173,9 +169,9 @@ if (command.name === 'getJSON') {
 }
 ```
 
-## Drive a native toolbar
+## 驱动原生工具栏
 
-A native toolbar needs to know which buttons are active (the selection is bold) and which are available (whether a heading can be toggled at the current selection). Compute that state when the selection changes and send it as a `selectionChanged` event, but only for the commands you actually render, never by looping over every command (see the warning below):
+原生工具栏需要知道哪些按钮处于激活状态（例如选区是否为粗体），以及哪些按钮可用（例如当前选区是否可以切换为标题）。在选区更改时计算这些状态，并通过 `selectionChanged` 事件发送；但只针对你实际呈现的命令执行，切勿遍历所有命令（见下方警告）：
 
 ```js
 // one entry per button your toolbar renders
@@ -198,19 +194,15 @@ editor.on('selectionUpdate', () => {
 })
 ```
 
-Your app reads this map to highlight active buttons and disable unavailable ones. The reference implementation sends `selectionChanged` on every selection change (no subscription needed) and debounces it. See [`PROTOCOL.md`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/PROTOCOL.md) for details.
+应用读取这个映射，以突出显示已激活的按钮，并禁用不可用的按钮。参考实现会在每次选区更改时发送 `selectionChanged`（无需订阅），并对发送操作进行防抖处理。详情请参阅 [`PROTOCOL.md`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/PROTOCOL.md)。
 
-<Callout title="Building a native toolbar? Don't probe every command" variant="warning">
-  To light up toolbar buttons you'll want each one's active and enabled state. Read it only for the
-  commands you actually render (`editor.isActive('bold')`, `editor.can().toggleBold()`). Never loop
-  `editor.can()` over *every* command. Some commands aren't side-effect free in a dry run (`blur`,
-  for example, schedules a real blur on the next frame), so probing all of them on each keystroke
-  can pull focus away from the user as they type.
+<Callout title="要构建原生工具栏？不要探测所有命令" variant="warning">
+  要点亮工具栏按钮，你需要知道每个按钮的激活和启用状态。只读取你实际呈现的命令状态（`editor.isActive('bold')`、`editor.can().toggleBold()`）。切勿对*所有*命令循环调用 `editor.can()`。某些命令在试运行时并非无副作用（例如 `blur` 会安排在下一帧执行实际的失焦操作），因此每次按键都探测所有命令可能会在用户输入时抢走焦点。
 </Callout>
 
-## Ask the host for data
+## 向宿主请求数据
 
-Some things only the native side can do: uploading a pasted image, resolving a mention, picking a file. For those the editor sends a **host request** and awaits a reply, the same `id` correlation as commands but in the other direction. Give each request a timeout, so a host that never replies cannot leave the editor waiting forever:
+有些操作只有原生端才能完成：上传粘贴的图片、解析提及对象、选择文件。对于这些操作，编辑器会发送一个**宿主请求**并等待回复，与命令一样使用 `id` 进行关联，但方向相反。为每个请求设置超时，避免宿主一直不回复导致编辑器无限等待：
 
 ```js
 const pending = new Map()
@@ -240,22 +232,22 @@ window.tiptapBridge.handleReply = (json) => {
 }
 ```
 
-For example, intercept a pasted image, hand it to the host, and insert the URL the host returns:
+例如，拦截粘贴的图片，将其交给宿主处理，然后插入宿主返回的 URL：
 
 ```js
 const url = await hostRequest('uploadImage', { dataUrl })
 editor.chain().focus().setImage({ src: url }).run()
 ```
 
-Reading the pasted file as a data URL and suppressing the default paste with Tiptap's `handlePaste` is shown in full in [`main.ts`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/web/src/main.ts) in the reference repo.
+在参考仓库的 [`main.ts`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/web/src/main.ts) 中，完整展示了如何将粘贴的文件读取为 data URL，并通过 Tiptap 的 `handlePaste` 阻止默认粘贴行为。
 
-## Connect your native app
+## 连接原生应用
 
-Your app always sends commands the same way, by evaluating `window.tiptapBridge.handleCommand("<json>")` in the WebView, and receives messages through the platform's own channel. On the editor side, detect which channel is available and `send` through it. Use the section that matches your stack. With Flutter, one host serves both iOS and Android, so you only need the Flutter section. Each host is a small file (or two) you can copy: [`tiptap_bridge.dart`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/flutter_example/lib/tiptap_bridge.dart) (Flutter), [`TiptapBridge.swift`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/ios_example/TiptapBridgeExample/TiptapBridge.swift) (iOS), [`TiptapBridge.kt`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/android_example/app/src/main/java/dev/tiptap/mobilebridge/example/TiptapBridge.kt) (Android), and [`TiptapBridge.ts`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/react_native_example/src/TiptapBridge.ts) plus [`EditorWebView.tsx`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/react_native_example/src/EditorWebView.tsx) (React Native).
+应用始终以相同方式发送命令：在 WebView 中执行 `window.tiptapBridge.handleCommand("<json>")`，并通过平台自身的通道接收消息。在编辑器端，检测可用的通道，并通过它调用 `send`。根据你的技术栈，使用对应的章节。使用 Flutter 时，同一宿主可同时服务 iOS 和 Android，因此只需参考 Flutter 章节。每个宿主只需一个或两个小文件即可复制：[`tiptap_bridge.dart`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/flutter_example/lib/tiptap_bridge.dart)（Flutter）、[`TiptapBridge.swift`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/ios_example/TiptapBridgeExample/TiptapBridge.swift)（iOS）、[`TiptapBridge.kt`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/android_example/app/src/main/java/dev/tiptap/mobilebridge/example/TiptapBridge.kt)（Android），以及 [`TiptapBridge.ts`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/react_native_example/src/TiptapBridge.ts) 和 [`EditorWebView.tsx`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/react_native_example/src/EditorWebView.tsx)（React Native）。
 
 ### Flutter
 
-With [`flutter_inappwebview`](https://pub.dev/packages/flutter_inappwebview), register a handler for outbound messages and evaluate JavaScript for inbound commands. Your app holds a map of pending commands by `id` and resolves each when its response arrives:
+使用 [`flutter_inappwebview`](https://pub.dev/packages/flutter_inappwebview) 时，为发出的消息注册处理程序，并通过执行 JavaScript 发送传入命令。应用按 `id` 保存待处理命令的映射，并在收到相应响应时逐一处理：
 
 ```dart
 final _pending = <String, Completer<Object?>>{};
@@ -290,9 +282,9 @@ controller.addJavaScriptHandler(
 );
 ```
 
-### iOS (`WKWebView`)
+### iOS（`WKWebView`）
 
-Add a script-message handler for outbound messages, and evaluate JavaScript for inbound commands:
+为发出的消息添加脚本消息处理程序，并通过执行 JavaScript 发送传入命令：
 
 ```swift
 // outbound: the editor calls window.webkit.messageHandlers.tiptapBridge.postMessage(json)
@@ -302,11 +294,11 @@ config.userContentController.add(self, name: "tiptapBridge")
 webView.evaluateJavaScript("window.tiptapBridge.handleCommand(\(jsStringLiteral))")
 ```
 
-Send your first command only after `window.tiptapBridge` exists. `WKWebView`'s `didFinish` can fire before the editor's module installs it, so poll for it before sending that first command (see [`EditorWebView.swift`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/ios_example/TiptapBridgeExample/EditorWebView.swift) for the polling loop).
+只有在 `window.tiptapBridge` 存在后才能发送第一条命令。`WKWebView` 的 `didFinish` 可能会在编辑器模块安装该对象之前触发，因此请先轮询确认对象已就绪，再发送第一条命令（轮询循环示例见 [`EditorWebView.swift`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/ios_example/TiptapBridgeExample/EditorWebView.swift)）。
 
-### Android (`WebView`)
+### Android（`WebView`）
 
-Expose a `@JavascriptInterface` for outbound messages, and call `evaluateJavascript` for inbound commands:
+为发出的消息公开一个 `@JavascriptInterface`，并通过调用 `evaluateJavascript` 发送传入命令：
 
 ```kotlin
 // outbound: the editor calls window.AndroidTiptapBridge.postMessage(json)
@@ -318,11 +310,11 @@ webView.addJavascriptInterface(object {
 webView.evaluateJavascript("window.tiptapBridge.handleCommand(${JSONObject.quote(json)})", null)
 ```
 
-A `@JavascriptInterface` callback arrives on a background thread, so marshal every WebView call back to the main thread, since a WebView is not thread-safe. This is the one concern the Flutter and iOS hosts don't have. As on iOS, send your first command only after `window.tiptapBridge` exists: the editor's module can install it just after the page finishes loading, so poll for it before `init` (see [`EditorWebView.kt`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/android_example/app/src/main/java/dev/tiptap/mobilebridge/example/EditorWebView.kt)).
+`@JavascriptInterface` 回调会在后台线程中执行，因此必须将所有 WebView 调用转回主线程，因为 WebView 不是线程安全的。这是 Flutter 和 iOS 宿主不需要考虑的问题。与 iOS 一样，只有在 `window.tiptapBridge` 存在后才能发送第一条命令：编辑器模块可能会在页面加载完成后才安装该对象，因此请在发送 `init` 前轮询确认对象已就绪（示例见 [`EditorWebView.kt`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/android_example/app/src/main/java/dev/tiptap/mobilebridge/example/EditorWebView.kt)）。
 
-### React Native (`react-native-webview`)
+### React Native（`react-native-webview`）
 
-Send inbound commands with `injectJavaScript`, and receive outbound messages through the `onMessage` prop:
+使用 `injectJavaScript` 发送传入命令，并通过 `onMessage` 属性接收发出的消息：
 
 ```tsx
 // outbound: the editor calls window.ReactNativeWebView.postMessage(json), delivered to the onMessage
@@ -342,35 +334,35 @@ function EditorWebView() {
 webviewRef.current?.injectJavaScript(`window.tiptapBridge.handleCommand(${jsStringLiteral}); true;`)
 ```
 
-Three React Native specifics: `injectJavaScript` returns nothing (no success or error, unlike `evaluateJavaScript`), so the bridge adds a per-command timeout for the same "caller never hangs" guarantee, and the injected script must end with `true;`. Load the bundle as inline HTML (`source={{ html }}` with `originWhitelist={['*']}`), because react-native-webview does not load local files in release builds. As on iOS and Android, poll for `window.tiptapBridge` before sending the first command (see [`EditorWebView.tsx`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/react_native_example/src/EditorWebView.tsx)). The bridge is framework-agnostic, so the same code runs under Expo, where you swap the image picker.
+React Native 有三点需要注意：`injectJavaScript` 不返回任何内容（与 `evaluateJavaScript` 不同，它既不报告成功，也不报告错误），因此桥接层会为每条命令设置超时时间，以确保调用方不会一直等待；注入的脚本必须以 `true;` 结尾。请将包作为内嵌 HTML 加载（使用 `source={{ html }}` 和 `originWhitelist={['*']}`），因为 react-native-webview 在发布版本中无法加载本地文件。与 iOS 和 Android 一样，发送第一条命令前请先轮询确认 `window.tiptapBridge` 已就绪（见 [`EditorWebView.tsx`](https://github.com/ueberdosis/tiptap-mobile-bridge/blob/main/react_native_example/src/EditorWebView.tsx)）。桥接层与框架无关，因此相同代码也可用于 Expo，只需替换图片选择器即可。
 
-## Community projects
+## 社区项目
 
-This guide builds the bridge from scratch, so you own and can customize every part. If you'd rather start from an existing library, some open-source community projects also run Tiptap's engine and drive it from native code, though they differ in how they render the document:
+本指南从头构建桥接层，因此每个部分都由你掌控，并且都可以自定义。如果你更愿意从现有库开始，也有一些开源社区项目使用 Tiptap 引擎并通过原生代码驱动它们，不过这些项目在文档渲染方式上有所不同：
 
-- [10Tap](https://github.com/10play/10tap-editor): a rich-text editor for React Native, built on Tiptap and rendered in a WebView, like this guide.
-- [tiptap-flutter](https://github.com/blackcoffee2/tiptap-flutter): runs the Tiptap engine headless and renders the document with native Flutter widgets.
+- [10Tap](https://github.com/10play/10tap-editor)：适用于 React Native 的富文本编辑器，基于 Tiptap 构建，并像本指南一样在 WebView 中渲染。
+- [tiptap-flutter](https://github.com/blackcoffee2/tiptap-flutter)：以无头模式运行 Tiptap 引擎，并使用 Flutter 原生组件渲染文档。
 
-These are community projects, not maintained by Tiptap, so evaluate each for your own needs. Have a look if you want to see how others have approached the same idea.
+这些都是社区项目，并非由 Tiptap 维护，请根据自身需求评估。若想了解其他人如何实现类似方案，不妨看看这些项目。
 
-## Known limitations
+## 已知限制
 
-The editor runs inside a WebView, so it inherits a few mobile WebView constraints worth knowing before you ship:
+编辑器运行在 WebView 中，因此也会受到一些移动 WebView 限制的影响。发布前值得了解以下几点：
 
-### The caret can hide behind the keyboard
+### 光标可能被键盘遮挡
 
-When the on-screen keyboard opens, the caret or selection can end up behind it, because the WebView does not always scroll the selection into the visible area. This is a WebView-level behavior rather than something the bridge controls. The usual approach is to react to `window.visualViewport` resizes and scroll the caret into view, coordinated with the keyboard inset on the native side (for example `MediaQuery.viewInsets` in Flutter), but making it reliable across devices and keyboards takes real testing. It is not handled in this reference.
+屏幕键盘打开时，光标或选区可能会被键盘遮挡，因为 WebView 不一定会自动滚动选区，使其进入可视区域。这是 WebView 层面的行为，并非桥接层所能控制。通常的处理方式是监听 `window.visualViewport` 尺寸变化，并将光标滚动到可视区域，同时与原生端的键盘内边距配合（例如 Flutter 中的 `MediaQuery.viewInsets`）。但要让它在不同设备和键盘上都可靠运行，需要进行充分测试。本参考实现未处理此问题。
 
-### The editor does not auto-grow to fit its content
+### 编辑器不会自动扩展以适应内容高度
 
-The WebView takes whatever height the native layout gives it, and the editor does not report its content height, so the WebView will not resize to fit the content. That is fine for a full-screen editor (the content scrolls inside the WebView), but an inline, auto-growing editor (like a chat input) is not supported out of the box. To add it, measure the content height in the WebView (for example with a `ResizeObserver`) and send it over the bridge so the native side can resize the WebView.
+WebView 的高度由原生布局决定，而编辑器不会报告自身内容高度，因此 WebView 不会自动调整大小以适应内容。对于全屏编辑器（内容在 WebView 内滚动）来说，这没有问题；但开箱即用的方案不支持行内自动扩展的编辑器（例如聊天输入框）。如需实现此功能，可在 WebView 中测量内容高度（例如使用 `ResizeObserver`），并通过桥接层发送该高度，以便原生端调整 WebView 大小。
 
-### The return key adds a line inside a table cell
+### 回车键会在表格单元格内插入换行
 
-Mobile keyboards have no Tab key, and the reference keeps the default table behavior, so pressing return inside a table cell inserts a new line in that cell instead of moving to the next cell. To navigate cells on mobile you would wire it yourself, for example a keymap or toolbar buttons that run the `goToNextCell` / `goToPreviousCell` commands.
+移动键盘没有 Tab 键，且参考实现保留了表格的默认行为，因此在表格单元格中按回车会在当前单元格内插入换行，而不是移动到下一个单元格。若要在移动设备上实现单元格导航，需要自行接入，例如使用键盘映射或工具栏按钮来执行 `goToNextCell` / `goToPreviousCell` 命令。
 
-## Security
+## 安全
 
-Treat content coming from the editor like any other user input. `setContent` and the HTML you load are parsed against your editor's schema, which drops tags and attributes it doesn't recognize, but that is not a substitute for validating and sanitizing untrusted content on your server before you store or render it.
+请像对待其他用户输入一样处理来自编辑器的内容。`setContent` 和你加载的 HTML 都会按照编辑器的 Schema 解析，无法识别的标签和属性会被移除；但这不能替代在服务器上存储或渲染不可信内容之前进行验证和清理。
 
-Treat the bridge itself as a trust boundary too. Validate every incoming message before you act on it, and load only trusted, bundled editor HTML into the WebView, never a remote or untrusted page. Keep the native surface narrow: expose host requests explicitly and by allow-list instead of a broad native API, so the editor can only request the specific things you intend.
+也要将桥接层本身视为信任边界。执行操作之前，请验证每条传入消息；只将可信且随应用打包的编辑器 HTML 加载到 WebView 中，切勿加载远程或不可信页面。保持原生接口范围精简：通过明确的白名单公开宿主请求，而不是提供宽泛的原生 API，这样编辑器就只能请求你允许的特定操作。
