@@ -2,29 +2,29 @@
 tags:
   - type: collaboration
 meta:
-  title: Name Documents | Tiptap Collaboration Docs
-  description: Name and organize documents effectively in Tiptap Collaboration, using unique identifiers and Y.js fragments. More in the docs!
+  title: 为文档命名 | Tiptap 协作文档
+  description: 在 Tiptap Collaboration 中使用唯一标识符和 Y.js 片段，高效地为文档命名并进行整理。更多内容请参阅文档！
   category: Collaboration
-title: Name and structure your Collaboration documents
+title: 为协作文档命名并设计结构
 ---
 
-This guide outlines best practices for naming documents and organizing content within a single document, to help you define your own document structure.
+本指南介绍为文档命名以及组织单个文档内内容的最佳实践，帮助你定义自己的文档结构。
 
-For a comprehensive understanding of how to choose document names, you should review our [authorization guide](/collaboration/getting-started/authenticate#authorize-per-document), as document naming plays a crucial role in access control as well.
+要全面了解如何选择文档名称，请参阅我们的[授权指南](/collaboration/getting-started/authenticate#authorize-per-document)，因为文档命名对访问控制也起着至关重要的作用。
 
-## Structure document names
+## 设计文档名称
 
-Tiptap Collaboration uses document names to facilitate collaborative sessions, they serve as unique identifiers that link users to the same document. In theory it could be any string.
+Tiptap Collaboration 使用文档名称来支持协作会话。文档名称是唯一标识符，可将用户关联到同一文档。理论上，它可以是任意字符串。
 
-While the following example uses an entity's name combined with a unique ID, typical for CMS applications, you're free to adopt any naming convention that suits your application's requirements.
+下面的示例使用实体名称与唯一 ID 组合，这在 CMS 应用中很常见；你也可以根据应用需求采用任何命名约定。
 
-New documents are automatically generated as needed; you only need to provide a string identifier to the provider.
+需要时会自动创建新文档；你只需向 provider 提供一个字符串标识符。
 
 ```typescript
 const documentName = 'article.123'
 ```
 
-This naming format allows you to separate out the key details easily:
+这种命名格式便于轻松拆分出关键细节：
 
 ```typescript
 const documentName = 'article.123'
@@ -36,13 +36,13 @@ console.log(entityType) // Output: "article"
 console.log(entityID) // Output: "123"
 ```
 
-## Manage nested documents with fragments
+## 使用片段管理嵌套文档
 
-Yjs's fragments are ideal for handling complex documents with distinct sections. This might be relevant in case you want to nest your documents, like for example a blog post with separate `title` and `content` parts.
+Yjs 的片段非常适合处理包含不同部分的复杂文档。如果你想嵌套文档，例如将博客文章拆分为单独的 `title` 和 `content` 部分，就可以使用片段。
 
-With fragments, you can use one Y.Doc instance (e.g. one document) and use different editors for its distinct sections.
+使用片段时，你可以使用一个 Y.Doc 实例（例如一个文档），并使用不同的编辑器处理其中各个部分。
 
-For example, in this blog post setup:
+例如，下面是一个博客文章的设置：
 
 ```typescript
 const ydoc = new Y.Doc()
@@ -68,7 +68,7 @@ const bodyEditor = new Editor({
 })
 ```
 
-For complex setups with nested fragments, you can directly use a raw Y.js fragment, bypassing the `document` and `field` settings.
+对于包含嵌套片段的复杂设置，你可以直接使用原始 Y.js 片段，绕过 `document` 和 `field` 设置。
 
 ```typescript
 // a raw Y.js fragment
@@ -77,4 +77,4 @@ Collaboration.configure({
 })
 ```
 
-To fully grasp how document naming influences access control in Tiptap Collaboration, it's essential to consult our [authorization guide](/collaboration/getting-started/authenticate).
+要充分了解文档命名如何影响 Tiptap Collaboration 中的访问控制，请务必参阅我们的[授权指南](/collaboration/getting-started/authenticate)。
