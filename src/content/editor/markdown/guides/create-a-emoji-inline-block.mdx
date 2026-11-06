@@ -1,21 +1,21 @@
 ---
-title: Create an Emoji Inline Node with Markdown Support
+title: 创建支持 Markdown 的 Emoji 行内节点
 tags:
   - type: beta
 meta:
-  title: Create an Emoji Inline Node with Markdown | Tiptap Editor Docs
-  description: Learn how to create a custom Emoji inline node in Tiptap that supports shortcode Markdown (e.g., :smile:).
-  category: Editor
+  title: 创建支持 Markdown 的 Emoji 行内节点 | Tiptap 编辑器文档
+  description: 了解如何在 Tiptap 中创建自定义 Emoji 行内节点，使其支持简码 Markdown（例如 :smile:）。
+  category: 编辑器
 ---
 
-This guide shows how to add Markdown support for a small atomic inline node that renders emoji shortcodes (for example `:smile:`). We'll walk through four clear steps and include a full example at each step so you always have the complete context:
+本指南将介绍如何为一个小型原子行内节点添加 Markdown 支持，该节点可以渲染 Emoji 简码（例如 `:smile:`）。我们将分为四个步骤，并在每一步提供完整示例，确保你始终能了解完整上下文：
 
-1. Create the basic `emoji` Node (no Markdown).
-2. Step 2: Add a tokenizer to convert `:name:` into tokens.
-3. Step 3: Add the parser to turn tokens into Tiptap JSON.
-4. Step 4: Add the renderer to serialize Tiptap JSON back to Markdown.
+1. 创建基础 `emoji` 节点（不含 Markdown 支持）。
+2. 添加分词器，将 `:name:` 转换为令牌。
+3. 添加解析器，将令牌转换为 Tiptap JSON。
+4. 添加渲染器，将 Tiptap JSON 序列化回 Markdown。
 
-Example shorthand we'll support:
+我们将支持以下简写形式：
 
 ```md
 Hello :smile: world!
@@ -23,9 +23,9 @@ Hello :smile: world!
 
 ---
 
-## Step 1: Create the basic `emoji` node
+## 第 1 步：创建基础 `emoji` 节点
 
-Start by defining a small atomic inline node that stores a `name` attribute and renders an emoji in HTML.
+首先，定义一个小型原子行内节点，用于存储 `name` 属性，并在 HTML 中渲染 Emoji。
 
 ```js
 import { Node } from '@tiptap/core'
@@ -62,15 +62,15 @@ export const Emoji = Node.create({
 })
 ```
 
-**Notes:**
-- The node is `atom: true` and `inline` so it behaves like an indivisible inline piece of content.
-- `emojiMap` is used to map short names to actual emoji characters for HTML output.
+**注意：**
+- 节点设置了 `atom: true` 和 `inline`，因此它的行为就像不可拆分的行内内容。
+- `emojiMap` 用于将简短名称映射为实际的 Emoji 字符，以便输出 HTML。
 
 ---
 
-## Step 2: Add a custom Markdown tokenizer
+## 第 2 步：添加自定义 Markdown 分词器
 
-The tokenizer recognizes `:name:` shortcodes in inline Markdown and returns a token with the emoji name. Below is the full extension including the tokenizer so you can see how it integrates with the base Node.
+分词器会识别行内 Markdown 中的 `:name:` 简码，并返回包含 Emoji 名称的令牌。下面是包含分词器的完整扩展，以便你了解它如何与基础 Node 集成。
 
 ```js
 import { Node } from '@tiptap/core'
@@ -126,16 +126,16 @@ export const Emoji = Node.create({
 })
 ```
 
-**Implementation notes:**
-- `start` is an optimization used by the lexer to quickly find candidate positions.
-- The tokenizer returns a token object with `type`, `raw`, and `emojiName` fields that the parser will consume.
-- Keep the tokenizer inline-level (`level: 'inline'`) so it integrates with inline parsing.
+**实现说明：**
+- `start` 是一种优化，供词法分析器快速查找候选位置。
+- 分词器会返回包含 `type`、`raw` 和 `emojiName` 字段的令牌对象，解析器将使用这些字段。
+- 将分词器设为行内级别（`level: 'inline'`），使其能够参与行内解析。
 
 ---
 
-## Step 3: Add the parser
+## 第 3 步：添加解析器
 
-The `parseMarkdown` function converts the tokenizer token into a Tiptap node. For an atomic inline node, it should return a node object with the `type` and `attrs`. Here's the full extension now including tokenizer + parse.
+`parseMarkdown` 函数会将分词器生成的令牌转换为 Tiptap 节点。对于原子行内节点，应返回一个包含 `type` 和 `attrs` 的节点对象。下面是包含分词器和解析器的完整扩展。
 
 ```js
 import { Node } from '@tiptap/core'
@@ -198,15 +198,15 @@ export const Emoji = Node.create({
 })
 ```
 
-**Notes:**
-- The `parseMarkdown` function should return an object where `type` matches the node `name`.
-- Atomic nodes do not supply `content`; they are standalone nodes with attributes.
+**注意：**
+- `parseMarkdown` 函数应返回一个对象，其中 `type` 与节点的 `name` 相匹配。
+- 原子节点不提供 `content`；它们是带属性的独立节点。
 
 ---
 
-## Step 4: Add the renderer
+## 第 4 步：添加渲染器
 
-To support serializing the editor state back to Markdown shortcodes, implement the `renderMarkdown` function. It receives a Tiptap node and should return a Markdown string representing that node. Below is the full extension with tokenizer, parse, and render included.
+要支持将编辑器状态序列化回 Markdown 简码，请实现 `renderMarkdown` 函数。该函数接收一个 Tiptap 节点，并应返回表示该节点的 Markdown 字符串。下面是包含分词、解析和渲染功能的完整扩展。
 
 ```js
 import { Node } from '@tiptap/core'
@@ -277,21 +277,21 @@ export const Emoji = Node.create({
 
 ---
 
-## Usage
+## 用法
 
-Set the editor content from Markdown that contains emoji shortcodes. Depending on your Markdown integration, pass `contentType: 'markdown'` or use the API your setup provides:
+使用包含 Emoji 简码的 Markdown 设置编辑器内容。根据你的 Markdown 集成方式，传入 `contentType: 'markdown'`，或使用所配置环境提供的 API：
 
 ```js
 editor.commands.setContent('Hello :smile: :heart: :thumbsup:', { contentType: 'markdown' })
 ```
 
-This will produce inline `emoji` nodes with corresponding `name` attributes, and HTML rendering will display the mapped emoji characters (via `emojiMap`).
+这将生成带有相应 `name` 属性的行内 `emoji` 节点；HTML 渲染时会显示映射后的 Emoji 字符（通过 `emojiMap`）。
 
 ---
 
-## Testing and edge cases
+## 测试与边缘情况
 
-- Unknown names: If a shortcode isn't in `emojiMap`, the node currently renders the raw `name` in the span (you may prefer to show a fallback or remove the node). Validate or normalize names in `markdownTokenizer` or `parseMarkdown` if needed.
-- Case sensitivity: The tokenizer uses an `i` flag to allow case-insensitive names; ensure your `emojiMap` keys match your chosen convention or normalize them with `.toLowerCase()`.
-- Inline parsing: Because this is an inline tokenizer, it will be tried within paragraph and inline contexts — ensure it doesn't conflict with other inline tokenizers (like emphasis) by adjusting the regex or using surrounding whitespace checks if necessary.
-- Atomic behavior: The node is atomic, so it won't be editable as text. This is appropriate for emoji elements but might need different behavior for editable shortcodes.
+- 未知名称：如果某个简码不在 `emojiMap` 中，当前节点会在 span 中渲染原始 `name`（你也可以选择显示备用内容或移除该节点）。如有需要，可在 `markdownTokenizer` 或 `parseMarkdown` 中验证或规范化名称。
+- 大小写敏感性：分词器使用 `i` 标志，因此名称不区分大小写；请确保 `emojiMap` 键符合你选择的命名约定，或使用 `.toLowerCase()` 将其统一为小写。
+- 行内解析：由于这是一个行内分词器，它会在段落和行内上下文中尝试匹配。请确保它不会与其他行内分词器（例如强调语法）冲突；必要时可调整正则表达式，或检查周围空白字符。
+- 原子行为：该节点是原子的，因此不能作为文本进行编辑。这适用于 Emoji 元素，但如果需要编辑简码，可能就需要采用不同的行为。
