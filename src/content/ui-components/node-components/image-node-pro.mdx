@@ -2,11 +2,11 @@
 title: Image Node Pro
 meta:
   title: Image Node Pro | Tiptap UI Components
-  description: Add resizable images to your Tiptap editor with editable captions, keyboard navigation, alignment controls, and a floating toolbar.
-  category: UI Components
+  description: 为 Tiptap 编辑器添加可调整大小的图片，并支持可编辑说明文字、键盘导航、对齐控制和浮动工具栏。
+  category: UI 组件
 component:
   name: Image Node Pro
-  description: An enhanced image node component with editable captions, keyboard-safe navigation, resizing, alignment controls, and a floating toolbar.
+  description: 增强型图片节点组件，支持可编辑说明文字、键盘安全导航、调整大小、对齐控制和浮动工具栏。
   type: node-component
   isFree: false
   isCloud: false
@@ -20,41 +20,39 @@ tags:
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-An enhanced image node component for Tiptap editors. Features drag-to-resize, editable captions, keyboard-safe navigation, floating toolbar controls, image alignment options, download functionality, responsive styling, and accessible interaction patterns.
+适用于 Tiptap 编辑器的增强型图片节点组件。支持拖动调整大小、可编辑说明文字、键盘安全导航、浮动工具栏控件、图片对齐选项、下载功能、自适应样式和无障碍交互模式。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-node/image-node-pro" />
 
-## Installation
+## 安装
 
-Add the component via the Tiptap CLI:
+通过 Tiptap CLI 添加组件：
 
 ```bash
 npx @tiptap/cli@latest add image-node-pro floating-element toolbar
 ```
 
-<Callout title="Where is the source code?" variant="info">
-  The preview above is a live demo. The command installs Image Node Pro and the `FloatingElement`
-  and `Toolbar` wrappers used by the example below. Tiptap UI Components are delivered as editable
-  source files copied into your project (under `@/components/…`), not as an npm package. That is why
-  the imports resolve to files in your own codebase rather than a module in `node_modules`.
+<Callout title="源代码在哪里？" variant="info">
+  上方预览是一个实时演示。该命令会安装 Image Node Pro，以及下方示例所用的 `FloatingElement`
+  和 `Toolbar` 包装组件。Tiptap UI Components 以可编辑源文件的形式提供，并复制到你的项目中（位于
+  `@/components/…` 下），而不是作为 npm 包提供。因此，导入路径会指向你自己的代码库中的文件，而不是
+  `node_modules` 中的模块。
 </Callout>
 
-### Update an existing installation
+### 更新现有安装
 
-UI Components are copied into your project, so existing installations do not update automatically.
-To receive the complete image, floating element, and toolbar fixes, reinstall them with overwrite
-enabled:
+UI Components 会复制到你的项目中，因此现有安装不会自动更新。若要获取完整的图片、浮动元素和工具栏修复，
+请启用覆盖并重新安装：
 
 ```bash
 npx @tiptap/cli@latest add image-node-pro floating-element toolbar -o
 ```
 
-<Callout title="Review local customizations first" variant="warning">
-  The `-o` flag overwrites installed component files. Commit or review local customizations before
-  running the update.
+<Callout title="请先检查本地自定义内容" variant="warning">
+  `-o` 标志会覆盖已安装的组件文件。运行更新前，请先提交或检查本地自定义内容。
 </Callout>
 
-## Usage
+## 用法
 
 ```tsx
 import { EditorContent, EditorContext, useEditor } from '@tiptap/react'
@@ -89,76 +87,60 @@ export default function ImageEditor() {
 }
 ```
 
-`EditorContext.Provider` is required here because the actions rendered by `ImageNodeFloating` read the
-editor from context. `FloatingElement` positions the controls relative to the selected image, while
-`Toolbar` supplies the accessible toolbar interaction model.
+这里必须使用 `EditorContext.Provider`，因为 `ImageNodeFloating` 渲染的操作会从上下文中读取编辑器。`FloatingElement`
+会相对于所选图片定位控件，而 `Toolbar` 则提供符合无障碍要求的工具栏交互模式。
 
-## Features
+## 功能
 
-- Drag-to-resize: hover an image and drag the handle on either side to set its width
-- Editable image captions
-- Floating toolbar with alignment controls
-- Image download functionality
-- Delete node button
-- Alignment options (left, center, right)
-- Configured HTML attributes are preserved when serializing bare and captioned images
-- Enhanced accessibility
-- Responsive image sizing
-- Selection highlighting
-- Stable image selection after content is inserted before or after the node
-- Keyboard navigation around captionless images and into or out of visible captions
-- Predictable undo boundaries for image deletion and resizing
-- Read-only-safe captions and resize controls
+- 拖动调整大小：将鼠标悬停在图片上，拖动任一侧的手柄即可设置图片宽度
+- 可编辑图片说明文字
+- 带对齐控制的浮动工具栏
+- 图片下载功能
+- 删除节点按钮
+- 对齐选项（左对齐、居中、右对齐）
+- 序列化无说明文字和带说明文字的图片时，保留已配置的 HTML 属性
+- 增强的无障碍支持
+- 自适应图片尺寸
+- 选中状态高亮
+- 在节点前后插入内容后，仍能稳定选中图片
+- 在无说明文字的图片周围进行键盘导航，以及进入或离开可见说明文字
+- 图片删除和调整大小具有可预测的撤销边界
+- 说明文字和调整大小控件支持只读模式
 
-### Selection and caption behavior
+### 选中和说明文字行为
 
-Image Node Pro tracks its document position as surrounding content changes, so clicking the image
-continues to create a node selection after blocks are inserted or edited before it. Captionless
-images behave like atomic blocks during keyboard navigation: the caret skips their hidden caption
-content instead of entering an invisible text position. Visible captions remain editable and
-navigable.
+Image Node Pro 会在周围内容发生变化时跟踪图片在文档中的位置，因此即使在图片前插入或编辑区块，点击图片仍会创建节点选区。
+在键盘导航时，不带说明文字的图片会像原子区块一样处理：光标会跳过隐藏的说明文字内容，而不会进入不可见的文本位置。可见说明文字仍可编辑和导航。
 
-Empty captions close when focus leaves the image or when you press `Escape`. Populated captions
-remain visible, including in read-only editors. Image deletion and resize commits use separate undo
-boundaries, so the first undo restores the deleted image or previous size without also reverting the
-latest caption edit.
+当焦点离开图片或按下 `Escape` 时，空说明文字会关闭。已填写的说明文字会保持显示，包括在只读编辑器中。图片删除和调整大小的提交分别具有独立的撤销边界，因此第一次撤销会恢复已删除的图片或之前的尺寸，而不会同时撤销最近一次说明文字编辑。
 
-### Keyboard behavior
+### 键盘行为
 
-| Key                                               | Behavior                                                                                                                              |
-| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `ArrowUp`, `ArrowDown`, `ArrowLeft`, `ArrowRight` | Move around captionless images without entering hidden caption content, and enter or leave visible captions at their boundaries.      |
-| `Enter`                                           | Leave the selected image or caption and move into an existing or new paragraph after the image.                                       |
-| `Shift+Enter`, `Mod+Enter`                        | Insert a hard break while editing a caption when the editor schema supports hard breaks.                                              |
-| `Backspace`, `Delete`                             | Edit text normally inside a caption. At an image boundary, select the image first; pressing the key again removes the selected image. |
-| `Escape`                                          | Return to image node selection and close the caption when it is empty.                                                                |
-| `Mod+A`                                           | In a non-empty caption, select the caption content first, then progress to the whole document.                                        |
+| 按键                                              | 行为                                                                                                                                |
+| ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `ArrowUp`、`ArrowDown`、`ArrowLeft`、`ArrowRight` | 在无说明文字的图片周围移动，不进入隐藏的说明文字内容；在可见说明文字的边界处进入或离开说明文字。                                    |
+| `Enter`                                           | 离开已选中的图片或说明文字，并移至图片后的现有段落或新段落中。                                                                      |
+| `Shift+Enter`、`Mod+Enter`                        | 如果编辑器的 schema 支持硬换行，则在编辑说明文字时插入硬换行。                                                                      |
+| `Backspace`、`Delete`                             | 在说明文字中正常编辑文本。在图片边界处，先选中图片；再次按下按键即可删除所选图片。                                                   |
+| `Escape`                                          | 返回图片节点选中状态；如果说明文字为空，则将其关闭。                                                                                |
+| `Mod+A`                                           | 在非空说明文字中，先选中说明文字内容，然后扩展为选中整个文档。                                                                      |
 
-The floating image toolbar uses horizontal roving focus. Press `Tab` to enter it, use `ArrowLeft`,
-`ArrowRight`, `Home`, and `End` to move between controls, and press `Enter` (or native `Space` on a
-button) to activate the focused control. `Tab` and `Shift+Tab` leave the toolbar instead of trapping
-focus.
+浮动图片工具栏采用水平循环焦点导航。按 `Tab` 进入工具栏，使用 `ArrowLeft`、`ArrowRight`、`Home` 和 `End` 在控件间移动，
+然后按 `Enter`（或按钮上的原生 `Space`）激活当前聚焦的控件。按 `Tab` 和 `Shift+Tab` 会离开工具栏，不会将焦点限制在工具栏内。
 
-### HTML input and output
+### HTML 输入和输出
 
-Captionless images serialize as `<img>` elements. Images with a visible or populated caption
-serialize as a `<figure>` containing one `<img>` and one `<figcaption>`. Configured `HTMLAttributes`
-are applied to the serialized `<img>` in both forms.
+不带说明文字的图片会序列化为 `<img>` 元素。带有可见或已填写说明文字的图片会序列化为一个 `<figure>`，其中包含一个 `<img>` 和一个 `<figcaption>`。在这两种形式中，已配置的 `HTMLAttributes` 都会应用于序列化后的 `<img>`。
 
-When parsing HTML, positive `width` and `height` values are normalized to numbers; invalid, zero, or
-negative dimensions are ignored. The `allowBase64` option is applied consistently to bare images and
-images inside figures. A figure is treated as a single captioned image only when it contains exactly
-one valid direct-child `<img>`. Figures containing multiple images are not collapsed into one node;
-eligible images remain separate.
+解析 HTML 时，正数 `width` 和 `height` 值会规范化为数字；无效、为零或负数的尺寸会被忽略。`allowBase64` 选项会一致地应用于独立图片和 figure 内的图片。只有当 figure 恰好包含一个有效的直接子级 `<img>` 时，才会将其视为带说明文字的单张图片。包含多张图片的 figure 不会折叠为一个节点；符合条件的图片仍会作为独立图片保留。
 
-## Extensions
+## 扩展
 
-### `Image` (Enhanced)
+### `Image`（增强版）
 
-Extends the Tiptap Image extension with inline caption content, figure parsing and serialization,
-alignment attributes, isolating keyboard behavior, and a tracked resizable React node view.
+扩展 Tiptap Image 扩展，支持行内说明文字内容、figure 解析和序列化、对齐属性、隔离式键盘行为，以及可跟踪的可调整大小 React 节点视图。
 
-#### Usage
+#### 用法
 
 ```tsx
 import { Image } from '@/components/tiptap-node/image-node/image-node-extension'
@@ -168,76 +150,72 @@ const editor = useEditor({
 })
 ```
 
-## Floating Toolbar Components
+## 浮动工具栏组件
 
-`ImageNodeFloating` renders the image action group. When it is mounted inside `FloatingElement` and
-`Toolbar`, the controls appear whenever an image is selected.
+`ImageNodeFloating` 会渲染图片操作组。将它挂载在 `FloatingElement` 和 `Toolbar` 中后，每当选中图片时，控件都会显示。
 
 ### `<ImageNodeFloating />`
 
-Combines the alignment, caption, download, replace, and delete actions for the selected image.
+组合用于所选图片的对齐、说明文字、下载、替换和删除操作。
 
 ### `<DeleteNodeButton />`
 
-Remove the selected image node from the editor.
+从编辑器中删除所选图片节点。
 
 ### `<ImageDownloadButton />`
 
-Download the image to the user's device.
+将图片下载到用户的设备。
 
 ### `<ImageAlignButton />`
 
-Control image alignment with options for left, center, and right alignment.
+通过左对齐、居中和右对齐选项控制图片对齐方式。
 
 ### `<ImageCaptionButton />`
 
-Show or hide the editable caption for the selected image.
+显示或隐藏所选图片的可编辑说明文字。
 
 ### `<ImageUploadButton />`
 
-Replaces the selected image when the editor schema includes the `imageUpload` extension. The Replace
-action stays hidden when that extension is unavailable.
+当编辑器 schema 包含 `imageUpload` 扩展时，替换所选图片。如果没有该扩展，替换操作会保持隐藏。
 
-## How It Works
+## 工作原理
 
-The image node system works through several integrated layers:
+图片节点系统通过多个相互集成的层协同工作：
 
-1. **Enhanced Display**: Extends the basic Tiptap Image extension with additional styling and responsive behavior
-2. **Floating Toolbar**: Provides contextual controls that appear when an image is selected
-3. **Resizing**: Drag handles on either side of a hovered image let you set its width interactively
-4. **Alignment System**: Manages image positioning with left, center, and right alignment options
-5. **Node Management**: Handles image deletion and download functionality through toolbar actions
-6. **State Integration**: Seamlessly integrates with Tiptap's node system and command architecture
+1. **增强显示**：扩展基础 Tiptap Image 扩展，添加额外样式和自适应行为
+2. **浮动工具栏**：选中图片时显示上下文相关控件
+3. **调整大小**：鼠标悬停在图片上时，可通过两侧的拖动手柄交互式设置图片宽度
+4. **对齐系统**：通过左对齐、居中和右对齐选项管理图片位置
+5. **节点管理**：通过工具栏操作处理图片删除和下载
+6. **状态集成**：与 Tiptap 的节点系统和命令架构无缝集成
 
-After you mount `FloatingElement`, `Toolbar`, and `ImageNodeFloating` as shown above, selecting an image
-opens the floating toolbar with alignment, caption, download, optional replace, and delete controls.
+如上所示，挂载 `FloatingElement`、`Toolbar` 和 `ImageNodeFloating` 后，选中图片会打开浮动工具栏，其中包含对齐、说明文字、下载、可选的替换和删除控件。
 
-## Requirements
+## 要求
 
-### Dependencies
+### 依赖项
 
-- `@tiptap/core` - Core types and HTML attribute utilities
-- `@tiptap/extension-image` - Core image extension
-- `@tiptap/pm` - ProseMirror model, selection, transaction, and history utilities
-- `@tiptap/react` - React integration
-- `sass` - SCSS compiler development dependency
-- `sass-embedded` - Embedded Sass development dependency
+- `@tiptap/core` - 核心类型和 HTML 属性工具
+- `@tiptap/extension-image` - 核心图片扩展
+- `@tiptap/pm` - ProseMirror 模型、选区、事务和历史记录工具
+- `@tiptap/react` - React 集成
+- `sass` - SCSS 编译器开发依赖
+- `sass-embedded` - Embedded Sass 开发依赖
 
-### Referenced Components
+### 引用的组件
 
-The `image-node-pro` registry item installs these direct registry dependencies automatically:
+`image-node-pro` registry 项会自动安装以下直接 registry 依赖：
 
-- `image-node` (node component and styles)
-- `use-tiptap-editor` (hook)
-- `tiptap-utils` (lib)
-- `delete-node-button` (component)
-- `image-download-button` (component)
-- `image-align-button` (component)
-- `image-caption-button` (component)
-- `image-upload-button` (component)
-- `refresh-ccw-icon` (icon)
-- `separator` (primitive)
-- `styles` (shared styles)
+- `image-node`（节点组件和样式）
+- `use-tiptap-editor`（Hook）
+- `tiptap-utils`（库）
+- `delete-node-button`（组件）
+- `image-download-button`（组件）
+- `image-align-button`（组件）
+- `image-caption-button`（组件）
+- `image-upload-button`（组件）
+- `refresh-ccw-icon`（图标）
+- `separator`（基础组件）
+- `styles`（共享样式）
 
-The quick-start install command adds `floating-element` and `toolbar` separately because they compose
-the contextual toolbar around Image Node Pro rather than being imported by the image node itself.
+快速入门安装命令会单独添加 `floating-element` 和 `toolbar`，因为它们用于组合 Image Node Pro 周围的上下文工具栏，而不是由图片节点本身导入。
