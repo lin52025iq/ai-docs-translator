@@ -1,18 +1,18 @@
 ---
-title: Markdown Extension API
+title: Markdown 扩展 API
 tags:
   - type: beta
 meta:
-  title: Markdown Extension API | Tiptap Editor Docs
-  description: Learn how to create custom Markdown extensions for Tiptap using the Markdown Extension API.
+  title: Markdown 扩展 API | Tiptap 编辑器文档
+  description: 了解如何使用 Markdown Extension API 为 Tiptap 创建自定义 Markdown 扩展。
   category: Editor
 ---
 
-## Extension Configuration
+## 扩展配置
 
 ### `Markdown.configure(options)`
 
-Configure the Markdown extension with custom options.
+使用自定义选项配置 Markdown 扩展。
 
 ```typescript
 Markdown.configure({
@@ -25,22 +25,22 @@ Markdown.configure({
 })
 ```
 
-#### Parameters
+#### 参数
 
-- **`indentation`** (optional)
+- **`indentation`**（可选）
 
-  - `style`: Indentation character: `'space'` or `'tab'`. Default: `'space'`
-  - `size`: Number of indentation characters. Default: `2`
+  - `style`：缩进字符：`'space'` 或 `'tab'`。默认值：`'space'`
+  - `size`：缩进字符数。默认值：`2`
 
-- **`marked`** (optional)
+- **`marked`**（可选）
 
-  - Custom MarkedJS instance to use for parsing
+  - 用于解析的自定义 MarkedJS 实例
 
-- **`markedOptions`** (optional)
-  - Options passed to `marked.setOptions()`
-  - See [marked documentation](https://marked.js.org/using_advanced#options)
+- **`markedOptions`**（可选）
+  - 传递给 `marked.setOptions()` 的选项
+  - 请参阅 [marked 文档](https://marked.js.org/using_advanced#options)
 
-#### Example
+#### 示例
 
 ```typescript
 import { Markdown } from '@tiptap/markdown'
