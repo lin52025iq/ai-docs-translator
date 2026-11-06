@@ -1,40 +1,40 @@
 ---
-title: Workflows
+title: 工作流
 meta:
-  title: Workflows | Tiptap AI Toolkit
-  description: API reference for the built-in workflows of the AI Toolkit.
+  title: 工作流 | Tiptap AI Toolkit
+  description: AI Toolkit 内置工作流的 API 参考。
   category: AI Toolkit
 ---
 
-Workflows are scenarios where the AI model has a single, well-defined task. The AI Toolkit includes these built-in workflows:
+工作流是指 AI 模型执行单一且定义明确的任务的场景。AI Toolkit 内置了以下工作流：
 
-- [Insert content](/ai/ai-toolkit/client/workflows/insert-content).
-- [Proofreader](/ai/ai-toolkit/client/workflows/proofreader).
-- [Tiptap Edit](/ai/ai-toolkit/client/workflows/tiptap-edit).
-- [Comments](/ai/ai-toolkit/client/workflows/comments).
-- [Template](/ai/ai-toolkit/client/workflows/template).
+- [插入内容](/ai/ai-toolkit/client/workflows/insert-content)。
+- [校对](/ai/ai-toolkit/client/workflows/proofreader)。
+- [Tiptap Edit](/ai/ai-toolkit/client/workflows/tiptap-edit)。
+- [评论](/ai/ai-toolkit/client/workflows/comments)。
+- [模板](/ai/ai-toolkit/client/workflows/template)。
 
-Below is the API reference for the methods that support these built-in workflows.
+以下是支持这些内置工作流的方法的 API 参考。
 
-## `createProofreaderWorkflow` (server-side utility)
+## `createProofreaderWorkflow`（服务端工具）
 
-Creates a ready-made workflow configuration for proofreading. Returns a system prompt and schemas for validating AI output.
+创建现成的校对工作流配置。返回系统提示词以及用于验证 AI 输出的 schema。
 
-The workflow expects a user prompt as a JSON object with:
+该工作流要求用户提示词为 JSON 对象，包含以下字段：
 
-- `content`: The content of the document to be proofread (see the client-side setup section on how to obtain it)
-- `task`: A string describing the task to complete
-- `context`: (Optional) Additional context or background information related to the task
+- `content`：要校对的文档内容（如何获取，请参阅客户端设置部分）
+- `task`：描述要完成任务的字符串
+- `context`：（可选）与任务相关的其他上下文或背景信息
 
-### Returns
+### 返回值
 
-- `systemPrompt` (`string`): Ready-to-use system prompt that instructs the AI model on how to generate proofreading operations
-- `zodOutputSchema` (`ZodObject`): Zod schema for validating the AI output
-- `jsonOutputSchema` (`object`): JSON schema for validating the AI output
+- `systemPrompt`（`string`）：可直接使用的系统提示词，用于指示 AI 模型如何生成校对操作
+- `zodOutputSchema`（`ZodObject`）：用于验证 AI 输出的 Zod schema
+- `jsonOutputSchema`（`object`）：用于验证 AI 输出的 JSON schema
 
-The `systemPrompt` field contains an example ready-to-use prompt with sensible defaults. We encourage you to read it and modify it to fit your needs.
+`systemPrompt` 字段包含一个可直接使用的示例提示词，其中设置了合理的默认值。建议阅读并根据需要进行修改。
 
-### Example
+### 示例
 
 ```ts
 import { createProofreaderWorkflow } from '@tiptap-pro/client-ai-toolkit-tool-definitions'
@@ -61,24 +61,24 @@ const result = streamText({
 })
 ```
 
-## `createInsertContentWorkflow` (server-side utility)
+## `createInsertContentWorkflow`（服务端工具）
 
-Creates a ready-made workflow configuration for inserting or replacing content. Returns a system prompt for the AI model.
+创建用于插入或替换内容的现成工作流配置。返回供 AI 模型使用的系统提示词。
 
-The workflow expects a user prompt that is a JSON object with the following properties:
+该工作流要求用户提示词为包含以下属性的 JSON 对象：
 
-- `task`: the task to complete
-- `replace`: the HTML content to be replaced (optional)
-- `before`: the HTML content before (optional)
-- `after`: the HTML content after (optional)
+- `task`：要完成的任务
+- `replace`：要替换的 HTML 内容（可选）
+- `before`：前面的 HTML 内容（可选）
+- `after`：后面的 HTML 内容（可选）
 
-### Returns
+### 返回值
 
-- `systemPrompt` (`string`): Ready-to-use system prompt that instructs the AI model on how to generate HTML content
+- `systemPrompt`（`string`）：可直接使用的系统提示词，用于指示 AI 模型如何生成 HTML 内容
 
-The `systemPrompt` field contains an example ready-to-use prompt with sensible defaults. We encourage you to read it and modify it to fit your needs.
+`systemPrompt` 字段包含一个可直接使用的示例提示词，其中设置了合理的默认值。建议阅读并根据需要进行修改。
 
-### Example
+### 示例
 
 ```ts
 import { createInsertContentWorkflow } from '@tiptap-pro/client-ai-toolkit-tool-definitions'
@@ -107,30 +107,30 @@ return createTextStreamResponse({ stream: toTextStream({ stream: result.stream }
 
 ## `proofreaderWorkflow`
 
-Applies a list of proofreading operations to the document.
+将一组校对操作应用于文档。
 
-### Parameters
+### 参数
 
-- `options` (`ProofreaderWorkflowOptions`): Configuration options
-  - `hasFinished` (`boolean`): Whether streaming has finished. Pass `false` while operations are still streaming and `true` for the final call.
-  - `operations` (`PartialProofreaderOperation[]`): Array of proofreading operations.
-  - `workflowId` (`unknown`): Unique ID for this workflow run
-  - `reviewOptions?` ([`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options)): Control preview/review behavior. [See available options](/ai/ai-toolkit/client/api-reference/review-options).
-    - In this method, `diffUtilityOptions.groupInlineChanges` defaults to `2` instead of `1`, so edits are shown as inline changes by default.
-    - `mode: 'trackedChanges'` is supported when the [Tracked Changes](/tracked-changes/getting-started/overview) extension is installed.
-  - `range?` (`Range`): The range to apply the proofreading operations to
-    - `from` (`number`): Start position
-    - `to` (`number`): End position
+- `options`（`ProofreaderWorkflowOptions`）：配置选项
+  - `hasFinished`（`boolean`）：流式传输是否已完成。操作仍在流式传输时传入 `false`，最后一次调用时传入 `true`。
+  - `operations`（`PartialProofreaderOperation[]`）：校对操作数组。
+  - `workflowId`（`unknown`）：本次工作流运行的唯一 ID
+  - `reviewOptions?`（[`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options)）：控制预览/审阅行为。[查看可用选项](/ai/ai-toolkit/client/api-reference/review-options)。
+    - 在此方法中，`diffUtilityOptions.groupInlineChanges` 默认值为 `2`，而不是 `1`，因此默认以内联变更的形式显示编辑内容。
+    - 安装了 [Tracked Changes](/tracked-changes/getting-started/overview) 扩展时，支持 `mode: 'trackedChanges'`。
+  - `range?`（`Range`）：要对其应用校对操作的范围
+    - `from`（`number`）：起始位置
+    - `to`（`number`）：结束位置
 
-### Returns (`ProofreaderWorkflowResult`)
+### 返回值（`ProofreaderWorkflowResult`）
 
-- `doc` (`Node`): The modified document after applying operations
-- `operationResults` (`OperationResult[]`): Array of operation results, in the same order as the input operations. Each result contains:
-  - `target` (`string`): The target hash associated with the operation result
-  - `success` (`boolean`): Whether the operation was successful
-  - `error` (`string | null`): Error message if the operation failed, otherwise `null`
+- `doc`（`Node`）：应用操作后修改的文档
+- `operationResults`（`OperationResult[]`）：操作结果数组，顺序与输入操作相同。每个结果包含：
+  - `target`（`string`）：与操作结果关联的目标哈希
+  - `success`（`boolean`）：操作是否成功
+  - `error`（`string | null`）：操作失败时的错误消息，否则为 `null`
 
-### Example
+### 示例
 
 ```ts
 const toolkit = getAiToolkit(editor)
@@ -151,23 +151,23 @@ const result = toolkit.proofreaderWorkflow({
 })
 ```
 
-## `createTiptapEditWorkflow` (server-side utility)
+## `createTiptapEditWorkflow`（服务端工具）
 
-Creates a ready-made workflow configuration for editing documents. Returns a system prompt and schemas for validating AI output.
+创建用于编辑文档的现成工作流配置。返回系统提示词以及用于验证 AI 输出的 schema。
 
-The workflow expects a user prompt as a JSON object with:
+该工作流要求用户提示词为 JSON 对象，包含以下字段：
 
-- `content`: The content of the document to be edited (obtained from `tiptapRead`)
-- `task`: A string describing the editing task to complete
-- `context`: (Optional) Additional context or background information related to the task
+- `content`：要编辑的文档内容（通过 `tiptapRead` 获取）
+- `task`：描述要完成的编辑任务的字符串
+- `context`：（可选）与任务相关的其他上下文或背景信息
 
-### Returns
+### 返回值
 
-- `systemPrompt` (`string`): Ready-to-use system prompt that instructs the AI model on how to generate edit operations
-- `zodOutputSchema` (`ZodObject`): Zod schema for validating the AI output. This schema validates the streamed `operations` object returned by your model.
-- `jsonOutputSchema` (`object`): JSON schema for validating the AI output
+- `systemPrompt`（`string`）：可直接使用的系统提示词，用于指示 AI 模型如何生成编辑操作
+- `zodOutputSchema`（`ZodObject`）：用于验证 AI 输出的 Zod schema。此 schema 会验证模型返回的流式 `operations` 对象。
+- `jsonOutputSchema`（`object`）：用于验证 AI 输出的 JSON schema
 
-### Example
+### 示例
 
 ```ts
 import { createTiptapEditWorkflow } from '@tiptap-pro/client-ai-toolkit-tool-definitions'
@@ -190,34 +190,34 @@ const result = streamText({
 
 ## `tiptapEditWorkflow`
 
-Applies a list of edit operations to the document.
+将一组编辑操作应用于文档。
 
-### Parameters
+### 参数
 
-- `options` (`TiptapEditWorkflowOptions`): Configuration options
-  - `hasFinished` (`boolean`): Whether streaming has finished. Pass `false` while operations are still streaming and `true` for the final call.
-  - `operations` (`PartialTiptapEditOperation[]`): Array of edit operations. Each operation is an object with:
-    - `type`: `'replace'` | `'insertBefore'` | `'insertAfter'`
-    - `target`: The 6-character hash of the node (from `tiptapRead`) or `'doc'` for entire document
-    - `content`: HTML string with the content to insert
-  - `workflowId` (`unknown`): Unique ID for this workflow run
-  - `tiptapReadResult` (`TiptapReadResult`): Result returned by `tiptapRead`, used for stale-read detection while applying edit operations.
-  - `reviewOptions?` ([`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options)): Control preview/review behavior.
-    - `mode: 'trackedChanges'` is supported when the [Tracked Changes](/tracked-changes/getting-started/overview) extension is installed.
-  - `streamingOptions?` (`StreamingOptions`): Controls how streamed operations are applied.
-    - `disableTypingEffect?` (`boolean`): Disables the typing effect while streamed operations are applied.
-  - `tiptapEditHooks?` (`TiptapEditHooks`): Hooks for intercepting and modifying operations. See the [Tiptap Edit hooks guide](/ai/ai-toolkit/client/advanced-guides/tiptap-edit-hooks) for details.
-    - `beforeOperation?` (`(context: BeforeOperationContext) => BeforeOperationResult`): Called before each operation is applied. Return `{ action: 'accept' }` to apply the operation (optionally with `fragment` or `operationType` overrides), or `{ action: 'reject', error }` to skip it.
+- `options`（`TiptapEditWorkflowOptions`）：配置选项
+  - `hasFinished`（`boolean`）：流式传输是否已完成。操作仍在流式传输时传入 `false`，最后一次调用时传入 `true`。
+  - `operations`（`PartialTiptapEditOperation[]`）：编辑操作数组。每个操作都是包含以下属性的对象：
+    - `type`：`'replace'` | `'insertBefore'` | `'insertAfter'`
+    - `target`：节点的 6 字符哈希（来自 `tiptapRead`），或表示整个文档的 `'doc'`
+    - `content`：包含要插入内容的 HTML 字符串
+  - `workflowId`（`unknown`）：本次工作流运行的唯一 ID
+  - `tiptapReadResult`（`TiptapReadResult`）：`tiptapRead` 返回的结果，应用编辑操作时用于检测读取内容是否过期。
+  - `reviewOptions?`（[`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options)）：控制预览/审阅行为。
+    - 安装了 [Tracked Changes](/tracked-changes/getting-started/overview) 扩展时，支持 `mode: 'trackedChanges'`。
+  - `streamingOptions?`（`StreamingOptions`）：控制如何应用流式传输的操作。
+    - `disableTypingEffect?`（`boolean`）：应用流式传输的操作时禁用打字效果。
+  - `tiptapEditHooks?`（`TiptapEditHooks`）：用于拦截和修改操作的钩子。详情请参阅 [Tiptap Edit 钩子指南](/ai/ai-toolkit/client/advanced-guides/tiptap-edit-hooks)。
+    - `beforeOperation?`（`(context: BeforeOperationContext) => BeforeOperationResult`）：在应用每个操作前调用。返回 `{ action: 'accept' }` 以应用操作（可选覆盖 `fragment` 或 `operationType`），或返回 `{ action: 'reject', error }` 以跳过操作。
 
-### Returns (`TiptapEditWorkflowResult`)
+### 返回值（`TiptapEditWorkflowResult`）
 
-- `doc` (`Node`): The modified document after applying operations
-- `operationResults` (`OperationResult[]`): Array of operation results, in execution order. Each result contains:
-  - `target` (`string`): The target hash associated with the operation result
-  - `success` (`boolean`): Whether the operation completed successfully
-  - `error` (`string | null`): Error message if the operation failed, otherwise `null`
+- `doc`（`Node`）：应用操作后修改的文档
+- `operationResults`（`OperationResult[]`）：操作结果数组，顺序与执行顺序相同。每个结果包含：
+  - `target`（`string`）：与操作结果关联的目标哈希
+  - `success`（`boolean`）：操作是否成功完成
+  - `error`（`string | null`）：操作失败时的错误消息，否则为 `null`
 
-### Example
+### 示例
 
 ```ts
 const toolkit = getAiToolkit(editor)
@@ -242,23 +242,23 @@ const result = toolkit.tiptapEditWorkflow({
 })
 ```
 
-## `createEditThreadsWorkflow` (server-side utility)
+## `createEditThreadsWorkflow`（服务端工具）
 
-Creates a ready-made workflow configuration for managing comments and threads. Returns a system prompt and schemas for validating AI output.
+创建用于管理评论和讨论串的现成工作流配置。返回系统提示词以及用于验证 AI 输出的 schema。
 
-The workflow expects a user prompt as a JSON object with:
+该工作流要求用户提示词为 JSON 对象，包含以下字段：
 
-- `content`: The content of the document (obtained from `tiptapRead`)
-- `threads`: The existing threads in the document (obtained from `getThreads`)
-- `task`: A string describing the comment management task to complete
+- `content`：文档内容（通过 `tiptapRead` 获取）
+- `threads`：文档中现有的讨论串（通过 `getThreads` 获取）
+- `task`：描述要完成的评论管理任务的字符串
 
-### Returns
+### 返回值
 
-- `systemPrompt` (`string`): Ready-to-use system prompt that instructs the AI model on how to manage comments
-- `zodOutputSchema` (`ZodObject`): Zod schema for validating the AI output
-- `jsonOutputSchema` (`object`): JSON schema for validating the AI output
+- `systemPrompt`（`string`）：可直接使用的系统提示词，用于指示 AI 模型如何管理评论
+- `zodOutputSchema`（`ZodObject`）：用于验证 AI 输出的 Zod schema
+- `jsonOutputSchema`（`object`）：用于验证 AI 输出的 JSON schema
 
-### Example
+### 示例
 
 ```ts
 import { createEditThreadsWorkflow } from '@tiptap-pro/client-ai-toolkit-tool-definitions'
@@ -281,18 +281,18 @@ const result = streamText({
 
 ## `getThreads`
 
-Retrieves all threads in the document with their comments and location information.
+获取文档中的所有讨论串及其评论和位置信息。
 
-### Returns (`GetThreadsResult`)
+### 返回值（`GetThreadsResult`）
 
-- `threadCount` (`number`): The number of threads in the document
-- `threads` (`ThreadInfo[]`): Array of thread information, each containing:
-  - `id` (`string`): The unique identifier of the thread
-  - `comments` (`{ id: string; content: string }[]`): Array of comments in the thread
-  - `nodeRange?` (`string`): The range of nodes where the thread is located
-  - `documentContent?` (`string`): The HTML content where the thread is applied
+- `threadCount`（`number`）：文档中的讨论串数量
+- `threads`（`ThreadInfo[]`）：讨论串信息数组，每项包含：
+  - `id`（`string`）：讨论串的唯一标识符
+  - `comments`（`{ id: string; content: string }[]`）：讨论串中的评论数组
+  - `nodeRange?`（`string`）：讨论串所在的节点范围
+  - `documentContent?`（`string`）：应用讨论串的位置所包含的 HTML 内容
 
-### Example
+### 示例
 
 ```ts
 const toolkit = getAiToolkit(editor)
@@ -309,22 +309,22 @@ result.threads.forEach((thread) => {
 
 ## `editThreadsWorkflow`
 
-Applies comment and thread operations to the document.
+将评论和讨论串操作应用于文档。
 
-### Parameters
+### 参数
 
-- `options` (`EditThreadsWorkflowOptions`): Configuration options
-  - `operations` (`string[][]`): Array of comment operations as tuples.
-  - `commentsOptions?` (`CommentsOptions`): Options for comment operations
-    - `threadData?` (`Record<string, any>`): Extra metadata for created threads
-    - `commentData?` (`Record<string, any>`): Extra metadata for created comments
+- `options`（`EditThreadsWorkflowOptions`）：配置选项
+  - `operations`（`string[][]`）：以元组形式表示的评论操作数组。
+  - `commentsOptions?`（`CommentsOptions`）：评论操作选项
+    - `threadData?`（`Record<string, any>`）：为创建的讨论串添加的额外元数据
+    - `commentData?`（`Record<string, any>`）：为创建的评论添加的额外元数据
 
-### Returns (`EditThreadsWorkflowResult`)
+### 返回值（`EditThreadsWorkflowResult`）
 
-- `operations` (`EditThreadsOperationResult[]`): Array of operation results
-- `success` (`boolean`): Whether all operations were successful
+- `operations`（`EditThreadsOperationResult[]`）：操作结果数组
+- `success`（`boolean`）：所有操作是否均成功
 
-### Example
+### 示例
 
 ```ts
 const toolkit = getAiToolkit(editor)
@@ -345,30 +345,30 @@ if (result.success) {
 }
 ```
 
-## `createTemplateWorkflow` (server-side utility)
+## `createTemplateWorkflow`（服务端工具）
 
-Creates a ready-made workflow configuration for filling templates. Accepts an HTML template string (generated by the `createHtmlTemplate` method on the client), auto-extracts all template keys, and returns a system prompt and schemas for validating AI output.
+创建用于填充模板的现成工作流配置。该方法接收 HTML 模板字符串（由客户端的 `createHtmlTemplate` 方法生成），自动提取所有模板键，并返回系统提示词以及用于验证 AI 输出的 schema。
 
-The workflow expects a user prompt as a JSON object with:
+该工作流要求用户提示词为 JSON 对象，包含以下字段：
 
-- `task`: A string describing what content to generate for the template
-- `context`: (Optional) Additional context or background information related to the task
+- `task`：描述要为模板生成什么内容的字符串
+- `context`：（可选）与任务相关的其他上下文或背景信息
 
-### Parameters
+### 参数
 
-- `options` (`CreateTemplateWorkflowOptions`): Configuration options
-  - `htmlTemplate` (`string`): The template as an HTML string, generated by the `createHtmlTemplate` method on the client
-  - `requiredSlots?` (`string[]`): Slot names the AI must fill. Unlisted slots are optional. When omitted, all slots are required. Pass an empty array to make all slots optional.
-  - `requiredConditions?` (`string[]`): Condition names the AI must evaluate. Unlisted conditions are optional. When omitted, all conditions are required. Pass an empty array to make all conditions optional.
-  - `requiredAttributes?` (`string[]`): Attribute key names the AI must set. Unlisted attributes are optional. When omitted, all attributes are required. Pass an empty array to make all attributes optional.
+- `options`（`CreateTemplateWorkflowOptions`）：配置选项
+  - `htmlTemplate`（`string`）：以 HTML 字符串表示的模板，由客户端的 `createHtmlTemplate` 方法生成
+  - `requiredSlots?`（`string[]`）：AI 必须填充的插槽名称。未列出的插槽均为可选项。省略时，所有插槽均为必填项。传入空数组则所有插槽均为可选项。
+  - `requiredConditions?`（`string[]`）：AI 必须评估的条件名称。未列出的条件均为可选项。省略时，所有条件均为必填项。传入空数组则所有条件均为可选项。
+  - `requiredAttributes?`（`string[]`）：AI 必须设置的属性键名称。未列出的属性均为可选项。省略时，所有属性均为必填项。传入空数组则所有属性均为可选项。
 
-### Returns
+### 返回值
 
-- `systemPrompt` (`string`): Ready-to-use system prompt that instructs the AI model on how to fill the template
-- `zodOutputSchema` (`ZodObject`): Zod schema for validating the AI output
-- `jsonOutputSchema` (`object`): JSON schema for validating the AI output
+- `systemPrompt`（`string`）：可直接使用的系统提示词，用于指示 AI 模型如何填充模板
+- `zodOutputSchema`（`ZodObject`）：用于验证 AI 输出的 Zod schema
+- `jsonOutputSchema`（`object`）：用于验证 AI 输出的 JSON schema
 
-### Example
+### 示例
 
 ```ts
 import { createTemplateWorkflow } from '@tiptap-pro/client-ai-toolkit-tool-definitions'
@@ -391,20 +391,20 @@ return createTextStreamResponse({ stream: toTextStream({ stream: result.stream }
 
 ## `templateWorkflow`
 
-Fills a Tiptap JSON template with AI-generated values and inserts the result into the editor. The template uses special attributes (`_templateSlot`, `_templateIf`, `_templateAttributes`, `_templateFieldMetadata`) to mark dynamic parts.
+使用 AI 生成的值填充 Tiptap JSON 模板，并将结果插入编辑器。模板使用特殊属性（`_templateSlot`、`_templateIf`、`_templateAttributes`、`_templateFieldMetadata`）标记动态部分。
 
-### Parameters
+### 参数
 
-- `options` (`TemplateWorkflowOptions`): Configuration options
-  - `template` (`Record<string, any>`): The template in Tiptap JSON format (a doc node or fragment array)
-  - `values` (`TemplateValues`): AI-generated values to fill the template. Keys correspond to template attribute values.
-  - `position?` (`Range | number`): Where to insert the filled template. Default: entire document range.
-  - `hasFinished?` (`boolean`): Whether streaming has finished. When omitted, the method runs in non-streaming mode. Default: `true`
-  - `workflowId?` (`unknown`): Unique ID for this workflow run. When provided, enables streaming mode where the method tracks the insertion range across calls and replaces content progressively.
-  - `preserveSlotAttr?` (`boolean`): When `true`, keeps `_templateSlot` attributes on nodes after filling. This allows identifying AI-filled content and re-filling template fields later. Default: `false`
-  - `reviewOptions?` ([`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options)): Control preview/review behavior
+- `options`（`TemplateWorkflowOptions`）：配置选项
+  - `template`（`Record<string, any>`）：Tiptap JSON 格式的模板（doc 节点或片段数组）
+  - `values`（`TemplateValues`）：用于填充模板的 AI 生成值。键对应模板属性值。
+  - `position?`（`Range | number`）：插入已填充模板的位置。默认值：整个文档范围。
+  - `hasFinished?`（`boolean`）：流式传输是否已完成。省略时，方法以非流式模式运行。默认值：`true`
+  - `workflowId?`（`unknown`）：本次工作流运行的唯一 ID。提供此值后会启用流式模式，方法会在多次调用间跟踪插入范围并逐步替换内容。
+  - `preserveSlotAttr?`（`boolean`）：为 `true` 时，填充后保留节点上的 `_templateSlot` 属性。这样便可识别 AI 填充的内容，并在之后重新填充模板字段。默认值：`false`
+  - `reviewOptions?`（[`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options)）：控制预览/审阅行为
 
-### Example
+### 示例
 
 ```ts
 import { useEffect } from 'react'
@@ -435,19 +435,19 @@ useEffect(() => {
 
 ## `createHtmlTemplate`
 
-Converts a Tiptap JSON template to an HTML string with template attributes preserved. The resulting HTML can be sent to the server where `createTemplateWorkflow` parses the template keys.
+将 Tiptap JSON 模板转换为 HTML 字符串，同时保留模板属性。生成的 HTML 可发送到服务器，由服务器上的 `createTemplateWorkflow` 解析模板键。
 
-Since this is an AI Toolkit method, the editor schema is automatically available — you only need to pass the template.
+由于这是 AI Toolkit 的方法，编辑器 schema 会自动提供，因此只需传入模板。
 
-### Parameters
+### 参数
 
-- `template` (`Record<string, unknown>`): The template as Tiptap JSON (a doc node or fragment array)
+- `template`（`Record<string, unknown>`）：Tiptap JSON 格式的模板（doc 节点或片段数组）
 
-### Returns
+### 返回值
 
-- An HTML `string` with lowercased template attributes (`_templateslot`, `_templateif`, `_templateattributes`, `_templatefieldmetadata`)
+- HTML `string`，其中模板属性名称已转换为小写（`_templateslot`、`_templateif`、`_templateattributes`、`_templatefieldmetadata`）
 
-### Example
+### 示例
 
 ```ts
 const toolkit = getAiToolkit(editor)
@@ -456,25 +456,25 @@ const htmlTemplate = toolkit.createHtmlTemplate(templateJson)
 
 ## `TemplateField`
 
-A Tiptap extension that adds template field attributes to all node types in the editor schema. Register this extension to enable template field support in the editor DOM (rendering, parsing, and CSS styling).
+一种 Tiptap 扩展，可将模板字段属性添加到编辑器 schema 中的所有节点类型。注册此扩展后，即可在编辑器 DOM 中支持模板字段（渲染、解析和 CSS 样式）。
 
-The extension adds four global attributes:
+该扩展添加了四个全局属性：
 
-- `_templateSlot` (`string | null`): Marks a node as a content placeholder. When the template is filled, the node is replaced with AI-generated HTML.
-- `_templateIf` (`string | null`): Marks a node as conditionally included. When the value is `false`, the node is excluded from the output.
-- `_templateAttributes` (`TemplateAttributeEntry[] | null`): Maps template keys to specific node attributes.
-- `_templateFieldMetadata` (`Record<string, unknown> | null`): Stores optional developer-defined metadata for a field occurrence.
+- `_templateSlot`（`string | null`）：将节点标记为内容占位符。填充模板时，该节点会被 AI 生成的 HTML 替换。
+- `_templateIf`（`string | null`）：将节点标记为条件包含项。当值为 `false` 时，输出中将排除该节点。
+- `_templateAttributes`（`TemplateAttributeEntry[] | null`）：将模板键映射到特定节点属性。
+- `_templateFieldMetadata`（`Record<string, unknown> | null`）：存储由开发者定义的可选字段实例元数据。
 
-### Commands
+### 命令
 
-- `setTemplateSlot(name: string)`: Sets the `_templateSlot` attribute on the node at the current selection.
-- `unsetTemplateSlot()`: Removes the `_templateSlot` attribute from the node at the current selection.
-- `setTemplateIf(name: string)`: Sets the `_templateIf` attribute on the node at the current selection.
-- `unsetTemplateIf()`: Removes the `_templateIf` attribute from the node at the current selection.
-- `setTemplateAttributes(entries: TemplateAttributeEntry[])`: Sets the `_templateAttributes` attribute on the node at the current selection.
-- `unsetTemplateAttributes()`: Removes the `_templateAttributes` attribute from the node at the current selection.
+- `setTemplateSlot(name: string)`：为当前选区中的节点设置 `_templateSlot` 属性。
+- `unsetTemplateSlot()`：移除当前选区中节点的 `_templateSlot` 属性。
+- `setTemplateIf(name: string)`：为当前选区中的节点设置 `_templateIf` 属性。
+- `unsetTemplateIf()`：移除当前选区中节点的 `_templateIf` 属性。
+- `setTemplateAttributes(entries: TemplateAttributeEntry[])`：为当前选区中的节点设置 `_templateAttributes` 属性。
+- `unsetTemplateAttributes()`：移除当前选区中节点的 `_templateAttributes` 属性。
 
-### Example
+### 示例
 
 ```ts
 import { TemplateField } from '@tiptap-pro/client-ai-toolkit'
@@ -492,25 +492,25 @@ editor.commands.unsetTemplateSlot()
 
 ## `getTemplateFieldMatches`
 
-Returns all matching template field occurrences for a field name from a Tiptap JSON document.
+从 Tiptap JSON 文档中返回与指定字段名称匹配的所有模板字段实例。
 
-The search covers `_templateSlot`, `_templateIf`, and `_templateAttributes`. Each match includes the node content and the optional `_templateFieldMetadata` object stored on that field occurrence.
+搜索范围包括 `_templateSlot`、`_templateIf` 和 `_templateAttributes`。每个匹配项都包含节点内容，以及存储在该字段实例上的可选 `_templateFieldMetadata` 对象。
 
-### Parameters
+### 参数
 
-- `options` (`GetTemplateFieldMatchesOptions`): Search options
-  - `document` (`JSONContent | JSONContent[]`): A Tiptap JSON doc node or fragment array
-  - `fieldName` (`string`): The field name to search for
+- `options`（`GetTemplateFieldMatchesOptions`）：搜索选项
+  - `document`（`JSONContent | JSONContent[]`）：Tiptap JSON 文档节点或片段数组
+  - `fieldName`（`string`）：要搜索的字段名称
 
-### Returns
+### 返回值
 
 - `TemplateFieldMatch[]`
-  - `fieldName` (`string`): The matched field name
-  - `fieldType` (`'slot' | 'condition' | 'attribute'`): Which template field type matched
-  - `metadata` (`Record<string, unknown> | null`): The `_templateFieldMetadata` object for that field occurrence
-  - `content` (`JSONContent[] | null`): The matched node content as Tiptap JSON
+  - `fieldName`（`string`）：匹配的字段名称
+  - `fieldType`（`'slot' | 'condition' | 'attribute'`）：匹配的模板字段类型
+  - `metadata`（`Record<string, unknown> | null`）：该字段实例的 `_templateFieldMetadata` 对象
+  - `content`（`JSONContent[] | null`）：匹配的节点内容，采用 Tiptap JSON 格式
 
-### Example
+### 示例
 
 ```ts
 import { getTemplateFieldMatches } from '@tiptap-pro/client-ai-toolkit'
