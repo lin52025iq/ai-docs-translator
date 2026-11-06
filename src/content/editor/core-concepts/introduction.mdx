@@ -1,25 +1,25 @@
 ---
-title: Tiptap Concepts
-description: Explore the foundational elements of Tiptap's API, designed for intricate rich text editing based on ProseMirror's architecture.
+title: Tiptap 概念
+description: 探索 Tiptap API 的基础组成部分。Tiptap 基于 ProseMirror 架构，专为复杂的富文本编辑而设计。
 meta:
-  title: Tiptap Concepts | Tiptap Editor Docs
-  description: Learn how to integrate Tiptap's document schema, transaction-based state management, and editor extensions in our docs.
+  title: Tiptap 概念 | Tiptap 编辑器文档
+  description: 在文档中了解如何集成 Tiptap 的文档模式、基于事务的状态管理以及编辑器扩展。
   category: Editor
 ---
 
-## Structure
+## 结构
 
-ProseMirror works with a strict [Schema](/editor/core-concepts/schema), which defines the allowed structure of a document. A document is a tree of headings, paragraphs and other elements, called nodes. Marks can be attached to a node, e. g. to emphasize part of it. [Commands](/editor/api/commands) change that document programmatically.
+ProseMirror 使用严格的[模式](/editor/core-concepts/schema)来定义文档允许采用的结构。文档是一棵由标题、段落和其他元素组成的树，这些元素称为节点。标记可以附加到节点上，例如用于强调节点中的部分内容。[命令](/editor/api/commands)可以通过编程方式更改文档。
 
-## State
+## 状态
 
-The document is stored in a state. Changes are applied as transactions to the state. The state has details about the current content, cursor position and selection. You can hook into [events](/editor/api/events), for example to alter transactions before they get applied.
+文档存储在一个状态中。更改以事务的形式应用到状态。状态包含当前内容、光标位置和选区等信息。你可以监听[事件](/editor/api/events)，例如在事务应用之前对其进行修改。
 
-## Content
+## 内容
 
-The document is stored internally as a [ProseMirror node](https://prosemirror.net/docs/ref/#model.Node), and can be retrieved as a Tiptap JSON object calling `editor.getJSON()`.
+文档在内部存储为一个 [ProseMirror 节点](https://prosemirror.net/docs/ref/#model.Node)，并可通过调用 `editor.getJSON()` 获取为 Tiptap JSON 对象。
 
-Tiptap JSON is the recommended format for storing the document and working with it. Below is an example Tiptap JSON document:
+Tiptap JSON 是存储和处理文档的推荐格式。以下是一个 Tiptap JSON 文档示例：
 
 ```json
 {
@@ -44,26 +44,26 @@ Tiptap JSON is the recommended format for storing the document and working with 
 }
 ```
 
-A Tiptap JSON document is a tree of nodes. Some nodes can have children, but only text nodes (those with `type: 'text'`) can contain text. Text nodes and other inline nodes can have marks applied to them. Some nodes and marks can have attributes.
+Tiptap JSON 文档是一棵节点树。有些节点可以包含子节点，但只有文本节点（即 `type: 'text'` 的节点）可以包含文本。文本节点和其他内联节点可以应用标记。有些节点和标记可以带有属性。
 
-The JSON Schema for valid Tiptap JSON content is available in [`/assets/schemas/tiptap-json-schema.json`](/assets/schemas/tiptap-json-schema.json). You can use it to validate Tiptap JSON before storing or processing it.
+有效 Tiptap JSON 内容的 JSON Schema 位于 [`/assets/schemas/tiptap-json-schema.json`](/assets/schemas/tiptap-json-schema.json)。你可以使用它在存储或处理 Tiptap JSON 之前对其进行验证。
 
-## Extensions
+## 扩展
 
-Extensions add [nodes](/editor/extensions/nodes), [marks](/editor/extensions/marks) and/or [functionalities](/editor/extensions/functionality) to the editor. A lot of those extensions bind their commands to common [keyboard shortcuts](/editor/core-concepts/keyboard-shortcuts).
+扩展可以为编辑器添加[节点](/editor/extensions/nodes)、[标记](/editor/extensions/marks)和/或[功能](/editor/extensions/functionality)。其中许多扩展会将命令绑定到常用的[键盘快捷键](/editor/core-concepts/keyboard-shortcuts)。
 
-## Vocabulary
+## 术语
 
-ProseMirror has its own vocabulary and you’ll stumble upon all those words now and then. Here is a short overview of the most common words we use in the documentation.
+ProseMirror 有自己的一套术语，你时不时会遇到这些词。下面简要介绍了文档中最常用的一些词语。
 
-| Word        | Description                                                              |
-| ----------- | ------------------------------------------------------------------------ |
-| Schema      | Configures the structure your content can have.                          |
-| Document    | The actual content in your editor.                                       |
-| State       | Everything to describe the current content and selection of your editor. |
-| Transaction | A change to the state (updated selection, content, …)                    |
-| Extension   | Registers new functionality.                                             |
-| Node        | A type of content, for example a heading or a paragraph.                 |
-| Mark        | Can be applied to nodes, for example for inline formatting.              |
-| Command     | Execute an action inside the editor, that somehow changes the state.     |
-| Decoration  | Styling on top of the document, for example to highlight mistakes.       |
+| 术语 | 描述 |
+| --- | --- |
+| 模式（Schema） | 配置内容可以采用的结构。 |
+| 文档（Document） | 编辑器中的实际内容。 |
+| 状态（State） | 用于描述编辑器当前内容和选区的所有信息。 |
+| 事务（Transaction） | 对状态的更改（例如更新选区或内容）。 |
+| 扩展（Extension） | 注册新功能。 |
+| 节点（Node） | 一种内容类型，例如标题或段落。 |
+| 标记（Mark） | 可应用于节点，例如用于内联格式设置。 |
+| 命令（Command） | 在编辑器中执行某项操作，从而以某种方式更改状态。 |
+| 装饰（Decoration） | 应用于文档的样式，例如用于突出显示错误。 |
