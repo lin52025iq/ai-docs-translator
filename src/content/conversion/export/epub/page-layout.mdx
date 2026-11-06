@@ -1,14 +1,14 @@
 ---
-title: Custom page layouts in EPUB
+title: EPUB 中的自定义页面布局
 tags:
   - type: start
   - type: beta
   - type: version
     label: v0.4.3
 meta:
-    title: Custom page layouts in EPUB | Tiptap Conversion
-    description: Learn how to customize your EPUB page and margin sizes using the Export EPUB extension.
-    category: Conversion
+    title: EPUB 中的自定义页面布局 | Tiptap Conversion
+    description: 了解如何使用 EPUB 导出扩展自定义 EPUB 页面和页边距大小。
+    category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
@@ -18,39 +18,39 @@ import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 <EnterpriseCalloutAuto variant="epub" renderMode="sidebar" disableWaitlist />
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 开启试用或订阅">
+        在账户中开始[免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 套餐](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Install from private registry">
-        To install this frontend extension, authenticate to Tiptap's private npm registry by following the [setup guide](/guides/pro-extensions).
+    <RequirementItem label="2. 从私有注册表安装">
+        如需安装此前端扩展，请按照[设置指南](/guides/pro-extensions)进行身份验证，以访问 Tiptap 的私有 npm 注册表。
     </RequirementItem>
 </Requirements>
 
-The EPUB Export extension supports custom page sizes and margins, allowing you to create documents with precise layouts that match your requirements. Whether you need A5 pages, custom paper sizes, or specific margin configurations, you can configure these settings directly in the extension.
+EPUB 导出扩展支持自定义页面大小和页边距，让你能够创建布局精确、符合需求的文档。无论你需要 A5 页面、自定义纸张大小，还是特定的页边距配置，都可以直接在扩展中进行设置。
 
-## Page size configuration
+## 页面大小配置
 
-Use the `pageSize` option to define custom page dimensions for your exported EPUB files. The page size configuration accepts width and height values with various measurement units.
+使用 `pageSize` 选项为导出的 EPUB 文件设置自定义页面尺寸。页面大小配置接受宽度和高度值，并支持多种度量单位。
 
-### Supported units
+### 支持的单位
 
-All page size and margin measurements support the following units:
+所有页面大小和页边距度量均支持以下单位：
 
-| Unit | Description            |
-|------|------------------------|
-| `cm` | Centimeters (default) |
-| `in` | Inches                |
-| `pt` | Points                |
-| `pc` | Picas                 |
-| `mm` | Millimeters           |
-| `px` | Pixels                |
+| 单位 | 说明       |
+|------|------------|
+| `cm` | 厘米（默认）|
+| `in` | 英寸       |
+| `pt` | 磅         |
+| `pc` | 派卡       |
+| `mm` | 毫米       |
+| `px` | 像素       |
 
-### Configuration options
+### 配置选项
 
-| Property | Type     | Description                                                                                          | Default    |
-|----------|----------|------------------------------------------------------------------------------------------------------|------------|
-| `width`  | `string` | The width of the page. Must be a positive number followed by a valid unit (cm, in, pt, pc, mm, px).  | `"21cm"`   |
-| `height` | `string` | The height of the page. Must be a positive number followed by a valid unit (cm, in, pt, pc, mm, px). | `"29.7cm"` |
+| 属性     | 类型     | 说明                                                                                  | 默认值   |
+|----------|----------|---------------------------------------------------------------------------------------|----------|
+| `width`  | `string` | 页面宽度。必须是一个正数，后跟有效单位（cm、in、pt、pc、mm、px）。                    | `"21cm"` |
+| `height` | `string` | 页面高度。必须是一个正数，后跟有效单位（cm、in、pt、pc、mm、px）。                    | `"29.7cm"` |
 
 ```js
 import { ExportEpub } from '@tiptap-pro/extension-export-epub'
@@ -64,18 +64,18 @@ ExportEpub.configure({
 })
 ```
 
-## Page margins configuration
+## 页面页边距配置
 
-The `pageMargins` option allows you to set custom margins for all sides of your document pages. Unlike page sizes, top and bottom margins can accept negative values.
+`pageMargins` 选项允许你为文档页面的各个边设置自定义页边距。与页面大小不同，上下页边距可以使用负值。
 
-### Configuration options
+### 配置选项
 
-| Property | Type     | Description                                                                                                        | Default  |
-|----------|----------|--------------------------------------------------------------------------------------------------------------------|----------|
-| `top`    | `string` | The top margin of the page. Can be negative. Must be a number followed by a valid unit (cm, in, pt, pc, mm, px).   | `"1cm"`  |
-| `bottom` | `string` | The bottom margin of the page. Can be negative. Must be a number followed by a valid unit (cm, in, pt, pc, mm, px).| `"1cm"`  |
-| `left`   | `string` | The left margin of the page. Must be a positive number followed by a valid unit (cm, in, pt, pc, mm, px).          | `"1cm"`  |
-| `right`  | `string` | The right margin of the page. Must be a positive number followed by a valid unit (cm, in, pt, pc, mm, px).         | `"1cm"`  |
+| 属性     | 类型     | 说明                                                                                                      | 默认值  |
+|----------|----------|-----------------------------------------------------------------------------------------------------------|---------|
+| `top`    | `string` | 页面上边距。可以为负值。必须是一个数字，后跟有效单位（cm、in、pt、pc、mm、px）。                          | `"1cm"` |
+| `bottom` | `string` | 页面下边距。可以为负值。必须是一个数字，后跟有效单位（cm、in、pt、pc、mm、px）。                          | `"1cm"` |
+| `left`   | `string` | 页面左边距。必须是一个正数，后跟有效单位（cm、in、pt、pc、mm、px）。                                      | `"1cm"` |
+| `right`  | `string` | 页面右边距。必须是一个正数，后跟有效单位（cm、in、pt、pc、mm、px）。                                      | `"1cm"` |
 
 ```js
 import { ExportEpub } from '@tiptap-pro/extension-export-epub'
@@ -91,9 +91,9 @@ ExportEpub.configure({
 })
 ```
 
-## Complete example
+## 完整示例
 
-Here's a complete example showing how to configure custom page layouts with the EPUB Export extension:
+下面是一个完整示例，展示如何使用 EPUB 导出扩展配置自定义页面布局：
 
 ```js
 import { ExportEpub } from '@tiptap-pro/extension-export-epub'
@@ -138,21 +138,21 @@ editor
   .run()
 ```
 
-## Common page sizes
+## 常见页面大小
 
-Here are some common page sizes you can use as reference:
+以下是一些可供参考的常见页面大小：
 
-| Format     | Width    | Height   |
-|------------|----------|----------|
-| **A4**     | `21cm`   | `29.7cm` |
-| **A5**     | `14.8cm` | `21cm`   |
-| **Letter** | `8.5in`  | `11in`   |
-| **Legal**  | `8.5in`  | `14in`   |
-| **Tabloid**| `11in`   | `17in`   |
+| 格式      | 宽度     | 高度     |
+|-----------|----------|----------|
+| **A4**    | `21cm`   | `29.7cm` |
+| **A5**    | `14.8cm` | `21cm`   |
+| **Letter**| `8.5in`  | `11in`   |
+| **Legal** | `8.5in`  | `14in`   |
+| **Tabloid**| `11in`  | `17in`   |
 
-## Different measurement units
+## 使用不同的度量单位
 
-You can mix and match different units based on your preference:
+你可以根据偏好混用不同的单位：
 
 ```js
 ExportEpub.configure({
@@ -172,6 +172,6 @@ ExportEpub.configure({
 })
 ```
 
-<Callout title="Unit consistency" variant="hint">
-    While you can mix different units, it's generally recommended to use consistent units throughout your configuration for better maintainability and clarity.
+<Callout title="单位一致性" variant="hint">
+    虽然可以混用不同单位，但通常建议在整个配置中统一使用相同单位，以便于维护并提高可读性。
 </Callout>
