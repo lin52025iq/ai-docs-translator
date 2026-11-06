@@ -1,29 +1,29 @@
 ---
-title: insertContentAt command
+title: insertContentAt 命令
 meta:
-  title: insertContentAt command | Tiptap Editor Docs
-  description: Add content to a specific position or range using plain text, HTML, or JSON with the insertContentAt command. More in the docs!
-  category: Editor
+  title: insertContentAt 命令 | Tiptap 编辑器文档
+  description: 使用 insertContentAt 命令，通过纯文本、HTML 或 JSON 向指定位置或范围添加内容。更多信息请参阅文档！
+  category: 编辑器
 ---
 
-The `insertContentAt` will insert an HTML string or a node at a given position or range. If a range is given, the new content will replace the content in the given range with the new content.
+`insertContentAt` 会在指定位置或范围插入 HTML 字符串或节点。如果指定了范围，新内容将替换该范围内的内容。
 
-## Parameters
+## 参数
 
 `position: number | Range`
 
-The position or range the content will be inserted in.
+要插入内容的位置或范围。
 
 `value: Content`
 
-The content to be inserted. Can be plain text, an HTML string or JSON node(s).
+要插入的内容。可以是纯文本、HTML 字符串或 JSON 节点。
 
 `options: Record<string, any>`
 
-- updateSelection: controls if the selection should be moved to the newly inserted content.
-- parseOptions: Passed content is parsed by ProseMirror. To hook into the parsing, you can pass `parseOptions` which are then handled by [ProseMirror](https://prosemirror.net/docs/ref/#model.ParseOptions).
+- updateSelection：控制是否将选区移至新插入的内容。
+- parseOptions：传入的内容由 ProseMirror 解析。若要介入解析过程，可以传入 `parseOptions`，它会由 [ProseMirror](https://prosemirror.net/docs/ref/#model.ParseOptions) 处理。
 
-## Use the insertContentAt command
+## 使用 insertContentAt 命令
 
 ```js
 // Plain text
