@@ -47,7 +47,7 @@ pnpm translator validate --project projects/<项目名>/config.yml
 pnpm translator run-project --project projects/<项目名>/config.yml --source-root ../source
 ```
 
-源文件读取已提交的 Git 快照。默认只生成本地分支和进度，增加 `--push` 发布到管理仓库远端；增加 `--retry-failed` 重试失败和冲突文件。有未完成文件时命令以非零状态退出，已完成结果保留。
+源文件读取已提交的 Git 快照。默认只生成本地分支和进度，增加 `--push` 发布到管理仓库远端；增加 `--retry-failed` 重试失败和冲突文件。仅有已归档的结构冲突时警告并正常退出，实际失败时以非零状态退出，已完成结果保留。
 
 无需项目配置即可翻译单个文件，源语言默认自动识别：
 

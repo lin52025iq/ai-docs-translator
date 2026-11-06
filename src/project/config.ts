@@ -67,20 +67,13 @@ export const projectSchema = z
     })
     .superRefine((config, context) => {
         const locales = new Set<string>()
-        const branches = new Set(['main', config.source.branch])
-        if (config.source.branch === 'main') {
-            context.addIssue({
-                code: 'custom',
-                path: ['source', 'branch'],
-                message: 'Source 分支不能使用管理分支 main'
-            })
-        }
+        const branches = new Set([config.source.branch])
         for (const [index, target] of config.targets.entries()) {
             if (locales.has(target.locale) || branches.has(target.branch)) {
                 context.addIssue({
                     code: 'custom',
                     path: ['targets', index],
-                    message: '语言和分支必须唯一，且不能使用 main 或 Source 分支'
+                    message: '语言和分支必须唯一，且目标分支不能与 Source 分支相同'
                 })
             }
             locales.add(target.locale)
@@ -91,7 +84,7 @@ export const projectSchema = z
             context.addIssue({
                 code: 'custom',
                 path: ['translation', 'review', 'draftBranch'],
-                message: 'Draft 分支不能与 main、Source 或任何目标语言分支相同'
+                message: 'Draft 分支不能与 Source 或任何目标语言分支相同'
             })
         }
     })

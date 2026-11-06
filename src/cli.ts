@@ -8,6 +8,7 @@ import { commitConflictDraft } from './git/conflict-draft.ts'
 import { createScopeMatcher, loadProject, localeSchema, sourceLanguageSchema } from './project/config.ts'
 import { runProject } from './project/run.ts'
 import { readTranslationFile } from './shared/files.ts'
+import { logWarning } from './shared/log.ts'
 import {
     createProgress,
     type FileSnapshot,
@@ -54,7 +55,10 @@ program
         }) => {
             const result = await runProject({ ...options, push: options.push === true })
             console.log(JSON.stringify(result, null, 4))
-            if (result.status !== 'success') process.exitCode = 1
+            if (result.status === 'partial_success') process.exitCode = 1
+            if (result.status === 'warning') {
+                logWarning('翻译处理完成，异常输出已归档到 draft 分支，请人工确认；未推进冲突文件的成功状态')
+            }
         }
     )
 
@@ -75,7 +79,7 @@ program
     .requiredOption('--locale <locale>', '项目中启用的目标语言')
     .requiredOption('--source-root <path>', '本地 Source 快照根目录')
     .requiredOption('--target-root <path>', '本地目标语言快照根目录')
-    .option('--retry-failed', '允许重新尝试当前版本的文件级失败或结构冲突')
+    .option('--retry-failed', '允许重新尝试当前版本的文件级失败或异常输出')
     .action(
         async (options: {
             project: string
@@ -186,7 +190,7 @@ program
                     result
                 })
                 console.log(JSON.stringify({ status: 'conflict', ...draft }, null, 4))
-                process.exitCode = 1
+                logWarning(`译文未应用，异常输出已归档：${draft.branch}，提交 ${draft.commit}`)
                 return
             }
             const output = resolve(options.output ?? `.translation-drafts/${locale}/${path}`)

@@ -15,7 +15,7 @@ import {
 } from '../git/branches.ts'
 import { commitConflictDraft } from '../git/conflict-draft.ts'
 import { decodeTranslationText } from '../shared/files.ts'
-import { logProgress } from '../shared/log.ts'
+import { logProgress, logWarning } from '../shared/log.ts'
 import {
     createProgress,
     type FileSnapshot,
@@ -263,7 +263,7 @@ export async function runProject(options: {
                     result
                 })
                 conflictFiles += 1
-                logProgress(
+                logWarning(
                     `[${target.locale}] ${file.path} 已拒绝应用，冲突已归档：${draft.branch}，提交 ${draft.commit}`
                 )
                 nextManifest = recordTranslationFailure(manifest, file.path, {
@@ -301,6 +301,11 @@ export async function runProject(options: {
         if (providerBlocked) break
     }
     const incomplete = providerBlocked || Object.values(locales).some((progress) => progress.completed < progress.total)
+    const hasErrors =
+        providerBlocked ||
+        Object.values(locales).some(
+            ({ summary }) => summary.pending + summary.failed + summary.retryable_failed + summary.blocked > 0
+        )
     logProgress(
         `项目 ${config.project.id} ${incomplete ? '处理结束，仍有未完成文件' : '翻译完成'}：本次通过 ${successfulFiles}，冲突 ${conflictFiles}，失败 ${failedFiles}`
     )
@@ -309,7 +314,7 @@ export async function runProject(options: {
         sourceCommit,
         managementCommit: managementHead,
         pushed: options.push,
-        status: incomplete ? 'partial_success' : 'success',
+        status: incomplete ? (hasErrors ? 'partial_success' : 'warning') : 'success',
         processed: { successful: successfulFiles, conflict: conflictFiles, failed: failedFiles },
         locales
     }

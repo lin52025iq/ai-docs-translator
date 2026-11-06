@@ -104,7 +104,7 @@ jobs:
                       const rows = Object.entries(result.locales).map(([locale, progress]) =>
                           `| ${locale} | ${progress.completed}/${progress.total} | ${progress.summary.conflict} | ${progress.summary.failed + progress.summary.retryable_failed + progress.summary.blocked} |`
                       )
-                      summary = `## 项目文档翻译\n\n${result.status === 'success' ? '翻译完成' : '部分完成，仍有未完成文件'}\n\n| 语言 | 已完成/总数 | 冲突 | 失败或阻塞 |\n| --- | --- | --- | --- |\n${rows.join('\n')}\n`
+                      summary = `## 项目文档翻译\n\n${result.status === 'success' ? '翻译完成' : result.status === 'warning' ? '翻译处理完成，异常输出已归档，请人工确认' : '部分完成，仍有失败或未处理文件'}\n\n| 语言 | 已完成/总数 | 冲突 | 失败或阻塞 |\n| --- | --- | --- | --- |\n${rows.join('\n')}\n`
                   }
                   await appendFile(process.env.GITHUB_STEP_SUMMARY, summary)
                   console.log(summary)

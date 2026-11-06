@@ -1,6 +1,6 @@
-import { createHash } from 'node:crypto'
+import { createHash, randomUUID } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
-import { resolve } from 'node:path'
+import { extname, resolve } from 'node:path'
 
 import { type Project, projectSchema } from '../project/config.ts'
 import { readOptionalText } from '../shared/files.ts'
@@ -50,8 +50,14 @@ export async function buildTranslationContext(
                 instructions,
                 terms,
                 model,
-                review,
+                review: {
+                    enabled: review.enabled,
+                    model: review.model,
+                    minimumProbability: review.minimumProbability
+                },
                 reviewInstructions,
+                // 输入组织方式变化会影响模型结果，应使此前失败任务重新进入规划。
+                inputFormat: 'dynamic-tagged-file-v2',
                 sourceLanguage: source,
                 locale
             })
@@ -70,3 +76,42 @@ export async function buildTranslationContext(
 }
 
 export type TranslationContext = Awaited<ReturnType<typeof buildTranslationContext>>
+
+/** 任务信息与文件正文分区，正文直接插入，保留换行及原始字符。 */
+export function buildFileInput(input: {
+    path: string
+    context: Pick<TranslationContext, 'sourceLanguage' | 'targetLanguage'>
+    glossary?: TranslationContext['terms']
+    sourceContent: string
+    previousTranslation?: string
+    translatedContent?: string
+}) {
+    const metadata = `源语言：${input.context.sourceLanguage}\n目标语言：${input.context.targetLanguage}\n文件路径：${input.path}\n扩展名：${extname(input.path) || '无扩展名'}`
+    const regions: [string, string][] = []
+    if (input.glossary?.length) {
+        const terms = input.glossary
+            .map(
+                (term) => `- ${term.source} → ${term.translation}${term.context ? `（适用语境：${term.context}）` : ''}`
+            )
+            .join('\n')
+        regions.push(['glossary', terms])
+    }
+    if (input.previousTranslation?.trim()) {
+        regions.push(['previous_translation', input.previousTranslation])
+    }
+    regions.push(['source_content', input.sourceContent])
+    if (input.translatedContent !== undefined) {
+        regions.push(['translated_content', input.translatedContent])
+    }
+    // 后缀不出现在任何输入数据中，则整组开始、结束标签都不会与内容碰撞。
+    const contents = [metadata, ...regions.map(([, content]) => content)]
+    let suffix: string
+    do {
+        suffix = randomUUID().replaceAll('-', '')
+    } while (contents.some((content) => content.includes(suffix)))
+    const sections = [metadata, `分区标签：\n${regions.map(([name]) => `${name}：${name}_${suffix}`).join('\n')}`]
+    for (const [name, content] of regions) {
+        sections.push(`<${name}_${suffix}>\n${content}\n</${name}_${suffix}>`)
+    }
+    return sections.join('\n\n')
+}

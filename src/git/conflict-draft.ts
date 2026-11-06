@@ -22,7 +22,7 @@ export async function commitConflictDraft(input: {
     const failedChecks = input.result.review.decision?.checks.filter((check) => !check.passed) ?? []
     const reason =
         input.result.review.localConflict?.message ??
-        `Decisions 结构审查未通过：${failedChecks.map((check) => check.name).join('、')}`
+        `Decisions 输出审查未通过：${failedChecks.map((check) => check.name).join('、')}`
     const report = {
         schemaVersion: 1,
         status: 'conflict',
@@ -46,7 +46,7 @@ export async function commitConflictDraft(input: {
         [`before/${input.path}`]: input.sourceContent,
         [`after/${input.path}`]: input.result.content,
         'report.json': `${JSON.stringify(report, null, 4)}\n`,
-        'README.md': `# 翻译结构冲突\n\n${reason}\n\n候选译文未应用，成功状态未推进。before/ 为原文，after/ 为候选译文，previous/ 为可选旧译文，均保留原始目录和扩展名。错误来源与具体判定见 report.json。\n`
+        'README.md': `# 翻译输出异常\n\n${reason}\n\n候选译文未应用，成功状态未推进。before/ 为原文，after/ 为候选译文，previous/ 为可选旧译文，均保留原始目录和扩展名。错误来源与具体判定见 report.json。\n`
     }
     if (input.previousTranslation !== undefined) artifacts[`previous/${input.path}`] = input.previousTranslation
     const commit = await commitBranchFiles({
@@ -56,7 +56,7 @@ export async function commitConflictDraft(input: {
         files: Object.fromEntries(
             Object.entries(artifacts).map(([path, content]) => [`${artifactPath}/${path}`, content])
         ),
-        message: `translation(${input.config.project.id}/${input.locale}): record structure conflict`,
+        message: `translation(${input.config.project.id}/${input.locale}): record output conflict`,
         push: options.pushDraft,
         remote: options.remote
     })
