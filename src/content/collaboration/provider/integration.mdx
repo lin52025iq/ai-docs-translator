@@ -1,34 +1,34 @@
 ---
-title: Integrate the Collaboration provider
+title: 集成 Collaboration provider
 meta:
-  title: Provider | Tiptap Collaboration Docs
-  description: Set up and configure the Collaboration provider to manage real-time document synchronization across users.
-  category: Collaboration
+  title: Provider | Tiptap Collaboration 文档
+  description: 设置并配置 Collaboration provider，以管理多个用户之间的实时文档同步。
+  category: 协作
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Together with the Collaboration backend, providers serve as the backbone for real-time collaborative editing. They establish and manage the communication channels between users, ensuring that updates and changes to documents are synchronized across all participants.
+Provider 与 Collaboration 后端共同构成实时协作编辑的基础。它们会建立并管理用户之间的通信渠道，确保文档的更新和更改在所有参与者之间保持同步。
 
-Providers handle the complexities of real-time data exchange, including conflict resolution, network reliability, and user presence awareness.
+Provider 负责处理实时数据交换的复杂问题，包括冲突解决、网络可靠性和用户在线状态感知。
 
-The `TiptapCollabProvider` adds advanced features tailored for collaborative environments, such as WebSocket message authentication, debug modes, and flexible connection strategies.
+`TiptapCollabProvider` 提供了专为协作环境设计的高级功能，例如 WebSocket 消息身份验证、调试模式和灵活的连接策略。
 
-## Set up the provider
+## 设置 provider
 
-First, install the provider package in your project using:
+首先，使用以下命令在项目中安装 provider 包：
 
-<Callout title="Set up private registry" variant="hint">
-Note that you need to follow the instructions [here](https://cloud.tiptap.dev/pro-extensions) to set up access to the private registry.
+<Callout title="设置私有 registry" variant="hint">
+请注意，你需要按照[此处](https://cloud.tiptap.dev/pro-extensions)的说明设置私有 registry 的访问权限。
 </Callout>
 
 ```bash
 npm install @tiptap-pro/provider
 ```
 
-For a basic setup, connect to the Collaboration backend by specifying the document's name, your document server ID (labeled "Document server ID" in your [Cloud dashboard](https://cloud.tiptap.dev/v2/configuration/document-server)) for cloud setups, or the base URL for on-premises, along with your JWT.
+要进行基本设置，请连接到 Collaboration 后端，并指定文档名称、文档服务器 ID（在云端设置中，该 ID 在 [Cloud 控制面板](https://cloud.tiptap.dev/v2/configuration/document-server)中标记为“Document server ID”），或自托管部署所用的基础 URL，以及你的 JWT。
 
-Depending on your framework, register a callback to the Collaboration backend, such as `useEffect()` in React or `onMounted()` in Vue.js.
+根据所使用的框架，向 Collaboration 后端注册回调，例如在 React 中使用 `useEffect()`，或在 Vue.js 中使用 `onMounted()`。
 
 ```ts
 const doc = new Y.Doc()
@@ -44,68 +44,68 @@ useEffect(() => {
 }, [])
 ```
 
-<Callout title="Note for On-Premises Customers" variant="hint">
-  If you are hosting your collaboration environment on-premises, replace the `appId` parameter with
-  `baseUrl` in your provider configuration to connect to your server.
+<Callout title="自托管客户须知" variant="hint">
+  如果你在自托管环境中运行协作服务，请在 provider 配置中将 `appId` 参数替换为
+  `baseUrl`，以连接到你的服务器。
 </Callout>
 
-## Configure the collaboration provider
+## 配置 collaboration provider
 
-The Tiptap Collaboration provider offers several settings for custom configurations. Review the tables below for all parameters, practical use cases, and key concepts like "[awareness](/collaboration/core-concepts/awareness)".
+Tiptap Collaboration provider 提供了多种设置，可用于自定义配置。请查看下表，了解所有参数、实际用例以及“[感知](/collaboration/core-concepts/awareness)”等关键概念。
 
-| Setting              | Default Value | Description                                                                                                     |
-| -------------------- | ------------- |-----------------------------------------------------------------------------------------------------------------|
-| `appId`              | `''` (empty)  | Your document server ID (labeled "Document server ID" in the [Cloud dashboard](https://cloud.tiptap.dev/v2/configuration/document-server)) for Collaboration Cloud setups |
-| `baseUrl`            | `''` (empty)  | URL for connecting to on-premises servers. Used as an alternative to `appId` for on-prem setups                 |
-| `shardKey`            | `''` (empty)  | Only use this if you use Tiptap Collab HA. Usually this would then be set to the document name, or a team id   |
-| `name`               | `''` (empty)  | The document's name                                                                                             |
-| `token`              | `''` (empty)  | Authentication token for secure connections. Supports strings, functions, and Promises                          |
-| `document`           | `new Y.Doc()` | The Yjs document instance. Defaults to a new document if none is provided                                       |
-| `user`               | `null`        | User ID or name for attributing changes to the document.                                                        |
-| `forceSyncInterval`  | `false`       | Forces server sync at regular intervals, in milliseconds                                                        |
+| 设置                 | 默认值        | 说明                                                                                                               |
+| -------------------- | ------------- |--------------------------------------------------------------------------------------------------------------------|
+| `appId`              | `''`（空）     | Collaboration Cloud 设置中的文档服务器 ID（在 [Cloud 控制面板](https://cloud.tiptap.dev/v2/configuration/document-server)中标记为“Document server ID”） |
+| `baseUrl`            | `''`（空）     | 用于连接自托管服务器的 URL。在自托管设置中作为 `appId` 的替代项使用                                             |
+| `shardKey`           | `''`（空）     | 仅在使用 Tiptap Collab HA 时设置。通常设置为文档名称或团队 ID                                                   |
+| `name`               | `''`（空）     | 文档名称                                                                                                           |
+| `token`              | `''`（空）     | 用于安全连接的身份验证令牌。支持字符串、函数和 Promise                                                            |
+| `document`           | `new Y.Doc()` | Yjs 文档实例。如果未提供，则默认为新文档                                                                           |
+| `user`               | `null`        | 用于标记文档更改来源的用户 ID 或名称。                                                                            |
+| `forceSyncInterval`  | `false`       | 按固定时间间隔（毫秒）强制与服务器同步                                                                            |
 
-### Optimize reconnection timings
+### 优化重新连接时间
 
-The provider’s reconnection settings are preset for optimal performance in production settings. If you need to adjust these settings for specific scenarios, you can do so with our delay configurations.
+Provider 的重新连接设置已预先配置，可在生产环境中实现最佳性能。如果你需要针对特定场景调整这些设置，可以使用延迟配置。
 
-Adjust initial delays, apply exponential backoff, or set maximum wait times to fine-tune your application's reconnection behavior, balancing responsiveness with server efficiency.
+调整初始延迟、应用指数退避，或设置最长等待时间，以微调应用的重新连接行为，在响应速度和服务器效率之间取得平衡。
 
-Note that these settings can only be configured when creating the TiptapCollabProviderWebsocket instance separately. You'll then need to pass it to the TiptapCollabProvider (as `websocketProvider`).
+请注意，只有在单独创建 `TiptapCollabProviderWebsocket` 实例时，才能配置这些设置。随后需要将该实例作为 `websocketProvider` 传递给 `TiptapCollabProvider`。
 
-| Setting                   | Default Value | Description                                                                                                                                            |
-| ------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `delay`                   | `1000`        | Base delay between reconnection attempts, in milliseconds                                                                                              |
-| `factor`                  | `2`           | Multiplier applied to the delay, increasing it exponentially after each attempt                                                                        |
-| `initialDelay`            | `0`           | Time in milliseconds before the first reconnection attempt                                                                                             |
-| `maxAttempts`             | `0`           | Maximum number of reconnection attempts. `0` means unlimited attempts                                                                                  |
-| `jitter`                  | `true`        | Adds variability to the delay by randomly selecting a value between `minDelay` and the calculated delay for each attempt                               |
-| `minDelay`                | `1000`        | Minimum delay when jitter is enabled. Has no effect if jitter is disabled                                                                              |
-| `maxDelay`                | `30000`       | Maximum delay allowed between reconnection attempts. Set to `0` to allow the delay to increase indefinitely using exponential backoff (`factor`).      |
-| `timeout`                 | `0`           | Time limit, in milliseconds, for each reconnection attempt before stopping                                                                             |
-| `messageReconnectTimeout` | `30000`       | Time in milliseconds to wait for a server message before terminating the connection. If no message is received, the connection is closed automatically |
+| 设置                      | 默认值  | 说明                                                                                                                                               |
+| ------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `delay`                   | `1000`  | 每次重新连接尝试之间的基础延迟时间，单位为毫秒                                                                                                     |
+| `factor`                  | `2`     | 延迟乘数；每次尝试后都会按此乘数指数递增                                                                                                           |
+| `initialDelay`            | `0`     | 首次重新连接尝试前的等待时间，单位为毫秒                                                                                                           |
+| `maxAttempts`             | `0`     | 重新连接尝试的最大次数。`0` 表示不限制尝试次数                                                                                                    |
+| `jitter`                  | `true`  | 为延迟增加随机变化：每次尝试时，在 `minDelay` 与计算所得的延迟之间随机选择一个值                                                                    |
+| `minDelay`                | `1000`  | 启用 jitter 时的最小延迟。禁用 jitter 时此设置无效                                                                                                 |
+| `maxDelay`                | `30000` | 重新连接尝试之间允许的最大延迟。设为 `0` 时，延迟会按 `factor` 指定的指数退避方式无限递增。                                                       |
+| `timeout`                 | `0`     | 每次重新连接尝试的时限，单位为毫秒；超时后停止尝试                                                                                                 |
+| `messageReconnectTimeout` | `30000` | 等待服务器消息的时长，单位为毫秒；超过此时间后终止连接。如果未收到消息，连接会自动关闭                                                            |
 
-## Unsynced changes
+## 未同步的更改
 
-The provider maintains an integer that keeps track of the number of unsynced changes. Whenever the server receives a change, it acknowledges it, and the provider decrements the counter.
+Provider 会维护一个整数，用于记录尚未同步的更改数量。服务器每收到一项更改，都会进行确认，Provider 随后会将计数器减一。
 
-You should monitor this counter and inform the user when their changes are not yet synced: either before they leave the page or after a certain timeout or number of unsynced changes.
+你应该监控此计数器，并在用户的更改尚未同步时通知他们：例如，在用户离开页面前，或未同步更改持续达到一定时长或数量时。
 
-A "change" may be a single character, a single node, or a whole document, depending on your custom use-case, so in general the counter should be at `0` or slightly above, but only for a short period of time (essentially the latency of the connection).
+根据你的具体用例，“更改”可能是单个字符、单个节点，也可能是整个文档。因此，一般而言，计数器应为 `0` 或略高于 `0`，且这种情况只会持续很短时间（本质上就是连接延迟）。
 
-You can get the current value of the counter by accessing `TiptapCollabProvider.unsyncedChanges`, or by subscribing to the `unsyncedChanges` event.
+你可以通过访问 `TiptapCollabProvider.unsyncedChanges` 获取计数器的当前值，也可以订阅 `unsyncedChanges` 事件。
 
 ```
 TiptapCollabProvider.on('unsyncedChanges', n => console.log(`${n.number} unsynced changes`))
 ```
 
-## Rate limits
+## 速率限制
 
-To maintain system integrity and protect from misconfigured clients, our infrastructure—including the management API and websocket connections through the `TiptapCollabProvider`—is subject to rate limits.
+为维护系统完整性并防止客户端配置错误，我们的基础设施（包括管理 API，以及通过 `TiptapCollabProvider` 建立的 WebSocket 连接）均受速率限制。
 
-### Default rate limits (per source IP):
+### 默认速率限制（按源 IP 计算）：
 
-- **Requests:** 100
-- **Time window:** 5 seconds
-- **Burst capacity:** Up to 200 requests
+- **请求数：** 100
+- **时间窗口：** 5 秒
+- **突发容量：** 最多 200 个请求
 
-If you encounter these limits under normal operation, please [email us](mailto:humans@tiptap.dev).
+如果在正常运行期间遇到这些限制，请[发送电子邮件联系我们](mailto:humans@tiptap.dev)。
