@@ -1,40 +1,40 @@
 ---
-title: Undo/Redo extension
+title: 撤销/重做扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extensions?label=version
     url: https://www.npmjs.com/package/@tiptap/extensions
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extensions.svg
     url: https://npmcharts.com/compare/@tiptap/extensions?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  title: Undo/Redo extension | Tiptap Editor Docs
-  description: Undo and redo changes in your Tiptap Editor with ease, allowing you to revert or reapply edits in your editor. More in the docs.
-  category: Editor
+  title: 撤销/重做扩展 | Tiptap 编辑器文档
+  description: 在 Tiptap 编辑器中轻松撤销和重做更改，回退或重新应用编辑内容。更多信息请参阅文档。
+  category: 编辑器
 extension:
-  name: Undo/Redo
-  description: Undo and redo changes in your Tiptap Editor with ease, allowing you to revert or reapply edits in your editor.
+  name: 撤销/重做
+  description: 在 Tiptap 编辑器中轻松撤销和重做更改，回退或重新应用编辑内容。
   type: extension
   icon: Undo2
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-This extension provides undo and redo support. All changes to the document will be tracked and can be removed with `undo`. Undone changes can be applied with `redo` again.
+此扩展提供撤销和重做功能。文档中的所有更改都会被跟踪，并且可以使用 `undo` 撤销。已撤销的更改可以再次使用 `redo` 应用。
 
-You should only integrate this extension if you don't plan to make your editor collaborative. The Collaboration extension has its own undo/redo support because people generally don't want to revert changes made by others.
+只有在不打算让编辑器支持协作时，才应集成此扩展。协作扩展有自己的撤销/重做功能，因为通常人们不希望撤销他人所做的更改。
 
 <CodeDemo path="/Extensions/UndoRedo" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extensions
 ```
 
-## Usage
+## 用法
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -45,13 +45,13 @@ new Editor({
 })
 ```
 
-## Settings
+## 设置
 
 ### depth
 
-The amount of history events that are collected before the oldest events are discarded.
+保留的历史记录事件数量。超过此数量后，最早的事件将被丢弃。
 
-Default: `100`
+默认值：`100`
 
 ```js
 UndoRedo.configure({
@@ -61,9 +61,9 @@ UndoRedo.configure({
 
 ### newGroupDelay
 
-The delay between changes after which a new group should be started (in milliseconds). When changes aren’t adjacent, a new group is always started.
+两次更改之间的延迟时间（毫秒）；超过此时间后会开始一个新分组。如果更改不连续，则始终会开始一个新分组。
 
-Default: `500`
+默认值：`500`
 
 ```js
 UndoRedo.configure({
@@ -71,11 +71,11 @@ UndoRedo.configure({
 })
 ```
 
-## Commands
+## 命令
 
 ### undo()
 
-Undo the last change.
+撤销上一次更改。
 
 ```js
 editor.commands.undo()
@@ -83,24 +83,24 @@ editor.commands.undo()
 
 ### redo()
 
-Redo the last change.
+重做上一次更改。
 
 ```js
 editor.commands.redo()
 ```
 
-## Keyboard shortcuts
+## 键盘快捷键
 
-| Command | Windows/Linux                                                                                                                                     | macOS                                                                                                                                 |
+| 命令 | Windows/Linux                                                                                                                                     | macOS                                                                                                                                 |
 | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| undo()  | <kbd>Control</kbd> + <kbd>Z</kbd> or <kbd>Control</kbd> + <kbd>я</kbd>                                                                            | <kbd>Cmd</kbd> + <kbd>Z</kbd> + or <kbd>Cmd</kbd> + <kbd>я</kbd>                                                                      |
-| redo()  | <kbd>Shift</kbd> + <kbd>Control</kbd> + <kbd>Z</kbd> or <kbd>Control</kbd> + <kbd>Y</kbd> or <kbd>Shift</kbd> + <kbd>Control</kbd> + <kbd>я</kbd> | <kbd>Shift</kbd> + <kbd>Cmd</kbd> + <kbd>Z</kbd> or <kbd>Cmd</kbd> + <kbd>Y</kbd> or <kbd>Shift</kbd> + <kbd>Cmd</kbd> + <kbd>я</kbd> |
+| undo()  | <kbd>Control</kbd> + <kbd>Z</kbd> 或 <kbd>Control</kbd> + <kbd>я</kbd>                                                                            | <kbd>Cmd</kbd> + <kbd>Z</kbd> + 或 <kbd>Cmd</kbd> + <kbd>я</kbd>                                                                      |
+| redo()  | <kbd>Shift</kbd> + <kbd>Control</kbd> + <kbd>Z</kbd> 或 <kbd>Control</kbd> + <kbd>Y</kbd> 或 <kbd>Shift</kbd> + <kbd>Control</kbd> + <kbd>я</kbd> | <kbd>Shift</kbd> + <kbd>Cmd</kbd> + <kbd>Z</kbd> 或 <kbd>Cmd</kbd> + <kbd>Y</kbd> 或 <kbd>Shift</kbd> + <kbd>Cmd</kbd> + <kbd>я</kbd> |
 
-## Source code
+## 源代码
 
 [packages/extensions/src/undo-redo/](https://github.com/ueberdosis/tiptap/blob/main/packages/extensions/src/undo-redo/)
 
-## Minimal Install
+## 最小化安装
 
 ```js
 import { Editor } from '@tiptap/core'
