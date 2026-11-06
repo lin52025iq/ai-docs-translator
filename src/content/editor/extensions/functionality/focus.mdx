@@ -1,41 +1,41 @@
 ---
-title: Focus extension
+title: Focus 扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extensions?label=version
     url: https://www.npmjs.com/package/@tiptap/extensions
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extensions.svg
     url: https://npmcharts.com/compare/@tiptap/extensions?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  title: Focus extension | Tiptap Editor Docs
-  description: Use the Focus extension in Tiptap to track and highlight the cursor's position. Learn more in our docs!
-  category: Editor
+  title: Focus 扩展 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 Focus 扩展来跟踪并突出显示光标的位置。欢迎阅读文档了解更多信息！
+  category: 编辑器
 extension:
   name: Focus
   link: https://github.com/ueberdosis/tiptap/tree/main/extensions/src/focus
-  description: Keep track of where the cursor is, and let the user know you know it.
+  description: 跟踪光标所在位置，并让用户知道你已知晓它的位置。
   type: extension
   icon: Focus
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-The Focus extension adds a CSS class to focused nodes. By default it adds `.has-focus`, but you can change that.
+Focus 扩展会为获得焦点的节点添加 CSS 类。默认情况下，它会添加 `.has-focus`，但你可以更改此类。
 
-Note that it’s only a class, the styling is totally up to you. The usage example below has some CSS for that class.
+请注意，它只会添加一个类，具体样式完全由你决定。下面的用法示例包含了该类的 CSS 样式。
 
 <CodeDemo path="/Extensions/Focus" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extensions
 ```
 
-And import it in your editor:
+然后在编辑器中导入：
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -46,13 +46,13 @@ new Editor({
 })
 ```
 
-## Settings
+## 设置
 
 ### className
 
-The class that is applied to the focused element.
+应用于获得焦点的元素的类名。
 
-Default: `'has-focus'`
+默认值：`'has-focus'`
 
 ```js
 Focus.configure({
@@ -62,9 +62,9 @@ Focus.configure({
 
 ### mode
 
-Apply the class to `'all'`, the `'shallowest'` or the `'deepest'` node.
+将类应用于 `'all'`（所有节点）、`'shallowest'`（最浅层节点）或 `'deepest'`（最深层节点）。
 
-Default: `'all'`
+默认值：`'all'`
 
 ```js
 Focus.configure({
@@ -72,6 +72,6 @@ Focus.configure({
 })
 ```
 
-## Source code
+## 源代码
 
 [packages/extensions/focus/](https://github.com/ueberdosis/tiptap/blob/main/packages/extensions/src/focus/)
