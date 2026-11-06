@@ -1,24 +1,24 @@
 ---
-title: AI agent lifecycle
+title: AI 智能体生命周期
 meta:
-  title: AI agent lifecycle | Tiptap Content AI
-  description: Learn about the lifecycle of an AI agent run in Tiptap.
-  category: Content AI
+  title: AI 智能体生命周期 | Tiptap 内容 AI
+  description: 了解 Tiptap 中 AI 智能体运行的生命周期。
+  category: 内容 AI
 ---
 
-The AI agent lifecycle starts when `provider.run()` is called, and ends when the AI agent has completed the task, needs user review, or encounters an error.
+调用 `provider.run()` 时，AI 智能体的生命周期开始；当 AI 智能体完成任务、需要用户审核或遇到错误时，生命周期结束。
 
-## Lifecycle steps
+## 生命周期步骤
 
-1. **Initialization**: The lifecycle begins when you call `provider.run()` after adding a user message.
-2. **Processing**: The AI agent calls the AI model. The AI responds with a message and a tool call.
-3. **Tool execution**: The AI agent calls the tool to read or modify the document.
-4. **Loop**: The AI agent calls the AI again and executes the next tool, until a termination condition is met.
-5. **Completion**: The lifecycle ends when the AI agent has completed the task, needs user review, or encounters an error.
+1. **初始化**：添加用户消息后，调用 `provider.run()`，生命周期随之开始。
+2. **处理**：AI 智能体调用 AI 模型。AI 会返回一条消息和一个工具调用。
+3. **工具执行**：AI 智能体调用工具来读取或修改文档。
+4. **循环**：AI 智能体再次调用 AI 并执行下一个工具，直到满足终止条件。
+5. **完成**：当 AI 智能体完成任务、需要用户审核或遇到错误时，生命周期结束。
 
-## Controlling the lifecycle
+## 控制生命周期
 
-You can control the AI agent lifecycle using these methods:
+你可以使用以下方法控制 AI 智能体的生命周期：
 
 ```tsx
 // Start the lifecycle
@@ -28,7 +28,7 @@ provider.run()
 provider.stop()
 ```
 
-By default, the AI agent doesn't automatically run after adding a user message. You need to explicitly call `run()`:
+默认情况下，添加用户消息后，AI 智能体不会自动运行。你需要显式调用 `run()`：
 
 ```tsx
 // Add a message and run the AI agent
@@ -36,9 +36,9 @@ provider.addUserMessage('Format this document with proper headings')
 provider.run()
 ```
 
-## Handling completion
+## 处理完成状态
 
-Listen to the `stopRunning` event to be notified when the lifecycle is completed and the AI agent stops running.
+监听 `stopRunning` 事件，以便在生命周期结束、AI 智能体停止运行时收到通知。
 
 ```tsx
 // Subscribe to the stopRunning event
@@ -48,21 +48,21 @@ provider.on('stopRunning', (context) => {
 })
 ```
 
-## Statuses
+## 状态
 
-During its lifecycle, the AI agent transitions through different [statuses](/ai/deprecated/agent/features/state#status):
+在生命周期内，AI 智能体会在不同的[状态](/ai/deprecated/agent/features/state#status)之间切换：
 
-1. `idle` → `loading`: When `run()` is called
-2. `loading` → `reviewingToolCall`: When a tool call requires user review
-3. `loading` → `loadingError`: When an error occurs
-4. `loading` → `idle`: When one of these conditions is met:
-   - A final tool call is executed. A final tool call is one that has the `isFinal` property set to `true` in the tool call handler object.
-   - The LLM does not respond with a tool call.
-   - `provider.stop()` is called
-   - Another lifecycle is started with `provider.run()`, before the current lifecycle has finished.
+1. `idle` → `loading`：调用 `run()` 时
+2. `loading` → `reviewingToolCall`：工具调用需要用户审核时
+3. `loading` → `loadingError`：发生错误时
+4. `loading` → `idle`：满足以下任一条件时：
+   - 执行了最终工具调用。最终工具调用是指工具调用处理程序对象中 `isFinal` 属性设为 `true` 的工具调用。
+   - LLM 未返回工具调用。
+   - 调用了 `provider.stop()`。
+   - 当前生命周期尚未结束时，通过 `provider.run()` 启动了另一个生命周期。
 
-## Running AI Agents concurrently
+## 并发运行 AI 智能体
 
-In its current version, the AI Agent extension does not support running multiple AI Agents within the same editor. If a lifecycle is already in progress when `provider.run()` is called, the current lifecycle is interrupted before the new lifecycle starts.
+在当前版本中，AI Agent 扩展不支持在同一编辑器中运行多个 AI Agent。如果调用 `provider.run()` 时已有生命周期正在进行，当前生命周期会先中断，然后才启动新的生命周期。
 
-To run multiple AI Agents at the same time, instantiate multiple editors and AI agent providers.
+如需同时运行多个 AI Agent，请实例化多个编辑器和 AI 智能体提供程序。
