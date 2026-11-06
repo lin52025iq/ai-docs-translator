@@ -1,35 +1,35 @@
 ---
-title: AI Toolkit concepts
+title: AI Toolkit 概念
 meta:
-  title: AI Toolkit concepts | Tiptap AI Toolkit
-  description: Understand and work with the basic concepts of the AI Toolkit.
+  title: AI Toolkit 概念 | Tiptap AI Toolkit
+  description: 了解并掌握 AI Toolkit 的基本概念。
   category: AI Toolkit
 ---
 
-Understand the basic concepts that will help you work with the AI Toolkit.
+了解有助于使用 AI Toolkit 的基本概念。
 
-## Position
+## 位置
 
-The AI Toolkit methods allow you to [read](/ai/ai-toolkit/client/api-reference/read-the-document) and [edit](/ai/ai-toolkit/client/api-reference/edit-the-document) the document at specific positions.
+AI Toolkit 的方法允许你在文档的特定位置[读取](/ai/ai-toolkit/client/api-reference/read-the-document)和[编辑](/ai/ai-toolkit/client/api-reference/edit-the-document)文档。
 
-Positions allow you to locate elements in the document. They are represented as an integer.
+位置用于定位文档中的元素，以整数表示。
 
-The first position in the document is 0. The last position in the document is equal to the document content size.
+文档中的第一个位置是 0。最后一个位置等于文档内容的大小。
 
 ```ts
 const position = 0
 const lastPosition = editor.state.doc.content.size
 ```
 
-The position of the cursor can be obtained using the `selection` property of the editor state.
+可以通过编辑器状态的 `selection` 属性获取光标位置。
 
 ```ts
 const position = editor.state.selection.head
 ```
 
-## Range
+## 范围
 
-A range is a pair of positions. It represents a contiguous range of content in the document.
+范围由一对位置组成，表示文档中一段连续的内容。
 
 ```ts
 import { Range } from '@tiptap/core'
@@ -37,19 +37,19 @@ import { Range } from '@tiptap/core'
 const range: Range = { from: 0, to: 100 }
 ```
 
-The range of the entire document is:
+整个文档的范围是：
 
 ```ts
 const range = { from: 0, to: editor.doc.content.size }
 ```
 
-You can get the range of the selection using the `selection` property of the editor state.
+可以通过编辑器状态的 `selection` 属性获取选区范围。
 
 ```ts
 const range = { from: editor.state.selection.from, to: editor.state.selection.to }
 ```
 
-You can insert or read content at a specific position or range.
+你可以在特定位置或范围插入或读取内容。
 
 ```ts
 const range: Range = { from: 0, to: 100 }
@@ -62,44 +62,44 @@ editor.commands.insertHtml(
   {
     position: range,
   }
-})
+)
 ```
 
-Ranges are used to determine the position of [suggestions](#suggestion).
+范围用于确定[建议](#suggestion)的位置。
 
-## Suggestion
+## 建议
 
-A suggestion represents a proposed change to the document. When the AI makes a change to the document, you can show it as a suggestion so that the user can review and accept or reject it. Learn more in the [Review UI guide](/ai/ai-toolkit/client/agents/review-changes).
+建议表示对文档的一项拟议更改。当 AI 修改文档时，你可以将更改显示为建议，让用户查看并接受或拒绝。详细了解[审阅界面指南](/ai/ai-toolkit/client/agents/review-changes)。
 
-## NodeRange
+## 节点范围
 
-A node range is a range of top-level nodes in the document.
+节点范围是文档中顶层节点组成的范围。
 
-Top-level nodes are the direct children of the `doc` node.
+顶层节点是 `doc` 节点的直接子节点。
 
-A node range is an object with two properties:
+节点范围是一个包含两个属性的对象：
 
-- `from` (number): The index of the first node in the range (inclusive)
-- `to` (number): The index after the last node in the range (exclusive upper bound)
+- `from`（数字）：范围内第一个节点的索引（包含）
+- `to`（数字）：最后一个节点之后的索引（不包含上界）
 
 ```ts
 // Range from the first to the 100th node
 const nodeRange: NodeRange = { from: 0, to: 100 }
 ```
 
-The node range of the entire document is:
+整个文档的节点范围是：
 
 ```ts
 const nodeRange = { from: 0, to: editor.state.doc.childCount }
 ```
 
-## Tiptap Read and Tiptap Edit
+## Tiptap Read 和 Tiptap Edit
 
-Tiptap Edit is a format developed by Tiptap that allows AI to edit the document efficiently and accurately. With it, the AI can make small, precise edits fast, without replacing the whole document. It enables a reduction in token usage of up to 95%.
+Tiptap Edit 是 Tiptap 开发的一种格式，可帮助 AI 高效、准确地编辑文档。借助它，AI 无需替换整个文档，就能快速进行细小而精准的编辑。它最多可减少 95% 的 token 用量。
 
-Tiptap Edit is available as a [tool](/ai/ai-toolkit/client/agents/tools) for AI agents to use. It is also available as a [workflow](/ai/ai-toolkit/client/workflows/tiptap-edit).
+AI 代理可以将 Tiptap Edit 作为[工具](/ai/ai-toolkit/client/agents/tools)使用，也可以将其作为[工作流](/ai/ai-toolkit/client/workflows/tiptap-edit)使用。
 
-For Tiptap Edit to work, you need to read the document with Tiptap Read first. Tiptap Read is available as a [tool](/ai/ai-toolkit/client/agents/tools) for AI agents to use, or as a [workflow](/ai/ai-toolkit/client/workflows/tiptap-edit).
+要使用 Tiptap Edit，必须先通过 Tiptap Read 读取文档。AI 代理可以将 Tiptap Read 作为[工具](/ai/ai-toolkit/client/agents/tools)使用，也可以将其作为[工作流](/ai/ai-toolkit/client/workflows/tiptap-edit)使用。
 
 ```ts
 const { content } = toolkit.tiptapRead()
