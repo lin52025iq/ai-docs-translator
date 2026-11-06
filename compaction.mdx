@@ -1,13 +1,11 @@
 ---
-title: "Stream Compaction"
-description: "compactEvents utility for reducing verbose streaming sequences"
+title: "流压缩"
+description: "用于精简冗长流式序列的 compactEvents 工具"
 ---
 
 # compactEvents
 
-`compactEvents` reduces verbose streaming sequences in an event array while
-preserving semantics. Use it to shrink logs before persistence or to simplify
-post‑processing of Server‑Sent Events (SSE) streams.
+`compactEvents` 会在保留语义的同时，精简事件数组中冗长的流式序列。可用它在持久化前缩减日志，或简化服务器发送事件（SSE）流的后处理。
 
 ```ts
 import { compactEvents, EventType, type BaseEvent } from "@ag-ui/client"
@@ -21,21 +19,16 @@ const compacted: BaseEvent[] = compactEvents(events)
 function compactEvents(events: BaseEvent[]): BaseEvent[]
 ```
 
-## What it does
+## 功能
 
-- Text messages: Groups `TEXT_MESSAGE_START` → `TEXT_MESSAGE_CONTENT*` →
-  `TEXT_MESSAGE_END` for the same `messageId`, concatenating all `delta`
-  chunks into a single `TEXT_MESSAGE_CONTENT` event.
-- Tool calls: Groups `TOOL_CALL_START` → `TOOL_CALL_ARGS*` → `TOOL_CALL_END`
-  for the same `toolCallId`, concatenating all `delta` chunks into a single
-  `TOOL_CALL_ARGS` event.
-- Interleaved events: Any events that occur between a start/end pair are moved
-  after that sequence so the streaming block remains contiguous.
-- Pass‑through: All other events (state, custom, etc.) are preserved unchanged.
+- 文本消息：对同一 `messageId` 的 `TEXT_MESSAGE_START` → `TEXT_MESSAGE_CONTENT*` → `TEXT_MESSAGE_END` 事件进行分组，并将所有 `delta` 块拼接为一个 `TEXT_MESSAGE_CONTENT` 事件。
+- 工具调用：对同一 `toolCallId` 的 `TOOL_CALL_START` → `TOOL_CALL_ARGS*` → `TOOL_CALL_END` 事件进行分组，并将所有 `delta` 块拼接为一个 `TOOL_CALL_ARGS` 事件。
+- 交错事件：开始与结束事件之间出现的其他事件会被移到该序列之后，使流式块保持连续。
+- 直接保留：所有其他事件（状态、自定义事件等）均保持不变。
 
-## Example
+## 示例
 
-Before:
+处理前：
 
 ```ts
 [
@@ -48,7 +41,7 @@ Before:
 ]
 ```
 
-After:
+处理后：
 
 ```ts
 [
@@ -59,36 +52,21 @@ After:
 ]
 ```
 
-Tool call compaction works analogously for `TOOL_CALL_ARGS` chunks.
+工具调用的压缩方式与此类似，会合并 `TOOL_CALL_ARGS` 块。
 
-## When to use
+## 适用场景
 
-- Persisting event history (store fewer frames with the same meaning)
-- Preparing snapshots for analytics or export
-- Reducing noise in tests or debugging output
+- 持久化事件历史（存储更少的帧，含义不变）
+- 为分析或导出准备快照
+- 减少测试或调试输出中的冗余
 
-## Metadata
+## 元数据
 
-Collapsing a run of delta events also folds their
-[metadata](/concepts/metadata), key by key with the last write winning, so a
-compacted stream produces the same metadata as the original. Metadata that
-arrives after the first delta — from later deltas and from a replayed start
-alike — rides the collapsed event in arrival order, because compaction emits
-the start ahead of it.
+合并一组连续的 delta 事件时，也会按键合并其[元数据](/concepts/metadata)，并以最后一次写入的值为准，因此压缩后的流会产生与原始流相同的元数据。首个 delta 之后到达的元数据——无论来自后续 delta 还是重放的开始事件——都会按到达顺序附加到合并后的事件上，因为压缩会先输出开始事件。
 
-Compaction reorders events so each stream's events stay together, and that
-reordering is not semantics-preserving in general. Two parallel tool calls
-whose ends arrive in the opposite order to their starts end up swapped in the
-assistant message's `toolCalls` array, each still carrying its own metadata.
-More significantly, an event that interrupts a stream is emitted after it, so a
-`MESSAGES_SNAPSHOT` arriving mid-message is replayed after that message's own
-events and overwrites what they produced — the appended content as much as the
-merged metadata. Avoid interleaving snapshots with an open stream if you rely
-on exact replay equivalence.
+压缩会对事件重新排序，使每个流中的事件保持在一起；但这种重新排序通常无法保留语义。两个并行工具调用的结束事件若到达顺序与开始事件相反，它们在 assistant 消息的 `toolCalls` 数组中的顺序就会互换，但各自仍保留原有元数据。更重要的是，中断某个流的事件会被移到该流之后输出。因此，在消息处理过程中到达的 `MESSAGES_SNAPSHOT` 会在该消息自身的事件之后重放，并覆盖这些事件产生的结果——包括追加的内容和合并后的元数据。如果依赖完全一致的重放结果，请避免在流尚未结束时插入快照。
 
-## Notes & limitations
+## 备注与限制
 
-- This utility focuses on message and tool‑call streams. It does not modify
-  state events (`STATE_SNAPSHOT`/`STATE_DELTA`) or generate message snapshots.
-- For background and broader patterns (branching, normalization), see
-  [Serialization](/concepts/serialization).
+- 此工具专注于消息流和工具调用流。它不会修改状态事件（`STATE_SNAPSHOT`/`STATE_DELTA`），也不会生成消息快照。
+- 有关背景和更广泛模式（分支、规范化），请参阅[序列化](/concepts/serialization)。
