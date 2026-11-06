@@ -1,35 +1,35 @@
 ---
-title: TextStyle extension
+title: TextStyle 扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-text-style?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-text-style
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-text-style.svg
     url: https://npmcharts.com/compare/@tiptap/extension-text-style?minimal=true
-    label: Downloads
+    label: 下载量
 extension:
   name: Text Style
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-text-style
-  description: 'Otherwise useless, it adds inline span elements required by other extensions.'
+  description: '它本身没有其他用途，只会添加其他扩展所需的行内 span 元素。'
   type: mark
   icon: Paintbrush
 meta:
-  title: TextStyle extension | Tiptap Editor Docs
-  description: Use the Text Style extension in Tiptap to add inline span elements with custom styles. Learn more in our docs!
+  title: TextStyle 扩展 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 Text Style 扩展，添加带有自定义样式的行内 span 元素。了解详情，请参阅我们的文档！
   category: Editor
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-This mark renders a `<span>` HTML tag and enables you to add a list of styling related attributes, for example font-family, font-size, or color. The extension doesn’t add any styling attribute by default, but other extensions use it as the foundation, for example [`FontFamily`](/editor/extensions/functionality/fontfamily) or [`Color`](/editor/extensions/functionality/color).
+此标记会渲染 HTML `<span>` 标签，并允许你添加一系列与样式相关的属性，例如 font-family、font-size 或 color。该扩展默认不会添加任何样式属性，但其他扩展会以它为基础，例如 [`FontFamily`](/editor/extensions/functionality/fontfamily) 或 [`Color`](/editor/extensions/functionality/color)。
 
 <CodeDemo path="/Marks/Textstyle" />
 
-## Apply font sizes
+## 设置字体大小
 
-`TextStyle` provides the `<span>` mark, while extensions such as [`FontSize`](/editor/extensions/functionality/fontsize) add specific style attributes. Install the text-style package and include both extensions in an editor with a document schema, such as the one provided by `StarterKit`:
+`TextStyle` 提供 `<span>` 标记，而 [`FontSize`](/editor/extensions/functionality/fontsize) 等扩展则会添加特定的样式属性。安装 text-style 包，并在包含文档 schema 的编辑器中加入这两个扩展，例如使用 `StarterKit` 提供的 schema：
 
 ```bash
 npm install @tiptap/extension-text-style @tiptap/starter-kit
@@ -47,24 +47,24 @@ const editor = new Editor({
 editor.chain().focus().setFontSize('18px').run()
 ```
 
-The command renders the selected text as a `span` with an inline `font-size: 18px` style.
+此命令会将选中的文本渲染为带有行内 `font-size: 18px` 样式的 `span`。
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-text-style
 ```
 
-## Commands
+## 命令
 
 ### removeEmptyTextStyle()
 
-Remove `<span>` tags without an inline style.
+移除没有行内样式的 `<span>` 标签。
 
 ```js
 editor.command.removeEmptyTextStyle()
 ```
 
-## Source code
+## 源代码
 
 [packages/extension-text-style/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-text-style/)
