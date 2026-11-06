@@ -1,0 +1,333 @@
+---
+title: 在编辑器中管理讨论串
+meta:
+  title: 管理讨论串 | Tiptap 评论文档
+  description: 使用讨论串、评论和编辑器命令，在 Tiptap Editor 中管理讨论。更多内容请参阅我们的文档！
+  category: 评论
+---
+
+import { Callout } from '@/components/ui/Callout'
+
+本指南将介绍如何将评论直接集成到编辑器中。有关所有 Comments 编辑器命令的完整列表，请参阅[编辑器命令](/comments/integrate/editor-commands)页面。
+
+你也可以通过[评论 REST API](/comments/integrate/rest-api)在编辑器外与评论交互。
+
+如需自定义锚点消失或讨论串状态发生变化时的行为，请配置 [`onThreadAnchorRemoved`](/comments/core-concepts/configure#onthreadanchorremoved) 和 [`onThreadStateChanged`](/comments/core-concepts/configure#onthreadstatechanged)。
+
+## 了解讨论串
+
+Tiptap 的 Comments 功能会将讨论组织成讨论串，通过区分讨论串和单条评论，让协作更清晰、更贴合上下文。
+
+讨论串用于容纳与文档特定部分相关的讨论，而评论则代表讨论串中的单条发言。
+
+## 创建新讨论串
+
+假设你有一个用于创建新讨论串的按钮。你可以使用 `setThread` 命令，在当前选区创建一个新讨论串。
+
+```js
+const createThread = () => {
+  editor
+    .chain()
+    .setThread({
+      content: 'This is a new thread', // the content of the threads first inital comment
+    })
+    .run()
+}
+```
+
+这会在当前选区创建一个新讨论串，并添加一条包含指定内容的评论。默认情况下，评论和讨论串都不会关联用户或其他元数据。假设你想为讨论串**和**评论添加作者信息，可以将 `data` 和 `commentData` 属性传递给 `setThread` 命令。
+
+```js
+const createThread = () => {
+  const user = {
+    id: '123', // the user id of the author
+    name: 'John Doe', // the name of the author
+    avatarUrl: 'https://example.com/avatar.jpg', // the avatar of the author
+  }
+
+  editor
+    .chain()
+    .setThread({
+      content: 'This is a new thread', // the content of the threads first inital comment
+      data: {
+        user,
+      },
+      commentData: {
+        user,
+      },
+    })
+    .run()
+}
+```
+
+现在，讨论串和评论都会关联到一个用户。
+
+## 接收并监听讨论串和评论
+
+使用 `@tiptap-pro/extension-comments` 中的 `subscribeToThreads`，让讨论串列表保持最新。传入 `editor`，即可包含每个讨论串在当前文档中的范围。
+
+回调会立即接收初始列表。传入编辑器后，讨论串数据或范围发生变化时，后续更新会合并到一个微任务中。本地编辑、协同编辑以及撤销或重做后，范围都会更新。仅选区变化不会触发回调。
+
+```js
+import { subscribeToThreads } from '@tiptap-pro/extension-comments'
+
+const unsubscribe = subscribeToThreads({
+  editor,
+  provider: yourTiptapCollabProvider,
+  callback: (threads) => {
+    console.log(threads.map((thread) => ({ id: thread.id, ranges: thread.ranges })))
+  },
+  getThreadsOptions: {
+    types: ['archived', 'unarchived'],
+  },
+})
+```
+
+默认情况下，只会返回未归档的讨论串。使用 `getThreadsOptions.types` 可包含已归档的讨论串（即软删除的讨论串）。
+
+传入 `editor` 时，订阅默认使用编辑器的协同字段。你可以通过 `getThreadsOptions.field` 指定其他字段。字段筛选也会包含未分配字段的旧版讨论串。
+
+不再需要更新时，请调用 `unsubscribe()`。提供的编辑器销毁时，订阅也会自动清理。
+
+不传入 `editor` 时，`subscribeToThreads` 返回不带 `ranges` 的提供方讨论串记录，并且只监听提供方的变化。
+
+## 读取当前讨论串范围
+
+使用 `@tiptap-pro/extension-comments` 中的 `getThreads`，读取讨论串记录及其在编辑器中的当前锚点。编辑器必须安装 `Comments` 或 `CommentsKit`。
+
+```js
+import { getThreads } from '@tiptap-pro/extension-comments'
+
+const threads = getThreads({
+  editor,
+  provider: yourTiptapCollabProvider,
+})
+```
+
+每个结果都会保留提供方的讨论串数据，并添加一个只读的 `ranges` 数组。此程序包导出了 `ThreadWithPositions<Data, CommentData>` 和 `ThreadRange` 类型。
+
+每个范围都包含以下字段：
+
+| 字段   | 说明                                                       |
+| ------ | ---------------------------------------------------------- |
+| `from` | 当前 ProseMirror 文档中的起始位置。                        |
+| `to`   | 当前 ProseMirror 文档中的结束位置（不包含该位置）。        |
+| `type` | 标记范围为 `'inline'`，块级讨论串包装节点为 `'block'`。     |
+
+块级范围包含包装节点。一个讨论串可以有多个彼此分离的锚点，因此 `ranges` 中可以包含多个条目，并按文档位置排序。在所提供的编辑器中没有锚点的讨论串，其 `ranges` 为 `[]`。
+
+这些位置描述的是当前文档中的位置，而不是永久锚点。编辑后请重新读取，或使用传入 `editor` 的 `subscribeToThreads` 接收更新后的范围。
+
+`getThreads` 接受与订阅相同的 `getThreadsOptions` 筛选条件，并默认使用编辑器的协同字段。它会保留提供方的顺序，而不会按文档位置对讨论串排序。
+
+若要按文档顺序显示讨论串，请按第一个范围排序。以下示例会将没有锚点的讨论串排在最后，并使用讨论串 ID 打破并列：
+
+```js
+const firstPosition = (thread) => thread.ranges[0]?.from ?? Infinity
+
+const orderedThreads = [...threads].sort(
+  (left, right) => firstPosition(left) - firstPosition(right) || left.id.localeCompare(right.id),
+)
+```
+
+## 手动接收并渲染讨论串
+
+若要手动获取当前文档中的讨论串列表，只需调用 `provider.getThreads()`。这会返回一个数组，其中包含与提供方连接的文档中的讨论串。
+
+这是一个静态数组，不会自动更新。若要让讨论串列表保持最新，可以通过 `provider.watchThreads` 和 `provider.unwatchThreads` 函数监听变化。
+
+```js
+// let's save threads in a variable
+let threads = []
+
+// this function is called whenever the threads change
+const getThreads = () => {
+  threads = provider.getThreads()
+}
+
+// initial call to get the threads
+getThreads()
+
+// watch for changes
+provider.watchThreads(getThreads)
+```
+
+若要停止监听讨论串，可以调用 `provider.unwatchThreads(getThreads)`。
+
+```js
+provider.unwatchThreads(getThreads)
+```
+
+监听器回调还会接收 Yjs 事件和事务。使用 `transaction.local` 区分本地和远程更改；取消订阅时，将同一个回调传递给 `unwatchThreads`：
+
+```js
+const handleThreadChanges = (events, transaction) => {
+  console.log('Thread changes', events, transaction.local ? 'local' : 'remote')
+}
+
+provider.watchThreads(handleThreadChanges)
+
+// Unsubscribe when the watcher is no longer needed.
+provider.unwatchThreads(handleThreadChanges)
+```
+
+## 在 React 状态中维护讨论串范围
+
+在 React Hook 中使用支持编辑器的订阅，以接收讨论串数据和范围更新：
+
+不传入 `editor` 时，该 Hook 也能正常工作。这种情况下，它接收的是不带 `ranges` 的提供方讨论串记录。
+
+```jsx
+import { subscribeToThreads } from '@tiptap-pro/extension-comments'
+import { useEffect, useState } from 'react'
+
+const useThreads = (provider, editor) => {
+  const [threads, setThreads] = useState([])
+
+  useEffect(() => {
+    if (!provider) {
+      return
+    }
+
+    return subscribeToThreads({
+      editor,
+      provider,
+      callback: setThreads,
+    })
+  }, [provider, editor])
+
+  return threads
+}
+```
+
+使用返回的讨论串渲染 UI。依赖项发生变化或组件卸载时，React 会调用取消订阅函数。
+
+## 更新讨论串
+
+若要更新讨论串，可以使用 `updateThread` 命令。此命令会更新指定 ID 的讨论串及其内容。
+
+```js
+editor.commands.updateThread({
+  id: '123',
+  {
+    data: {
+      seen: true,
+    }
+  }
+})
+```
+
+这会更新 ID 为 `123` 的讨论串，并将 `seen` 属性设为 `true`。
+
+## 删除讨论串
+
+若要删除讨论串，可以使用 `removeThread` 命令。此命令会删除指定 ID 的讨论串。
+
+<Callout title="如何删除讨论串" variant="default">
+  默认情况下，已移除的讨论串不会从 Yjs 文档中删除。若要执行删除操作，可以将
+  `deleteThread` 选项传递给 `removeThread` 命令。
+</Callout>
+
+```js
+editor.commands.removeThread({
+  id: '123',
+  deleteThread: true,
+})
+```
+
+## 创建、更新和删除评论
+
+可以在讨论串中添加、编辑和删除评论，但不能将评论标记为已解决，因为评论被视为讨论串讨论的一部分。
+
+若要在讨论串中创建评论，可以使用 `createComment` 命令。此命令会在指定 ID 的讨论串中创建一条新评论。
+
+```js
+editor.commands.createComment({
+  threadId: '123',
+  content: 'This is a new comment', // this could also be Tiptap JSON or any other type of content
+  data: {
+    user, // pass through any meta data you want - in this case the user
+  },
+})
+```
+
+这会在 ID 为 `123` 的讨论串中创建一条新评论，并将内容设为 `This is a new comment`。你也可以为评论传入所需的任意元数据。
+
+若要更新评论，可以使用 `updateComment` 命令。此命令会更新指定 ID 的评论及其内容。
+
+```js
+editor.commands.updateComment({
+  threadId: '123', // the thread ID
+  id: '456', // the comment ID
+  content: 'Now this is the new content', // the new content of the comment
+  data: {
+    edited: true, // set the edited property to true
+  },
+})
+```
+
+这会更新 ID 为 `123` 的讨论串中 ID 为 `456` 的评论，并将内容设为 `Now this is the new content`。你也可以为评论传入所需的任意元数据。
+
+最后，你可以使用 `deleteComment` 命令删除评论。此命令会删除指定 ID 的评论。
+
+```js
+editor.commands.deleteComment({
+  threadId: '123',
+  id: '456',
+})
+```
+
+## 解决和取消解决讨论串
+
+若要解决讨论串，可以使用 `resolveThread` 命令。此命令会解决指定 ID 的讨论串。
+
+```js
+editor.commands.resolveThread({
+  id: '123',
+})
+```
+
+这会解决 ID 为 `123` 的讨论串。若要取消解决讨论串，可以使用 `unresolveThread` 命令。此命令会取消解决指定 ID 的讨论串。
+
+如果你想在解决讨论串时记录由哪个用户解决，可以将该用户的信息添加到讨论串数据中。取消解决讨论串时，记得清除这些数据。
+
+```js
+editor.commands.unresolveThread({
+  id: '123',
+})
+```
+
+## 查找文档中的所有讨论串
+
+若要查找编辑器文档中的所有讨论串，可以使用 `findThreadsInDocument` 实用函数。此函数会返回所有讨论串节点和标记的数组，包括它们在文档中的位置。
+
+```js
+const threads = findThreadsInDocument(editor, {
+  blockTypeName: 'blockThread',
+  markTypeName: 'inlineThread',
+})
+```
+
+这会返回一个讨论串对象数组。每个对象都包含讨论串标识符、节点、位置，以及可选的关联标记。
+
+## 选中讨论串
+
+若要选中讨论串，可以使用 `selectThread` 命令。此命令会选中指定 ID 的讨论串。
+
+```js
+editor.commands.selectThread({
+  id: '123',
+})
+```
+
+这会将光标移到 ID 为 `123` 的讨论串。
+
+若要取消选中讨论串，可以使用 `unselectThread` 命令。此命令会取消选中指定 ID 的讨论串。
+
+```js
+editor.commands.unselectThread({
+  id: '123',
+})
+```
+
+你也可以在不指定 ID 的情况下选中或取消选中讨论串。这种情况下，编辑器会选中或取消选中当前选区所在的讨论串。
