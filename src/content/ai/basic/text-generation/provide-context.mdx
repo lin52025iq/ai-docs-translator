@@ -1,11 +1,11 @@
 ---
-title: Provide more context to your prompts
+title: 为提示词提供更多上下文
 tags:
   - type: start
 meta:
-    title: Context | Tiptap Basic AI Generation
-    description: Add more context to your prompts and editor commands to fine-tune your AI's response. Learn more in our docs.
-    category: Basic AI Generation
+    title: 上下文 | Tiptap Basic AI Generation
+    description: 为提示词和编辑器命令添加更多上下文，以微调 AI 的响应。了解更多信息，请参阅我们的文档。
+    category: 基础 AI 生成
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
@@ -13,28 +13,27 @@ import { Callout } from '@/components/ui/Callout'
 import { Requirements, RequirementItem } from '@/components/Requirements'
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 激活试用或订阅">
+        在你的账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 计划](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Integrate an AI provider">
-        Configure OpenAI in your [AI settings](https://cloud.tiptap.dev/v2/cloud/ai) or review the [Custom LLM guides](/ai/basic/custom-llms).
+    <RequirementItem label="2. 集成 AI 提供商">
+        在[AI 设置](https://cloud.tiptap.dev/v2/cloud/ai)中配置 OpenAI，或查看[自定义 LLM 指南](/ai/basic/custom-llms)。
     </RequirementItem>
-    <RequirementItem label="3. Install from private registry">
-        To install the frontend extensions, authenticate to Tiptap’s private npm registry by following the [setup guide](/guides/pro-extensions).
+    <RequirementItem label="3. 从私有注册表安装">
+        若要安装前端扩展，请按照[设置指南](/guides/pro-extensions)进行身份验证，以访问 Tiptap 的私有 npm 注册表。
     </RequirementItem>
 </Requirements>
 
-With the `context` option, you can provide additional information to the AI model to help it generate more relevant content. This can be useful when you want to generate content that is more aligned with the context of the conversation.
+使用 `context` 选项，你可以向 AI 模型提供更多信息，帮助它生成更相关的内容。如果你希望生成的内容更贴合对话上下文，这会很有用。
 
 <CodeDemo isPro path="/Extensions/AiContext" />
 
-## Context option
+## Context 选项
 
-Context can be provided in two formats, `text` and `url`. The `text` format is used to provide additional text context to the AI model, while the `url` format is used to provide a URL context.
+可以通过 `text` 和 `url` 两种格式提供上下文。`text` 格式用于向 AI 模型提供额外的文本上下文，`url` 格式则用于提供 URL 上下文。
 
-<Callout title="URL requirements" variant="warning">
-    The url provided must be a valid URL that is accessible by Tiptap Basic AI Generation. This is useful when
-    you want to provide additional context to the AI model that is referencing a third-party source.
+<Callout title="URL 要求" variant="warning">
+    提供的 URL 必须有效，并且 Tiptap Basic AI Generation 能够访问。如果你希望向 AI 模型提供来自第三方来源的额外上下文，这种方式会很有用。
 </Callout>
 
 ```ts
