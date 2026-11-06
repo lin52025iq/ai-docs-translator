@@ -1,33 +1,33 @@
 ---
 title: ProseMirror
 meta:
-  title: ProseMirror | Tiptap Editor Docs
-  description: Access the ProseMirror API and functionality with the Tiptap PM package while developing your editor. Learn more in the docs!
-  category: Editor
+  title: ProseMirror | Tiptap 编辑器文档
+  description: 使用 Tiptap PM 软件包，在开发编辑器时访问 ProseMirror API 和功能。了解更多内容，请参阅文档！
+  category: 编辑器
 ---
 
-Tiptap is built on top of ProseMirror, which has a pretty powerful API. To access it, we provide the package `@tiptap/pm`. This package provides all important ProseMirror packages like `prosemirror-state`, `prosemirror-view` or `prosemirror-model`.
+Tiptap 构建于 ProseMirror 之上，后者提供了相当强大的 API。为便于访问该 API，我们提供了 `@tiptap/pm` 软件包。此软件包包含所有重要的 ProseMirror 软件包，例如 `prosemirror-state`、`prosemirror-view` 和 `prosemirror-model`。
 
-Using the package for custom development makes sure that you always have the same version of ProseMirror which is used by Tiptap as well. This way, we can make sure that Tiptap and all extensions are compatible with each other and prevent version clashes.
+在自定义开发中使用此软件包，可以确保你始终使用与 Tiptap 相同版本的 ProseMirror。这样，我们就能确保 Tiptap 与所有扩展彼此兼容，并避免版本冲突。
 
-Another plus is that you don't need to install all ProseMirror packages manually, especially if you are not using npm or any other package manager that supports automatic peer dependency resolution.
+此外，你无需手动安装所有 ProseMirror 软件包，尤其是在使用不支持自动解析对等依赖的 npm 或其他软件包管理器时。
 
-## Install
+## 安装
 
 ```bash
 npm i @tiptap/pm
 ```
 
-After that you can access all internal ProseMirror packages like this:
+安装后，你可以像这样访问所有内部 ProseMirror 软件包：
 
 ```js
-// this example loads the EditorState class from the ProseMirror state package
+// 此示例从 ProseMirror state 软件包中加载 EditorState 类
 import { EditorState } from '@tiptap/pm/state'
 ```
 
-## Integrate packages
+## 集成软件包
 
-The following packages are available:
+以下软件包可供使用：
 
 - `@tiptap/pm/changeset`
 - `@tiptap/pm/commands`
@@ -43,6 +43,6 @@ The following packages are available:
 - `@tiptap/pm/transform`
 - `@tiptap/pm/view`
 
-If you need other ProseMirror packages that are not re-exported by `@tiptap/pm` (for example `prosemirror-collab`, `prosemirror-markdown`, `prosemirror-menu`, `prosemirror-schema-basic`, or `prosemirror-trailing-node`), install them directly from npm.
+如果你需要其他未由 `@tiptap/pm` 重新导出的 ProseMirror 软件包（例如 `prosemirror-collab`、`prosemirror-markdown`、`prosemirror-menu`、`prosemirror-schema-basic` 或 `prosemirror-trailing-node`），请直接从 npm 安装。
 
-You can find out more about those libraries in the [ProseMirror documentation](https://prosemirror.net/docs/ref).
+你可以在 [ProseMirror 文档](https://prosemirror.net/docs/ref)中了解这些库的更多信息。
