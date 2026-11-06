@@ -1,19 +1,18 @@
 ---
-title: Persistence
+title: 持久化
 meta:
-  title: Persistence | Tiptap Editor Docs
-  description: Learn how to persist the editor state in Tiptap. Discover how to save and restore the editor content in the docs.
+  title: 持久化 | Tiptap 编辑器文档
+  description: 了解如何在 Tiptap 中持久化编辑器状态。通过文档了解如何保存和恢复编辑器内容。
 ---
 
-After you have set up your editor, configured it and added some content you might wonder how to persist the editor.
-Since Tiptap is able to return **HTML** or **JSON** you can easily save the content to a database, LocalStorage or any other storage solution like sqlite or IndexedDB.
+设置好编辑器、完成配置并添加一些内容后，你可能会想知道如何持久化编辑器内容。
+Tiptap 可以返回 **HTML** 或 **JSON**，因此你可以轻松地将内容保存到数据库、LocalStorage 或其他存储方案中，例如 sqlite 或 IndexedDB。
 
-While saving HTML is possible and may be the easiest way to get renderable content, we recommend using JSON to persist the editor state as it is more flexible, easier to parse
-and allows for external edits if needed without running an additional HTML parser over it.
+虽然可以保存 HTML，而且这可能是获取可渲染内容最简单的方式，但我们建议使用 JSON 持久化编辑器状态，因为它更加灵活、更易于解析；如果需要外部编辑，也无需再运行额外的 HTML 解析器。
 
-## Persisting the state to LocalStorage
+## 将状态持久化到 LocalStorage
 
-You can use the `localStorage` API to persist the editor state in the browser. Here's a simple example of how to save and restore the editor content using LocalStorage:
+你可以使用 `localStorage` API 在浏览器中持久化编辑器状态。下面是一个使用 LocalStorage 保存和恢复编辑器内容的简单示例：
 
 ```js
 // Save the editor content to LocalStorage
@@ -26,7 +25,7 @@ if (savedContent) {
 }
 ```
 
-You can also get data from the localStorage when initializing the editor:
+初始化编辑器时，你也可以从 localStorage 获取数据：
 
 ```js
 const savedContent = localStorage.getItem('editorContent')
@@ -38,11 +37,11 @@ const editor = new Editor({
 })
 ```
 
-## Persisting the state to a database
+## 将状态持久化到数据库
 
-To persist the editor state to a database, you can use the same approach as with LocalStorage, but instead of using `localStorage`, you would send the JSON data to your backend API.
+要将编辑器状态持久化到数据库，可以采用与 LocalStorage 相同的方法，但不使用 `localStorage`，而是将 JSON 数据发送到后端 API。
 
-In this example we'll use the Fetch API to send the editor content to a hypothetical endpoint:
+在这个示例中，我们将使用 Fetch API 将编辑器内容发送到一个假设的端点：
 
 ```js
 // Save the editor content to a database
@@ -55,7 +54,7 @@ fetch('/api/editor/content', {
 })
 ```
 
-To restore the editor content from the database, you would fetch the content from your API and set it in the editor:
+要从数据库恢复编辑器内容，你需要从 API 获取内容并将其设置到编辑器中：
 
 ```js
 // Restore the editor content from a database
@@ -69,9 +68,9 @@ fetch('/api/editor/content')
   })
 ```
 
-## Restoring the editor state in React
+## 在 React 中恢复编辑器状态
 
-If you are using React, you can use the `useEffect` hook to restore the editor state when the component mounts. Here's an example of how to do this for the LocalStorage case:
+如果你使用 React，可以使用 `useEffect` hook 在组件挂载时恢复编辑器状态。下面是一个使用 LocalStorage 的示例：
 
 ```jsx
 function MyEditor() {
