@@ -1,0 +1,254 @@
+---
+title: 颜色高亮弹出框
+meta:
+  title: 颜色高亮弹出框 | Tiptap UI 组件
+  description: 添加一个可供选择高亮颜色的弹出框。将此 UI 组件添加到你的 Tiptap 编辑器中。
+  category: UI 组件
+component:
+  name: 颜色高亮弹出框
+  description: 添加一个可供选择高亮颜色的弹出框。将此 UI 组件添加到你的 Tiptap 编辑器中。
+  type: component
+  isFree: true
+  isCloud: false
+  isOpen: true
+  isNew: false
+  icon: HighlighterIcon
+tags:
+  - type: mit
+---
+
+import { CodeDemo } from '@/components/CodeDemo'
+
+这是一款完全无障碍的 Tiptap 编辑器高亮颜色选择弹出框。可使用精选调色板添加背景高亮、移除高亮，并通过键盘快捷键和移动设备支持，为文本高亮提供直观的操作界面。
+
+<CodeDemo
+  isScrollable
+  isSmall
+  src="https://template.tiptap.dev/preview/tiptap-ui/color-highlight-popover"
+/>
+
+## 安装
+
+通过 Tiptap CLI 添加此组件：
+
+```bash
+npx @tiptap/cli@latest add color-highlight-popover
+```
+
+## 组件
+
+### `<ColorHighlightPopover />`
+
+预构建的 React 组件，可通过紧凑的弹出框界面选择高亮颜色。
+
+#### 用法
+
+```tsx
+import { EditorContent, EditorContext, useEditor } from '@tiptap/react'
+import { StarterKit } from '@tiptap/starter-kit'
+import { Highlight } from '@tiptap/extension-highlight'
+import { ColorHighlightPopover } from '@/components/tiptap-ui/color-highlight-popover'
+
+import '@/components/tiptap-node/paragraph-node/paragraph-node.scss'
+
+export default function MyEditor() {
+  const editor = useEditor({
+    immediatelyRender: false,
+    extensions: [StarterKit, Highlight.configure({ multicolor: true })],
+    content: `
+        <p style="text-align: left">
+            <mark data-color="var(--tt-color-highlight-purple)" style="background-color: var(--tt-color-highlight-purple); color: inherit">
+                <span class="selection">Highlight text</span>
+            </mark>
+            <span class="selection"> </span>
+            <mark data-color="var(--tt-color-highlight-red)" style="background-color: var(--tt-color-highlight-red); color: inherit">
+                <span class="selection">in</span>
+            </mark>
+            <span class="selection"> </span>
+            <mark data-color="var(--tt-color-highlight-green)" style="background-color: var(--tt-color-highlight-green); color: inherit">
+                <span class="selection">different</span>
+            </mark>
+            <span class="selection"> </span>
+            <mark data-color="var(--tt-color-highlight-blue)" style="background-color: var(--tt-color-highlight-blue); color: inherit">
+                <span class="selection">colors</span>
+            </mark>
+            <span class="selection"> to draw attention to key points.</span>
+        </p>
+        `,
+  })
+
+  return (
+    <EditorContext.Provider value={{ editor }}>
+      <ColorHighlightPopover
+        editor={editor}
+        hideWhenUnavailable={true}
+        onApplied={({ color, label }) => console.log(`Applied highlight: ${label} (${color})`)}
+      />
+
+      <EditorContent editor={editor} role="presentation" />
+    </EditorContext.Provider>
+  )
+}
+```
+
+#### 属性
+
+| 名称                  | 类型               | 默认值         | 说明                                           |
+| --------------------- | ------------------ | --------------- | ----------------------------------------------------- |
+| `editor`              | `Editor \| null`   | `undefined`     | Tiptap 编辑器实例                            |
+| `colors`              | `HighlightColor[]` | Default palette | 要显示的自定义高亮颜色                    |
+| `hideWhenUnavailable` | `boolean`          | `false`         | 高亮不可用时隐藏弹出框  |
+| `onApplied`           | `HighlightHandler` | `undefined`     | 应用或移除高亮时触发的回调 |
+
+### `<ColorHighlightPopoverContent />`
+
+用于显示调色板和移除选项的内容组件。可单独用于自定义弹出框实现。
+
+#### 用法
+
+```tsx
+<PopoverContent>
+  <ColorHighlightPopoverContent editor={editor} colors={customColors} />
+</PopoverContent>
+```
+
+#### 属性
+
+| 名称     | 类型               | 默认值         | 说明                        |
+| -------- | ------------------ | --------------- | ---------------------------------- |
+| `editor` | `Editor \| null`   | `undefined`     | Tiptap 编辑器实例         |
+| `colors` | `HighlightColor[]` | Default palette | 要显示的自定义高亮颜色 |
+
+## Hooks
+
+### `useColorHighlight()`
+
+自定义 hook，可用于构建自己的高亮功能，并完全控制其行为和渲染。
+
+#### 用法
+
+```tsx
+function MyHighlightButton() {
+  const {
+    isVisible,
+    isActive,
+    canColorHighlight,
+    handleColorHighlight,
+    handleRemoveHighlight,
+    label,
+    shortcutKeys,
+    Icon,
+  } = useColorHighlight({
+    editor: myEditor,
+    highlightColor: 'var(--tt-color-highlight-yellow)',
+    label: 'Yellow Highlight',
+    hideWhenUnavailable: true,
+    onApplied: ({ color, label }) => {
+      console.log(`Highlight applied: ${label} (${color})`)
+    },
+  })
+
+  if (!isVisible) return null
+
+  return (
+    <button
+      onClick={handleColorHighlight}
+      disabled={!canColorHighlight}
+      aria-label={label}
+      aria-pressed={isActive}
+    >
+      <Icon />
+      {label}
+      <kbd>{shortcutKeys}</kbd>
+    </button>
+  )
+}
+```
+
+#### 属性
+
+| 名称                  | 类型               | 默认值     | 说明                             |
+| --------------------- | ------------------ | ----------- | --------------------------------------- |
+| `editor`              | `Editor \| null`   | `undefined` | Tiptap 编辑器实例              |
+| `highlightColor`      | `string`           | `undefined` | 高亮的 CSS 颜色值       |
+| `label`               | `string`           | `undefined` | 高亮的无障碍标签      |
+| `hideWhenUnavailable` | `boolean`          | `false`     | 高亮不可用时隐藏 hook |
+| `onApplied`           | `HighlightHandler` | `undefined` | 高亮更改时触发的回调          |
+
+#### 返回值
+
+| 名称                    | 类型            | 说明                              |
+| ----------------------- | --------------- | ---------------------------------------- |
+| `isVisible`             | `boolean`       | 是否应渲染按钮    |
+| `isActive`              | `boolean`       | 当前是否已启用高亮     |
+| `canColorHighlight`     | `boolean`       | 当前是否允许高亮     |
+| `handleColorHighlight`  | `() => boolean` | 应用或切换高亮的函数   |
+| `handleRemoveHighlight` | `() => boolean` | 移除任何高亮的函数         |
+| `label`                 | `string`        | 按钮的无障碍标签文本     |
+| `shortcutKeys`          | `string`        | 键盘快捷键（Cmd/Ctrl + Shift + H） |
+| `Icon`                  | `React.FC`      | 高亮按钮的图标组件  |
+
+## 实用函数
+
+### `canColorHighlight(editor)`
+
+检查当前编辑器状态下是否可以使用高亮。
+
+```tsx
+import { canColorHighlight } from '@/components/tiptap-ui/color-highlight-button'
+
+const canHighlight = canColorHighlight(editor)
+if (canHighlight) {
+  // Show highlight options
+}
+```
+
+### `removeHighlight(editor)`
+
+以编程方式移除当前选区中的任何高亮。
+
+```tsx
+import { removeHighlight } from '@/components/tiptap-ui/color-highlight-button'
+
+const success = removeHighlight(editor)
+if (success) {
+  console.log('Highlight removed!')
+}
+```
+
+## 键盘快捷键
+
+高亮弹出框支持以下键盘快捷键：
+
+- **Cmd/Ctrl + Shift + H**：切换高亮（配置了特定颜色时）
+
+```tsx
+// Shortcut works automatically with useColorHighlight hook
+const { shortcutKeys } = useColorHighlight({
+  editor,
+  highlightColor: 'var(--tt-color-highlight-yellow)',
+})
+
+console.log(shortcutKeys) // "mod+shift+h"
+```
+
+## 要求
+
+### 依赖项
+
+- `@tiptap/react` - Tiptap React 核心集成
+- `@tiptap/extension-highlight` - 用于文本高亮的 Highlight 扩展
+
+### 引用的组件
+
+- `use-tiptap-editor`（hook）
+- `use-menu-navigation`（hook）
+- `use-mobile`（hook）
+- `button`（基础组件）
+- `popover`（基础组件）
+- `card`（基础组件）
+- `separator`（基础组件）
+- `highlighter-icon`（图标）
+- `ban-icon`（图标）
+- `color-highlight-button`（组件）
+- `tiptap-utils`（库）
