@@ -1,14 +1,14 @@
 ---
-title: Export ODT via REST API
+title: 通过 REST API 导出 ODT
 tags:
   - type: start
   - type: beta
   - type: version
     label: v2.39.1
 meta:
-    title: ODT REST API | Tiptap Conversion
-    description: Learn how to export Tiptap JSON documents to ODT (OpenDocument Text) format using the Tiptap Conversion REST API v2.
-    category: Conversion
+    title: ODT REST API | Tiptap 转换
+    description: 了解如何使用 Tiptap Conversion REST API v2 将 Tiptap JSON 文档导出为 ODT（OpenDocument 文本）格式。
+    category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
@@ -20,30 +20,30 @@ import RegionalEndpoints from '../../_shared/_regional-endpoints.mdx'
 <EnterpriseCalloutAuto variant="odt" renderMode="sidebar" disableWaitlist />
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 开通试用或订阅">
+        在账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 方案](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Configure Convert app">
-        Authenticate REST calls with a signed token carrying `aud: "Convert"`. See [Authentication](/authentication).
+    <RequirementItem label="2. 配置 Convert 应用">
+        使用包含 `aud: "Convert"` 的签名令牌对 REST 调用进行身份验证。请参阅[身份验证](/authentication)。
     </RequirementItem>
 </Requirements>
 
-The ODT export API converts Tiptap JSON documents into OpenDocument Text (`.odt`) files, compatible with LibreOffice and OpenOffice.
+ODT 导出 API 可将 Tiptap JSON 文档转换为与 LibreOffice 和 OpenOffice 兼容的 OpenDocument 文本（`.odt`）文件。
 
-<Callout title="Review the postman collection" variant="hint">
-    You can also experiment with the Document Conversion API by heading over to our [Postman
-    Collection](https://www.postman.com/tiptap-platform/workspace/tiptap-workspace/collection/33042171-bcc93ecb-8bad-4484-8cb0-d995ee23ae60).
+<Callout title="查看 Postman 集合" variant="hint">
+    您也可以前往我们的 [Postman
+    集合](https://www.postman.com/tiptap-platform/workspace/tiptap-workspace/collection/33042171-bcc93ecb-8bad-4484-8cb0-d995ee23ae60)，试用文档转换 API。
 </Callout>
 
 <RegionalEndpoints />
 
-## Export ODT
+## 导出 ODT
 
 `POST /v2/convert/export/odt`
 
-The `/v2/convert/export/odt` endpoint converts Tiptap JSON documents into ODT format. Send a `POST` request with your document as a JSON body to receive a downloadable ODT file.
+`/v2/convert/export/odt` 端点可将 Tiptap JSON 文档转换为 ODT 格式。发送 `POST` 请求，并在 JSON 请求体中提供文档，即可接收可下载的 ODT 文件。
 
-### Example (cURL)
+### 示例（cURL）
 
 ```bash
 curl --output document.odt -X POST "https://api.tiptap.dev/v2/convert/export/odt" \
@@ -54,107 +54,104 @@ curl --output document.odt -X POST "https://api.tiptap.dev/v2/convert/export/odt
     }'
 ```
 
-<Callout title="Subscription required" variant="warning">
-    This endpoint requires a valid Tiptap subscription. For more details review our [pricing page](https://tiptap.dev/pricing).
+<Callout title="需要订阅" variant="warning">
+    此端点需要有效的 Tiptap 订阅。更多详情请查看我们的[定价页面](https://tiptap.dev/pricing)。
 </Callout>
 
-### Required headers
+### 必需的请求头
 
-| Name            | Description                                                                                                                               |
+| 名称            | 描述                                                                                                                               |
 | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `Authorization` | The JWT token to authenticate the request. Example: `Bearer your-jwt-token`                                                               |
-| `Content-Type`  | Must be `application/json`                                                                                                                |
+| `Authorization` | 用于对请求进行身份验证的 JWT 令牌。示例：`Bearer your-jwt-token`                                                               |
+| `Content-Type`  | 必须为 `application/json`                                                                                                                |
 
-### Body
+### 请求体
 
-| Name                 | Type     | Description                                                            | Default     |
+| 名称                 | 类型     | 描述                                                            | 默认值     |
 | -------------------- | -------- | ---------------------------------------------------------------------- | ----------- |
-| `doc`                | `String` | Tiptap JSON document as a string                                       | `N/A`       |
-| `exportType`         | `string` | The expected export type                                               | `blob`      |
-| `styleOverrides`     | `Object` | Style overrides                                                        | `{}`        |
-| `pageSize`           | `Object` | Page size configuration                                                | `undefined` |
-| `pageMargins`        | `Object` | Page margins configuration                                             | `undefined` |
-| `headers`            | `Object` | Page header configuration                                              | `undefined` |
-| `footers`            | `Object` | Page footer configuration                                              | `undefined` |
-| `tableOverrides`     | `Object` | Table-level rendering overrides forwarded to the DOCX step             | `undefined` |
-| `paragraphOverrides` | `Object` | Paragraph-level rendering overrides forwarded to the DOCX step         | `undefined` |
-| `textRunOverrides`   | `Object` | Text run rendering overrides forwarded to the DOCX step                | `undefined` |
-| `tableCellOverrides` | `Object` | Table cell rendering overrides forwarded to the DOCX step              | `undefined` |
-| `imageOverrides`     | `Object` | Image rendering overrides forwarded to the DOCX step                   | `undefined` |
-| `headerFooterOverrides` | `Object` | Per-field overrides scoped to header/footer content (same five keys as the element overrides). See [Element Overrides](#element-overrides). | `undefined` |
-| `placeholders`       | `Object \| false` | Rename map (`{ page?, total? }`) for page-number tokens in headers/footers, matching `Pages.configure({ placeholders })`. Works in every slot shape: plain text, stringified Tiptap JSON, or a Tiptap JSON object. Pass `false` to disable substitution. See [Custom token names](/conversion/export/docx/rest-api#custom-token-names-placeholders). | `undefined` |
-| `customNodeDsl` | `Object` | [Custom-node DSL](/conversion/export/docx/custom-nodes-dsl) rules for rendering custom Tiptap nodes into the exported file. | `undefined` |
+| `doc`                | `String` | 以字符串形式提供的 Tiptap JSON 文档                                       | `N/A`       |
+| `exportType`         | `string` | 预期的导出类型                                               | `blob`      |
+| `styleOverrides`     | `Object` | 样式覆盖                                                        | `{}`        |
+| `pageSize`           | `Object` | 页面尺寸配置                                                | `undefined` |
+| `pageMargins`        | `Object` | 页边距配置                                             | `undefined` |
+| `headers`            | `Object` | 页眉配置                                              | `undefined` |
+| `footers`            | `Object` | 页脚配置                                              | `undefined` |
+| `tableOverrides`     | `Object` | 表格级渲染覆盖项，会传递给 DOCX 处理步骤             | `undefined` |
+| `paragraphOverrides` | `Object` | 段落级渲染覆盖项，会传递给 DOCX 处理步骤         | `undefined` |
+| `textRunOverrides`   | `Object` | 文本片段渲染覆盖项，会传递给 DOCX 处理步骤                | `undefined` |
+| `tableCellOverrides` | `Object` | 表格单元格渲染覆盖项，会传递给 DOCX 处理步骤              | `undefined` |
+| `imageOverrides`     | `Object` | 图像渲染覆盖项，会传递给 DOCX 处理步骤                   | `undefined` |
+| `headerFooterOverrides` | `Object` | 仅应用于页眉/页脚内容的字段级覆盖项（与元素覆盖项使用相同的五个键）。请参阅[元素覆盖项](#element-overrides)。 | `undefined` |
+| `placeholders`       | `Object \| false` | 用于重命名页眉/页脚中页码令牌的映射（`{ page?, total? }`），与 `Pages.configure({ placeholders })` 对应。适用于所有槽位形式：纯文本、字符串化的 Tiptap JSON 或 Tiptap JSON 对象。传入 `false` 可禁用替换。请参阅[自定义令牌名称](/conversion/export/docx/rest-api#custom-token-names-placeholders)。 | `undefined` |
+| `customNodeDsl` | `Object` | 用于将自定义 Tiptap 节点渲染到导出文件中的[自定义节点 DSL](/conversion/export/docx/custom-nodes-dsl) 规则。 | `undefined` |
 
-#### Page Size Configuration
+#### 页面尺寸配置
 
-The `pageSize` object allows you to customize the dimensions of your exported ODT document:
+`pageSize` 对象可用于自定义导出 ODT 文档的尺寸：
 
-| Property | Type     | Description                                                                                         | Default    |
+| 属性 | 类型     | 描述                                                                                         | 默认值    |
 | -------- | -------- | --------------------------------------------------------------------------------------------------- | ---------- |
-| `width`  | `string` | The width of the page. Must be a positive number followed by a valid unit (cm, in, pt, pc, mm, px). | `"21.0cm"` |
-| `height` | `string` | The height of the page. Must be a positive number followed by a valid unit (cm, in, pt, pc, mm, px).| `"29.7cm"` |
+| `width`  | `string` | 页面宽度。必须为正数，后接有效单位（cm、in、pt、pc、mm、px）。 | `"21.0cm"` |
+| `height` | `string` | 页面高度。必须为正数，后接有效单位（cm、in、pt、pc、mm、px）。| `"29.7cm"` |
 
-#### Page Margins Configuration
+#### 页边距配置
 
-The `pageMargins` object allows you to customize the margins of your exported ODT document:
+`pageMargins` 对象可用于自定义导出 ODT 文档的页边距：
 
-| Property | Type     | Description                                                                                                       | Default  |
+| 属性 | 类型     | 描述                                                                                                       | 默认值  |
 | -------- | -------- | ----------------------------------------------------------------------------------------------------------------- | -------- |
-| `top`    | `string` | The top margin of the page. Can be negative. Must be a number followed by a valid unit (cm, in, pt, pc, mm, px).  | `"1.0cm"`|
-| `bottom` | `string` | The bottom margin of the page. Can be negative. Must be a number followed by a valid unit (cm, in, pt, pc, mm, px).| `"1.0cm"`|
-| `left`   | `string` | The left margin of the page. Must be a positive number followed by a valid unit (cm, in, pt, pc, mm, px).         | `"1.0cm"`|
-| `right`  | `string` | The right margin of the page. Must be a positive number followed by a valid unit (cm, in, pt, pc, mm, px).        | `"1.0cm"`|
+| `top`    | `string` | 页面上边距。可以为负数。必须为数字，后接有效单位（cm、in、pt、pc、mm、px）。  | `"1.0cm"`|
+| `bottom` | `string` | 页面下边距。可以为负数。必须为数字，后接有效单位（cm、in、pt、pc、mm、px）。| `"1.0cm"`|
+| `left`   | `string` | 页面左边距。必须为正数，后接有效单位（cm、in、pt、pc、mm、px）。         | `"1.0cm"`|
+| `right`  | `string` | 页面右边距。必须为正数，后接有效单位（cm、in、pt、pc、mm、px）。        | `"1.0cm"`|
 
-#### Headers Configuration
+#### 页眉配置
 
-The `headers` object allows you to customize the headers of your exported ODT document:
+`headers` 对象可用于自定义导出 ODT 文档的页眉：
 
-| Property            | Type      | Description                                                                                                          |
+| 属性            | 类型      | 描述                                                                                                          |
 | ------------------- | --------- | -------------------------------------------------------------------------------------------------------------------- |
-| `evenAndOddHeaders` | `boolean` | Whether to use different headers for odd and even pages                                                              |
-| `differentFirstPage` | `boolean` | Whether to use a different header on the first page. When `true`, the `first` value is used on page one instead of `default`. |
-| `default`           | `string \| Object` | The standard default header on every page, or header on odd pages when `evenAndOddHeaders` is activated. Accepts plain text, stringified Tiptap JSONContent, or a Tiptap JSONContent object. |
-| `first`             | `string \| Object` | The header on the first page. Only used when `differentFirstPage` is set to `true`. Accepts plain text, stringified Tiptap JSONContent, or a Tiptap JSONContent object. |
-| `even`              | `string \| Object` | The header on even pages when the `evenAndOddHeaders` option is activated. Accepts plain text, stringified Tiptap JSONContent, or a Tiptap JSONContent object. |
+| `evenAndOddHeaders` | `boolean` | 是否为奇数页和偶数页使用不同的页眉                                                              |
+| `differentFirstPage` | `boolean` | 是否为首页使用不同的页眉。设为 `true` 时，首页使用 `first` 值而非 `default`。 |
+| `default`           | `string \| Object` | 每页通用的默认页眉；启用 `evenAndOddHeaders` 时，则用于奇数页。接受纯文本、字符串化的 Tiptap JSONContent，或 Tiptap JSONContent 对象。 |
+| `first`             | `string \| Object` | 首页页眉。仅当 `differentFirstPage` 设为 `true` 时使用。接受纯文本、字符串化的 Tiptap JSONContent，或 Tiptap JSONContent 对象。 |
+| `even`              | `string \| Object` | 启用 `evenAndOddHeaders` 选项时偶数页的页眉。接受纯文本、字符串化的 Tiptap JSONContent，或 Tiptap JSONContent 对象。 |
 
-<Callout title="Accepted slot values">
-  Each header value may be one of three shapes:
+<Callout title="支持的槽位值" >
+  每个页眉值可以采用以下三种形式之一：
 
-- A **plain text string.** Produces a simple unstyled header.
-- A **stringified Tiptap JSONContent.** Enables rich formatting such as bold, italic, and links. Produce it with `JSON.stringify(yourHeaderDoc)`.
-- A **Tiptap JSONContent object.** The same rich content, sent as a nested JSON object inside the request body without stringifying it.
+- **纯文本字符串。** 生成不带样式的简单页眉。
+- **字符串化的 Tiptap JSONContent。** 支持粗体、斜体和链接等富文本格式。使用 `JSON.stringify(yourHeaderDoc)` 生成。
+- **Tiptap JSONContent 对象。** 同样支持富文本内容，可作为嵌套 JSON 对象直接放入请求体，无需字符串化。
 
-In a JSON request body, an object must include a `type` field, and an invalid shape returns `400 Bad Request`.
+在 JSON 请求体中，对象必须包含 `type` 字段；格式无效时会返回 `400 Bad Request`。
 
 </Callout>
 
-#### Footers Configuration
+#### 页脚配置
 
-The `footers` object allows you to customize the footers of your exported ODT document:
+`footers` 对象可用于自定义导出 ODT 文档的页脚：
 
-| Property            | Type      | Description                                                                                                          |
+| 属性            | 类型      | 描述                                                                                                          |
 | ------------------- | --------- | -------------------------------------------------------------------------------------------------------------------- |
-| `evenAndOddFooters` | `boolean` | Whether to use different footers for odd and even pages                                                              |
-| `differentFirstPage` | `boolean` | Whether to use a different footer on the first page. When `true`, the `first` value is used on page one instead of `default`. |
-| `default`           | `string \| Object` | The standard default footer on every page, or footer on odd pages when `evenAndOddFooters` is activated. Accepts plain text, stringified Tiptap JSONContent, or a Tiptap JSONContent object. |
-| `first`             | `string \| Object` | The footer on the first page. Only used when `differentFirstPage` is set to `true`. Accepts plain text, stringified Tiptap JSONContent, or a Tiptap JSONContent object. |
-| `even`              | `string \| Object` | The footer on even pages when the `evenAndOddFooters` option is activated. Accepts plain text, stringified Tiptap JSONContent, or a Tiptap JSONContent object. |
+| `evenAndOddFooters` | `boolean` | 是否为奇数页和偶数页使用不同的页脚                                                              |
+| `differentFirstPage` | `boolean` | 是否为首页使用不同的页脚。设为 `true` 时，首页使用 `first` 值而非 `default`。 |
+| `default`           | `string \| Object` | 每页通用的默认页脚；启用 `evenAndOddFooters` 时，则用于奇数页。接受纯文本、字符串化的 Tiptap JSONContent，或 Tiptap JSONContent 对象。 |
+| `first`             | `string \| Object` | 首页页脚。仅当 `differentFirstPage` 设为 `true` 时使用。接受纯文本、字符串化的 Tiptap JSONContent，或 Tiptap JSONContent 对象。 |
+| `even`              | `string \| Object` | 启用 `evenAndOddFooters` 选项时偶数页的页脚。接受纯文本、字符串化的 Tiptap JSONContent，或 Tiptap JSONContent 对象。 |
 
-<Callout title="Accepted slot values">
-  Each footer value may be one of the same three shapes as a header value: a plain text string, a
-  stringified Tiptap JSONContent, or a Tiptap JSONContent object. In a JSON request body, an object
-  must include a `type` field, and an invalid shape returns `400 Bad Request`.
+<Callout title="支持的槽位值">
+  每个页脚值都可以采用与页眉值相同的三种形式之一：纯文本字符串、字符串化的 Tiptap JSONContent，或 Tiptap JSONContent 对象。在 JSON 请求体中，对象必须包含 `type` 字段；格式无效时会返回 `400 Bad Request`。
 </Callout>
 
-### Element Overrides
+### 元素覆盖项
 
-ODT generation goes through the DOCX pipeline, so the same five element
-overrides accepted by `/export/docx` also apply here when sending Tiptap JSON.
-They have **no effect** when uploading a pre-built DOCX via `docxFile`.
+ODT 生成过程会经过 DOCX 处理管线，因此，使用 Tiptap JSON 时，`/export/docx` 接受的同样五种元素覆盖项也适用于此处。
+通过 `docxFile` 上传预先生成的 DOCX 时，这些覆盖项**不会生效**。
 
 <ElementOverridesRestApi />
 
-#### Example cURL combining multiple element overrides
+#### 组合使用多个元素覆盖项的 cURL 示例
 
 ```bash
 curl --output document.odt -X POST "https://api.tiptap.dev/v2/convert/export/odt" \
@@ -172,7 +169,7 @@ curl --output document.odt -X POST "https://api.tiptap.dev/v2/convert/export/odt
     }'
 ```
 
-### Example with custom page layout
+### 自定义页面布局示例
 
 ```bash
 curl --output document.odt -X POST "https://api.tiptap.dev/v2/convert/export/odt" \
@@ -193,19 +190,19 @@ curl --output document.odt -X POST "https://api.tiptap.dev/v2/convert/export/odt
     }'
 ```
 
-### Response
+### 响应
 
-On success the API returns the ODT file as a binary download:
+成功时，API 会以二进制下载的形式返回 ODT 文件：
 
-- **Status**: `200 OK`
-- **Content-Type**: `application/vnd.oasis.opendocument.text`
-- **Content-Disposition**: `attachment; filename=export-{timestamp}.odt`
+- **状态码**：`200 OK`
+- **Content-Type**：`application/vnd.oasis.opendocument.text`
+- **Content-Disposition**：`attachment; filename=export-{timestamp}.odt`
 
-### Error responses
+### 错误响应
 
-| Status | Code                            | Description                          |
+| 状态码 | 代码                            | 描述                          |
 | ------ | ------------------------------- | ------------------------------------ |
-| 400    | `NO_DOCUMENT_PROVIDED`          | No document was provided in the body |
-| 422    | `FAILED_TO_PARSE_DOCX_FILE`    | Failed to parse JSON inputs          |
-| 422    | `FAILED_TO_EXPORT_ODT_FILE`    | Failed to export intermediate format |
-| 422    | `FAILED_TO_CONVERT_DOCX_TO_ODT`| Failed to convert to ODT             |
+| 400    | `NO_DOCUMENT_PROVIDED`          | 请求体中未提供文档 |
+| 422    | `FAILED_TO_PARSE_DOCX_FILE`    | 解析 JSON 输入失败          |
+| 422    | `FAILED_TO_EXPORT_ODT_FILE`    | 导出中间格式失败 |
+| 422    | `FAILED_TO_CONVERT_DOCX_TO_ODT`| 转换为 ODT 失败             |
