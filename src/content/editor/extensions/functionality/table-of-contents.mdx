@@ -1,47 +1,47 @@
 ---
-title: Table of Contents extension
+title: 目录扩展
 extension:
-  name: Table of contents
+  name: 目录
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-table-of-contents
-  description: Add a table of contents listing all your anchors or headlines.
+  description: 添加目录，列出所有锚点或标题。
   type: extension
   icon: List
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-table-of-contents.svg?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-table-of-contents
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-table-of-contents.svg
     url: https://npmcharts.com/compare/@tiptap/extension-table-of-contents?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  title: Contents extension | Tiptap Editor Docs
-  description: Integrate a list of anchors to your document and collect all headlines in a nice TOC (Table of Contents). Learn more in the docs!
-  category: Editor
+  title: 目录扩展 | Tiptap 编辑器文档
+  description: 将锚点列表集成到文档中，并汇总所有标题，生成清晰的目录。了解详情，请参阅文档！
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-The `TableOfContents` extension lets you get a list of anchors from your document and passes on important information about each anchor (for example the depth, the content and a unique ID for each heading but also the active state and scroll states for each anchor). This can be used to render the table of content on your own.
+`TableOfContents` 扩展可以从文档中获取锚点列表，并提供每个锚点的重要信息（例如深度、内容和每个标题的唯一 ID，以及每个锚点的激活状态和滚动状态）。你可以利用这些信息自行渲染目录。
 
 <CodeDemo path="/Extensions/TableOfContents" />
 
-## Install
+## 安装
 
-Once done, you can install the extension:
+完成后，即可安装此扩展：
 
 ```bash
 npm install @tiptap/extension-table-of-contents
 ```
 
-## Settings
+## 配置
 
 ### anchorTypes
 
-The types of the nodes you want to use for your Table of Content. By default this is `["heading"]` but in case you create your own custom Heading extension OR extend the existing one and use a different name, you can pass that name here.
+指定要用于目录的节点类型。默认值为 `["heading"]`。如果你创建了自定义的 Heading 扩展，或扩展了现有扩展并使用了不同的名称，可以在此处传入该名称。
 
-Default: `["heading"]`
+默认值：`["heading"]`
 
 ```js
 TableOfContents.configure({
@@ -51,7 +51,7 @@ TableOfContents.configure({
 
 ### getIndex
 
-This option can be used to customize how the item indexes are calculated. By default this is using an internal function but it can be overwritten to do some custom logic.
+此选项可用于自定义目录项索引的计算方式。默认情况下会使用内部函数，但你可以覆盖它，实现自定义逻辑。
 
 ```js
 TableOfContents.configure({
@@ -62,7 +62,7 @@ TableOfContents.configure({
 })
 ```
 
-We expose two ready to use functions - one to generate linear indexes which continue to count from 1 to n and one to generate hierarchical indexes that will count from 1 to n for each level.
+我们提供了两个可直接使用的函数：一个生成从 1 到 n 递增的线性索引，另一个生成分层索引，并在每个层级内从 1 到 n 计数。
 
 ```js
 import { getLinearIndexes, getHierarchicalIndexes } from '@tiptap/extension-table-of-contents'
@@ -80,7 +80,7 @@ TableOfContents.configure({
 
 ### getLevel
 
-This option can be used to customize how item levels are generated. By default the normal level generation is used that checks for heading element level attributes. If you want to customize this because for example you want to include custom anchors in your heading generation, you can use this to do so.
+此选项可用于自定义目录项层级的生成方式。默认情况下，系统会检查标题元素的 level 属性来生成层级。如果你想自定义此行为，例如在标题生成过程中包含自定义锚点，可以使用此选项。
 
 ```js
 TableOfContents.configure({
@@ -93,11 +93,11 @@ TableOfContents.configure({
 
 ### getId
 
-A builder function that returns a unique ID for each heading. Inside the argument you get access to the headings text content (for example you want to generate IDs based on the text content of the heading).
+用于为每个标题返回唯一 ID 的构造函数。参数中可以访问标题的文本内容（例如，你可以根据标题文本生成 ID）。
 
-By default this is a function that uses the [uuid](https://www.npmjs.com/package/uuid) package to generate a unique ID.
+默认情况下，此函数会使用 [uuid](https://www.npmjs.com/package/uuid) 包生成唯一 ID。
 
-Default: `() => uuid()`
+默认值：`() => uuid()`
 
 ```js
 // here we use an imaginary "slugify" function
@@ -109,9 +109,9 @@ TableOfContents.configure({
 
 ### scrollParent
 
-The scroll parent you want to attach to. This is used to determine which heading currently is active or was already scrolled over. By default this is a callback function that returns the window but you can pass a callback that returns any HTML element here.
+指定要附加到的滚动父级。此选项用于确定当前激活的标题，或已经滚动经过的标题。默认情况下，这是一个返回 window 的回调函数；你也可以传入一个返回任意 HTML 元素的回调函数。
 
-Default: `() => window`
+默认值：`() => window`
 
 ```js
 // For example the editors DOM element itself is the scrolling element
@@ -122,13 +122,13 @@ TableOfContents.configure({
 
 ### onUpdate
 
-The most important option that you must set to use this extension. This is a callback function that gets called whenever the Table of Content updates. You get access to an array of heading data (see below) which you can use to render your own Table of Content.
+使用此扩展时必须设置的最重要选项。它是一个回调函数，每当目录更新时都会调用。你可以获取一个标题数据数组（见下文），并用它来渲染自己的目录。
 
-To render the table of content you can render it by any means you want. You can use a framework like Vue, React or Svelte or you can use a simple templating engine like Handlebars or Pug. You can also use a simple `document.createElement` to render the table of content.
+你可以采用任意方式渲染目录。可以使用 Vue、React 或 Svelte 等框架，也可以使用 Handlebars 或 Pug 等简单模板引擎，还可以直接使用 `document.createElement` 来渲染目录。
 
-You can pass a second argument to get the information whether this is the initial creation step for the ToC data.
+你可以传入第二个参数，以了解当前是否是目录数据的初始创建阶段。
 
-Default: `undefined`
+默认值：`undefined`
 
 ```js
 // with vanilla JS
@@ -181,11 +181,11 @@ TableOfContents.configure({
 })
 ```
 
-## Storage
+## 存储
 
 ### content
 
-The heading content of the current document
+当前文档的标题内容
 
 ```js
 editor.storage.tableOfContents.content
@@ -193,7 +193,7 @@ editor.storage.tableOfContents.content
 
 ### anchors
 
-An array of HTML nodes
+HTML 节点数组
 
 ```js
 editor.storage.tableOfContents.anchors
@@ -201,8 +201,7 @@ editor.storage.tableOfContents.anchors
 
 ### scrollHandler
 
-The scrollHandler used by the scroll function. Should not be changed or edited but
-could be used to manually bind this function somewhere else
+滚动函数使用的 scrollHandler。请勿更改或编辑，但可以将此函数手动绑定到其他位置。
 
 ```js
 editor.storage.tableOfContents.scrollHandler()
@@ -210,15 +209,15 @@ editor.storage.tableOfContents.scrollHandler()
 
 ### scrollPosition
 
-The current scrollPosition inside the scrollParent.
+scrollParent 中的当前位置。
 
 ```js
 editor.storage.tableOfContents.scrollPosition
 ```
 
-## The anchors array
+## anchors 数组
 
-The array returned by the storage or the `onUpdate` function includes objects structured like this:
+存储或 `onUpdate` 函数返回的数组包含如下结构的对象：
 
 ```js
 {
@@ -236,22 +235,22 @@ The array returned by the storage or the `onUpdate` function includes objects st
 }
 ```
 
-This should give you enough flexibility to render your own table of content.
+这些信息应能让你灵活地渲染自己的目录。
 
-## Server side anchor ID utility
+## 服务端锚点 ID 工具函数
 
-The `generateTocIds` function allows you to assign anchor IDs (`id` and `data-toc-id`) to a Tiptap document on the server side, without needing to create an `Editor` instance. This is useful when you want to render the document statically — for example with `@tiptap/static-renderer` — and still get the same anchor attributes the `TableOfContents` plugin would produce in a live editor.
+`generateTocIds` 函数可以在服务端为 Tiptap 文档分配锚点 ID（`id` 和 `data-toc-id`），而无需创建 `Editor` 实例。当你想要静态渲染文档（例如使用 `@tiptap/static-renderer`），同时又希望获得与实时编辑器中的 `TableOfContents` 插件生成的相同锚点属性时，这个函数就很有用。
 
-### Parameters
+### 参数
 
-- **`doc`** (`JSONContent`): A Tiptap JSON document to add anchor IDs to
-- **`extensions`** (`Extensions`): The extensions to use. Must include the `TableOfContents` extension. To customize how the IDs are generated or which node types are treated as anchors, pass options like `getId` or `anchorTypes` to the `TableOfContents` extension.
+- **`doc`**（`JSONContent`）：要添加锚点 ID 的 Tiptap JSON 文档
+- **`extensions`**（`Extensions`）：要使用的扩展。必须包含 `TableOfContents` 扩展。若要自定义 ID 的生成方式或指定哪些节点类型作为锚点，请向 `TableOfContents` 扩展传入 `getId` 或 `anchorTypes` 等选项。
 
-### Return type
+### 返回类型
 
-Returns a new Tiptap document (a `JSONContent` object) with `id` and `data-toc-id` attributes assigned to anchor-type nodes that were missing or had duplicate IDs.
+返回一个新的 Tiptap 文档（`JSONContent` 对象），并为缺少 ID 或存在重复 ID 的锚点类型节点分配 `id` 和 `data-toc-id` 属性。
 
-### Example
+### 示例
 
 ```js
 import { generateTocIds, TableOfContents } from '@tiptap/extension-table-of-contents'
@@ -279,4 +278,4 @@ const newDoc = generateTocIds(doc, [StarterKit, TableOfContents])
 // }
 ```
 
-The function automatically picks up the configuration from the `TableOfContents` extension, including `anchorTypes` and `getId`.
+此函数会自动读取 `TableOfContents` 扩展的配置，包括 `anchorTypes` 和 `getId`。
