@@ -1,65 +1,65 @@
 ---
-title: Contributing to Tiptap
+title: 为 Tiptap 做贡献
 meta:
-  title: Contributing | Tiptap
-  description: Step-by-step guide for those interested in contributing to Tiptap, from setting up your development environment to tips for successful pull requests and creating your own extensions.
-  category: Editor
+  title: 贡献 | Tiptap
+  description: 为有意参与 Tiptap 项目的人提供的分步指南，涵盖开发环境搭建、成功提交拉取请求的技巧，以及如何创建自己的扩展。
+  category: 编辑器
 ---
 
-Tiptap would be nothing without its lively community. Contributions have always been and will always be welcome. Here is a little bit you should know, before you send your contribution:
+没有活跃的社区，Tiptap 就不会有今天的样子。我们一直欢迎贡献，也将一如既往地欢迎大家参与。在提交贡献之前，以下几点值得了解：
 
-## Welcome examples
+## 欢迎提交的内容
 
-- Failing regression tests as bug reports
-- Documentation improvements, e. g. fix a typo, add a section
-- New features for existing extensions, e. g. a new configureable option
-- Well explained, non-breaking changes to the core
+- 作为错误报告提交未通过的回归测试
+- 改进文档，例如修正错别字或添加章节
+- 为现有扩展添加新功能，例如新增可配置选项
+- 对核心代码进行说明充分且不会造成破坏的修改
 
-## Won’t merge
+## 不会合并的内容
 
-- New extensions, which we then need to support and maintain
+- 我们需要负责支持和维护的新扩展
 
-## Submit ideas
+## 提交想法
 
-Make sure to open an issue and outline your idea first. We’ll get back to you quickly and let you know if there is a chance we can merge your contribution.
+请先创建一个 issue，简要说明你的想法。我们会尽快回复，并告知你的贡献是否有机会被合并。
 
-## Set up the development environment
+## 搭建开发环境
 
-It’s not too hard to tinker around with the official repository. You’ll need [Git](https://github.com/git-guides/install-git), [Node](https://nodejs.org/en/download/) and [pnpm](https://pnpm.io/installation) installed. Here is what you need to do then:
+在官方仓库中进行试验并不难。你需要安装 [Git](https://github.com/git-guides/install-git)、[Node](https://nodejs.org/en/download/) 和 [pnpm](https://pnpm.io/installation)。接下来，请按以下步骤操作：
 
-1. Copy the code to your local machine: `$ git clone git@github.com:ueberdosis/tiptap.git`
-2. Install dependencies: `$ pnpm install`
-3. Start the development environment: `$ pnpm run start`
-4. Open http://localhost:3000 in your favorite browser.
-5. Start playing around!
+1. 将代码克隆到本地：`$ git clone git@github.com:ueberdosis/tiptap.git`
+2. 安装依赖：`$ pnpm install`
+3. 启动开发环境：`$ pnpm run start`
+4. 在你常用的浏览器中打开 http://localhost:3000。
+5. 开始动手探索吧！
 
-## Our code style
+## 代码风格
 
-There is an eslint config that ensures a consistent code style. To check for errors, run `$ pnpm run lint`. That’ll be checked when you send a pull request, too. Make sure it’s passing, before sending a pull request.
+我们使用 eslint 配置来确保代码风格一致。运行 `$ pnpm run lint` 检查错误。提交拉取请求时也会进行检查。请确保检查通过后再提交拉取请求。
 
-## Test for errors
+## 检查错误
 
-Your pull request will automatically execute all our existing tests. Make sure that they all pass, before sending a pull request. Run all tests locally with `$ pnpm run test` or run single tests (e. g. when writing new ones) with `$ pnpm run test:open`.
+你的拉取请求会自动运行所有现有测试。请在提交拉取请求前确认测试全部通过。使用 `$ pnpm run test` 在本地运行所有测试；也可以使用 `$ pnpm run test:open` 运行单个测试（例如编写新测试时）。
 
-## Create your own extensions
+## 创建自己的扩展
 
-If you want to create and maintain your own extensions, you can use your `create-tiptap-extension` CLI tool. It will create a new extension boilerplate with all necessary files and the build process. It's as easy as running
+如果你想创建并维护自己的扩展，可以使用 `create-tiptap-extension` CLI 工具。它会生成一个包含所有必要文件和构建流程的新扩展模板。只需运行：
 
 ```bash
 pnpm init tiptap-extension
 ```
 
-If you want to let us know about your extension you can give us a hint on [X](https://x.com/tiptap_editor) or [Discord](https://tiptap.dev/discord).
+如果想让我们了解你的扩展，可以在 [X](https://x.com/tiptap_editor) 或 [Discord](https://tiptap.dev/discord) 上告诉我们。
 
-## Document your contributions
+## 记录你的贡献
 
-When contributing to Tiptap, it's important to understand that Tiptap's codebase and its documentation are managed in two separate repositories. If you make changes or enhancements to Tiptap, documenting these changes is of course important for clarity and usability by others. Ensure you update the documentation repository corresponding to any alterations you make in the code.
+为 Tiptap 做贡献时，请注意：Tiptap 的代码库和文档分别由两个独立的仓库管理。如果你对 Tiptap 进行了修改或改进，记录这些变更有助于他人理解和使用。请务必根据代码中的改动更新相应的文档仓库。
 
-1. Tiptap Repository: [Tiptap Code Repository](https://github.com/ueberdosis/tiptap) - Modify the code here.
-2. Documentation Repository: [Tiptap Documentation Repository](https://github.com/ueberdosis/tiptap-docs) - Update or add documentation here to reflect changes made in the Tiptap repository.
+1. Tiptap 仓库：[Tiptap 代码仓库](https://github.com/ueberdosis/tiptap)——在此修改代码。
+2. 文档仓库：[Tiptap 文档仓库](https://github.com/ueberdosis/tiptap-docs)——在此更新或添加文档，以反映 Tiptap 仓库中的改动。
 
-In your PR to the Tiptap code repository, include a reference to the corresponding updates you've made in the Documentation repository. Alternatively, when submitting a PR to the Documentation repository, make sure to include references to any associated code changes in the Tiptap repository if they are relevant to the documentation updates.
+在提交到 Tiptap 代码仓库的 PR 中，请附上你在文档仓库中所做相应更新的链接。反之，如果向文档仓库提交 PR，请在相关时附上 Tiptap 仓库中对应代码改动的链接。
 
-## Further questions
+## 还有其他问题？
 
-Any further questions? Create a [new issue](https://github.com/ueberdosis/tiptap/issues) or [discussion](https://github.com/ueberdosis/tiptap/discussions) in the repository. We’ll get back to you.
+如有其他问题，请在仓库中创建一个[新 issue](https://github.com/ueberdosis/tiptap/issues)或发起[讨论](https://github.com/ueberdosis/tiptap/discussions)。我们会尽快回复。
