@@ -1,0 +1,578 @@
+---
+title: 通过 REST API 导入 DOCX
+tags:
+  - type: start
+  - type: beta
+  - type: version
+    label: v2.39.1
+meta:
+  title: DOCX REST API 导入 | Tiptap Conversion
+  description: 了解如何通过 Conversion REST API 将 .docx 文件导入为 Tiptap JSON 格式。
+  category: Conversion
+---
+
+import { Callout } from '@/components/ui/Callout'
+import { Requirements, RequirementItem } from '@/components/Requirements'
+import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
+import RegionalEndpoints from '../../_shared/_regional-endpoints.mdx'
+
+<EnterpriseCalloutAuto variant="docx" renderMode="sidebar" disableWaitlist />
+
+<Requirements>
+  <RequirementItem label="1. 开通试用或订阅">
+    在账户中开始[免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start
+    计划](https://cloud.tiptap.dev/v2/billing)。
+  </RequirementItem>
+  <RequirementItem label="2. 配置 Convert 应用">
+    使用包含 `aud: "Convert"` 的签名令牌对 REST 调用进行身份验证。请参阅
+    [身份验证](/authentication)。
+  </RequirementItem>
+</Requirements>
+
+DOCX 导入 API 可将 `.docx` 文件转换为 Tiptap 的 JSON 格式。它使用与[编辑器扩展](/conversion/import/docx/editor-extension)相同的转换服务，并生成完全相同的内容。
+
+如果你需要在服务器端处理、访问脚注或尾注数据（扩展不会提供这些数据），或获取未经架构过滤的原始 JSON，REST API 是更合适的选择。如果你希望内容直接加载到 Tiptap 编辑器中，并自动应用页眉和页脚，请改用[编辑器扩展](/conversion/import/docx/editor-extension)。
+
+<Callout title="查看 Postman 集合" variant="hint">
+  你也可以前往我们的 [Postman
+  集合](https://www.postman.com/tiptap-platform/workspace/tiptap-workspace/collection/33042171-bcc93ecb-8bad-4484-8cb0-d995ee23ae60)，体验文档转换 API。
+</Callout>
+
+<RegionalEndpoints />
+
+## 导入 DOCX
+
+`POST /v2/convert/import/docx`
+
+`/v2/convert/import/docx` 端点可将 `docx` 文件转换为 Tiptap 的 JSON 格式。用户可以向此端点发送 `POST` 请求，并使用各种参数自定义转换过程中对不同文档元素的处理方式。
+
+### 示例（cURL）
+
+```bash
+curl -X POST "https://api.tiptap.dev/v2/convert/import/docx" \
+    -H "Authorization: Bearer YOUR_TOKEN" \
+    -F "file=@/path/to/your/file.docx" \
+    -F 'imageUploadConfig={"url":"https://your-image-upload-endpoint.com","headers":{"Authorization":"Bearer your-upload-token"}}' \
+    -F "prosemirrorNodes={\"nodeKey\":\"nodeValue\"}" \
+    -F "prosemirrorMarks={\"markKey\":\"markValue\"}"
+```
+
+<Callout title="需要订阅" variant="warning">
+  此端点需要有效的 Tiptap 订阅。详情请查看我们的[定价页面](https://tiptap.dev/pricing)。
+</Callout>
+
+### 必需的请求头
+
+| 名称            | 说明                                                                 |
+| --------------- | --------------------------------------------------------------------------- |
+| `Authorization` | 用于验证请求的 JWT 令牌。例如：`Bearer your-jwt-token` |
+
+### 请求体
+
+| 名称                | 类型                   | 说明                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ------------------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `file`              | `File`                 | 要转换的文件                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `imageUploadConfig` | `JSON string`          | 用于配置图像上传的 JSON 对象。包含必需的 `url`，以及可选的 `headers`、`method` 和 `queryParams`。完整架构请参阅[编辑器扩展文档](/conversion/import/docx/editor-extension#image-upload-configuration)。                                                                                                                                                                                                                                                                                                                                                         |
+| `prosemirrorNodes`  | `Object string`        | 转换时使用的自定义节点映射，[了解详情](/conversion/import/docx/custom-node-mapping)。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `prosemirrorMarks`  | `Object string`        | 转换时使用的自定义标记映射，[了解详情](/conversion/import/docx/custom-mark-mapping)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `extractCssStyles`  | `"true" \| "false"`    | **实验性功能。** 设置为 `"true"` 时，响应会包含 `cssStyles` 字段，其中包含转换为 CSS 兼容键值对的 DOCX 样式目录。默认值为 `"false"`。输出格式和注意事项请参阅 [CSS 样式提取](#css-style-extraction-experimental)。                                                                                                                                                                                                                                                                                                                                 |
+| `placeholders`      | `JSON string`          | 可选择将页眉和页脚中的 Word `PAGE` / `NUMPAGES` 域代码转换为规范的 `{page}` / `{numpages}` 文本令牌。发送 `{}`（空对象）以使用默认的传输格式启用；发送 `{ "page"?: string, "total"?: string }` 以通过重命名映射启用（例如，`{"total":"pages"}` 会将 `NUMPAGES` 转换为 `{pages}`）；发送 `false` 可显式禁用。省略此参数（默认行为）时，Word 缓存的显示值会保留为纯文本。与编辑器的 `Pages.configure({ placeholders })` 选项一致；编辑器扩展会自动将该选项转发到此处。请参阅[页码域](#page-number-fields)。 |
+| `documentName`      | `String`               | 目标 Tiptap Collaboration 文档名称。如果令牌授予了对此文档的 `Documents:Write` 权限，服务会将导入的评论线程与 Document Server 协调，使评论在导入后即可使用。请参阅[响应中的评论](#comments-in-the-response)。可选；如果令牌没有相应权限，或环境中没有 Document Server，则会忽略此参数。                                                                                                                                                                                                                                        |
+| `taskLists`         | `"import" \| "ignore"` | 是否将 Word 复选框列表转换为 `taskList` / `taskItem` 节点。默认值为 `"ignore"`，即将其导入为项目符号列表或编号列表。如果编辑器注册了任务节点，请发送 `"import"`。请参阅[任务列表](/conversion/content-types/text-and-formatting/task-lists)。                                                                                                                                                                                                                                                                                                                             |
+| `trackedChanges`    | `String`               | 如何处理 Word 中的插入和删除：`preserve` 将其保留为建议，`accept` 应用更改，`reject` 放弃更改。默认值为 `accept`。请参阅[修订](/conversion/import/docx/tracked-changes)。                                                                                                                                                                                                                                                                                                                                                                                    |
+
+### 响应中的警告和错误
+
+每个响应都会在 `data` 旁包含一个 `logs` 对象，其中包含 `warn` 和 `error` 数组。警告表示某些内容未能导入文档，因此值得告知上传文件的用户。
+
+```js
+{
+  "data": {
+    "content": {
+        // Tiptap JSON
+    }
+  },
+  "logs": {
+    "warn": [
+      {
+        "message": "Image skipped: No imageUploadConfig was provided, so images cannot be imported.",
+        "fileName": "image1.gif"
+      }
+    ],
+    "error": [
+      {
+        "message": "Image upload failed: General error",
+        "fileName": "image1.gif",
+        "url": "https://your-image-upload-endpoint.com",
+        "error": "Unable to connect. Is the computer able to access the url?",
+        "context": "uploadImage general error"
+      }
+    ]
+  }
+}
+```
+
+## 响应中的页眉和页脚
+
+导入 API 会从 `.docx` 文件中提取页眉和页脚。文档包含页眉或页脚内容时，响应的 `data` 对象会包含其他字段。
+
+### 响应字段
+
+| 字段             | 类型             | 说明                                                             |
+| ----------------- | ---------------- | ----------------------------------------------------------------------- |
+| `content`         | `Object`         | Tiptap JSON 格式的文档主体内容                                   |
+| `header`          | `Object \| null` | Tiptap JSON 格式的默认页眉内容                                   |
+| `footer`          | `Object \| null` | Tiptap JSON 格式的默认页脚内容                                   |
+| `headerFirstPage` | `Object \| null` | 首页页眉（在 Word 中启用“首页不同”时）      |
+| `footerFirstPage` | `Object \| null` | 首页页脚（在 Word 中启用“首页不同”时）      |
+| `headerOdd`       | `Object \| null` | 奇数页页眉（在 Word 中启用“奇偶页不同”时）  |
+| `footerOdd`      | `Object \| null` | 奇数页页脚（在 Word 中启用“奇偶页不同”时）  |
+| `headerEven`      | `Object \| null` | 偶数页页眉（在 Word 中启用“奇偶页不同”时） |
+| `footerEven`      | `Object \| null` | 偶数页页脚（在 Word 中启用“奇偶页不同”时） |
+
+### 响应示例
+
+```json
+{
+  "data": {
+    "content": {
+      "type": "doc",
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [{ "type": "text", "text": "Document body content..." }]
+        }
+      ]
+    },
+    "header": {
+      "type": "doc",
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [{ "type": "text", "text": "Default Header" }]
+        }
+      ]
+    },
+    "footer": {
+      "type": "doc",
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "Page " },
+            { "type": "text", "text": "{page}" },
+            { "type": "text", "text": " of " },
+            { "type": "text", "text": "{numpages}" }
+          ]
+        }
+      ]
+    },
+    "headerFirstPage": {
+      "type": "doc",
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "type": "text",
+              "text": "Title Page Header",
+              "marks": [{ "type": "bold" }]
+            }
+          ]
+        }
+      ]
+    },
+    "footerFirstPage": null,
+    "headerOdd": null,
+    "footerOdd": null,
+    "headerEven": null,
+    "footerEven": null
+  }
+}
+```
+
+值为 `null` 的字段表示文档未为相应的页眉或页脚位置定义内容。
+
+### 页码域
+
+默认情况下，页眉和页脚中的 Word `PAGE` 和 `NUMPAGES` 域代码会作为 Word 上次打开文档时存储的缓存显示值导入（例如，字面文本 `1`）。在请求中传递 `placeholders={}`，即可将这些域转换为规范文本令牌：`PAGE` 对应 `{page}`，`NUMPAGES` 对应 `{numpages}`。识别到域指令后，缓存的数值会被丢弃。
+
+服务可识别以下三种布局中的这些域：
+
+- Word 常见的布局，每个域部分各自位于一个 run 中。
+- 整个域打包在一个 run 中。Tiptap 自身的 DOCX 导出会采用此布局，因此重新导入从 Tiptap 导出的文件时，页码会恢复为令牌。
+- 页码包含在块级内容控件中，Word 的“插入”→“页码”图库就是以这种方式添加页码的。
+
+对于以简单 `w:fldSimple` 域形式编写的 `PAGE` 或 `NUMPAGES` 域，服务不会进行转换，并会丢弃其缓存值。此规则适用于所有 `placeholders` 值，包括 `false`；`false` 会让其他布局中的缓存页码保留为纯文本。
+
+```bash
+curl -X POST "https://api.tiptap.dev/v2/convert/import/docx" \
+    -H "Authorization: Bearer YOUR_TOKEN" \
+    -F "file=@/path/to/your/file.docx" \
+    -F "placeholders={}"
+```
+
+下游使用方（例如 [Pages 扩展](/pages/getting-started/overview)）会根据其配置识别的令牌名称，替换 `{page}` 和 `{numpages}`。若要让传输格式与自定义令牌注册表匹配，请将 `placeholders` 作为 JSON 对象传入，并包含 `page` 和/或 `total` 键：
+
+```bash
+curl -X POST "https://api.tiptap.dev/v2/convert/import/docx" \
+    -H "Authorization: Bearer YOUR_TOKEN" \
+    -F "file=@/path/to/your/file.docx" \
+    -F 'placeholders={"page":"page","total":"total"}'
+```
+
+上面的示例将 `NUMPAGES` 映射为 `{total}`（Pages 对总页数字段的默认名称），因此编辑器预览无需任何配置即可原生替换。传输字段与 `Pages.configure({ placeholders })` 直接对应；安装 Pages 扩展后，[编辑器扩展](/conversion/import/docx/editor-extension)会自动将其转发到此处。
+
+## 响应中的脚注和尾注
+
+导入 API 会从 `.docx` 文件中提取脚注和尾注。文档包含脚注或尾注内容时，响应的 `data` 对象会包含其他字段。
+
+### 响应字段
+
+| 字段       | 类型     | 说明                                                                                                    |
+| ----------- | -------- | -------------------------------------------------------------------------------------------------------------- |
+| `footnotes` | `Object` | 以脚注 ID 为键的对象，每个值都是一个 Tiptap JSON 文档（`{ type: "doc", content: [...] }`） |
+| `endnotes`  | `Object` | 以尾注 ID 为键的对象，每个值都是一个 Tiptap JSON 文档（`{ type: "doc", content: [...] }`）  |
+
+没有脚注或尾注的文档会返回空对象（`{}`），因此现有集成不会受到影响。
+
+文档主体中的行内引用会表示为 `footnoteReference` 和 `endnoteReference` 节点。每个节点都带有 `noteId` 属性，用于关联 `footnotes` 或 `endnotes` 中的对应条目。
+
+### 响应示例
+
+```json
+{
+  "data": {
+    "content": {
+      "type": "doc",
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [
+            { "type": "text", "text": "This sentence has a footnote" },
+            { "type": "footnoteReference", "attrs": { "noteId": "1" } },
+            { "type": "text", "text": " and an endnote" },
+            { "type": "endnoteReference", "attrs": { "noteId": "1" } },
+            { "type": "text", "text": "." }
+          ]
+        }
+      ]
+    },
+    "footnotes": {
+      "1": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [{ "type": "text", "text": "This is the footnote content." }]
+          }
+        ]
+      }
+    },
+    "endnotes": {
+      "1": {
+        "type": "doc",
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [{ "type": "text", "text": "This is the endnote content." }]
+          }
+        ]
+      }
+    },
+    "header": null,
+    "footer": null,
+    "headerFirstPage": null,
+    "footerFirstPage": null,
+    "headerOdd": null,
+    "footerOdd": null,
+    "headerEven": null,
+    "footerEven": null
+  }
+}
+```
+
+## 响应中的页面布局和列表编号
+
+另外两个字段描述的是整个文档，而不是文档内容。
+
+| 字段              | 类型     | 说明                                                                                                                                                     |
+| ------------------ | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pageLayout`       | `Object` | 从文档分节属性中读取的页面大小、方向和页边距。数值单位为 twip。请参阅[应用页面布局](#applying-the-page-layout)。 |
+| `numberingFormats` | `Array`  | 文档有序列表和项目符号列表的编号定义。每个列表节点都带有一个 `numberingFormat` 属性，其值指向此处的对应条目。           |
+
+如果文档没有可报告的信息，则不会包含这两个字段。
+
+在编辑器中注册 `numberingFormats`，以保留列表编号；并将其传递给导出器，以便往返转换时保留编号。[列表编号和项目符号](/conversion/export/docx/ordered-list-numbering)页面介绍了完整流程。
+
+### 应用页面布局
+
+`pageLayout` 报告的是 Word 中的页面布局，而不是[Pages 扩展](/pages/getting-started/overview)所需的格式，因此使用前需要进行转换：
+
+```json
+{
+  "width": 12240,
+  "height": 15840,
+  "orientation": "portrait",
+  "margins": {
+    "top": 1440,
+    "right": 1440,
+    "bottom": 1440,
+    "left": 1440,
+    "header": 720,
+    "footer": 720
+  }
+}
+```
+
+所有测量值的单位都是 twip，而 Pages 的 `setPageFormat` 需要像素和 `id`。请使用 ConvertKit 的 OOXML 注册表中的 `twipsToPixels`，不要自行编写转换逻辑，这样数值才能与转换服务使用的数值一致：
+
+```ts
+import { twipsToPixels } from '@tiptap-pro/extension-convert-kit/ooxml-registry'
+
+// The field is absent for a document with no section properties.
+if (pageLayout) {
+  editor.commands.setPageFormat({
+    id: 'docx-import',
+    width: twipsToPixels(pageLayout.width),
+    height: twipsToPixels(pageLayout.height),
+    margins: {
+      top: twipsToPixels(pageLayout.margins.top),
+      right: twipsToPixels(pageLayout.margins.right),
+      bottom: twipsToPixels(pageLayout.margins.bottom),
+      left: twipsToPixels(pageLayout.margins.left),
+    },
+  })
+}
+```
+
+`header` 和 `footer` 页边距没有对应的 `setPageFormat` 参数，因此请忽略它们。
+
+<Callout variant="info" title="使用共享单位转换辅助函数">
+  OOXML 注册表提供了转换流程两端都会使用的单位转换函数，包括
+  `twipsToPixels`、`pixelsToTwips`、`halfPointsToPixels`、`emuToPixels` 和 `twipsToPoints`，以及
+  `TWIPS_PER_PIXEL` 等常量。使用这些函数可确保你的数值与导入器和导出器使用的数值完全一致。自行编写计算逻辑通常会导致文档往返转换后略有偏差。
+</Callout>
+
+注册 Pages 扩展后，[编辑器扩展](/conversion/import/docx/editor-extension)会自动为你完成这项转换，因此只有通过 REST API 导入时才需要手动处理。
+
+## 响应中的评论
+
+导入 API 会从 `.docx` 文件中提取评论线程。文档包含评论时，响应的 `data` 对象会包含一个 `commentThreads` 数组。文档主体包含 `inlineThread` 标记（以及 `blockThread` 节点），其 `data-thread-id` 与各线程的 `id` 相匹配，因此你可以将每个线程关联回其批注的文本。
+
+### 响应字段
+
+| 字段                        | 类型      | 说明                                                                                          |
+| ---------------------------- | --------- | ---------------------------------------------------------------------------------------------------- |
+| `commentThreads`             | `Array`   | 每个评论线程对应一个条目。文档没有评论时为空（或不包含此字段）。                  |
+| `commentThreads[].id`        | `String`  | 线程 ID。与 `content` 中该线程 `inlineThread` / `blockThread` 的 `data-thread-id` 相匹配。 |
+| `commentThreads[].durableId` | `String`  | Word 稳定的持久 ID（如果存在）。                                                                |
+| `commentThreads[].resolved`  | `Boolean` | 线程是否已解决。                                                                      |
+| `commentThreads[].messages`  | `Array`   | 线程中的消息，先列根消息，再按日期升序排列回复。                                   |
+| `messages[].wId`             | `String`  | 评论的原始 DOCX `w:id`。                                                                      |
+| `messages[].id`              | `String`  | Document Server 生成的评论 ID。仅在完成协调后出现（见下文）。                    |
+| `messages[].durableId`       | `String`  | 规范化后的持久 ID（如果存在）。                                                                 |
+| `messages[].body`            | `Object`  | Tiptap JSON 格式的消息正文。                                                                     |
+| `messages[].data`            | `Object`  | 作者和日期元数据：`author`、`initials?`、`providerId?`、`userId?`、`dateIso?`、`dateUtc?`。   |
+
+没有评论的文档会返回空的 `commentThreads` 数组，因此现有集成不会受到影响。`/import/docx` 和通用的 `/import` 返回相同的数据。
+
+### 与 Document Server 协调
+
+默认情况下，返回的线程 ID 和消息 ID 根据 DOCX 生成，线程 `id` 与 `content` 中的 `data-thread-id` 标记相对应，因此客户端可以自行持久化这些线程。
+
+对于令牌已获授该文档 `Documents:Write` 权限的请求，传入 `documentName`，即可让服务将导入的评论与 Document Server 协调：服务会在 Document Server 中创建或更新线程，然后将返回的 `commentThreads` 和正文标记中的 ID 都改写为服务器生成的 ID。这样，导入后评论即可直接使用，且 `messages[].id` 会有值。如果未提供 `documentName`、令牌没有 `Documents:Write` 权限，或环境中没有 Document Server，则会跳过协调，并原样返回根据 DOCX 生成的 ID。
+
+### 响应示例
+
+```json
+{
+  "data": {
+    "content": {
+      "type": "doc",
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [
+            {
+              "type": "text",
+              "text": "Reviewed text",
+              "marks": [{ "type": "inlineThread", "attrs": { "data-thread-id": "abc123" } }]
+            }
+          ]
+        }
+      ]
+    },
+    "commentThreads": [
+      {
+        "id": "abc123",
+        "resolved": false,
+        "messages": [
+          {
+            "wId": "0",
+            "body": {
+              "type": "doc",
+              "content": [
+                {
+                  "type": "paragraph",
+                  "content": [{ "type": "text", "text": "Please cite a source." }]
+                }
+              ]
+            },
+            "data": {
+              "author": "Ada Lovelace",
+              "initials": "AL",
+              "dateIso": "2026-01-01T10:30:00Z",
+              "dateUtc": "2026-01-01T10:30:00Z"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## CSS 样式提取（实验性功能）
+
+<Callout title="实验性功能" variant="warning">
+  `extractCssStyles` 是一项可选的实验性功能。响应格式可能会在不另行通知的情况下变更。如果你依赖此功能，请固定使用确切的客户端版本，并阅读 [CSS 注入文档](/conversion/import/docx/css-injection)，了解支持的选择器、CSS 属性和已知限制的完整列表。
+</Callout>
+
+在请求中传递 `extractCssStyles=true`，即可让响应包含 `cssStyles` 字段。该字段包含 DOCX 默认样式目录转换而来的、与 CSS 兼容的键值对，并以 CSS 选择器为键。
+
+### 请求
+
+```bash
+curl -X POST "https://api.tiptap.dev/v2/convert/import/docx" \
+    -H "Authorization: Bearer YOUR_TOKEN" \
+    -F "file=@/path/to/your/file.docx" \
+    -F "extractCssStyles=true"
+```
+
+### 响应字段
+
+| 字段       | 类型     | 说明                                                                                                                                                                                                                                             |
+| ----------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `cssStyles` | `Object` | 以 CSS 选择器为键的对象，每个值都是一个包含 CSS 属性的对象。如果文档没有可提取的默认样式，则为空（`{}`）。未设置 `extractCssStyles` 或其值为 `"false"` 时，响应中不会包含此字段。 |
+
+### 支持的选择器
+
+提取器会将 DOCX 命名样式映射到以下固定的 CSS 选择器。无法匹配此映射的样式不会转换。
+
+`p`、`h1`、`h2`、`h3`、`h4`、`h5`、`h6`、`blockquote`、`ul li`、`ol li`、`strong`、`em`、`u`、`s`、`a`、`code`
+
+### 支持的 CSS 属性
+
+根据 DOCX 样式中的定义，上述每个选择器都可以包含以下属性的任意子集。
+
+`color`、`fontSize`、`fontFamily`、`fontWeight`、`fontStyle`、`textDecoration`、`backgroundColor`、`textAlign`、`marginTop`、`marginBottom`、`lineHeight`
+
+### 响应示例
+
+```json
+{
+  "data": {
+    "content": {
+      "type": "doc",
+      "content": [
+        {
+          "type": "paragraph",
+          "content": [{ "type": "text", "text": "Document body..." }]
+        }
+      ]
+    },
+    "cssStyles": {
+      "p": {
+        "fontSize": "16px",
+        "fontFamily": "Calibri",
+        "lineHeight": 1.15,
+        "marginBottom": "8pt"
+      },
+      "h1": {
+        "fontSize": "28px",
+        "fontWeight": "bold",
+        "color": "#1F3864",
+        "marginTop": "24pt",
+        "marginBottom": "6pt"
+      },
+      "a": {
+        "color": "#0563C1",
+        "textDecoration": "underline"
+      },
+      "blockquote": {
+        "fontStyle": "italic",
+        "color": "#595959"
+      }
+    }
+  }
+}
+```
+
+关于输出的说明：
+
+- **值为字符串或数字。** 基于像素的属性（`fontSize`）以 `"Npx"` 字符串形式输出；基于点的间距（`marginTop`、`marginBottom`）以 `"Npt"` 形式输出；无单位乘数（`auto` 行规则下的 `lineHeight`）以纯数字形式输出。
+- **样式继承会被解析。** 子级 DOCX 样式包含从父级继承的所有内容（通过 `basedOn`）；输出会将这些内容展开，因此你无需遍历继承链。
+- **支持本地化文档。** 非英文版 Word 中的命名样式会在输出前映射回规范选择器。
+- **缺少字段表示“未定义”。** 只有至少提取到一个属性时，才会出现相应选择器。如果 DOCX 没有样式目录（或所有命名样式都不在 16 个选择器的映射范围内），则 `cssStyles` 为 `{}`。
+
+### 自定义节点和标记映射
+
+你可以在请求体中分别通过 `prosemirrorNodes` 和 `prosemirrorMarks` 指定映射，从而覆盖导入时使用的默认 `node/mark` 类型。如果编辑器使用自定义 `nodes/marks`，并且希望导入的 `JSON` 使用这些类型，就需要提供相应映射。
+
+每个条目中的键是默认类型名称，值是你希望导入的 JSON 使用的名称。例如，如果你的架构将段落称为 `textBlock`，请在请求体中发送 `"{\"paragraph\":\"textBlock\"}"`，这样所有导入的段落都会变为 `textBlock`。
+
+你也可以调整标题、列表、粗体或斜体等标记，以及其他类型。名称区分大小写，请严格使用下方列出的名称。
+
+#### 默认节点
+
+| 名称                | 说明                                                              |
+| ------------------- | ------------------------------------------------------------------------ |
+| `paragraph`         | 定义段落转换所使用的 ProseMirror 类型          |
+| `heading`           | 定义标题转换所使用的 ProseMirror 类型            |
+| `blockquote`        | 定义块引用转换所使用的 ProseMirror 类型         |
+| `bulletList`        | 定义项目符号列表转换所使用的 ProseMirror 类型         |
+| `orderedList`       | 定义有序列表转换所使用的 ProseMirror 类型        |
+| `listItem`          | 定义列表项转换所使用的 ProseMirror 类型           |
+| `hardBreak`         | 定义硬换行转换所使用的 ProseMirror 类型          |
+| `horizontalRule`    | 定义水平分隔线转换所使用的 ProseMirror 类型     |
+| `table`             | 定义表格转换所使用的 ProseMirror 类型              |
+| `tableCell`         | 定义表格单元格转换所使用的 ProseMirror 类型          |
+| `tableHeader`       | 定义表头单元格转换所使用的 ProseMirror 类型        |
+| `tableRow`          | 定义表格行转换所使用的 ProseMirror 类型          |
+| `image`             | 定义图像转换所使用的 ProseMirror 类型              |
+| `footnoteReference` | 定义脚注引用转换所使用的 ProseMirror 类型 |
+| `endnoteReference`  | 定义尾注引用转换所使用的 ProseMirror 类型  |
+| `tableOfContents`   | 定义目录所使用的 ProseMirror 类型           |
+| `pageBreak`         | 定义分页符所使用的 ProseMirror 类型                   |
+| `columns`           | 定义多栏分节所使用的 ProseMirror 类型        |
+| `column`            | 定义单栏所使用的 ProseMirror 类型               |
+| `blockThread`       | 定义块级评论线程所使用的 ProseMirror 类型  |
+| `bookmark`          | 定义书签目标所使用的 ProseMirror 类型              |
+
+#### 默认标记
+
+| 名称            | 说明                                                         |
+| --------------- | ------------------------------------------------------------------- |
+| `bold`          | 定义粗体转换所使用的 ProseMirror 标记          |
+| `italic`        | 定义斜体转换所使用的 ProseMirror 标记        |
+| `underline`     | 定义下划线转换所使用的 ProseMirror 标记     |
+| `strikethrough` | 定义删除线转换所使用的 ProseMirror 标记 |
+| `link`          | 定义链接转换所使用的 ProseMirror 标记          |
+| `superscript`   | 定义上标转换所使用的 ProseMirror 标记   |
+| `subscript`     | 定义下标转换所使用的 ProseMirror 标记     |
+| `inlineThread`  | 定义行内评论线程所使用的 ProseMirror 标记   |
+
+<Callout variant="info" title="暂不支持重命名代码块和行内代码">
+  代码块类型和行内代码标记始终分别导入为 `codeBlock` 和 `code`。目前，通过 `prosemirrorNodes` 或 `prosemirrorMarks` 重命名它们不会生效。如果你的架构使用其他名称，请在导入后进行映射。
+</Callout>
+
+#### 将 Word 样式映射为标记
+
+`prosemirrorMarks` 还支持第二种条目类型。如果键是 Word 字符样式的名称，而不是上述标记之一，则所有使用该样式的文本 run 都会获得你指定的标记。例如，`"{\"Strong\":\"bold\"}"` 表示所有应用了 `Strong` 样式的文本 run 都会获得 `bold` 标记。
+
+这样就能将自定义 Word 样式引入你的架构。更详细的操作步骤请参阅[自定义标记映射](/conversion/import/docx/custom-mark-mapping)。
+
+## 支持情况与限制
+
+如需详细了解转换流程各阶段支持的文档功能，请参阅[支持的功能](/conversion/getting-started/feature-support-matrix)矩阵。
