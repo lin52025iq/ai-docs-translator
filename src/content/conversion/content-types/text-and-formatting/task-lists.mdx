@@ -1,35 +1,35 @@
 ---
-title: Task lists
+title: 任务列表
 tags:
   - type: beta
 meta:
-  title: Task lists | Tiptap Conversion
-  description: How Word checkbox lists convert to Tiptap task lists, which checkbox shapes are recognised, and how to style them.
-  category: Conversion
+  title: 任务列表 | Tiptap 转换
+  description: 了解 Word 复选框列表如何转换为 Tiptap 任务列表、可识别哪些复选框样式，以及如何设置样式。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Word checkbox lists convert to Tiptap `taskList` and `taskItem` nodes, with the ticked state preserved in both directions. Import is opt-in, because an editor without the task nodes cannot render them.
+Word 复选框列表会转换为 Tiptap 的 `taskList` 和 `taskItem` 节点，并在导入和导出时保留勾选状态。导入此功能需显式启用，因为不包含这些任务节点的编辑器无法渲染它们。
 
-## What you need
+## 所需内容
 
-- **Extensions:** [`ConvertKit`](/conversion/import/docx/convertkit) bundles `TaskList` and `TaskItem`. `TaskItem` is configured with `nested: true` so imported sublists stay valid.
-- **Configuration:** the editor extension resolves this for you. On the REST API, send `taskLists: "import"`.
+- **扩展：**[`ConvertKit`](/conversion/import/docx/convertkit) 内置 `TaskList` 和 `TaskItem`。`TaskItem` 配置了 `nested: true`，以确保导入的嵌套列表有效。
+- **配置：**编辑器扩展会为你处理此配置。使用 REST API 时，请传入 `taskLists: "import"`。
 
-## Support overview
+## 支持概览
 
-|                       | Import            | Editor                 | Export    |
-| --------------------- | ----------------- | ---------------------- | --------- |
-| Checkbox lists        | Supported, opt-in | Supported (ConvertKit) | Supported |
-| Ticked state          | Supported         | Supported              | Supported |
-| Nested checkbox lists | Supported         | Supported              | Supported |
+|                       | 导入             | 编辑器                 | 导出    |
+| --------------------- | ---------------- | ---------------------- | ------- |
+| 复选框列表            | 支持，需显式启用 | 支持（ConvertKit）     | 支持    |
+| 勾选状态              | 支持             | 支持                   | 支持    |
+| 嵌套复选框列表        | 支持             | 支持                   | 支持    |
 
-A checkbox outside a list is left as it is today. An exported checkbox stays interactive in Word. Both are covered below.
+列表以外的复选框仍按现有方式处理。导出的复选框在 Word 中仍可交互。下文将分别介绍这两种情况。
 
-## Import
+## 导入
 
-Turn it on with the [editor extension](/conversion/import/docx/editor-extension) or the [REST API](/conversion/import/docx/rest-api).
+通过[编辑器扩展](/conversion/import/docx/editor-extension)或 [REST API](/conversion/import/docx/rest-api)启用此功能。
 
 ```js
 ImportDocx.configure({
@@ -40,42 +40,39 @@ ImportDocx.configure({
 })
 ```
 
-`auto` checks your editor schema for both `taskList` and `taskItem`. With `ConvertKit` they are always present, so `auto` imports them. Pass `'import'` to force it, or `'ignore'` to keep the old behaviour of importing checkbox lists as bullet or numbered lists.
+`auto` 会检查编辑器架构中是否同时包含 `taskList` 和 `taskItem`。使用 `ConvertKit` 时，这两个节点始终存在，因此 `auto` 会导入任务列表。传入 `'import'` 可强制导入；传入 `'ignore'` 则会保留原有行为，将复选框列表导入为项目符号列表或编号列表。
 
-<Callout title="The REST API defaults to ignore" variant="info">
-  The editor extension knows your schema, so it can default to `auto`. A direct REST call cannot, so
-  `taskLists` defaults to `"ignore"` there. Send `taskLists: "import"` to get task nodes.
+<Callout title="REST API 默认忽略" variant="info">
+  编辑器扩展能够获知你的架构，因此默认值可以是 `auto`。直接调用 REST API 时无法获知架构，所以 `taskLists` 在那里默认设为 `"ignore"`。传入 `taskLists: "import"` 即可获取任务节点。
 </Callout>
 
-### Which checkboxes are recognised
+### 可识别的复选框
 
-Word writes checkboxes in several ways. Three of them convert:
+Word 有多种表示复选框的方式，其中三种可以转换：
 
-- **Glyph bullets.** A box character used as the list bullet in the document's numbering, for example Wingdings `U+F06F` or the Unicode ballot box `U+2610`. This is the most common checkbox list in real documents. The ticked state comes from the glyph, so a list drawn with a ticked box imports as checked.
-- **Content controls.** A `w14:checkbox` control, which is what modern Word inserts and what Tiptap exports. The ticked state comes from the control.
-- **Legacy form fields.** The older Word form-field checkbox. The state comes from the field, falling back to its default when the current value is absent.
+- **字形项目符号。**在文档的编号设置中，将方框字符用作列表项目符号，例如 Wingdings `U+F06F` 或 Unicode 投票方框 `U+2610`。这是实际文档中最常见的复选框列表。勾选状态由字形决定，因此使用已勾选方框绘制的列表会作为已勾选项导入。
+- **内容控件。**`w14:checkbox` 控件，这是现代版 Word 插入的复选框，也是 Tiptap 导出的格式。勾选状态由控件决定。
+- **旧式表单域。**较早版本 Word 中的表单域复选框。状态取自表单域；如果当前值缺失，则使用其默认值。
 
-A checkbox only becomes a task item when it is the **only** checkbox in its paragraph and it comes **before** the text. That is what separates a checklist from a form. A row like `Yes ☐ No ☐`, or a tick box placed after a sentence, keeps importing as it does today.
+只有当复选框是段落中**唯一**的复选框，并且位于文本**之前**时，才会转换为任务项。这样可以区分清单和表单。例如 `Yes ☐ No ☐` 这样的行，或位于句子之后的复选框，仍按现有方式导入。
 
-Checkmark glyphs such as Wingdings `U+F0FC` (✔) are deliberately not treated as checkboxes. They are the most common decorative bullet in real documents, so reading them as checkboxes would turn ordinary lists and table tick marks into checklists.
+像 Wingdings `U+F0FC`（✔）这样的勾号字形不会被视为复选框。这类符号是实际文档中最常见的装饰性项目符号；若将其识别为复选框，普通列表和表格中的勾号就会被误转为清单。
 
-<Callout title="Numbering is dropped when a numbered list holds checkboxes" variant="warning">
-  A numbered list whose items each begin with a single checkbox imports as a task list, so the
-  numbers are lost. The checkbox carries more meaning than the number for a checklist, but if you
-  need the numbering, import with `taskLists: 'ignore'`.
+<Callout title="编号列表包含复选框时，编号会丢失" variant="warning">
+  如果编号列表中的每一项都以一个复选框开头，该列表会作为任务列表导入，因此编号会丢失。对于清单而言，复选框比编号更有意义；但如果需要保留编号，请使用 `taskLists: 'ignore'` 导入。
 </Callout>
 
-## Editor rendering
+## 编辑器渲染
 
-`TaskList` and `TaskItem` come from [`ConvertKit`](/conversion/import/docx/convertkit), so there is nothing to install. See the [`TaskList`](/editor/extensions/nodes/task-list) and [`TaskItem`](/editor/extensions/nodes/task-item) extension pages for their own options and commands.
+`TaskList` 和 `TaskItem` 来自 [`ConvertKit`](/conversion/import/docx/convertkit)，无需额外安装。有关各自的选项和命令，请参阅 [`TaskList`](/editor/extensions/nodes/task-list) 和 [`TaskItem`](/editor/extensions/nodes/task-item) 扩展页面。
 
-A task list renders as `<ul data-type="taskList">` with `<li data-type="taskItem" data-checked="true|false">`. Each item holds a `<label>` with the checkbox and a `<div>` with the item's content.
+任务列表会渲染为 `<ul data-type="taskList">`，其中包含 `<li data-type="taskItem" data-checked="true|false">`。每个任务项都包含一个放置复选框的 `<label>`，以及一个放置该项内容的 `<div>`。
 
-`ConvertKit` ships the layout for these nodes, so the checkbox lines up with where a bullet would sit and item text lines up with bullet and numbered list text. You do not need to add CSS to get a checklist that matches the exported document.
+`ConvertKit` 内置了这些节点的布局，因此复选框会与项目符号的位置对齐，项目文本也会与项目符号和编号列表的文本对齐。无需添加 CSS，即可让清单的外观与导出的文档一致。
 
-### Customising the look
+### 自定义外观
 
-Style the data attributes rather than replacing the layout, so the alignment `ConvertKit` sets is preserved:
+请设置数据属性的样式，而不要替换布局，以保留 `ConvertKit` 设置的对齐方式：
 
 ```css
 /* A ticked item */
@@ -90,7 +87,7 @@ Style the data attributes rather than replacing the layout, so the alignment `Co
 }
 ```
 
-To turn the nodes off entirely, or to pass their own options:
+如需完全关闭这些节点，或为它们传入自定义选项：
 
 ```js
 ConvertKit.configure({
@@ -99,18 +96,18 @@ ConvertKit.configure({
 })
 ```
 
-## Export
+## 导出
 
-Export with the [editor extension](/conversion/export/docx/editor-extension) or the [REST API](/conversion/export/docx/rest-api). Both behave the same.
+通过[编辑器扩展](/conversion/export/docx/editor-extension)或 [REST API](/conversion/export/docx/rest-api)导出。两者的行为相同。
 
-A task item exports as a Word checkbox content control followed by its text. The control stays interactive in Word, so a reader can tick and untick it, and the ticked state you exported is what they see.
+任务项会导出为 Word 复选框内容控件，后接该项文本。该控件在 Word 中仍可交互，因此读者可以勾选或取消勾选，并能看到你导出时的勾选状态。
 
-Items use Word's List Paragraph style with a hanging indent, so a checkbox list sits at the same indent as a bullet or numbered list in the same document, with the same spacing between rows.
+列表项使用 Word 的“列表段落”样式并采用悬挂缩进，因此复选框列表在文档中的缩进与项目符号列表或编号列表相同，各行之间的间距也一致。
 
-Nested task lists export with the deeper indent Word uses for a nested list. When a task item holds several blocks, the checkbox goes on the first one and the rest are indented to match without a second checkbox.
+嵌套任务列表导出时会使用 Word 嵌套列表的更深缩进。如果任务项包含多个块，复选框会放在第一个块前，其余块也会相应缩进，但不会再出现第二个复选框。
 
-## Round trip
+## 往返转换
 
-A Word checkbox list imported and exported again comes back as a Word checkbox list with its ticked states intact. The same holds in the other direction: a task list written in the editor, exported, then imported, keeps its items and their states.
+Word 复选框列表导入后再导出，仍会变回 Word 复选框列表，且勾选状态保持不变。反向转换也是如此：在编辑器中创建任务列表，导出后再导入，其列表项及状态都会保留。
 
-Export always writes a content control, not the glyph-bullet shape most existing Word documents use. Both import correctly, so a document that arrives as glyph bullets leaves as content controls.
+导出时始终会写入内容控件，而不是大多数现有 Word 文档使用的字形项目符号样式。两种格式都能正确导入，因此以字形项目符号形式导入的文档，导出时会变为内容控件。
