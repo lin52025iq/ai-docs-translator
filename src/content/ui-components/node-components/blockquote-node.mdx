@@ -1,12 +1,12 @@
 ---
-title: Blockquote Node
+title: 引用块节点
 meta:
-  title: Blockquote Node | Tiptap UI Components
-  description: Integrate a node component displaying blockquotes in your Tiptap Editor. More in our docs!
-  category: UI Components
+  title: 引用块节点 | Tiptap UI 组件
+  description: 在 Tiptap 编辑器中集成用于显示引用块的节点组件。更多内容请参阅我们的文档！
+  category: UI 组件
 component:
-  name: Blockquote UI node
-  description: Add a blockquote node component to your editor.
+  name: 引用块 UI 节点
+  description: 在编辑器中添加引用块节点组件。
   type: node-component
   isFree: true
   isCloud: false
@@ -17,21 +17,21 @@ component:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A styled blockquote node for displaying formatted blockquotes in the editor.
+用于在编辑器中显示格式化引用块的样式化节点。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-node/blockquote-node" />
 
-## Installation
+## 安装
 
-You can add the node component via Tiptap CLI
+你可以通过 Tiptap CLI 添加此节点组件：
 
 ```bash
 npx @tiptap/cli@latest add blockquote-node
 ```
 
-## Usage
+## 用法
 
-The BlockquoteNode is primarily a styling component that enhances the appearance of blockquotes in the editor. To use it, simply include it in your project and ensure you're using the Blockquote extension from Tiptap.
+BlockquoteNode 主要是一个样式组件，可改善编辑器中引用块的显示效果。要使用它，只需将其添加到项目中，并确保使用 Tiptap 的 Blockquote 扩展。
 
 ```tsx
 import { useEditor, EditorContent } from '@tiptap/react'
@@ -56,9 +56,10 @@ export default function EditorWithBlockquote() {
 }
 ```
 
-## Features
+## 功能
 
-- Syntax highlighting styles for blockquotes
-- Dark mode support
-- Proper spacing and margins
-- Enhanced readability with monospace font
+- 引用块的语法高亮样式
+- 支持深色模式
+- 恰当的间距和边距
+- 使用等宽字体提升可读性
+
