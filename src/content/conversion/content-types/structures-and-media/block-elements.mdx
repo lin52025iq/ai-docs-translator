@@ -1,77 +1,77 @@
 ---
-title: Block elements
+title: 块级元素
 tags:
   - type: beta
 meta:
-  title: Block Elements | Tiptap Conversion
-  description: How blockquotes, code blocks, horizontal rules, hard breaks, and page breaks are handled across the DOCX conversion pipeline.
-  category: Conversion
+  title: 块级元素 | Tiptap 转换
+  description: 了解引用块、代码块、水平线、硬换行和分页符在 DOCX 转换流程中的处理方式。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Block elements define the structural layout of a document: quoted passages, preformatted code, visual dividers, and line breaks. All are included in StarterKit. Support varies across the pipeline.
+块级元素定义了文档的结构布局，包括引用段落、预格式化代码、视觉分隔线和换行。它们都包含在 StarterKit 中，但在转换流程中的支持情况各不相同。
 
-## What you need
+## 所需内容
 
-- **Extensions:** `StarterKit` (includes `Blockquote`, `CodeBlock`, `HorizontalRule`, and `HardBreak`)
-- **Configuration:** None required. Page breaks require a separate extension and are covered on their [own page](/conversion/content-types/page-layout/page-breaks).
-- **Integration paths:** Import and export work identically via both the [editor extension](/conversion/import/docx/editor-extension) and [REST API](/conversion/import/docx/rest-api).
+- **扩展：** `StarterKit`（包含 `Blockquote`、`CodeBlock`、`HorizontalRule` 和 `HardBreak`）
+- **配置：** 无需配置。分页符需要单独的扩展，详见[分页符](/conversion/content-types/page-layout/page-breaks)页面。
+- **集成方式：** 通过[编辑器扩展](/conversion/import/docx/editor-extension)和 [REST API](/conversion/import/docx/rest-api) 导入和导出的效果相同。
 
-## Support overview
+## 支持概览
 
-| | Import | Editor | Export |
+| | 导入 | 编辑器 | 导出 |
 | --- | --- | --- | --- |
-| Blockquote | Supported | Supported (StarterKit) | Supported |
-| Code block | Not supported | Supported (StarterKit) | Not supported (dropped) |
-| Horizontal rule | Supported | Supported (StarterKit) | Supported |
-| Hard break | Supported | Supported (StarterKit) | Supported |
-| Page break | See [Page breaks](/conversion/content-types/page-layout/page-breaks) | | |
+| 引用块 | 支持 | 支持（StarterKit） | 支持 |
+| 代码块 | 不支持 | 支持（StarterKit） | 不支持（会被丢弃） |
+| 水平线 | 支持 | 支持（StarterKit） | 支持 |
+| 硬换行 | 支持 | 支持（StarterKit） | 支持 |
+| 分页符 | 参见[分页符](/conversion/content-types/page-layout/page-breaks) | | |
 
-## Blockquote
+## 引用块
 
-In Word, blockquotes are paragraphs with a "Quote" style (matched case-insensitively).
+在 Word 中，引用块是应用了“Quote”样式的段落（匹配时不区分大小写）。
 
-The import produces a `blockquote` node wrapping one or more `paragraph` children. Inline formatting inside the quote is preserved.
+导入时会生成一个 `blockquote` 节点，其中包含一个或多个 `paragraph` 子节点。引用内容中的行内格式会予以保留。
 
-The export writes paragraphs with the "Quote" style back to DOCX. Blockquotes round-trip correctly.
+导出时，会将应用了“Quote”样式的段落写回 DOCX。引用块可以正确地往返转换。
 
-**Extension:** [`Blockquote`](/editor/extensions/nodes/blockquote) (StarterKit) | **Shortcut:** Cmd+Shift+B
+**扩展：** [`Blockquote`](/editor/extensions/nodes/blockquote)（StarterKit） | **快捷键：** Cmd+Shift+B
 
-## Code block
+## 代码块
 
-The DOCX import does not map any Word style to `codeBlock` nodes. Code blocks are available in the editor via StarterKit but have no import or export support in the conversion pipeline.
+导入 DOCX 时，不会将任何 Word 样式映射到 `codeBlock` 节点。编辑器通过 StarterKit 提供代码块，但转换流程不支持导入或导出代码块。
 
-<Callout variant="warning" title="Code blocks have no DOCX conversion support">
-  Code blocks are neither imported from nor exported to DOCX. On export, `codeBlock` nodes are not converted. If your workflow requires round-tripping code blocks, register custom node handlers on both the import and export extensions.
+<Callout variant="warning" title="代码块不支持 DOCX 转换">
+  代码块既不会从 DOCX 导入，也不会导出到 DOCX。导出时，`codeBlock` 节点不会被转换。如果你的工作流程需要往返转换代码块，请在导入和导出扩展中都注册自定义节点处理程序。
 </Callout>
 
-**Extension:** [`CodeBlock`](/editor/extensions/nodes/code-block) (StarterKit) | **Shortcut:** Cmd+Alt+C
+**扩展：** [`CodeBlock`](/editor/extensions/nodes/code-block)（StarterKit） | **快捷键：** Cmd+Alt+C
 
-## Horizontal rule
+## 水平线
 
-Horizontal rules in Word are typically VML shapes (`v:rect` with `o:hr` attributes, `v:line` elements). The import detects these and creates `horizontalRule` nodes.
+Word 中的水平线通常是 VML 图形（带有 `o:hr` 属性的 `v:rect`，以及 `v:line` 元素）。导入时会检测这些图形并创建 `horizontalRule` 节点。
 
-The export produces valid Word horizontal rules using VML shapes. Horizontal rules round-trip correctly.
+导出时会使用 VML 图形生成有效的 Word 水平线。水平线可以正确地往返转换。
 
-**Extension:** [`HorizontalRule`](/editor/extensions/nodes/horizontal-rule) (StarterKit) | **Input rules:** `---`, `___`, `***`
+**扩展：** [`HorizontalRule`](/editor/extensions/nodes/horizontal-rule)（StarterKit） | **输入规则：** `---`、`___`、`***`
 
-## Hard break
+## 硬换行
 
-A hard break (Shift+Enter) creates a new line within the same paragraph. In Word this is a `<w:br/>` element. Hard breaks round-trip correctly.
+硬换行（Shift+Enter）会在同一段落中另起一行。在 Word 中，它对应 `<w:br/>` 元素。硬换行可以正确地往返转换。
 
-**Extension:** [`HardBreak`](/editor/extensions/nodes/hard-break) (StarterKit) | **Shortcut:** Shift+Enter
+**扩展：** [`HardBreak`](/editor/extensions/nodes/hard-break)（StarterKit） | **快捷键：** Shift+Enter
 
-## Page break
+## 分页符
 
-Page breaks have been moved to the [Page breaks](/conversion/content-types/page-layout/page-breaks) page under Page layout.
+分页符内容已移至“页面布局”下的[分页符](/conversion/content-types/page-layout/page-breaks)页面。
 
-## Export
+## 导出
 
-| Element | DOCX output |
+| 元素 | DOCX 输出 |
 | --- | --- |
-| Blockquote | Paragraphs with "Quote" style |
-| Code block | Not exported |
-| Horizontal rule | VML horizontal rule shape |
-| Hard break | `<w:br/>` within a text run |
-| Page break | See [Page breaks](/conversion/content-types/page-layout/page-breaks) |
+| 引用块 | 应用了“Quote”样式的段落 |
+| 代码块 | 不导出 |
+| 水平线 | VML 水平线图形 |
+| 硬换行 | 文本运行中的 `<w:br/>` |
+| 分页符 | 参见[分页符](/conversion/content-types/page-layout/page-breaks) |
