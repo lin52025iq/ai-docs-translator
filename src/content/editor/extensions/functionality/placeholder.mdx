@@ -1,39 +1,39 @@
 ---
-title: Placeholder extension
+title: Placeholder 扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extensions?label=version
     url: https://www.npmjs.com/package/@tiptap/extensions
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extensions.svg
     url: https://npmcharts.com/compare/@tiptap/extensions?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  title: Placeholder extension | Tiptap Editor Docs
-  description: Configure a helpful placeholder to fill the emptiness in your Tiptap editor. Learn how to set up and use it here in the Docs!
-  category: Editor
+  title: Placeholder 扩展 | Tiptap 编辑器文档
+  description: 为 Tiptap 编辑器配置实用的占位符，填补编辑器中的空白。查看文档，了解如何设置和使用！
+  category: 编辑器
 extension:
   name: Placeholder
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extensions
-  description: Configure a helpful placeholder to fill the emptiness.
+  description: 配置实用的占位符，填补编辑器中的空白。
   type: extension
   icon: Ghost
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-This extension provides placeholder support. Give your users an idea what they should write with a tiny hint. There is a handful of things to customize, if you feel like it.
+此扩展提供占位符支持。通过简短提示，让用户了解应该输入什么内容。你还可以按需自定义多项设置。
 
 <CodeDemo path="/Extensions/Placeholder" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extensions
 ```
 
-## Usage
+## 用法
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -48,11 +48,11 @@ new Editor({
 })
 ```
 
-### Additional Setup
+### 其他设置
 
-Placeholders are displayed with the help of CSS.
+占位符通过 CSS 显示。
 
-**Display a Placeholder only for the first line in an empty editor.**
+**仅在空编辑器的第一行显示占位符。**
 
 ```
 .tiptap p.is-editor-empty:first-child::before {
@@ -64,7 +64,7 @@ Placeholders are displayed with the help of CSS.
 }
 ```
 
-**Display Placeholders on every new line.**
+**在每个新行显示占位符。**
 
 ```
 .tiptap p.is-empty::before {
@@ -76,13 +76,13 @@ Placeholders are displayed with the help of CSS.
 }
 ```
 
-## Settings
+## 设置
 
 ### emptyEditorClass
 
-The added CSS class if the editor is empty.
+编辑器为空时添加的 CSS 类。
 
-Default: `'is-editor-empty'`
+默认值：`'is-editor-empty'`
 
 ```js
 Placeholder.configure({
@@ -92,16 +92,16 @@ Placeholder.configure({
 
 ### emptyNodeClass
 
-The added CSS class if the node is empty.
+节点为空时添加的 CSS 类。
 
-Default: `'is-empty'`
+默认值：`'is-empty'`
 
 ```js
 Placeholder.configure({
   emptyNodeClass: 'my-custom-is-empty-class',
 })
 ```
-It's also possible to use a function to determine the class based on the node:
+也可以使用函数，根据节点确定类名：
 ```js
 Placeholder.configure({
   emptyNodeClass: ({ node }) => {
@@ -115,9 +115,9 @@ Placeholder.configure({
 
 ### dataAttribute
 
-The data attribute used to store the placeholder text. When setting this to `'my-placeholder'`, the placeholder text will be stored in the `data-my-placeholder` attribute, for example.
+用于存储占位符文本的 data 属性。例如，将其设为 `'my-placeholder'` 时，占位符文本会存储在 `data-my-placeholder` 属性中。
 
-Default: `'placeholder'`
+默认值：`'placeholder'`
 
 ```js
 Placeholder.configure({
@@ -127,9 +127,9 @@ Placeholder.configure({
 
 ### placeholder
 
-The placeholder text added as `data-placeholder` attribute.
+作为 `data-placeholder` 属性添加的占位符文本。
 
-Default: `'Write something …'`
+默认值：`'Write something …'`
 
 ```js
 Placeholder.configure({
@@ -137,7 +137,7 @@ Placeholder.configure({
 })
 ```
 
-You can even use a function to add placeholder depending on the node:
+你还可以使用函数，根据节点添加占位符：
 
 ```js
 Placeholder.configure({
@@ -153,9 +153,9 @@ Placeholder.configure({
 
 ### showOnlyWhenEditable
 
-Show decorations only when editor is editable.
+仅当编辑器可编辑时显示装饰。
 
-Default: `true`
+默认值：`true`
 
 ```js
 Placeholder.configure({
@@ -165,9 +165,9 @@ Placeholder.configure({
 
 ### showOnlyCurrent
 
-Show decorations only in currently selected node.
+仅在当前选中的节点中显示装饰。
 
-Default: `true`
+默认值：`true`
 
 ```js
 Placeholder.configure({
@@ -177,9 +177,9 @@ Placeholder.configure({
 
 ### includeChildren
 
-Show decorations also for nested nodes. Only textblock nodes (nodes that directly contain inline content, such as `paragraph` or `heading`) will receive a placeholder — wrapper nodes like `bulletList` or `listItem` are automatically skipped.
+也为嵌套节点显示装饰。只有文本块节点（直接包含行内内容的节点，例如 `paragraph` 或 `heading`）会显示占位符；`bulletList` 或 `listItem` 这类包装节点会自动跳过。
 
-Default: `false`
+默认值：`false`
 
 ```js
 Placeholder.configure({
@@ -187,11 +187,11 @@ Placeholder.configure({
 })
 ```
 
-## Source code
+## 源代码
 
 [packages/extensions/src/placeholder](https://github.com/ueberdosis/tiptap/blob/main/packages/extensions/src/placeholder)
 
-## Minimal Install
+## 最小化安装
 
 ```js
 import { Editor } from '@tiptap/core'
