@@ -1,28 +1,28 @@
 ---
-title: HTML Utility
+title: HTML 工具
 meta:
-  title: HTML utility | Tiptap Editor Docs
-  description: Use the HTML Utility in Tiptap to render JSON as HTML and convert HTML to JSON without an editor instance. More in the docs!
-  category: Editor
+  title: HTML 工具 | Tiptap 编辑器文档
+  description: 使用 Tiptap 的 HTML 工具将 JSON 渲染为 HTML，并在不创建编辑器实例的情况下将 HTML 转换为 JSON。详情请参阅文档！
+  category: 编辑器
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/html?label=version
     url: https://www.npmjs.com/package/@tiptap/html
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/html?label=version
     url: https://npmcharts.com/compare/@tiptap/html
-    label: Downloads
+    label: 下载量
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-The HTML Utility helps render JSON content as HTML and generate JSON from HTML without an editor instance, suitable for server-side operations. All it needs is JSON or an HTML string, and a list of extensions.
+HTML 工具可以在不创建编辑器实例的情况下，将 JSON 内容渲染为 HTML，并根据 HTML 生成 JSON，适用于服务端操作。它只需要 JSON 或 HTML 字符串，以及扩展列表。
 
-## Generating HTML from JSON
+## 根据 JSON 生成 HTML
 
-Given a JSON object, representing a ProseMirror document, the `generateHTML` function will return a `string` object representing the JSON content. The function takes two arguments: the JSON object and a list of extensions.
+给定一个表示 ProseMirror 文档的 JSON 对象，`generateHTML` 函数会返回一个表示该 JSON 内容的 `string`。该函数接受两个参数：JSON 对象和扩展列表。
 
 ```js
 /* IN BROWSER ONLY - See below for server-side compatible package */
@@ -66,19 +66,15 @@ generateHTML(
 // `<p>On the server, or the browser</p>`
 ```
 
-<Callout title="Caution" variant="warning">
-  There are two exports available: `generateHTML` from `@tiptap/core` and from `@tiptap/html`. The
-  former is only for use within the browser, the latter can be used on either the server or the
-  browser. Make sure to use the correct one for your use case. On the server, a virtual DOM is used
-  to generate the HTML. So using `@tiptap/core` can ship less code if you don&apos;t need the
-  server-side functionality.
+<Callout title="注意" variant="warning">
+  `@tiptap/core` 和 `@tiptap/html` 都导出了 `generateHTML`。前者只能在浏览器中使用，后者则既可用于服务端，也可用于浏览器。请根据使用场景选择正确的版本。在服务端，HTML 是通过虚拟 DOM 生成的。因此，如果不需要服务端功能，使用 `@tiptap/core` 可以减少打包的代码量。
 </Callout>
 
 <CodeDemo path="/GuideContent/GenerateHTML" />
 
-## Generating JSON from HTML
+## 根据 HTML 生成 JSON
 
-Given an HTML string, the `generateJSON` function will return a JSON object representing the HTML content as a ProseMirror document. The function takes two arguments: the HTML string and a list of extensions.
+给定一个 HTML 字符串，`generateJSON` 函数会返回一个 JSON 对象，将 HTML 内容表示为 ProseMirror 文档。该函数接受两个参数：HTML 字符串和扩展列表。
 
 ```js
 /* IN BROWSER ONLY - See below for server-side compatible package */
@@ -108,16 +104,12 @@ generateJSON(`<p>On the server, or the browser</p>`, [
 // { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'On the server, or the browser' }] }] }
 ```
 
-<Callout title="Caution" variant="warning">
-  There are two exports available: `generateJSON` from `@tiptap/core` and from `@tiptap/html`. The
-  former is only for use within the browser, the latter can be used on either the server or the
-  browser. Make sure to use the correct one for your use case. On the server, a virtual DOM is used
-  to generate the HTML. So using `@tiptap/core` can ship less code if you don&apos;t need the
-  server-side functionality.
+<Callout title="注意" variant="warning">
+  `@tiptap/core` 和 `@tiptap/html` 都导出了 `generateJSON`。前者只能在浏览器中使用，后者则既可用于服务端，也可用于浏览器。请根据使用场景选择正确的版本。在服务端，HTML 是通过虚拟 DOM 生成的。因此，如果不需要服务端功能，使用 `@tiptap/core` 可以减少打包的代码量。
 </Callout>
 
 <CodeDemo path="/GuideContent/GenerateJSON" />
 
-## Source code
+## 源代码
 
 [packages/html/](https://github.com/ueberdosis/tiptap/blob/main/packages/html/)
