@@ -1,0 +1,226 @@
+---
+title: 将自定义节点导出为 .docx
+tags:
+  - type: start
+  - type: beta
+  - type: version
+    label: v0.26.1
+meta:
+  title: 将自定义节点导出为 DOCX | Tiptap 转换
+  description: 了解如何使用 Export 扩展将自定义节点导出为 DOCX（Word）文件。
+  category: Conversion
+---
+
+import { Callout } from '@/components/ui/Callout'
+import { CodeDemo } from '@/components/CodeDemo'
+import { Requirements, RequirementItem } from '@/components/Requirements'
+import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
+import CustomNodeConversionGuide from '../_shared/_custom-node-conversion-guide.mdx'
+
+<EnterpriseCalloutAuto variant="docx" renderMode="sidebar" disableWaitlist />
+
+<Requirements>
+  <RequirementItem label="1. 开通试用或订阅">
+    在账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start
+    计划](https://cloud.tiptap.dev/v2/billing)。
+  </RequirementItem>
+  <RequirementItem label="2. 从私有注册表安装">
+    要安装这些前端扩展，请按照[设置指南](/guides/pro-extensions)进行操作，以通过身份验证访问 Tiptap 的私有 npm 注册表。
+  </RequirementItem>
+</Requirements>
+
+`@tiptap-pro/extension-export-docx` 扩展的一大优势是，你可以定义 Tiptap schema 中的自定义节点在 DOCX 中的渲染方式。
+
+这样，你就可以在导出的 Word 文件中保留应用特有的内容。
+
+<Callout variant="hint" title="正在寻找兼容 REST 的版本？">
+  函数无法通过 HTTP 序列化，因此本页面的函数 API 仅适用于编辑器扩展。若要使用基于 JSON、可通过 REST 传输并在两种环境中运行的对应方案，请参阅 [Custom-nodes DSL](/conversion/export/docx/custom-nodes-dsl)。
+</Callout>
+
+## 将自定义节点导出为 .docx
+
+<CodeDemo isPro path="/Extensions/ExportDocxCustomNode" />
+
+调用 `editor.exportDocx()` 时，可以在 `ExportDocxOptions` 参数中传入一个自定义节点定义数组。每个定义都指定节点类型和渲染函数。
+
+<CustomNodeConversionGuide />
+
+### 定义自定义节点渲染函数
+
+接下来，我们定义自定义节点 `Hintbox` 在导出文档中的渲染方式：
+
+```ts
+// Import the ExportDocx extension
+import {
+  convertTextNode,
+  Docx,
+  ExportDocx,
+  lineHeightToDocx,
+  pixelsToHalfPoints,
+  pointsToTwips,
+} from '@tiptap-pro/extension-export-docx'
+
+const editor = new Editor({
+  extensions: [
+    // Other extensions ...
+    ExportDocx.configure({
+      onCompleteExport: (result) => {
+        setIsLoading(false)
+        const blob = new Blob([result], {
+          type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = 'export.docx'
+        a.click()
+        URL.revokeObjectURL(url)
+      },
+      exportType: 'blob',
+      customNodes: [
+        {
+          type: 'hintbox',
+          render: (node) => {
+            // Here we define how our custom Hintbox node should be rendered in the DOCX.
+            // Per the documentation, we should return a Docx node
+            // that's either a Paragraph, an array of Paragraphs, a Table, a TextRun, an ExternalHyperlink, or null.
+            return new Docx.Paragraph({
+              children: node.content.map((content) => convertTextNode(content)),
+              style: 'Hintbox', // Here we apply our custom style to the Paragraph node.
+            })
+          },
+        },
+      ], // Custom nodes
+      styleOverrides: {
+        paragraphStyles: [
+          // Here we define our custom styles for our custom Hintbox node.
+          {
+            id: 'Hintbox',
+            name: 'Hintbox',
+            basedOn: 'Normal',
+            next: 'Normal',
+            quickFormat: false,
+            run: {
+              font: 'Aptos Light',
+              size: pixelsToHalfPoints(16),
+            },
+            paragraph: {
+              spacing: {
+                before: pointsToTwips(12),
+                after: pointsToTwips(12),
+                line: lineHeightToDocx(1),
+              },
+              border: {
+                // DOCX colors are in Hexadecimal without the leading #
+                top: { style: Docx.BorderStyle.SINGLE, size: 1, color: 'b8d8ff', space: 5 },
+                bottom: { style: Docx.BorderStyle.SINGLE, size: 1, color: 'b8d8ff', space: 5 },
+                right: { style: Docx.BorderStyle.SINGLE, size: 1, color: 'b8d8ff', space: 5 },
+                left: { style: Docx.BorderStyle.SINGLE, size: 1, color: 'b8d8ff', space: 5 },
+              },
+              shading: {
+                type: Docx.ShadingType.SOLID,
+                color: 'e6f3ff',
+              },
+            },
+          },
+        ],
+      }, // Style overrides
+    }),
+    // Other extensions ...
+  ],
+  // Other editor settings ...
+})
+```
+
+之后，你可以在应用的其他位置将编辑器内容导出为 `DOCX` 文件：
+
+```ts
+editor.chain().exportDocx().run()
+```
+
+在 `render` 函数中，你可以使用 `Docx` 库提供的类（`Paragraph`、`TextRun`、`Table` 等）构造任何受支持的 `DOCX` 元素。这些类可通过从 `@tiptap-pro/extension-export-docx` 包导入 `Docx` 来使用。
+
+有关 RTL 对齐、百分比宽度和默认样式的信息，请参阅[原生 DOCX 选项](/conversion/export/docx/styles#native-docx-options)。
+
+## 让图片适应页面或表格单元格
+
+如果图片没有设置 `width` 和 `height`，导出时会使用其像素尺寸，因此较大的图片会超出 Word 文档的右边距。渲染图片的自定义节点可以将图片限制在页面范围内。
+
+`render` 会接收第二个参数 `context`。其中的 `maxImageWidth` 是页面文本栏的像素宽度，或者节点所在表格单元格的内容宽度（单元格宽度减去左右边距）。列表缩进不会从宽度中扣除。对于 [`customNodeDsl`](/conversion/export/docx/custom-nodes-dsl) 规则中的自定义节点，`context` 为 `undefined`。
+
+将其作为 `maxWidth` 传给 `convertImage` 或 `convertImageRun`：
+
+```ts
+import { convertImage, ExportDocx } from '@tiptap-pro/extension-export-docx'
+
+ExportDocx.configure({
+  customNodes: [
+    {
+      type: 'photo',
+      render: (node, context) => {
+        const { src, width, height } = node.attrs ?? {}
+
+        return convertImage({
+          node: { type: 'image', attrs: { src, width, height } },
+          maxWidth: context?.maxImageWidth,
+        })
+      },
+    },
+  ],
+})
+```
+
+只有在图片既未设置 `width` 也未设置 `height` 时，`maxWidth` 才会影响图片。宽度超过 `maxWidth` 的图片会缩小到该宽度，并保持纵横比。图片自身设置的尺寸以及 `imageOverrides.transformation` 仍具有优先权。
+
+如果节点需要围绕图片排布内容，请使用 `convertImageRunWithSize`。它会返回图片运行对象及图片在文档中的尺寸（`{ imageRun, width, height }`，单位为像素）；如果导出时跳过了图片，则返回 `null`。以下示例会在图片下方添加标题，并将它们放在与图片同宽的表格中：
+
+```ts
+import {
+  convertImageRunWithSize,
+  Docx,
+  ExportDocx,
+  pixelsToPoints,
+  pointsToTwips,
+} from '@tiptap-pro/extension-export-docx'
+
+ExportDocx.configure({
+  customNodes: [
+    {
+      type: 'figure',
+      render: async (node, context) => {
+        const { src, width, height } = node.attrs ?? {}
+        const image = await convertImageRunWithSize({
+          node: { type: 'image', attrs: { src, width, height } },
+          maxWidth: context?.maxImageWidth,
+        })
+        if (!image) return null
+
+        // Word measures table widths in twips.
+        const tableWidth = Math.round(pointsToTwips(pixelsToPoints(image.width)))
+
+        return new Docx.Table({
+          // A fixed layout without cell margins keeps the table exactly as wide as the image.
+          layout: Docx.TableLayoutType.FIXED,
+          width: { size: tableWidth, type: Docx.WidthType.DXA },
+          columnWidths: [tableWidth],
+          margins: { top: 0, bottom: 0, left: 0, right: 0 },
+          rows: [
+            new Docx.TableRow({
+              children: [
+                new Docx.TableCell({
+                  children: [
+                    new Docx.Paragraph({ children: [image.imageRun] }),
+                    new Docx.Paragraph({ text: node.attrs?.caption }),
+                  ],
+                }),
+              ],
+            }),
+          ],
+        })
+      },
+    },
+  ],
+})
+```
+
+内置的 `image` 节点不受影响：导出时仍使用其自身尺寸。
