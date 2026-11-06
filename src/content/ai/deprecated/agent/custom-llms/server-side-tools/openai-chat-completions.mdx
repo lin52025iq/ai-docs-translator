@@ -1,21 +1,21 @@
 ---
-title: Server-side tools (OpenAI Chat Completions API)
+title: 服务端工具（OpenAI Chat Completions API）
 meta:
-  title: Server-side tools (OpenAI Chat Completions API) | Tiptap Content AI
-  description: Learn how to call server-side tools using the OpenAI Chat Completions API.
-  category: Content AI
+  title: 服务端工具（OpenAI Chat Completions API）| Tiptap Content AI
+  description: 了解如何使用 OpenAI Chat Completions API 调用服务端工具。
+  category: 内容 AI
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-This guide explains how to call server-side tools using the OpenAI Chat Completions API. It presents an example of a tool that returns the weather in a given location.
+本指南介绍如何使用 OpenAI Chat Completions API 调用服务端工具，并以一个返回指定地点天气的工具为例。
 
-<Callout title="Code demo available" variant="info">
-  This guide includes a code demo to help you get started. See the [GitHub
-  repository](https://github.com/ueberdosis/ai-agent-custom-llm-demos).
+<Callout title="提供代码演示" variant="info">
+  本指南包含一个代码演示，帮助你快速上手。请参阅 [GitHub
+  仓库](https://github.com/ueberdosis/ai-agent-custom-llm-demos)。
 </Callout>
 
-First, define the tool in the [OpenAI Chat Completions API tool format](https://platform.openai.com/docs/guides/function-calling):
+首先，按照 [OpenAI Chat Completions API 工具格式](https://platform.openai.com/docs/guides/function-calling)定义工具：
 
 ```ts
 const weatherTool = {
@@ -37,7 +37,7 @@ const weatherTool = {
 }
 ```
 
-Then, when you call the OpenAI API, include the tool in the `tools` array.
+然后，调用 OpenAI API 时，将该工具添加到 `tools` 数组中。
 
 ```ts
 import {
@@ -81,15 +81,15 @@ ${toolkit.getSystemPrompt()}
 })
 ```
 
-First, add the response to the formatter so that it is included in the conversation.
+首先，将响应添加到 formatter 中，使其包含在对话中。
 
 ```ts
 formatter.addAiResponse(response)
 ```
 
-Then, check if the response contains a server-side tool call like the weather tool. If so, call the tool and add the result to the formatter. Then, call the OpenAI API again.
+然后，检查响应中是否包含类似天气工具的服务端工具调用。如果包含，就调用该工具，并将结果添加到 formatter 中。接着，再次调用 OpenAI API。
 
-Repeat this process until there are no more server-side tool calls in the response.
+重复此过程，直到响应中不再包含服务端工具调用。
 
 ```ts
 const isGetWeatherToolCall = (toolCall: OpenAI.Chat.Completions.ChatCompletionMessageToolCall) =>
@@ -134,10 +134,10 @@ while (!response || response.choices[0].message.tool_calls?.some(isGetWeatherToo
 }
 ```
 
-Finally, when there are no more server-side tool calls, use the `formatter` to convert the response to the format expected by the AI Agent extension.
+最后，如果没有更多服务端工具调用，请使用 `formatter` 将响应转换为 AI Agent 扩展所需的格式。
 
 ```ts
 const response = formatter.getResolverResponse()
 ```
 
-The value returned from `formatter.getResolverResponse()` should be the response of your API endpoint and the return value of the resolver function.
+`formatter.getResolverResponse()` 返回的值应作为 API 端点的响应，也是 resolver 函数的返回值。
