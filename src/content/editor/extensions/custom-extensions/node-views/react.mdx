@@ -1,26 +1,26 @@
 ---
-title: Node views with React
+title: 使用 React 创建节点视图
 meta:
-  title: React node views | Tiptap Editor Docs
-  description: Use React to build custom node views in Tiptap. Direct manipulation of node properties and interactive content.
-  category: Editor
+  title: React 节点视图 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 React 构建自定义节点视图。直接操作节点属性并创建交互式内容。
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-Using Vanilla JavaScript can feel complex if you are used to work in React. Good news: You can use regular React components in your node views, too. There is just a little bit you need to know, but let’s go through this one by one.
+如果你习惯使用 React，那么使用原生 JavaScript 可能会让你觉得复杂。好消息是，你也可以在节点视图中使用常规的 React 组件。只需要了解一些内容，我们接下来逐一介绍。
 
-## Render a React component
+## 渲染 React 组件
 
-Here is what you need to do to render React components inside your editor:
+要在编辑器中渲染 React 组件，需要完成以下操作：
 
-1. [Create a node extension](/editor/extensions/custom-extensions)
-2. Create a React component
-3. Pass that component to the provided `ReactNodeViewRenderer`
-4. Register it with `addNodeView()`
-5. [Configure Tiptap to use your new node extension](/editor/getting-started/configure)
+1. [创建节点扩展](/editor/extensions/custom-extensions)
+2. 创建一个 React 组件
+3. 将该组件传递给提供的 `ReactNodeViewRenderer`
+4. 使用 `addNodeView()` 注册它
+5. [配置 Tiptap 使用你的新节点扩展](/editor/getting-started/configure)
 
-This is how your node extension could look like:
+你的节点扩展可以如下所示：
 
 ```js
 import { Node } from '@tiptap/core'
@@ -36,29 +36,29 @@ export default Node.create({
 })
 ```
 
-There is a little bit of magic required to make this work. But don’t worry, we provide a wrapper component you can use to get started easily. Don’t forget to add it to your custom React component, like shown below:
+要让这一切正常工作，需要一些特别的处理。不过别担心，我们提供了一个包装组件，方便你快速上手。别忘了像下面这样将它添加到自定义 React 组件中：
 
 ```jsx
 <NodeViewWrapper className="react-component">React Component</NodeViewWrapper>
 ```
 
-Got it? Let’s see it in action. Feel free to copy the below example to get started.
+明白了吗？我们来看看实际效果。你可以复制下面的示例开始尝试。
 
 <CodeDemo path="/GuideNodeViews/ReactComponent?inline=false&hideSource=false" />
 
-That component doesn’t interact with the editor, though. Time to wire it up.
+不过，这个组件还没有与编辑器交互。现在来接入交互功能。
 
-## Access node attributes
+## 访问节点属性
 
-The `ReactNodeViewRenderer` which you use in your node extension, passes a few very helpful props to your custom React component. One of them is the `node` prop. Let’s say you have [added an attribute](/editor/extensions/custom-extensions/extend-existing#attributes) named `count` to your node extension (like we did in the above example) you could access it like this:
+在节点扩展中使用的 `ReactNodeViewRenderer` 会向自定义 React 组件传递一些非常有用的 props。其中一个就是 `node` prop。假设你已经为节点扩展[添加了一个名为 `count` 的属性](/editor/extensions/custom-extensions/extend-existing#attributes)（就像上面的示例一样），就可以这样访问它：
 
 ```js
 props.node.attrs.count
 ```
 
-## Update node attributes
+## 更新节点属性
 
-You can even update node attributes from your node, with the help of the `updateAttributes` prop passed to your component. Pass an object with updated attributes to the `updateAttributes` prop:
+借助传递给组件的 `updateAttributes` prop，你还可以在节点中更新节点属性。将包含更新后属性的对象传递给 `updateAttributes` prop：
 
 ```js
 export default (props) => {
@@ -72,11 +72,11 @@ export default (props) => {
 }
 ```
 
-And yes, all of that is reactive, too. A pretty seamless communication, isn’t it?
+没错，这些操作也都是响应式的。通信过程非常流畅，对吧？
 
-## Adding a content editable
+## 添加可编辑内容
 
-There is another component called `NodeViewContent` which helps you adding editable content to your node view. Here is an example:
+还有一个名为 `NodeViewContent` 的组件，可以帮助你在节点视图中添加可编辑内容。示例如下：
 
 ```jsx
 import React from 'react'
@@ -95,26 +95,26 @@ export default () => {
 }
 ```
 
-You don’t need to add those `className` attributes, feel free to remove them or pass other class names. Try it out in the following example:
+你不必添加这些 `className` 属性，可以随意删除它们或传入其他类名。试试下面的示例：
 
 <CodeDemo path="/GuideNodeViews/ReactComponentContent?inline=false&hideSource=false" />
 
-Keep in mind that this content is rendered by Tiptap. That means you need to tell what kind of content is allowed, for example with `content: 'inline*'` in your node extension (that’s what we use in the above example).
+请注意，这些内容由 Tiptap 渲染。这意味着你需要指定允许的内容类型，例如在节点扩展中使用 `content: 'inline*'`（上面的示例就是这样设置的）。
 
-The `NodeViewWrapper` and `NodeViewContent` components render a `<div>` HTML tag (`<span>` for inline nodes), but you can change that. For example `<NodeViewContent as="p">` should render a paragraph. One limitation though: That tag must not change during runtime.
+`NodeViewWrapper` 和 `NodeViewContent` 组件会渲染 `<div>` HTML 标签（对于行内节点则是 `<span>`），不过你可以更改标签。例如，`<NodeViewContent as="p">` 会渲染一个段落。需要注意的限制是：运行时不能更改该标签。
 
-## Changing the default content tag for a node view
+## 更改节点视图的默认内容标签
 
-For non-leaf node views, `ReactNodeViewRenderer` creates an editable content element inside the wrapper. This element defaults to a `div` for block nodes and a `span` for inline nodes. Use `contentDOMElementTag` to override its tag:
+对于非叶节点视图，`ReactNodeViewRenderer` 会在包装元素内部创建一个可编辑内容元素。块级节点默认使用 `div`，行内节点默认使用 `span`。使用 `contentDOMElementTag` 可以覆盖其标签：
 
 ```js
 // this will use a header tag for the editable content
 return ReactNodeViewRenderer(Component, { contentDOMElementTag: 'header' })
 ```
 
-## Changing the outer wrapper element
+## 更改外层包装元素
 
-The outer element created by `ReactNodeViewRenderer` defaults to a `div` for block nodes and a `span` for inline nodes. Use the `as` option to override it. This is separate from `contentDOMElementTag`, which controls the inner editable content element:
+`ReactNodeViewRenderer` 创建的外层元素，块级节点默认使用 `div`，行内节点默认使用 `span`。使用 `as` 选项可以覆盖该元素。它与 `contentDOMElementTag` 不同，后者控制内部可编辑内容元素：
 
 ```js
 import { Node } from '@tiptap/core'
@@ -130,43 +130,43 @@ export default Node.create({
 })
 ```
 
-## Updating `selected` on a text selection
+## 在文本选区中更新 `selected`
 
-By default, the `selected` prop only becomes `true` when the node itself is selected with a `NodeSelection`. That works great for atom nodes, but it does not fire when the cursor is simply placed inside a node that has text content. If you want `selected` to also reflect that case, enable the `selectedOnTextSelection` option on the `ReactNodeViewRenderer`:
+默认情况下，只有使用 `NodeSelection` 选中节点本身时，`selected` prop 才会变为 `true`。这对原子节点来说很合适，但当光标仅仅位于含有文本内容的节点内部时，不会触发此状态。如果你希望这种情况也能反映在 `selected` 中，请在 `ReactNodeViewRenderer` 上启用 `selectedOnTextSelection` 选项：
 
 ```js
 return ReactNodeViewRenderer(Component, { selectedOnTextSelection: true })
 ```
 
-With this option turned on, `selected` will also be `true` whenever a `TextSelection` is fully contained within the node’s range — for example, when the cursor is placed somewhere inside the node’s content. Selections that only partially overlap the node are not considered selected.
+启用此选项后，当 `TextSelection` 完全包含在节点范围内时，`selected` 也会变为 `true`，例如光标位于节点内容中的某处时。仅与节点部分重叠的选区不会被视为已选中。
 
-## Tracking node position
+## 跟踪节点位置
 
-Node views do not re-render when decorations or position change without content changes. ProseMirror handles decorations natively on the contentDOM, and the `getPos()` closure always returns the current position when called — even without a re-render.
+如果装饰或位置发生变化而内容没有变化，节点视图不会重新渲染。ProseMirror 会在 contentDOM 上原生处理装饰，而 `getPos()` 闭包在调用时始终会返回当前位置，即使没有重新渲染也是如此。
 
-If your component needs `getPos()` to stay reactive in render output (e.g. a drag handle that displays `pos: 42`), enable `trackNodeViewPosition`:
+如果你需要 `getPos()` 在渲染输出中保持响应式（例如拖动手柄显示 `pos: 42`），请启用 `trackNodeViewPosition`：
 
 ```js
 return ReactNodeViewRenderer(Component, { trackNodeViewPosition: true })
 ```
 
-When enabled, the component re-renders on every position shift. Use with caution — frequent re-renders can impact performance.
+启用后，每当位置发生变化，组件都会重新渲染。请谨慎使用，因为频繁重新渲染可能会影响性能。
 
-## All available props
+## 所有可用的 props
 
-Here is the full list of what props you can expect:
+以下是你可能会用到的全部 props：
 
-| Prop               | Description                                                     |
+| Prop               | 说明                                                     |
 | ------------------ | --------------------------------------------------------------- |
-| editor             | The editor instance                                             |
-| node               | The current node                                                |
-| decorations        | An array of decorations                                         |
-| selected           | `true` when there is a `NodeSelection` at the current node view. Also `true` on a `TextSelection` fully inside the node when [`selectedOnTextSelection`](#updating-selected-on-a-text-selection) is enabled. |
-| extension          | Access to the node extension, for example to get options        |
-| getPos()           | Get the document position of the current node                   |
-| updateAttributes() | Update attributes of the current node                           |
-| deleteNode()       | Delete the current node                                         |
+| editor             | 编辑器实例                                             |
+| node               | 当前节点                                                |
+| decorations        | 装饰数组                                         |
+| selected           | 当前节点视图存在 `NodeSelection` 时为 `true`。启用 [`selectedOnTextSelection`](#在文本选区中更新-selected) 后，节点内部完全包含 `TextSelection` 时也为 `true`。 |
+| extension          | 访问节点扩展，例如获取其选项        |
+| getPos()           | 获取当前节点在文档中的位置                   |
+| updateAttributes() | 更新当前节点的属性                           |
+| deleteNode()       | 删除当前节点                                         |
 
-## Dragging
+## 拖动
 
-To make your node views draggable, set `draggable: true` in the extension and add `data-drag-handle` to the DOM element that should function as the drag handle.
+要让节点视图支持拖动，请在扩展中设置 `draggable: true`，并将 `data-drag-handle` 添加到用作拖动手柄的 DOM 元素上。
