@@ -1,42 +1,39 @@
 ---
-title: Decorations in Tiptap
+title: Tiptap 中的装饰
 meta:
-  title: Decorations | Tiptap Editor Docs
-  description: Add view-only highlights, search results, annotations, and widgets to your Tiptap editor with the Decorations API. Learn more in the docs!
-  category: Editor
+  title: 装饰 | Tiptap 编辑器文档
+  description: 使用 Decorations API 为 Tiptap 编辑器添加仅用于视图的高亮、搜索结果、注释和小部件。了解更多信息，请参阅文档！
+  category: 编辑器
 ---
 
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-Decorations change how content looks inside the editor. They do not change the document itself. They are not included when you save the editor as JSON or HTML.
+装饰会改变内容在编辑器中的显示方式，但不会改变文档本身。将编辑器保存为 JSON 或 HTML 时，装饰不会包含在内。
 
-Extensions add decorations with `addDecorations()`. Use the `Decoration` class to create them. Tiptap takes care of adding them to the editor.
+扩展通过 `addDecorations()` 添加装饰。使用 `Decoration` 类创建装饰，Tiptap 会负责将它们添加到编辑器中。
 
 <CodeDemo path="/Examples/Decorations?inline=false&hideSource=false" />
 
-## When to use decorations vs. node views
+## 何时使用装饰，何时使用节点视图
 
-Reach for decorations when the marker is purely visual and lives outside the document. Reach for a [node view](/editor/extensions/custom-extensions/node-views) when the content is part of the document itself.
+当标记纯粹用于视觉呈现，且位于文档之外时，使用装饰。如果内容本身属于文档，请使用[节点视图](/editor/extensions/custom-extensions/node-views)。
 
-<Callout title="Decorations vs. node views" variant="info">
-  Use **decorations** for highlights, search results, comments, annotations, and temporary UI
-  markers that don't change the document. Use **[node
-  views](/editor/extensions/custom-extensions/node-views)** when you need persisted custom document
-  content, editable custom blocks, or complex embedded UI that owns document structure.
+<Callout title="装饰与节点视图" variant="info">
+  对于不会更改文档的高亮、搜索结果、评论、注释和临时 UI 标记，请使用**装饰**。如果需要持久化的自定义文档内容、可编辑的自定义块，或拥有文档结构的复杂嵌入式 UI，请使用**[节点视图](/editor/extensions/custom-extensions/node-views)**。
 </Callout>
 
-## The three kinds of decoration
+## 三种装饰
 
-There are three kinds of decoration, all created through the `Decoration` class:
+装饰共有三种，均通过 `Decoration` 类创建：
 
-- **node** adds attributes, such as a CSS class, to one node.
-- **inline** styles a range of text or other inline content.
-- **widget** adds a DOM element or framework component at one document position.
+- **node** 为单个节点添加属性，例如 CSS 类。
+- **inline** 为一段文本或其他行内内容添加样式。
+- **widget** 在文档中的某个位置添加 DOM 元素或框架组件。
 
-## Declaring decorations
+## 声明装饰
 
-Extensions declare decorations through the `addDecorations()` lifecycle hook, which returns a `DecorationSpec` (or `null` for none). Build the decorations themselves with the `Decoration` class imported from `@tiptap/core`.
+扩展通过生命周期钩子 `addDecorations()` 声明装饰，该钩子返回一个 `DecorationSpec`（没有装饰时返回 `null`）。使用从 `@tiptap/core` 导入的 `Decoration` 类来创建装饰：
 
 ```ts
 import { Decoration, Extension } from '@tiptap/core'
@@ -52,37 +49,36 @@ const MyExtension = Extension.create({
 })
 ```
 
-Like other extension hooks, `addDecorations()` is bound to `this` (`{ name, options, storage, editor, type, parent }`), so you can read options and storage while declaring decorations.
+与其他扩展钩子一样，`addDecorations()` 绑定到 `this`（`{ name, options, storage, editor, type, parent }`），因此声明装饰时可以读取选项和存储。
 
-<Callout title="Read state from the state argument, not editor.state" variant="warning">
-  Inside `create()` and `createInRange()`, always read the document from the `state` argument, not
-  `editor.state`. During a transaction, the editor's view state has not been updated yet, so
-  `editor.state` points at the pre-transaction document. The `state` argument is the correct state
-  being built.
+<Callout title="从 state 参数读取状态，而不是 editor.state" variant="warning">
+  在 `create()` 和 `createInRange()` 中，始终从 `state` 参数读取文档，而不要使用
+  `editor.state`。事务执行期间，编辑器的视图状态尚未更新，因此
+  `editor.state` 指向事务处理前的文档。`state` 参数才是当前正在构建的正确状态。
 </Callout>
 
-### The `Decoration` class
+### `Decoration` 类
 
-The `Decoration` class has static methods that return decoration instances describing what Tiptap should show. Import it from `@tiptap/core`:
+`Decoration` 类包含一些静态方法，它们会返回描述 Tiptap 应显示内容的装饰实例。请从 `@tiptap/core` 导入：
 
 ```ts
 import { Decoration } from '@tiptap/core'
 
-// Decorate a single node (attrs go on the node's DOM wrapper)
+// 为单个节点添加装饰（属性会添加到节点的 DOM 外层）
 Decoration.Node(from, to, attrs, spec)
 
-// Decorate a range of inline content (wraps it in a styled span)
+// 为一段行内内容添加装饰（将其包裹在带样式的 span 中）
 Decoration.Inline(from, to, attrs, spec)
 
-// Insert a widget (a DOM node) at a position; `key` is REQUIRED
+// 在某个位置插入小部件（DOM 节点）；`key` 为必填项
 Decoration.Widget(pos, render, options)
 ```
 
-`attrs` accepts `class`, `style`, `nodeName`, and any other HTML attribute (ProseMirror's `DecorationAttrs`).
+`attrs` 接受 `class`、`style`、`nodeName` 以及其他任意 HTML 属性（ProseMirror 的 `DecorationAttrs`）。
 
-### Node decorations
+### 节点装饰
 
-A node decoration applies attributes to the DOM wrapper of a single node. This is the cheapest way to, for example, outline every heading with a class:
+节点装饰会为单个节点的 DOM 外层添加属性。例如，为每个标题添加轮廓类，这是最轻量的做法：
 
 ```ts
 addDecorations() {
@@ -100,17 +96,17 @@ addDecorations() {
 }
 ```
 
-### Inline decorations
+### 行内装饰
 
-An inline decoration wraps a range of inline content in a styled span. This is ideal for highlights and search results:
+行内装饰会将一段行内内容包裹在带样式的 span 中，非常适合用于高亮和搜索结果：
 
 ```ts
 Decoration.Inline(matchFrom, matchTo, { class: 'is-match' })
 ```
 
-### Widget decorations
+### 小部件装饰
 
-A widget decoration inserts a DOM node at a single position. Unlike node and inline decorations, widgets need a `render` callback and a **required, stable `key`**:
+小部件装饰会在某个位置插入一个 DOM 节点。与节点装饰和行内装饰不同，小部件需要 `render` 回调和一个**必填且稳定的 `key`**：
 
 ```ts
 Decoration.Widget(
@@ -124,86 +120,80 @@ Decoration.Widget(
 )
 ```
 
-`side` controls which side of the position the widget belongs to. See ProseMirror's [`Decoration.widget`](https://prosemirror.net/docs/ref/#view.Decoration%5Ewidget). Every widget also needs a `key`.
+`side` 用于控制小部件位于该位置的哪一侧。请参阅 ProseMirror 的 [`Decoration.widget`](https://prosemirror.net/docs/ref/#view.Decoration%5Ewidget)。每个小部件都必须有 `key`。
 
-## Widget keys
+## 小部件的 key
 
-Every widget decoration requires a stable, position-independent `key`. This is the most common source of bugs when working with widgets.
+每个小部件装饰都需要一个稳定且与位置无关的 `key`。这是使用小部件时最常见的问题来源。
 
-<Callout title="Choose stable, globally unique keys" variant="warning">
-  ProseMirror reuses a widget's DOM across redraws **only when the key matches** the previous render. Without
-  a stable key the widget is destroyed and recreated on every update, causing flicker and lost component
-  state. Keys must also be **globally unique** across all widget decorations in the editor. Duplicate keys
-  cause ProseMirror to misplace the widget DOM and crash.
+<Callout title="选择稳定且全局唯一的 key" variant="warning">
+  只有当小部件的 key 与上次渲染时相同时，ProseMirror 才会在重绘时复用其 DOM。如果没有稳定的 key，小部件会在每次更新时被销毁并重新创建，导致闪烁和组件状态丢失。所有编辑器中的小部件装饰，其 key 还必须**全局唯一**。重复的 key 会导致 ProseMirror 错误放置小部件 DOM 并崩溃。
 
-  Tiptap logs a development warning when it detects two widget decorations with the same key in a single
-  build, naming the offending extension:
+  如果 Tiptap 在一次构建中检测到两个小部件装饰具有相同的 key，就会在开发环境中发出警告，并指出有问题的扩展：
   
   `[tiptap warn]: Duplicate widget decoration key "<key>" in extension "<name>". Widget decoration keys must
     be globally unique…`
   
-  The warning helps you find the problem. You must still make every key unique. Otherwise,
-  ProseMirror misplaces the widget DOM.
+  该警告有助于你发现问题，但仍须确保每个 key 都是唯一的。否则，ProseMirror 会错误放置小部件 DOM。
 
 </Callout>
 
-**Good keys** use an ID that belongs to the item: `comment-${id}`, `paragraph-${node.attrs.id}`, `suggestion-${id}`.
+**好的 key** 使用属于该项的 ID：`comment-${id}`、`paragraph-${node.attrs.id}`、`suggestion-${id}`。
 
-**Bad keys** are unstable or position-dependent: a loop or paragraph index, a document position (`marker-${from}`), or any position-derived value.
+**不好的 key** 不稳定或依赖位置，例如循环或段落索引、文档位置（`marker-${from}`）或任何基于位置的值。
 
-If you need two widgets for one entity, suffix them: `comment-${id}-start` and `comment-${id}-end`.
+如果同一实体需要两个小部件，请添加后缀：`comment-${id}-start` 和 `comment-${id}-end`。
 
-<Callout title="Exception for stateless widgets" variant="hint">
-  For stateless widgets in demos and simple examples (such as a static marker), index- or
-  position-based keys are acceptable. Widgets that hold state must use a stable item ID instead.
+<Callout title="无状态小部件的例外情况" variant="hint">
+  对于演示和简单示例中的无状态小部件（例如静态标记），可以使用基于索引或位置的 key。有状态的小部件则必须使用稳定的项目 ID。
 </Callout>
 
-## Default behavior
+## 默认行为
 
-- On editor init, every extension's `create` runs once to build the initial decorations.
-- When the document changes, Tiptap builds the decorations again by default.
-- When only the selection changes, Tiptap keeps the current decorations and updates their positions.
+- 编辑器初始化时，每个扩展的 `create` 都会运行一次，以构建初始装饰。
+- 默认情况下，文档更改时，Tiptap 会重新构建装饰。
+- 仅选区更改时，Tiptap 会保留当前装饰并更新其位置。
 
-## Performance
+## 性能
 
-Decorations use the `document` update strategy by default. This builds them again after every document change. For a large document, you can choose a different strategy to reduce the amount of work.
+默认情况下，装饰使用 `document` 更新策略。每次文档更改后都会重新构建装饰。对于大型文档，可以选择其他策略来减少工作量。
 
-### Use `shouldUpdate` to skip updates
+### 使用 `shouldUpdate` 跳过更新
 
-Return `false` from `shouldUpdate` when an edit cannot affect your decorations. Tiptap will keep them and update their positions instead of building them again.
+如果一次编辑不会影响装饰，请让 `shouldUpdate` 返回 `false`。Tiptap 会保留装饰并更新其位置，而不是重新构建。
 
 ```ts
 addDecorations() {
   return {
     create: ({ state }) => buildHeadingOutline(state),
     shouldUpdate: ({ tr, oldState, newState }) => {
-      // Only rebuild when the number of headings changed
+      // 仅当标题数量发生变化时才重新构建
       return countHeadings(oldState.doc) !== countHeadings(newState.doc)
     },
   }
 }
 ```
 
-By default, `shouldUpdate` runs after every document change.
+默认情况下，每次文档更改后都会运行 `shouldUpdate`。
 
-### Use `changedRanges` for edited blocks
+### 使用 `changedRanges` 更新已编辑的块
 
-With `update: 'changedRanges'` and a `createInRange` callback, on a document change the manager:
+使用 `update: 'changedRanges'` 和 `createInRange` 回调时，文档更改后，管理器会：
 
-1. Updates the positions of the current decorations.
-2. Computes the changed range(s) of the transaction and expands them to the **enclosing top-level block boundaries**, so a match that overlaps the raw edit (for example typing in the middle of a word) is still fully contained.
-3. Removes the now-stale decorations anchored in those blocks and rebuilds **only those blocks** by calling `createInRange({ state, from, to })`.
+1. 更新现有装饰的位置。
+2. 计算事务中的更改范围，并将其扩展到**外围顶层块的边界**，这样即使匹配内容与原始编辑范围重叠（例如在单词中间输入），也仍会完整包含在内。
+3. 移除锚定在这些块中的过时装饰，并通过调用 `createInRange({ state, from, to })` **仅重新构建这些块**。
 
-During normal editing, Tiptap does not call `create`. It only calls `create` when the editor starts or when you call [`updateDecorations()`](#build-decorations-again). This avoids scanning the full document after every key press.
+正常编辑期间，Tiptap 不会调用 `create`。只有编辑器启动时或调用 [`updateDecorations()`](#重新构建装饰) 时才会调用 `create`。这样可以避免每次按键后都扫描整个文档。
 
-`createInRange` receives a **block-aligned** `from`/`to` and must return only decorations within that range. It typically shares a scan helper with `create`:
+`createInRange` 接收与块边界对齐的 `from`/`to`，且只能返回该范围内的装饰。它通常会与 `create` 共用一个扫描辅助函数：
 
 ```ts
 addDecorations() {
   const scan = (editor, state, from, to) => {
     const decorations = []
     state.doc.nodesBetween(from, to, (node, pos) => {
-      // …build decorations for nodes/text within [from, to]…
+      // …为 [from, to] 范围内的节点/文本构建装饰…
     })
     return decorations
   }
@@ -216,71 +206,61 @@ addDecorations() {
 }
 ```
 
-<Callout title="createInRange contract" variant="warning">
-  `createInRange` must return **only** decorations whose start position lies within `[from, to)`.
-  `from` for inline and node decorations, `pos` for widget decorations. `to` is exclusive: it is
-  the next block's start, and that block rebuilds it, so decorations anchored at `to` are ignored.
-  The last block is the exception, because it owns the end of the document. Decorations anchored
-  before `from` belong to a neighbouring block that the manager did not remove, so returning them
-  leaks duplicate decorations that are never cleaned up. If a decoration depends on content outside
-  the supplied range, use the `document` strategy instead.
+<Callout title="createInRange 的约定" variant="warning">
+  `createInRange` 只能返回起始位置位于 `[from, to)` 内的装饰。对于行内装饰和节点装饰，起始位置是 `from`；对于小部件装饰，起始位置是 `pos`。`to` 不包含在范围内：它是下一个块的起始位置，该块会自行重新构建，因此会忽略锚定在 `to` 的装饰。最后一个块是例外，因为它包含文档末尾。锚定在 `from` 之前的装饰属于相邻块，而管理器不会移除该相邻块，因此返回这些装饰会造成重复，并且永远不会被清理。如果装饰依赖给定范围之外的内容，请改用 `document` 策略。
 </Callout>
 
-TypeScript enforces the pairing: `update: 'changedRanges'` requires `createInRange`, while the other strategies do not accept it.
+TypeScript 会强制检查两者的搭配：`update: 'changedRanges'` 必须搭配 `createInRange`，而其他策略不接受 `createInRange`。
 
-<Callout title="Incremental mode is only correct for block-local decorations" variant="warning">
-  Incremental mode is **only correct when each decoration depends solely on the content within its own
-  block or range.** Tiptap only scans edited blocks again. It does not check decorations in other blocks.
+<Callout title="增量模式仅适用于块内装饰" variant="warning">
+  只有当每个装饰**仅依赖其所在块或范围内的内容时**，增量模式才是正确的。Tiptap 只会重新扫描已编辑的块，不会检查其他块中的装饰。
 
-**Safe (local):** "highlight every occurrence of a word", "outline every heading", "underline misspelled
-words". Each decoration depends only on its own block.
+**安全（局部）：**“高亮某个单词的每次出现”“为每个标题添加轮廓”“给拼写错误的单词加下划线”。每个装饰都只依赖所在块。
 
-**Not safe (depends on the whole document):** use the default `document` strategy and `create`, or force a
-full rebuild with `updateDecorations()`:
+**不安全（依赖整个文档）：**使用默认的 `document` 策略和 `create`，或调用 `updateDecorations()` 强制完整重建：
 
-- Ordinal/counting logic: "highlight only the first match", "color every 3rd occurrence".
-- Cross-document relationships: "mark duplicate words across the document".
-- Structural relations: "the first heading gets a special class".
-- Anything depending on the selection or external state. Changed-range updates react to _content_ changes only;
-  trigger `updateDecorations()` on selection or state changes instead.
+- 序数/计数逻辑：“只高亮第一次匹配”“每第 3 次出现时更改颜色”。
+- 跨文档关系：“标记文档中的重复单词”。
+- 结构关系：“为第一个标题添加特殊类”。
+- 任何依赖选区或外部状态的内容。更改范围更新只响应_内容_变化；选区或状态变化时，请改为触发 `updateDecorations()`。
 
 </Callout>
 
-### Use `manual` for external state
+### 使用 `manual` 处理外部状态
 
-Use `update: 'manual'` when document transactions should only map existing decorations to their new positions. Manual decorations are rebuilt only during initialization and when you call `updateDecorations()`.
+当文档事务只应将现有装饰映射到新位置时，请使用 `update: 'manual'`。手动装饰只会在初始化时以及调用 `updateDecorations()` 时重新构建。
 
-Use the manual strategy when decorations depend on a value outside the document, such as a search query or filter. You cannot use it with `shouldUpdate` or `createInRange`.
+如果装饰依赖文档之外的值（例如搜索查询或筛选条件），请使用手动策略。该策略不能与 `shouldUpdate` 或 `createInRange` 搭配使用。
 
-## Build decorations again
+## 重新构建装饰
 
-Sometimes decorations depend on something outside the document, such as a search term or filter. Call `updateDecorations` when that value changes:
+有时装饰会依赖文档之外的内容，例如搜索词或筛选条件。该值发生变化时，请调用 `updateDecorations`：
 
 ```ts
-editor.commands.updateDecorations() // Update every extension.
-editor.commands.updateDecorations('myExtension') // Update one extension.
+editor.commands.updateDecorations() // 更新每个扩展。
+editor.commands.updateDecorations('myExtension') // 更新一个扩展。
 ```
 
-`updateDecorations` always calls `create` for the full document. It ignores the update strategy and `shouldUpdate` for this update.
+`updateDecorations` 始终会针对整个文档调用 `create`。本次更新会忽略更新策略和 `shouldUpdate`。
 
-### Runtime parameters via storage
+### 通过 storage 设置运行时参数
 
-Store changing values in the extension's [`storage`](/editor/extensions/custom-extensions/create-new/extension#addstorage). Read them inside `create`, then call `updateDecorations` after changing them:
+将变化的值存储在扩展的 [`storage`](/editor/extensions/custom-extensions/create-new/extension#addstorage) 中。在 `create` 中读取这些值，更改后调用 `updateDecorations`：
 
 ```ts
 editor.storage.myExtension.term = 'foo'
 editor.commands.updateDecorations('myExtension')
 ```
 
-## Rendering framework components as widgets
+## 将框架组件渲染为小部件
 
-Widget decorations can render React or Vue components. The component stays inside your editor's React or Vue app, so hooks, context, and `provide`/`inject` continue to work.
+小部件装饰可以渲染 React 或 Vue 组件。组件会保留在编辑器的 React 或 Vue 应用中，因此 hooks、上下文以及 `provide`/`inject` 仍可正常工作。
 
 <CodeDemo path="/Examples/DecorationComponents?inline=false&hideSource=false" />
 
-### React: `ReactWidgetRenderer`
+### React：`ReactWidgetRenderer`
 
-Import `ReactWidgetRenderer` from `@tiptap/react`. It returns a `WidgetDecoration` you return from `create` or `createInRange`, alongside `Decoration.Node` and `Decoration.Inline`. Your component additionally receives `editor` and `getPos` as props.
+从 `@tiptap/react` 导入 `ReactWidgetRenderer`。它会返回一个 `WidgetDecoration`，可与 `Decoration.Node` 和 `Decoration.Inline` 一起从 `create` 或 `createInRange` 返回。组件还会通过 props 接收 `editor` 和 `getPos`。
 
 ```tsx
 import { Extension } from '@tiptap/core'
@@ -309,7 +289,7 @@ const Comments = Extension.create({
           ReactWidgetRenderer(CommentMarker, {
             editor,
             pos: c.pos,
-            key: `comment-${c.id}`, // stable domain key → component state preserved
+            key: `comment-${c.id}`, // 稳定的领域 key → 保留组件状态
             props: { label: c.label },
           }),
         ),
@@ -318,14 +298,14 @@ const Comments = Extension.create({
 })
 ```
 
-A few things worth knowing:
+需要了解以下几点：
 
-- Tiptap sends new `props` when `create` or `createInRange` runs again. It reuses the renderer for the same key, so the component keeps its state.
-- The cache is swept when the editor is destroyed.
+- 再次运行 `create` 或 `createInRange` 时，Tiptap 会传入新的 `props`。它会复用 key 相同的渲染器，因此组件会保留其状态。
+- 编辑器销毁时会清理缓存。
 
-### Vue: `VueWidgetRenderer`
+### Vue：`VueWidgetRenderer`
 
-Import `VueWidgetRenderer` from `@tiptap/vue-3` (or `@tiptap/vue-2`). It reuses Tiptap's `VueRenderer`, so the component shares the editor's app context (`provide`/`inject` work). The component receives `editor` and `getPos` in addition to your `props`.
+从 `@tiptap/vue-3`（或 `@tiptap/vue-2`）导入 `VueWidgetRenderer`。它复用了 Tiptap 的 `VueRenderer`，因此组件与编辑器共享应用上下文（`provide`/`inject` 可正常工作）。除你的 `props` 外，组件还会接收 `editor` 和 `getPos`。
 
 ```ts
 import { Extension } from '@tiptap/core'
@@ -351,16 +331,15 @@ const Comments = Extension.create({
 })
 ```
 
-<Callout title="Vue-specific notes" variant="warning">
-  The component **must render a single root element**. The `editor` is passed raw (with `markRaw`)
-  on purpose. Do not wrap it in reactivity.
+<Callout title="Vue 专属说明" variant="warning">
+  组件**必须渲染单个根元素**。`editor` 会以原始形式传入（使用 `markRaw`），这是有意为之。请勿将其包装为响应式对象。
 </Callout>
 
-## Worked example: a search-term highlighter
+## 完整示例：搜索词高亮器
 
-This example uses all three kinds of decoration and incremental mode. It highlights every occurrence of a term (inline), renders a star marker before each match (widget), and outlines every heading (node). The term lives in storage and is changed at runtime via `updateDecorations`.
+本示例使用了全部三种装饰和增量模式。它会高亮搜索词的每次出现（行内装饰）、在每个匹配项前渲染星形标记（小部件装饰），并为每个标题添加轮廓（节点装饰）。搜索词保存在 storage 中，并通过 `updateDecorations` 在运行时更改。
 
-Each match and each heading depends only on its own block, so `update: 'changedRanges'` is safe here.
+每个匹配项和标题都只依赖其所在块，因此这里使用 `update: 'changedRanges'` 是安全的。
 
 ```ts
 import { Decoration, Extension } from '@tiptap/core'
@@ -414,7 +393,7 @@ export const Highlight = Extension.create<HighlightOptions, HighlightStorage>({
                 el.textContent = '★'
                 return el
               },
-              { key: `marker-${matchFrom}`, side: -1 }, // stateless → position key OK
+              { key: `marker-${matchFrom}`, side: -1 }, // 无状态 → 可以使用位置作为 key
             ),
           )
           index = text.indexOf(term, index + term.length)
@@ -424,7 +403,7 @@ export const Highlight = Extension.create<HighlightOptions, HighlightStorage>({
     }
 
     return {
-      update: 'changedRanges', // each match/heading is block-local → safe
+      update: 'changedRanges', // 每个匹配项/标题都只依赖所在块 → 安全
       create: ({ editor, state }) => scan(editor, state, 0, state.doc.content.size),
       createInRange: ({ editor, state, from, to }) => scan(editor, state, from, to),
     }
@@ -432,16 +411,16 @@ export const Highlight = Extension.create<HighlightOptions, HighlightStorage>({
 })
 ```
 
-Change the term by updating storage and rebuilding the decorations:
+通过更新 storage 并重新构建装饰来更改搜索词：
 
 ```ts
 editor.storage.highlight.term = 'editor'
 editor.commands.updateDecorations('highlight')
 ```
 
-## Next steps
+## 后续步骤
 
-- Read the full [Decorations API reference](/editor/api/decorations) for every signature and option.
-- Build a term highlighter with the [Vanilla JS tutorial](/guides/decorations-vanilla), [React tutorial](/guides/decorations-react), or [Vue 3 tutorial](/guides/decorations-vue).
-- Learn how the [`addDecorations` hook](/editor/extensions/custom-extensions/create-new/extension#adddecorations) fits into the extension lifecycle.
-- Compare with [node views](/editor/extensions/custom-extensions/node-views) when you need persisted, editable custom content.
+- 阅读完整的 [Decorations API 参考](/editor/api/decorations)，了解所有签名和选项。
+- 通过 [Vanilla JS 教程](/guides/decorations-vanilla)、[React 教程](/guides/decorations-react)或 [Vue 3 教程](/guides/decorations-vue)构建搜索词高亮器。
+- 了解 [`addDecorations` 钩子](/editor/extensions/custom-extensions/create-new/extension#adddecorations)如何融入扩展生命周期。
+- 当需要持久化、可编辑的自定义内容时，请与[节点视图](/editor/extensions/custom-extensions/node-views)进行比较。
