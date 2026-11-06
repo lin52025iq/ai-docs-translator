@@ -1,6 +1,6 @@
 ---
-title: 'Axes'
-intro: "<code>spec.axes</code> holds a chart's axis titles, ranges, grid and axis lines and ticks, and which category labels are written at what angle. You change it with <code>updateChartAxis</code>."
+title: '坐标轴'
+intro: "<code>spec.axes</code> 包含图表的坐标轴标题、范围、网格线、坐标轴线和刻度，以及类别标签的显示内容和旋转角度。使用 <code>updateChartAxis</code> 可修改这些设置。"
 headerDemo:
   path: '/Extensions/DiagramsAxes'
   isPro: true
@@ -8,75 +8,68 @@ tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Axes | Tiptap Diagrams Docs'
-  description: "spec.axes holds a chart's axis titles, ranges, grid and axis lines and ticks, and which category labels are written at what angle."
+  title: '坐标轴 | Tiptap Diagrams 文档'
+  description: "spec.axes 包含图表的坐标轴标题、范围、网格线、坐标轴线和刻度，以及类别标签的显示内容和旋转角度。"
   category: Diagrams
 ---
 
-## Quick start
+## 快速开始
 
 ```ts
 editor.commands.updateChartAxis({ axis: 'y', changes: { step: 25 } })
 editor.commands.updateChartAxis({ axis: 'x', changes: { labels: { angle: 45 } } })
 ```
 
-## Axis fields
+## 坐标轴字段
 
-`x` is the category axis and `y` the value axis. This stays the same when bars lie on their
-side.
+`x` 是类别轴，`y` 是数值轴。即使条形横向排列，这一对应关系也不变。
 
-| Field        | Axis | Type             | Description                                                                                                                             |
-| ------------ | ---- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `title`      | Both | `string`         | The axis title                                                                                                                          |
-| `min`, `max` | Both | `number`         | The range of the value axis, and of a scatter chart's x axis when it holds numbers. Without them, the data decides                      |
-| `step`       | `y`  | `number`         | The distance between two ticks, and so between two value grid lines. See [Tick step](/diagrams/charts/axes#tick-step)                   |
-| `grid`       | Both | `ChartStroke`    | Grid lines across the plot, at each category (`x`) or value (`y`). See [Grid and axis lines](/diagrams/charts/axes#grid-and-axis-lines) |
-| `line`       | Both | `ChartStroke`    | The axis line itself                                                                                                                    |
-| `labels`     | `x`  | `CategoryLabels` | Which category labels are written and how far they are turned. See [Category labels](/diagrams/charts/axes#category-labels)             |
+| 字段         | 坐标轴 | 类型             | 说明                                                                                                                                   |
+| ------------ | ------ | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `title`      | 两者   | `string`         | 坐标轴标题                                                                                                                             |
+| `min`, `max` | 两者   | `number`         | 数值轴的范围；对于 x 轴包含数值的散点图，也用于设置其 x 轴范围。未设置时由数据决定                                                     |
+| `step`       | `y`    | `number`         | 两个刻度之间的间隔，也就是两条数值网格线之间的间隔。参见[刻度间隔](/diagrams/charts/axes#tick-step)                                     |
+| `grid`       | 两者   | `ChartStroke`    | 绘图区中的网格线，分别对应每个类别（`x`）或数值（`y`）。参见[网格线和坐标轴线](/diagrams/charts/axes#grid-and-axis-lines)               |
+| `line`       | 两者   | `ChartStroke`    | 坐标轴线本身                                                                                                                           |
+| `labels`     | `x`    | `CategoryLabels` | 指定显示哪些类别标签以及标签的旋转角度。参见[类别标签](/diagrams/charts/axes#category-labels)                                          |
 
-## Grid and axis lines
+## 网格线和坐标轴线
 
-`grid` and `line` are each a `ChartStroke`, an object that says how one line is drawn:
+`grid` 和 `line` 都是 `ChartStroke`，用于指定线条的绘制方式：
 
-| Field   | Type                                        | Description                                                                                                  |
-| ------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `line`  | `'none' \| 'solid' \| 'dashed' \| 'dotted'` | How the line is drawn. `'none'` leaves it out                                                                |
-| `width` | `number`                                    | 0.5 to 4 CSS pixels. Default 1                                                                               |
-| `color` | `string`                                    | A CSS color. Without it, the theme's grid or axis color                                                      |
-| `every` | `number`                                    | Category grid only, see [Grid lines at some categories](/diagrams/charts/axes#grid-lines-at-some-categories) |
-| `at`    | `number[]`                                  | Category grid only, see [Grid lines at some categories](/diagrams/charts/axes#grid-lines-at-some-categories) |
+| 字段    | 类型                                          | 说明                                                                                                  |
+| ------- | --------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `line`  | `'none' \| 'solid' \| 'dashed' \| 'dotted'` | 线条的绘制方式。`'none'` 表示不绘制                                                                    |
+| `width` | `number`                                      | 0.5 到 4 CSS 像素。默认值为 1                                                                           |
+| `color` | `string`                                      | CSS 颜色。未设置时，使用主题中的网格线颜色或坐标轴颜色                                                 |
+| `every` | `number`                                      | 仅适用于类别网格线，参见[在部分类别处绘制网格线](/diagrams/charts/axes#grid-lines-at-some-categories)   |
+| `at`    | `number[]`                                    | 仅适用于类别网格线，参见[在部分类别处绘制网格线](/diagrams/charts/axes#grid-lines-at-some-categories)   |
 
-Without `grid` and `line`, a chart has:
+未设置 `grid` 和 `line` 时，图表默认具有：
 
-- grid lines at its values,
-- no grid lines at its categories, except when the categories are numbers on a scatter chart,
-- a category axis line,
-- no value axis line.
+- 数值处的网格线；
+- 类别处没有网格线，但散点图的类别为数值时除外；
+- 类别轴线；
+- 没有数值轴线。
 
-### Where a grid line is left out
+### 不绘制网格线的情况
 
-Where a grid line would lie on top of an axis line, only the axis line is drawn. So the value
-grid has no line where the category axis runs, and the category grid has no line along the value
-axis. If you hide the category axis with `x.line: { line: 'none' }`, the bottom of the chart has
-no line at all.
+如果网格线与坐标轴线重合，则只绘制坐标轴线。因此，数值网格在类别轴所在位置不绘制线条，类别网格也不会沿数值轴绘制线条。如果使用 `x.line: { line: 'none' }` 隐藏类别轴，图表底部将完全没有线条。
 
-When values go below 0, the category axis runs through the plot at 0. The value grid then keeps
-its line at the lowest value.
+当数值低于 0 时，类别轴会在 0 处穿过绘图区。此时，数值网格线仍会绘制在最低数值处。
 
-### Grid lines at some categories
+### 在部分类别处绘制网格线
 
-The category grid (`x.grid`) also takes `every` and `at`:
+类别网格（`x.grid`）还接受 `every` 和 `at`：
 
-| Field   | Description                                                                             |
-| ------- | --------------------------------------------------------------------------------------- |
-| `every` | `every: 3` draws a line at every third category, starting with the first                |
-| `at`    | `at: [1, 4, 5]` draws lines only at those categories, counted from 0. Wins over `every` |
+| 字段    | 说明                                                                                 |
+| ------- | ------------------------------------------------------------------------------------ |
+| `every` | `every: 3` 从第一个类别开始，每隔三个类别绘制一条线                                   |
+| `at`    | `at: [1, 4, 5]` 仅在指定类别处绘制线条，类别从 0 开始计数。此设置优先于 `every`       |
 
-On a bar chart, the category grid lines run along the edges of the bars, so there is one line
-more than there are categories. For `every` and `at`, the line at the right edge of the last bar
-counts as the next category. With 4 bars, it is number 4.
+在条形图中，类别网格线沿条形边缘绘制，因此网格线的数量比类别多一条。对于 `every` 和 `at`，最后一个条形右侧边缘的线计作下一个类别。若有 4 个条形，该线的编号为 4。
 
-The value grid takes neither field. A scatter chart with numbers on its x axis takes neither.
+数值网格不接受这两个字段。x 轴为数值的散点图也不接受这两个字段。
 
 ```ts
 editor.commands.updateChartAxis({
@@ -87,72 +80,65 @@ editor.commands.updateChartAxis({ axis: 'x', changes: { grid: { line: 'solid', w
 editor.commands.updateChartAxis({ axis: 'x', changes: { grid: { line: 'solid', every: 3 } } })
 ```
 
-## Category labels
+## 类别标签
 
-`x.labels` is a `CategoryLabels` object. It leaves out or turns category labels, for long labels
-on a narrow chart. `every` and `at` pick categories as they do for
-[grid lines](/diagrams/charts/axes#grid-lines-at-some-categories).
+`x.labels` 是一个 `CategoryLabels` 对象，可隐藏或旋转类别标签，适用于窄图表上的长标签。`every` 和 `at` 的类别选择方式与[网格线](/diagrams/charts/axes#grid-lines-at-some-categories)相同。
 
-| Field   | Type       | Description                                                       |
-| ------- | ---------- | ----------------------------------------------------------------- |
-| `every` | `number`   | `{ every: 2 }` writes every second label, starting with the first |
-| `at`    | `number[]` | `{ at: [0, 5, 11] }` writes only those, counted from 0            |
-| `angle` | `number`   | Turns the labels counterclockwise, from -90 to 90 degrees         |
+| 字段    | 类型       | 说明                                                      |
+| ------- | ---------- | --------------------------------------------------------- |
+| `every` | `number`   | `{ every: 2 }` 从第一个标签开始，每隔一个标签显示一个      |
+| `at`    | `number[]` | `{ at: [0, 5, 11] }` 仅显示指定标签，标签从 0 开始计数     |
+| `angle` | `number`   | 将标签逆时针旋转，角度范围为 -90 到 90 度                 |
 
-- Only labels are left out. The categories, their bars and their points stay.
-- At `angle: 45`, a label rises to the right and ends at its category, so long names fit side by
-  side.
-- Without `every` or `at`, labels that would overlap are left out.
+- 只会隐藏标签，类别、对应的条形和数据点仍会保留。
+- 设置 `angle: 45` 时，标签向右上方倾斜，末端位于对应类别处，因此较长的名称可以并排显示。
+- 未设置 `every` 或 `at` 时，可能重叠的标签会被隐藏。
 
 ```ts
 editor.commands.updateChartAxis({ axis: 'x', changes: { labels: { every: 3 } } })
 ```
 
-## Tick step
+## 刻度间隔
 
-`y.step: 25` puts a tick, a label and a value grid line at 0, 25, 50 and so on.
+`y.step: 25` 会在 0、25、50 等位置设置刻度、标签和数值网格线。
 
-- Both ends of the axis round out to whole steps, unless `min` or `max` fixes them.
-- A step that would give more than 100 ticks is ignored.
-- On a combo chart with a second axis, the step applies to the left one.
+- 坐标轴两端会调整到完整的间隔值，除非通过 `min` 或 `max` 固定端点。
+- 如果某个间隔会产生超过 100 个刻度，则会被忽略。
+- 带有第二坐标轴的组合图中，该间隔适用于左侧坐标轴。
 
-## Which charts draw axes
+## 哪些图表会绘制坐标轴
 
-Line, bar, area, scatter and combo charts take every field. A radar chart takes two: `y.grid`
-sets the rings and `x.line` the spokes. Both are drawn by default.
+折线图、条形图、面积图、散点图和组合图支持所有字段。雷达图支持两个字段：`y.grid` 设置环线，`x.line` 设置辐射线。默认情况下，两者都会绘制。
 
-The [ECharts](/diagrams/renderers/echarts#chart-types) and
-[D3](/diagrams/renderers/d3#chart-types) Renderers draw every field. The Mermaid Renderer
-declines a chart that sets them, see its [limits](/diagrams/renderers/mermaid#limits). A
-Renderer of your own can draw the axes as the built-in ones do, see
-[What to honor in the spec](/diagrams/renderers/custom#what-to-honor-in-the-spec).
+[ECharts](/diagrams/renderers/echarts#chart-types) 和 [D3](/diagrams/renderers/d3#chart-types) 渲染器会绘制所有字段。Mermaid 渲染器不支持设置了这些字段的图表，详见其[限制](/diagrams/renderers/mermaid#limits)。自定义渲染器也可以像内置渲染器一样绘制坐标轴，参见[规范中需要遵循的内容](/diagrams/renderers/custom#what-to-honor-in-the-spec)。
 
-### In a Word document
+### 在 Word 文档中
 
-Word draws what the spec sets, and `every`, but not `at`.
+Word 会根据规范绘制相应内容，也支持 `every`，但不支持 `at`。
 
-- A color is used when it is a `#rrggbb` value. Otherwise Word uses the theme's color.
-- A category axis line set to `'none'` keeps the grid line along it.
-- `step` becomes the major unit of the value axis.
-- `labels.every` becomes the label skip.
-- `labels.angle` becomes the rotation of the labels.
-- `labels.at` has no equivalent in Word, so Word writes every label.
+- 当颜色值为 `#rrggbb` 格式时，Word 会使用该颜色；否则使用主题颜色。
+- 类别轴线设置为 `'none'` 时，沿该轴的网格线仍会保留。
+- `step` 会成为数值轴的主要单位。
+- `labels.every` 会转换为标签间隔设置。
+- `labels.angle` 会转换为标签旋转角度。
+- Word 中没有与 `labels.at` 对应的设置，因此会显示每个标签。
 
-## Commands
+## 命令
 
 ### updateChartAxis
 
-Changes fields of `spec.axes.x` or `spec.axes.y` and keeps the rest. A field set to `undefined`
-is removed.
+修改 `spec.axes.x` 或 `spec.axes.y` 中的字段，并保留其他字段。将字段设为 `undefined` 会移除该字段。
 
 ```ts
 editor.commands.updateChartAxis({ axis: 'y', changes: { title: 'EUR', min: 0 } })
 ```
 
-| Option    | Type                 | Description                                                                |
-| --------- | -------------------- | -------------------------------------------------------------------------- |
-| `axis`    | `'x' \| 'y'`         | The category axis (`x`) or the value axis (`y`)                            |
-| `changes` | `Partial<ChartAxis>` | The fields to change, see [Axis fields](/diagrams/charts/axes#axis-fields) |
-| `pos`     | `number`             | The chart's position. Defaults to the selected chart                       |
+| 选项      | 类型                 | 说明                                                                     |
+| --------- | -------------------- | ------------------------------------------------------------------------ |
+| `axis`    | `'x' \| 'y'`         | 类别轴（`x`）或数值轴（`y`）                                             |
+| `changes` | `Partial<ChartAxis>` | 要修改的字段，参见[坐标轴字段](/diagrams/charts/axes#axis-fields)        |
+| `pos`     | `number`             | 图表的位置。默认为当前选中的图表                                         |
 
-Returns `false` when there is no chart at `pos`, or no chart is selected.
+如果 `pos` 处没有图表，或没有选中图表，则返回 `false`。
+
+</translated_document
