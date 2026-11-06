@@ -1,0 +1,41 @@
+---
+title: 阅读大型文档
+meta:
+  title: 阅读大型文档 | Tiptap Content AI
+  description: 了解 AI 智能体如何在 Tiptap 中读取文档。
+  category: Content AI
+---
+
+AI 智能体会将文档拆分成多个块，以便高效处理任意大小的文档。这种分块机制至关重要，原因如下：
+
+1. 大型文档可能超出大语言模型（LLM）的上下文窗口
+2. 在多轮对话中，编辑文档块的效率更高
+3. 这样 AI 智能体就能专注于文档的特定部分
+
+## 分块机制
+
+默认情况下，文档会被拆分为每块约 32000 个字符，同时保留 HTML 结构。AI 智能体每次读取一个文档块，并可根据需要切换到下一个或上一个块。
+
+通过设置 `chunkSize` 选项，可以自定义每个文档块的字符数：
+
+```tsx
+const provider = new AiAgentProvider({
+  chunkSize: 2000, // Define a smaller chunk size
+  // ...other options
+})
+```
+
+## 自定义分块
+
+你可以通过提供自定义的 `chunkHtml` 函数来定制文档的分块方式：
+
+```tsx
+const provider = new AiAgentProvider({
+  // ...other options
+  chunkHtml: ({ html, chunkSize }) => {
+    // Custom logic to split HTML into chunks
+    // Must return an array of HTML strings
+    return customSplitFunction(html, chunkSize)
+  },
+})
+```
