@@ -1,22 +1,22 @@
 ---
-title: Thread authentication
+title: 评论线程身份验证
 meta:
-  title: Thread authentication | Tiptap Comments Docs
-  description: Enforce ownership rules for threads and comments, preventing users from editing or deleting each other's discussions.
-  category: Comments
+  title: 评论线程身份验证 | Tiptap 评论文档
+  description: 强制执行评论线程和评论的所有权规则，防止用户编辑或删除彼此的讨论。
+  category: 评论
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-The thread authenticator enforces ownership rules for threads and comments in collaborative documents. When enabled, users can only edit and delete their own threads and comments, while thread creation automatically assigns the authenticated user's ID.
+评论线程身份验证器会在协作文档中强制执行评论线程和评论的所有权规则。启用后，用户只能编辑和删除自己的评论线程和评论；创建评论线程时，系统会自动分配已通过身份验证的用户 ID。
 
-<Callout title="Requires JWT authentication" variant="hint">
-  Thread authentication relies on [JWT authentication](/collaboration/getting-started/authenticate) to identify users. Make sure your JWTs include the `sub` claim with a unique user identifier.
+<Callout title="需要 JWT 身份验证" variant="hint">
+  评论线程身份验证依赖 [JWT 身份验证](/collaboration/getting-started/authenticate) 来识别用户。请确保 JWT 中包含 `sub` 声明，且其值为唯一的用户标识符。
 </Callout>
 
-## Enable thread authentication
+## 启用评论线程身份验证
 
-Enable the thread authenticator by setting the `thread_authenticator` setting to `1` via the [Settings API](/collaboration/operations/configure):
+通过 [Settings API](/collaboration/operations/configure) 将 `thread_authenticator` 设置为 `1`，即可启用评论线程身份验证器：
 
 ```bash
 curl --location --request PUT 'https://YOUR_APP_ID.collab.tiptap.cloud/api/admin/settings/thread_authenticator' \
@@ -25,41 +25,41 @@ curl --location --request PUT 'https://YOUR_APP_ID.collab.tiptap.cloud/api/admin
 -d '1'
 ```
 
-You can also set the `COLLAB_THREAD_AUTHENTICATOR` environment variable to `1` on self-hosted instances.
+在自托管实例上，也可以将环境变量 `COLLAB_THREAD_AUTHENTICATOR` 设置为 `1`。
 
-## How it works
+## 工作原理
 
-When enabled, the thread authenticator intercepts all document updates that modify threads or comments and validates them against the authenticated user's identity.
+启用后，评论线程身份验证器会拦截所有修改评论线程或评论的文档更新，并根据已通过身份验证的用户身份对其进行验证。
 
-### Automatic user ID assignment
+### 自动分配用户 ID
 
-When a user creates a thread or comment, the authenticator automatically assigns their user ID (from the JWT `sub` claim) to the thread and comment. This happens transparently and does not require any client-side changes.
+用户创建评论线程或评论时，身份验证器会自动将其用户 ID（来自 JWT 的 `sub` 声明）分配给该评论线程和评论。此过程会自动完成，无需修改客户端。
 
-### Ownership enforcement
+### 所有权强制规则
 
-The following rules are enforced for all thread and comment operations:
+以下规则适用于所有评论线程和评论操作：
 
-| Operation | Rule |
+| 操作 | 规则 |
 |-----------|------|
-| **Create thread** | Allowed. The authenticated user's ID is assigned automatically. |
-| **Edit thread** | Only the thread owner can edit. |
-| **Delete thread** | Only the thread owner can delete. |
-| **Resolve/unresolve thread** | Owners can always resolve. Non-owners depend on access level (see below). |
-| **Create comment** | Allowed. The authenticated user's ID is assigned automatically. |
-| **Edit comment** | Only the comment owner can edit. |
-| **Delete comment** | Only the comment owner can delete. |
+| **创建评论线程** | 允许。系统会自动分配已通过身份验证的用户 ID。 |
+| **编辑评论线程** | 只有评论线程所有者可以编辑。 |
+| **删除评论线程** | 只有评论线程所有者可以删除。 |
+| **解决/取消解决评论线程** | 所有者始终可以解决评论线程。非所有者则取决于其访问级别（见下文）。 |
+| **创建评论** | 允许。系统会自动分配已通过身份验证的用户 ID。 |
+| **编辑评论** | 只有评论所有者可以编辑。 |
+| **删除评论** | 只有评论所有者可以删除。 |
 
-If a user attempts an unauthorized action, the server rejects the update and returns an unauthorized error.
+如果用户尝试执行未授权的操作，服务器会拒绝该更新并返回未授权错误。
 
-<Callout title="Threads without a user ID" variant="default">
-  Threads and comments that were created before enabling the thread authenticator may not have a user ID assigned. These can be edited or deleted by anyone. Once a user modifies such a thread, their user ID is assigned to it.
+<Callout title="没有用户 ID 的评论线程" variant="default">
+  在启用评论线程身份验证器之前创建的评论线程和评论可能没有分配用户 ID，因此任何人都可以编辑或删除它们。用户修改此类评论线程后，系统会为其分配该用户的 ID。
 </Callout>
 
-## Resolving foreign threads
+## 解决他人的评论线程
 
-By default, all users with write or comment access can resolve threads they don't own. This is useful for workflows where reviewers or editors need to mark discussions as resolved.
+默认情况下，拥有写入或评论权限的所有用户都可以解决自己不拥有的评论线程。这适用于需要审核者或编辑者将讨论标记为已解决的工作流程。
 
-To restrict comment-only users from resolving other users' threads, set the `commentonly_disallow_resolve_foreign_threads` setting to `1`:
+若要禁止仅有评论权限的用户解决他人的评论线程，请将 `commentonly_disallow_resolve_foreign_threads` 设置为 `1`：
 
 ```bash
 curl --location --request PUT 'https://YOUR_APP_ID.collab.tiptap.cloud/api/admin/settings/commentonly_disallow_resolve_foreign_threads' \
@@ -68,20 +68,20 @@ curl --location --request PUT 'https://YOUR_APP_ID.collab.tiptap.cloud/api/admin
 -d '1'
 ```
 
-The resulting permission matrix for resolving foreign threads:
+解决他人评论线程的权限矩阵如下：
 
-| Access level | Default behavior | With `commentonly_disallow_resolve_foreign_threads` set to `1` |
+| 访问级别 | 默认行为 | 将 `commentonly_disallow_resolve_foreign_threads` 设置为 `1` 时 |
 |---|---|---|
-| Write access | Can resolve | Can resolve |
-| Comment-only access | Can resolve | Cannot resolve |
+| 写入权限 | 可以解决 | 可以解决 |
+| 仅评论权限 | 可以解决 | 不能解决 |
 
-Thread owners can always resolve their own threads regardless of this setting.
+无论此设置如何，评论线程所有者始终可以解决自己的评论线程。
 
-## Configuration reference
+## 配置参考
 
-| Setting | Environment variable | Default | Description |
+| 设置 | 环境变量 | 默认值 | 说明 |
 |---|---|---|---|
-| `thread_authenticator` | `COLLAB_THREAD_AUTHENTICATOR` | `0` (disabled) | Set to `1` to enable thread authentication. |
-| `commentonly_disallow_resolve_foreign_threads` | `COLLAB_COMMENTONLY_DISALLOW_RESOLVE_FOREIGN_THREADS` | `0` (allowed) | Set to `1` to prevent comment-only users from resolving threads they don't own. |
+| `thread_authenticator` | `COLLAB_THREAD_AUTHENTICATOR` | `0`（已禁用） | 设置为 `1` 以启用评论线程身份验证。 |
+| `commentonly_disallow_resolve_foreign_threads` | `COLLAB_COMMENTONLY_DISALLOW_RESOLVE_FOREIGN_THREADS` | `0`（允许） | 设置为 `1`，以禁止仅有评论权限的用户解决自己不拥有的评论线程。 |
 
-Both settings can be configured via the [Settings API](/collaboration/operations/configure) or environment variables.
+这两项设置均可通过 [Settings API](/collaboration/operations/configure) 或环境变量进行配置。
