@@ -1,42 +1,42 @@
 ---
-title: Input Rules
+title: 输入规则
 meta:
-  title: Input Rules in Tiptap | Tiptap Editor Docs
-  description: Create input rules to automatically transform text as you type in Tiptap. Learn how to use and create input rules in the docs!
-  category: Editor
+  title: Tiptap 中的输入规则 | Tiptap 编辑器文档
+  description: 在 Tiptap 中创建输入规则，在输入时自动转换文本。阅读文档，了解如何使用和创建输入规则！
+  category: 编辑器
 ---
 
-Input rules are a powerful feature in Tiptap that allow you to automatically transform text as you type. They can be used to create shortcuts for formatting, inserting content, or triggering commands based on specific patterns in the text.
+输入规则是 Tiptap 中的一项强大功能，可在你输入时自动转换文本。你可以用它创建格式设置快捷方式、插入内容，或根据文本中的特定模式触发命令。
 
-## What are input rules?
+## 什么是输入规则？
 
-Input rules are pattern-based triggers that watch for specific text input and automatically transform it into something else. For example, typing `**bold**` can automatically turn the text into bold formatting, or typing `1.` at the start of a line can create an ordered list. Input rules are especially useful for implementing Markdown-like shortcuts and improving the user experience.
+输入规则是一种基于模式的触发器，会监视特定文本输入，并自动将其转换为其他内容。例如，输入 `**粗体**` 可以自动将文本设为粗体格式，或者在行首输入 `1.` 可以创建有序列表。输入规则特别适合实现类似 Markdown 的快捷方式，并改善用户体验。
 
-## How do input rules work in Tiptap?
+## Tiptap 中的输入规则如何工作？
 
-Tiptap uses input rules under the hood to provide many of its default shortcuts (like lists, blockquotes, and marks). Input rules are defined as regular expressions that match user input. When the pattern is detected, the rule executes a transformation—such as applying a mark, inserting a node, or running a command.
+Tiptap 在底层使用输入规则来提供许多默认快捷方式（例如列表、引用块和标记）。输入规则以正则表达式的形式定义，用于匹配用户输入。检测到匹配模式后，规则便会执行转换，例如应用标记、插入节点或运行命令。
 
-Input rules are typically registered inside extensions (nodes, marks, or generic extensions) using the `addInputRules()` method. Tiptap provides helper functions like `markInputRule` and `nodeInputRule` to simplify the creation of input rules for marks and nodes.
+输入规则通常通过 `addInputRules()` 方法在扩展（节点、标记或通用扩展）中注册。Tiptap 提供了 `markInputRule` 和 `nodeInputRule` 等辅助函数，以简化标记和节点输入规则的创建。
 
-## Understanding `markInputRule` and `nodeInputRule`
+## 了解 `markInputRule` 和 `nodeInputRule`
 
-Tiptap provides two helper functions to simplify the creation of input rules:
+Tiptap 提供了两个辅助函数，以简化输入规则的创建：
 
-- **`markInputRule`**: For applying marks (like bold, italic, highlight) based on a pattern.
-- **`nodeInputRule`**: For inserting or transforming nodes (like images, figures, custom blocks) based on a pattern.
+- **`markInputRule`**：根据模式应用标记（如粗体、斜体、高亮）。
+- **`nodeInputRule`**：根据模式插入或转换节点（如图像、图表、自定义块）。
 
-Both functions accept a configuration object with at least these properties:
+这两个函数都接受一个配置对象，其中至少包含以下属性：
 
-- `find`: A regular expression to match the input pattern.
-- `type`: The mark or node type to apply/insert.
-- `getAttributes` (optional): A function to extract and return attributes from the regex match.
-- `undoable` (optional): Whether the input rule can be undone. Defaults to true.
+- `find`：用于匹配输入模式的正则表达式。
+- `type`：要应用或插入的标记或节点类型。
+- `getAttributes`（可选）：从正则表达式匹配结果中提取并返回属性的函数。
+- `undoable`（可选）：输入规则是否可以撤销。默认为 `true`。
 
-### Extracting information with `getAttributes`
+### 使用 `getAttributes` 提取信息
 
-The `getAttributes` function allows you to extract data from the matched input and pass it as attributes to the node or mark. This is especially useful for nodes like images or figures, where you want to capture values like `src`, `alt`, or `title` from the user's input.
+`getAttributes` 函数可以从匹配的输入中提取数据，并将其作为属性传递给节点或标记。这对于图像或图表等节点特别有用，因为你可能需要从用户输入中获取 `src`、`alt` 或 `title` 等值。
 
-#### Example: Using `getAttributes` in a node input rule
+#### 示例：在节点输入规则中使用 `getAttributes`
 
 ```ts
 addInputRules() {
@@ -53,9 +53,9 @@ addInputRules() {
 },
 ```
 
-In this example, when a user types something like `![Alt text](image.png "Optional title")`, the input rule extracts the `alt`, `src`, and `title` from the match and passes them as attributes to the node.
+在此示例中，当用户输入类似 `![替代文本](image.png "可选标题")` 的内容时，输入规则会从匹配结果中提取 `alt`、`src` 和 `title`，并将它们作为属性传递给节点。
 
-#### Example: Using `getAttributes` in a mark input rule
+#### 示例：在标记输入规则中使用 `getAttributes`
 
 ```ts
 addInputRules() {
@@ -72,10 +72,10 @@ addInputRules() {
 },
 ```
 
-### Tips
+### 提示
 
-- The `match` parameter in `getAttributes` is the result of the regular expression, so you can destructure it to get the captured groups.
-- You can use `getAttributes` to set any attributes your node or mark supports, such as `href` for links, `src` for images, or custom data fields.
-- If you don’t need to extract attributes, you can omit `getAttributes`.
+- `getAttributes` 中的 `match` 参数是正则表达式的匹配结果，你可以通过解构获取捕获组。
+- 你可以使用 `getAttributes` 设置节点或标记支持的任意属性，例如链接的 `href`、图像的 `src` 或自定义数据字段。
+- 如果不需要提取属性，可以省略 `getAttributes`。
 
-For more details, see the [ProseMirror input rules docs](https://prosemirror.net/docs/ref/#inputrules.InputRule).
+更多详情请参阅 [ProseMirror 输入规则文档](https://prosemirror.net/docs/ref/#inputrules.InputRule)。
