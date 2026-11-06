@@ -1,17 +1,17 @@
 ---
-title: Redacted content
+title: 隐藏内容
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Redacted content | Tiptap Content Protection Docs
-  description: Customize hidden-content placeholders and their clipboard and export behavior.
-  category: Composable Docs
+  title: 隐藏内容 | Tiptap 内容保护文档
+  description: 自定义隐藏内容占位符及其剪贴板和导出行为。
+  category: 可组合文档
 ---
 
-Redacted content (content with reading disallowed by the policy) is replaced with a placeholder. Use `renderRedaction` to control its appearance and interactions.
+隐藏内容（根据策略禁止读取的内容）会被占位符替代。使用 `renderRedaction` 控制其外观和交互行为。
 
-Redacted Nodes are non-editable, including their type, attributes and content. This is enforced on transactions, not just through `contenteditable="false"`. See [read restrictions](/composable-docs/content-protection/api-reference/policy#read-restrictions).
+隐藏节点不可编辑，包括其类型、属性和内容。此限制通过事务强制执行，而不仅仅依赖 `contenteditable="false"`。请参阅[读取限制](/composable-docs/content-protection/api-reference/policy#read-restrictions)。
 
 ```ts
 ContentProtection.configure({
@@ -25,48 +25,48 @@ ContentProtection.configure({
 })
 ```
 
-## Options
+## 选项
 
-- `renderRedaction` (`RedactionRenderer | null`): Placeholder factory. Default: `null`, using the built-in view.
-- `redactionText` (`string`): Default visible text, accessible name and neutral clipboard output. Default: `'[Hidden content]'`; must be nonempty.
+- `renderRedaction`（`RedactionRenderer | null`）：占位符工厂。默认值：`null`，使用内置视图。
+- `redactionText`（`string`）：默认显示文本、无障碍名称和中性的剪贴板输出。默认值：`'[Hidden content]'`；不能为空。
 
 ## `RedactionRenderer`
 
-Synchronous factory with type `(props: RedactionViewProps) => RedactionView`.
+同步工厂，类型为 `(props: RedactionViewProps) => RedactionView`。
 
-### Parameters (`RedactionViewProps`)
+### 参数（`RedactionViewProps`）
 
-- `key` (`string`): Opaque identity for the mounted region. Not a document ID, position or content lookup key.
-- `inline` (`boolean`): `true` when the view must fit inside a text line.
-- `text` (`string`): Configured `redactionText`.
-- `label` (`string`): Default accessible name; the same value as `redactionText`.
+- `key`（`string`）：已挂载区域的不透明标识。它不是文档 ID、位置或内容查找键。
+- `inline`（`boolean`）：视图必须适合文本行时为 `true`。
+- `text`（`string`）：配置的 `redactionText`。
+- `label`（`string`）：默认无障碍名称；与 `redactionText` 相同。
 
-Props contain no original content, Nodes, positions, lengths, rule IDs or Editor instance.
+Props 不包含原始内容、节点、位置、长度、规则 ID 或 Editor 实例。
 
-### Returns (`RedactionView`)
+### 返回值（`RedactionView`）
 
-- `dom` (`HTMLElement`): A fresh, detached root. Inline views must contain inline-compatible elements.
-- `update?` (`(props: RedactionViewProps) => boolean`): Updates an existing view. Return `true` to reuse it; `false` to recreate it. Without this method, updates recreate the view.
-- `destroy?` (`() => void`): Cleans up listeners, framework roots and portals when the view is removed, replaced or the editor is destroyed.
+- `dom`（`HTMLElement`）：全新且尚未挂载的根元素。行内视图必须包含适用于行内布局的元素。
+- `update?`（`(props: RedactionViewProps) => boolean`）：更新现有视图。返回 `true` 以复用视图；返回 `false` 以重新创建视图。未提供此方法时，更新会重新创建视图。
+- `destroy?`（`() => void`）：视图被移除、替换或编辑器销毁时，清理监听器、框架根节点和门户。
 
-## Rendering behavior
+## 渲染行为
 
-- The extension attaches the root and sets `contenteditable="false"` and `data-content-protection="redacted"`.
-- Set `aria-label` or `aria-labelledby` on a custom root to supply an accessible name. Otherwise the extension uses `redactionText`.
-- The root may contain buttons and other interactive controls. It must not provide editable document content or `contentDOM`.
-- Hidden Nodes do not mount their original NodeViews. Concealing a visible Node destroys its original view.
-- An inline/block context change recreates the placeholder.
-- Invalid views or renderer failures fall back to the default placeholder, never the original content.
-- Framework renderers use their normal mount/update/unmount APIs. Clean up in `destroy`; this is not a `ReactNodeViewRenderer`.
-- Access-request controls belong to the application. Change access with [`setContentProtectionPolicy`](/composable-docs/content-protection/api-reference/commands#setcontentprotectionpolicy).
+- 扩展会挂载根元素，并设置 `contenteditable="false"` 和 `data-content-protection="redacted"`。
+- 在自定义根元素上设置 `aria-label` 或 `aria-labelledby`，以提供无障碍名称。否则，扩展会使用 `redactionText`。
+- 根元素可以包含按钮和其他交互控件，但不得提供可编辑的文档内容或 `contentDOM`。
+- 隐藏节点不会挂载其原始 NodeView。隐藏可见节点时，会销毁其原始视图。
+- 行内/块级上下文发生变化时，会重新创建占位符。
+- 视图无效或渲染器出错时，会回退到默认占位符，绝不会显示原始内容。
+- 框架渲染器使用其常规的挂载、更新和卸载 API。请在 `destroy` 中清理；这不是 `ReactNodeViewRenderer`。
+- 访问请求控件由应用负责。使用 [`setContentProtectionPolicy`](/composable-docs/content-protection/api-reference/commands#setcontentprotectionpolicy) 更改访问权限。
 
-## Clipboard and export
+## 剪贴板和导出
 
-- Copy uses `redactionText` and neutral HTML, not the custom view's DOM, labels or controls.
-- Cut is refused if any selected content cannot be deleted; the clipboard is left unchanged.
-- Dragging checks source and destination permissions and uses readable clipboard output.
-- [`getReadableContent`](/composable-docs/content-protection/api-reference/utilities#getreadablecontent) returns a presentation tree and text. It does not call `renderRedaction`; pass custom `redactionText` explicitly.
-- Partially hidden Slots omit their configuration from clipboard output.
-- `editor.getJSON()` and `editor.getHTML()` still include the complete document. Use the readable projection for outputs that must omit hidden content.
+- 复制时使用 `redactionText` 和中性的 HTML，而不是自定义视图的 DOM、标签或控件。
+- 如果所选内容中有任何部分无法删除，则会拒绝剪切，并保持剪贴板不变。
+- 拖动时会检查源和目标的权限，并使用可读取的剪贴板输出。
+- [`getReadableContent`](/composable-docs/content-protection/api-reference/utilities#getreadablecontent) 返回呈现树和文本。它不会调用 `renderRedaction`；如需自定义 `redactionText`，请显式传入。
+- 部分隐藏的插槽不会将其配置包含在剪贴板输出中。
+- `editor.getJSON()` 和 `editor.getHTML()` 仍会包含完整文档。对于必须省略隐藏内容的输出，请使用可读取内容投影。
 
-Custom rendering changes the view only. The complete source document remains in client memory; application sidebars and exports must apply the same read permissions.
+自定义渲染只会改变视图。完整的源文档仍保留在客户端内存中；应用侧边栏和导出功能必须应用相同的读取权限。
