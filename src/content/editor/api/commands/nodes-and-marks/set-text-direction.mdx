@@ -1,47 +1,47 @@
 ---
-title: setTextDirection command
+title: setTextDirection 命令
 meta:
-  title: setTextDirection command | Tiptap Editor Docs
-  description: Set text direction for nodes with the setTextDirection command. Control LTR, RTL, and auto direction for proper bidirectional text rendering.
+  title: setTextDirection 命令 | Tiptap 编辑器文档
+  description: 使用 setTextDirection 命令设置节点的文本方向。控制从左到右、从右到左和自动方向，以正确呈现双向文本。
   category: Editor
 ---
 
-The `setTextDirection` command sets the text direction for nodes at the current selection or at a specified position. This is useful for controlling the direction of right-to-left (RTL) languages like Arabic and Hebrew, or for bidirectional text content.
+`setTextDirection` 命令可设置当前选区或指定位置处节点的文本方向。此命令适用于控制阿拉伯语和希伯来语等从右到左（RTL）语言的方向，或处理双向文本内容。
 
-See also: [unsetTextDirection](/editor/api/commands/nodes-and-marks/unset-text-direction)
+另请参阅：[unsetTextDirection](/editor/api/commands/nodes-and-marks/unset-text-direction)
 
-## Parameters
+## 参数
 
 ### direction
 
-The text direction to set. Can be `'ltr'` (left-to-right), `'rtl'` (right-to-left), or `'auto'` (automatically detect based on content).
+要设置的文本方向。可以是 `'ltr'`（从左到右）、`'rtl'`（从右到左）或 `'auto'`（根据内容自动检测）。
 
 ### position
 
-Optional. The position or range where the direction should be applied. If not provided, the command will use the current selection.
+可选。要应用方向的位置或范围。如果未提供，命令将使用当前选区。
 
-Can be:
-- A number representing a specific position
-- An object with `from` and `to` properties representing a range
+可以是：
+- 表示特定位置的数字
+- 包含 `from` 和 `to` 属性、表示范围的对象
 
-## Examples
+## 示例
 
 ```js
-// Set RTL direction on current selection
+// 将当前选区设为 RTL 方向
 editor.commands.setTextDirection('rtl')
 
-// Set LTR direction on current selection
+// 将当前选区设为 LTR 方向
 editor.commands.setTextDirection('ltr')
 
-// Set auto direction on current selection
+// 将当前选区设为自动方向
 editor.commands.setTextDirection('auto')
 
-// Set direction on a specific position
+// 为特定位置设置方向
 editor.commands.setTextDirection('rtl', 5)
 
-// Set direction on a specific range
+// 为特定范围设置方向
 editor.commands.setTextDirection('ltr', { from: 0, to: 10 })
 
-// Chain with other commands
+// 与其他命令串联使用
 editor.chain().focus().setTextDirection('rtl').run()
 ```
