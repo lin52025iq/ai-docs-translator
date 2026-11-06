@@ -1,20 +1,20 @@
 ---
-title: Generate images
+title: 生成图像
 tags:
   - type: start
 meta:
-  title: Generate images | Tiptap Basic AI Generation Docs
-  description: Generate images with the OpenAI API and insert them into your Tiptap editor.
-  category: Basic AI Generation
+  title: 生成图像 | Tiptap 基础 AI 生成文档
+  description: 使用 OpenAI API 生成图像，并将其插入 Tiptap 编辑器。
+  category: 基础 AI 生成
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Generate images with AI and insert them in your document.
+使用 AI 生成图像并将其插入文档。
 
-## Install the Image extension
+## 安装 Image 扩展
 
-Add the [`@tiptap/extension-image`](/editor/extensions/nodes/image) extension to your editor.
+将 [`@tiptap/extension-image`](/editor/extensions/nodes/image) 扩展添加到编辑器中。
 
 ```js
 import Image from '@tiptap/extension-image'
@@ -25,14 +25,14 @@ const editor = new Editor({
 })
 ```
 
-## Generate the image on your server
+## 在服务器上生成图像
 
-Call the OpenAI API from a server-side route so your API key is not exposed to the browser. Use an image generation model such as `gpt-image-2`.
+通过服务器端路由调用 OpenAI API，以免 API 密钥暴露给浏览器。使用图像生成模型，例如 `gpt-image-2`。
 
-Then, store the generated image in your application's storage solution, such as S3, R2, Supabase Storage, or your own media service. Return the stored image URL to the client.
+然后，将生成的图像存储到应用使用的存储服务中，例如 S3、R2、Supabase Storage 或自有媒体服务。将存储后的图像 URL 返回给客户端。
 
-<Callout title="Avoid storing images as base64" variant="warning">
-  Storing generated images as base64 in the document is not recommended, especially in collaborative documents. Base64 images significantly increase document size, slow down syncing, and can make collaboration updates more expensive to process.
+<Callout title="避免将图像存储为 base64" variant="warning">
+  不建议将生成的图像以 base64 格式存储在文档中，尤其是在协作文档中。Base64 图像会显著增大文档体积、拖慢同步速度，还会增加处理协作更新的成本。
 </Callout>
 
 ```js
@@ -61,11 +61,11 @@ export async function POST(request) {
 }
 ```
 
-The `uploadImageToStorage` function depends on your application. It should upload the image bytes to your storage provider and return a URL that the editor can render.
+`uploadImageToStorage` 函数的实现取决于你的应用。它应将图像数据上传到存储服务，并返回一个可供编辑器显示的 URL。
 
-## Insert the generated image
+## 插入生成的图像
 
-Call your server route from the client and pass the returned image source to `setImage`.
+从客户端调用服务器路由，并将返回的图像源传递给 `setImage`。
 
 ```js
 async function generateAndInsertImage(prompt) {
@@ -83,7 +83,7 @@ async function generateAndInsertImage(prompt) {
 }
 ```
 
-You can include additional attributes when inserting the image. See a [list of all available options](/editor/extensions/nodes/image).
+插入图像时，你还可以添加其他属性。请参阅[所有可用选项列表](/editor/extensions/nodes/image)。
 
 ```js
 editor.commands.setImage({
