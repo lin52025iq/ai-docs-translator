@@ -1,14 +1,14 @@
 ---
-title: Integrate snapshots
+title: 集成快照
 tags:
   - type: starter
 meta:
-  title: Snapshot extension | Tiptap Editor Docs
-  description: Editor History for manual and automatic versioning of your documents. Learn how to set up and use it here in the Docs!
-  category: Collaboration
+  title: Snapshot 扩展 | Tiptap 编辑器文档
+  description: 用于手动和自动管理文档版本的编辑器历史记录。了解如何在此处设置和使用！
+  category: 协作
 extension:
   name: Snapshot
-  description: 'Document version history for manual and automatic versioning of your documents.'
+  description: '用于手动和自动管理文档版本的文档版本历史记录。'
   type: extension
   icon: FileStack
 ---
@@ -17,33 +17,33 @@ import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 import { Requirements, RequirementItem } from '@/components/Requirements'
 
-Document history records every change to your content so you can roll back mistakes, audit edits, or branch a new draft from any point.
+文档历史记录会记录内容的每一次更改，方便你撤销错误、审查编辑记录，或从任意时间点分支创建新草稿。
 
-This page walks you through installation, configuration, and common tasks for the **History** extension.
+本页将介绍 **History** 扩展的安装、配置和常见操作。
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a free [trial in your Account](https://cloud.tiptap.dev/v2/billing) or subscribe to a [Tiptap plan](https://cloud.tiptap.dev/v2/billing).
+    <RequirementItem label="1. 激活试用或订阅">
+        在[账户中开始免费试用](https://cloud.tiptap.dev/v2/billing)，或订阅 [Tiptap 套餐](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Start Document server">
-        [Add an Environment](https://cloud.tiptap.dev/v2/configuration/document-server) in your dashboard and configure your [Document server](https://cloud.tiptap.dev/v2/configuration/document-server).
+    <RequirementItem label="2. 启动文档服务器">
+        在控制面板中[添加环境](https://cloud.tiptap.dev/v2/configuration/document-server)，并配置[文档服务器](https://cloud.tiptap.dev/v2/configuration/document-server)。
     </RequirementItem>
-    <RequirementItem label="3. Install from private registry">
-        To install this extension, authenticate to Tiptap’s private npm registry by following the [setup guide](/guides/pro-extensions).
+    <RequirementItem label="3. 从私有注册表安装">
+        若要安装此扩展，请按照[设置指南](/guides/pro-extensions)验证身份，以访问 Tiptap 的私有 npm 注册表。
     </RequirementItem>
 </Requirements>
 
-<Callout title="Public Demo" variant="warning">
-    The editor content is shared across all demo visitors.
+<Callout title="公开演示" variant="warning">
+    所有演示访问者共享同一份编辑器内容。
 </Callout>
 
 <CodeDemo isPro path="/Extensions/Snapshot" />
 
 
-## Access the Pro registry
-The Version History extension is published in Tiptap’s private npm registry. Integrate the extension by following the [private registry guide](/guides/pro-extensions). If you already authenticated your Tiptap account you can go straight to [#Install](#install).
+## 访问 Pro 注册表
+Version History 扩展发布在 Tiptap 的私有 npm 注册表中。请按照[私有注册表指南](/guides/pro-extensions)集成此扩展。如果你已验证 Tiptap 账户身份，可以直接跳转到 [#安装](#install)。
 
-## Install
+## 安装
 
 ```bash
 
@@ -51,71 +51,71 @@ npm install @tiptap-pro/extension-snapshot @hocuspocus/transformer
 
 ```
 
-**Note**:
-The `@hocuspocus/transformer` package is required for transforming Y.js binary into Tiptap JSON. It also requires Y.js installed for collaboration.
-If you don't have it installed, run `npm install yjs` in your project. This should happen automatically if you use NPM (as it automatically resolves peer dependencies).
+**注意**：
+`@hocuspocus/transformer` 包用于将 Y.js 二进制数据转换为 Tiptap JSON。协作功能还需要安装 Y.js。
+如果尚未安装，请在项目中运行 `npm install yjs`。如果使用 NPM，这通常会自动完成（因为 NPM 会自动解析对等依赖）。
 
-## Settings
+## 设置
 
-| Setting  | Type                   | Default    |
+| 设置     | 类型                   | 默认值     |
 | -------- | ---------------------- | ---------- |
 | provider | `TiptapCollabProvider` | `null`     |
 | onUpdate | `function`             | `() => {}` |
 
-## Autoversioning
+## 自动版本管理
 
-The autoversioning feature automatically creates new versions of your document at regular intervals. This ensures that you have a comprehensive change history without manual intervention.
+自动版本管理功能会定期为文档创建新版本，无需手动操作，即可保留完整的更改历史记录。
 
-You can enable this feature using the `enableAutoVersioning` command (default: disabled).
+你可以使用 `enableAutoVersioning` 命令启用此功能（默认禁用）。
 
-When you enable autoversioning, Tiptap creates new versions at regular intervals (30 seconds by default, only if the document has changed). This can create many versions, so you may want to increase the interval.
-To customize the interval, you can do the following:
+启用自动版本管理后，Tiptap 会定期创建新版本（默认每 30 秒一次，且仅在文档发生更改时创建）。这可能会产生大量版本，因此你可能需要延长时间间隔。
+若要自定义时间间隔，可以这样操作：
 
 ```typescript
-// Set the interval (in seconds) between autoversions
+// 设置自动创建版本的时间间隔（秒）
 provider.setAutoVersioningInterval(900)
 provider.enableAutoVersioning()
 provider.disableAutoVersioning()
 ```
 
-## Revert to a version
+## 恢复到某个版本
 
-When you revert to a previous version:
+恢复到之前的版本时：
 
-1. If there are unsaved changes, Tiptap automatically creates a version to preserve those changes.
-2. Tiptap creates a new version at the top of the history with the content from the version you select.
-3. All users can continue working from this new version.
+1. 如果存在未保存的更改，Tiptap 会自动创建一个版本来保留这些更改。
+2. Tiptap 会在历史记录顶部创建一个新版本，其中包含所选版本的内容。
+3. 所有用户都可以继续基于这个新版本进行编辑。
 
-Note that reverting only affects the `default` fragment in the ydoc. When you revert the Tiptap content, the comments don't change (unless you specify a different `field` in the TiptapCollabProvider).
+请注意，恢复操作只会影响 ydoc 中的 `default` 片段。恢复 Tiptap 内容时，评论不会更改（除非你在 TiptapCollabProvider 中指定了其他 `field`）。
 
-You can integrate the [compare snapshots](/collaboration/documents/snapshot-compare) extension to highlight differences between versions, ensuring you choose the right version to restore.
+你可以集成 [compare snapshots](/collaboration/documents/snapshot-compare) 扩展来突出显示不同版本之间的差异，确保选择正确的版本进行恢复。
 
-## Storage
+## 存储
 
-| Key               | Type                   | Description                                                                     |
-| ----------------- | ---------------------- | ------------------------------------------------------------------------------- |
-| currentVersion    | `number`               | The current version.                                                            |
-| lastSaved         | `Date`                 | The last saved timestamp                                                        |
-| latestVersion     | `number`               | The latest version.                                                             |
-| provider          | `TiptapCollabProvider` | The Collaboration provider instance                                             |
-| status            | `string`               | The status of the provider - can be `connecting`, `connected` or `disconnected` |
-| synced            | `boolean`              | Is the version history synced with the server                                   |
-| versioningEnabled | `boolean`              | Is versioning enabled                                                           |
-| versions          | `array<Version>`       | The array of versions that are stored in the history. Each version has `version` (number), `date` (number), `name` (optional string), and `meta` (optional object). See [automatic version metadata](#automatic-version-metadata) for details on the `meta` field. |
+| 键                | 类型                   | 说明                                                                     |
+| ----------------- | ---------------------- | ------------------------------------------------------------------------ |
+| currentVersion    | `number`               | 当前版本。                                                               |
+| lastSaved         | `Date`                 | 上次保存的时间戳。                                                       |
+| latestVersion     | `number`               | 最新版本。                                                               |
+| provider          | `TiptapCollabProvider` | Collaboration 提供程序实例。                                            |
+| status            | `string`               | 提供程序的状态，可以是 `connecting`、`connected` 或 `disconnected`。     |
+| synced            | `boolean`              | 版本历史记录是否已与服务器同步。                                         |
+| versioningEnabled | `boolean`              | 是否已启用版本管理。                                                     |
+| versions          | `array<Version>`       | 存储在历史记录中的版本数组。每个版本包含 `version`（数字）、`date`（数字）、`name`（可选字符串）和 `meta`（可选对象）。有关 `meta` 字段的详情，请参阅[自动版本元数据](#automatic-version-metadata)。 |
 
-## Commands
+## 命令
 
-| Command           | Description                                                                       |
-| ----------------- | --------------------------------------------------------------------------------- |
-| saveVersion       | Creates a new version with an optional name, force flag, and metadata             |
-| fetchVersions     | Fetches the list of versions from the server and updates the storage              |
-| enableVersioning  | Enables autoversioning for this document                                          |
-| disableVersioning | Disables autoversioning for this document                                         |
-| revertToVersion   | Revert to a specific version, can create a new revert version with optional title |
+| 命令              | 说明                                                                       |
+| ----------------- | -------------------------------------------------------------------------- |
+| saveVersion       | 创建一个新版本，可选名称、强制标志和元数据                                 |
+| fetchVersions     | 从服务器获取版本列表并更新存储                                             |
+| enableVersioning  | 为此文档启用自动版本管理                                                   |
+| disableVersioning | 为此文档禁用自动版本管理                                                   |
+| revertToVersion   | 恢复到指定版本；可选择创建带有自定义标题的新恢复版本                       |
 
-## Examples
+## 示例
 
-### Basic setup
+### 基本设置
 
 ```js
 const provider = new TiptapCollabProvider({
@@ -133,9 +133,9 @@ const editor = new Editor({
 })
 ```
 
-### Store version updates
+### 保存版本更新
 
-In this example we retrieve the data of a version update and save it into a variable
+本例中，我们获取版本更新的数据并将其保存到变量中。
 
 ```js
 let currentVersion = 0
@@ -164,7 +164,7 @@ const editor = new Editor({
 })
 ```
 
-### Access version data directly from storage
+### 直接从存储中访问版本数据
 
 ```js
 const provider = new TiptapCollabProvider({
@@ -187,15 +187,15 @@ const versions = editor.storage.snapshot.versions
 const autoversioningEnabled = editor.storage.snapshot.versioningEnabled
 ```
 
-### Create a new version manually
+### 手动创建新版本
 
 ```js
 editor.commands.saveVersion('My new custom version')
 ```
 
-### Create a version with metadata
+### 创建带有元数据的版本
 
-You can attach arbitrary metadata to a version. This is useful for storing additional context like the author, tags, or any custom data.
+你可以为版本附加任意元数据。这对于存储作者、标签或自定义数据等额外信息很有用。
 
 ```js
 editor.commands.saveVersion('Release v1.0', false, {
@@ -204,19 +204,19 @@ editor.commands.saveVersion('Release v1.0', false, {
 })
 ```
 
-The `saveVersion` command accepts three parameters:
+`saveVersion` 命令接受三个参数：
 
-| Parameter | Type                        | Default     | Description                                              |
-| --------- | --------------------------- | ----------- | -------------------------------------------------------- |
-| name      | `string`                    | `undefined` | An optional name for the version                         |
-| force     | `boolean`                   | `false`     | Create the version even if no changes were detected      |
-| meta      | `Record<string, unknown>`   | `undefined` | Arbitrary metadata to attach to the version              |
+| 参数  | 类型                      | 默认值      | 说明                             |
+| ----- | ------------------------- | ----------- | -------------------------------- |
+| name  | `string`                  | `undefined` | 版本的可选名称                   |
+| force | `boolean`                 | `false`     | 即使未检测到更改，也创建版本     |
+| meta  | `Record<string, unknown>` | `undefined` | 要附加到版本的任意元数据         |
 
-### Automatic version metadata
+### 自动版本元数据
 
-Every version automatically includes a `__tiptap` key inside the `meta` object. This metadata is added by the server and provides context about how the version was created and who contributed to it.
+每个版本的 `meta` 对象中都会自动包含一个 `__tiptap` 键。此元数据由服务器添加，用于说明版本的创建方式以及参与创建的人员。
 
-A version's `meta` field looks like this:
+版本的 `meta` 字段如下所示：
 
 ```json
 {
@@ -229,102 +229,102 @@ A version's `meta` field looks like this:
 }
 ```
 
-The `__tiptap` object contains the following fields:
+`__tiptap` 对象包含以下字段：
 
-| Field       | Type       | Description                                                                                              |
-| ----------- | ---------- | -------------------------------------------------------------------------------------------------------- |
-| trigger     | `string`   | How the version was created. Possible values: `"websocket"` (via the editor/provider), `"api"` (via the REST API), `"autoVersioning"` (created automatically by the autoversioning feature), or `"revert"` (created when reverting to a previous version). |
-| changesBy   | `string[]` | A list of user identifiers who made changes included in this version. The identifiers are the `user` values set on the `TiptapCollabProvider` of the contributing clients. |
-| triggeredBy | `string`   | The user identifier of the person who triggered the version creation. For `"websocket"` versions this is the authenticated JWT `sub`; for `"api"` versions it is the `user` query parameter supplied by your backend. |
+| 字段        | 类型       | 说明                                                                                                                                                                                                                      |
+| ----------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| trigger     | `string`   | 版本的创建方式。可能的值：`"websocket"`（通过编辑器/提供程序）、`"api"`（通过 REST API）、`"autoVersioning"`（由自动版本管理功能创建）或 `"revert"`（恢复到之前的版本时创建）。 |
+| changesBy   | `string[]` | 对此版本所包含的更改作出贡献的用户标识符列表。这些标识符是参与编辑的客户端在 `TiptapCollabProvider` 上设置的 `user` 值。                                                                                                    |
+| triggeredBy | `string`   | 触发版本创建的用户标识符。对于 `"websocket"` 版本，这是经过身份验证的 JWT `sub`；对于 `"api"` 版本，这是后端提供的 `user` 查询参数。                                                                                      |
 
-Any custom metadata you pass to `saveVersion` or the REST API is stored alongside the `__tiptap` key at the top level of `meta`. The `__tiptap` key is reserved and cannot be overwritten by custom metadata.
+通过 `saveVersion` 或 REST API 传入的任何自定义元数据，都会与 `__tiptap` 键一起存储在 `meta` 顶层。`__tiptap` 键为保留键，不能被自定义元数据覆盖。
 
-<Callout title="Securing editing attribution" variant="warning">
-  By default, `changesBy` reflects the `user` value each client sets on its `TiptapCollabProvider`. This is a client-supplied value and is **not** verified against the authenticated JWT, so a client could record changes under another user's identity.
+<Callout title="确保编辑归属信息可信" variant="warning">
+  默认情况下，`changesBy` 会反映各客户端在其 `TiptapCollabProvider` 上设置的 `user` 值。此值由客户端提供，**不会**与经过身份验证的 JWT 核对，因此客户端可能会将更改记录在其他用户的身份名下。
 
-  To make attribution trustworthy, enable the [`user_mapping_authenticator`](/collaboration/operations/configure) setting. When enabled, the server rejects any attempt to register, overwrite, or delete a user identity that does not match the connection's JWT `sub`. With this setting on, **every client must set `TiptapCollabProvider.user` equal to its JWT `sub`**, otherwise its connection is rejected. This requires JWT authentication to be enabled.
+  若要确保归属信息可信，请启用 [`user_mapping_authenticator`](/collaboration/operations/configure) 设置。启用后，服务器会拒绝任何注册、覆盖或删除与连接 JWT `sub` 不匹配的用户身份的尝试。启用此设置后，**每个客户端都必须将 `TiptapCollabProvider.user` 设置为与其 JWT `sub` 相同的值**，否则连接会被拒绝。此功能要求启用 JWT 身份验证。
 </Callout>
 
-### Fetch versions from the server
+### 从服务器获取版本
 
-You can manually refresh the list of versions from the server using the `fetchVersions` command. This updates the extension storage with the latest version data.
+你可以使用 `fetchVersions` 命令手动刷新服务器上的版本列表。此操作会用最新版本数据更新扩展存储。
 
 ```js
 editor.commands.fetchVersions()
 ```
 
-### Enable autoversioning on document
+### 为文档启用自动版本管理
 
 ```js
 editor.commands.enableVersioning()
 ```
 
-### Disable autoversioning on document
+### 为文档禁用自动版本管理
 
 ```js
 editor.commands.disableVersioning()
 ```
 
-### Revert with version ID
+### 使用版本 ID 恢复
 
 ```js
 editor.commands.revertToVersion(4)
 ```
 
-### Revert with version ID with custom name
+### 使用版本 ID 和自定义名称恢复
 
-In this example, the editor command helps you go back to version 4. When you use this command, it takes you back to how things were in version 4, and it also saves this old version as a new version called 'Revert to version'. This way, you can continue working from version 4, but it's now saved as the latest version.
+在本例中，编辑器命令会帮助你返回到版本 4。使用此命令后，文档会恢复到版本 4 的状态，同时将这个旧版本保存为一个名为“Revert to version”的新版本。这样，你就可以继续基于版本 4 进行编辑，而它现在已保存为最新版本。
 
 ```js
 editor.commands.revertToVersion(4, 'Revert to version')
 ```
 
-### Revert, name, and back up
+### 恢复、命名并备份
 
-In this example, when you revert to version 4 of your document, the editor automatically creates two new versions. The first new version captures and saves your document’s state just before reverting, serving as a backup. The second new version restores the document to version 4, allowing you to continue from here as your new starting point.
+在本例中，将文档恢复到版本 4 时，编辑器会自动创建两个新版本。第一个新版本会捕获并保存恢复前文档的状态，作为备份。第二个新版本会将文档恢复到版本 4，让你可以从此处继续工作，并将其作为新的起点。
 
 ```js
 editor.commands.revertToVersion(4, 'Revert to version', 'Unversioned changes before revert')
 ```
 
-### Using provider-level version methods
+### 使用提供程序级别的版本方法
 
-The `TiptapCollabProvider` exposes methods for working with versions directly, without the Snapshot extension.
+`TiptapCollabProvider` 提供了直接操作版本的方法，无需使用 Snapshot 扩展。
 
-#### List versions
+#### 列出版本
 
-Fetch the full list of versions from the server:
+从服务器获取完整的版本列表：
 
 ```js
 const versions = await provider.listVersions()
 // versions: Array<{ version: number, date: number, name?: string, meta?: Record<string, unknown> }>
 ```
 
-#### Get cached versions
+#### 获取缓存的版本
 
-Get the locally cached list of versions (no server request):
+获取本地缓存的版本列表（不会向服务器发送请求）：
 
 ```js
 const versions = provider.getVersions()
 ```
 
-#### Watch for version changes
+#### 监听版本更改
 
-Subscribe to version list updates using callbacks:
+使用回调订阅版本列表更新：
 
 ```js
 const onVersionsChange = (versions) => {
   console.log('Versions updated:', versions)
 }
 
-// Start watching
+// 开始监听
 provider.watchVersions(onVersionsChange)
 
-// Stop watching
+// 停止监听
 provider.unwatchVersions(onVersionsChange)
 ```
 
-#### Create a version with metadata
+#### 创建带有元数据的版本
 
 ```js
 provider.createVersion('My version', false, {
@@ -333,59 +333,59 @@ provider.createVersion('My version', false, {
 })
 ```
 
-### Implementing version previews for your editor
+### 为编辑器实现版本预览
 
-The examples above directly modify the document and do not provide local-only previews of the version. Therefore, you must create your own frontend solution for this requirement. You can use the `previewVersion` method on the `TiptapCollabProvider` to request a specific version from the server.
+以上示例会直接修改文档，不会提供仅在本地显示的版本预览。因此，你需要自行实现前端方案。你可以使用 `TiptapCollabProvider` 上的 `previewVersion` 方法，从服务器请求指定版本。
 
-Start by attaching a listener to the provider:
+首先，为提供程序添加监听器：
 
 ```js
-// Import the getPreviewContentFromVersionPayload helper function (refer to details below)
+// 导入 getPreviewContentFromVersionPayload 辅助函数（详情见下文）
 import { watchPreviewContent } from '@tiptap-pro/extension-snapshot'
 
-// Configure the provider
+// 配置提供程序
 const provider = new TiptapCollabProvider({ ... })
 
-// Use the watchPreviewContent util function to watch for content changes on the provider
+// 使用 watchPreviewContent 工具函数监听提供程序的内容更改
 const unbindWatchContent = watchPreviewContent(provider, content => {
-  // set your editors content
+  // 设置编辑器内容
   editor.commands.setContent(content)
 })
 ```
 
-If you want to unbind the watcher, you can call the returned `unbindWatchContent` function like this:
+如果要解除监听，可以像这样调用返回的 `unbindWatchContent` 函数：
 
 ```js
 const unbindWatchContent = watchPreviewContent(provider, (content) => {
-  // set your editors content
+  // 设置编辑器内容
   editor.commands.setContent(content)
 })
 
-// unwatch
+// 停止监听
 unbindWatchContent()
 ```
 
-Following this setup, you can trigger `version.preview` requests like so:
+完成上述设置后，可以像这样发送 `version.preview` 请求：
 
 ```js
-// Request a specific version preview from the server
+// 从服务器请求指定版本的预览
 provider.previewVersion(1)
 
-// You can link this to button clicks or other UI elements to trigger the request.
+// 你可以将此操作绑定到按钮点击或其他 UI 元素上，以触发请求。
 ```
 
-To go beyond previews and compare different versions visually, the [compare snapshots](/collaboration/documents/snapshot-compare) extension provides an easy way to see the changes between any two versions within the editor.
+若要进一步可视化比较不同版本，[compare snapshots](/collaboration/documents/snapshot-compare) 扩展可让你轻松查看编辑器中任意两个版本之间的差异。
 
-## Utility functions
+## 实用函数
 
 ### getPreviewContentFromVersionPayload
 
-This function turns the payload from the Collaboration provider into Tiptap JSON content.
+此函数会将 Collaboration 提供程序的载荷转换为 Tiptap JSON 内容。
 
-| Argument | Description                                          |
-| -------- | ---------------------------------------------------- |
-| payload  | The Hocuspocus payload for the version preview event |
-| field    | The field you want to parse. Default: `default`      |
+| 参数    | 说明                                      |
+| ------- | ----------------------------------------- |
+| payload | 版本预览事件的 Hocuspocus 载荷            |
+| field   | 要解析的字段。默认值：`default`           |
 
 ```js
 const myContent = getPreviewContentFromVersionPayload(payload, 'default')
@@ -393,30 +393,30 @@ const myContent = getPreviewContentFromVersionPayload(payload, 'default')
 
 ### watchPreviewContent
 
-This function sets up a watcher on your provider that watches the necessary events to react to version content changes. It also returns a new function that you can use to unwatch those events.
+此函数会在提供程序上设置监听器，监听必要事件，以便在版本内容更改时作出响应。它还会返回一个新函数，供你取消监听这些事件。
 
-| Argument | Description                                                                   |
-| -------- | ----------------------------------------------------------------------------- |
-| provider | The Collaboration provider                                                    |
-| callback | The callback function that is called, the argument is the Tiptap JSON content |
-| field    | The watched field - defaults to `default`                                     |
+| 参数     | 说明                                           |
+| -------- | ---------------------------------------------- |
+| provider | Collaboration 提供程序                         |
+| callback | 被调用的回调函数，参数为 Tiptap JSON 内容       |
+| field    | 要监听的字段，默认值为 `default`               |
 
 ```js
 const unwatchContent = watchPreviewContent(provider, editor.commands.setContent, 'default')
 
-// unwatch the version preview content
+// 停止监听版本预览内容
 unwatchContent()
 ```
 
-## Possible provider payloads
+## 提供程序可能的载荷
 
-Here is a list of payloads that can be sent or received from the provider:
+以下是提供程序可能发送或接收的载荷列表：
 
-### Outgoing
+### 传出
 
 #### `document.revert`
 
-Request a document revert to a given version with optional title settings.
+请求将文档恢复到指定版本，并可选择设置标题。
 
 ```js
 provider.revertToVersion(1, {
@@ -427,7 +427,7 @@ provider.revertToVersion(1, {
 
 #### `version.create`
 
-Creates a new version with an optional name and metadata.
+创建一个新版本，可选择指定名称和元数据。
 
 ```js
 provider.createVersion('My custom version', false, { author: 'Jane Doe' })
@@ -435,17 +435,17 @@ provider.createVersion('My custom version', false, { author: 'Jane Doe' })
 
 #### `versions.list`
 
-Requests the full list of versions from the server.
+请求从服务器获取完整的版本列表。
 
 ```js
 const versions = await provider.listVersions()
 ```
 
-### Incoming
+### 传入
 
 #### `version.created`
 
-This stateless message includes information about newly created versions, including any metadata that was attached.
+这条无状态消息包含新创建版本的信息，包括附加的任何元数据。
 
 ```js
 provider.on('stateless', (data) => {
@@ -453,25 +453,25 @@ provider.on('stateless', (data) => {
 
   if (payload.event === 'version.created') {
     const latestVersion = payload.version
-    const name = payload.name // optional version name
-    const date = payload.date // creation timestamp
-    const meta = payload.meta // optional metadata object
+    const name = payload.name // 可选的版本名称
+    const date = payload.date // 创建时间戳
+    const meta = payload.meta // 可选的元数据对象
   }
 })
 ```
 
 #### `versions.list`
 
-The `listVersions` method returns the full list of versions. Each version includes `version`, `date`, and optional `name` and `meta` fields.
+`listVersions` 方法会返回完整的版本列表。每个版本都包含 `version`、`date`，以及可选的 `name` 和 `meta` 字段。
 
 ```js
 const versions = await provider.listVersions()
-// versions is an array of { version: number, date: number, name?: string, meta?: object }
+// versions 是由 { version: number, date: number, name?: string, meta?: object } 组成的数组
 ```
 
 #### `document.reverted`
 
-This stateless message includes information about a document revert.
+这条无状态消息包含文档恢复操作的信息。
 
 ```js
 provider.on('stateless', (data) => {
