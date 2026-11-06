@@ -1,12 +1,12 @@
 ---
-title: Define rules for the AI Suggestion extension
+title: 为 AI Suggestion 扩展定义规则
 meta:
-  title: Define Rules | Tiptap AI Suggestion
-  description: Configure the AI Suggestion extension with a list of rules to generate suggestions.
-  category: Content AI
+  title: 定义规则 | Tiptap AI Suggestion
+  description: 为 AI Suggestion 扩展配置规则列表，以生成建议。
+  category: 内容 AI
 ---
 
-The AI Suggestion extension must be configured with a list of rules to help the LLM analyze the editor's content and generate suggestions.
+AI Suggestion 扩展必须配置规则列表，以帮助大语言模型分析编辑器中的内容并生成建议。
 
 ```ts
 AiSuggestion.configure({
@@ -22,25 +22,25 @@ AiSuggestion.configure({
 })
 ```
 
-Each suggestion is associated with a rule. If no rules are provided, the AI Suggestion extension will not generate any suggestions.
+每条建议都与一条规则相关联。如果未提供规则，AI Suggestion 扩展将不会生成任何建议。
 
-Each rule must have a unique string id, so that each suggestion can be matched with its corresponding rule.
+每条规则都必须具有唯一的字符串 id，以便将每条建议与相应的规则关联起来。
 
-The prompt property is a string that describes the rule. It is provided to the AI model to help it generate suggestions.
+prompt 属性是用于描述规则的字符串。它会提供给 AI 模型，帮助其生成建议。
 
-Only the id and the prompt are sent to the AI model. The title, color and backgroundColor properties are used to style and display the suggestions in the editor.
+只有 id 和 prompt 会发送给 AI 模型。title、color 和 backgroundColor 属性用于设置建议的样式并在编辑器中显示建议。
 
-## Are Rules Stored in Tiptap Cloud?
+## 规则会存储在 Tiptap Cloud 中吗？
 
-If you use Tiptap Content AI Cloud to generate suggestions for your content, rules are not stored in the cloud. They are sent on each request.
+如果使用 Tiptap Content AI Cloud 为内容生成建议，规则不会存储在云端，而是会随每次请求发送。
 
-Because we do not store your rules, you can change them at any time and enable them based on your own application-specific logic. For example, you can have rules that apply to all documents, document-specific rules, rules that apply to certain users, or even have the user define their own rules.
+由于我们不会存储你的规则，你可以随时更改规则，并根据应用自身的逻辑启用规则。例如，你可以设置适用于所有文档的规则、特定文档的规则、适用于某些用户的规则，甚至允许用户自行定义规则。
 
-If you want rules to persist across sessions, you should store them in your own database.
+如果你希望规则在多个会话之间保留，应将其存储在自己的数据库中。
 
-## How to Change Rules After the Editor Is Loaded
+## 编辑器加载后如何更改规则
 
-You can change the rules at any time without having to reload the editor. Use the `setAiSuggestionRules` command to update the rules.
+无需重新加载编辑器，你可以随时更改规则。使用 `setAiSuggestionRules` 命令更新规则。
 
 ```ts
 const newRules = [
@@ -56,7 +56,7 @@ const newRules = [
 editor.commmands.setAiSuggestionRules(newRules)
 ```
 
-Warning: the `setAiSuggestionRules` command will not automatically reload the suggestions. You need to call the `loadAiSuggestions` command to update the suggestions based on the new rules. A common pattern is to chain the two commands together.
+警告：`setAiSuggestionRules` 命令不会自动重新加载建议。你需要调用 `loadAiSuggestions` 命令，根据新规则更新建议。常见做法是将这两个命令串联起来。
 
 ```ts
 editor.chain().setAiSuggestionRules(newRules).loadAiSuggestions().run()
