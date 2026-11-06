@@ -1,12 +1,12 @@
 ---
-title: List Node
+title: 列表节点
 meta:
-  title: List node | Tiptap UI Components
-  description: Add a list node UI component into your Tiptap Editor. Learn more about it in our docs.
-  category: UI Components
+  title: 列表节点 | Tiptap UI 组件
+  description: 在 Tiptap 编辑器中添加列表节点 UI 组件。请参阅我们的文档，了解更多信息。
+  category: UI 组件
 component:
-  name: List node
-  description: Add a node component that renders lists.
+  name: 列表节点
+  description: 添加一个用于渲染列表的节点组件。
   type: node-component
   isFree: true
   isCloud: false
@@ -19,21 +19,21 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-Styling for various list types in the Tiptap editor, including ordered lists, unordered lists, and task lists.
+为 Tiptap 编辑器中的各种列表类型设置样式，包括有序列表、无序列表和任务列表。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-node/list-node" />
 
-## Installation
+## 安装
 
-You can add the node component via Tiptap CLI
+你可以通过 Tiptap CLI 添加节点组件：
 
 ```bash
 npx @tiptap/cli@latest add list-node
 ```
 
-## Usage
+## 用法
 
-The ListNode provides styling for different types of lists within the editor. To use it, include it in your project and ensure you're using the list extensions from Tiptap.
+ListNode 为编辑器中的不同类型列表提供样式。要使用它，请将其引入项目，并确保使用 Tiptap 的列表扩展。
 
 ```tsx
 import { useEditor, EditorContent } from '@tiptap/react'
@@ -74,18 +74,18 @@ export default function EditorWithLists() {
 }
 ```
 
-## Features
+## 功能
 
-- Consistent styling for ordered lists, unordered lists, and task lists
-- Proper nesting with appropriate indentation
-- Custom checkbox styling for task lists
-- Interactive checkboxes that respond to clicks
-- Visual strikethrough for completed tasks
-- Dark mode support
+- 为有序列表、无序列表和任务列表提供一致的样式
+- 支持正确的嵌套和恰当的缩进
+- 为任务列表提供自定义复选框样式
+- 复选框可交互，点击后会响应
+- 已完成的任务会显示删除线
+- 支持深色模式
 
-## Requirements
+## 要求
 
-Open source feature(s)
+开源功能
 
 - [`@tiptap/extension-bullet-list`](/editor/extensions/nodes/bullet-list)
 - [`@tiptap/extension-ordered-list`](/editor/extensions/nodes/ordered-list)
