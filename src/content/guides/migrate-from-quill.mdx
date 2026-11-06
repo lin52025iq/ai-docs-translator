@@ -1,24 +1,24 @@
 ---
 tags:
   - type: editor
-title: Migrate from Quill to Tiptap
+title: 从 Quill 迁移到 Tiptap
 meta:
-  title: Migrate from Quill | Tiptap Editor Docs
-  description: Learn how to migrate your existing Quill editor to Tiptap. Complete guide covering content migration, setup, and feature mapping.
-  category: Editor
+  title: 从 Quill 迁移 | Tiptap 编辑器文档
+  description: 了解如何将现有的 Quill 编辑器迁移到 Tiptap。本指南涵盖内容迁移、配置和功能映射。
+  category: 编辑器
 ---
 
 import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 
 <EnterpriseCalloutAuto variant="migration" renderMode="sidebar" disableWaitlist/>
 
-Tiptap is a popular Quill alternative and migrating from Quill to Tiptap is straightforward. This guide will help you transition smoothly from Quill's Delta format to Tiptap's extension system.
+Tiptap 是一款广受欢迎的 Quill 替代方案，从 Quill 迁移到 Tiptap 非常简单。本指南将帮助你顺利从 Quill 的 Delta 格式过渡到 Tiptap 的扩展系统。
 
-## Content migration
+## 内容迁移
 
-### HTML content compatibility
+### HTML 内容兼容性
 
-Quill uses the Delta format for content storage, which needs to be converted to HTML for Tiptap:
+Quill 使用 Delta 格式存储内容，迁移到 Tiptap 时需要先将其转换为 HTML：
 
 ```ts
 // Convert Quill Delta to HTML first
@@ -33,7 +33,7 @@ const editor = new Editor({
 })
 ```
 
-If you already have HTML output from Quill, you can use it directly:
+如果你已经有 Quill 输出的 HTML，可以直接使用：
 
 ```ts
 // Your existing Quill HTML content
@@ -46,23 +46,23 @@ const editor = new Editor({
 })
 ```
 
-While HTML works perfectly, we recommend converting it to Tiptap's JSON format for better performance and readability. For batch conversion of existing content, use the [HTML utility](/editor/api/utilities/html) to convert HTML to JSON programmatically.
+虽然 HTML 完全可用，但我们建议将其转换为 Tiptap 的 JSON 格式，以提升性能和可读性。若要批量转换现有内容，可以使用 [HTML 工具](/editor/api/utilities/html)以编程方式将 HTML 转换为 JSON。
 
-## Editor setup
+## 编辑器配置
 
-### Installation
+### 安装
 
-First, install Tiptap and its dependencies:
+首先，安装 Tiptap 及其依赖项：
 
 ```bash
 npm install @tiptap/core @tiptap/starter-kit
 ```
 
-Tiptap supports all modern frontend UI frameworks like React and Vue. Follow the framework-specific installation instructions in our [installation guides](/editor/getting-started/install).
+Tiptap 支持 React 和 Vue 等所有现代前端 UI 框架。请参阅我们的[安装指南](/editor/getting-started/install)，按照相应框架的说明进行安装。
 
-### Basic editor setup
+### 基本编辑器配置
 
-Replace your Quill initialization with Tiptap:
+将 Quill 初始化代码替换为 Tiptap：
 
 ```ts
 // Quill (before)
@@ -89,35 +89,35 @@ const editor = new Editor({
 })
 ```
 
-## Extensions
+## 扩展
 
-### Understanding Tiptap's extension system
+### 了解 Tiptap 的扩展系统
 
-Tiptap uses a modular extension system that resembles Quill's module system. Each feature is an independent extension that can be configured and customized.
+Tiptap 使用模块化的扩展系统，与 Quill 的模块系统类似。每项功能都是独立的扩展，可以进行配置和自定义。
 
-The [StarterKit](/editor/extensions/functionality/starterkit) is a bundle of all the basic extensions, and you can add or remove other extensions as needed.
+[StarterKit](/editor/extensions/functionality/starterkit) 集合了所有基础扩展，你可以根据需要添加或移除其他扩展。
 
-Explore all available extensions in our [extensions guide](/editor/extensions/overview), or [create your own](/editor/extensions/custom-extensions) to support custom functionality and HTML elements.
+在我们的[扩展指南](/editor/extensions/overview)中查看所有可用扩展；也可以[创建自己的扩展](/editor/extensions/custom-extensions)，以支持自定义功能和 HTML 元素。
 
-### Common Quill module equivalents
+### 常见 Quill 模块对应项
 
-| Quill Feature         | Tiptap Extension                        | Notes                  |
+| Quill 功能 | Tiptap 扩展 | 说明 |
 | --------------------- | --------------------------------------- | ---------------------- |
-| Bold                  | `Bold`                                  | Included in StarterKit |
-| Italic                | `Italic`                                | Included in StarterKit |
-| Underline             | `Underline`                             | Included in StarterKit |
-| Link                  | `Link`                                  | Included in StarterKit |
-| Image                 | `Image`                                 | Available separately   |
-| List (bullet/ordered) | `BulletList`, `OrderedList`, `ListItem` | Included in StarterKit |
-| Header                | `Heading`                               | Included in StarterKit |
-| Blockquote            | `Blockquote`                            | Included in StarterKit |
-| Code Block            | `CodeBlock`                             | Included in StarterKit |
-| Strike                | `Strike`                                | Included in StarterKit |
-| Color                 | `TextStyle`, `Color`                    | Available separately   |
-| Background            | `TextStyle`, `Highlight`                | Available separately   |
-| Align                 | `TextAlign`                             | Available separately   |
+| 粗体 | `Bold` | 包含在 StarterKit 中 |
+| 斜体 | `Italic` | 包含在 StarterKit 中 |
+| 下划线 | `Underline` | 包含在 StarterKit 中 |
+| 链接 | `Link` | 包含在 StarterKit 中 |
+| 图片 | `Image` | 可单独使用 |
+| 列表（项目符号/有序） | `BulletList`、`OrderedList`、`ListItem` | 包含在 StarterKit 中 |
+| 标题 | `Heading` | 包含在 StarterKit 中 |
+| 引用块 | `Blockquote` | 包含在 StarterKit 中 |
+| 代码块 | `CodeBlock` | 包含在 StarterKit 中 |
+| 删除线 | `Strike` | 包含在 StarterKit 中 |
+| 颜色 | `TextStyle`、`Color` | 可单独使用 |
+| 背景 | `TextStyle`、`Highlight` | 可单独使用 |
+| 对齐 | `TextAlign` | 可单独使用 |
 
-### Extension configuration
+### 配置扩展
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -145,15 +145,15 @@ const editor = new Editor({
 })
 ```
 
-### Custom extensions
+### 自定义扩展
 
-For Quill custom modules or blots, create custom Tiptap extensions. See our [custom extensions guide](/editor/extensions/custom-extensions) for detailed instructions.
+对于 Quill 的自定义模块或 blot，可以创建自定义 Tiptap 扩展。详细说明请参阅我们的[自定义扩展指南](/editor/extensions/custom-extensions)。
 
-## UI implementation
+## UI 实现
 
-### Toolbar implementation
+### 工具栏实现
 
-Quill's toolbar configuration translates to custom UI components in Tiptap:
+在 Tiptap 中，Quill 的工具栏配置需要通过自定义 UI 组件来实现：
 
 ```tsx
 // Quill toolbar config
@@ -261,16 +261,16 @@ function Toolbar({ editor }) {
 }
 ```
 
-### Pre-built UI components
+### 预构建 UI 组件
 
-For faster development, use Tiptap's pre-built UI components:
+为了加快开发，可以使用 Tiptap 预构建的 UI 组件：
 
-- Explore our [UI components](/ui-components/getting-started/overview) for ready-to-use components
-- Check out practical examples in our [default text editor example](/examples/basics/default-text-editor)
+- 浏览我们的 [UI 组件](/ui-components/getting-started/overview)，获取开箱即用的组件
+- 查看[默认文本编辑器示例](/examples/basics/default-text-editor)中的实用示例
 
-### Bubble toolbar (Quill's bubble theme)
+### 气泡工具栏（Quill 的气泡主题）
 
-Replicate Quill's bubble theme using Tiptap's BubbleMenu:
+使用 Tiptap 的 BubbleMenu 复刻 Quill 的气泡主题：
 
 ```tsx
 import { BubbleMenu, useEditor } from '@tiptap/react'
@@ -313,26 +313,26 @@ function MyEditor() {
 }
 ```
 
-## Migration checklist
+## 迁移检查清单
 
 <Checklist>
-  <CheckboxItem>Install Tiptap packages</CheckboxItem>
-  <CheckboxItem>Convert Quill Delta content to HTML</CheckboxItem>
-  <CheckboxItem>Replace Quill initialization with Tiptap setup</CheckboxItem>
-  <CheckboxItem>Map Quill modules to Tiptap extensions</CheckboxItem>
-  <CheckboxItem>Migrate toolbar configuration to custom UI components</CheckboxItem>
-  <CheckboxItem>Test content compatibility</CheckboxItem>
-  <CheckboxItem>Convert existing content to JSON format (recommended)</CheckboxItem>
-  <CheckboxItem>Implement custom extensions for any missing functionality</CheckboxItem>
-  <CheckboxItem>Update event handlers and API calls</CheckboxItem>
-  <CheckboxItem>Test bubble menu functionality if using bubble theme</CheckboxItem>
-  <CheckboxItem>Verify image upload and handling</CheckboxItem>
-  <CheckboxItem>Test formatting and styling features</CheckboxItem>
+  <CheckboxItem>安装 Tiptap 包</CheckboxItem>
+  <CheckboxItem>将 Quill Delta 内容转换为 HTML</CheckboxItem>
+  <CheckboxItem>将 Quill 初始化代码替换为 Tiptap 配置</CheckboxItem>
+  <CheckboxItem>将 Quill 模块映射为 Tiptap 扩展</CheckboxItem>
+  <CheckboxItem>将工具栏配置迁移到自定义 UI 组件</CheckboxItem>
+  <CheckboxItem>测试内容兼容性</CheckboxItem>
+  <CheckboxItem>将现有内容转换为 JSON 格式（推荐）</CheckboxItem>
+  <CheckboxItem>为缺少的功能实现自定义扩展</CheckboxItem>
+  <CheckboxItem>更新事件处理程序和 API 调用</CheckboxItem>
+  <CheckboxItem>如果使用气泡主题，请测试气泡菜单功能</CheckboxItem>
+  <CheckboxItem>验证图片上传和处理</CheckboxItem>
+  <CheckboxItem>测试格式和样式功能</CheckboxItem>
 </Checklist>
 
-## Next steps
+## 后续步骤
 
-- Explore the [extension overview](/editor/extensions/overview) to discover all available extensions
-- Learn about [custom extensions](/editor/extensions/custom-extensions) for advanced customization
-- Check out our [examples](/examples) for implementation inspiration
-- Review the [performance guide](/guides/performance) for optimization tips
+- 浏览[扩展概览](/editor/extensions/overview)，了解所有可用扩展
+- 了解[自定义扩展](/editor/extensions/custom-extensions)，进行高级自定义
+- 查看我们的[示例](/examples)，获取实现灵感
+- 阅读[性能指南](/guides/performance)，了解优化技巧
