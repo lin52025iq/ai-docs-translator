@@ -1,39 +1,39 @@
 ---
-title: Find and Replace extension
+title: 查找和替换扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-find-and-replace.svg?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-find-and-replace
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-find-and-replace.svg
     url: https://npmcharts.com/compare/@tiptap/extension-find-and-replace?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  title: Find and Replace extension | Tiptap Editor Docs
-  description: Search, highlight, navigate, and replace text in a Tiptap editor with the Find and Replace extension.
-  category: Editor
+  title: 查找和替换扩展 | Tiptap 编辑器文档
+  description: 使用查找和替换扩展，在 Tiptap 编辑器中搜索、高亮、导航和替换文本。
+  category: 编辑器
 extension:
-  name: Find and Replace
+  name: 查找和替换
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-find-and-replace
-  description: Search, highlight, navigate, and replace text in your editor.
+  description: 在编辑器中搜索、高亮、导航和替换文本。
   type: extension
   icon: Search
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-The Find and Replace extension searches the document, highlights matches, and provides commands for navigation and replacement. It is headless, so you can build the controls and place them anywhere in your application.
+查找和替换扩展会搜索文档、高亮匹配项，并提供用于导航和替换的命令。它不包含界面，因此你可以自行构建控件，并将其放置在应用中的任意位置。
 
 <CodeDemo path="/Extensions/FindAndReplace" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-find-and-replace
 ```
 
-## Usage
+## 用法
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -45,17 +45,17 @@ new Editor({
 })
 ```
 
-See the [custom UI guide](/guides/find-and-replace) for complete React and Vue examples.
+如需完整的 React 和 Vue 示例，请参阅[自定义 UI 指南](/guides/find-and-replace)。
 
-## Settings
+## 设置
 
-These options set the initial state. Use the commands below to update the search while the editor is running.
+这些选项用于设置初始状态。编辑器运行时，可使用下方的命令更新搜索内容。
 
 ### searchTerm
 
-The initial text to search for. In regex mode, this is the regular expression source.
+要搜索的初始文本。在正则表达式模式下，此值为正则表达式源文本。
 
-Default: `''`
+默认值：`''`
 
 ```js
 FindAndReplace.configure({
@@ -65,10 +65,9 @@ FindAndReplace.configure({
 
 ### replaceTerm
 
-The initial text used by the replace commands. When regex mode is enabled, the replacement can
-reuse the complete match or capture groups.
+替换命令使用的初始文本。启用正则表达式模式时，替换内容可以引用完整匹配项或捕获组。
 
-Default: `''`
+默认值：`''`
 
 ```js
 FindAndReplace.configure({
@@ -80,9 +79,9 @@ FindAndReplace.configure({
 
 ### caseSensitive
 
-Whether the search matches case exactly.
+搜索是否区分大小写。
 
-Default: `false`
+默认值：`false`
 
 ```js
 FindAndReplace.configure({
@@ -92,9 +91,9 @@ FindAndReplace.configure({
 
 ### useRegex
 
-Whether `searchTerm` is treated as a regular expression.
+是否将 `searchTerm` 视为正则表达式。
 
-Default: `false`
+默认值：`false`
 
 ```js
 FindAndReplace.configure({
@@ -103,17 +102,13 @@ FindAndReplace.configure({
 })
 ```
 
-Regex mode can be combined with `caseSensitive` and `wholeWord`. Invalid patterns and patterns
-rejected as unsafe return no results. Regex mode uses RE2-compatible syntax, so lookarounds and
-backreferences in the search pattern are not supported.
+正则表达式模式可以与 `caseSensitive` 和 `wholeWord` 组合使用。无效或被判定为不安全的模式不会返回结果。正则表达式模式使用兼容 RE2 的语法，因此搜索模式不支持环视和反向引用。
 
 ### wholeWord
 
-Whether to require matches to have a Unicode word boundary on both sides. This works for literal
-and regex searches. Unicode word characters include letters, combining marks, numbers, and
-connector punctuation such as `_`.
+是否要求匹配项两侧都具有 Unicode 单词边界。此选项适用于字面搜索和正则表达式搜索。Unicode 单词字符包括字母、组合标记、数字以及连接标点（例如 `_`）。
 
-Default: `false`
+默认值：`false`
 
 ```js
 FindAndReplace.configure({
@@ -124,15 +119,13 @@ FindAndReplace.configure({
 })
 ```
 
-For example, this configuration matches `cat` and `catalog`, but not `cats` or `Catalog`. The regex
-engine can try a later alternative or a longer match when an earlier result does not satisfy the
-whole-word boundary.
+例如，此配置会匹配 `cat` 和 `catalog`，但不会匹配 `cats` 或 `Catalog`。如果较早的匹配结果不满足完整单词边界，正则表达式引擎可以尝试后续备选项或更长的匹配。
 
 ### searchDebounceMs
 
-The delay, in milliseconds, before `setSearchTerm()` updates the search results. Set this to `0` to update results immediately.
+调用 `setSearchTerm()` 后，更新搜索结果前的延迟时间（毫秒）。设为 `0` 可立即更新结果。
 
-Default: `250`
+默认值：`250`
 
 ```js
 FindAndReplace.configure({
@@ -142,9 +135,9 @@ FindAndReplace.configure({
 
 ### injectCSS
 
-Whether to inject the default result highlight styles. Disable this option to provide your own styles.
+是否注入默认的结果高亮样式。禁用此选项可使用自定义样式。
 
-Default: `true`
+默认值：`true`
 
 ```js
 FindAndReplace.configure({
@@ -154,9 +147,9 @@ FindAndReplace.configure({
 
 ### injectNonce
 
-The nonce applied to the injected style element. Set this when your Content Security Policy requires a nonce.
+应用于注入样式元素的 nonce。如果内容安全策略要求提供 nonce，请设置此项。
 
-Default: `undefined`
+默认值：`undefined`
 
 ```js
 FindAndReplace.configure({
@@ -164,11 +157,11 @@ FindAndReplace.configure({
 })
 ```
 
-## Commands
+## 命令
 
 ### setSearchTerm()
 
-Set the search term and highlight every match.
+设置搜索词并高亮所有匹配项。
 
 ```js
 editor.commands.setSearchTerm('Tiptap')
@@ -176,38 +169,28 @@ editor.commands.setSearchTerm('Tiptap')
 
 ### setReplaceTerm()
 
-Set the text used by `replace()` and `replaceAll()`. In regex mode, the replacement can include
-capture-group substitutions.
+设置 `replace()` 和 `replaceAll()` 使用的文本。在正则表达式模式下，替换内容可以包含捕获组替换标记。
 
 ```js
 editor.commands.setReplaceTerm('[$1]')
 ```
 
-#### Regex replacement tokens
+#### 正则表达式替换标记
 
-When regex mode is enabled, replacement terms support these JavaScript-style tokens:
+启用正则表达式模式后，替换词支持以下 JavaScript 风格的标记：
 
-| Token      | Replacement                              |
-| ---------- | ---------------------------------------- |
-| `$$`       | A literal `$`                            |
-| `$&`       | The complete match                       |
-| `$1`–`$99` | The corresponding numbered capture group |
-| `$<name>`  | The corresponding named capture group    |
+| 标记       | 替换内容           |
+| ---------- | ------------------ |
+| `$$`       | 字面量 `$`         |
+| `$&`       | 完整匹配项         |
+| `$1`–`$99` | 对应编号的捕获组   |
+| `$<name>`  | 对应名称的捕获组   |
 
-Unmatched groups insert an empty string. A one-digit numbered reference that exceeds the pattern's
-capture count remains unchanged. For a two-digit reference, JavaScript-style fallback applies: if
-the complete number does not exist but its first digit names a capture, that capture is inserted
-followed by the second digit. For example, `$12` with one capture inserts capture 1 followed by `2`.
-Zero-padded references such as `$01` also follow JavaScript semantics and address capture 1. An
-unknown named reference inserts an empty string when the pattern contains named groups, and remains
-unchanged when it does not.
+未匹配的组会插入空字符串。超出模式捕获组数量的一位数字编号引用会保持不变。对于两位数字引用，将应用 JavaScript 风格的回退规则：如果不存在完整编号，但首位数字对应一个捕获组，则插入该捕获组，后接第二位数字。例如，模式只有一个捕获组时，`$12` 会插入捕获组 1，后接 `2`。像 `$01` 这样的前导零引用也遵循 JavaScript 语义，指向捕获组 1。如果模式中含有命名组，未知名称的引用会插入空字符串；否则会保持不变。
 
-Other `$` sequences remain unchanged. The JavaScript before-match token (`$` followed by a
-backtick) and after-match token (`$'`) are not expanded. When regex mode is disabled, every
-replacement term is inserted literally.
+其他 `$` 序列保持不变。JavaScript 的匹配前标记（`$` 后接反引号）和匹配后标记（`$'`）不会展开。禁用正则表达式模式时，所有替换词都会按字面内容插入。
 
-In regex mode, escape the leading dollar sign with `$$` to preserve a supported token literally.
-For example, `$$1` inserts `$1`.
+在正则表达式模式下，使用 `$$` 转义开头的美元符号，即可按字面保留受支持的标记。例如，`$$1` 会插入 `$1`。
 
 ```js
 editor.commands.setUseRegex(true)
@@ -219,7 +202,7 @@ editor.commands.replaceAll()
 
 ### setCaseSensitive()
 
-Enable or disable case-sensitive matching. This works in literal and regex modes.
+启用或禁用区分大小写的匹配。此选项适用于字面模式和正则表达式模式。
 
 ```js
 editor.commands.setCaseSensitive(true)
@@ -227,8 +210,7 @@ editor.commands.setCaseSensitive(true)
 
 ### setUseRegex()
 
-Enable or disable regular expression matching. Regex mode can be enabled together with Match case
-and Whole word.
+启用或禁用正则表达式匹配。正则表达式模式可以与“区分大小写”和“全词匹配”同时启用。
 
 ```js
 editor.commands.setUseRegex(true)
@@ -236,7 +218,7 @@ editor.commands.setUseRegex(true)
 
 ### setWholeWord()
 
-Enable or disable Unicode-aware whole-word matching for literal or regex searches.
+为字面搜索或正则表达式搜索启用或禁用基于 Unicode 的全词匹配。
 
 ```js
 editor.commands.setWholeWord(true)
@@ -244,7 +226,7 @@ editor.commands.setWholeWord(true)
 
 ### goToNextResult()
 
-Select the next result. Navigation wraps from the final result to the first result.
+选择下一个结果。从最后一个结果继续导航时，会循环到第一个结果。
 
 ```js
 editor.commands.goToNextResult()
@@ -252,7 +234,7 @@ editor.commands.goToNextResult()
 
 ### goToPreviousResult()
 
-Select the previous result. Navigation wraps from the first result to the final result.
+选择上一个结果。从第一个结果继续导航时，会循环到最后一个结果。
 
 ```js
 editor.commands.goToPreviousResult()
@@ -260,7 +242,7 @@ editor.commands.goToPreviousResult()
 
 ### replace()
 
-Replace the selected result and select the next available result.
+替换选中的结果，并选择下一个可用结果。
 
 ```js
 editor.commands.replace()
@@ -268,7 +250,7 @@ editor.commands.replace()
 
 ### replaceAll()
 
-Replace every result in the current result set.
+替换当前结果集中的所有结果。
 
 ```js
 editor.commands.replaceAll()
@@ -276,19 +258,19 @@ editor.commands.replaceAll()
 
 ### clearSearch()
 
-Clear the search term and remove every result highlight.
+清除搜索词并移除所有结果高亮。
 
 ```js
 editor.commands.clearSearch()
 ```
 
-## Storage
+## 存储
 
-The extension keeps its current state in `editor.storage.findAndReplace`.
+扩展会将当前状态保存在 `editor.storage.findAndReplace` 中。
 
 ### searchTerm
 
-The current search term.
+当前搜索词。
 
 ```js
 editor.storage.findAndReplace.searchTerm
@@ -296,15 +278,15 @@ editor.storage.findAndReplace.searchTerm
 
 ### replaceTerm
 
-The current replacement text.
+当前替换文本。
 
 ```js
 editor.storage.findAndReplace.replaceTerm
 ```
 
-### caseSensitive, useRegex, and wholeWord
+### caseSensitive、useRegex 和 wholeWord
 
-The current matching options.
+当前匹配选项。
 
 ```js
 editor.storage.findAndReplace.caseSensitive
@@ -314,7 +296,7 @@ editor.storage.findAndReplace.wholeWord
 
 ### results
 
-The matches in document order. Every result has `from` and `to` ProseMirror positions.
+按文档顺序排列的匹配项。每个结果都包含 `from` 和 `to` 两个 ProseMirror 位置。
 
 ```js
 editor.storage.findAndReplace.results
@@ -322,26 +304,23 @@ editor.storage.findAndReplace.results
 
 ### currentIndex
 
-The index of the selected result, or `null` when no result is selected.
+选中结果的索引；未选中任何结果时为 `null`。
 
 ```js
 editor.storage.findAndReplace.currentIndex
 ```
 
-## Search behavior
+## 搜索行为
 
-Matches update when the document or a search option changes. A match can span text nodes with different marks, but never crosses a textblock or a non-text inline node such as a hard break or mention.
+文档或搜索选项发生变化时，匹配结果会更新。匹配项可以跨越带有不同标记的文本节点，但不会跨越文本块或非文本内联节点（例如硬换行或提及节点）。
 
-Match case, Regex, and Whole word are independent options and can be enabled together. In regex
-whole-word mode, the boundary is checked around the final regex result. This allows alternatives and
-quantifiers to continue until they produce a complete word. Consecutive matches can share a
-punctuation boundary, so a whole-word regex for `cat` finds all three matches in `cat-cat.cat`.
+区分大小写、正则表达式和全词匹配是相互独立的选项，可以同时启用。在正则表达式全词匹配模式下，会围绕最终的正则表达式结果检查边界。这样一来，备选项和量词可以继续尝试，直到匹配出完整单词。连续匹配可以共用标点边界，因此，对 `cat` 使用全词匹配的正则表达式，会在 `cat-cat.cat` 中找到全部三个匹配项。
 
-`replaceAll()` replaces the matches that exist when the command runs. If the replacement text also matches the search, those new matches remain in storage after the transaction.
+`replaceAll()` 会替换命令运行时存在的匹配项。如果替换文本也符合搜索条件，这些新匹配项会在事务完成后保留在存储中。
 
-## Styling results
+## 结果样式
 
-By default, results have a yellow highlight and the selected result has an orange highlight. Disable `injectCSS` to replace these styles.
+默认情况下，结果会以黄色高亮显示，选中的结果会以橙色高亮显示。禁用 `injectCSS` 可替换这些样式。
 
 ```css
 .find-and-replace-result {
@@ -353,6 +332,6 @@ By default, results have a yellow highlight and the selected result has an orang
 }
 ```
 
-## Source code
+## 源代码
 
 [packages/extension-find-and-replace/](https://github.com/ueberdosis/tiptap/tree/main/packages/extension-find-and-replace/)
