@@ -1,0 +1,168 @@
+---
+title: 在修订跟踪中使用 NodeView
+tags:
+  - type: addon
+meta:
+  title: NodeView 支持 | Tiptap 修订跟踪文档
+  description: 了解如何将 NodeView 与修订跟踪正确集成，以便跟踪自定义组件中的建议。
+  category: 修订跟踪
+---
+
+NodeView 允许你在编辑器中为特定节点类型渲染自定义组件。将 NodeView 与修订跟踪结合使用时，需要确保将建议元数据正确传递到组件的 DOM 元素中。
+
+## 什么是 NodeView？
+
+NodeView 是自定义的 React、Vue 或原生 JavaScript 组件，用于替代特定节点类型的默认渲染方式。常见用途包括：
+
+- 图片和媒体
+- 表格
+- 自定义块或卡片
+- 嵌入内容和交互式内容
+- 任何需要自定义渲染逻辑的节点类型
+
+## 为什么 NodeView 需要特殊处理
+
+启用修订跟踪后，扩展会添加元数据来跟踪修改。对于文本内容，这会通过标记自动完成。不过，对于 NodeView，必须将建议元数据显式传递给组件。
+
+如果处理不当，建议属性就不会传递到组件的 DOM 中，这意味着：
+- 建议不会以视觉方式突出显示
+- 建议查询可能无法找到 NodeView 中的更改
+- 建议跟踪将不完整
+
+## 问题：缺少建议属性
+
+修订跟踪会将建议元数据直接存储在节点属性（`node.attrs`）上。NodeView 需要将这些属性映射为 `data-suggestion-*` DOM 属性，以便跟踪系统能够找到它们。
+
+**错误示例（无法跟踪建议）：**
+
+```jsx
+function ImageNodeView({ node }) {
+  return (
+    <img src={node.attrs.src} alt={node.attrs.alt} />
+  )
+  // Problem: suggestion attrs from node.attrs not on the DOM — suggestions lost
+}
+```
+
+## 解决方案：getSuggestionHTMLAttributes()
+
+`getSuggestionHTMLAttributes()` 工具会直接从实时的 ProseMirror `node` 中读取建议数据，并返回相应的 `data-suggestion-*` DOM 属性，可安全地展开到组件上。
+
+传入 `node`，而不是 `HTMLAttributes`。NodeView 的 `HTMLAttributes` 属性在创建 NodeView 时只计算一次，之后不会更新，因此建议状态发生变化时，其中的数据会过时。`node` 属性始终反映当前状态。
+
+```jsx
+import { getSuggestionHTMLAttributes } from '@tiptap-pro/extension-tracked-changes'
+
+function ImageNodeView({ node }) {
+  const suggestionAttrs = getSuggestionHTMLAttributes(node)
+
+  return (
+    <img
+      src={node.attrs.src}
+      alt={node.attrs.alt}
+      {...suggestionAttrs}
+    />
+  )
+}
+```
+
+## 实现示例
+
+### 简单的图片 NodeView
+
+```jsx
+import { getSuggestionHTMLAttributes } from '@tiptap-pro/extension-tracked-changes'
+
+function ImageNodeView({ node }) {
+  const suggestionAttrs = getSuggestionHTMLAttributes(node)
+
+  return (
+    <figure {...suggestionAttrs}>
+      <img
+        src={node.attrs.src}
+        alt={node.attrs.alt}
+        className="editor-image"
+      />
+      {node.attrs.caption && <figcaption>{node.attrs.caption}</figcaption>}
+    </figure>
+  )
+}
+```
+
+### 自定义块 NodeView
+
+```jsx
+import { getSuggestionHTMLAttributes } from '@tiptap-pro/extension-tracked-changes'
+
+function CustomBlockNodeView({ node }) {
+  const suggestionAttrs = getSuggestionHTMLAttributes(node)
+
+  return (
+    <div
+      {...suggestionAttrs}
+      className="custom-block"
+      style={{
+        backgroundColor: node.attrs.bgColor,
+        padding: '16px',
+      }}
+    >
+      <h3>{node.attrs.title}</h3>
+      <p>{node.attrs.description}</p>
+    </div>
+  )
+}
+```
+
+### 使用 NodeView 的表格单元格
+
+```jsx
+import { getSuggestionHTMLAttributes } from '@tiptap-pro/extension-tracked-changes'
+
+function TableCellNodeView({ node }) {
+  const suggestionAttrs = getSuggestionHTMLAttributes(node)
+
+  return (
+    <td {...suggestionAttrs}>
+      {node.content}
+    </td>
+  )
+}
+```
+
+## 最佳实践
+
+**始终使用 `getSuggestionHTMLAttributes(node)`。** 直接从节点中获取属性，可确保它们随建议状态变化而同步更新，例如建议被接受、拒绝，或通过协作功能收到远程更新时。
+
+**将属性展开到根元素上。** 将建议属性放在 NodeView 最外层的 DOM 元素上，这样整个组件就会作为一个整体进行跟踪。
+
+**不要将 `HTMLAttributes` 传给该工具。** NodeView 的 `HTMLAttributes` 属性是在 NodeView 首次创建时计算的快照，后续渲染时不会更新。因此，使用它会导致状态变化后 `data-suggestion-*` 属性过时。
+
+**测试你的实现。** 实现 NodeView 后，请确认：
+- 组件在有建议和没有建议时都能正确渲染
+- 建议会以视觉方式突出显示（使用你的 CSS）
+- 接受或拒绝建议的操作符合预期
+- [建议查询](/tracked-changes/api-reference/utilities)能够找到 NodeView 中的更改
+
+## 查询 NodeView 中的建议
+
+正确集成后，你可以像查询文本建议一样查询 NodeView 中的建议：
+
+```js
+import { findSuggestions, getSuggestionAtSelection } from '@tiptap-pro/extension-tracked-changes'
+
+// Find all suggestions (including those on NodeViews)
+const all = findSuggestions(editor)
+
+// Find suggestions at the current selection
+const current = getSuggestionAtSelection(editor)
+
+// Accept/reject suggestions on NodeViews
+editor.commands.acceptSuggestion({ id: 'suggestion-123' })
+editor.commands.rejectSuggestion({ id: 'suggestion-123' })
+```
+
+## 另请参阅
+
+- [getSuggestionHTMLAttributes() API 参考](/tracked-changes/api-reference/utilities#getsuggestionsthtmlattributes)
+- [工具函数](/tracked-changes/api-reference/utilities)
+- [命令](/tracked-changes/api-reference/commands)
