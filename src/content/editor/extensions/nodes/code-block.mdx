@@ -1,48 +1,47 @@
 ---
-title: CodeBlock extension
+title: CodeBlock 扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-code-block?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-code-block
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-code-block.svg
     url: https://npmcharts.com/compare/@tiptap/extension-code-block?minimal=true
-    label: Downloads
+    label: 下载量
 extension:
   name: CodeBlock
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-code-block
-  description: The less code the better, but sometimes you just need multiple lines.
+  description: 代码越少越好，但有时你确实需要多行代码。
   type: node
   icon: Code
 meta:
-  title: CodeBlock extension | Tiptap Editor Docs
-  description: Use the CodeBlock extension in Tiptap to add fenced code blocks to your documents. Learn more in our docs!
-  category: Editor
+  title: CodeBlock 扩展 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 CodeBlock 扩展，为文档添加围栏代码块。欢迎查阅文档了解更多信息！
+  category: 编辑器
 ---
 
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-With the CodeBlock extension you can add fenced code blocks to your documents. It’ll wrap the code in `<pre>` and `<code>` HTML tags.
+使用 CodeBlock 扩展可以在文档中添加围栏代码块。代码会被包裹在 `<pre>` 和 `<code>` HTML 标签中。
 
-Type <code>&grave;&grave;&grave; </code> (three backticks and a space) or <code>&Tilde;&Tilde;&Tilde; </code> (three tildes and a space) and a code block is instantly added for you. You can even specify the language, try writing <code>&grave;&grave;&grave;css </code>. That should add a `language-css` class to the `<code>`-tag.
+输入 <code>&grave;&grave;&grave; </code>（三个反引号和一个空格）或 <code>&Tilde;&Tilde;&Tilde; </code>（三个波浪号和一个空格），即可立即插入代码块。你还可以指定语言，例如输入 <code>&grave;&grave;&grave;css </code>。这会为 `<code>` 标签添加 `language-css` 类。
 
-<Callout title="No syntax highlighting" variant="hint">
-  The CodeBlock extension doesn’t come with styling and has no syntax highlighting built-in. Try the
-  [CodeBlockLowlight](/editor/extensions/nodes/code-block-lowlight) extension if you’re looking for
-  code blocks with syntax highlighting.
+<Callout title="不提供语法高亮" variant="hint">
+  CodeBlock 扩展不包含样式，也没有内置语法高亮。如果你需要带语法高亮的代码块，可以试试
+  [CodeBlockLowlight](/editor/extensions/nodes/code-block-lowlight) 扩展。
 </Callout>
 
 <CodeDemo path="/Nodes/CodeBlock" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-code-block
 ```
 
-## Usage
+## 用法
 
 ```js
 import CodeBlock from '@tiptap/extension-code-block'
@@ -52,13 +51,13 @@ const editor = new Editor({
 })
 ```
 
-## Settings
+## 设置
 
 ### languageClassPrefix
 
-Adds a prefix to language classes that are applied to code tags.
+为应用于代码标签的语言类添加前缀。
 
-Default: `'language-'`
+默认值：`'language-'`
 
 ```js
 CodeBlock.configure({
@@ -68,9 +67,9 @@ CodeBlock.configure({
 
 ### exitOnTripleEnter
 
-Define whether the node should be exited on triple enter.
+设置是否在连续按三次 Enter 键时退出此节点。
 
-Default: `true`
+默认值：`true`
 
 ```js
 CodeBlock.configure({
@@ -80,9 +79,9 @@ CodeBlock.configure({
 
 ### defaultLanguage
 
-Define a default language instead of the automatic detection of lowlight.
+设置默认语言，而不是使用 lowlight 自动检测。
 
-Default: `null`
+默认值：`null`
 
 ```js
 CodeBlock.configure({
@@ -92,9 +91,9 @@ CodeBlock.configure({
 
 ### exitOnArrowDown
 
-Define whether the node should be exited on arrow down if there is no node after it.
+如果此节点后面没有其他节点，设置是否在按向下箭头键时退出此节点。
 
-Default: `true`
+默认值：`true`
 
 ```js
 CodeBlock.configure({
@@ -104,9 +103,9 @@ CodeBlock.configure({
 
 ### exitOnArrowUp
 
-Define whether the node should be exited on arrow up if there is no node before it.
+如果此节点前面没有其他节点，设置是否在按向上箭头键时退出此节点。
 
-Default: `true`
+默认值：`true`
 
 ```js
 CodeBlock.configure({
@@ -116,9 +115,9 @@ CodeBlock.configure({
 
 ### enableTabIndentation
 
-Define whether pressing the Tab key should be used for indentation.
+设置是否使用 Tab 键进行缩进。
 
-Default: `false`
+默认值：`false`
 
 ```js
 CodeBlock.configure({
@@ -128,9 +127,9 @@ CodeBlock.configure({
 
 ### tabSize
 
-Set the number of spaces to use for indentation.
+设置缩进所使用的空格数。
 
-Default: `4`
+默认值：`4`
 
 ```js
 CodeBlock.configure({
@@ -140,7 +139,7 @@ CodeBlock.configure({
 
 ### HTMLAttributes
 
-Custom HTML attributes that should be added to the rendered HTML tag.
+要添加到渲染后 HTML 标签的自定义 HTML 属性。
 
 ```js
 CodeBlock.configure({
@@ -152,9 +151,9 @@ CodeBlock.configure({
 
 ### enableTabIndentation
 
-Enable tab key for indentation in code blocks.
+启用 Tab 键在代码块中的缩进功能。
 
-Default: `false`
+默认值：`false`
 
 ```js
 CodeBlock.configure({
@@ -164,9 +163,9 @@ CodeBlock.configure({
 
 ### tabSize
 
-The number of spaces to use for tab indentation.
+Tab 缩进所使用的空格数。
 
-Default: `4`
+默认值：`4`
 
 ```js
 CodeBlock.configure({
@@ -174,11 +173,11 @@ CodeBlock.configure({
 })
 ```
 
-## Commands
+## 命令
 
 ### setCodeBlock()
 
-Wrap content in a code block.
+将内容包裹在代码块中。
 
 ```js
 editor.commands.setCodeBlock()
@@ -186,18 +185,18 @@ editor.commands.setCodeBlock()
 
 ### toggleCodeBlock()
 
-Toggle the code block.
+切换代码块。
 
 ```js
 editor.commands.toggleCodeBlock()
 ```
 
-## Keyboard shortcuts
+## 键盘快捷键
 
-| Command         | Windows/Linux                                      | macOS                                          |
+| 命令            | Windows/Linux                                      | macOS                                          |
 | --------------- | -------------------------------------------------- | ---------------------------------------------- |
 | toggleCodeBlock | <kbd>Control</kbd> + <kbd>Alt</kbd> + <kbd>C</kbd> | <kbd>Cmd</kbd> + <kbd>Alt</kbd> + <kbd>C</kbd> |
 
-## Source code
+## 源代码
 
 [packages/extension-code-block/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-code-block/)
