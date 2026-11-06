@@ -1,12 +1,12 @@
 ---
-title: Code editor with Slash Commands
+title: 带斜杠命令的代码编辑器
 meta:
-  title: Slash Commands Extension | Tiptap Editor Docs
-  description: Use the Slash Commands extension in Tiptap to add a toolbar via / that pops up at the slash position. Learn more in our docs!
-  category: Editor
+  title: 斜杠命令扩展 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用斜杠命令扩展，通过输入 / 在斜杠所在位置弹出工具栏。了解详情，请查阅我们的文档！
+  category: 编辑器
 extension:
-  name: Slash Commands
-  description: 'Adds a toolbar via / that pops up at the slash position.'
+  name: 斜杠命令
+  description: '通过输入 / 添加一个在斜杠所在位置弹出的工具栏。'
   type: extension
   icon: CopySlash
   isExperiment: true
@@ -15,20 +15,20 @@ extension:
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-<Callout variant="warning" title="Experiment" hasCalloutAfter>
+<Callout variant="warning" title="实验" hasCalloutAfter>
 
-Experiment, currently not supported or maintained. This extension does not have a published package yet. You may need to copy the source code and create your own extension.
+此扩展目前处于实验阶段，尚未获得支持或维护，也尚未发布为正式软件包。你可能需要复制源代码并创建自己的扩展。
 
 </Callout>
 
-The Slash Commands extension adds a toolbar via `/` that pops up at the slash position, well known from other editor applications. It's great to quickly insert different content types or apply inline formatting.
+斜杠命令扩展通过输入 `/` 添加一个在斜杠所在位置弹出的工具栏，这种功能在其他编辑器应用中很常见。它非常适合快速插入不同类型的内容或应用行内格式。
 
-Since this extension is **not yet published officially**, you may need to copy the source code and create your own extension.
+由于此扩展**尚未正式发布**，你可能需要复制源代码并创建自己的扩展。
 
 <CodeDemo path="/Experiments/Commands" />
 
-## Notes
+## 备注
 
-- **Not published**: This extension does not have a published package yet. You may need to copy the source code and create your own extension.
-- **Experiment**: This extension is an experiment and not yet supported or maintained.
-- This extension is using the `@tiptap/suggestion` package to build the slash commands panel
+- **尚未发布**：此扩展尚未发布为正式软件包。你可能需要复制源代码并创建自己的扩展。
+- **实验项目**：此扩展处于实验阶段，尚未获得支持或维护。
+- 此扩展使用 `@tiptap/suggestion` 软件包来构建斜杠命令面板
