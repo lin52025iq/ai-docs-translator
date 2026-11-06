@@ -1,45 +1,45 @@
 ---
-title: Paragraphs
+title: 段落
 tags:
   - type: beta
 meta:
-  title: Paragraphs | Tiptap Conversion
-  description: How Word paragraphs are handled across the DOCX conversion pipeline, including what formatting survives import, rendering, and export.
-  category: Conversion
+  title: 段落 | Tiptap 转换
+  description: 了解 Word 段落在 DOCX 转换流程中的处理方式，包括导入、渲染和导出时会保留哪些格式。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Paragraphs are the most fundamental content type in any document. In Word they carry formatting like spacing, indentation, borders, and alignment. In Tiptap they map to the `paragraph` node, which [ConvertKit](/conversion/import/docx/convertkit) registers automatically, with a custom variant that surfaces the DOCX-aware attributes the importer produces.
+段落是任何文档中最基本的内容类型。在 Word 中，段落包含间距、缩进、边框和对齐方式等格式。在 Tiptap 中，段落对应 `paragraph` 节点；[ConvertKit](/conversion/import/docx/convertkit) 会自动注册该节点，并使用自定义变体呈现导入器生成的 DOCX 相关属性。
 
-## What you need
+## 所需内容
 
-- **Extensions:** [`ConvertKit`](/conversion/import/docx/convertkit). Its custom Paragraph renders all the imported attributes (spacing, indentation, line height, font size, contextual spacing) and the bundled `TextAlign` is preconfigured for `['paragraph', 'heading']`.
-- **Configuration:** None required.
+- **扩展：** [`ConvertKit`](/conversion/import/docx/convertkit)。其自定义 Paragraph 会渲染所有导入的属性（间距、缩进、行高、字号和上下文间距），并且内置的 `TextAlign` 已预先配置为适用于 `['paragraph', 'heading']`。
+- **配置：** 无需配置。
 
-<Callout title="Paragraph formatting needs ConvertKit's custom Paragraph" variant="hint">
-  Text content and alignment round-trip with any paragraph node. Paragraph-level spacing, indentation, line height, and contextual spacing are extracted during import and rendered as inline CSS by ConvertKit's custom Paragraph. If you swap ConvertKit's Paragraph for a stock one (or disable the slot), those attributes stay in the JSON but are stripped on `setEditorContent()`. The [Styling converted content](/conversion/getting-started/guides/styling-converted-content) guide covers how to extend the schema for additional attributes. Paragraph spacing, indentation, contextual spacing, and line height (both proportional and fixed) now round-trip on export; see the support overview below.
+<Callout title="段落格式需要使用 ConvertKit 的自定义 Paragraph" variant="hint">
+  任意段落节点都可以往返保留文本内容和对齐方式。段落级间距、缩进、行高和上下文间距会在导入时提取，并由 ConvertKit 的自定义 Paragraph 渲染为内联 CSS。如果将 ConvertKit 的 Paragraph 替换为标准版本（或禁用该插槽），这些属性仍会保留在 JSON 中，但在调用 `setEditorContent()` 时会被剥除。[设置转换后内容的样式](/conversion/getting-started/guides/styling-converted-content)指南介绍了如何扩展 schema 以支持其他属性。段落间距、缩进、上下文间距和行高（比例值和固定值）现在都可以在导出时往返保留；请参阅下方的支持情况概览。
 </Callout>
 
-## Support overview
+## 支持情况概览
 
-| | Import | Editor (with ConvertKit) | Export |
+| | 导入 | 编辑器（使用 ConvertKit） | 导出 |
 | --- | --- | --- | --- |
-| Text content | Supported | Supported | Supported |
-| Text alignment | Supported | Supported (TextAlign) | Supported |
-| Line height | Supported (paragraph attr) | Supported (`line-height: <value>`) | Supported (proportional values as a relative line, fixed `px`/`pt` as an exact line) |
-| Paragraph spacing (before/after) | Supported (`spacingBefore`, `spacingAfter` attrs) | Supported (`margin-top` / `margin-bottom`) | Supported |
-| Indentation | Supported (`indent`, `indentRight`, `firstLineIndent` attrs) | Supported (`padding-left` / `padding-right` / `text-indent`) | Supported (left, right, first-line; a hanging indent imports as a negative first-line indent and exports back as a hanging indent) |
-| Contextual spacing | Supported (`contextualSpacing` attr) | Supported (`data-contextual-spacing` + injected CSS rule) | Supported |
-| Keep with next / keep lines together | Supported (`keepNext`, `keepLines` attrs) | Kept in the JSON, no visual effect | Supported |
+| 文本内容 | 支持 | 支持 | 支持 |
+| 文本对齐 | 支持 | 支持（TextAlign） | 支持 |
+| 行高 | 支持（paragraph 属性） | 支持（`line-height: <value>`） | 支持（比例值作为相对行距，固定的 `px`/`pt` 值作为精确行距） |
+| 段落间距（段前/段后） | 支持（`spacingBefore`、`spacingAfter` 属性） | 支持（`margin-top` / `margin-bottom`） | 支持 |
+| 缩进 | 支持（`indent`、`indentRight`、`firstLineIndent` 属性） | 支持（`padding-left` / `padding-right` / `text-indent`） | 支持（左缩进、右缩进、首行缩进；悬挂缩进会作为负的首行缩进导入，并在导出时还原为悬挂缩进） |
+| 上下文间距 | 支持（`contextualSpacing` 属性） | 支持（`data-contextual-spacing` + 注入的 CSS 规则） | 支持 |
+| 与下段同页 / 段中不分页 | 支持（`keepNext`、`keepLines` 属性） | 保留在 JSON 中，不产生视觉效果 | 支持 |
 
-## Import
+## 导入
 
-Import paragraphs using the [editor extension](/conversion/import/docx/editor-extension) or the [REST API](/conversion/import/docx/rest-api). Both produce identical paragraph output.
+使用[编辑器扩展](/conversion/import/docx/editor-extension)或 [REST API](/conversion/import/docx/rest-api)导入段落。两者生成的段落输出完全相同。
 
-When a DOCX file is imported, each Word paragraph becomes a `paragraph` node. The conversion service reads properties from the Word markup and maps them to node attributes.
+导入 DOCX 文件时，每个 Word 段落都会转换为一个 `paragraph` 节点。转换服务会读取 Word 标记中的属性，并将其映射为节点属性。
 
-The resulting JSON for a basic paragraph:
+基本段落生成的 JSON：
 
 ```json
 {
@@ -56,55 +56,54 @@ The resulting JSON for a basic paragraph:
 }
 ```
 
-### What is preserved
+### 保留的内容
 
-- All text content and inline formatting (bold, italic, links, and other marks)
-- Text alignment when the paragraph has explicit alignment in Word
+- 所有文本内容和内联格式（粗体、斜体、链接及其他标记）
+- 段落在 Word 中设置了显式对齐方式时，会保留文本对齐方式
 
-### What is lost
+### 不保留的内容
 
-The conversion service extracts paragraph-level attributes like `spacingBefore`, `spacingAfter`, `lineHeight`, `indent` (left), `indentRight` (right), `firstLineIndent`, `contextualSpacing`, `keepNext`, and `keepLines` from the Word source. A hanging indent is imported as a negative `firstLineIndent`. Values from the paragraph's named style (for example spacing or indentation carried by the "Normal" or a "Body" style) are resolved onto these attributes too, not only direct formatting. ConvertKit's custom Paragraph renders all of them as inline CSS, except `keepNext` and `keepLines`, which stay in the JSON for export and have no visual effect. If you replace it with the stock Paragraph (or disable the slot via `ConvertKit.configure({ paragraph: false })`), the values stay in the raw JSON but are stripped when content loads into the editor. Paragraph-level borders and background colors are not extracted during import in either setup.
+转换服务会从 Word 源文件中提取段落级属性，例如 `spacingBefore`、`spacingAfter`、`lineHeight`、`indent`（左缩进）、`indentRight`（右缩进）、`firstLineIndent`、`contextualSpacing`、`keepNext` 和 `keepLines`。悬挂缩进会作为负的 `firstLineIndent` 导入。段落命名样式（例如“Normal”或“Body”样式）中的值（如间距或缩进）也会解析到这些属性中，而不只是处理直接格式。ConvertKit 的自定义 Paragraph 会将这些属性全部渲染为内联 CSS，但 `keepNext` 和 `keepLines` 除外；它们会保留在 JSON 中供导出使用，不产生视觉效果。如果将其替换为标准 Paragraph（或通过 `ConvertKit.configure({ paragraph: false })` 禁用该插槽），这些值仍会保留在原始 JSON 中，但在内容载入编辑器时会被剥除。无论采用哪种配置，导入时都不会提取段落级边框和背景颜色。
 
-## Editor rendering
+## 编辑器渲染
 
-The [`Paragraph`](/editor/extensions/nodes/paragraph) extension is registered by [`ConvertKit`](/conversion/import/docx/convertkit) and renders each paragraph as a `<p>` element. ConvertKit substitutes a custom Paragraph that adds the DOCX-aware attributes; the standard Paragraph is the fallback if you disable the slot.
+[`ConvertKit`](/conversion/import/docx/convertkit) 会注册 [`Paragraph`](/editor/extensions/nodes/paragraph) 扩展，并将每个段落渲染为 `<p>` 元素。ConvertKit 会替换为添加 DOCX 相关属性的自定义 Paragraph；如果禁用该插槽，则回退到标准 Paragraph。
 
-### Text alignment is bundled
+### 内置文本对齐功能
 
-ConvertKit also registers `TextAlign` and preconfigures it for `['paragraph', 'heading']`, so the `textAlign` attribute from Word renders without further setup. If you disable the bundled `textAlign` slot, the attribute stays in the JSON but isn't applied. See the [invalid schema guide](/guides/invalid-schema).
+ConvertKit 还会注册 `TextAlign`，并预先将其配置为适用于 `['paragraph', 'heading']`，因此无需其他设置，Word 中的 `textAlign` 属性就能正常渲染。如果禁用内置的 `textAlign` 插槽，该属性仍会保留在 JSON 中，但不会应用。请参阅[无效 schema 指南](/guides/invalid-schema)。
 
-### Visual differences from Word
+### 与 Word 的视觉差异
 
-The editor renders paragraphs with your CSS styles, not Word's document styles. Word's "Normal" style typically includes specific font, size, and spacing values that will not carry over to the editor. Structure and text content are preserved. Visual appearance is yours to control through your editor's CSS. See the [Styling converted content](/conversion/getting-started/guides/styling-converted-content) guide for how to manage this.
+编辑器使用你的 CSS 样式渲染段落，而不是 Word 的文档样式。Word 的“Normal”样式通常包含特定的字体、字号和间距值，这些值不会带入编辑器。文档结构和文本内容会保留。段落的视觉外观由你通过编辑器 CSS 控制。有关如何管理这些样式，请参阅[设置转换后内容的样式](/conversion/getting-started/guides/styling-converted-content)指南。
 
-## Export
+## 导出
 
-Export paragraphs using the [editor extension](/conversion/export/docx/editor-extension) or the [REST API](/conversion/export/docx/rest-api). The extension supports [`paragraphOverrides` and `textRunOverrides`](/conversion/export/docx/styles#element-overrides) for fine-grained control over paragraph and text run defaults. The REST API does not accept element overrides. To customize paragraph styling via the REST API, use [`styleOverrides`](/conversion/export/docx/styles) to redefine the "Normal" document style.
+使用[编辑器扩展](/conversion/export/docx/editor-extension)或 [REST API](/conversion/export/docx/rest-api)导出段落。该扩展支持 [`paragraphOverrides` 和 `textRunOverrides`](/conversion/export/docx/styles#element-overrides)，可精细控制段落和文本运行的默认值。REST API 不接受元素覆盖。若要通过 REST API 自定义段落样式，请使用 [`styleOverrides`](/conversion/export/docx/styles) 重新定义文档的“Normal”样式。
 
-During DOCX export, each `paragraph` node is written as a Word paragraph with the "Normal" style applied. The default Normal style uses Aptos 11pt font, 10pt after-paragraph spacing, and 1.15 line height.
+导出 DOCX 时，每个 `paragraph` 节点都会写入为应用了“Normal”样式的 Word 段落。默认的 Normal 样式使用 Aptos 11pt 字体、10pt 段后间距和 1.15 倍行高。
 
-### What round-trips
+### 可往返保留的内容
 
-- All text content and inline marks
-- Text alignment is read from the paragraph node attributes and mapped to Word alignment
-- Line height is read from the `lineHeight` paragraph attribute (a block-level `textStyle` mark still takes precedence). A proportional value (a unitless multiple such as `1.5`, or a percentage such as `150%`) is written as a relative line spacing that scales with the font size. A fixed value carrying an absolute unit (`24px`, `18pt`, `1cm`) is written as an exact line height, so the spacing set in the editor is kept. Font-relative units such as `em` and `rem` have no absolute value on their own and are left to the document default.
-- Paragraph spacing (`spacingBefore` / `spacingAfter`), left, right, and first-line indentation (`indent` / `indentRight` / `firstLineIndent`), and contextual spacing (`contextualSpacing`) are read from the paragraph node attributes. A negative first-line indent is written as a hanging indent. These attributes also apply to styled paragraphs such as blockquotes.
-- Keep with next (`keepNext`) and keep lines together (`keepLines`) are written as Word's pagination hints.
+- 所有文本内容和内联标记
+- 从段落节点属性读取文本对齐方式，并映射为 Word 对齐方式
+- 从段落的 `lineHeight` 属性读取行高（块级 `textStyle` 标记仍具有更高优先级）。比例值（如 `1.5` 这样的无单位倍数，或 `150%` 这样的百分比）会写为相对行距，并随字号缩放。带有绝对单位的固定值（`24px`、`18pt`、`1cm`）会写为精确行高，因此编辑器中设置的间距会得到保留。`em` 和 `rem` 等相对字体单位本身没有绝对值，因此会采用文档默认值。
+- 从段落节点属性读取段落间距（`spacingBefore` / `spacingAfter`）、左缩进、右缩进和首行缩进（`indent` / `indentRight` / `firstLineIndent`），以及上下文间距（`contextualSpacing`）。负的首行缩进会写为悬挂缩进。这些属性也适用于引用块等带样式的段落。
+- 将与下段同页（`keepNext`）和段中不分页（`keepLines`）写为 Word 的分页提示。
 
-<Callout title="Line spacing is preserved, exact rendering is not" variant="info">
-  Line spacing carries over, but the exported document will not match the editor pixel for pixel.
-  A word processor and a web browser measure fonts and lay out lines differently, so the same line
-  height can occupy a slightly different amount of vertical space in each. This applies to
-  proportional and fixed line heights alike.
+<Callout title="行距会保留，但渲染效果不会完全一致" variant="info">
+  行距会保留，但导出的文档在像素层面不会与编辑器完全一致。
+  文字处理软件和网页浏览器测量字体、排版行文本的方式不同，因此相同的行高
+  在两者中占据的垂直空间可能略有差异。比例行高和固定行高都存在这种情况。
 </Callout>
 
-### What is not exported
+### 不会导出的内容
 
-Paragraph borders and background color are not read during export regardless of whether they exist in the JSON.
+无论 JSON 中是否包含段落边框和背景颜色，导出时都不会读取这些信息。
 
-### Customizing export styles
+### 自定义导出样式
 
-You can override the default paragraph styling using `styleOverrides` in the export configuration:
+你可以在导出配置中使用 `styleOverrides` 覆盖默认段落样式：
 
 ```ts
 ExportDocx.configure({
@@ -129,4 +128,4 @@ ExportDocx.configure({
 })
 ```
 
-This lets you control font, size, spacing, and other Word-level properties for all paragraphs in the exported document.
+这样，你就可以控制导出文档中所有段落的字体、字号、间距和其他 Word 级属性。
