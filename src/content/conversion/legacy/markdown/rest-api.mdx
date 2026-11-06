@@ -1,38 +1,38 @@
 ---
-title: Convert Markdown via REST API (Legacy)
+title: 通过 REST API 转换 Markdown（旧版）
 tags:
   - type: deprecated
 meta:
-    title: Legacy Markdown REST API | Tiptap Conversion
-    description: Learn how to handle Markdown files via the legacy REST API for Tiptap conversion.
-    category: Conversion
+    title: 旧版 Markdown REST API | Tiptap 转换
+    description: 了解如何通过旧版 REST API 处理 Markdown 文件，以便使用 Tiptap 进行转换。
+    category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
 import { Requirements, RequirementItem } from '@/components/Requirements'
 
-<Callout title="Legacy Markdown REST API (Deprecated)" variant="warning">
-    This REST API is deprecated and will be sunset at some point in 2026 with prior communication from the team. For new integrations, use the updated [Markdown export REST API](/conversion/export/markdown/rest-api) and [Markdown import REST API](/conversion/import/markdown/rest-api).
+<Callout title="旧版 Markdown REST API（已弃用）" variant="warning">
+    此 REST API 已弃用，团队将提前通知，并计划于 2026 年某个时间停止提供。对于新的集成，请使用新版 [Markdown 导出 REST API](/conversion/export/markdown/rest-api) 和 [Markdown 导入 REST API](/conversion/import/markdown/rest-api)。
 </Callout>
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 开启试用或订阅">
+        在账户中开始[免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 计划](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Configure Convert app">
-        In case you want to integrate the REST API retrieve your App ID and Convert secret from [your dashboard](https://cloud.tiptap.dev/v2/cloud/convert).
+    <RequirementItem label="2. 配置 Convert 应用">
+        如果要集成 REST API，请从[控制面板](https://cloud.tiptap.dev/v2/cloud/convert)获取应用 ID 和 Convert 密钥。
     </RequirementItem>
-    <RequirementItem label="3. Install from private registry">
-        To install the frontend extensions, authenticate to Tiptap's private npm registry by following the [setup guide](/guides/pro-extensions).
+    <RequirementItem label="3. 从私有仓库安装">
+        要安装前端扩展，请按照[设置指南](/guides/pro-extensions)完成身份验证，以访问 Tiptap 的私有 npm 仓库。
     </RequirementItem>
 </Requirements>
 
-<Callout title="Use Postman" variant="hint"> Experiment with the Conversion API in our <a href="https://www.postman.com/tiptap-platform/tiptap-workspace/request/33042171-63643052-8e65-467b-b4de-3042ae634f65">Postman collection</a>. </Callout>
+<Callout title="使用 Postman" variant="hint">在我们的 <a href="https://www.postman.com/tiptap-platform/tiptap-workspace/request/33042171-63643052-8e65-467b-b4de-3042ae634f65">Postman 集合</a>中试用 Conversion API。</Callout>
 
-## Import API endpoint
+## 导入 API 端点
 `POST /import`
 
-Converts .md files (or gfm) to Tiptap JSON.
+将 .md 文件（或 gfm 文件）转换为 Tiptap JSON。
 
 ```bash
 curl -X POST "https://api.tiptap.dev/v1/convert/import?format=md" \
@@ -41,22 +41,22 @@ curl -X POST "https://api.tiptap.dev/v1/convert/import?format=md" \
   -F "file=@/path/to/file.md"
 ```
 
-### Import API Headers
+### 导入 API 请求头
 | Header          | Description                                                                                                |
 |-----------------|------------------------------------------------------------------------------------------------------------|
 | `Authorization` | `Bearer <your-jwt>`                                                                                        |
-| `X-App-Id`      | Convert App ID from [https://cloud.tiptap.dev/convert-settings](https://cloud.tiptap.dev/convert-settings) |
+| `X-App-Id`      | Convert 应用 ID，获取地址：[https://cloud.tiptap.dev/convert-settings](https://cloud.tiptap.dev/convert-settings) |
 
-### Import API Fields
+### 导入 API 字段
 | Field                    | Description                                                                        |
 |--------------------------|------------------------------------------------------------------------------------|
-| `file`                   | The Markdown file to convert                                                       |
-| `imageUploadCallbackUrl` | Optional endpoint for handling images if the Markdown file references local images |
+| `file`                   | 要转换的 Markdown 文件                                                             |
+| `imageUploadCallbackUrl` | 可选端点；如果 Markdown 文件引用了本地图片，可用于处理这些图片                      |
 
-## Export API endpoint
+## 导出 API 端点
 `POST /export`
 
-Converts Tiptap JSON to .md or .gfm.
+将 Tiptap JSON 转换为 .md 或 .gfm。
 
 ```bash
 curl -X POST "https://api.tiptap.dev/v1/convert/export" \
@@ -67,14 +67,14 @@ curl -X POST "https://api.tiptap.dev/v1/convert/export" \
   --output document.md
 ```
 
-#### Export API Headers
+#### 导出 API 请求头
 | Header          | Description                                                                                                |
 |-----------------|------------------------------------------------------------------------------------------------------------|
 | `Authorization` | `Bearer <your-jwt>`                                                                                        |
-| `X-App-Id`      | Convert App ID from [https://cloud.tiptap.dev/convert-settings](https://cloud.tiptap.dev/convert-settings) |
+| `X-App-Id`      | Convert 应用 ID，获取地址：[https://cloud.tiptap.dev/convert-settings](https://cloud.tiptap.dev/convert-settings) |
 
-#### Export API Fields
+#### 导出 API 字段
 | Field             | Description                                               |
 |-------------------|-----------------------------------------------------------|
 | `prosemirrorJson` | Tiptap/ProseMirror JSON                                   |
-| `to`              | Target format, `md` or `gfm` for GitHub Flavored Markdown |
+| `to`              | 目标格式；`md` 或 `gfm`（GitHub 风格 Markdown）           |
