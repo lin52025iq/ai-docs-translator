@@ -1,36 +1,36 @@
 ---
-title: Manage checkpoints
+title: 管理检查点
 meta:
-  title: Manage checkpoints | Tiptap Content AI
-  description: Learn how to manage checkpoints in the AI agent.
+  title: 管理检查点 | Tiptap Content AI
+  description: 了解如何在 AI 代理中管理检查点。
   category: Content AI
 ---
 
-Checkpoints are snapshots of the editor's content and conversation state at a specific point in time. They allow you to save the current state of the document and conversation, and restore it later if needed.
+检查点是编辑器内容和对话状态在某个时间点的快照。它们可以保存文档和对话的当前状态，并在需要时稍后恢复。
 
-## Setting a checkpoint
+## 设置检查点
 
-To create a checkpoint, use the `setCheckpoint` method:
+要创建检查点，请使用 `setCheckpoint` 方法：
 
 ```tsx
 const checkpointMessage = provider.setCheckpoint()
 ```
 
-This method returns a checkpoint message that includes the current chat messages and editor content.
+此方法会返回一条检查点消息，其中包含当前的聊天消息和编辑器内容。
 
-## Restoring a checkpoint
+## 恢复检查点
 
-To restore a previously saved checkpoint, use the `restoreCheckpoint` method:
+要恢复之前保存的检查点，请使用 `restoreCheckpoint` 方法：
 
 ```tsx
 provider.restoreCheckpoint(checkpointMessage.checkpoint)
 ```
 
-This will revert the editor content and conversation messages to the point when the checkpoint was created.
+这会将编辑器内容和对话消息恢复到创建检查点时的状态。
 
-## Automatic checkpoints
+## 自动检查点
 
-You can configure the provider to automatically save checkpoints when the user sends a message:
+你可以将 provider 配置为在用户发送消息时自动保存检查点：
 
 ```tsx
 const provider = new AiAgentProvider({
@@ -39,4 +39,4 @@ const provider = new AiAgentProvider({
 })
 ```
 
-When `autoSaveCheckpoints` is enabled, checkpoints are saved before a user message is sent and before a tool is called. To save a checkpoint at other times, you can call `setCheckpoint` manually.
+启用 `autoSaveCheckpoints` 后，系统会在发送用户消息前以及调用工具前保存检查点。若要在其他时间保存检查点，可以手动调用 `setCheckpoint`。
