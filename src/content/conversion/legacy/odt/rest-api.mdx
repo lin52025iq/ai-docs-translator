@@ -1,82 +1,81 @@
 ---
-title: Convert ODT files via REST API (Legacy)
+title: 通过 REST API 转换 ODT 文件（旧版）
 tags:
   - type: deprecated
 meta:
-    title: Legacy ODT REST API | Tiptap Conversion
-    description: Learn how to handle ODT files (OpenDocument Text) via the legacy REST API for Tiptap conversion.
+    title: 旧版 ODT REST API | Tiptap 转换
+    description: 了解如何通过旧版 REST API 处理 ODT（OpenDocument Text）文件，以便在 Tiptap 中进行转换。
     category: Conversion
 ---
 
 import { Callout } from '@/components/ui/Callout'
 import { Requirements, RequirementItem } from '@/components/Requirements'
 
-<Callout title="Legacy ODT REST API (Deprecated)" variant="warning">
-    This REST API is deprecated and will be sunset at some point in 2026 with prior communication from the team. For new integrations, use the updated [ODT export REST API](/conversion/export/odt/rest-api) and [import REST API](/conversion/import/docx/rest-api).
+<Callout title="旧版 ODT REST API（已弃用）" variant="warning">
+    此 REST API 已弃用，团队会提前通知，并将在 2026 年的某个时间停止服务。对于新的集成，请使用更新后的 [ODT 导出 REST API](/conversion/export/odt/rest-api) 和 [导入 REST API](/conversion/import/docx/rest-api)。
 </Callout>
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 激活试用或订阅">
+        在你的账户中开始[免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 方案](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Configure Convert app">
-        In case you want to integrate the REST API retrieve your App ID and Convert secret from [your dashboard](https://cloud.tiptap.dev/v2/cloud/convert).
+    <RequirementItem label="2. 配置 Convert 应用">
+        如果要集成 REST API，请从[你的控制面板](https://cloud.tiptap.dev/v2/cloud/convert)获取 App ID 和 Convert 密钥。
     </RequirementItem>
-    <RequirementItem label="3. Install from private registry">
-        To install the frontend extensions, authenticate to Tiptap's private npm registry by following the [setup guide](/guides/pro-extensions).
+    <RequirementItem label="3. 从私有注册表安装">
+        若要安装前端扩展，请按照[设置指南](/guides/pro-extensions)进行身份验证，以访问 Tiptap 的私有 npm 注册表。
     </RequirementItem>
 </Requirements>
 
-The ODT document conversion API supports conversion from and to Tiptap's JSON format.
+ODT 文档转换 API 支持与 Tiptap JSON 格式之间的双向转换。
 
-<Callout title="Review the postman collection" variant="hint">
-    You can also experiment with the Document Conversion API by heading over to our [Postman
-    Collection](https://www.postman.com/tiptap-platform/workspace/tiptap-workspace/request/33042171-d272bdec-dba8-48d9-839e-04423fad6ef2).
+<Callout title="查看 Postman 集合" variant="hint">
+    你也可以访问我们的 [Postman 集合](https://www.postman.com/tiptap-platform/workspace/tiptap-workspace/request/33042171-d272bdec-dba8-48d9-839e-04423fad6ef2)，试用文档转换 API。
 </Callout>
 
-## Import API endpoint
+## 导入 API 端点
 `POST /import`
 
-The `/import` endpoint enables the conversion of `ODT` files into Tiptap's JSON format. Users can POST documents to this endpoint.
+`/import` 端点可将 `ODT` 文件转换为 Tiptap JSON 格式。用户可以向此端点 POST 文档。
 
-### Example (cURL)
+### 示例（cURL）
  ```bash
  curl -X POST "https://api.tiptap.dev/v1/convert/import" \
    -H "Authorization: Bearer <your-jwt>" \
    -H "X-App-Id: <your-app-id>" \
    -F "file=@/path/to/document.odt"
  ```
-In this example, the request uploads an ODT file
+在此示例中，请求会上传一个 ODT 文件。
 
-### Required headers
+### 必需的请求头
 
-| Name            | Description                                                                                                                                     |
+| 名称            | 描述                                                                                                                                     |
 | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Authorization` | The JWT to authenticate the request. Example: `Bearer your-jwt`                                                                                 |
-| `X-App-Id`      | The Convert App-ID from the Collaboration settings page: [https://cloud.tiptap.dev/convert-settings](https://cloud.tiptap.dev/convert-settings) |
+| `Authorization` | 用于验证请求的 JWT。示例：`Bearer your-jwt`                                                                                 |
+| `X-App-Id`      | 来自 Collaboration 设置页面的 Convert App-ID：[https://cloud.tiptap.dev/convert-settings](https://cloud.tiptap.dev/convert-settings) |
 
-### Body
+### 请求体
 
-| Name                     | Type     | Description                                                                                                                  |
+| 名称                     | 类型     | 描述                                                                                                                  |
 | ------------------------ | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `file`                   | `File`   | The file to convert                                                                                                          |
-| `imageUploadCallbackUrl` | `string` | The callback endpoint to upload images that were encountered within the uploaded document |
+| `file`                   | `File`   | 要转换的文件                                                                                                          |
+| `imageUploadCallbackUrl` | `string` | 用于上传所上传文档中图片的回调端点 |
 
-## Export API endpoint
+## 导出 API 端点
 `POST /export`
 
-The `/export` endpoint converts Tiptap documents back into the `odt` format.
+`/export` 端点可将 Tiptap 文档转换回 `odt` 格式。
 
-### Required headers
+### 必需的请求头
 
-| Name            | Description                                                                                                                                     |
+| 名称            | 描述                                                                                                                                     |
 | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Authorization` | The JWT to authenticate the request. Example: `Bearer your-jwt`                                                                                 |
-| `X-App-Id`      | The Convert App-ID from the Collaboration settings page: [https://cloud.tiptap.dev/convert-settings](https://cloud.tiptap.dev/convert-settings) |
+| `Authorization` | 用于验证请求的 JWT。示例：`Bearer your-jwt`                                                                                 |
+| `X-App-Id`      | 来自 Collaboration 设置页面的 Convert App-ID：[https://cloud.tiptap.dev/convert-settings](https://cloud.tiptap.dev/convert-settings) |
 
-### Body
+### 请求体
 
-| Name              | Type     | Description                               |
+| 名称              | 类型     | 描述                               |
 |-------------------|----------|-------------------------------------------|
 | `prosemirrorJson` | `Object` | Tiptap/ProseMirror JSON                   |
-| `to`              | `string` | The format to convert to, should be `odt` |
+| `to`              | `string` | 要转换成的格式，应为 `odt` |
