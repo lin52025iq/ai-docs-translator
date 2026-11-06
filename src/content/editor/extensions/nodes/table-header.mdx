@@ -1,41 +1,41 @@
 ---
-title: TableHeader extension
+title: TableHeader 扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-table?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-table
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-table.svg
     url: https://npmcharts.com/compare/@tiptap/extension-table?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  title: TableHeader extension | Tiptap Editor Docs
-  description: Improve tables with Tiptap’s TableHeader extension. Easily control table headers. Source code and usage examples in the docs!
+  title: TableHeader 扩展 | Tiptap 编辑器文档
+  description: 使用 Tiptap 的 TableHeader 扩展改进表格，轻松控制表头。文档中提供源代码和用法示例！
   category: Editor
 extension:
-  name: Table Header
+  name: 表头
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-table
-  description: 'Tables don’t require a header, but let’s be honest: They look better with it.'
+  description: '表格不一定需要表头，但说实话：有表头看起来更好。'
   type: node
   icon: Table
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-This extension complements the [`Table`](/editor/extensions/nodes/table) extension and adds… you guessed it… table headers to them.
+此扩展是 [`Table`](/editor/extensions/nodes/table) 扩展的补充，顾名思义，它为表格添加了表头。
 
 <CodeDemo path="/Nodes/Table" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-table
 ```
 
-This extension requires the [`Table`](/editor/extensions/nodes/table) extension to be installed.
+此扩展需要先安装 [`Table`](/editor/extensions/nodes/table) 扩展。
 
-This extension is installed by default with the `TableKit` extension, so you don’t need to install it separately.
+此扩展默认随 `TableKit` 扩展一同安装，因此无需单独安装。
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -46,9 +46,9 @@ new Editor({
 })
 ```
 
-## Usage
+## 用法
 
-Table headers are optional. But come on, you want them, don’t you? If you don’t want them, update the `content` attribute of the [`TableRow`](/editor/extensions/nodes/table-row) extension, like this:
+表头是可选的。不过，来吧，你肯定想要表头，对吧？如果不需要，可以像这样更新 [`TableRow`](/editor/extensions/nodes/table-row) 扩展的 `content` 属性：
 
 ```js
 // Table rows without table headers
@@ -57,7 +57,7 @@ TableRow.extend({
 })
 ```
 
-This is the default, which allows table headers:
+以下是默认设置，允许使用表头：
 
 ```js
 // Table rows with table headers (default)
@@ -66,11 +66,11 @@ TableRow.extend({
 })
 ```
 
-## Source code
+## 源代码
 
 [packages/extension-table-header/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-table/src/header)
 
-## Minimal Install
+## 最小化安装
 
 ```js
 import { Editor } from '@tiptap/core'
