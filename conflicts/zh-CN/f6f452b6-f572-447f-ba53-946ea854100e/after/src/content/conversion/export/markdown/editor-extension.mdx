@@ -1,0 +1,188 @@
+---
+title: 从编辑器导出 Markdown
+tags:
+  - type: start
+  - type: beta
+  - type: version
+    label: v0.2.2
+meta:
+  title: 导出 Markdown | Tiptap 转换
+  description: 在文档中了解如何使用 Export Markdown 扩展，将 Tiptap 编辑器内容导出为 Markdown 文件。
+  category: 转换
+---
+
+import { Callout } from '@/components/ui/Callout'
+import { CodeDemo } from '@/components/CodeDemo'
+import { Requirements, RequirementItem } from '@/components/Requirements'
+import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
+
+<EnterpriseCalloutAuto variant="markdown" renderMode="sidebar" disableWaitlist />
+
+<Requirements>
+  <RequirementItem label="1. 激活试用或订阅">
+    在你的账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start
+    套餐](https://cloud.tiptap.dev/v2/billing)。
+  </RequirementItem>
+  <RequirementItem label="2. 从私有注册表安装">
+    要安装这些前端扩展，请按照[设置指南](/guides/pro-extensions)登录 Tiptap 的私有 npm 注册表。
+  </RequirementItem>
+</Requirements>
+
+<CodeDemo isPro path="/Extensions/ExportMarkdown" />
+
+使用 Tiptap 的 `@tiptap-pro/extension-export-markdown` 将编辑器内容导出为 `.md` 文件。此扩展使用 `@tiptap/markdown` 扩展在本地将编辑器内容转换为 Markdown；无需调用 API 或提供凭据。
+
+如果希望在服务器上处理转换，也可以使用 [REST API](/conversion/export/markdown/rest-api)。
+
+## 安装 Markdown 导出扩展
+
+Conversion 扩展发布在 Tiptap 的私有 npm 注册表中。请按照[私有注册表指南](/guides/pro-extensions)集成这些扩展。
+
+完成后，即可安装并导入 **Export Markdown** 扩展包。
+
+```bash
+npm i @tiptap-pro/extension-export-markdown
+```
+
+<Callout title="必需的对等依赖项" variant="hint">
+  此扩展要求在编辑器中安装并配置 `@tiptap/markdown` 扩展。`@tiptap/markdown` 扩展提供序列化逻辑，用于将编辑器内容转换为 Markdown。
+</Callout>
+
+```bash
+npm i @tiptap/markdown
+```
+
+```js
+import { ExportMarkdown } from '@tiptap-pro/extension-export-markdown'
+```
+
+## 配置扩展
+
+可以在 `configure` 方法中传入 `ExportMarkdownOptions`（`object`）来配置 `ExportMarkdown` 扩展。该对象支持以下属性：
+
+```ts
+import { Markdown } from '@tiptap/markdown'
+import { ExportMarkdown } from '@tiptap-pro/extension-export-markdown'
+
+const editor = new Editor({
+  extensions: [
+    // Other extensions ...
+    Markdown,
+    ExportMarkdown.configure({
+      onCompleteExport: (result) => {
+        // Handle the exported Markdown string
+      },
+    }),
+    // Other extensions ...
+  ],
+})
+```
+
+| 参数                 | 类型                       | 说明                                       | 默认值                   |
+| -------------------- | -------------------------- | ------------------------------------------ | ------------------------ |
+| `onCompleteExport`   | `(result: string) => void` | 接收导出 Markdown 内容字符串的回调函数    | 未提供时抛出错误         |
+
+## 导出 Markdown 文件
+
+安装扩展后，可以使用 `exportMarkdown` 命令将编辑器内容导出为 `.md` 文件。
+
+```ts
+/**
+ * Export the current document as a Markdown string.
+ *
+ * Requires the @tiptap/markdown extension to be installed and
+ * configured in the editor for serialization to work.
+ *
+ * @param options.onCompleteExport - Optional callback to override the extension-level handler
+ * @example editor.commands.exportMarkdown({ onCompleteExport: (markdown) => console.log(markdown) })
+ */
+exportMarkdown: (options?: ExportMarkdownCommandOptions) => ReturnType
+```
+
+`ExportMarkdownCommandOptions` 接口：
+
+| 属性                 | 类型                       | 说明                                                          |
+| -------------------- | -------------------------- | ------------------------------------------------------------- |
+| `onCompleteExport`   | `(result: string) => void` | 可选的单次调用回调，用于覆盖扩展级别的 `onCompleteExport` 回调 |
+
+```js
+import { Markdown } from '@tiptap/markdown'
+import { ExportMarkdown } from '@tiptap-pro/extension-export-markdown'
+
+const editor = new Editor({
+  extensions: [
+    // Other extensions ...
+    Markdown,
+    ExportMarkdown.configure({
+      onCompleteExport(result) {
+        // Download the Markdown file
+        const blob = new Blob([result], { type: 'text/markdown' })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+
+        a.href = url
+        a.download = 'document.md'
+        a.click()
+
+        URL.revokeObjectURL(url)
+      },
+    }),
+    // Other extensions ...
+  ],
+})
+
+// Use the extension-level callback
+editor.chain().exportMarkdown().run()
+
+// Or override the callback for a specific export
+editor
+  .chain()
+  .exportMarkdown({
+    onCompleteExport(result) {
+      // Custom handling, e.g. copy to clipboard
+      navigator.clipboard.writeText(result)
+    },
+  })
+  .run()
+```
+
+### 工作原理
+
+调用 `exportMarkdown` 时，扩展会使用 `@tiptap/markdown` 扩展的 `getMarkdown()` 方法，在本地序列化编辑器内容。不会向任何外部服务发送数据。`onCompleteExport` 回调会直接接收 Markdown 字符串，你可以将其下载为 `.md` 文件、复制到剪贴板，或按需进行处理。
+
+## 预期效果
+
+- **无需身份验证。** 导出完全在浏览器中执行，无需令牌，也不会调用 API。
+- **同步返回结果。** `onCompleteExport` 回调会直接接收 Markdown 字符串。
+- **默认输出 CommonMark**，并支持少数非标准语法：下划线（`++text++`）和高亮（`==text==`）。
+
+## 不支持的功能
+
+- **无法无损转换。** Markdown 没有表示字体颜色、字号、页面布局、复杂表格单元格格式或文档元数据的语法。无法映射到 CommonMark 的内容都会被丢弃，如下表所示。
+- **往返后无法保持一致。** 重新导入导出的 Markdown 会生成简化后的文档；导出时丢失的样式和布局不会恢复。
+
+## 支持情况与限制
+
+Markdown 导出会将 Tiptap 内容转换为兼容 CommonMark 的 Markdown。支持的功能取决于 Markdown 语法能够表示的内容。与 DOCX 不同，Markdown 不支持丰富的样式、页面布局或复杂的表格格式。
+
+| **功能**                 | **支持情况**                                                    |
+| ------------------------ | --------------------------------------------------------------- |
+| **文本内容**             | ✓ 段落、标题（1–6 级）、硬换行                                  |
+| **行内格式**             | ✓ 粗体、斜体、删除线、行内代码                                  |
+| **块级元素**             | ✓ 引用块、代码块（带语言标识的围栏代码）、水平分隔线            |
+| **列表**                 | ✓ 无序列表、有序列表、任务列表、嵌套列表                        |
+| **表格**                 | ✓ 基本管道符语法表格（单个表头行，不支持合并单元格）            |
+| **链接**                 | ✓ 带文本和 URL 的超链接                                         |
+| **图片**                 | ✓ 带替代文本的图片引用（不含尺寸）                              |
+| **下划线**               | ✓ 自定义语法（`++text++`，非标准）                              |
+| **高亮**                 | ✓ 自定义语法（`==text==`，非标准）                              |
+| **文本颜色 / 字体**      | ✗ Markdown 没有表示颜色、字体系列或字号的语法                   |
+| **文本对齐**             | ✗ Markdown 不支持                                               |
+| **间距 / 缩进**          | ✗ Markdown 不支持                                               |
+| **合并单元格**           | ✗ Markdown 表格不支持 colspan 或 rowspan                        |
+| **页眉和页脚**           | ✗ Markdown 中没有此概念                                         |
+| **页面布局**             | ✗ 不支持分页符、分节或页面尺寸                                  |
+| **数学公式**             | ~ 取决于扩展（配置数学扩展时可使用 `$...$` 语法）                |
+| **脚注和尾注**           | ✗ CommonMark 不支持                                             |
+
+如需查看所有格式的完整功能对比，请参阅[支持的功能](/conversion/getting-started/feature-support-matrix)矩阵。
