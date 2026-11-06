@@ -1,11 +1,11 @@
 ---
-title: Pages Live Demo
+title: Pages 在线演示
 tags:
   - type: team
   - type: beta
 meta:
-  title: Pages Live Demo | Tiptap Pages
-  description: Try a live demo of Tiptap Pages, a paginated DOCX editor with configurable page layout, headers and footers, and DOCX/PDF export.
+  title: Pages 在线演示 | Tiptap Pages
+  description: 试用 Tiptap Pages 在线演示：这是一款支持分页的 DOCX 编辑器，可配置页面布局、页眉和页脚，并支持导出 DOCX/PDF。
   category: Pages
 sidebars:
   hideSecondary: true
@@ -16,7 +16,7 @@ import { CodeDemo } from '@/components/CodeDemo'
 import { Link } from '@/components/Link'
 import { Callout } from '@/components/ui/Callout'
 
-This demo shows Tiptap Pages in a real word processor. It combines pagination, collaboration, configurable page layout, and DOCX/PDF export in a single editor.
+此演示展示了 Tiptap Pages 在实际文字处理器中的使用效果。它在同一个编辑器中集成了分页、协作、可配置的页面布局以及 DOCX/PDF 导出功能。
 
 <CodeDemo
   isScrollable
@@ -24,8 +24,7 @@ This demo shows Tiptap Pages in a real word processor. It combines pagination, c
   src="https://template.tiptap.dev/docx"
   caption={
     <>
-      <strong>Try Tiptap Pages</strong> in this interactive DOCX editor demo with pagination,
-      headers and footers, and DOCX/PDF export.
+      在这个交互式 DOCX 编辑器演示中<strong>试用 Tiptap Pages</strong>，体验分页、页眉和页脚以及 DOCX/PDF 导出。
     </>
   }
   captionActions={
@@ -35,7 +34,7 @@ This demo shows Tiptap Pages in a real word processor. It combines pagination, c
         target="_blank"
         className="flex items-center gap-1 text-grayAlpha-600 hover:text-grayAlpha-800 font-medium whitespace-nowrap"
       >
-        Full screen
+        全屏
         <Expand className="size-3" />
       </a>
       <span className="text-grayAlpha-300">|</span>
@@ -43,28 +42,26 @@ This demo shows Tiptap Pages in a real word processor. It combines pagination, c
         href="https://tiptap.dev/docs/ui-components/templates/docx-editor"
         className="flex items-center gap-1 text-grayAlpha-600 hover:text-grayAlpha-800 font-medium whitespace-nowrap"
       >
-        Learn more
+        了解更多
         <ExternalLinkIcon className="size-3" />
       </Link>
     </>
   }
 />
 
-### Paginated editing
+### 分页编辑
 
-- **Page layout**: Content flows across visual pages with built-in formats (A4, Letter, and more) and configurable margins
-- **Headers and footers**: Double-click a header or footer to edit it in place, with `{page}` and `{total}` placeholders
-- **Page breaks**: Insert explicit breaks or let Pages handle automatic pagination
-- **Zoom**: Visual zoom that does not affect document content or export
+- **页面布局**：内容会在可视页面间流动，支持内置纸张格式（A4、Letter 等）和可配置页边距
+- **页眉和页脚**：双击页眉或页脚即可直接编辑，并可使用 `{page}` 和 `{total}` 占位符
+- **分页符**：可插入显式分页符，也可让 Pages 自动分页
+- **缩放**：仅调整页面的视觉缩放，不影响文档内容或导出结果
 
-### Document workflows
+### 文档工作流
 
-- **Collaboration**: The whole document is part of a shared collaborative session, including its headers and footers
-- **DOCX import and export**: Round-trip Word documents with headers, footers, and pagination preserved via [Tiptap Conversion](/conversion/getting-started/overview)
-- **PDF export**: Render the paginated layout to a print-ready PDF
+- **协作**：整个文档都属于共享协作会话的一部分，包括页眉和页脚
+- **DOCX 导入和导出**：通过 [Tiptap Conversion](/conversion/getting-started/overview) 往返转换 Word 文档，并保留页眉、页脚和分页
+- **导出 PDF**：将分页布局渲染为适合打印的 PDF
 
-<Callout title="Access the source code" variant="info">
-  We are working on making the complete source code for this demo available through the Tiptap CLI.
-  It will be released soon. Usage is subject to our [Terms of
-  Service](https://tiptap.dev/terms-of-service) and [Pro License](https://tiptap.dev/pro-license).
+<Callout title="获取源代码" variant="info">
+  我们正在通过 Tiptap CLI 准备此演示的完整源代码，很快就会发布。使用须遵守我们的[服务条款](https://tiptap.dev/terms-of-service)和[专业版许可](https://tiptap.dev/pro-license)。
 </Callout>
