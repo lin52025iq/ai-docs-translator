@@ -1,12 +1,12 @@
 ---
-title: Numbering Format Dropdown Menu
+title: 编号格式下拉菜单
 meta:
-  title: Numbering format dropdown menu | Tiptap UI Components
-  description: Add a picker for ordered-list numbering styles (decimal, alpha, roman, nested) to your Tiptap editor. More in the documentation!
-  category: UI Components
+  title: 编号格式下拉菜单 | Tiptap UI Components
+  description: 为 Tiptap 编辑器添加有序列表编号样式选择器（十进制、字母、罗马数字、嵌套格式）。详情请参阅文档！
+  category: UI 组件
 component:
-  name: Numbering format dropdown menu
-  description: A dropdown for choosing the numbering style of an ordered list — decimal, parenthesised, nested, alpha, roman, or zero-padded.
+  name: 编号格式下拉菜单
+  description: 用于选择有序列表编号样式的下拉菜单 — 十进制、带括号、嵌套、字母、罗马数字或补零格式。
   type: component
   isFree: false
   isCloud: false
@@ -20,32 +20,30 @@ tags:
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-A numbering-style picker for ordered lists. It renders a `ListButton` to toggle the ordered list alongside a dropdown of numbering styles — decimal, parenthesised, nested decimal, upper/lower alpha, upper/lower roman, and zero-padded — each shown as a small nested-list preview.
+用于有序列表的编号样式选择器。它会显示一个用于切换有序列表的 `ListButton`，以及一个编号样式下拉菜单，其中包含十进制、带括号、嵌套十进制、大写/小写字母、大写/小写罗马数字和补零格式；每种格式都以小型嵌套列表预览呈现。
 
-The active format is read from and applied through the **`orderedListNumbering` extension** (part of `@tiptap-pro/extension-convert-kit`), so the on-screen markers always match the format that was registered. All editor logic is exposed by the `useNumberingFormatDropdownMenu` hook, so you can build a fully custom UI on top of it.
+当前格式通过 **`orderedListNumbering` 扩展**（属于 `@tiptap-pro/extension-convert-kit`）读取和应用，因此屏幕上显示的标记始终与已注册的格式一致。所有编辑器逻辑都由 `useNumberingFormatDropdownMenu` hook 提供，你可以基于它构建完全自定义的 UI。
 
 <CodeDemo
   isScrollable
   src="https://template.tiptap.dev/preview/tiptap-ui/numbering-format-dropdown-menu"
 />
 
-<Callout title="Requires the orderedListNumbering extension" variant="warning">
-  This component reads and writes a `numberingFormat` id on the outermost ordered list. The matching
-  level definitions (what each id renders as on screen and on export) are supplied by the extension
-  config — see [Setup](#setup) below. Without it, selecting a format has no visible effect.
+<Callout title="需要 orderedListNumbering 扩展" variant="warning">
+  此组件会读取和写入最外层有序列表上的 `numberingFormat` id。对应的级别定义（每个 id 在屏幕上和导出时的呈现方式）由扩展配置提供 — 请参阅下文的[设置](#setup)。如果没有此扩展，选择格式不会产生可见效果。
 </Callout>
 
-## Installation
+## 安装
 
-Add the component via the Tiptap CLI:
+通过 Tiptap CLI 添加此组件：
 
 ```bash
 npx @tiptap/cli@latest add numbering-format-dropdown-menu
 ```
 
-## Setup
+## 设置
 
-The component only stores a format **id** on the list; the extension owns the actual marker rendering. Configure `orderedListNumbering` (via ConvertKit) with one level definition per format id you want to offer, and the same definitions can be passed to `ExportDocx` for a faithful round-trip.
+此组件只会在列表上存储格式 **id**；实际标记的呈现由扩展负责。请通过 ConvertKit 配置 `orderedListNumbering`，为你希望提供的每个格式 id 定义一个级别；也可以将相同的定义传递给 `ExportDocx`，以确保往返转换时格式准确保留。
 
 ```tsx
 import { ConvertKit } from '@tiptap-pro/extension-convert-kit'
@@ -74,13 +72,13 @@ const editor = useEditor({
 })
 ```
 
-## Components
+## 组件
 
 ### `<NumberingFormatDropdownMenu />`
 
-A prebuilt component that pairs an ordered-list toggle with the numbering-style dropdown.
+预构建组件，将有序列表切换按钮与编号样式下拉菜单组合在一起。
 
-#### Usage
+#### 用法
 
 ```tsx
 export default function MyEditor() {
@@ -95,38 +93,38 @@ export default function MyEditor() {
 }
 ```
 
-#### Props
+#### 属性
 
-The component also forwards any extra `Button` props (except `type`) to the dropdown trigger.
+此组件还会将所有额外的 `Button` 属性（`type` 除外）传递给下拉菜单触发器。
 
-| Name                  | Type                | Default           | Description                                               |
-| --------------------- | ------------------- | ----------------- | --------------------------------------------------------- |
-| `editor`              | `Editor \| null`    | `undefined`       | The Tiptap editor instance.                               |
-| `formats`             | `NumberingFormat[]` | `DEFAULT_FORMATS` | The numbering format ids to offer in the dropdown.        |
-| `hideWhenUnavailable` | `boolean`           | `false`           | Hides the dropdown when an ordered list is not available. |
-| `modal`               | `boolean`           | `true`            | Whether the dropdown traps focus as a modal.              |
-| `onOpenChange`        | `(boolean) => void` | `undefined`       | Callback for when the dropdown opens or closes.           |
+| 名称                  | 类型                | 默认值            | 描述                                                   |
+| --------------------- | ------------------- | ----------------- | ------------------------------------------------------ |
+| `editor`              | `Editor \| null`    | `undefined`       | Tiptap 编辑器实例。                                    |
+| `formats`             | `NumberingFormat[]` | `DEFAULT_FORMATS` | 下拉菜单中提供的编号格式 id。                          |
+| `hideWhenUnavailable` | `boolean`           | `false`           | 没有可用的有序列表时隐藏下拉菜单。                     |
+| `modal`               | `boolean`           | `true`            | 下拉菜单是否以模态框形式锁定焦点。                     |
+| `onOpenChange`        | `(boolean) => void` | `undefined`       | 下拉菜单打开或关闭时调用的回调函数。                   |
 
 ### `<NumberingFormatButton />`
 
-A single format option, rendered as a small nested-list preview. Used to build the dropdown grid, or on its own.
+单个格式选项，以小型嵌套列表预览呈现。可用于构建下拉网格，也可单独使用。
 
-#### Props
+#### 属性
 
-| Name                  | Type              | Default     | Description                                             |
+| 名称                  | 类型              | 默认值      | 描述                                                    |
 | --------------------- | ----------------- | ----------- | ------------------------------------------------------- |
-| `editor`              | `Editor \| null`  | `undefined` | The Tiptap editor instance.                             |
-| `format`              | `NumberingFormat` | —           | The numbering format this button applies. **Required.** |
-| `hideWhenUnavailable` | `boolean`         | `false`     | Hides the button when an ordered list is not available. |
-| `onFormatSet`         | `() => void`      | `undefined` | Called after the format is successfully applied.        |
+| `editor`              | `Editor \| null`  | `undefined` | Tiptap 编辑器实例。                                     |
+| `format`              | `NumberingFormat` | —           | 此按钮应用的编号格式。**必填。**                       |
+| `hideWhenUnavailable` | `boolean`         | `false`     | 没有可用的有序列表时隐藏此按钮。                        |
+| `onFormatSet`         | `() => void`      | `undefined` | 成功应用格式后调用。                                    |
 
 ## Hooks
 
 ### `useNumberingFormatDropdownMenu()`
 
-A headless hook with the full state and actions needed to build a custom numbering dropdown.
+无界面 hook，提供构建自定义编号下拉菜单所需的完整状态和操作。
 
-#### Usage
+#### 用法
 
 ```tsx
 function MyNumberingDropdown() {
@@ -161,53 +159,53 @@ function MyNumberingDropdown() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type                | Default           | Description                                             |
-| --------------------- | ------------------- | ----------------- | ------------------------------------------------------- |
-| `editor`              | `Editor \| null`    | `undefined`       | The Tiptap editor instance.                             |
-| `formats`             | `NumberingFormat[]` | `DEFAULT_FORMATS` | The numbering format ids to offer.                      |
-| `hideWhenUnavailable` | `boolean`           | `false`           | Hides the dropdown when an ordered list is unavailable. |
+| 名称                  | 类型                | 默认值            | 描述                                           |
+| --------------------- | ------------------- | ----------------- | ---------------------------------------------- |
+| `editor`              | `Editor \| null`    | `undefined`       | Tiptap 编辑器实例。                            |
+| `formats`             | `NumberingFormat[]` | `DEFAULT_FORMATS` | 提供的编号格式 id。                            |
+| `hideWhenUnavailable` | `boolean`           | `false`           | 没有可用的有序列表时隐藏下拉菜单。             |
 
-#### Return Values
+#### 返回值
 
-| Name             | Type                                   | Description                                                      |
-| ---------------- | -------------------------------------- | ---------------------------------------------------------------- |
-| `isVisible`      | `boolean`                              | Whether the dropdown should be rendered.                         |
-| `currentFormat`  | `string`                               | The currently applied format id (`"decimal"` when none is set).  |
-| `isActive`       | `boolean`                              | Whether any of the offered formats is currently active.          |
-| `canToggle`      | `boolean`                              | Whether a numbering format can be set in the current state.      |
-| `formats`        | `NumberingFormat[]`                    | The offered format ids.                                          |
-| `setFormat`      | `(format: NumberingFormat) => boolean` | Apply a format; returns `true` on success.                       |
-| `isFormatActive` | `(format: NumberingFormat) => boolean` | Whether a given format is the active one (for an active marker). |
-| `getFormatLabel` | `(format: NumberingFormat) => string`  | Human-readable preview label for a format, e.g. `"1. 2. 3."`.    |
+| 名称             | 类型                                   | 描述                                                        |
+| ---------------- | -------------------------------------- | ----------------------------------------------------------- |
+| `isVisible`      | `boolean`                              | 是否应渲染下拉菜单。                                        |
+| `currentFormat`  | `string`                               | 当前应用的格式 id（未设置时为 `"decimal"`）。              |
+| `isActive`       | `boolean`                              | 当前是否有任一提供的格式处于启用状态。                      |
+| `canToggle`      | `boolean`                              | 当前状态下是否可以设置编号格式。                            |
+| `formats`        | `NumberingFormat[]`                    | 提供的格式 id。                                             |
+| `setFormat`      | `(format: NumberingFormat) => boolean` | 应用格式；成功时返回 `true`。                               |
+| `isFormatActive` | `(format: NumberingFormat) => boolean` | 指定格式是否为当前启用的格式（用于显示启用状态标记）。      |
+| `getFormatLabel` | `(format: NumberingFormat) => string`  | 格式的易读预览标签，例如 `"1. 2. 3."`。                    |
 
 ### `useNumberingFormatButton()`
 
-State and handlers for a single format option.
+单个格式选项的状态和处理函数。
 
-#### Props
+#### 属性
 
-| Name                  | Type              | Default     | Description                                   |
-| --------------------- | ----------------- | ----------- | --------------------------------------------- |
-| `editor`              | `Editor \| null`  | `undefined` | The Tiptap editor instance.                   |
-| `format`              | `NumberingFormat` | —           | The format this button applies. **Required.** |
-| `hideWhenUnavailable` | `boolean`         | `false`     | Hides the button when unavailable.            |
-| `onFormatSet`         | `() => void`      | `undefined` | Called after the format is set.               |
+| 名称                  | 类型              | 默认值      | 描述                                       |
+| --------------------- | ----------------- | ----------- | ------------------------------------------ |
+| `editor`              | `Editor \| null`  | `undefined` | Tiptap 编辑器实例。                        |
+| `format`              | `NumberingFormat` | —           | 此按钮应用的格式。**必填。**               |
+| `hideWhenUnavailable` | `boolean`         | `false`     | 不可用时隐藏此按钮。                       |
+| `onFormatSet`         | `() => void`      | `undefined` | 设置格式后调用。                           |
 
-#### Return Values
+#### 返回值
 
-| Name              | Type            | Description                                          |
-| ----------------- | --------------- | ---------------------------------------------------- |
-| `isVisible`       | `boolean`       | Whether the button should be rendered.               |
-| `isActive`        | `boolean`       | Whether this format is currently active.             |
-| `handleSetFormat` | `() => boolean` | Applies the format; returns `true` on success.       |
-| `canSet`          | `boolean`       | Whether the format can be set in the current state.  |
-| `label`           | `string`        | The preview label for the format, e.g. `"1. 2. 3."`. |
+| 名称              | 类型            | 描述                                             |
+| ----------------- | --------------- | ------------------------------------------------ |
+| `isVisible`       | `boolean`       | 是否应渲染此按钮。                               |
+| `isActive`        | `boolean`       | 此格式当前是否处于启用状态。                     |
+| `handleSetFormat` | `() => boolean` | 应用格式；成功时返回 `true`。                    |
+| `canSet`          | `boolean`       | 当前状态下是否可以设置此格式。                   |
+| `label`           | `string`        | 格式的预览标签，例如 `"1. 2. 3."`。             |
 
-## Utilities
+## 实用工具
 
-### Format ids and labels
+### 格式 id 和标签
 
 ```tsx
 import {
@@ -217,9 +215,9 @@ import {
 } from '@/components/tiptap-ui/numbering-format-dropdown-menu'
 ```
 
-`NumberingFormat` is one of: `decimal`, `decimal-paren`, `decimal-nested`, `upper-alpha`, `lower-alpha`, `upper-roman`, `lower-roman`, `decimal-zero`. `NUMBERING_FORMAT_IDS` lists them in dropdown order; `DEFAULT_FORMATS` is the default offered set; `NUMBERING_FORMAT_LABELS` maps each id to its preview string (e.g. `"A. B. C."`).
+`NumberingFormat` 可以是以下值之一：`decimal`、`decimal-paren`、`decimal-nested`、`upper-alpha`、`lower-alpha`、`upper-roman`、`lower-roman`、`decimal-zero`。`NUMBERING_FORMAT_IDS` 按下拉菜单中的顺序列出这些值；`DEFAULT_FORMATS` 是默认提供的格式集合；`NUMBERING_FORMAT_LABELS` 将每个 id 映射到对应的预览字符串（例如 `"A. B. C."`）。
 
-### Editor helpers
+### 编辑器辅助函数
 
 ```tsx
 import {
@@ -237,19 +235,19 @@ canSetNumberingFormat(editor) // boolean
 getFormatLabel('lower-alpha') // "a. b. c."
 ```
 
-## Requirements
+## 要求
 
-### Dependencies
+### 依赖项
 
-- `@tiptap/react` — Core Tiptap React integration
-- `@tiptap-pro/extension-convert-kit` — Provides the `orderedListNumbering` extension that stores and renders the format
+- `@tiptap/react` — Tiptap React 核心集成
+- `@tiptap-pro/extension-convert-kit` — 提供用于存储和呈现格式的 `orderedListNumbering` 扩展
 
-### Referenced Components
+### 引用的组件
 
-- `use-tiptap-editor` (hook)
-- `list-button` (component)
-- `button` (primitive)
-- `button-group` (primitive)
-- `dropdown-menu` (primitive)
-- `tiptap-utils` (lib)
-- `chevron-down-icon` (icon)
+- `use-tiptap-editor`（hook）
+- `list-button`（组件）
+- `button`（基础组件）
+- `button-group`（基础组件）
+- `dropdown-menu`（基础组件）
+- `tiptap-utils`（库）
+- `chevron-down-icon`（图标）
