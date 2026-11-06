@@ -1,44 +1,44 @@
 ---
-title: Use the AI Suggestion extension with Tiptap Content AI Cloud
+title: 在 Tiptap Content AI Cloud 中使用 AI Suggestion 扩展
 meta:
   title: Content AI Cloud | Tiptap AI Suggestion
-  description: Get started with the AI Suggestion extension by generating suggestions with the Tiptap Content AI Cloud API.
+  description: 使用 Tiptap Content AI Cloud API 生成建议，开始使用 AI Suggestion 扩展。
   category: Content AI
 ---
 
-The fastest way to get started with the AI Suggestion extension is to let the suggestions be generated with the Tiptap Content AI Cloud API. This works out of the box, you only need to provide the authentication credentials to the extension.
+开始使用 AI Suggestion 扩展的最快方式，是通过 Tiptap Content AI Cloud API 生成建议。该功能开箱即用，你只需向扩展提供身份验证凭据。
 
-This installation guide relies on using the [Tiptap Content AI backend service](https://cloud.tiptap.dev/v2/cloud/ai), if you want to configure it with your own custom LLM you need to follow [this guide](/ai/deprecated/suggestion/custom-llms) instead.
+本安装指南使用 [Tiptap Content AI 后端服务](https://cloud.tiptap.dev/v2/cloud/ai)。如果你想使用自己的自定义 LLM 进行配置，请改为参阅[本指南](/ai/deprecated/suggestion/custom-llms)。
 
-## Start your Content AI app
-1. **Activate a plan:** Begin a [free trial or choose a subscription](https://cloud.tiptap.dev/v2/billing).
-2. **Configure your AI app.** Add your OpenAI API key to your [Content AI app](https://cloud.tiptap.dev/v2/cloud/ai).
-3. **Set up authentication**: Sign a token with `aud: "AI"` and the `AI:Generation` permission, then pass it to the extension. See [Authentication](/authentication).
+## 启动 Content AI 应用
+1. **激活方案：** 开始[免费试用或选择订阅方案](https://cloud.tiptap.dev/v2/billing)。
+2. **配置 AI 应用。** 将 OpenAI API 密钥添加到你的 [Content AI 应用](https://cloud.tiptap.dev/v2/cloud/ai)。
+3. **设置身份验证：** 使用 `aud: "AI"` 和 `AI:Generation` 权限对令牌进行签名，然后将其传递给扩展。请参阅[身份验证](/authentication)。
 
-## Add Your Authentication Credentials to the Extension
+## 将身份验证凭据添加到扩展
 
-Import the extension and configure it with your signed token.
+导入扩展，并使用已签名的令牌进行配置。
 
 ```tsx
 import { Editor } from '@tiptap/core'
 import StarterKit from '@tiptap/starter-kit'
 import AiSuggestion from '@tiptap-pro/extension-ai-suggestion'
 
-// Initialize the editor
+// 初始化编辑器
 const editor = new Editor({
   extensions: [
     StarterKit,
     AiSuggestion.configure({
-      // This needs to be your generated JWT and MUST NOT be the OpenAI API key!
+      // 这里必须填写生成的 JWT，绝不能使用 OpenAI API 密钥！
       token: 'TOKEN_HERE',
-      // Other configuration options...
+      // 其他配置选项……
     }),
   ],
 })
 ```
 
-Now, when the editor loads, the suggestions will be fetched from the Tiptap Content AI API.
+现在，编辑器加载时会从 Tiptap Content AI API 获取建议。
 
-## Privacy and data handling
+## 隐私与数据处理
 
-Learn how Tiptap processes AI requests and handles your content data in our [privacy documentation](/ai/basic/privacy). This covers data retention, security practices, and compliance information for using Content AI features.
+请参阅我们的[隐私文档](/ai/basic/privacy)，了解 Tiptap 如何处理 AI 请求以及如何处理你的内容数据。文档涵盖了使用 Content AI 功能时的数据保留、安全实践和合规信息。
