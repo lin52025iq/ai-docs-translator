@@ -1,14 +1,14 @@
 ---
-title: Export custom nodes to .epub
+title: 将自定义节点导出为 .epub
 tags:
   - type: start
   - type: beta
   - type: version
     label: v0.4.3
 meta:
-    title: Export custom nodes to EPUB | Tiptap Conversion
-    description: Learn how to export custom nodes to EPUB files using the Export EPUB extension.
-    category: Conversion
+    title: 将自定义节点导出为 EPUB | Tiptap Conversion
+    description: 了解如何使用 Export EPUB 扩展将自定义节点导出为 EPUB 文件。
+    category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
@@ -19,23 +19,23 @@ import CustomNodeConversionGuide from '../_shared/_custom-node-conversion-guide.
 <EnterpriseCalloutAuto variant="epub" renderMode="sidebar" disableWaitlist />
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 激活试用或订阅">
+        在账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 计划](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Install from private registry">
-        To install this frontend extensions, authenticate to Tiptap's private npm registry by following the [setup guide](/guides/pro-extensions).
+    <RequirementItem label="2. 从私有注册表安装">
+        要安装这些前端扩展，请按照[设置指南](/guides/pro-extensions)进行操作，完成 Tiptap 私有 npm 注册表的身份验证。
     </RequirementItem>
 </Requirements>
 
-The `@tiptap-pro/extension-export-epub` extension supports custom node conversion, allowing you to define how custom nodes in your Tiptap schema should be rendered in EPUB exports.
+`@tiptap-pro/extension-export-epub` 扩展支持自定义节点转换，让你可以定义 Tiptap schema 中的自定义节点在导出为 EPUB 时的呈现方式。
 
-<Callout title="Requires Export DOCX extension" variant="warning">
-  Custom node conversion for EPUB export requires the `@tiptap-pro/extension-export-docx` extension to be installed and configured in your editor. The EPUB export uses DOCX generation under the hood before converting to EPUB. Without it, the `customNodes` option will have no effect.
+<Callout title="需要 Export DOCX 扩展" variant="warning">
+  要在导出 EPUB 时转换自定义节点，必须在编辑器中安装并配置 `@tiptap-pro/extension-export-docx` 扩展。EPUB 导出会先在底层生成 DOCX，再将其转换为 EPUB。若未安装该扩展，`customNodes` 选项将不起作用。
 </Callout>
 
-## Export custom nodes to .epub
+## 将自定义节点导出为 .epub
 
-Pass your custom node definitions via the `customNodes` option when configuring `ExportEpub`:
+配置 `ExportEpub` 时，通过 `customNodes` 选项传入自定义节点定义：
 
 ```ts
 import { ExportEpub } from '@tiptap-pro/extension-export-epub'
@@ -50,12 +50,12 @@ const editor = new Editor({
         {
           type: 'hintbox',
           render: node => {
-            // Define how your custom node renders in the document
+            // 定义自定义节点在文档中的呈现方式
           },
         },
       ],
       onCompleteExport(result) {
-        // Handle the exported EPUB
+        // 处理导出的 EPUB
       },
     }),
   ],
@@ -64,9 +64,9 @@ const editor = new Editor({
 
 <CustomNodeConversionGuide />
 
-### Define the custom node render function
+### 定义自定义节点的渲染函数
 
-And we will define how the `Hintbox` custom node should be rendered in the exported document:
+接下来，我们将定义自定义 `Hintbox` 节点在导出文档中的呈现方式：
 
 ```ts
 import { ExportEpub } from '@tiptap-pro/extension-export-epub'
@@ -81,7 +81,7 @@ import {
 
 const editor = new Editor({
   extensions: [
-    // Other extensions ...
+    // 其他扩展 ...
     ExportDocx,
     ExportEpub.configure({
       token: 'YOUR_TOKEN',
@@ -137,9 +137,9 @@ const editor = new Editor({
         ],
       },
     }),
-    // Other extensions ...
+    // 其他扩展 ...
   ],
 })
 ```
 
-You can construct any supported DOCX elements in the `render` function using the `Docx` library classes (`Paragraph`, `TextRun`, `Table`, etc.) that are provided via the `Docx` import from the `@tiptap-pro/extension-export-docx` package.
+你可以在 `render` 函数中使用 `Docx` 库的类（`Paragraph`、`TextRun`、`Table` 等）构造任意受支持的 DOCX 元素。这些类由 `@tiptap-pro/extension-export-docx` 包中的 `Docx` 导入提供。
