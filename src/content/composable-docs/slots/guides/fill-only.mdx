@@ -1,18 +1,18 @@
 ---
-title: Allow filling only
+title: 仅允许填写
 meta:
-  description: Protect document content and assign individual slots with a ready-made policy.
+  description: 使用现成策略保护文档内容并为各个插槽分配权限。
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-To prevent users from editing content outside the slots, use the [`ContentProtection`](/composable-docs/content-protection/getting-started/overview) extension.
+若要防止用户编辑插槽之外的内容，请使用 [`ContentProtection`](/composable-docs/content-protection/getting-started/overview) 扩展。
 
 <CodeDemo isPro path="/Examples/SlotFilling" />
 
-The `ContentProtection` extension takes a [content protection policy](/composable-docs/content-protection/api-reference/policy). Use the [`createSlotFillingPolicy` utility](/composable-docs/slots/api-reference/utilities#createslotfillingpolicy) to allow editing inside slots while protecting their configuration and the surrounding document.
+`ContentProtection` 扩展接受一个[内容保护策略](/composable-docs/content-protection/api-reference/policy)。使用 [`createSlotFillingPolicy` 工具](/composable-docs/slots/api-reference/utilities#createslotfillingpolicy)，即可允许用户编辑插槽内的内容，同时保护插槽配置及其周围的文档内容。
 
-For [value slots](/composable-docs/slots/guides/value-slots), the same policy allows changes only to the `value` attribute of assigned fields. Identity, configuration, other attributes, and node structure remain protected. An object or array value is edited as a whole.
+对于[值插槽](/composable-docs/slots/guides/value-slots)，同一策略只允许更改已分配字段的 `value` 属性。标识、配置、其他属性以及节点结构仍受保护。对象或数组值作为整体编辑。
 
 ```ts
 import { Slot, createSlotFillingPolicy } from '@tiptap-pro/extension-slot'
@@ -27,7 +27,7 @@ const extensions = [
 ]
 ```
 
-To allow users to edit selected slots, pass their IDs to the policy creator. This also allows editing content inside their nested slots. Use [higher-priority rules](/composable-docs/content-protection/guides/example-policies#protect-nested-content) to restrict nested content.
+若要允许用户编辑指定的插槽，请将其 ID 传给策略创建函数。这样也会允许编辑这些插槽中嵌套插槽的内容。若要限制嵌套内容，请使用[优先级更高的规则](/composable-docs/content-protection/guides/example-policies#protect-nested-content)。
 
 ```ts
 editor.commands.setContentProtectionPolicy({
@@ -37,9 +37,9 @@ editor.commands.setContentProtectionPolicy({
 })
 ```
 
-## Assign slots by role
+## 按角色分配插槽
 
-Roles belong to your application. To assign Slots by an ID prefix, read the current IDs, filter them in the host, and pass the exact IDs to `createSlotFillingPolicy`:
+角色由你的应用定义。若要根据 ID 前缀分配插槽，请读取当前 ID，在宿主应用中进行筛选，然后将确切的 ID 传给 `createSlotFillingPolicy`：
 
 ```ts
 import { getSlots } from '@tiptap-pro/extension-slot'
@@ -55,10 +55,10 @@ function applyRole(role: 'Auditor' | 'Reviewer') {
 }
 ```
 
-Call `applyRole` when the role or the set of Slot IDs changes. The policy contains exact IDs; it does not keep evaluating the prefix. An editable parent Slot also permits editing its nested content, so use higher-priority rules when a nested Slot needs a different assignment.
+当角色或插槽 ID 集合发生变化时，调用 `applyRole`。策略中保存的是确切 ID，不会持续根据前缀进行匹配。可编辑的父级插槽也允许编辑其嵌套内容，因此，如果嵌套插槽需要不同的分配规则，请使用优先级更高的规则。
 
-## Collaboration
+## 协作
 
-Slots work with [Tiptap Collaboration](/editor/extensions/functionality/collaboration). Include `Slot` alongside `Collaboration` and `ContentProtection`, and disable StarterKit's local undo/redo with `StarterKit.configure({ undoRedo: false })`.
+插槽可与 [Tiptap Collaboration](/editor/extensions/functionality/collaboration) 配合使用。将 `Slot` 与 `Collaboration` 和 `ContentProtection` 一同加入，并通过 `StarterKit.configure({ undoRedo: false })` 禁用 StarterKit 的本地撤销/重做功能。
 
-Slot content, IDs and configuration synchronize through the shared document. Each collaborator can use their own `editableSlotIds`: these restrict local edits without rejecting updates from other collaborators. Collaborative undo/redo also synchronizes without a local policy check. Slot snapshots and validation refresh when shared content changes; validation results and policies remain local.
+插槽内容、ID 和配置会通过共享文档同步。每位协作者都可以使用自己的 `editableSlotIds`：这些 ID 会限制本地编辑，但不会拒绝其他协作者的更新。协作撤销/重做也会同步，且不会经过本地策略检查。共享内容发生变化时，插槽快照和验证结果会刷新；验证结果和策略仍保留在本地。
