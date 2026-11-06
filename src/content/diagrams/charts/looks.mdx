@@ -1,6 +1,6 @@
 ---
-title: 'Looks'
-intro: "A look is a copy of a chart's style, colors, frame, legend, lines and label layout. You take it from one chart and give it to another, or save it and start new charts with it."
+title: '外观'
+intro: "外观是图表样式、颜色、边框、图例、线条和标签布局的副本。你可以从一个图表中获取外观并应用到另一个图表，也可以保存外观，并用它创建新图表。"
 headerDemo:
   path: '/Extensions/DiagramsLooks'
   isPro: true
@@ -8,82 +8,76 @@ tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Looks | Tiptap Diagrams Docs'
-  description: "A look is a copy of a chart's style, colors, frame, legend, lines and label layout."
+  title: '外观 | Tiptap Diagrams 文档'
+  description: "外观是图表样式、颜色、边框、图例、线条和标签布局的副本。"
   category: Diagrams
 ---
 
-## Quick start
+## 快速开始
 
 ```ts
 import { chartLook } from '@tiptap-pro/extension-diagrams'
 
 const [first, second] = editor.storage.diagrams.listCharts()
 
-// Give the second chart the look of the first one
+// 将第一个图表的外观应用到第二个图表
 const look = chartLook(first.spec, first.data)
 editor.commands.applyChartLook({ look, pos: second.pos })
 
-// Insert a new line chart with the same look
+// 插入一个使用相同外观的新折线图
 editor.commands.insertChart({ type: 'line', data: second.data, look })
 
-// A template also holds the chart type
+// 模板还会包含图表类型
 const template = chartLook(first.spec, first.data, { type: true })
 editor.commands.insertChart({ data: second.data, look: template })
 ```
 
-[`listCharts()`](/diagrams/api-reference/storage) returns every chart in the document.
+[`listCharts()`](/diagrams/api-reference/storage) 会返回文档中的所有图表。
 
-## What a look holds
+## 外观包含的内容
 
-`chartLook(spec, data, { references?, type? })` takes the look of a chart:
+`chartLook(spec, data, { references?, type? })` 会获取图表的外观，包括：
 
-- `style`, `palette`, `background`, `border` and `legend`
-- the grid and axis lines
-- the label layout of the category axis
-- the line styles of the series, by position: the first series' style goes to the first series
-- the reference lines
+- `style`、`palette`、`background`、`border` 和 `legend`
+- 网格线和坐标轴线
+- 分类轴的标签布局
+- 各数据系列的线条样式，按位置对应：第一个系列的样式会应用到第一个系列
+- 参考线
 
-Titles, ranges, the step and the data stay with each chart.
+标题、范围、步长和数据仍由各图表自身保留。
 
-| Option       | Type      | Description                                            |
-| ------------ | --------- | ------------------------------------------------------ |
-| `references` | `boolean` | `false` leaves out the reference lines. Default `true` |
-| `type`       | `boolean` | `true` takes the chart type too. Default `false`       |
+| 选项         | 类型      | 说明                                               |
+| ------------ | --------- | -------------------------------------------------- |
+| `references` | `boolean` | `false` 表示不包含参考线。默认为 `true`            |
+| `type`       | `boolean` | `true` 表示同时获取图表类型。默认为 `false`        |
 
-When you apply a look, the chart keeps every field the look does not set. A look with the type
-is a template: every chart it is applied to, or starts, becomes that type. A `type` passed to
-`insertChart` wins over the look's.
+应用外观时，图表会保留外观未设置的所有字段。包含图表类型的外观可用作模板：应用该外观或基于它创建的图表都会变成相应类型。传递给 `insertChart` 的 `type` 优先于外观中的类型。
 
-## Saving looks
+## 保存外观
 
-A look is plain JSON. Your app can save it, per user or per team, and pass it back later.
+外观是普通的 JSON。你的应用可以按用户或团队保存外观，并在之后传回。
 
-`readChartLook(value)` checks a saved look the same way a Chart Spec is checked, and drops
-anything that does not belong in a look. `applyChartLook` and `insertChart` call it themselves.
+`readChartLook(value)` 会像检查 Chart Spec 一样检查已保存的外观，并移除不属于外观的内容。`applyChartLook` 和 `insertChart` 会自动调用它。
 
-Applying a look copies its fields into the chart, so a document stays complete without your
-saved looks.
+应用外观会将其中的字段复制到图表中，因此即使没有保存的外观，文档也能保持完整。
 
-## Looks and styles
+## 外观与样式
 
-A [style](/diagrams/guides/styling#styles) is different from a look. A chart names a style by id
-(`spec.style`) instead of copying its fields. When you change a registered style, every chart
-that names it changes.
+[样式](/diagrams/guides/styling#styles)与外观不同。图表通过 id（`spec.style`）指定样式，而不是复制样式字段。更改已注册的样式后，所有指定了该样式的图表都会随之更改。
 
-## Commands
+## 命令
 
 ### applyChartLook
 
-Gives a chart a look, taken from another chart or saved earlier.
+为图表应用外观，该外观可以取自另一个图表，也可以是之前保存的外观。
 
 ```ts
 editor.commands.applyChartLook({ look, pos: second.pos })
 ```
 
-| Option | Type        | Description                                          |
-| ------ | ----------- | ---------------------------------------------------- |
-| `look` | `ChartLook` | The look, from `chartLook` or a saved one            |
-| `pos`  | `number`    | The chart's position. Defaults to the selected chart |
+| 选项  | 类型        | 说明                                      |
+| ----- | ----------- | ----------------------------------------- |
+| `look` | `ChartLook` | 外观，可通过 `chartLook` 获取或使用已保存的外观 |
+| `pos` | `number`    | 图表的位置。默认为当前选中的图表          |
 
-Returns `false` when there is no chart at `pos`, or no chart is selected.
+如果 `pos` 处没有图表，或当前未选中任何图表，则返回 `false`。
