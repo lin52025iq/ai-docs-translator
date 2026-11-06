@@ -1,16 +1,16 @@
 ---
-title: clearNodes command
+title: clearNodes 命令
 meta:
-  title: clearNodes command | Tiptap Editor Docs
-  description: Use the clearNodes command in Tiptap to normalize all nodes in the document to the default paragraph node. More in our docs!
-  category: Editor
+  title: clearNodes 命令 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 clearNodes 命令，将文档中的所有节点规范化为默认的段落节点。更多内容请参阅我们的文档！
+  category: 编辑器
 ---
 
-The `clearNodes` command normalizes nodes to the default node, which is the paragraph by default. It’ll even normalize all kind of lists. For advanced use cases it can come in handy, before applying a new node type.
+`clearNodes` 命令会将节点规范化为默认节点，默认情况下即段落节点。它甚至会规范化各种列表。在一些高级用例中，应用新的节点类型之前使用此命令会很有帮助。
 
-If you wonder how you can define the default node: It depends on what’s in the `content` attribute of your [`Document`](/editor/extensions/nodes/document), by default that’s `block+` (at least one block node) and the [`Paragraph`](/editor/extensions/nodes/paragraph) node has the highest priority, so it’s loaded first and is therefore the default node.
+如果你想了解如何定义默认节点：这取决于 [`Document`](/editor/extensions/nodes/document) 的 `content` 属性。默认值为 `block+`（至少包含一个块级节点），而 [`Paragraph`](/editor/extensions/nodes/paragraph) 节点的优先级最高，因此会最先加载，也就成为默认节点。
 
-## Use the clearNodes command
+## 使用 clearNodes 命令
 
 ```js
 editor.commands.clearNodes()
