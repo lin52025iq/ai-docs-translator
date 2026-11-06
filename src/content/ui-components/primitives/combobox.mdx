@@ -1,12 +1,12 @@
 ---
-title: Integrate the Combobox UI component
+title: 集成 Combobox UI 组件
 meta:
-  title: Combobox | Tiptap UI Components
-  description: Integrate a searchable dropdown component that combines an input field with a filterable list of options. Learn more in the docs.
-  category: UI Components
+  title: Combobox | Tiptap UI 组件
+  description: 集成可搜索的下拉组件，将输入框与可筛选的选项列表结合起来。了解更多信息，请参阅文档。
+  category: UI 组件
 component:
   name: Combobox
-  description: A searchable dropdown that combines an input field with a filterable list of options for enhanced user interaction.
+  description: 可搜索的下拉组件，将输入框与可筛选的选项列表结合起来，提升用户交互体验。
   type: primitive
   isFree: false
   isCloud: false
@@ -17,19 +17,19 @@ component:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A searchable dropdown component that combines an input field with a filterable list of options, built on top of Ariakit for accessibility and powered by advanced interaction patterns.
+可搜索的下拉组件，将输入框与可筛选的选项列表结合起来。该组件基于 Ariakit 构建，具有出色的无障碍支持，并采用先进的交互模式。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui-primitive/combobox" />
 
-## Install
+## 安装
 
-You can add the primitive via Tiptap CLI
+你可以通过 Tiptap CLI 添加此基础组件
 
 ```bash
 npx @tiptap/cli@latest add combobox
 ```
 
-## Usage
+## 用法
 
 ```tsx
 import React from 'react'
@@ -67,38 +67,38 @@ export default function MyComponent() {
 }
 ```
 
-## Props
+## 属性
 
 ### ComboboxProvider
 
-Built on top of Ariakit's ComboboxProvider with optimized defaults.
+基于 Ariakit 的 ComboboxProvider 构建，并采用经过优化的默认设置。
 
-| Name                | Type                      | Default | Description                                     |
-| ------------------- | ------------------------- | ------- | ----------------------------------------------- |
-| includesBaseElement | `boolean`                 | false   | Whether to include base element in tab sequence |
-| resetValueOnHide    | `boolean`                 | true    | Whether to reset value when popover is hidden   |
-| value               | `string`                  | -       | Current selected value                          |
-| setValue            | `(value: string) => void` | -       | Function to update selected value               |
+| Name                | Type                      | Default | Description                     |
+| ------------------- | ------------------------- | ------- | ------------------------------- |
+| includesBaseElement | `boolean`                 | false   | 是否将基础元素包含在 Tab 键导航顺序中 |
+| resetValueOnHide    | `boolean`                 | true    | 弹出框隐藏时是否重置值          |
+| value               | `string`                  | -       | 当前选中的值                    |
+| setValue            | `(value: string) => void` | -       | 用于更新所选值的函数            |
 
 ### Combobox
 
-The input field component for typing and filtering.
+用于输入和筛选的输入框组件。
 
-| Name       | Type      | Default | Description                       |
-| ---------- | --------- | ------- | --------------------------------- |
-| autoSelect | `boolean` | true    | Automatically select first option |
+| Name       | Type      | Default | Description       |
+| ---------- | --------- | ------- | ----------------- |
+| autoSelect | `boolean` | true    | 自动选择第一个选项 |
 
 ### ComboboxItem
 
-Individual selectable option within the combobox list.
+组合框列表中的单个可选项。
 
-| Name  | Type     | Default | Description                         |
-| ----- | -------- | ------- | ----------------------------------- |
-| value | `string` | -       | Value to select when item is chosen |
+| Name  | Type     | Default | Description     |
+| ----- | -------- | ------- | --------------- |
+| value | `string` | -       | 选择此项时选取的值 |
 
-## Styling
+## 样式
 
-The Combobox component uses CSS custom properties for theming:
+Combobox 组件使用 CSS 自定义属性进行主题设置：
 
 ```scss
 .tiptap-combobox-list {
