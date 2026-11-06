@@ -1,25 +1,24 @@
 ---
-title: 'Tools for a model'
-intro: 'An AI model, such as a large language model (LLM), can insert, read and change charts and diagrams through tool calls. On this page, "model" always means an AI model. The extension builds the tool definitions from what your editor supports. Each tool writes through the same commands that a user''s edits use.'
+title: '模型工具'
+intro: 'AI 模型（例如大型语言模型，LLM）可以通过工具调用插入、读取和更改图表与示意图。本页中的“模型”始终指 AI 模型。扩展会根据编辑器支持的功能生成工具定义。每个工具都会通过与用户编辑时相同的命令写入内容。'
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Tools for a model | Tiptap Diagrams Docs'
-  description: 'An AI model, such as a large language model (LLM), can insert, read and change charts and diagrams through tool calls.'
+  title: '模型工具 | Tiptap Diagrams 文档'
+  description: 'AI 模型（例如大型语言模型，LLM）可以通过工具调用插入、读取和更改图表与示意图。'
   category: Diagrams
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-Run the tool calls a model would make, and see each answer and its effect on the document:
+运行模型会发起的工具调用，并查看每个调用的答复及其对文档的影响：
 
 <CodeDemo isPro viewer view="preview" path="/Extensions/DiagramsModelTools" />
 
-## Quick start
+## 快速开始
 
-Offer the model the chart tools and the diagram tools. Answer each tool call with the matching
-run function:
+向模型提供图表工具和示意图工具。对每个工具调用，使用相应的运行函数进行响应：
 
 ```ts
 import {
@@ -37,42 +36,38 @@ const result = runChartTool(editor, name, input)
 const other = runDiagramTool(editor, name, input)
 ```
 
-## Functions
+## 函数
 
-| Function                              | Returns                                                                                                   |
+| 函数                                  | 返回值                                                                                                   |
 | ------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `getChartToolDefinitions(editor)`     | Tool definitions (`name`, `description`, `inputSchema`) for the [chart tools](/diagrams/guides/ai#charts) |
-| `runChartTool(editor, name, input)`   | `{ ok, output, pos? }` after running one chart tool                                                       |
-| `getDiagramToolDefinitions(editor)`   | Tool definitions for the [diagram tools](/diagrams/guides/ai#diagrams)                                    |
-| `runDiagramTool(editor, name, input)` | `{ ok, output, pos? }` after running one diagram tool                                                     |
+| `getChartToolDefinitions(editor)`     | 图表工具的工具定义（`name`、`description`、`inputSchema`），参见[图表工具](/diagrams/guides/ai#charts) |
+| `runChartTool(editor, name, input)`   | 运行一个图表工具后返回 `{ ok, output, pos? }`                                                            |
+| `getDiagramToolDefinitions(editor)`   | [示意图工具](/diagrams/guides/ai#diagrams)的工具定义                                                      |
+| `runDiagramTool(editor, name, input)` | 运行一个示意图工具后返回 `{ ok, output, pos? }`                                                          |
 
-## What a call returns
+## 调用返回什么
 
-| Field    | Type      | Description                                                                                              |
-| -------- | --------- | -------------------------------------------------------------------------------------------------------- |
-| `ok`     | `boolean` | Whether the call succeeded                                                                               |
-| `output` | `string`  | JSON, or on failure a message that tells the model how to fix the call                                   |
-| `pos`    | `number`  | The position of the chart or diagram that an insert or an update wrote. The end of `output` names it too |
+| 字段     | 类型      | 说明                                                                                              |
+| -------- | --------- | ------------------------------------------------------------------------------------------------- |
+| `ok`     | `boolean` | 调用是否成功                                                                                      |
+| `output` | `string`  | JSON；如果失败，则为一条告知模型如何修正调用的消息                                                 |
+| `pos`    | `number`  | 插入或更新操作写入的图表或示意图的位置。`output` 末尾也会标明该位置                                |
 
-## Charts
+## 图表
 
-The chart tools are `insertChart`, `insertLinkedChart`, `updateChart`, `readChart`, `listCharts`
-and `describeChartCapabilities`. Their definitions list the formats and Renderers of your editor
-as enums.
+图表工具包括 `insertChart`、`insertLinkedChart`、`updateChart`、`readChart`、`listCharts` 和 `describeChartCapabilities`。这些工具的定义会将编辑器支持的格式和渲染器列为枚举值。
 
-### Only what this editor can draw
+### 仅支持此编辑器能够绘制的图表
 
-The tools never insert a chart that no registered Renderer can draw. The `type` enum lists the
-chart types that a registered Renderer draws, and `describeChartCapabilities` names the types of
-each Renderer.
+这些工具不会插入任何未注册渲染器能够绘制的图表。`type` 枚举会列出已注册渲染器能够绘制的图表类型，而 `describeChartCapabilities` 会列出每个渲染器支持的类型。
 
-These calls are refused, and nothing is written:
+以下调用会被拒绝，且不会写入任何内容：
 
-- an insert of a chart that no Renderer draws
-- a `renderer` that is not registered, or that does not draw the chart's type
-- an `updateChart` call that changes the type to one no Renderer draws
+- 插入渲染器无法绘制的图表
+- 使用未注册的 `renderer`，或使用无法绘制该图表类型的渲染器
+- 调用 `updateChart` 将图表类型改为任何渲染器都无法绘制的类型
 
-The answer names the types or Renderers to use instead:
+答复会指出可改用的类型或渲染器：
 
 ```json
 {
@@ -81,44 +76,29 @@ The answer names the types or Renderers to use instead:
 }
 ```
 
-### A chart that reads a Data Source
+### 读取数据源的图表
 
-The tool `insertLinkedChart` inserts a chart and links it to a [Data Source](/diagrams/data/sources), such
-as a CSV file at a URL, with `linkChartSource`. The command of the same name,
-[`insertLinkedChart`](/diagrams/data/tables#insertlinkedchart), is different: it makes a chart that
-follows a table in the document. The tool cannot do that, because it does not offer the
-`document-table` source.
+`insertLinkedChart` 工具会插入图表，并使用 `linkChartSource` 将其链接到[数据源](/diagrams/data/sources)，例如 URL 上的 CSV 文件。同名命令 [`insertLinkedChart`](/diagrams/data/tables#insertlinkedchart) 则不同：它会创建一个跟随文档中表格的图表。该工具无法实现这一点，因为它不提供 `document-table` 数据源。
 
-| Parameter  | Type      | Description                                                                         |
-| ---------- | --------- | ----------------------------------------------------------------------------------- |
-| `provider` | `string`  | The Data Source. An enum of the registered Data Sources other than `document-table` |
-| `address`  | `object`  | Where the source reads from, such as `{ url }` for a CSV or JSON file at a URL      |
-| `type`     | `string`  | The chart type. Optional                                                            |
-| `title`    | `string`  | The chart's title. Optional                                                         |
-| `readOnly` | `boolean` | The chart is read-only unless this is `false`                                       |
+| 参数       | 类型      | 说明                                                                         |
+| ---------- | --------- | ---------------------------------------------------------------------------- |
+| `provider` | `string`  | 数据源。枚举值为已注册的数据源，但不包括 `document-table`                    |
+| `address`  | `object`  | 数据源读取位置，例如 URL 上的 CSV 或 JSON 文件对应的 `{ url }`               |
+| `type`     | `string`  | 图表类型，可选                                                               |
+| `title`    | `string`  | 图表标题，可选                                                               |
+| `readOnly` | `boolean` | 除非值为 `false`，否则图表为只读                                             |
 
-The data arrives after the call returns. A failed read goes to `onSourceError`. The tool links
-`url-csv` and `url-json` only when your app sets [`allowSourceUrl`](/diagrams/api-reference/options#allowsourceurl),
-and only to the URLs it allows. `allowSourceUrl` decides where a request may go, not what the URL
-holds.
-A model can still put document text into an allowed URL, for example in its query. So allow only
-hosts you trust with the document's content.
+调用返回后，数据才会到达。读取失败时会触发 `onSourceError`。只有当应用设置了 [`allowSourceUrl`](/diagrams/api-reference/options#allowsourceurl) 时，工具才会链接 `url-csv` 和 `url-json`，且只能链接到该选项允许的 URL。`allowSourceUrl` 决定请求可以发往何处，而不限制 URL 中包含的内容。
+模型仍可能将文档文本放入允许的 URL 中，例如作为查询参数。因此，只允许访问你信任其能够处理文档内容的主机。
 
-## Diagrams
+## 示意图
 
-The diagram tools are `insertDiagram`, `updateDiagram`, `readDiagram` and `listDiagrams`. A model
-writes Mermaid, which it already knows. `listDiagrams` names each diagram's `format`. A draw.io or
-BPMN diagram is read and changed as its whole XML.
+示意图工具包括 `insertDiagram`、`updateDiagram`、`readDiagram` 和 `listDiagrams`。模型会编写其已熟悉的 Mermaid。`listDiagrams` 会列出每个示意图的 `format`。读取或更改 draw.io 或 BPMN 示意图时，会将其整个 XML 作为整体处理。
 
-A [Mermaid chart kind](/diagrams/charts/overview#importmermaidchart), such as a pie, is a chart. A diagram tool call with one is
-refused, with a message that points the model to `insertChart`.
+[Mermaid 图表类型](/diagrams/charts/overview#importmermaidchart)（例如饼图）属于图表。使用此类图表的示意图工具调用会被拒绝，并提示模型改用 `insertChart`。
 
-### Formats and Renderers
+### 格式和渲染器
 
-- **`insertDiagram` creates Mermaid or BPMN.** For BPMN, the call passes `format: 'bpmn'`. Without
-  a `format`, it creates Mermaid, unless your editor draws BPMN but not Mermaid.
-- **`insertDiagram` does not offer draw.io.** Its `format` enum is `mermaid` and `bpmn`. The
-  model can read and change an existing draw.io diagram with `readDiagram` and `updateDiagram`.
-- **The tools write the source whatever Renderers are registered**, as the commands do. A format
-  or a kind that no Renderer here draws is written all the same. The `output` tells the model that
-  it shows as unavailable in this editor.
+- **`insertDiagram` 可创建 Mermaid 或 BPMN。** 对于 BPMN，调用需传入 `format: 'bpmn'`。如果未传入 `format`，则会创建 Mermaid；但如果编辑器支持绘制 BPMN 而不支持 Mermaid，则会创建 BPMN。
+- **`insertDiagram` 不支持 draw.io。** 其 `format` 枚举值为 `mermaid` 和 `bpmn`。模型可以使用 `readDiagram` 和 `updateDiagram` 读取和更改现有的 draw.io 示意图。
+- **这些工具会像命令一样写入源数据，无论注册了哪些渲染器。** 即使当前没有任何渲染器能够绘制某种格式或类型，工具仍会写入它。`output` 会告知模型该内容在此编辑器中显示为不可用。
