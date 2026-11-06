@@ -1,24 +1,24 @@
 ---
 tags:
   - type: editor
-title: Migrate from CKEditor 5 to Tiptap
+title: 从 CKEditor 5 迁移到 Tiptap
 meta:
-  title: Migrate from CKEditor 5 | Tiptap Editor Docs
-  description: Learn how to migrate your existing CKEditor 5 editor to Tiptap. Complete guide covering content migration, setup, and feature mapping.
-  category: Editor
+  title: 从 CKEditor 5 迁移 | Tiptap 编辑器文档
+  description: 了解如何将现有的 CKEditor 5 编辑器迁移到 Tiptap。本完整指南涵盖内容迁移、设置和功能映射。
+  category: 编辑器
 ---
 
 import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 
 <EnterpriseCalloutAuto variant="migration" renderMode="sidebar" disableWaitlist/>
 
-If you're moving away from CKEditor, Tiptap is a great alternative.Migrating from CKEditor 5 to Tiptap is straightforward. This guide covers everything you need to know for a smooth transition.
+如果你打算弃用 CKEditor，Tiptap 是一个很好的替代方案。从 CKEditor 5 迁移到 Tiptap 十分简单。本指南将介绍如何顺利完成迁移。
 
-## Content migration
+## 内容迁移
 
-### HTML content compatibility
+### HTML 内容兼容性
 
-CKEditor 5 typically outputs HTML content, which Tiptap can use directly without any conversion:
+CKEditor 5 通常会输出 HTML 内容，Tiptap 可以直接使用，无需进行任何转换：
 
 ```ts
 // Your existing CKEditor 5 content
@@ -32,23 +32,23 @@ const editor = new Editor({
 })
 ```
 
-While HTML works perfectly, we recommend converting it to Tiptap's JSON format for better performance and readability. For batch conversion of existing content, use the [HTML utility](/editor/api/utilities/html) to convert HTML to JSON programmatically.
+HTML 可以正常使用，但我们建议将其转换为 Tiptap 的 JSON 格式，以提升性能和可读性。若要批量转换现有内容，请使用 [HTML 工具](/editor/api/utilities/html)以编程方式将 HTML 转换为 JSON。
 
-## Editor setup
+## 编辑器设置
 
-### Installation
+### 安装
 
-First, install Tiptap and its dependencies:
+首先，安装 Tiptap 及其依赖项：
 
 ```bash
 npm install @tiptap/core @tiptap/starter-kit
 ```
 
-Tiptap supports all modern frontend UI frameworks like React and Vue. Follow the framework-specific installation instructions in our [installation guides](/editor/getting-started/install).
+Tiptap 支持 React 和 Vue 等所有现代前端 UI 框架。请参阅我们的[安装指南](/editor/getting-started/install)，按照对应框架的说明进行安装。
 
-### Basic editor setup
+### 基本编辑器设置
 
-Replace your CKEditor 5 initialization with Tiptap:
+将 CKEditor 5 初始化代码替换为 Tiptap：
 
 ```ts
 // CKEditor 5 (before)
@@ -73,34 +73,34 @@ const editor = new Editor({
 })
 ```
 
-## Extensions
+## 扩展
 
-### Understanding Tiptap's extension system
+### 了解 Tiptap 的扩展系统
 
-Tiptap uses a modular extension system that resembles CKEditor 5's plugin architecture. Each feature is an independent extension that can be configured and customized.
+Tiptap 使用模块化的扩展系统，其架构与 CKEditor 5 的插件架构类似。每项功能都是一个独立的扩展，可以进行配置和自定义。
 
-The [StarterKit](/editor/extensions/functionality/starterkit) is a bundle of all the basic extensions, and you can add or remove other extensions as needed.
+[StarterKit](/editor/extensions/functionality/starterkit) 包含所有基本扩展，你可以根据需要添加或移除其他扩展。
 
-Explore all available extensions in our [extensions guide](/editor/extensions/overview), or [create your own](/editor/extensions/custom-extensions) to support custom functionality and HTML elements.
+请在我们的[扩展指南](/editor/extensions/overview)中查看所有可用扩展，或[创建自己的扩展](/editor/extensions/custom-extensions)，以支持自定义功能和 HTML 元素。
 
-### Common CKEditor 5 plugin equivalents
+### 常见 CKEditor 5 插件对应项
 
-| CKEditor 5 Plugin | Tiptap Extension                        | Notes                  |
-| ----------------- | --------------------------------------- | ---------------------- |
-| `Bold`            | `Bold`                                  | Included in StarterKit |
-| `Italic`          | `Italic`                                | Included in StarterKit |
-| `List`            | `BulletList`, `OrderedList`, `ListItem` | Included in StarterKit |
-| `Link`            | `Link`                                  | Included in StarterKit |
-| `Image`           | `Image`                                 | Available separately   |
-| `Table`           | `Table`                                 | Available separately   |
-| `CodeBlock`       | `CodeBlock`                             | Included in StarterKit |
-| `Heading`         | `Heading`                               | Included in StarterKit |
-| `Blockquote`      | `Blockquote`                            | Included in StarterKit |
-| `Alignment`       | `TextAlign`                             | Available separately   |
-| `FontColor`       | `TextStyle`, `Color`                    | Available separately   |
-| `FontSize`        | `TextStyle`, `FontSize`                 | Available separately   |
+| CKEditor 5 插件 | Tiptap 扩展                             | 说明         |
+| ---------------- | --------------------------------------- | ------------ |
+| `Bold`           | `Bold`                                  | 已包含在 StarterKit 中 |
+| `Italic`         | `Italic`                                | 已包含在 StarterKit 中 |
+| `List`           | `BulletList`, `OrderedList`, `ListItem` | 已包含在 StarterKit 中 |
+| `Link`           | `Link`                                  | 已包含在 StarterKit 中 |
+| `Image`          | `Image`                                 | 需单独安装   |
+| `Table`          | `Table`                                 | 需单独安装   |
+| `CodeBlock`      | `CodeBlock`                             | 已包含在 StarterKit 中 |
+| `Heading`        | `Heading`                               | 已包含在 StarterKit 中 |
+| `Blockquote`     | `Blockquote`                            | 已包含在 StarterKit 中 |
+| `Alignment`      | `TextAlign`                             | 需单独安装   |
+| `FontColor`      | `TextStyle`, `Color`                    | 需单独安装   |
+| `FontSize`       | `TextStyle`, `FontSize`                 | 需单独安装   |
 
-### Extension configuration
+### 配置扩展
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -132,15 +132,15 @@ const editor = new Editor({
 })
 ```
 
-### Custom extensions
+### 自定义扩展
 
-For CKEditor 5 custom plugins, create custom Tiptap extensions. See our [custom extensions guide](/editor/extensions/custom-extensions) for detailed instructions.
+对于 CKEditor 5 的自定义插件，请创建自定义 Tiptap 扩展。详细说明请参阅我们的[自定义扩展指南](/editor/extensions/custom-extensions)。
 
-## UI implementation
+## UI 实现
 
-### Toolbar implementation
+### 工具栏实现
 
-CKEditor 5's toolbar configuration translates to custom UI components in Tiptap:
+在 Tiptap 中，CKEditor 5 的工具栏配置需要转换为自定义 UI 组件：
 
 ```tsx
 // CKEditor 5 toolbar config
@@ -221,16 +221,16 @@ function Toolbar({ editor }) {
 }
 ```
 
-### Pre-built UI components
+### 预构建 UI 组件
 
-For faster development, use Tiptap's pre-built UI components:
+如需加快开发速度，可以使用 Tiptap 的预构建 UI 组件：
 
-- Explore our [UI components](/ui-components/getting-started/overview) for ready-to-use components
-- Check out practical examples in our [default text editor example](/examples/basics/default-text-editor)
+- 浏览我们的 [UI 组件](/ui-components/getting-started/overview)，获取可直接使用的组件
+- 查看[默认文本编辑器示例](/examples/basics/default-text-editor)中的实用示例
 
-### Balloon editor equivalent
+### 气泡编辑器的对应实现
 
-CKEditor 5's balloon editor can be replicated using Tiptap's BubbleMenu:
+CKEditor 5 的气泡编辑器可以通过 Tiptap 的 BubbleMenu 实现：
 
 ```tsx
 import { BubbleMenu } from '@tiptap/react'
@@ -273,25 +273,25 @@ function MyEditor() {
 }
 ```
 
-## Migration checklist
+## 迁移检查清单
 
 <Checklist>
-  <CheckboxItem>Install Tiptap packages</CheckboxItem>
-  <CheckboxItem>Replace CKEditor 5 initialization with Tiptap setup</CheckboxItem>
-  <CheckboxItem>Map CKEditor 5 plugins to Tiptap extensions</CheckboxItem>
-  <CheckboxItem>Migrate toolbar configuration to custom UI components</CheckboxItem>
-  <CheckboxItem>Test content compatibility</CheckboxItem>
-  <CheckboxItem>Convert existing content to JSON format (recommended)</CheckboxItem>
-  <CheckboxItem>Implement custom extensions for any missing functionality</CheckboxItem>
-  <CheckboxItem>Update event handlers and API calls</CheckboxItem>
-  <CheckboxItem>Test balloon/bubble menu functionality if used</CheckboxItem>
-  <CheckboxItem>Verify image upload and handling</CheckboxItem>
-  <CheckboxItem>Test table functionality if used</CheckboxItem>
+  <CheckboxItem>安装 Tiptap 软件包</CheckboxItem>
+  <CheckboxItem>将 CKEditor 5 初始化代码替换为 Tiptap 设置</CheckboxItem>
+  <CheckboxItem>将 CKEditor 5 插件映射为 Tiptap 扩展</CheckboxItem>
+  <CheckboxItem>将工具栏配置迁移为自定义 UI 组件</CheckboxItem>
+  <CheckboxItem>测试内容兼容性</CheckboxItem>
+  <CheckboxItem>将现有内容转换为 JSON 格式（推荐）</CheckboxItem>
+  <CheckboxItem>为缺失的功能实现自定义扩展</CheckboxItem>
+  <CheckboxItem>更新事件处理程序和 API 调用</CheckboxItem>
+  <CheckboxItem>如果使用了气泡菜单，请测试其功能</CheckboxItem>
+  <CheckboxItem>验证图片上传和处理</CheckboxItem>
+  <CheckboxItem>如果使用了表格，请测试其功能</CheckboxItem>
 </Checklist>
 
-## Next steps
+## 后续步骤
 
-- Explore the [extension overview](/editor/extensions/overview) to discover all available extensions
-- Learn about [custom extensions](/editor/extensions/custom-extensions) for advanced customization
-- Check out our [examples](/examples) for implementation inspiration
-- Review the [performance guide](/guides/performance) for optimization tips
+- 浏览[扩展概览](/editor/extensions/overview)，了解所有可用扩展
+- 了解用于高级自定义的[自定义扩展](/editor/extensions/custom-extensions)
+- 查看我们的[示例](/examples)，获取实现灵感
+- 阅读[性能指南](/guides/performance)，了解优化技巧
