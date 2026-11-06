@@ -1,45 +1,45 @@
 ---
-title: Audio extension
+title: 音频扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-audio?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-audio
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-audio.svg
     url: https://npmcharts.com/compare/@tiptap/extension-audio?minimal=true
-    label: Downloads
+    label: 下载量
 extension:
   name: Audio
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-audio
-  description: Embed audio files directly into your documents.
+  description: 在文档中直接嵌入音频文件。
   type: node
   icon: AudioLines
 meta:
-  title: Audio extension | Tiptap Editor Docs
-  description: Use the Audio extension in Tiptap to embed audio files in your documents. Learn more in our docs!
-  category: Editor
+  title: 音频扩展 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用音频扩展，将音频文件嵌入文档。更多信息请参阅文档！
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-This extension adds support for native `<audio>` elements in the editor, allowing you to embed audio files directly into your documents.
+此扩展为编辑器添加了对原生 `<audio>` 元素的支持，让你可以在文档中直接嵌入音频文件。
 
 <CodeDemo path="/Nodes/Audio" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-audio
 ```
 
-## Settings
+## 设置
 
 ### addPasteHandler
 
-Controls if the paste handler for audio sources should be added.
+控制是否添加用于处理音频源的粘贴处理器。
 
-Default: `true`
+默认值：`true`
 
 ```js
 Audio.configure({
@@ -49,9 +49,9 @@ Audio.configure({
 
 ### autoplay
 
-Controls if the audio should autoplay.
+控制音频是否自动播放。
 
-Default: `false`
+默认值：`false`
 
 ```js
 Audio.configure({
@@ -61,9 +61,9 @@ Audio.configure({
 
 ### controls
 
-Controls if the audio element should render the native controls.
+控制音频元素是否显示原生控件。
 
-Default: `true`
+默认值：`true`
 
 ```js
 Audio.configure({
@@ -73,9 +73,9 @@ Audio.configure({
 
 ### loop
 
-Controls if the audio should loop.
+控制音频是否循环播放。
 
-Default: `false`
+默认值：`false`
 
 ```js
 Audio.configure({
@@ -85,9 +85,9 @@ Audio.configure({
 
 ### muted
 
-Controls if the audio should be muted.
+控制音频是否静音。
 
-Default: `false`
+默认值：`false`
 
 ```js
 Audio.configure({
@@ -97,9 +97,9 @@ Audio.configure({
 
 ### preload
 
-The preload behavior for the audio element.
+音频元素的预加载行为。
 
-Default: `'metadata'`
+默认值：`'metadata'`
 
 ```js
 Audio.configure({
@@ -109,9 +109,9 @@ Audio.configure({
 
 ### controlslist
 
-Provides the controlslist attribute for the audio element.
+设置音频元素的 controlslist 属性。
 
-Default: `undefined`
+默认值：`undefined`
 
 ```js
 Audio.configure({
@@ -121,9 +121,9 @@ Audio.configure({
 
 ### crossorigin
 
-Sets the crossorigin attribute for the audio element.
+设置音频元素的 crossorigin 属性。
 
-Default: `undefined`
+默认值：`undefined`
 
 ```js
 Audio.configure({
@@ -133,9 +133,9 @@ Audio.configure({
 
 ### disableRemotePlayback
 
-Controls if remote playback should be disabled on the audio element.
+控制是否禁用音频元素的远程播放。
 
-Default: `false`
+默认值：`false`
 
 ```js
 Audio.configure({
@@ -145,9 +145,9 @@ Audio.configure({
 
 ### allowBase64
 
-Allows data: URLs for audio sources.
+允许将 data: URL 用作音频源。
 
-Default: `false`
+默认值：`false`
 
 ```js
 Audio.configure({
@@ -157,7 +157,7 @@ Audio.configure({
 
 ### HTMLAttributes
 
-Custom HTML attributes that should be added to the rendered HTML tag.
+要添加到渲染后 HTML 标签的自定义 HTML 属性。
 
 ```js
 Audio.configure({
@@ -169,9 +169,9 @@ Audio.configure({
 
 ### inline
 
-Controls if the audio node should be inline or not.
+控制音频节点是否以内联方式显示。
 
-Default: `false`
+默认值：`false`
 
 ```js
 Audio.configure({
@@ -179,11 +179,11 @@ Audio.configure({
 })
 ```
 
-## Commands
+## 命令
 
 ### setAudio(options)
 
-Inserts an audio element at the current position with the specified options. The audio element will be embedded as a block-level node by default, but can be configured to be inline.
+在当前位置插入一个具有指定选项的音频元素。默认情况下，音频元素会作为块级节点嵌入，但也可以配置为内联节点。
 
 ```js
 editor.commands.setAudio({
@@ -193,21 +193,21 @@ editor.commands.setAudio({
 })
 ```
 
-#### Options
+#### 选项
 
-| Option                | Description                                                                | Optional | Default    |
-| --------------------- | -------------------------------------------------------------------------- | -------- | ---------- |
-| src                   | The URL of the audio file to embed                                         | ❌       | -          |
-| controls              | Show native audio controls (play, pause, volume, etc.)                     | ✅       | true       |
-| autoplay              | Automatically start playing the audio when the page loads                  | ✅       | false      |
-| loop                  | Loop the audio playback continuously                                       | ✅       | false      |
-| muted                 | Start the audio in a muted state                                           | ✅       | false      |
-| preload               | How the audio should be loaded ('auto', 'metadata', 'none', or null)       | ✅       | 'metadata' |
-| controlslist          | Comma-separated list of controls to hide (e.g., 'nodownload')              | ✅       | undefined  |
-| crossorigin           | CORS setting for the audio element ('anonymous', 'use-credentials', or '') | ✅       | undefined  |
-| disableRemotePlayback | Disable remote playback on supported devices                               | ✅       | false      |
-| HTMLAttributes        | Additional HTML attributes to apply to the audio element                   | ✅       | {}         |
+| 选项                  | 说明                                                                     | 可选 | 默认值     |
+| --------------------- | ------------------------------------------------------------------------ | ---- | ---------- |
+| src                   | 要嵌入的音频文件 URL                                                     | ❌   | -          |
+| controls              | 显示原生音频控件（播放、暂停、音量等）                                   | ✅   | true       |
+| autoplay              | 页面加载时自动开始播放音频                                               | ✅   | false      |
+| loop                  | 连续循环播放音频                                                         | ✅   | false      |
+| muted                 | 初始时将音频设为静音                                                     | ✅   | false      |
+| preload               | 音频的加载方式（'auto'、'metadata'、'none' 或 null）                     | ✅   | 'metadata' |
+| controlslist          | 以逗号分隔的要隐藏的控件列表（例如 'nodownload'）                        | ✅   | undefined  |
+| crossorigin           | 音频元素的 CORS 设置（'anonymous'、'use-credentials' 或 ''）             | ✅   | undefined  |
+| disableRemotePlayback | 在支持的设备上禁用远程播放                                               | ✅   | false      |
+| HTMLAttributes        | 要应用于音频元素的其他 HTML 属性                                         | ✅   | {}         |
 
-## Source code
+## 源代码
 
 [packages/extension-audio/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-audio/)
