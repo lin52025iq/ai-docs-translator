@@ -1,24 +1,24 @@
 ---
-title: extendMarkRange command
+title: extendMarkRange 命令
 meta:
-  title: extendMarkRange command | Tiptap Editor Docs
-  description: Use the extendMarkRange command in Tiptap to expand the current selection to include the specified mark. Learn more in our docs!
-  category: Editor
+  title: extendMarkRange 命令 | Tiptap 编辑器文档
+  description: 使用 Tiptap 中的 extendMarkRange 命令，将当前选区扩展至包含指定标记。了解更多信息，请参阅我们的文档！
+  category: 编辑器
 ---
 
-The `extendMarkRange` command expands the current selection to encompass the current mark. If the current selection doesn’t have the specified mark, nothing changes.
+`extendMarkRange` 命令会扩展当前选区，使其包含当前标记。如果当前选区没有指定的标记，则不会发生任何变化。
 
-## Parameters
+## 参数
 
 `typeOrName: string | MarkType`
 
-Name or type of the mark.
+标记的名称或类型。
 
 `attributes?: Record<string, any>`
 
-Optionally, you can specify attributes that the extended mark must contain.
+也可以指定扩展后的标记必须包含的属性。
 
-## Use the extendMarkRange command
+## 使用 extendMarkRange 命令
 
 ```js
 // Expand selection to link marks
