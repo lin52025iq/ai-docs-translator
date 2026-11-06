@@ -1,14 +1,14 @@
 ---
-title: Extend your EPUB export with Headers & Footers
+title: 使用页眉和页脚扩展 EPUB 导出
 tags:
   - type: start
   - type: beta
   - type: version
     label: v0.4.3
 meta:
-    title: Extend your EPUB export with Headers & Footers | Tiptap Conversion
-    description: Learn how to extend your EPUB exports with custom Headers & Footers using the Export EPUB extension.
-    category: Conversion
+    title: 使用页眉和页脚扩展 EPUB 导出 | Tiptap Conversion
+    description: 了解如何使用 Export EPUB 扩展，通过自定义页眉和页脚扩展 EPUB 导出。
+    category: 转换
 ---
 
 import { Requirements, RequirementItem } from '@/components/Requirements'
@@ -17,45 +17,45 @@ import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 <EnterpriseCalloutAuto variant="epub" renderMode="sidebar" disableWaitlist />
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 开通试用或订阅">
+        在账户中开始[免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 套餐](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Install from private registry">
-        To install this frontend extension, authenticate to Tiptap's private npm registry by following the [setup guide](/guides/pro-extensions).
+    <RequirementItem label="2. 从私有注册表安装">
+        如需安装此前端扩展，请按照[设置指南](/guides/pro-extensions)完成身份验证，以访问 Tiptap 私有 npm 注册表。
     </RequirementItem>
 </Requirements>
 
-The `@tiptap-pro/extension-export-epub` extension includes built-in support for customizing the headers and footers of the exported document. You can configure different headers and footers for the first page, odd pages, and even pages.
+`@tiptap-pro/extension-export-epub` 扩展内置了自定义导出文档页眉和页脚的支持。你可以分别为首页、奇数页和偶数页配置不同的页眉和页脚。
 
-## Headers Configuration
+## 页眉配置
 
-The `headers` object allows you to customize the headers of your exported EPUB document:
+`headers` 对象用于自定义导出 EPUB 文档的页眉：
 
-| Property            | Type      | Description                                                                                          |
+| 属性 | 类型 | 说明 |
 | ------------------- | --------- | ---------------------------------------------------------------------------------------------------- |
-| `evenAndOddHeaders` | `boolean` | Whether to use different headers for odd and even pages                                              |
-| `differentFirstPage` | `boolean` | Whether to use a different header on the first page. When `true`, the `first` value is used on page one instead of `default`. |
-| `default`           | `string`  | The standard default header on every page, or header on odd pages when `evenAndOddHeaders` is active. Accepts a plain text string or stringified Tiptap JSONContent for rich formatting. |
-| `first`             | `string`  | The header on the first page. Only used when `differentFirstPage` is set to `true`. Accepts a plain text string or stringified Tiptap JSONContent for rich formatting. |
-| `even`              | `string`  | The header on even pages when the `evenAndOddHeaders` option is activated. Accepts a plain text string or stringified Tiptap JSONContent for rich formatting. |
+| `evenAndOddHeaders` | `boolean` | 是否为奇数页和偶数页使用不同的页眉 |
+| `differentFirstPage` | `boolean` | 是否为首页使用不同的页眉。设为 `true` 时，首页使用 `first` 的值，而不是 `default`。 |
+| `default` | `string` | 每页使用的默认页眉；启用 `evenAndOddHeaders` 时，也用作奇数页页眉。接受纯文本字符串，或序列化为字符串的 Tiptap JSONContent，以保留富文本格式。 |
+| `first` | `string` | 首页页眉。仅当 `differentFirstPage` 设为 `true` 时使用。接受纯文本字符串，或序列化为字符串的 Tiptap JSONContent，以保留富文本格式。 |
+| `even` | `string` | 启用 `evenAndOddHeaders` 选项时偶数页使用的页眉。接受纯文本字符串，或序列化为字符串的 Tiptap JSONContent，以保留富文本格式。 |
 
-When using plain text, a simple unstyled header is produced. When using stringified Tiptap JSONContent (via `JSON.stringify()`), rich formatting such as bold, italic, and links is preserved.
+使用纯文本时，生成的页眉不带样式。使用序列化为字符串的 Tiptap JSONContent（通过 `JSON.stringify()`）时，则会保留粗体、斜体和链接等富文本格式。
 
-## Footers Configuration
+## 页脚配置
 
-The `footers` object allows you to customize the footers of your exported EPUB document:
+`footers` 对象用于自定义导出 EPUB 文档的页脚：
 
-| Property            | Type      | Description                                                                                          |
+| 属性 | 类型 | 说明 |
 | ------------------- | --------- | ---------------------------------------------------------------------------------------------------- |
-| `evenAndOddFooters` | `boolean` | Whether to use different footers for odd and even pages                                              |
-| `differentFirstPage` | `boolean` | Whether to use a different footer on the first page. When `true`, the `first` value is used on page one instead of `default`. |
-| `default`           | `string`  | The standard default footer on every page, or footer on odd pages when `evenAndOddFooters` is active. Accepts a plain text string or stringified Tiptap JSONContent for rich formatting. |
-| `first`             | `string`  | The footer on the first page. Only used when `differentFirstPage` is set to `true`. Accepts a plain text string or stringified Tiptap JSONContent for rich formatting. |
-| `even`              | `string`  | The footer on even pages when the `evenAndOddFooters` option is activated. Accepts a plain text string or stringified Tiptap JSONContent for rich formatting. |
+| `evenAndOddFooters` | `boolean` | 是否为奇数页和偶数页使用不同的页脚 |
+| `differentFirstPage` | `boolean` | 是否为首页使用不同的页脚。设为 `true` 时，首页使用 `first` 的值，而不是 `default`。 |
+| `default` | `string` | 每页使用的默认页脚；启用 `evenAndOddFooters` 时，也用作奇数页页脚。接受纯文本字符串，或序列化为字符串的 Tiptap JSONContent，以保留富文本格式。 |
+| `first` | `string` | 首页页脚。仅当 `differentFirstPage` 设为 `true` 时使用。接受纯文本字符串，或序列化为字符串的 Tiptap JSONContent，以保留富文本格式。 |
+| `even` | `string` | 启用 `evenAndOddFooters` 选项时偶数页使用的页脚。接受纯文本字符串，或序列化为字符串的 Tiptap JSONContent，以保留富文本格式。 |
 
-When using plain text, a simple unstyled footer is produced. When using stringified Tiptap JSONContent (via `JSON.stringify()`), rich formatting such as bold, italic, and links is preserved.
+使用纯文本时，生成的页脚不带样式。使用序列化为字符串的 Tiptap JSONContent（通过 `JSON.stringify()`）时，则会保留粗体、斜体和链接等富文本格式。
 
-## Complete example
+## 完整示例
 
 ```js
 import { ExportEpub } from '@tiptap-pro/extension-export-epub'
@@ -100,9 +100,9 @@ editor
   .run()
 ```
 
-## Simple headers and footers
+## 简单的页眉和页脚
 
-If you don't need different headers for odd/even pages, you can provide just the `default` values:
+如果不需要为奇数页和偶数页设置不同的页眉，可以只提供 `default` 值：
 
 ```js
 ExportEpub.configure({
