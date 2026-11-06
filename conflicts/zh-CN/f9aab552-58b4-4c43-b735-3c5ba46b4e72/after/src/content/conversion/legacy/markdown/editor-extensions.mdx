@@ -1,0 +1,171 @@
+---
+title: 使用 Tiptap 转换 Markdown（旧版）
+tags:
+  - type: deprecated
+meta:
+    title: 旧版 Markdown 编辑器扩展 | Tiptap 转换
+    description: 了解如何使用旧版导入/导出扩展，在 Tiptap 编辑器中处理 Markdown 文件。
+    category: 转换
+---
+
+import { Callout } from '@/components/ui/Callout'
+import { Requirements, RequirementItem } from '@/components/Requirements'
+
+<Callout title="旧版 Markdown 编辑器扩展（已弃用）" variant="warning">
+    这些编辑器扩展已弃用，团队会提前通知，并计划于 2026 年某个时间停止支持。对于新的集成，请使用更新后的 [Markdown 导出扩展](/conversion/export/markdown/editor-extension)和 [导入 REST API](/conversion/import/markdown/rest-api)。
+</Callout>
+
+Tiptap 的转换工具支持通过以下三种方式处理 **Markdown**（`.md`）文件：
+
+- **编辑器导入** – 将 `.md` 文件直接转换为 Tiptap JSON，以便在编辑器中编辑。
+- **编辑器导出** – 将 Tiptap 内容转换为 `.md`（标准 Markdown 或 GitHub Flavored Markdown）。
+- **REST API** – 使用 [MD 转换 REST API](/conversion/legacy/markdown/rest-api) 在服务器端集成 Markdown 转换，无需直接使用 Tiptap 编辑器。
+
+<Requirements>
+    <RequirementItem label="1. 开通试用或订阅">
+        在你的账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 计划](https://cloud.tiptap.dev/v2/billing)。
+    </RequirementItem>
+    <RequirementItem label="2. 从私有仓库安装">
+        要安装这些前端扩展，请按照[设置指南](/guides/pro-extensions)登录 Tiptap 的私有 npm 仓库。
+    </RequirementItem>
+</Requirements>
+
+## 在编辑器中导入 Markdown
+转换扩展发布在 Tiptap 的私有 npm 仓库中。请按照[私有仓库指南](/guides/pro-extensions)集成这些扩展。
+
+**安装导入扩展：**
+
+```bash
+npm i @tiptap-pro/extension-import
+```
+
+### 在编辑器中配置扩展
+```js
+import { Import } from '@tiptap-pro/extension-import'
+
+const editor = new Editor({
+  // ...
+  extensions: [
+    // ...
+    Import.configure({
+      // Your Convert App ID from https://cloud.tiptap.dev/convert-settings
+      appId: 'your-app-id',
+
+      // JWT you generated
+      token: 'your-jwt',
+
+      // If your Markdown includes images, you can provide a URL for image upload
+      imageUploadCallbackUrl: 'https://your-image-upload-url.com',
+    }),
+  ],
+})
+```
+
+### 导入你的第一个文档
+```js
+editor.chain().focus().import({ file }).run()
+```
+此操作会将所选 `.md` 文件上传到转换 API，将其转换为 Tiptap JSON，并替换编辑器当前内容。
+
+### 自定义导入行为
+
+```js
+editor.chain().import({
+  file,
+  onImport(context) {
+    const { setEditorContent, content, error } = context
+    if (error) {
+      showErrorToast({ message: error.message })
+    }
+    // Example: add a paragraph before insertion
+    content.doc.content.push({ type: 'paragraph', content: [{ type: 'text', text: 'Hello!' }] })
+    isLoading = false
+    editor.commands.setContent(content)
+  },
+}).focus().run()
+```
+
+### 选项
+| 名称                     | 类型       | 默认值      | 说明                                                                                                         |
+| ------------------------ | ---------- | ----------- | ------------------------------------------------------------------------------------------------------------------- |
+| `appId`                  | `string`   | `undefined` | 来自 [https://cloud.tiptap.dev/convert-settings](https://cloud.tiptap.dev/convert-settings) 的 Convert App ID          |
+| `token`                  | `string`   | `undefined` | 在你的服务器上生成的 JWT                                                                                        |
+| `imageUploadCallbackUrl` | `string`   | `undefined` | 如果未设置，Markdown 中的图片可能会作为外部链接处理，也可能被省略（取决于文件结构）      |
+
+### 命令
+| 命令   | 说明                           |
+| --------- | ------------------------------------- |
+| `import`  | 将文件导入编辑器内容中 |
+
+### `import` 参数
+| 名称       | 类型       | 默认值      | 选项           | 说明                                                                                                               |
+| ---------- | ---------- | ----------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `file`     | `File`     | `undefined` | 任意文件          | 要导入的文件                                                                                                        |
+| `format`   | `string`   | `undefined` | `gfm`（可选）  | 如果设置为 `gfm`，转换会将输入内容视为 GitHub Flavored Markdown                                              |
+| `onImport` | `Function` | `undefined` | `fn(context)`     | 用于自定义导入的回调。接收一个上下文，其中包含 Tiptap JSON `content`、可能出现的 `error` 以及 `setEditorContent()`。   |
+
+## 在编辑器中导出 Markdown
+
+### 安装导出扩展：
+```bash
+npm i @tiptap-pro/extension-export
+```
+
+### 在编辑器中配置扩展
+
+```js
+import { Export } from '@tiptap-pro/extension-export'
+
+const editor = new Editor({
+  // ...
+  extensions: [
+    // ...
+    Export.configure({
+      appId: 'your-app-id',
+      token: 'your-jwt',
+    }),
+  ],
+})
+```
+
+### 导出文档
+```js
+// Export the editor's content as Markdown
+// Supported export formats: docx, odt, md, gfm
+editor.chain().focus().export({ format: 'md' }).run()
+```
+
+### 自定义导出行为
+
+```js
+editor.chain().export({
+  format: 'md',
+  onExport(context) {
+    const { blob, error, download, filename } = context
+    if (error) {
+      showErrorToast({ message: error.message })
+    }
+    isLoading = false
+    // If needed, rename the file, handle the blob, or call download()
+    download() // triggers a "document.md" download in the browser
+  },
+}).run()
+```
+
+### 选项
+| 名称    | 类型     | 默认值      | 说明                                                                                |
+|---------|----------|-------------|--------------------------------------------------------------------------------------------|
+| `appId` | `string` | `undefined` | 来自 [https://cloud.tiptap.dev/convert-settings](https://cloud.tiptap.dev/) 的 Convert App ID |
+| `token` | `string` | `undefined` | 在你的服务器上生成的 JWT                                                             |
+
+### 命令
+| 命令  | 说明                |
+|----------|----------------------------|
+| `export` | 导出编辑器内容。 |
+
+### `export` 参数
+| 名称       | 类型          | 默认值      | 选项           | 说明                                                                                                                                             |
+| ---------- | ------------- | ----------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `format`   | `string`      | `undefined` | `docx,odt,md,gfm` | 目标格式（此处为 `md`，或表示 GitHub Flavored Markdown 的 `gfm`）。                                                                                   |
+| `content`  | `JSONContent` | `undefined` | 任意 Tiptap JSON   | 可选：导出与编辑器当前内容不同的内容。                                                                                 |
+| `onExport` | `Function`    | `undefined` | `fn(context)`     | 用于自定义导出的回调。接收一个 `blob`、可能出现的 `error`、`download()` 辅助函数以及 `filename`。如果需要原始文本，请使用 `blob.text()`。 |
