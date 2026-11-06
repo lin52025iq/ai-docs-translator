@@ -1,55 +1,54 @@
 ---
-title: FileHandler extension
+title: FileHandler 扩展
 extension:
-  name: File Handler
+  name: 文件处理器
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-file-handler
-  description: Have you ever wanted to drag and drop or paste files into your editor? Well, we did too.
+  description: 你是否曾想过将文件拖放或粘贴到编辑器中？我们也这么想过。
   type: extension
   icon: File
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-file-handler.svg?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-file-handler
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-file-handler.svg
     url: https://npmcharts.com/compare/@tiptap/extension-file-handler?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  category: Editor
-  title: FileHandler extension | Tiptap Editor Docs
-  description: Handle file drops and pastes in your Tiptap editor with the FileHandler extension. Learn how to set it up here in the Docs!
+  category: 编辑器
+  title: FileHandler 扩展 | Tiptap 编辑器文档
+  description: 使用 FileHandler 扩展处理 Tiptap 编辑器中的文件拖放和粘贴。请在此处查看文档，了解如何进行设置！
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-Have you ever wanted to drag and drop or paste files into your editor? Well, we did too—so here’s an extension for that.
+你是否曾想过将文件拖放或粘贴到编辑器中？我们也这么想过，因此开发了这个扩展。
 
-The `FileHandler` extension allows you to easily handle file drops and pastes in the editor. You can define custom handlers for both events & manage allowed file types.
+`FileHandler` 扩展可让你轻松处理拖放到编辑器中的文件和粘贴到编辑器中的文件。你可以为这两种事件定义自定义处理程序，并管理允许的文件类型。
 
-By default, the extension does not display the uploaded file when it is pasted or dropped. Instead, it triggers an event that you can respond to by inserting a new Node into the editor. For example, to display the uploaded image file, use the [image extension](/editor/extensions/nodes/image).
+默认情况下，粘贴或拖放文件时，扩展不会显示上传的文件。它会触发一个事件，你可以通过向编辑器插入新节点来响应此事件。例如，要显示上传的图像文件，请使用[图像扩展](/editor/extensions/nodes/image)。
 
-<Callout title="No Server Upload Functionality" variant="info">
-  This extension is only responsible for handling the event of dropping or pasting a file into the
-  editor. It does not implement server file uploads.
+<Callout title="不提供服务器上传功能" variant="info">
+  此扩展仅负责处理将文件拖放或粘贴到编辑器中的事件，不负责实现服务器文件上传。
 </Callout>
 
 <CodeDemo path="/Extensions/FileHandler" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-file-handler
 ```
 
-## Settings
+## 设置
 
 ### onPaste
 
-The callback function that will be called when a file is pasted into the editor. You will have access to the editor instance & the files pasted.
+当文件粘贴到编辑器中时调用的回调函数。你可以访问编辑器实例和粘贴的文件。
 
-Default: `undefined`
+默认值：`undefined`
 
 ```js
 FileHandler.configure({
@@ -66,9 +65,9 @@ FileHandler.configure({
 
 ### onDrop
 
-The callback function that will be called when a file is dropped into the editor. You will have access to the editor instance, the files dropped and the position the file was dropped at.
+当文件拖放到编辑器中时调用的回调函数。你可以访问编辑器实例、拖放的文件，以及文件被放置的位置。
 
-Default: `undefined`
+默认值：`undefined`
 
 ```js
 FileHandler.configure({
@@ -81,9 +80,9 @@ FileHandler.configure({
 
 ### allowedMimeTypes
 
-This option controls which file types are allowed to be dropped or pasted into the editor. You can define a list of mime types or a list of file extensions. If no mime types or file extensions are defined, all files will be allowed.
+此选项用于控制允许拖放或粘贴到编辑器中的文件类型。你可以定义 MIME 类型列表或文件扩展名列表。如果未定义 MIME 类型或文件扩展名，则允许所有文件。
 
-Default: `undefined`
+默认值：`undefined`
 
 ```js
 FileHandler.configure({
@@ -93,11 +92,11 @@ FileHandler.configure({
 
 ### consumePasteEvent
 
-When `true`, the paste event is fully consumed when files are present, even if HTML content exists alongside them in the clipboard. This prevents other extensions' paste rules from running on the same event and creating duplicate content.
+设为 `true` 时，只要粘贴内容中包含文件，就会完全拦截粘贴事件，即使剪贴板中还包含 HTML 内容也一样。这样可以阻止其他扩展的粘贴规则处理同一事件，从而避免创建重复内容。
 
-Use this when your `onPaste` callback handles file insertion and you want to prevent other extensions from processing the same paste (for example, avoiding duplicate image nodes when both the file handler and the image extension try to handle a pasted image).
+当 `onPaste` 回调负责插入文件，且你希望阻止其他扩展处理同一次粘贴时，请使用此选项（例如，避免文件处理器和图像扩展同时处理粘贴的图像，导致生成重复的图像节点）。
 
-Default: `false`
+默认值：`false`
 
 ```js
 FileHandler.configure({
