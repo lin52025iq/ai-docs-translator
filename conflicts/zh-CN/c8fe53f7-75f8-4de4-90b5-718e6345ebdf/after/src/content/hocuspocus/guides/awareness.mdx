@@ -1,0 +1,67 @@
+---
+title: 感知状态
+meta:
+    title: 感知状态 | Hocuspocus 文档
+    category: Hocuspocus
+---
+
+## 简介
+
+借助感知状态，可以共享所有在线用户的信息。你可以通过感知状态同步用户名、光标位置，甚至复杂 3D 世界中的坐标。它底层使用独立的 CRDT，但不会保留更新历史。你可以在 [Yjs 关于感知状态的文档](https://docs.yjs.dev/getting-started/adding-awareness)中了解更多信息。
+
+## 设置状态
+传入一个键和一个值，即可为当前用户设置感知信息。你可以传入任意想与其他用户共享的数据。下面的示例在 `user` 键下设置了用户名和十六进制颜色值：
+
+你还可以在[提供程序的事件章节](/hocuspocus/provider/events)中了解相关事件：`awarenessUpdate` 和 `awarenessChange`。
+
+## 设置状态
+
+```js
+// 设置当前用户的感知字段
+provider.setAwarenessField("user", {
+  name: "Kevin Jahns",
+  color: "#ffcc00",
+});
+```
+
+## 监听更改
+
+注册事件监听器，以接收并响应更改。这不仅适用于你自己的感知状态，也适用于所有已连接用户的感知状态：
+
+```js
+// 监听所有用户状态的更新
+provider.on("awarenessUpdate", ({ states }) => {
+  console.log(states);
+});
+```
+
+## 用法
+
+这么多零散的小片段！下面是一个完整可运行的示例，展示了如何在应用中使用感知状态：
+
+```js
+import * as Y from 'yjs'
+import { HocuspocusProvider } from '@hocuspocus/provider'
+
+// 设置提供程序
+provider = new HocuspocusProvider({
+  url: "ws://127.0.0.1:1234",
+  name: "awareness-example",
+  document: new Y.Doc(),
+  // 监听更新……
+  onAwarenessUpdate: ({ states }) => {
+    console.log(states);
+  },
+});
+
+// 例如，监听鼠标移动
+ document.addEventListener("mousemove", (event) => {
+  // 共享任意信息
+  provider.setAwarenessField("user", {
+    name: "Kevin Jahns",
+    color: "#ffcc00",
+    mouseX: event.clientX,
+    mouseY: event.clientY,
+  });
+});
+```
