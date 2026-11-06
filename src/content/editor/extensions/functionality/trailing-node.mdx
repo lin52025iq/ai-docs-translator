@@ -1,39 +1,39 @@
 ---
-title: Trailing Node extension
+title: Trailing Node 扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extensions?label=version
     url: https://www.npmjs.com/package/@tiptap/extensions
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extensions.svg
     url: https://npmcharts.com/compare/@tiptap/extensions?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  title: Trailing Node extension | Tiptap Editor Docs
-  description: Add a trailing node to your editor with the Trailing Node extension in Tiptap. Learn more in our documentation.
-  category: Editor
+  title: Trailing Node 扩展 | Tiptap 编辑器文档
+  description: 使用 Tiptap 的 Trailing Node 扩展在编辑器中添加尾随节点。请参阅我们的文档了解更多信息。
+  category: 编辑器
 extension:
   name: Trailing Node
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extensions
-  description: The trailing node extension adds a node after the last block node in the editor.
+  description: Trailing Node 扩展会在编辑器中最后一个块节点后添加一个节点。
   type: extension
   icon: BetweenHorizontalEnd
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-This extension adds a node after the last block node in the editor. This can be useful for adding a trailing node like a placeholder or a button.
+此扩展会在编辑器中最后一个块节点后添加一个节点。这适用于添加占位符或按钮等尾随节点。
 
 <CodeDemo path="/Extensions/TrailingNode" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extensions
 ```
 
-## Usage
+## 用法
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -44,13 +44,13 @@ new Editor({
 })
 ```
 
-## Settings
+## 设置
 
 ### node
 
-The node type that should be inserted at the end of the document. When you leave it unset, Trailing Node asks the ProseMirror schema for whatever fallback node it defines (usually the default block node), but you can override that behavior with the `node` option. This is particularly relevant when you define a custom document structure - see the [Forced content structure example](/examples/advanced/forced-content-structure) for how custom documents may affect the assumed fallback node.
+要在文档末尾插入的节点类型。如果未设置，Trailing Node 会从 ProseMirror schema 中获取其定义的备用节点（通常是默认块节点）；你也可以通过 `node` 选项覆盖此行为。自定义文档结构时，这一点尤为重要——请参阅[强制内容结构示例](/examples/advanced/forced-content-structure)，了解自定义文档可能如何影响默认备用节点。
 
-Default: `undefined`
+默认值：`undefined`
 
 ```js
 TrailingNode.configure({
@@ -60,9 +60,9 @@ TrailingNode.configure({
 
 ### notAfter
 
-The node types after which the trailing node should not be inserted.
+尾随节点不应插入其后的节点类型。
 
-Default: `['paragraph']`
+默认值：`['paragraph']`
 
 ```js
 TrailingNode.configure({
@@ -71,9 +71,9 @@ TrailingNode.configure({
 })
 ```
 
-## Skipping trailing node creation on transactions
+## 在事务中跳过尾随节点的创建
 
-You can skip the automatic trailing node insertion for a specific transaction by setting the `skipTrailingNode` meta flag on that transaction.
+你可以在特定事务上设置 `skipTrailingNode` 元数据标志，以跳过自动插入尾随节点。
 
 ```ts
 editor
@@ -86,13 +86,13 @@ editor
   .run()
 ```
 
-This is useful when you intentionally want a transaction to leave the document without the extra trailing node.
+如果你希望事务有意让文档不包含额外的尾随节点，这会很有用。
 
-## Source code
+## 源代码
 
 [packages/extensions/src/trailing-node/](https://github.com/ueberdosis/tiptap/blob/main/packages/extensions/src/trailing-node/)
 
-## Minimal Install
+## 最小化安装
 
 ```js
 import { Editor } from '@tiptap/core'
