@@ -1,8 +1,8 @@
 ---
-title: Page format
+title: 页面格式
 meta:
-  title: Page Format | Tiptap Pages Docs
-  description: Learn how to set the page format (A4, Letter, etc) in the Tiptap Pages extension.
+  title: 页面格式 | Tiptap Pages 文档
+  description: 了解如何在 Tiptap Pages 扩展中设置页面格式（A4、Letter 等）。
   category: Pages
 sidebars:
   hideSecondary: true
@@ -11,15 +11,15 @@ sidebars:
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-The `pageFormat` option controls the size and margins of each page in your document. This helps your content look consistent and professional, especially when printing or exporting.
+`pageFormat` 选项用于控制文档中每一页的尺寸和页边距。这有助于让内容保持一致、专业，尤其是在打印或导出时。
 
 <CodeDemo isPro path="/Extensions/PagesPageFormat" />
 
-## Built-in formats
+## 内置格式
 
-Pages uses standard CSS pixels (one inch is 96 pixels), so the dimensions below match what your browser will render. The Pages extension preserves fractional pixel values internally to avoid cumulative layout drift; the integers shown here are rounded for readability.
+Pages 使用标准 CSS 像素（1 英寸为 96 像素），因此下方的尺寸与浏览器实际渲染的尺寸一致。Pages 扩展会在内部保留小数像素值，以避免布局误差累积；此处显示的整数经过四舍五入，便于阅读。
 
-| Name      | Dimensions (cm) | Dimensions (px) | Margins (cm: top, right, bottom, left) | Margins (px)   |
+| 名称      | 尺寸 (cm)       | 尺寸 (px)       | 页边距 (cm：上、右、下、左)             | 页边距 (px)   |
 | --------- | --------------- | --------------- | -------------------------------------- | -------------- |
 | `A4`      | 21.0 × 29.7     | 794 × 1123      | 2.5, 2.0, 2.5, 2.0                     | 95, 76, 95, 76 |
 | `A3`      | 29.7 × 42.0     | 1123 × 1587     | 2.5, 2.0, 2.5, 2.0                     | 95, 76, 95, 76 |
@@ -28,9 +28,9 @@ Pages uses standard CSS pixels (one inch is 96 pixels), so the dimensions below 
 | `Legal`   | 21.59 × 35.56   | 816 × 1345      | 2.54, 2.54, 2.54, 2.54                 | 96, 96, 96, 96 |
 | `Tabloid` | 27.94 × 43.18   | 1056 × 1633     | 2.54, 2.54, 2.54, 2.54                 | 96, 96, 96, 96 |
 
-Each built-in format ships with default margins and sizes. To customize them, define your own format object. See [Custom page formats](#custom-page-formats) below.
+每种内置格式都提供默认的页边距和尺寸。如需自定义，请定义自己的格式对象。请参阅下文的[自定义页面格式](#custom-page-formats)。
 
-## Using built-in formats
+## 使用内置格式
 
 ```js
 Pages.configure({
@@ -38,9 +38,9 @@ Pages.configure({
 })
 ```
 
-### Using constants for built-in formats
+### 使用内置格式常量
 
-You can also import the built-in page format constants for better autocompletion and type safety:
+你也可以导入内置页面格式常量，以获得更好的自动补全和类型安全：
 
 ```js
 import { PAGE_FORMATS } from '@tiptap-pro/extension-pages'
@@ -50,7 +50,7 @@ Pages.configure({
 })
 ```
 
-This is equivalent to using the string literal:
+这与使用字符串字面量等效：
 
 ```js
 Pages.configure({
@@ -58,13 +58,13 @@ Pages.configure({
 })
 ```
 
-Use whichever approach you prefer.
+任选你喜欢的方式即可。
 
-## Custom page formats
+## 自定义页面格式
 
 <CodeDemo isPro path="/Extensions/PagesCustomPageFormat" />
 
-You can define custom page formats by providing a page format object with your desired dimensions and margins:
+你可以提供页面格式对象，并设置所需的尺寸和页边距，从而定义自定义页面格式：
 
 ```js
 Pages.configure({
@@ -82,16 +82,13 @@ Pages.configure({
 })
 ```
 
-<Callout title="Tip" variant="info">
-  In this example, we use the [`cmToPixels`](/pages/utilities/cm-to-pixels) utility to define our
-  page dimensions and margins in centimeters, making it easy to work with familiar print
-  measurements. Learn more about <code>cmToPixels</code> in the [utility
-  reference](/pages/utilities/cm-to-pixels).
+<Callout title="提示" variant="info">
+  在此示例中，我们使用 [`cmToPixels`](/pages/utilities/cm-to-pixels) 实用工具，以厘米为单位定义页面尺寸和页边距，方便使用常见的印刷尺寸。请参阅[实用工具参考](/pages/utilities/cm-to-pixels)，详细了解 <code>cmToPixels</code>。
 </Callout>
 
-## Page margins
+## 页面边距
 
-Page margins can be customized by using a custom page format. Built-in formats come with fixed margins, but you can create your own format with custom margins:
+你可以使用自定义页面格式来调整页面边距。内置格式的页边距是固定的，但你可以创建带有自定义页边距的格式：
 
 ```js
 Pages.configure({
@@ -109,9 +106,9 @@ Pages.configure({
 })
 ```
 
-## Changing page format programmatically
+## 以编程方式更改页面格式
 
-Use the `setPageFormat` command to change the page format after the editor is initialized:
+编辑器初始化后，可以使用 `setPageFormat` 命令更改页面格式：
 
 ```js
 // Switch to a built-in format
@@ -131,9 +128,9 @@ editor.commands.setPageFormat({
 })
 ```
 
-## Listening to page format changes
+## 监听页面格式变更
 
-Use the `onPageFormatChange` callback to react when the page format is changed:
+使用 `onPageFormatChange` 回调，在页面格式发生更改时执行相应操作：
 
 ```js
 Pages.configure({
@@ -145,7 +142,6 @@ Pages.configure({
 })
 ```
 
-<Callout title="Flexibility" variant="info">
-  With custom page formats, you have full control over both page dimensions and margins to create
-  the exact layout you need.
+<Callout title="灵活性" variant="info">
+  使用自定义页面格式，你可以完全控制页面尺寸和页边距，从而创建所需的精确布局。
 </Callout>
