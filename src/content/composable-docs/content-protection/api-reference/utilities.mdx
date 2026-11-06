@@ -1,128 +1,128 @@
 ---
-title: Utilities
+title: 工具函数
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Utilities | Tiptap Content Protection Docs
-  description: Functions for validating policies, checking permissions and exporting readable content.
-  category: Composable Docs
+  title: 工具函数 | Tiptap 内容保护文档
+  description: 用于验证策略、检查权限和导出可读内容的函数。
+  category: 组合式文档
 ---
 
-Import these functions from `@tiptap-pro/extension-content-protection`. Each accepts one options object. Pass policy JSON directly; standalone utilities validate it against the document or transaction's schema and throw `ProtectionConfigurationError` for invalid policies.
+从 `@tiptap-pro/extension-content-protection` 导入这些函数。每个函数都接受一个选项对象。直接传入策略 JSON；独立工具函数会根据文档或事务的架构验证策略，无效策略会抛出 `ProtectionConfigurationError`。
 
-`Editor` comes from `@tiptap/core`; `Node` and `Schema` from `@tiptap/pm/model`; `Transaction` from `@tiptap/pm/state`.
+`Editor` 来自 `@tiptap/core`；`Node` 和 `Schema` 来自 `@tiptap/pm/model`；`Transaction` 来自 `@tiptap/pm/state`。
 
 ## `validateContentProtectionPolicy`
 
-Validates policy syntax and, when a schema is supplied, referenced types and attributes.
+验证策略语法；如果提供了架构，还会验证所引用的类型和属性。
 
-### Parameters
+### 参数
 
-- `policy` (`unknown`): The value to validate.
-- `schema?` (`Schema`): Schema for name checks. Omit to check syntax only.
+- `policy` (`unknown`)：要验证的值。
+- `schema?` (`Schema`)：用于检查名称的架构。省略时仅检查语法。
 
-### Returns (`{ valid: boolean; issues: PolicyIssue[] }`)
+### 返回值（`{ valid: boolean; issues: PolicyIssue[] }`）
 
-- `valid` (`boolean`): Whether validation passed.
-- `issues` (`PolicyIssue[]`): Configuration errors; empty when valid.
+- `valid` (`boolean`)：验证是否通过。
+- `issues` (`PolicyIssue[]`)：配置错误；验证通过时为空。
 
 ## `checkProtectedTransaction`
 
-Checks a transaction against an editor's active policy without applying it or emitting events. Requires `ContentProtection` in the editor.
+根据编辑器当前启用的策略检查事务，但不应用事务或触发事件。编辑器中必须包含 `ContentProtection`。
 
-### Parameters
+### 参数
 
-- `editor` (`Editor`): The editor holding the active policy.
-- `transaction` (`Transaction`): A transaction created from the editor's current state.
+- `editor` (`Editor`)：包含当前启用策略的编辑器。
+- `transaction` (`Transaction`)：根据编辑器当前状态创建的事务。
 
-### Returns (`ProtectionCheck`)
+### 返回值（`ProtectionCheck`）
 
-Permission result, violations and current revisions. Throws `ProtectionInputError` for missing extension or mismatched starting document. Dispatch checks permissions again.
+权限结果、违规项和当前修订版本。缺少扩展或起始文档不匹配时会抛出 `ProtectionInputError`。分发事务时会再次检查权限。
 
 ## `checkContentProtectionTransaction`
 
-Checks a transaction without an editor.
+在没有编辑器的情况下检查事务。
 
-### Parameters
+### 参数
 
-- `policy` (`ContentProtectionPolicy`): The policy to evaluate.
-- `transaction` (`Transaction`): The proposed transaction.
+- `policy` (`ContentProtectionPolicy`)：要评估的策略。
+- `transaction` (`Transaction`)：拟议的事务。
 
-### Returns (`ProtectionCheck`)
+### 返回值（`ProtectionCheck`）
 
-Permission result and violations. Both revisions are `null`. Throws `ProtectionInputError` for incompatible input.
+权限结果和违规项。两个修订版本均为 `null`。输入不兼容时会抛出 `ProtectionInputError`。
 
 ## `getProtection`
 
-Summarizes read and edit permissions in an editor. Requires `ContentProtection`.
+汇总编辑器中的读取和编辑权限。需要 `ContentProtection`。
 
-### Parameters
+### 参数
 
-- `editor` (`Editor`): The editor to inspect.
-- `range?` (`{ from: number; to: number }`): Range to summarize. Default: current selection.
+- `editor` (`Editor`)：要检查的编辑器。
+- `range?` (`{ from: number; to: number }`)：要汇总的范围。默认值：当前选区。
 
-### Returns (`PermissionSummary`)
+### 返回值（`PermissionSummary`）
 
-Aggregate permissions and matching rule identifiers. A collapsed range checks text insertion at the caret; use a transaction check for a specific edit.
+汇总权限和匹配的规则标识符。折叠范围会检查光标处的文本插入权限；如需检查特定编辑，请使用事务检查函数。
 
 ## `summarizeContentProtection`
 
-Summarizes permissions without an editor.
+在没有编辑器的情况下汇总权限。
 
-### Parameters
+### 参数
 
-- `policy` (`ContentProtectionPolicy`): The policy to evaluate.
-- `document` (`Node`): The document to inspect.
-- `range` (`{ from: number; to: number }`): Range to summarize.
+- `policy` (`ContentProtectionPolicy`)：要评估的策略。
+- `document` (`Node`)：要检查的文档。
+- `range` (`{ from: number; to: number }`)：要汇总的范围。
 
-### Returns (`PermissionSummary`)
+### 返回值（`PermissionSummary`）
 
-Aggregate read and edit permissions. Throws `ProtectionInputError` for invalid input.
+汇总读取和编辑权限。输入无效时会抛出 `ProtectionInputError`。
 
 ## `explainProtection`
 
-Explains permissions for one existing target in an editor. Requires `ContentProtection`.
+说明编辑器中某个现有目标的权限。需要 `ContentProtection`。
 
-### Parameters
+### 参数
 
-- `editor` (`Editor`): The editor to inspect.
-- `subject` (`ProtectionSubject`): The Node, attribute or marked range to inspect.
+- `editor` (`Editor`)：要检查的编辑器。
+- `subject` (`ProtectionSubject`)：要检查的节点、属性或带标记的范围。
 
-### Returns (`ProtectionExplanation`)
+### 返回值（`ProtectionExplanation`）
 
-Read/edit decisions and enclosing concealment rules. Throws `ProtectionInputError` for invalid targets or missing extension.
+读取/编辑权限判定以及外围的隐藏规则。目标无效或缺少扩展时会抛出 `ProtectionInputError`。
 
 ## `explainContentProtection`
 
-Explains permissions without an editor.
+在没有编辑器的情况下说明权限。
 
-### Parameters
+### 参数
 
-- `policy` (`ContentProtectionPolicy`): The policy to evaluate.
-- `document` (`Node`): The document to inspect.
-- `subject` (`ProtectionSubject`): The existing target to inspect.
+- `policy` (`ContentProtectionPolicy`)：要评估的策略。
+- `document` (`Node`)：要检查的文档。
+- `subject` (`ProtectionSubject`)：要检查的现有目标。
 
-### Returns (`ProtectionExplanation`)
+### 返回值（`ProtectionExplanation`）
 
-Read/edit decisions and enclosing concealment rules. Throws `ProtectionInputError` for invalid input.
+读取/编辑权限判定以及外围的隐藏规则。输入无效时会抛出 `ProtectionInputError`。
 
 ## `getReadableContent`
 
-Creates a presentation tree and plain text with redacted regions replaced by placeholders.
+创建一个展示用树结构和纯文本，并用占位符替换已隐去的区域。
 
-### Parameters
+### 参数
 
-- `document` (`Node`): The document to inspect.
-- `policy` (`ContentProtectionPolicy`): The policy to evaluate.
-- `range?` (`{ from: number; to: number }`): Content to include. Default: the entire document.
-- `redactionText?` (`string`): Replacement text. Default: `'[Hidden content]'`. Editor options are not read automatically.
+- `document` (`Node`)：要检查的文档。
+- `policy` (`ContentProtectionPolicy`)：要评估的策略。
+- `range?` (`{ from: number; to: number }`)：要包含的内容。默认值：整个文档。
+- `redactionText?` (`string`)：替换文本。默认值：`'[Hidden content]'`。不会自动读取编辑器选项。
 
-### Returns (`ReadableContent`)
+### 返回值（`ReadableContent`）
 
-- `content` (`ReadableNode[]`): Visible content and redacted regions. This is not Tiptap JSON and must not be passed to `setContent`.
-- `text` (`string`): Visible text with newlines between textblocks and for hard breaks. Non-text leaves use `U+FFFC`; hidden regions use `redactionText`. No trailing newline is added.
+- `content` (`ReadableNode[]`)：可见内容和已隐去的区域。这不是 Tiptap JSON，不得传递给 `setContent`。
+- `text` (`string`)：可见文本；文本块之间以及硬换行处以换行符分隔。非文本叶节点使用 `U+FFFC`；隐藏区域使用 `redactionText`。末尾不会添加换行符。
 
-Throws `ProtectionInputError` for invalid input. Does not change the document, resolve external values, generate HTML or call `renderRedaction`.
+输入无效时会抛出 `ProtectionInputError`。此函数不会更改文档、解析外部值、生成 HTML 或调用 `renderRedaction`。
 
-See [result types](/composable-docs/content-protection/api-reference/types) and [policy types](/composable-docs/content-protection/api-reference/policy).
+请参阅[结果类型](/composable-docs/content-protection/api-reference/types)和[策略类型](/composable-docs/content-protection/api-reference/policy)。
