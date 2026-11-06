@@ -1,0 +1,220 @@
+---
+title: ODT 中的自定义页面布局
+tags:
+  - type: start
+  - type: beta
+  - type: version
+    label: v0.6.2
+meta:
+  title: ODT 中的自定义页面布局 | Tiptap Conversion
+  description: 了解如何使用 Export ODT 扩展自定义 ODT 页面和页边距大小。
+  category: 转换
+---
+
+import { Callout } from '@/components/ui/Callout'
+import { Requirements, RequirementItem } from '@/components/Requirements'
+import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
+
+<EnterpriseCalloutAuto variant="odt" renderMode="sidebar" disableWaitlist />
+
+<Requirements>
+  <RequirementItem label="1. 激活试用或订阅">
+    在你的账户中开始[免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start
+    计划](https://cloud.tiptap.dev/v2/billing)。
+  </RequirementItem>
+  <RequirementItem label="2. 从私有注册表安装">
+    若要安装此前端扩展，请按照[设置指南](/guides/pro-extensions)对 Tiptap 的私有 npm 注册表进行身份验证。
+  </RequirementItem>
+</Requirements>
+
+ODT Export 扩展支持自定义页面大小和页边距，让你能够创建布局精准、符合需求的文档。无论你需要 A5 页面、自定义纸张大小，还是特定的页边距配置，都可以直接在扩展中进行设置。
+
+## 页面大小配置
+
+使用 `pageSize` 选项为导出的 ODT 文件定义自定义页面尺寸。页面大小配置支持使用各种度量单位指定宽度和高度。
+
+### 支持的单位
+
+所有页面大小和页边距的测量值均支持以下单位：
+
+| 单位 | 说明         |
+| ---- | ------------ |
+| `cm` | 厘米（默认） |
+| `in` | 英寸         |
+| `pt` | 磅           |
+| `pc` | 派卡         |
+| `mm` | 毫米         |
+| `px` | 像素         |
+
+### 配置选项
+
+| 属性     | 类型     | 说明                                                                            | 默认值     |
+| -------- | -------- | ------------------------------------------------------------------------------- | ---------- |
+| `width`  | `string` | 页面宽度。必须是正数，后跟有效单位（cm、in、pt、pc、mm、px）。                   | `"21cm"`   |
+| `height` | `string` | 页面高度。必须是正数，后跟有效单位（cm、in、pt、pc、mm、px）。                   | `"29.7cm"` |
+
+```js
+import { ExportOdt } from '@tiptap-pro/extension-export-odt'
+
+ExportOdt.configure({
+  token: 'YOUR_TOKEN',
+  pageSize: {
+    width: '14.8cm', // A5 width
+    height: '21cm', // A5 height
+  },
+})
+```
+
+## 页面页边距配置
+
+`pageMargins` 选项允许你为文档页面的各个边设置自定义页边距。与页面大小不同，顶部和底部页边距可以使用负值。
+
+### 配置选项
+
+| 属性     | 类型     | 说明                                                                                     | 默认值     |
+| -------- | -------- | ---------------------------------------------------------------------------------------- | ---------- |
+| `top`    | `string` | 页面顶部页边距。可以为负值。必须是数字，后跟有效单位（cm、in、pt、pc、mm、px）。          | `"1cm"`    |
+| `bottom` | `string` | 页面底部页边距。可以为负值。必须是数字，后跟有效单位（cm、in、pt、pc、mm、px）。         | `"1cm"`    |
+| `left`   | `string` | 页面左侧页边距。必须是正数，后跟有效单位（cm、in、pt、pc、mm、px）。                       | `"1cm"`    |
+| `right`  | `string` | 页面右侧页边距。必须是正数，后跟有效单位（cm、in、pt、pc、mm、px）。                       | `"1cm"`    |
+| `header` | `string` | 页面上边缘到页眉顶部的距离。应小于 `top`。必须是带单位的正数。                             | `"1.25cm"` |
+| `footer` | `string` | 页面下边缘到页脚底部的距离。应小于 `bottom`。必须是带单位的正数。                          | `"1.25cm"` |
+
+```js
+import { ExportOdt } from '@tiptap-pro/extension-export-odt'
+
+ExportOdt.configure({
+  token: 'YOUR_TOKEN',
+  pageMargins: {
+    top: '2cm',
+    bottom: '2cm',
+    left: '1.5cm',
+    right: '1.5cm',
+    // Distance from the page edge to the header/footer
+    header: '1cm',
+    footer: '1cm',
+  },
+})
+```
+
+<Callout title="从 Pages 扩展自动获取" variant="hint">
+  如果同时配置了 [Pages 扩展](/editor/extensions/functionality/pages)和
+  `ExportOdt`，`header` 和 `footer` 偏移量会自动从 Pages 存储值
+  `headerTopMargin` 和 `footerBottomMargin` 中获取。你传入 `pageMargins` 的值始终优先。
+</Callout>
+
+<Callout title="转换服务要求" variant="info">
+  要端到端支持 `pageMargins.header` 和 `pageMargins.footer`，Tiptap convert
+  服务必须使用能够接受这些字段的版本，并提供更新后的
+  `@tiptap-pro/extension-export-docx`。在较旧版本的 convert 服务中，这些值会被忽略，并使用 Word 的默认值。
+</Callout>
+
+## 页面背景颜色
+
+使用 `pageColor` 选项为导出的 ODT 文件每一页设置背景颜色。
+
+### 支持的格式
+
+| 格式         | 示例                                                      |
+| ------------ | --------------------------------------------------------- |
+| 十六进制（6 位） | `"#ff0000"`                                               |
+| 十六进制（3 位） | `"#f00"`                                                  |
+| `rgb()`       | `"rgb(255, 0, 0)"`                                        |
+| `rgba()`      | `"rgba(255, 0, 0, 0.5)"`                                  |
+| 命名颜色      | 常见的 CSS 命名颜色（`"red"`、`"blue"`、`"green"`、…） |
+
+传入 `"transparent"` 或不设置 `pageColor`，即可不指定页面颜色。
+
+```js
+ExportOdt.configure({
+  token: 'YOUR_TOKEN',
+  pageColor: '#fff8dc',
+})
+```
+
+## 完整示例
+
+以下完整示例展示了如何使用 ODT Export 扩展配置自定义页面布局：
+
+```js
+import { ExportOdt } from '@tiptap-pro/extension-export-odt'
+
+const editor = new Editor({
+  extensions: [
+    // Other extensions...
+    ExportOdt.configure({
+      token: 'YOUR_TOKEN',
+      // A5 page size
+      pageSize: {
+        width: '14.8cm',
+        height: '21cm',
+      },
+      // Custom margins
+      pageMargins: {
+        top: '2cm',
+        bottom: '2cm',
+        left: '2cm',
+        right: '2cm',
+      },
+      // Page background color
+      pageColor: '#fff8dc',
+    }),
+    // Other extensions...
+  ],
+})
+
+// Export with custom layout
+editor
+  .chain()
+  .exportOdt({
+    onCompleteExport(result) {
+      const url = URL.createObjectURL(result)
+      const a = document.createElement('a')
+
+      a.href = url
+      a.download = 'custom-layout.odt'
+      a.click()
+
+      URL.revokeObjectURL(url)
+    },
+  })
+  .run()
+```
+
+## 常见页面大小
+
+以下是一些可供参考的常见页面大小：
+
+| 格式       | 宽度     | 高度     |
+| ---------- | -------- | -------- |
+| **A4**     | `21cm`   | `29.7cm` |
+| **A5**     | `14.8cm` | `21cm`   |
+| **信纸**   | `8.5in`  | `11in`   |
+| **Legal**  | `8.5in`  | `14in`   |
+| **Tabloid** | `11in`   | `17in`   |
+
+## 不同的度量单位
+
+你可以根据偏好混合使用不同单位：
+
+```js
+ExportOdt.configure({
+  token: 'YOUR_TOKEN',
+  // US Letter size in inches
+  pageSize: {
+    width: '8.5in',
+    height: '11in',
+  },
+  // Margins in different units
+  pageMargins: {
+    top: '0.75in', // Inches
+    bottom: '72pt', // Points (1 inch = 72 points)
+    left: '2cm', // Centimeters
+    right: '20mm', // Millimeters
+  },
+})
+```
+
+<Callout title="单位一致性" variant="hint">
+  虽然可以混合使用不同单位，但通常建议在整个配置中保持单位一致，以便于维护和理解。
+</Callout>
