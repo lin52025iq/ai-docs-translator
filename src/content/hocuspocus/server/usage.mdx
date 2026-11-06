@@ -1,21 +1,19 @@
 ---
-title: Usage
+title: 用法
 meta:
-  title: Usage | Hocuspocus Docs
+  title: 用法 | Hocuspocus 文档
   category: Hocuspocus
 ---
 
-## Usage
+## 用法
 
-There are two ways on how you can use hocuspocus. Either with the built-in server. Or with another framework, for
-example with [Express](/hocuspocus/server/examples#express).
+使用 Hocuspocus 有两种方式：使用内置服务器，或使用其他框架，例如 [Express](/hocuspocus/server/examples#express)。
 
-Since v4 Hocuspocus supports multiple runtimes: Node.js (with `ws` or `uWebSockets.js`), Bun, Deno, and Cloudflare Workers. The built-in `Server` class works as before for Node.js; for other runtimes use `Hocuspocus` directly and pass any `WebSocketLike` instance to `handleConnection()`. Node.js 22+ is required.
+从 v4 开始，Hocuspocus 支持多种运行时：Node.js（使用 `ws` 或 `uWebSockets.js`）、Bun、Deno 和 Cloudflare Workers。内置的 `Server` 类在 Node.js 中的用法与之前相同；在其他运行时中，请直接使用 `Hocuspocus`，并将任意 `WebSocketLike` 实例传递给 `handleConnection()`。需要 Node.js 22 或更高版本。
 
 ### Hocuspocus Server
 
-Using the built-in server make sure to import `Server` from `@hocuspocus/server`. You configure the server as described
-under [configuration](/hocuspocus/server/configuration). The built-in server spins up a webserver and a websocket server.
+使用内置服务器时，请确保从 `@hocuspocus/server` 导入 `Server`。按照[配置](/hocuspocus/server/configuration)中的说明配置服务器。内置服务器会启动 Web 服务器和 WebSocket 服务器。
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -27,7 +25,7 @@ const server = new Server({
 server.listen();
 ```
 
-You can access the instance of hocuspocus through the webserver to call its [methods](/hocuspocus/server/usage#methods).
+你可以通过 Web 服务器访问 Hocuspocus 实例并调用它的[方法](/hocuspocus/server/usage#methods)。
 
 ```js
 // …
@@ -35,9 +33,9 @@ You can access the instance of hocuspocus through the webserver to call its [met
 server.hocuspocus.getDocumentsCount();
 ```
 
-#### Stopping the server
+#### 停止服务器
 
-Call `server.destroy()` to shut the server down cleanly — for example from a `SIGINT` / `SIGTERM` handler, in tests, or when hot-reloading during development.
+调用 `server.destroy()` 可正常关闭服务器，例如在 `SIGINT` / `SIGTERM` 处理程序中、测试期间，或在开发过程中进行热重载时。
 
 ```js
 server.destroy();
@@ -45,8 +43,7 @@ server.destroy();
 
 ### Hocuspocus
 
-As mentioned earlier, you can use hocuspocus without the built-in server. Make sure to import `Hocuspocus` from the
-`@hocuspocus/server` package.
+如前所述，你可以不使用内置服务器，直接使用 Hocuspocus。请确保从 `@hocuspocus/server` 包导入 `Hocuspocus`。
 
 ```js
 import { Hocuspocus } from "@hocuspocus/server";
@@ -59,25 +56,25 @@ const hocuspocus = new Hocuspocus({
 // …
 ```
 
-Check out the [examples](/hocuspocus/server/examples) to learn more.
+请参阅[示例](/hocuspocus/server/examples)了解更多信息。
 
 
-## Methods
+## 方法
 
 ### Server
 
-| Method                   | Description                                       |
-|--------------------------|---------------------------------------------------|
-| `listen(port, callback)` | Start the server.                                 |
-| `destroy()`              | Stop the server.                                  |
+| 方法                      | 说明                   |
+|--------------------------|------------------------|
+| `listen(port, callback)` | 启动服务器。           |
+| `destroy()`              | 停止服务器。           |
 
 ### Hocuspocus
 
-| Method                                         | Description                                       |
-|------------------------------------------------|---------------------------------------------------|
-| `configure(configuration)`                     | Pass custom settings.                             |
-| `handleConnection(incoming, request, context)` | Bind the server to an existing server instance.   |
-| `getDocumentsCount()`                          | Get the total number of active documents          |
-| `getConnectionsCount()`                        | Get the total number of active connections        |
-| `closeConnections(documentName?)`              | Close all connections, or to a specific document. |
-| `openDirectConnection(documentName, context)`  | Creates a local connection to a document.         |
+| 方法                                            | 说明                           |
+|-------------------------------------------------|--------------------------------|
+| `configure(configuration)`                     | 传入自定义设置。               |
+| `handleConnection(incoming, request, context)` | 将服务器绑定到现有服务器实例。 |
+| `getDocumentsCount()`                          | 获取活动文档的总数             |
+| `getConnectionsCount()`                        | 获取活动连接的总数             |
+| `closeConnections(documentName?)`              | 关闭所有连接，或关闭特定文档的连接。 |
+| `openDirectConnection(documentName, context)`  | 创建与文档的本地连接。         |
