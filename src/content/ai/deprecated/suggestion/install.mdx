@@ -1,34 +1,33 @@
 ---
-title: Install the AI Suggestion extension
+title: 安装 AI Suggestion 扩展
 tags:
   - type: beta
   - type: deprecated
 meta:
-  title: Install AI Suggestion | Tiptap AI Suggestion
-  description: Install and configure the AI Suggestion extension to display real-time proofreading suggestions with customizable rules and styling.
-  category: Content AI
+  title: 安装 AI Suggestion | Tiptap AI Suggestion
+  description: 安装并配置 AI Suggestion 扩展，通过可自定义的规则和样式显示实时校对建议。
+  category: 内容 AI
 ---
 
 import { Callout } from '@/components/ui/Callout'
 import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 
-<Callout title="Deprecated" variant="warning">
-  This extension is being phased out in favor of the AI Toolkit, which offers enhanced capabilities
-  and a modernized API. While you can continue using this extension, we recommend exploring the AI
-  Toolkit for new implementations.
+<Callout title="已弃用" variant="warning">
+  此扩展正在逐步淘汰，取而代之的是功能更强、API 更新的 AI Toolkit。虽然你仍可继续使用此扩展，但我们建议在新项目中探索使用 AI
+  Toolkit。
 </Callout>
 
 <EnterpriseCalloutAuto variant="deprecated" renderMode="sidebar" />
 
-This setup guide will help you integrate the AI Suggestion Extension from scratch into your application.
+本设置指南将帮助你从头开始将 AI Suggestion 扩展集成到应用中。
 
-## Install
+## 安装
 
-The AI Suggestion extension is published in Tiptap's private npm registry. Integrate the extension by following the [private registry guide](/guides/pro-extensions).
+AI Suggestion 扩展发布在 Tiptap 的私有 npm 注册表中。请按照[私有注册表指南](/guides/pro-extensions)集成此扩展。
 
-## Import the extension in your editor
+## 在编辑器中导入扩展
 
-Add the `AiSuggestion` to the list of extensions.
+将 `AiSuggestion` 添加到扩展列表中。
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -65,19 +64,19 @@ const editor = new Editor({
 })
 ```
 
-## Decide how suggestions are generated
+## 决定如何生成建议
 
-The next step is to configure a way to generate the suggestions that will be displayed in the editor.
+下一步是配置生成建议的方式，以便在编辑器中显示这些建议。
 
-The easiest way to get started with the AI Suggestion extension is to use Tiptap Content AI Cloud. Our API will generate suggestions from your rules and content. Follow this setup guide: [Use Tiptap Content AI Cloud](/ai/deprecated/suggestion/use-with-content-ai-cloud).
+使用 Tiptap Content AI Cloud 是开始使用 AI Suggestion 扩展的最简单方式。我们的 API 会根据你的规则和内容生成建议。请参阅此设置指南：[使用 Tiptap Content AI Cloud](/ai/deprecated/suggestion/use-with-content-ai-cloud)。
 
-You can also use your own backend and LLMs to generate proofreading suggestions. You can find a guide here: [Integrate your own backend and LLMs](/ai/deprecated/suggestion/custom-llms).
+你也可以使用自己的后端和 LLM 来生成校对建议。请参阅此指南：[集成自己的后端和 LLM](/ai/deprecated/suggestion/custom-llms)。
 
-## Customize the User Interface
+## 自定义用户界面
 
-Finally, you’ll need to configure the editor styles so that the suggestions are displayed in the UI.
+最后，你需要配置编辑器样式，以便在 UI 中显示建议。
 
-By default, the AI Suggestions have CSS classes and color attributes to help you style them. Use these CSS styles to show a colored underline below the suggestions.
+默认情况下，AI Suggestions 带有 CSS 类和颜色属性，方便你设置样式。使用以下 CSS 样式可在建议下方显示彩色下划线。
 
 ```css
 .tiptap-ai-suggestion {
@@ -91,4 +90,4 @@ By default, the AI Suggestions have CSS classes and color attributes to help you
 }
 ```
 
-You can customize the suggestions' appearance even more by providing custom decorations. To show a tooltip or a popover when you select a suggestion, [follow this guide](/ai/deprecated/suggestion/features/display-suggestions#show-a-popover-when-you-select-a-suggestion).
+你还可以通过提供自定义装饰来进一步自定义建议的外观。若要在选中建议时显示工具提示或弹出框，请[参阅此指南](/ai/deprecated/suggestion/features/display-suggestions#show-a-popover-when-you-select-a-suggestion)。
