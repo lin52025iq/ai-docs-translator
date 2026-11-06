@@ -1,18 +1,18 @@
 ---
-title: 'Styling'
-intro: '<code>chartStyleRules()</code> returns the CSS that a chart needs for its layout and for showing its state. <code>flowDiagramStyleRules()</code> returns the same for a diagram. Add both to the page once.'
+title: '样式'
+intro: '<code>chartStyleRules()</code> 返回图表布局和状态显示所需的 CSS。<code>flowDiagramStyleRules()</code> 返回流程图所需的 CSS。将两者各自添加到页面一次即可。'
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Styling | Tiptap Diagrams Docs'
-  description: 'chartStyleRules() returns the CSS that a chart needs for its layout and for showing its state.'
-  category: Diagrams
+  title: '样式 | Tiptap Diagrams 文档'
+  description: 'chartStyleRules() 返回图表布局和状态显示所需的 CSS。'
+  category: 图表
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-## Quick start
+## 快速开始
 
 ```ts
 import { chartStyleRules, flowDiagramStyleRules } from '@tiptap-pro/extension-diagrams'
@@ -22,14 +22,12 @@ style.textContent = chartStyleRules() + flowDiagramStyleRules()
 document.head.append(style)
 ```
 
-## Custom properties
+## 自定义属性
 
-Every CSS rule reads a custom property that has a default value. The full list is on
-[Classes, data attributes and custom properties](/diagrams/api-reference/selectors).
+每条 CSS 规则都会读取一个具有默认值的自定义属性。完整列表请参阅
+[类、数据属性和自定义属性](/diagrams/api-reference/selectors)。
 
-To restyle, set the properties on `.tiptap`, or on a single `.tiptap-chart`. Do not override the
-rules. A dark theme needs nothing by default, see [Dark color scheme](/diagrams/guides/styling#dark-color-scheme). To
-choose the dark colors yourself, set a second set of the same properties:
+要自定义样式，请在 `.tiptap` 或单个 `.tiptap-chart` 上设置这些属性。不要覆盖这些规则。默认情况下，深色主题无需额外设置，详见[深色配色方案](/diagrams/guides/styling#dark-color-scheme)。若要自行选择深色，请再设置一组相同的属性：
 
 ```css
 .tiptap {
@@ -44,73 +42,57 @@ choose the dark colors yourself, set a second set of the same properties:
 }
 ```
 
-### Changing colors from script
+### 通过脚本更改颜色
 
-A chart reads its colors and fonts when it is drawn. After you change them from script, for
-example to switch a theme, call `editor.storage.diagrams.refresh()`. An exported file uses the
-values that apply to the chart at the moment of the export.
+图表在绘制时读取颜色和字体。通过脚本更改后（例如切换主题时），请调用 `editor.storage.diagrams.refresh()`。导出的文件使用导出时适用于该图表的值。
 
-## Styles
+## 样式
 
-A style is a named set of colors and fonts. A chart can name a style instead of carrying its own
-colors:
+样式是一组命名的颜色和字体。图表可以指定样式，而不必自带颜色：
 
 ```ts
 editor.commands.updateChartSpec({ spec: { style: 'ocean' } })
 ```
 
-Give a chart one of the built-in styles, or change a style and see every chart that names it
-change:
+为图表指定一种内置样式，或者修改某种样式，所有指定该样式的图表都会随之改变：
 
 <CodeDemo isPro viewer view="preview" path="/Extensions/DiagramsStyles" />
 
-The document stores only the style's id. Styles apply to charts only. A diagram's look comes from
-its source and from the custom properties.
+文档只存储样式的 id。样式仅适用于图表。流程图的外观取决于其源内容和自定义属性。
 
-### What a style holds
+### 样式包含什么
 
-A style is `{ id, label, palette, appearance? }`. The chart stores the `id`. The user sees the
-`label`. The `palette` holds the colors of the data series, such as the bars or lines. The
-optional `appearance` may set `background`, `axisColor`, `gridColor`, `labelColor`, `titleColor`,
-`fontFamily` and `border`.
+样式的结构为 `{ id, label, palette, appearance? }`。图表存储 `id`，用户看到的是 `label`。`palette` 包含数据系列（如柱形或折线）的颜色。可选的 `appearance` 可以设置 `background`、`axisColor`、`gridColor`、`labelColor`、`titleColor`、`fontFamily` 和 `border`。
 
-### Which value wins
+### 哪个值优先
 
-The chart's own `palette`, `background` and `border` win over the style. What neither sets comes
-from the [custom properties](/diagrams/api-reference/selectors). An id that is not registered is ignored, and the chart
-looks as if it named no style.
+图表自身的 `palette`、`background` 和 `border` 优先于样式。两者都未设置的值取自[自定义属性](/diagrams/api-reference/selectors)。未注册的 id 会被忽略，图表的外观就如同未指定样式一样。
 
-### Built-in styles
+### 内置样式
 
-The package exports the built-in styles as `CHART_STYLES`: `standard`, `ocean`, `sunset`,
-`mono`, `pastel`, `high-contrast`, `corporate`, `print`, `neon` and `earth`. Each label is its id
-in title case, such as High Contrast. `print` is on white with a frame. `neon` is on a dark
-background.
+该软件包通过 `CHART_STYLES` 导出内置样式：`standard`、`ocean`、`sunset`、`mono`、`pastel`、`high-contrast`、`corporate`、`print`、`neon` 和 `earth`。每种样式的标签是其 id 的标题式大小写形式，例如 High Contrast。`print` 使用白色背景和边框。`neon` 使用深色背景。
 
-### Your own styles
+### 自定义样式
 
-Add your own styles with the [`styles`](/diagrams/api-reference/options#styles) option.
+通过 [`styles`](/diagrams/api-reference/options#styles) 选项添加自定义样式。
 
-| Where                                                      | What                                                                |
-| ---------------------------------------------------------- | ------------------------------------------------------------------- |
-| `editor.storage.diagrams.styles`                           | Every style                                                         |
-| `describeCapabilities().styles`                            | Every style, for an agent                                           |
-| `editor.storage.diagrams.styleChart(spec, theme, scheme?)` | The spec and theme a chart is drawn with, for a preview of your own |
+| 位置                                                       | 内容                                      |
+| ---------------------------------------------------------- | ----------------------------------------- |
+| `editor.storage.diagrams.styles`                           | 所有样式                                  |
+| `describeCapabilities().styles`                             | 供代理使用的所有样式                      |
+| `editor.storage.diagrams.styleChart(spec, theme, scheme?)` | 图表所用的 spec 和主题，可用于预览自定义样式 |
 
-## Dark color scheme
+## 深色配色方案
 
-The default colors are `light-dark()` pairs, declared on `:where(.tiptap)`, so any value you set
-wins. A chart or a diagram uses the color scheme it inherits from the page. `color-scheme: dark`
-on the page turns the defaults dark. `color-scheme: light dark` follows the system.
+默认颜色是 `light-dark()` 配对值，声明在 `:where(.tiptap)` 上，因此你设置的任何值都会优先生效。图表或流程图使用从页面继承的配色方案。页面上的 `color-scheme: dark` 会将默认颜色切换为深色。`color-scheme: light dark` 则遵循系统设置。
 
-Switch the page between light and dark and watch charts and diagrams follow:
+切换页面的浅色和深色模式，看看图表和流程图如何随之变化：
 
 <CodeDemo isPro viewer view="preview" path="/Extensions/DiagramsDarkMode" />
 
-### How a dark color is derived
+### 深色如何生成
 
-The extension derives each dark default from its light color. It inverts the lightness in the
-OKLCH color space and keeps the hue and the chroma. `lightDarkColor` applies the same rule to a color of your own:
+扩展会根据浅色为每个默认深色生成对应值：在 OKLCH 色彩空间中反转亮度，同时保留色相和色度。`lightDarkColor` 会对自定义颜色应用同样的规则：
 
 ```ts
 import { lightDarkColor } from '@tiptap-pro/extension-diagrams'
@@ -119,38 +101,30 @@ editor.view.dom.style.setProperty('--tt-chart-series-1', lightDarkColor('#0b5fff
 editor.storage.diagrams.refresh()
 ```
 
-### When the scheme changes
+### 配色方案发生变化时
 
-- **When the system's scheme changes**, the charts and diagrams are drawn again.
-- **When the page's scheme changes in another way**, such as through a class on `<html>`, call
-  `editor.storage.diagrams.refresh()`.
-- **An exported file and a Word document** are light, whatever the page shows. For a dark file,
-  pass `scheme: 'dark'` to `export`.
-- **The [`colorScheme`](/diagrams/api-reference/options#colorscheme) option `'light'`** keeps every chart and
-  diagram light.
+- **系统配色方案发生变化时**，图表和流程图会重新绘制。
+- **页面配色方案以其他方式发生变化时**（例如通过 `<html>` 上的类），请调用 `editor.storage.diagrams.refresh()`。
+- **导出的文件和 Word 文档**始终采用浅色，不受页面显示效果影响。若要导出深色文件，请在 `export` 中传入 `scheme: 'dark'`。
+- **[`colorScheme`](/diagrams/api-reference/options#colorscheme) 选项设为 `'light'` 时**，所有图表和流程图都会保持浅色。
 
-### Styles in the dark
+### 深色模式下的样式
 
-The colors of a [style](/diagrams/guides/styling#styles) turn dark by the same rule: its palette, its background, and its
-axis, grid, label and title colors. A style with a dark background of its own, such as `neon`,
-keeps its colors. A `palette` or a `background` that the Chart Spec sets itself stays the same in
-both schemes.
+[样式](/diagrams/guides/styling#styles)中的颜色也会按相同规则转为深色，包括调色板、背景，以及坐标轴、网格、标签和标题的颜色。具有自身深色背景的样式（如 `neon`）会保留原有颜色。Chart Spec 自身设置的 `palette` 或 `background` 在两种配色方案下都保持不变。
 
-`styleChart(spec, theme, scheme)` takes `'light'` (the default), `'dark'` or `'auto'`. `'auto'`
-returns `light-dark()` pairs, which the page then resolves.
+`styleChart(spec, theme, scheme)` 接受 `'light'`（默认值）、`'dark'` 或 `'auto'`。`'auto'` 会返回 `light-dark()` 配对值，再由页面解析。
 
-### Browser support
+### 浏览器支持
 
-`light-dark()` and relative colors need a current browser: Chrome and Edge 123, Safari 18, Firefox 128.
+`light-dark()` 和相对颜色需要较新的浏览器：Chrome 和 Edge 123、Safari 18、Firefox 128。
 
-## Color helpers
+## 颜色辅助函数
 
-A Renderer gets the colors already resolved, as hex values, never as `light-dark()`. The sandbox
-that draws a diagram gets them the same way.
+Renderer 获取的颜色已经解析为十六进制值，不会是 `light-dark()`。绘制流程图的沙箱也会以相同方式获取颜色。
 
-| Function                                                | From                                   | Returns                                                                         |
-| ------------------------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------------- |
-| `darkColor(color)`                                      | `@tiptap-pro/extension-diagrams`       | The dark rule as CSS, `oklch(from <color> calc(0.95 - 0.75 * l) c h)`           |
-| `lightDarkColor(color)`                                 | `@tiptap-pro/extension-diagrams`       | The `light-dark()` pair, for colors of your own                                 |
-| `resolveColors(element, colors, scheme?)`               | `@tiptap-pro/extension-diagrams/theme` | Colors of your own, resolved                                                    |
-| `resolveChartColors(element, { spec, theme }, scheme?)` | `@tiptap-pro/extension-diagrams/theme` | What [`styleChart`](/diagrams/guides/styling#your-own-styles) returns, resolved |
+| 函数                                                     | 来自                                     | 返回值                                                                        |
+| -------------------------------------------------------- | ---------------------------------------- | ----------------------------------------------------------------------------- |
+| `darkColor(color)`                                       | `@tiptap-pro/extension-diagrams`         | 作为 CSS 的深色规则：`oklch(from <color> calc(0.95 - 0.75 * l) c h)`           |
+| `lightDarkColor(color)`                                  | `@tiptap-pro/extension-diagrams`         | `light-dark()` 配对值，适用于自定义颜色                                       |
+| `resolveColors(element, colors, scheme?)`                | `@tiptap-pro/extension-diagrams/theme`   | 已解析的自定义颜色                                                            |
+| `resolveChartColors(element, { spec, theme }, scheme?)` | `@tiptap-pro/extension-diagrams/theme`   | [`styleChart`](/diagrams/guides/styling#your-own-styles) 返回的内容，经解析后所得 |
