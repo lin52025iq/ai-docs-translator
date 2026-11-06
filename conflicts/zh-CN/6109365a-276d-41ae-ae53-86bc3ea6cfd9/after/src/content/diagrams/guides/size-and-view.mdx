@@ -1,0 +1,152 @@
+---
+title: '尺寸与视图'
+intro: "图表或示意图会占据编辑器文本的整个宽度，直到为其指定独立尺寸。在此之前，图表的宽高比为 16:9；示意图则保留其绘图的宽高比，且高度不超过 640px。"
+headerDemo:
+  path: '/Extensions/DiagramsSizeAndZoom'
+  isPro: true
+tags:
+  - type: alpha
+  - type: restricted
+meta:
+  title: '尺寸与视图 | Tiptap Diagrams 文档'
+  description: "图表或示意图会占据编辑器文本的整个宽度，直到为其指定独立尺寸。"
+  category: 图表
+---
+
+import { CodeDemo } from '@/components/CodeDemo'
+
+## 快速开始
+
+```ts
+// Half the width of the editor's text, at 4:3, stored in the document
+editor.commands.setDiagramSize({ size: { width: 0.5, ratio: 4 / 3, locked: true } })
+
+// 150 % in this editor only
+editor.storage.diagrams.setZoom({}, 1.5)
+```
+
+## 哪些内容会被保存
+
+文档会保存尺寸和对齐方式，因此协作者之间会共享这些设置，重新加载后也会保留。缩放、平移和最大化只会改变当前编辑器中图表或示意图的显示方式，不会共享，重新加载后也会重置。
+
+## 窄屏幕
+
+在手机上， [`chart.minRenderWidth`](/diagrams/api-reference/options#minrenderwidth) 选项会先按大屏幕的宽度绘制图表，再将其缩小。比较启用和未启用该选项时窄屏图表的效果：
+
+<CodeDemo isPro viewer view="preview" path="/Extensions/DiagramsNarrowScreens" />
+
+## 视图函数
+
+视图函数位于 `editor.storage.diagrams`。每个函数都接受一个 `target`，其类型为 `{ pos? }`。如果未提供 `pos`，函数就会作用于当前选中的图表或示意图。
+
+| 函数                              | 作用                                                            |
+| --------------------------------- | --------------------------------------------------------------- |
+| `setZoom(target, zoom)`           | 设置缩放比例。`zoom` 的类型为 `number \| 'fit'`                  |
+| `getZoom(target?)`                | 返回缩放比例，或 `null`                                          |
+| `setPan(target, { x, y })`        | 在框架内移动已缩放的图表或示意图                                  |
+| `getPan(target?)`                 | 返回偏移量 `{ x, y }`，或 `null`                                 |
+| `setMaximized(target, maximized)` | 将图表或示意图铺满窗口，或恢复原状                                |
+| `getMaximized()`                  | 返回已最大化图表或示意图的位置，或 `null`                        |
+| `getShownSize(target?)`           | 返回其在屏幕上的尺寸，类型为 `FigureSize`，或 `null`             |
+
+这些函数仅适用于当前显示在屏幕上的图表或示意图。对于未显示在屏幕上的对象，`set` 函数会返回 `false`，`get` 函数会返回 `null`。
+
+## 缩放
+
+```ts
+editor.storage.diagrams.setZoom({ pos }, 1.5) // 150 % of the unzoomed size
+editor.storage.diagrams.setZoom({}, 'fit') // the selected chart, back to the unzoomed size
+```
+
+未缩放尺寸（`'fit'`）是图表恰好填满自身宽度时的尺寸。数值表示该尺寸的倍数，范围为 `0.25` 到 `4`。超出此范围的数值会被限制在范围内。
+
+放大时，图表会保持高度不变，你可以在其中滚动。缩小时，图表占用的空间会减少。所有 Renderer 都支持缩放，因为绘制好的图表会被缩放，而不是重新绘制。图表的根元素会通过 `data-tt-chart-zoom` 属性记录缩放比例。
+
+## 平移
+
+```ts
+editor.storage.diagrams.setZoom({ pos }, 2)
+editor.storage.diagrams.setPan({ pos }, { x: 120, y: 40 })
+```
+
+平移会在框架内移动放大后的图表或示意图。
+
+- **按住鼠标拖动**即可移动对象。不移动直接单击则会选中对象。
+- **`setPan`** 可通过代码移动对象。`x` 和 `y` 表示图表或示意图在左侧和顶部移出可视区域的像素数。
+- **`'fit'`** 会将对象移回 `0, 0`。
+- **拖动期间**，根元素会带有 `data-tt-chart-panning` 或 `data-tt-flow-diagram-panning` 属性。
+
+## 最大化
+
+```ts
+editor.storage.diagrams.setMaximized({ pos }, true) // over the window
+editor.storage.diagrams.setMaximized({ pos }, false) // back into the text
+```
+
+最大化的图表会覆盖窗口，与窗口边缘的距离由 `--tt-chart-maximized-inset` 决定。图表会按新的尺寸重新绘制，缩放比例则从 `'fit'` 开始。最大化期间，其根元素会带有 `data-tt-chart-maximized` 属性。
+
+同一时间只能最大化一个图表。最大化另一个图表、在编辑器中按 Escape 键，或删除、移动该图表，都会使其恢复原状。每次变更都会派发一个不修改文档的事务，因此监听 `transaction` 的工具栏可以据此更新按钮。
+
+## 调整大小的控制点
+
+启用 [`resizable`](/diagrams/api-reference/options#resizable) 选项后，当编辑器处于可编辑状态时，选中的图表或示意图会显示控制点。控制点位于左右两侧、底部以及两个下角。
+
+- **侧边控制点**会改变宽度并保持高度不变。居中的图表或示意图会向两侧扩展。左对齐或右对齐的对象（见 [`setDiagramAlign`](/diagrams/guides/size-and-view#setdiagramalign)）只会向控制点所在的一侧扩展。
+- **底部控制点**会改变高度。
+- **角落控制点**会同时改变宽度和高度。尺寸设置为 `locked: true` 时，它会保持宽高比；按住 Shift 则相反。
+- **接近全宽时**，拖动会吸附到编辑器文本的边缘。双击控制点可将宽度设为全宽。
+- **拖动结束时**，`setDiagramSize` 会写入尺寸，并作为一个撤销步骤记录。
+
+## 命令
+
+### setDiagramSize
+
+为当前选中的图表或示意图，或 `pos` 指定位置的对象，设置尺寸。
+
+```ts
+editor.commands.setDiagramSize({ size: { width: 0.5, ratio: 4 / 3, locked: true } })
+```
+
+| 选项   | 类型                 | 说明                                                                          |
+| ------ | -------------------- | ----------------------------------------------------------------------------- |
+| `size` | `FigureSize \| null` | 尺寸，见下文。`null` 会恢复为全宽和自然宽高比                                  |
+| `pos`  | `number`             | 图表或示意图的位置。默认为当前选中的对象                                       |
+
+`FigureSize` 包含以下字段。超出范围的值会被限制在范围内。
+
+| 字段     | 类型                            | 说明                                                                                      |
+| -------- | ------------------------------- | ----------------------------------------------------------------------------------------- |
+| `width`  | `number`                        | 相对于编辑器文本宽度的比例，范围为 `0.1` 到 `1`                                           |
+| `ratio`  | `number`                        | 宽高比，即绘图区域的宽度除以高度，范围为 `0.25` 到 `8`                                    |
+| `locked` | `boolean`                       | 角落控制点是否保持宽高比                                                                  |
+| `align`  | `'left' \| 'center' \| 'right'` | 对齐方式，见 [`setDiagramAlign`](/diagrams/guides/size-and-view#setdiagramalign)。可选      |
+
+| 场景       | 尺寸的处理方式                                                   |
+| ---------- | ---------------------------------------------------------------- |
+| 图表       | 以 `size` 的形式保存在其 Chart Spec 中                           |
+| 示意图     | 以 `size` 的形式保存在其 `options` 中                            |
+| 导出图像   | 保留宽高比，并使用导出时的常规宽度                               |
+| Word       | 将图表或示意图放置为页面宽度的相应比例                           |
+| HTML       | 在 `<figure>` 元素上转换为 `style="width: …%"`                   |
+
+如果不存在图表或示意图，或者 `size` 不是有效尺寸，则返回 `false`。
+
+### setDiagramAlign
+
+将当前选中的图表或示意图，或 `pos` 指定位置的对象，与编辑器文本的 `'left'`、`'center'` 或 `'right'` 对齐。
+
+```ts
+editor.commands.setDiagramAlign({ align: 'right' })
+```
+
+| 选项    | 类型                            | 说明                               |
+| ------- | ------------------------------- | ---------------------------------- |
+| `align` | `'left' \| 'center' \| 'right'` | 对齐方式                           |
+| `pos`   | `number`                        | 图表或示意图的位置。默认为当前选中的对象 |
+
+- **对齐方式会**以 `align` 的形式保存在尺寸中。默认值为 `center`，不会写入。
+- **尚未设置独立尺寸的图表或示意图**会采用其屏幕上显示的尺寸 `getShownSize()`，并同时应用对齐方式。
+- **全宽时**，只有缩窄图表或示意图后才能看到对齐效果。
+- **HTML** 会通过边距体现对齐方式。**Word** 会通过包含图表或示意图的段落对齐方式体现。
+
+如果不存在图表或示意图，或指定了未知的对齐方式，则返回 `false`。如果图表或示意图尚未设置独立尺寸且当前未显示在屏幕上，也会返回 `false`，因为该命令需要从屏幕读取宽高比。
