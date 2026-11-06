@@ -1,48 +1,48 @@
 ---
-title: Superscript extension
+title: 上标扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-superscript?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-superscript
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-superscript.svg
     url: https://npmcharts.com/compare/@tiptap/extension-superscript?minimal=true
-    label: Downloads
+    label: 下载量
 extension:
-  name: Superscript
+  name: 上标
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-superscript
-  description: Write slightly above the normal line to show you’re on the next level.
+  description: 将文本显示在基准线上方，彰显更高一层。
   type: mark
   icon: Superscript
 meta:
-  title: Superscript extension | Tiptap Editor Docs
-  description: Use the Superscript extension in Tiptap to write text above the normal line. Learn more in our docs!
-  category: Editor
+  title: 上标扩展 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用上标扩展，将文本显示在基准线上方。了解更多，请参阅我们的文档！
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-Use this extension to render text in <sup>superscript</sup>. If you pass `<sup>` or text with `vertical-align: super` as inline style in the editor’s initial content, both will be rendered accordingly.
+使用此扩展可将文本显示为 <sup>上标</sup>。如果编辑器初始内容中包含 `<sup>`，或包含带有 `vertical-align: super` 内联样式的文本，两者都会按相应方式呈现。
 
-<Callout title="Restrictions" variant="default">
-    The extension will generate the corresponding `<sup>` HTML tags when reading contents of the `Editor` instance. All text in superscript, regardless of the method will be normalized to `<sup>` HTML tags.
+<Callout title="限制" variant="default">
+    读取 `Editor` 实例的内容时，此扩展会生成相应的 `<sup>` HTML 标签。所有上标文本，无论采用哪种方式，都会统一规范为 `<sup>` HTML 标签。
 </Callout>
 
 <CodeDemo path="/Marks/Superscript" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-superscript
 ```
 
-## Settings
+## 设置
 
 ### HTMLAttributes
 
-Custom HTML attributes that should be added to the rendered HTML tag.
+要添加到渲染后的 HTML 标签中的自定义 HTML 属性。
 
 ```js
 Superscript.configure({
@@ -52,11 +52,11 @@ Superscript.configure({
 })
 ```
 
-## Commands
+## 命令
 
 ### setSuperscript()
 
-Mark text as superscript.
+将文本标记为上标。
 
 ```js
 editor.commands.setSuperscript()
@@ -64,7 +64,7 @@ editor.commands.setSuperscript()
 
 ### toggleSuperscript()
 
-Toggle superscript mark.
+切换上标标记。
 
 ```js
 editor.commands.toggleSuperscript()
@@ -72,18 +72,18 @@ editor.commands.toggleSuperscript()
 
 ### unsetSuperscript()
 
-Remove superscript mark.
+移除上标标记。
 
 ```js
 editor.commands.unsetSuperscript()
 ```
 
-## Keyboard shortcuts
+## 键盘快捷键
 
-| Command             | Windows/Linux                     | macOS                         |
+| 命令                | Windows/Linux                     | macOS                         |
 | ------------------- | --------------------------------- | ----------------------------- |
 | toggleSuperscript() | <kbd>Control</kbd> + <kbd>.</kbd> | <kbd>Cmd</kbd> + <kbd>.</kbd> |
 
-## Source code
+## 源代码
 
 [packages/extension-superscript/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-superscript/)
