@@ -1,12 +1,12 @@
 ---
-title: Image Upload Node
+title: 图像上传节点
 meta:
-  title: Image upload node | Tiptap UI Components
-  description: Integrate a node UI component that adds an image upload in your Tiptap Editor. More in the docs!
-  category: UI Components
+  title: 图像上传节点 | Tiptap UI 组件
+  description: 在 Tiptap 编辑器中集成一个用于上传图像的节点 UI 组件。详情请参阅文档！
+  category: UI 组件
 component:
-  name: Image upload node
-  description: Upload an image via a node UI component
+  name: 图像上传节点
+  description: 通过节点 UI 组件上传图像
   type: node-component
   isFree: true
   isCloud: false
@@ -19,19 +19,19 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A node for uploading images directly within the Tiptap editor, providing a drag-and-drop interface and progress tracking.
+用于在 Tiptap 编辑器中直接上传图像的节点，提供拖放界面和进度跟踪功能。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-node/image-upload-node" />
 
-## Installation
+## 安装
 
-You can add the node component via Tiptap CLI
+你可以通过 Tiptap CLI 添加此节点组件：
 
 ```bash
 npx @tiptap/cli@latest add image-upload-node
 ```
 
-## Usage
+## 用法
 
 ```tsx
 import * as React from 'react'
@@ -71,34 +71,34 @@ export default function EditorWithImageUpload() {
 }
 ```
 
-## Props
+## 属性
 
-| Name      | Type                                                                                | Default    | Description                                  |
-| --------- | ----------------------------------------------------------------------------------- | ---------- | -------------------------------------------- |
-| accept    | string                                                                              | 'image/\*' | Acceptable file types for upload             |
-| limit     | number                                                                              | 1          | Maximum number of files that can be uploaded |
-| maxSize   | number                                                                              | 0          | Maximum file size in bytes (0 for unlimited) |
-| upload    | `(file: File, onProgress?: Function, abortSignal?: AbortSignal) => Promise<string>` | undefined  | Function to handle the upload process        |
-| onError   | (error: Error) => void                                                              | undefined  | Callback for upload errors                   |
-| onSuccess | (url: string) => void                                                               | undefined  | Callback for successful uploads              |
+| 名称      | 类型                                                                                | 默认值     | 说明                     |
+| --------- | ----------------------------------------------------------------------------------- | ---------- | ------------------------ |
+| accept    | string                                                                              | 'image/\*' | 可接受上传的文件类型     |
+| limit     | number                                                                              | 1          | 最多可上传的文件数量     |
+| maxSize   | number                                                                              | 0          | 文件大小上限（字节；0 表示不限制） |
+| upload    | `(file: File, onProgress?: Function, abortSignal?: AbortSignal) => Promise<string>` | undefined  | 处理上传过程的函数       |
+| onError   | (error: Error) => void                                                              | undefined  | 上传出错时的回调         |
+| onSuccess | (url: string) => void                                                               | undefined  | 上传成功时的回调         |
 
-## Features
+## 功能
 
-- Drag-and-drop file upload
-- File size validation
-- Upload progress tracking
-- File type filtering
-- Abortable uploads
-- Visual feedback during upload process
-- Seamless replacement with Image node after upload
+- 拖放上传文件
+- 文件大小验证
+- 上传进度跟踪
+- 文件类型筛选
+- 支持中止上传
+- 上传过程中的视觉反馈
+- 上传完成后无缝替换为 Image 节点
 
-## Requirements
+## 要求
 
-Used reference components
+使用的参考组件
 
-- `close-icon` (icon)
+- `close-icon`（图标）
 
-Open source feature(s)
+开源功能
 
 - `@tiptap/react`
-- [`@tiptap/extension-image`](/editor/extensions/nodes/image) (recommended for full functionality)
+- [`@tiptap/extension-image`](/editor/extensions/nodes/image)（建议安装，以获得完整功能）
