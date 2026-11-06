@@ -1,58 +1,58 @@
 ---
-title: Configure the AI agent's tools
+title: 配置 AI 代理的工具
 meta:
-  title: AI agent tools | Tiptap Content AI
-  description: Learn how to configure the AI agent's tools.
+  title: AI 代理工具 | Tiptap Content AI
+  description: 了解如何配置 AI 代理的工具。
   category: Content AI
 ---
 
-Tools are the building blocks of an AI agent. They define the actions that the AI model can take to interact with its environment.
+工具是构建 AI 代理的基础。它们定义了 AI 模型可以采取哪些操作来与其环境交互。
 
-The Tiptap AI Agent extension provides a set of built-in tools that give your AI agent the ability to read and edit rich text documents.
+Tiptap AI Agent 扩展提供了一组内置工具，让 AI 代理能够读取和编辑富文本文档。
 
-Although the AI Agent extension provides a set of built-in tools, you can also [define custom tools](#custom-tools) to extend your AI agent's capabilities.
+虽然 AI Agent 扩展提供了一组内置工具，但你也可以[定义自定义工具](#custom-tools)，扩展 AI 代理的功能。
 
-## Built-in tools
+## 内置工具
 
 ### `read_first_chunk`
 
-Starts reading the current document from the beginning.
+从头开始读取当前文档。
 
 ### `read_next_chunk`
 
-Reads the next chunk of the document.
+读取文档的下一个区块。
 
 ### `read_previous_chunk`
 
-Reads the previous chunk of the document.
+读取文档的上一个区块。
 
 ### `apply_diff`
 
-This is the main tool the AI agent has for making changes to the document. It applies a list of diffs to the document. Each diff contains:
+这是 AI 代理用于修改文档的主要工具。它会将一组差异应用到文档中。每项差异包含：
 
-- The content before the change, used to locate the place to edit.
-- The content to delete
-- The content to insert
+- 更改前的内容，用于定位需要编辑的位置。
+- 要删除的内容
+- 要插入的内容
 
 ### `replace_document`
 
-Replaces the entire document with new content.
+用新内容替换整个文档。
 
 ### `plan`
 
-Plans the work to be done. It generates a list of steps in Markdown format.
+规划要完成的工作，并以 Markdown 格式生成步骤列表。
 
 ### `ask_user`
 
-Asks the user a question.
+向用户提问。
 
 ### `finish_with_summary`
 
-Marks the task as completed, and provides a summary in Markdown format.
+将任务标记为已完成，并以 Markdown 格式提供摘要。
 
-## Customize built-in tools
+## 自定义内置工具
 
-You can remove or replace the built-in tools by configuring the `AiAgentToolkit` instance.
+你可以通过配置 `AiAgentToolkit` 实例来移除或替换内置工具。
 
 ```ts
 import {
@@ -82,9 +82,9 @@ const toolkit = new AiAgentToolkit({
 })
 ```
 
-## Custom tools
+## 自定义工具
 
-Besides the built-in tools, you can define additional tools. There are two types of custom tools:
+除了内置工具，你还可以定义其他工具。自定义工具分为两种：
 
-- [**Client-side tools**](/ai/deprecated/agent/custom-llms/client-side-tools) run in the client. They interact with the editor's content. For example: a tool that counts the number of words in the document, or a tool that formats the document. All built-in tools are client-side tools.
-- [**Server-side tools**](/ai/deprecated/agent/custom-llms/server-side-tools) run in the server. They interact with external data sources. For example: a tool that searches the web, or a tool that queries a database.
+- [**客户端工具**](/ai/deprecated/agent/custom-llms/client-side-tools)在客户端运行，可与编辑器内容交互。例如，统计文档字数或设置文档格式的工具。所有内置工具都是客户端工具。
+- [**服务器端工具**](/ai/deprecated/agent/custom-llms/server-side-tools)在服务器上运行，可与外部数据源交互。例如，搜索网页或查询数据库的工具。
