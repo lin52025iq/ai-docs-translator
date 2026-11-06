@@ -1,30 +1,30 @@
 ---
-title: Diff view
+title: 差异视图
 meta:
-  title: Diff view | Tiptap AI Suggestion
-  description: Use the AI Suggestion extension to preview AI-generated changes before they are applied.
-  category: Content AI
+  title: 差异视图 | Tiptap AI Suggestion
+  description: 使用 AI Suggestion 扩展，在应用 AI 生成的更改之前预览这些更改。
+  category: 内容 AI
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Use the AI Suggestion extension to preview changes before they are applied to the document. Display changes in a diff view, and enable users to accept/reject individual changes.
+使用 AI Suggestion 扩展，在将更改应用到文档之前预览这些更改。以差异视图显示更改，并允许用户接受或拒绝单项更改。
 
-<Callout title="Note" variant="info">
-  To review changes **after** they are applied to the document, see the [AI
-  Changes](/ai/deprecated/changes/overview) extension.
+<Callout title="注意" variant="info">
+  如需在更改应用到文档**之后**进行审阅，请参阅 [AI
+  Changes](/ai/deprecated/changes/overview) 扩展。
 </Callout>
 
-<Callout title="Beta feature" variant="warning">
-  The diff view API is experimental and might change in the future. We appreciate your feedback!
-  [Contact us](mailto:humans@tiptap.dev).
+<Callout title="Beta 功能" variant="warning">
+  差异视图 API 仍处于实验阶段，未来可能会发生变化。欢迎向我们提供反馈！
+  [联系我们](mailto:humans@tiptap.dev)。
 </Callout>
 
-## Setup guide
+## 设置指南
 
-### Step 1: Configure the AI Suggestion extension
+### 第 1 步：配置 AI Suggestion 扩展
 
-Initialize the Editor instance with the AI Suggestion extension. Disable automatic loading of suggestions.
+使用 AI Suggestion 扩展初始化 Editor 实例。禁用自动加载建议。
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -36,7 +36,7 @@ const editor = new Editor({
   extensions: [
     StarterKit,
     AiSuggestion.configure({
-      // Disable automatic loading of suggestions
+      // 禁用自动加载建议
       loadOnStart: false,
       reloadOnUpdate: false,
     }),
@@ -44,9 +44,9 @@ const editor = new Editor({
 })
 ```
 
-### Step 2: Define a rule to group diff suggestions
+### 第 2 步：定义用于归组差异建议的规则
 
-Every suggestion must be associated with a rule. In this case, we want to display the diff as a list of suggestions that belong to the `'diff'` rule.
+每条建议都必须关联一条规则。在本例中，我们希望将差异显示为一组属于 `'diff'` 规则的建议。
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -58,20 +58,20 @@ const editor = new Editor({
   extensions: [
     StarterKit,
     AiSuggestion.configure({
-      // Disable automatic loading of suggestions
+      // 禁用自动加载建议
       loadOnStart: false,
       reloadOnUpdate: false,
       rules: [
         {
           id: 'diff',
-          // Title, prompt, and color are not used in the diff view
+          // 差异视图不会使用标题、提示词和颜色
           title: '',
           prompt: '',
           color: '#000',
           backgroundColor: '#fff',
-          // Do not send this rule to the AI model to generate suggestions
+          // 不将此规则发送给 AI 模型来生成建议
           ignoreInTiptapCloud: true,
-          // Display suggestions in a diff format
+          // 以差异格式显示建议
           displayAsDiff: true,
         },
       ],
@@ -80,9 +80,9 @@ const editor = new Editor({
 })
 ```
 
-### Step 3: Configure styles
+### 第 3 步：配置样式
 
-Customize how the suggestions are displayed in the editor.
+自定义建议在编辑器中的显示方式。
 
 ```css
 :root {
@@ -107,11 +107,11 @@ Customize how the suggestions are displayed in the editor.
 }
 ```
 
-Learn how to add advanced styles to suggestions in the [styling guide](/ai/deprecated/suggestion/features/display-suggestions).
+了解如何为建议添加高级样式，请参阅[样式指南](/ai/deprecated/suggestion/features/display-suggestions)。
 
-### Step 4: Generate suggestions
+### 第 4 步：生成建议
 
-Generate suggestions by passing the new content of the document to the resolver function (in html format). The AI Suggestion extension will compare the new content with the current content and generate a list of suggestions that belong to the `'diff'` rule defined earlier.
+将文档的新内容（HTML 格式）传递给 resolver 函数以生成建议。AI Suggestion 扩展会将新内容与当前内容进行比较，并生成一组属于前面定义的 `'diff'` 规则的建议。
 
 ```ts
 editor.commands.loadAiSuggestions({
@@ -138,6 +138,6 @@ editor.commands.loadAiSuggestions({
 })
 ```
 
-### Step 5: Review suggestions
+### 第 5 步：审阅建议
 
-Reviewing diff-based suggestions is done the same way as regular suggestions. See the [apply suggestions](/ai/deprecated/suggestion/features/apply-suggestions) guide for more information.
+审阅基于差异的建议与审阅常规建议的方式相同。更多信息请参阅[应用建议](/ai/deprecated/suggestion/features/apply-suggestions)指南。
