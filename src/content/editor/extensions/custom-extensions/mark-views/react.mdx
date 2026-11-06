@@ -1,26 +1,26 @@
 ---
-title: Mark views with React
+title: 使用 React 构建标记视图
 meta:
-  title: React mark views | Tiptap Editor Docs
-  description: Use React to build custom mark views in Tiptap.
-  category: Editor
+  title: React 标记视图 | Tiptap 编辑器文档
+  description: 使用 React 在 Tiptap 中构建自定义标记视图。
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-Using Vanilla JavaScript can feel complex if you are used to work in React. Good news: You can use regular React components in your mark views, too. There is just a little bit you need to know, but let’s go through this one by one.
+如果你习惯使用 React，那么使用原生 JavaScript 可能会让你觉得复杂。好消息是，你也可以在标记视图中使用常规的 React 组件。只需了解一点内容，下面我们逐一介绍。
 
-## Render a React component
+## 渲染 React 组件
 
-Here is what you need to do to render React components inside your editor:
+要在编辑器中渲染 React 组件，请按以下步骤操作：
 
-1. [Create a mark extension](/editor/extensions/custom-extensions/create-new/mark)
-2. Create a React component
-3. Pass that component to the provided `ReactNodeViewRenderer`
-4. Register it with `addMarkView()`
-5. [Configure Tiptap to use your new node extension](/editor/getting-started/configure)
+1. [创建标记扩展](/editor/extensions/custom-extensions/create-new/mark)
+2. 创建 React 组件
+3. 将该组件传递给提供的 `ReactNodeViewRenderer`
+4. 使用 `addMarkView()` 注册组件
+5. [配置 Tiptap 以使用新的节点扩展](/editor/getting-started/configure)
 
-This is how your node extension could look like:
+节点扩展可以这样编写：
 
 ```ts
 import { Mark } from '@tiptap/core'
@@ -37,7 +37,7 @@ export default Mark.create({
 })
 ```
 
-And here is an example of a React component:
+下面是一个 React 组件示例：
 
 ```tsx
 import { MarkViewContent, MarkViewRendererProps } from '@tiptap/react'
@@ -50,13 +50,13 @@ export default (props: MarkViewRendererProps) => {
     <span className="content" data-test-id="mark-view">
       <MarkViewContent />
       <label contentEditable={false}>
-        React component:
+        React 组件：
         <button
           onClick={() => {
             setCount(count + 1)
           }}
         >
-          This button has been clicked {count} times.
+          此按钮已被点击 {count} 次。
         </button>
       </label>
     </span>
@@ -64,13 +64,13 @@ export default (props: MarkViewRendererProps) => {
 }
 ```
 
-Got it? Let’s see it in action. Feel free to copy the below example to get started.
+明白了吗？来看看它的实际效果。你可以复制下面的示例来开始使用。
 
 <CodeDemo path="/GuideMarkViews/ReactComponent?inline=false&hideSource=false" />
 
-## Updating the mark view attributes
+## 更新标记视图属性
 
-Updating your mark view's attributes is very straightforward. You can use the `updateAttributes` method provided by the `MarkViewRendererProps` to update the attributes of your mark view.
+更新标记视图的属性非常简单。你可以使用 `MarkViewRendererProps` 提供的 `updateAttributes` 方法来更新标记视图的属性。
 
 ```tsx
 import { MarkViewContent, MarkViewRendererProps } from '@tiptap/react'
@@ -80,7 +80,7 @@ export default (props: MarkViewRendererProps) => {
   return (
     <span id={props.HTMLAttributes.id}>
       <MarkViewContent />
-      <button onClick={() => props.updateAttributes({ id: Date.now() })}>Update ID</button>
+      <button onClick={() => props.updateAttributes({ id: Date.now() })}>更新 ID</button>
     </span>
   )
 }
