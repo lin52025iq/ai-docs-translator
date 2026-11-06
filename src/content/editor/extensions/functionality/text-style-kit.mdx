@@ -1,45 +1,45 @@
 ---
-title: TextStyleKit extension
+title: TextStyleKit 扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-text-style/beta?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-text-style
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-text-style.svg
     url: https://npmcharts.com/compare/@tiptap/extension-text-style?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  title: TextStyleKit extension | Tiptap Editor Docs
-  description: All necessary text style extensions in one extension with TextStyleKit. Perfect for quickly registering the most common text styles with Tiptap. More in the docs!
-  category: Editor
+  title: TextStyleKit 扩展 | Tiptap 编辑器文档
+  description: TextStyleKit 将所有必需的文本样式扩展整合到一个扩展中，方便你快速为 Tiptap 注册最常用的文本样式。详见文档！
+  category: 编辑器
 extension:
   name: TextStyleKit
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-text-style
-  description: All common text styles in one. It doesn’t get much better than this.
+  description: 集合常用文本样式，一应俱全。
   type: extension
   icon: Package
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-The `TextStyleKit` is a collection of the most common Tiptap text style extensions. If you quickly want to setup styles for your text in Tiptap, this extension is for you.
+`TextStyleKit` 集合了 Tiptap 最常用的文本样式扩展。如果你想快速为 Tiptap 中的文本设置样式，那么这个扩展正适合你。
 
 <CodeDemo path="/Marks/Textstyle" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-text-style
 ```
 
-## Included extensions
+## 包含的扩展
 
-### Marks
+### 标记
 
 - [`TextStyle`](/editor/extensions/marks/text-style)
 
-### Functionality
+### 功能
 
 - [`BackgroundColor`](/editor/extensions/functionality/background-color)
 - [`Color`](/editor/extensions/functionality/color)
@@ -47,13 +47,13 @@ npm install @tiptap/extension-text-style
 - [`FontSize`](/editor/extensions/functionality/fontsize)
 - [`LineHeight`](/editor/extensions/functionality/line-height)
 
-## Source code
+## 源代码
 
 [packages/extension-text-style/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-text-style/)
 
-## Using the TextStyleKit extension
+## 使用 TextStyleKit 扩展
 
-Pass `TextStyleKit` to the editor to load all included extension at once.
+将 `TextStyleKit` 传递给编辑器，即可一次性加载所有包含的扩展。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -64,7 +64,7 @@ const editor = new Editor({
 })
 ```
 
-You can configure the included extensions, or even disable a few of them, like shown below.
+你可以配置其中包含的扩展，也可以禁用其中的一些，如下所示。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -73,10 +73,10 @@ import { TextStyleKit } from '@tiptap/extension-text-style'
 const editor = new Editor({
   extensions: [
     TextStyleKit.configure({
-      // Disable an extension
+      // 禁用一个扩展
       backgroundColor: false,
 
-      // Configure an extension
+      // 配置一个扩展
       fontSize: {
         types: ['heading', 'paragraph'],
       },
