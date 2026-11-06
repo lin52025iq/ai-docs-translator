@@ -1,21 +1,21 @@
 ---
-title: Custom extensions
+title: 自定义扩展
 meta:
-    title: Custom extensions | Hocuspocus Docs
+    title: 自定义扩展 | Hocuspocus 文档
     category: Hocuspocus
 ---
 
-## Official extensions
+## 官方扩展
 
-You can see the extensions we have already created [here](/hocuspocus/server/extensions/overview).
+[这里](/hocuspocus/server/extensions/overview)可以查看我们已经创建的扩展。
 
-## Create your own extension
+## 创建自己的扩展
 
-Hocuspocus is written in TypeScript. You don't have to use TypeScript to write extensions, but it's highly recommended. We will only cover the TypeScript part in this documentation.
+Hocuspocus 使用 TypeScript 编写。编写扩展时不一定要使用 TypeScript，但我们强烈建议使用。本篇文档仅介绍 TypeScript 的相关内容。
 
-First step: Create a new class that implements the [`Extension`](https://github.com/ueberdosis/hocuspocus/blob/14e5676ff685a1432d87fed780b6cbead12c8122/packages/server/src/types.ts#L35-L57) interface and add the desired hooks.
+第一步：创建一个新类，实现 [`Extension`](https://github.com/ueberdosis/hocuspocus/blob/14e5676ff685a1432d87fed780b6cbead12c8122/packages/server/src/types.ts#L35-L57) 接口，并添加所需的钩子。
 
-As every hook needs to return a Promise, the easiest way is to mark them as `async`.
+每个钩子都需要返回一个 Promise，最简单的做法是将它们标记为 `async`。
 
 ```js
 import {
@@ -50,9 +50,9 @@ export class MyHocuspocusExtension implements Extension {
 }
 ```
 
-Notice something? These look like the hooks we introduced in the previous chapters of the guide. And guess what: they work the same way as those hooks. So you should already know what they do and how you can use them. If you're still not sure, check out the [hooks](/hocuspocus/server/hooks) section of this documentation which explains them in more detail.
+注意到了吗？这些钩子看起来和本指南前面章节介绍的钩子一样。它们的工作方式也确实相同。因此，你应该已经了解它们的作用以及如何使用。如果还不确定，可以查看本文档的[钩子](/hocuspocus/server/hooks)部分，了解更多详细信息。
 
-Now you can add a constructor that accepts your extension's configuration and merges the default one. It's good practise at this point to create an interface for your configuration too.
+接下来，你可以添加一个构造函数，用于接收扩展配置并与默认配置合并。此时，最好也为配置创建一个接口。
 
 ```js
 import {
@@ -111,7 +111,7 @@ export class MyHocuspocusExtension implements Extension {
 }
 ```
 
-That's it. The only thing missing now is your code. Happy extension writing! When you're done you can simply import and register your extension like any other:
+就这么简单。现在只差写入你自己的代码了。祝你扩展开发顺利！完成后，只需像注册其他扩展一样导入并注册它即可：
 
 ```js
 import { Server } from "@hocuspocus/server";
