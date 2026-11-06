@@ -1,12 +1,12 @@
 ---
-title: Integrate a popover UI component
+title: 集成弹出框 UI 组件
 meta:
   title: Popover | Tiptap UI Components
-  description: Add a pop-up UI element appearing when a user clicks on a trigger element. More in the docs!
-  category: UI Components
+  description: 添加一个弹出式 UI 元素，用户点击触发元素时即可显示。更多内容请参阅文档！
+  category: UI 组件
 component:
   name: Popover
-  description: Integrate a pop-up UI element next a selection.
+  description: 集成一个显示在选区旁边的弹出式 UI 元素。
   type: primitive
   isFree: true
   isCloud: false
@@ -19,19 +19,19 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A popover element that appears when a user clicks on a trigger element.
+用户点击触发元素时显示的弹出框。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui-primitive/popover" />
 
-## Install
+## 安装
 
-You can add the primitive via Tiptap CLI
+你可以通过 Tiptap CLI 添加此基础组件
 
 ```bash
 npx @tiptap/cli@latest add popover
 ```
 
-## Usage
+## 使用方法
 
 ```tsx
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/tiptap-ui-primitive/popover'
@@ -41,37 +41,37 @@ export default function MyComponent() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button data-style="ghost">Open Popover</Button>
+        <Button data-style="ghost">打开弹出框</Button>
       </PopoverTrigger>
       <PopoverContent>
-        <p>Popover content goes here</p>
+        <p>弹出框内容显示在此处</p>
       </PopoverContent>
     </Popover>
   )
 }
 ```
 
-## Props
+## 属性
 
 ### Popover
 
-| Name         | Type                    | Default   | Description                          |
-| ------------ | ----------------------- | --------- | ------------------------------------ |
-| open         | boolean                 | undefined | Controlled open state                |
-| onOpenChange | (open: boolean) => void | undefined | Callback when open state changes     |
-| defaultOpen  | boolean                 | false     | Default open state                   |
-| modal        | boolean                 | false     | Whether to render in a modal context |
+| Name         | Type                    | Default   | Description      |
+| ------------ | ----------------------- | --------- | ---------------- |
+| open         | boolean                 | undefined | 受控的打开状态   |
+| onOpenChange | (open: boolean) => void | undefined | 打开状态变化时的回调 |
+| defaultOpen  | boolean                 | false     | 默认打开状态     |
+| modal        | boolean                 | false     | 是否在模态上下文中渲染 |
 
 ### PopoverTrigger
 
-| Name    | Type    | Default | Description                       |
-| ------- | ------- | ------- | --------------------------------- |
-| asChild | boolean | false   | Whether to merge props with child |
+| Name    | Type    | Default | Description          |
+| ------- | ------- | ------- | -------------------- |
+| asChild | boolean | false   | 是否与子元素合并属性 |
 
 ### PopoverContent
 
-| Name   | Type                                   | Default  | Description                       |
-| ------ | -------------------------------------- | -------- | --------------------------------- |
-| side   | 'top' \| 'right' \| 'bottom' \| 'left' | 'bottom' | Preferred side to display content |
-| align  | 'start' \| 'center' \| 'end'           | 'center' | Alignment along the edge          |
-| portal | boolean                                | true     | Whether to render in a portal     |
+| Name   | Type                                   | Default  | Description      |
+| ------ | -------------------------------------- | -------- | ---------------- |
+| side   | 'top' \| 'right' \| 'bottom' \| 'left' | 'bottom' | 内容的首选显示方向 |
+| align  | 'start' \| 'center' \| 'end'           | 'center' | 沿边缘的对齐方式 |
+| portal | boolean                                | true     | 是否通过 portal 渲染 |
