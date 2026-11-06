@@ -1,9 +1,9 @@
 ---
-title: Styling the Editor
+title: 设置编辑器样式
 meta:
-  title: Style your editor | Tiptap Editor Docs
-  description: Apply custom styles to your Tiptap editor using plain HTML, custom classes, or Tailwind CSS. Learn more in the docs.
-  category: Editor
+  title: 设置编辑器样式 | Tiptap 编辑器文档
+  description: 使用纯 HTML、自定义类或 Tailwind CSS 为 Tiptap 编辑器应用自定义样式。请参阅文档了解详情。
+  category: 编辑器
 ---
 
 import { ArrowRightIcon } from 'lucide-react'
@@ -14,21 +14,21 @@ import Link from '@/components/Link'
 import { Button } from '@/components/ui/Button'
 import { Callout } from '@/components/ui/Callout'
 
-Tiptap follows a headless-first approach, which means the core extensions come without any styling or UI components - just pure logic. This gives you complete control over how your editor looks and behaves.
+Tiptap 采用 headless-first（无头优先）的设计方式，这意味着核心扩展不包含任何样式或 UI 组件，只有纯粹的逻辑。这样你就可以完全掌控编辑器的外观和行为。
 
-However, we now also offer optional UI components and templates that you can use to accelerate your development.
+不过，我们现在也提供可选的 UI 组件和模板，帮助你加快开发进度。
 
 <ImageCard.Card>
-  <ImageCard.Image src={contentTemplatesImage.src} alt="User interface templates for Tiptap" />
+  <ImageCard.Image src={contentTemplatesImage.src} alt="Tiptap 的用户界面模板" />
   <ImageCard.Content>
-    <ImageCard.Title>Get started with UI templates</ImageCard.Title>
+    <ImageCard.Title>从 UI 模板开始</ImageCard.Title>
     <ImageCard.Paragraph>
-      Our UI templates include pre-built components for common editor features. Download the source code and customize to your needs.
+      我们的 UI 模板包含适用于常见编辑器功能的预构建组件。下载源代码，并根据需求进行自定义。
     </ImageCard.Paragraph>
     <div className="flex items-center gap-2 mt-8">
       <Button asChild variant="secondary">
         <Link href="/ui-components/getting-started/overview">
-          Get UI components
+          获取 UI 组件
           <ArrowRightIcon className="size-4" />
         </Link>
       </Button>
@@ -36,13 +36,13 @@ However, we now also offer optional UI components and templates that you can use
   </ImageCard.Content>
 </ImageCard.Card>
 
-### Building your own UI
+### 构建自己的 UI
 
-If you prefer to build your own UI or need to understand how styling works in Tiptap, here are the available methods
+如果你更愿意构建自己的 UI，或者需要了解 Tiptap 中样式的工作方式，可以使用以下方法。
 
-## Style plain HTML
+## 设置纯 HTML 的样式
 
-The entire editor is rendered inside a container with the class `.tiptap`. You can use that to scope your styling to the editor content:
+整个编辑器都渲染在一个带有 `.tiptap` 类的容器中。你可以利用它，将样式限定在编辑器内容范围内：
 
 ```css
 /* Scoped to the editor */
@@ -51,13 +51,11 @@ The entire editor is rendered inside a container with the class `.tiptap`. You c
 }
 ```
 
-<Callout title="Style with CSS modules" variant="warning">
-  In [CSS modules](https://github.com/css-modules/css-modules), class names are modified to enable
-  local scoping, which may prevent styles from applying when targeting the `.tiptap` class. Use
-  global styles or the `:global(.tiptap)` modifier to ensure styles are applied correctly.
+<Callout title="使用 CSS Modules 设置样式" variant="warning">
+  在 [CSS Modules](https://github.com/css-modules/css-modules) 中，类名会经过修改以实现局部作用域，可能导致针对 `.tiptap` 类的样式无法生效。请使用全局样式，或使用 `:global(.tiptap)` 修饰符，确保样式正确应用。
 </Callout>
 
-If you're rendering the stored content elsewhere, there won't be a `.tiptap` container, so you can globally add styling to the relevant HTML tags:
+如果你在其他地方渲染已存储的内容，其中就不会有 `.tiptap` 容器，因此可以为相关 HTML 标签添加全局样式：
 
 ```css
 /* Global styling */
@@ -66,13 +64,13 @@ p {
 }
 ```
 
-## Add custom classes
+## 添加自定义类
 
-You can control the whole rendering, including adding classes to everything.
+你可以控制整个渲染过程，包括为所有元素添加类。
 
-### Extensions
+### 扩展
 
-Most extensions allow you to add attributes to the rendered HTML through the `HTMLAttributes` option. You can use that to add a custom class (or any other attribute). That's also very helpful when you work with [Tailwind CSS](#style-using-tailwind-css).
+大多数扩展都允许你通过 `HTMLAttributes` 选项为渲染出的 HTML 添加属性。你可以利用它添加自定义类（或其他属性）。使用 [Tailwind CSS](#style-using-tailwind-css) 时，这也非常实用。
 
 ```js
 new Editor({
@@ -93,18 +91,18 @@ new Editor({
 })
 ```
 
-The rendered HTML will look like this:
+渲染后的 HTML 如下所示：
 
 ```html
 <h1 class="my-custom-heading">Example Text</h1>
 <p class="my-custom-paragraph">Wow, that's really custom.</p>
 ```
 
-If there are already classes defined by the extensions, your classes will be added.
+如果扩展已经定义了类，你添加的类也会一并保留。
 
-### Editor
+### 编辑器
 
-You can even pass classes to the element that contains the editor:
+你甚至可以为包含编辑器的元素传递类：
 
 ```js
 new Editor({
@@ -116,9 +114,9 @@ new Editor({
 })
 ```
 
-## Customize HTML
+## 自定义 HTML
 
-Or you can customize the markup for extensions. The following example will make a custom bold extension that doesn't render a `<strong>` tag, but a `<b>` tag:
+你也可以自定义扩展的标记。下面的示例会创建一个自定义粗体扩展，它渲染的不是 `<strong>` 标签，而是 `<b>` 标签：
 
 ```js
 import Bold from '@tiptap/extension-bold'
@@ -139,16 +137,16 @@ new Editor({
 })
 ```
 
-You should place your custom extensions in separate files for better organization, but you get the idea.
+为了更好地组织代码，你应该将自定义扩展放在单独的文件中，不过大致思路就是这样。
 
-## Style using Tailwind CSS
+## 使用 Tailwind CSS 设置样式
 
-Since content managed in Tiptap is plain HTML which by default doesn't come with Tailwind CSS classes, you have a few approaches to style your editor:
+Tiptap 管理的内容是纯 HTML，默认不带 Tailwind CSS 类，因此可以通过几种方式为编辑器设置样式：
 
-### Using a global CSS file and `@apply`
+### 使用全局 CSS 文件和 `@apply`
 
-Even though the Tailwind maintainers recommend not using `@apply` we think it's the best way to define styles for flexible, user written content like Tiptaps content.
-You can use a global CSS file and apply Tailwind styles to HTML tags inside your editor. Since nested selectors are now widely supported, you can scope your styles to the `.tiptap` class:
+尽管 Tailwind 的维护者建议不要使用 `@apply`，但我们认为，对于像 Tiptap 内容这样灵活、由用户编写的内容，它是定义样式的最佳方式。
+你可以使用全局 CSS 文件，为编辑器中的 HTML 标签应用 Tailwind 样式。现在嵌套选择器已得到广泛支持，你可以将样式限定在 `.tiptap` 类的范围内：
 
 ```css
 .tiptap {
@@ -162,9 +160,9 @@ You can use a global CSS file and apply Tailwind styles to HTML tags inside your
 }
 ```
 
-### Adding classes to your extensions
+### 为扩展添加类
 
-If you don't want to use a global CSS file, a more complicated approach would be to extend existing components and add Tailwind classes to the `HTMLAttributes` inside the `renderHTML` output.
+如果你不想使用全局 CSS 文件，一种更复杂的做法是扩展现有组件，并在 `renderHTML` 输出中的 `HTMLAttributes` 里添加 Tailwind 类。
 
 ```js
 import Paragraph from '@tiptap/extension-paragraph'
@@ -183,17 +181,17 @@ const TailwindParagraph = Paragraph.extend({
 })
 ```
 
-This approach can work but will become more complicated with more complicated extensions or when NodeViews are used so we still would recommend using a global CSS file with `@apply` for most cases.
+这种方法可行，但随着扩展变得更复杂，或使用 NodeViews 时，处理起来也会更加复杂。因此，在大多数情况下，我们仍建议使用全局 CSS 文件和 `@apply`。
 
-### Using the `@tailwindcss/typography` plugin
+### 使用 `@tailwindcss/typography` 插件
 
-The editor works fine with Tailwind CSS, too. Find an example that's styled with the `@tailwindcss/typography` plugin below.
+编辑器也能很好地配合 Tailwind CSS 使用。下面是一个使用 `@tailwindcss/typography` 插件设置样式的示例。
 
 <CodeDemo path="/Experiments/Tailwind?inline=false" />
 
-### Intellisense
+### 智能提示
 
-If you're using [TailwindCSS Intellisense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss), add this snippet to your `.vscode/settings.json` to enable intellisense support inside Tiptap objects:
+如果你使用 [TailwindCSS Intellisense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)，请将以下代码片段添加到 `.vscode/settings.json`，以便在 Tiptap 对象中启用智能提示：
 
 ```json
 "tailwindCSS.experimental.classRegex": [
@@ -201,8 +199,8 @@ If you're using [TailwindCSS Intellisense](https://marketplace.visualstudio.com/
 ]
 ```
 
-## Next steps
+## 后续步骤
 
-- [Learn more about Tiptaps concepts](/editor/core-concepts/introduction)
-- [Learn how to persist the editor state](/editor/core-concepts/persistence)
-- [Start building your own extensions](/editor/extensions/custom-extensions)
+- [进一步了解 Tiptap 的概念](/editor/core-concepts/introduction)
+- [了解如何持久化编辑器状态](/editor/core-concepts/persistence)
+- [开始构建自己的扩展](/editor/extensions/custom-extensions)
