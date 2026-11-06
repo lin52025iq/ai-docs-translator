@@ -1,29 +1,29 @@
 ---
-title: Hocuspocus Provider Examples
+title: Hocuspocus Provider 示例
 meta:
-  title: Hocuspocus Provider Examples | Tiptap Collaboration Docs
+  title: Hocuspocus Provider 示例 | Tiptap 协作文档
   category: Hocuspocus
 ---
 
 ## Tiptap
 
-[Tiptap](https://tiptap.dev) is a headless text editor, that’s fully customizable and has a first-class collaborative editing integration that’s compatible with Hocuspocus.
+[Tiptap](https://tiptap.dev) 是一款无头文本编辑器，可完全自定义，并且内置一流的协同编辑集成，兼容 Hocuspocus。
 
-The below example code shows everything you need to create an instance of Tiptap, with all default extension, start your collaboration backend with Hocuspocus and connect everything.
+下面的示例代码展示了如何创建 Tiptap 实例、启用所有默认扩展、使用 Hocuspocus 启动协作后端，并将所有部分连接起来。
 
-Add an element to your HTML document where Tiptap should be initialized:
+在 HTML 文档中添加一个用于初始化 Tiptap 的元素：
 
 ```html
 <div class="element"></div>
 ```
 
-Install the required extensions:
+安装所需扩展：
 
 ```bash
 npm install @hocuspocus/provider @tiptap/core @tiptap/pm @tiptap/starter-kit @tiptap/extension-collaboration @tiptap/extension-collaboration-caret yjs y-prosemirror
 ```
 
-And create your Tiptap instance:
+然后创建 Tiptap 实例：
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -83,7 +83,7 @@ const editor = CodeMirror(document.querySelector(".editor"), {
 const binding = new CodemirrorBinding(yText, editor, provider.awareness, { yUndoManager });
 ```
 
-Learn more: https://github.com/yjs/y-codemirror
+了解更多：https://github.com/yjs/y-codemirror
 
 ## Monaco
 
@@ -136,7 +136,7 @@ window.addEventListener("load", () => {
 });
 ```
 
-Learn more: https://github.com/yjs/y-monaco
+了解更多：https://github.com/yjs/y-monaco
 
 ## Quill
 
@@ -166,7 +166,7 @@ var quill = new Quill(".editor", {
 new QuillBinding(type, quill, provider.awareness);
 ```
 
-Learn more: https://github.com/yjs/y-quill
+了解更多：https://github.com/yjs/y-quill
 
 ## Lexical
 
@@ -230,16 +230,16 @@ function createWebsocketProvider(
 }
 ```
 
-## Slate (Draft)
+## Slate（草稿）
 
-Learn more: https://github.com/BitPhinix/slate-yjs
+了解更多：https://github.com/BitPhinix/slate-yjs
 
-## Multiplexing
+## 多路复用
 
-In order to use multiplexing (i.e. opening multiple documents over the same websocket connection) with TiptapCollab or Hocuspocus, you'll need to create the socket and the provider separately.
-The example below will show how it works with TiptapCollab, but you can just replace `TiptapCollabProviderWebsocket` with `HocuspocusProviderWebsocket` and `TiptapCollabProvider` with `HocuspocusProvider` for use with Hocuspocus.
+若要将多路复用（即通过同一个 WebSocket 连接打开多个文档）与 TiptapCollab 或 Hocuspocus 配合使用，需要分别创建 socket 和 provider。
+下面的示例展示了如何与 TiptapCollab 配合使用；如果要与 Hocuspocus 配合使用，只需将 `TiptapCollabProviderWebsocket` 替换为 `HocuspocusProviderWebsocket`，并将 `TiptapCollabProvider` 替换为 `HocuspocusProvider`。
 
-Note that the authentication has to be taken care of per document, thus `token` is part of the Provider, not the ProviderWebsocket.
+请注意，身份验证需要按文档分别处理，因此 `token` 属于 Provider，而不是 ProviderWebsocket。
 ```typescript
 import {
   TiptapCollabProvider,
