@@ -1,45 +1,45 @@
 ---
-title: Subscript and superscript
+title: 下标和上标
 tags:
   - type: beta
 meta:
-  title: Subscript and Superscript | Tiptap Conversion
-  description: How subscript and superscript marks round-trip between DOCX and Tiptap.
-  category: Conversion
+  title: 下标和上标 | Tiptap 转换
+  description: 了解下标和上标标记如何在 DOCX 与 Tiptap 之间双向转换。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Subscript and superscript marks round-trip between DOCX and Tiptap. Content like H₂O imports, renders in the editor, and exports back to DOCX with formatting preserved.
+下标和上标标记可以在 DOCX 与 Tiptap 之间双向转换。例如，H₂O 等内容导入后会在编辑器中渲染，并在导出回 DOCX 时保留格式。
 
-## What you need
+## 所需内容
 
-- **Extensions:** [ConvertKit](/conversion/import/docx/convertkit) bundles `Subscript` and `Superscript`, both enabled by default.
-- **Configuration:** None required beyond registering ConvertKit.
+- **扩展：**[ConvertKit](/conversion/import/docx/convertkit) 内置 `Subscript` 和 `Superscript`，两者默认均已启用。
+- **配置：**注册 ConvertKit 即可，无需其他配置。
 
-## Support overview
+## 支持概览
 
-| | Import | Editor | Export |
+| | 导入 | 编辑器 | 导出 |
 | --- | --- | --- | --- |
-| Subscript | Supported | Supported via ConvertKit | Supported |
-| Superscript | Supported | Supported via ConvertKit | Supported |
+| 下标 | 支持 | 通过 ConvertKit 支持 | 支持 |
+| 上标 | 支持 | 通过 ConvertKit 支持 | 支持 |
 
-## Import
+## 导入
 
-Import subscript and superscript using the [editor extension](/conversion/import/docx/editor-extension) or the [REST API](/conversion/import/docx/rest-api). Both produce identical output.
+可使用[编辑器扩展](/conversion/import/docx/editor-extension)或 [REST API](/conversion/import/docx/rest-api) 导入下标和上标。两者会生成相同的输出。
 
-The conversion service reads `<w:vertAlign>` run properties and produces the corresponding marks:
+转换服务会读取 `<w:vertAlign>` 行属性，并生成相应的标记：
 
-| Word element | Tiptap mark |
+| Word 元素 | Tiptap 标记 |
 | --- | --- |
 | `<w:vertAlign val="subscript">` | `subscript` |
 | `<w:vertAlign val="superscript">` | `superscript` |
 
-Chemical formulas (H₂O, CO₂), mathematical notation (x², E=mc²), and footnote references all import correctly.
+化学式（H₂O、CO₂）、数学符号（x²、E=mc²）和脚注引用均可正确导入。
 
-## Editor rendering
+## 在编辑器中渲染
 
-[ConvertKit](/conversion/import/docx/convertkit) bundles both [`Subscript`](/editor/extensions/marks/subscript) and [`Superscript`](/editor/extensions/marks/superscript) and enables them by default, so no separate install is required.
+[ConvertKit](/conversion/import/docx/convertkit) 内置 [`Subscript`](/editor/extensions/marks/subscript) 和 [`Superscript`](/editor/extensions/marks/superscript)，且默认启用，因此无需单独安装。
 
 ```ts
 import { ConvertKit } from '@tiptap-pro/extension-convert-kit'
@@ -49,9 +49,9 @@ const editor = new Editor({
 })
 ```
 
-Subscript renders as `<sub>`, superscript renders as `<sup>`. Keyboard shortcuts: Cmd+, for subscript, Cmd+. for superscript.
+下标会渲染为 `<sub>`，上标会渲染为 `<sup>`。键盘快捷键：Cmd+, 用于下标，Cmd+. 用于上标。
 
-If you don't want one of them, disable it through ConvertKit's configuration:
+如果不需要其中一种，可以通过 ConvertKit 的配置将其禁用：
 
 ```ts
 ConvertKit.configure({
@@ -60,21 +60,20 @@ ConvertKit.configure({
 })
 ```
 
-<Callout title="Disabling either one drops imported marks" variant="info">
-  When you set `subscript: false` or `superscript: false`, marks of that type from imported DOCX
-  will not be recognised by the editor schema. See the
-  [invalid schema guide](/guides/invalid-schema) for how to manage unrecognised marks.
+<Callout title="禁用其中一种会丢弃导入的标记" variant="info">
+  将 `subscript: false` 或 `superscript: false` 设为禁用后，编辑器架构将无法识别从 DOCX 导入的相应类型标记。有关如何处理无法识别的标记，请参阅
+  [无效架构指南](/guides/invalid-schema)。
 </Callout>
 
-## Export
+## 导出
 
-Both the [editor extension](/conversion/export/docx/editor-extension) and the [REST API](/conversion/export/docx/rest-api) export subscript and superscript marks back to DOCX run properties:
+[编辑器扩展](/conversion/export/docx/editor-extension)和 [REST API](/conversion/export/docx/rest-api) 都可以将下标和上标标记导出为 DOCX 行属性：
 
-| Tiptap mark | Word element |
+| Tiptap 标记 | Word 元素 |
 | --- | --- |
 | `subscript` | `<w:vertAlign val="subscript">` |
 | `superscript` | `<w:vertAlign val="superscript">` |
 
-Chemical formulas (H₂O, CO₂), mathematical notation (x², E=mc²), and footnote references all round-trip without loss.
+化学式（H₂O、CO₂）、数学符号（x²、E=mc²）和脚注引用均可无损地完成双向转换。
 
-Subscript and superscript within math or LaTeX expressions follow a separate code path (using OOXML math elements `m:sSub` and `m:sSup`).
+数学或 LaTeX 表达式中的下标和上标使用单独的处理路径（采用 OOXML 数学元素 `m:sSub` 和 `m:sSup`）。
