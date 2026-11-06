@@ -1,0 +1,334 @@
+---
+title: React 绑定
+meta:
+  title: React 绑定 | Tiptap 协作文档
+  description: 使用 @hocuspocus/provider-react，通过组件和 Hook 将 Hocuspocus 集成到 React 应用中。
+  category: Hocuspocus
+---
+
+从 v4 开始，Hocuspocus 通过 [`@hocuspocus/provider-react`](https://www.npmjs.com/package/@hocuspocus/provider-react) 包提供专用的 React 绑定。它提供两个组件，用于管理 WebSocket 连接和房间生命周期；还提供多个 Hook，用于订阅 Provider 状态（连接、同步、Awareness、事件）。所有功能均基于 `useSyncExternalStore` 构建，并兼容 React StrictMode。
+
+## 安装
+
+```bash
+npm install @hocuspocus/provider @hocuspocus/provider-react yjs
+```
+
+Peer 依赖：React 18 或 19、Yjs `^13.6.8`，以及与之匹配版本的 `@hocuspocus/provider`。
+
+## 入门
+
+使用 `HocuspocusProviderWebsocketComponent`（用于管理共享 WebSocket）和一个或多个 `HocuspocusRoom` 组件（每个文档对应一个）包裹协作子树。在房间内部，可以使用 `useHocuspocusProvider`、`useHocuspocusAwareness` 和 `useHocuspocusConnectionStatus` 等 Hook 访问 Provider。
+
+```tsx
+import {
+  HocuspocusProviderWebsocketComponent,
+  HocuspocusRoom,
+} from '@hocuspocus/provider-react'
+
+export function App() {
+  return (
+    <HocuspocusProviderWebsocketComponent url="ws://127.0.0.1:1234">
+      <HocuspocusRoom name="example-document">
+        <Editor />
+      </HocuspocusRoom>
+    </HocuspocusProviderWebsocketComponent>
+  )
+}
+```
+
+WebSocket 组件会为其子树创建一个 `HocuspocusProviderWebsocket`。多个 `HocuspocusRoom` 可以共用它，这样在文档间切换时就无需承担额外的连接开销（即多路复用）。
+
+## 组件
+
+### HocuspocusProviderWebsocketComponent
+
+管理共享的 `HocuspocusProviderWebsocket` 实例。请在应用顶部附近创建一次。
+
+```tsx
+<HocuspocusProviderWebsocketComponent url="ws://127.0.0.1:1234">
+  {children}
+</HocuspocusProviderWebsocketComponent>
+```
+
+**Props**
+
+| Prop                | 类型                            | 说明                                                                                                   |
+|---------------------|---------------------------------|---------------------------------------------------------------------------------------------------------------|
+| `url`               | `string`                        | Hocuspocus 服务器 URL。除非提供了 `websocketProvider`，否则必填。                                   |
+| `websocketProvider` | `HocuspocusProviderWebsocket`   | 使用自定义 Socket 实例以获得完全控制。不能与 `url` 同时使用。                               |
+| `children`          | `ReactNode`                     | 通常是一个或多个 `HocuspocusRoom`。                                                                        |
+
+该组件能够妥善处理 React StrictMode 的重复挂载——每个挂载周期只创建一次 WebSocket，并且只有在 WebSocket 并非由外部提供时才会销毁。
+
+`maxAttempts`、`messageReconnectTimeout` 或 `onMaxAttemptsFailed` 等 Socket 级别的选项不是该组件的 Props。若要使用这些选项，请自行创建 `HocuspocusProviderWebsocket`，并通过 `websocketProvider` 传入：
+
+```tsx
+import { useMemo } from 'react'
+import { HocuspocusProviderWebsocket } from '@hocuspocus/provider'
+import { HocuspocusProviderWebsocketComponent } from '@hocuspocus/provider-react'
+
+function App({ children }) {
+  const websocketProvider = useMemo(
+    () =>
+      new HocuspocusProviderWebsocket({
+        url: 'ws://127.0.0.1:1234',
+        maxAttempts: 5,
+        onMaxAttemptsFailed: ({ error }) => {
+          console.error('Could not connect to the server:', error)
+        },
+      }),
+    [],
+  )
+
+  return (
+    <HocuspocusProviderWebsocketComponent websocketProvider={websocketProvider}>
+      {children}
+    </HocuspocusProviderWebsocketComponent>
+  )
+}
+```
+
+如果由你自行提供 Socket，则需要负责销毁它。请参阅[处理重新连接失败](/hocuspocus/provider/configuration#reacting-to-failed-reconnects)。
+
+### HocuspocusRoom
+
+创建与特定文档关联、并连接到共享 WebSocket 的 `HocuspocusProvider`。必须在 `HocuspocusProviderWebsocketComponent` 内部渲染。
+
+```tsx
+<HocuspocusRoom
+  name="example-document"
+  token={async () => fetchJwt()}
+  onAuthenticationFailed={(data) => console.error(data.reason)}
+  onSynced={() => console.log('synced')}
+>
+  <Editor />
+</HocuspocusRoom>
+```
+
+**Props**
+
+| Prop       | 类型                                                                | 说明                                                                                             |
+|------------|---------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
+| `name`     | `string`                                                            | 文档名称。必填。                                                                                |
+| `document` | `Y.Doc`                                                             | 可选——使用自定义的 Y.Doc。如果省略，组件会为你创建一个。                                    |
+| `token`    | `string \| (() => string) \| (() => Promise<string>)`               | 发送到服务器进行身份验证的 JWT（或异步解析函数）。                                          |
+| `sessionAwareness` | `boolean`                                                   | 启用基于会话的多路复用，使具有相同文档名称的多个房间可以共用一个 WebSocket。仅在连接到 v4 服务器时设为 `true`。默认值为 `false`。请参阅 [`sessionAwareness`](/hocuspocus/provider/configuration)。 |
+| `flushDelay` | `false \| number`                                                 | 在较短时间窗口内批量处理待发送的文档和 Awareness 更新（单位为毫秒），以减少大量编辑时的 WebSocket 流量。默认值为 `false`。请参阅[批量发送更新](/hocuspocus/provider/configuration#batching-outgoing-updates)。 |
+| `onOpen`、`onConnect`、`onClose`、`onDisconnect`、`onStatus`、`onSynced`、`onUnsyncedChanges`、`onMessage`、`onOutgoingMessage`、`onStateless`、`onAuthenticated`、`onAuthenticationFailed`、`onAwarenessUpdate`、`onAwarenessChange`、`onDestroy` | Function | 每个 [Provider 事件](/hocuspocus/provider/events)对应的可选处理函数。 |
+
+更改 `name`、`document`、`token` 或上游 WebSocket Provider 时，会重新创建底层 Provider。其他内容均保持稳定。
+
+### 处理身份验证失败
+
+当服务器的 `onAuthenticate` Hook 抛出异常时，Provider 会触发 `authenticationFailed` 事件，并使用以下参数调用 `HocuspocusRoom` 上的 `onAuthenticationFailed` 处理函数：
+
+```ts
+{ reason: string }  // the error message thrown on the server
+```
+
+常见的用户体验流程：清除过期令牌，显示登录界面，然后使用新令牌重新渲染。
+
+```tsx
+<HocuspocusRoom
+  name="example-document"
+  token={token}
+  onAuthenticationFailed={({ reason }) => {
+    console.warn('Auth failed:', reason)
+    setToken(null)  // drop into your sign-in flow
+  }}
+>
+  <Editor />
+</HocuspocusRoom>
+```
+
+如果你想在嵌套组件中处理该事件，也可以通过 [`useHocuspocusEvent('authenticationFailed', handler)`](#usehocuspocusevent) 进行订阅。
+
+## Hook
+
+以下所有 Hook 都必须在 `HocuspocusRoom` 内部使用。如果没有房间上下文，它们会抛出错误。
+
+### useHocuspocusProvider
+
+返回当前房间的 `HocuspocusProvider` 实例。需要直接访问 Provider 时可使用此 Hook，例如，将 Tiptap 的 `Collaboration` / `CollaborationCaret` 扩展连接到 Provider 的 Y.Doc 和 Awareness。
+
+```tsx
+import { useHocuspocusProvider } from '@hocuspocus/provider-react'
+import { useEditor, EditorContent } from '@tiptap/react'
+import Collaboration from '@tiptap/extension-collaboration'
+import CollaborationCaret from '@tiptap/extension-collaboration-caret'
+import { StarterKit } from '@tiptap/starter-kit'
+
+function Editor() {
+  const provider = useHocuspocusProvider()
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({ undoRedo: false }),
+      Collaboration.configure({ document: provider.document }),
+      CollaborationCaret.configure({
+        provider,
+        user: { name: 'John Doe', color: '#ffcc00' },
+      }),
+    ],
+  })
+
+  return <EditorContent editor={editor} />
+}
+```
+
+### useHocuspocusConnectionStatus
+
+订阅 WebSocket 连接状态。返回 `'connecting' | 'connected' | 'disconnected'`。
+
+```tsx
+import { useHocuspocusConnectionStatus } from '@hocuspocus/provider-react'
+
+function ConnectionIndicator() {
+  const status = useHocuspocusConnectionStatus()
+
+  return (
+    <div className={`status-${status}`}>
+      {status === 'connected'
+        ? 'Online'
+        : status === 'connecting'
+          ? 'Connecting…'
+          : 'Offline'}
+    </div>
+  )
+}
+```
+
+### useHocuspocusSyncStatus
+
+订阅本地更改是否已与服务器同步。返回 `'synced' | 'syncing'`。
+
+```tsx
+import { useHocuspocusSyncStatus } from '@hocuspocus/provider-react'
+
+function SaveIndicator() {
+  const syncStatus = useHocuspocusSyncStatus()
+
+  return <div>{syncStatus === 'syncing' ? 'Saving…' : 'All changes saved'}</div>
+}
+```
+
+### useHocuspocusAwareness
+
+订阅已连接用户的列表（Awareness 状态）。返回一个对象数组，每个对象都包含 `clientId`，以及你在 Awareness 上设置的任意状态（名称、颜色、光标等）。
+
+```tsx
+import { useHocuspocusAwareness } from '@hocuspocus/provider-react'
+
+function UserList() {
+  const users = useHocuspocusAwareness()
+
+  return (
+    <div className="avatars">
+      {users.map((user) => (
+        <div
+          key={user.clientId}
+          style={{ backgroundColor: user.color as string }}
+          title={user.name as string}
+        >
+          {(user.name as string | undefined)?.[0]}
+        </div>
+      ))}
+    </div>
+  )
+}
+```
+
+### useHocuspocusEvent
+
+以稳定的方式订阅任意 [Provider 事件](/hocuspocus/provider/events)（处理函数的 ref 会在内部保持最新，因此无需使用 memoize）。
+
+```tsx
+import { useHocuspocusEvent } from '@hocuspocus/provider-react'
+
+function AuthGuard() {
+  useHocuspocusEvent('authenticationFailed', (data) => {
+    console.error('Auth failed:', data.reason)
+    redirectToLogin()
+  })
+
+  useHocuspocusEvent('close', (data) => {
+    console.log('Connection closed', data.event.code, data.event.reason)
+  })
+
+  return null
+}
+```
+
+## 完整示例 — Tiptap + Awareness
+
+下面将各部分组合起来，展示一个 Tiptap 编辑器、连接状态指示器和用户列表：
+
+```tsx
+import {
+  HocuspocusProviderWebsocketComponent,
+  HocuspocusRoom,
+  useHocuspocusAwareness,
+  useHocuspocusConnectionStatus,
+  useHocuspocusProvider,
+} from '@hocuspocus/provider-react'
+import { EditorContent, useEditor } from '@tiptap/react'
+import Collaboration from '@tiptap/extension-collaboration'
+import CollaborationCaret from '@tiptap/extension-collaboration-caret'
+import { StarterKit } from '@tiptap/starter-kit'
+
+function Editor() {
+  const provider = useHocuspocusProvider()
+  const status = useHocuspocusConnectionStatus()
+  const users = useHocuspocusAwareness()
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({ undoRedo: false }),
+      Collaboration.configure({ document: provider.document }),
+      CollaborationCaret.configure({
+        provider,
+        user: { name: 'John Doe', color: '#ffcc00' },
+      }),
+    ],
+  })
+
+  return (
+    <>
+      <header>
+        <span>Status: {status}</span>
+        <span>{users.length} online</span>
+      </header>
+      <EditorContent editor={editor} />
+    </>
+  )
+}
+
+export function App() {
+  return (
+    <HocuspocusProviderWebsocketComponent url="ws://127.0.0.1:1234">
+      <HocuspocusRoom name="example-document">
+        <Editor />
+      </HocuspocusRoom>
+    </HocuspocusProviderWebsocketComponent>
+  )
+}
+```
+
+## 切换文档（多路复用）
+
+由于 WebSocket 位于外层组件中，更改 `HocuspocusRoom` 的 `name` 属性时，会销毁旧的文档 Provider 并创建新的 Provider，而无需重新连接 Socket：
+
+```tsx
+function Workspace({ docId }: { docId: string }) {
+  return (
+    <HocuspocusProviderWebsocketComponent url="ws://127.0.0.1:1234">
+      <HocuspocusRoom name={docId}>
+        <Editor />
+      </HocuspocusRoom>
+    </HocuspocusProviderWebsocketComponent>
+  )
+}
+```
+
+如果想通过同一个 Socket 同时打开多个文档，请将多个 `HocuspocusRoom` 作为同级组件渲染。连接到 v4 服务器并通过多路复用使用多个 Provider，且文档名称可能冲突时，可以考虑在底层的 `HocuspocusProviderWebsocket` 上启用 [`sessionAwareness`](/hocuspocus/provider/configuration)。
