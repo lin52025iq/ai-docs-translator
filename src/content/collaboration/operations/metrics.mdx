@@ -1,53 +1,51 @@
 ---
-title: Server metrics and statistics
+title: 服务器指标和统计数据
 meta:
-  title: Metrics | Tiptap Collaboration Docs
-  description: Access server and document statistics of your Tiptap Document server. Learn more in our docs!
+  title: 指标 | Tiptap Collaboration 文档
+  description: 查看 Tiptap 文档服务器的服务器和文档统计数据。欢迎在我们的文档中了解更多信息！
   category: API
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-The Tiptap Collaboration API offers several endpoints to access real-time statistics and health information for both the server and individual documents. A simplified version of the metrics is also available in the cloud dashboard.
+Tiptap Collaboration API 提供多个端点，用于访问服务器和各个文档的实时统计数据及运行状况信息。云端控制台也提供简化版指标。
 
-These endpoints help to troubleshoot issues, monitor server performance, or build analytics dashboards for insights into user interactions and system status. Integrating statistics into your monitoring systems allows you to proactively manage your collaboration environment's health.
+这些端点有助于排查问题、监控服务器性能，或构建分析仪表板，以了解用户交互情况和系统状态。将统计数据集成到监控系统中，可以主动管理协作环境的运行状况。
 
-<Callout title="Review the postman collection" variant="hint">
-  Experiment with the REST API by visiting our [Postman
-  Collection](https://www.postman.com/tiptap-platform/workspace/tiptap-workspace/request/33042171-1adccc70-772c-464a-8602-1303659f9af6).
+<Callout title="查看 Postman 集合" variant="hint">
+  访问我们的 [Postman
+  集合](https://www.postman.com/tiptap-platform/workspace/tiptap-workspace/request/33042171-1adccc70-772c-464a-8602-1303659f9af6)，试用 REST API。
 </Callout>
 
-## Access the API
+## 访问 API
 
-The REST API is exposed directly from your Document server at your custom URL:
+REST API 可通过自定义 URL 直接从文档服务器访问：
 
 ```bash
 https://YOUR_APP_ID.collab.tiptap.cloud/
 ```
 
-Replace `YOUR_APP_ID` with your document server ID, which is labeled "Document server ID" in the [Cloud dashboard](https://cloud.tiptap.dev/v2/configuration/document-server).
+将 `YOUR_APP_ID` 替换为文档服务器 ID。该 ID 在[云端控制台](https://cloud.tiptap.dev/v2/configuration/document-server)中标记为“Document server ID”。
 
-### Authentication
-Authenticate your API requests by including your API secret in the `Authorization` header. You can find your API secret in
-the [settings](https://cloud.tiptap.dev/v2/configuration/document-server) of your Tiptap Cloud dashboard.
+### 身份验证
+在请求的 `Authorization` 标头中添加 API 密钥，以验证 API 请求。您可以在 Tiptap 云端控制台的[设置](https://cloud.tiptap.dev/v2/configuration/document-server)中找到 API 密钥。
 
-### Document identifiers
-If your document identifier contains a slash (`/`), encode it as `%2F`, e.g., using `encodeURIComponent`.
+### 文档标识符
+如果文档标识符包含斜杠（`/`），请将其编码为 `%2F`，例如使用 `encodeURIComponent`。
 
-## Server statistics endpoint
+## 服务器统计数据端点
 
-This endpoint provides basic statistics about the Tiptap Collaboration server, offering insights into overall activity and usage metrics.
+此端点提供 Tiptap Collaboration 服务器的基本统计数据，帮助了解整体活动和使用情况指标。
 
 ```bash
 GET /api/statistics
 ```
 
-<Callout title="Caution" variant="hint">
-  The total number of connections in the last 30 days and the lifetime connection count are
-  presented as strings due to their internal representation as BigInt values.
+<Callout title="注意" variant="hint">
+  最近 30 天的连接总数和生命周期内的连接总数以字符串形式呈现，因为它们在内部以 BigInt 值表示。
 </Callout>
 
-**Example:** Server statistics
+**示例：** 服务器统计数据
 ```json
 {
   "totalDocuments": 4,
@@ -64,15 +62,15 @@ GET /api/statistics
 }
 ```
 
-## Document statistics endpoint
+## 文档统计数据端点
 
-Retrieve statistics for a specific document by its identifier. Use this endpoint to monitor real-time user engagement with a document.
+根据文档标识符获取特定文档的统计数据。使用此端点监控文档的实时用户参与情况。
 
 ```bash
 GET /api/documents/:identifier/statistics
 ```
 
-**Example:** Statistics of a document named :identifier
+**示例：** 名为 :identifier 的文档的统计数据
 
 ```json
 {
@@ -81,15 +79,15 @@ GET /api/documents/:identifier/statistics
 }
 ```
 
-## Server health endpoint
+## 服务器运行状况端点
 
-Use this call to check liveness, readiness, and cconnectivity to essential components like the database and Redis.
+使用此调用检查服务器的存活状态、就绪状态，以及与数据库和 Redis 等关键组件的连接情况。
 
 ```bash
 GET /health
 ```
 
-**Example:** Issue with Redis
+**示例：** Redis 出现问题
 
 ```bash
 HTTP 500:
@@ -98,7 +96,7 @@ DB:ok
 REDIS:fail
 ```
 
-**Example:** No Redis detected
+**示例：** 未检测到 Redis
 ```bash
 HTTP 200:
 
