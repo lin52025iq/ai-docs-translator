@@ -1,48 +1,48 @@
 ---
-title: Tabs
+title: 制表符
 tags:
   - type: beta
 meta:
-  title: Tabs | Tiptap Conversion
-  description: How tab characters from Word are handled during DOCX import and what developers should expect.
-  category: Conversion
+  title: 制表符 | Tiptap 转换
+  description: 了解 Word 中的制表符在导入 DOCX 时如何处理，以及开发者需要注意什么。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Word documents use tab characters for alignment, indentation, and columnar layout within paragraphs. Tiptap and HTML do not have a native tab stop concept, so tabs are converted to spaces during import.
+Word 文档使用制表符在段落中对齐、缩进和排列内容。Tiptap 和 HTML 没有原生的制表位概念，因此导入时会将制表符转换为空格。
 
-## What you need
+## 所需内容
 
-- **Extensions:** No additional extensions required. Tab content is converted to plain text.
-- **Configuration:** None.
+- **扩展：** 无需其他扩展。制表符内容会转换为纯文本。
+- **配置：** 无。
 
-## Support overview
+## 支持情况概览
 
-| | Import | Editor | Export |
+| | 导入 | 编辑器 | 导出 |
 | --- | --- | --- | --- |
-| Tab characters (mid-paragraph) | Converted to four spaces | Plain text (spaces) | Spaces remain as spaces |
-| Tab characters (start of paragraph) | Converted to four spaces in the JSON; visually collapse in the editor | Not visible by default (see below) | Spaces remain as spaces |
-| Tab stop positions | Not preserved | Not supported | Not supported |
+| 制表符（段落中间） | 转换为四个空格 | 纯文本（空格） | 空格仍保留为空格 |
+| 制表符（段落开头） | 在 JSON 中转换为四个空格；在编辑器中视觉上会折叠 | 默认不可见（见下文） | 空格仍保留为空格 |
+| 制表位位置 | 不保留 | 不支持 | 不支持 |
 
-## Import
+## 导入
 
-Import tabs using the [editor extension](/conversion/import/docx/editor-extension) or the [REST API](/conversion/import/docx/rest-api). Both handle tabs identically.
+使用[编辑器扩展](/conversion/import/docx/editor-extension)或 [REST API](/conversion/import/docx/rest-api) 导入制表符。两者对制表符的处理方式相同。
 
-When the import converter encounters a `<w:tab/>` element in a text run, it replaces it with four space characters. Word's tab stop positions (left, center, right, decimal, and bar tabs defined in paragraph or style properties) are not extracted or preserved.
+导入转换器在文本运行中遇到 `<w:tab/>` 元素时，会将其替换为四个空格字符。Word 的制表位位置（在段落或样式属性中定义的左对齐、居中、右对齐、小数点对齐和竖线制表位）不会被提取或保留。
 
-The conversion is positional-agnostic: a tab at the start of a paragraph and a tab in the middle of a paragraph both produce four space characters in the JSON. The visual outcome differs because of how the browser renders whitespace (see Editor rendering below).
+转换与位置无关：段落开头和段落中间的制表符都会在 JSON 中转换为四个空格。由于浏览器渲染空白字符的方式不同，最终的视觉效果也会有所差异（见下文“编辑器渲染”）。
 
-## Editor rendering
+## 编辑器渲染
 
-Tab characters are converted to spaces on import, so the editor receives regular text content. There is no tab stop or tab character concept in Tiptap.
+导入时，制表符会转换为空格，因此编辑器接收到的是普通文本内容。Tiptap 中没有制表位或制表符的概念。
 
-<Callout title="Leading spaces in a paragraph are not visible by default" variant="info">
-  The four spaces produced from a tab character live in the JSON and reach the editor unchanged, but the browser collapses runs of whitespace under default `white-space: normal`. A tab at the start of a paragraph therefore renders as if it were a single space hugging the paragraph's left edge, which visually looks like the tab was dropped. This is the standard HTML whitespace rule, not import-side trimming. A tab in the middle of a sentence is also collapsed to a single space, which usually reads correctly because there is text on either side.
+<Callout title="段落开头的空格默认不可见" variant="info">
+  制表符转换成的四个空格会保存在 JSON 中，并原样传递给编辑器，但在默认的 `white-space: normal` 设置下，浏览器会折叠连续的空白字符。因此，段落开头的制表符渲染出来就像一个贴着段落左边缘的空格，视觉上仿佛制表符被删除了。这是 HTML 的标准空白字符处理规则，并非导入时进行了修剪。句子中间的制表符也会折叠为一个空格；由于两侧都有文字，通常不会影响阅读。
 
-  To preserve the visual indentation, either set `white-space: pre-wrap` on your editor's paragraph styles, or transform leading spaces into non-breaking spaces (` `) in your `onImport` callback before loading content into the editor.
+  若要保留视觉上的缩进，可以在编辑器的段落样式中设置 `white-space: pre-wrap`，或者在将内容载入编辑器之前，在 `onImport` 回调中将开头的空格转换为不换行空格（` `）。
 </Callout>
 
-## Export
+## 导出
 
-Spaces remain as spaces in the exported DOCX. There is no conversion from spaces back to tab characters. Content that originally used tabs in Word will export with spaces instead.
+导出的 DOCX 中，空格仍然是空格。空格不会转换回制表符。原先在 Word 中使用制表符的内容，导出后会以空格呈现。
