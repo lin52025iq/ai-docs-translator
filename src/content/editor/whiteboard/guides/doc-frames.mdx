@@ -1,19 +1,19 @@
 ---
-title: Whiteboard doc frames
+title: 白板文档框
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Whiteboard doc frames | Tiptap Editor Docs
-  description: Show rich text documents on a whiteboard. Each doc frame holds a document in an editor of its own, and your app keeps the documents.
+  title: 白板文档框 | Tiptap 编辑器文档
+  description: 在白板上显示富文本。每个文档框都在自己的编辑器中容纳一个文档，文档由你的应用管理。
   category: Editor
 ---
 
-A doc frame is a shape that shows a rich text document, in an editor of its own. The board stores the frame and the id of its document. Your app keeps the documents, so the board stays free of any storage.
+文档框是一种形状，用于在独立的编辑器中显示富文本。白板会存储文档框及其文档 ID。文档由你的应用管理，因此白板无需承担任何存储工作。
 
-## Provide the documents
+## 提供文档
 
-Tell the board where the documents live with the `docs` option of `WhiteboardKit`. Without it, doc frames show no document. This example keeps the documents in memory:
+通过 `WhiteboardKit` 的 `docs` 选项告知白板文档存放的位置。未设置此选项时，文档框不会显示文档。以下示例将文档保存在内存中：
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -49,16 +49,16 @@ const editor = new Editor({
 })
 ```
 
-In React, create the configured kit once, outside the component or with `useMemo`. See [Set up a board in React](/editor/whiteboard/guides/react).
+在 React 中，请在组件外部或使用 `useMemo` 创建一次配置好的 kit。请参阅[在 React 中设置白板](/editor/whiteboard/guides/react)。
 
-The `docs` object has these members:
+`docs` 对象包含以下成员：
 
-- `createEditor({ element, docId })` creates the editor of a document inside `element`, the frame's content element, `[data-shape-content]`. The board destroys the editor with its frame. The editor can have any extensions, like `StarterKit`.
-- `copy({ fromDocId, toDocId })` copies a document for the copy of its frame, when a user duplicates or pastes the frame. It runs before the copy shows.
-- `load({ docId, content })`, which is optional, fills the new document of a frame that [`importBoard`](/editor/whiteboard/guides/export-and-import#doc-frames) adds from a board file. It runs before the frame shows. Without it, imported frames start empty.
-- `start(docId)`, which is optional, starts the document of every frame that a change in this editor brings onto the board: a new frame, a copy, and also frames that `setContent` or an undo with `UndoRedo` bring back. It runs before the frame shows. Frames that come through Yjs, from other editors or from its undo, don't start a document here.
+- `createEditor({ element, docId })` 在 `element` 中创建文档的编辑器。`element` 是文档框的内容元素 `[data-shape-content]`。白板会在销毁文档框时销毁编辑器。编辑器可以使用任意扩展，例如 `StarterKit`。
+- `copy({ fromDocId, toDocId })` 为文档框副本复制文档；用户复制或粘贴文档框时会调用此方法。副本显示前会运行此方法。
+- 可选的 `load({ docId, content })` 用于填充新文档，该文档属于通过 [`importBoard`](/editor/whiteboard/guides/export-and-import#doc-frames) 从白板文件导入的文档框。文档框显示前会运行此方法。未提供此方法时，导入的文档框内容为空。
+- 可选的 `start(docId)` 用于初始化由当前编辑器中的更改添加到白板上的每个文档框的文档：包括新建的文档框、副本，以及通过 `setContent` 或使用 `UndoRedo` 撤销操作恢复的文档框。文档框显示前会运行此方法。通过 Yjs 从其他编辑器同步而来，或由其撤销操作恢复的文档框，不会在此处初始化文档。
 
-So `start` also runs for frames whose document exists already, like a copy, after `copy`. Keep a document that the frame already has:
+因此，即使文档已经存在，`start` 也会运行，例如在 `copy` 之后为副本运行。请保留文档框已有的文档：
 
 ```js
 start: (docId) => {
@@ -68,9 +68,9 @@ start: (docId) => {
 },
 ```
 
-## Add a doc frame
+## 添加文档框
 
-The `doc` tool, key <kbd>W</kbd>, adds a frame with a new document and starts editing it. Without `docs`, the board has no `doc` tool. In code, add a frame like any other shape:
+`doc` 工具（快捷键 <kbd>W</kbd>）会添加一个带有新文档的文档框，并开始编辑该文档。未设置 `docs` 时，白板不会提供 `doc` 工具。在代码中，添加文档框的方式与添加其他形状相同：
 
 ```js
 import { createShapeId } from '@tiptap-pro/extension-whiteboard'
@@ -78,21 +78,21 @@ import { createShapeId } from '@tiptap-pro/extension-whiteboard'
 editor.commands.insertShape({ type: 'docFrame', docId: createShapeId(), x: 0, y: 0, width: 420 })
 ```
 
-The frame shows the document with the id in `docId`. A frame without a `docId` uses its own shape id, so it still gets a document of its own. `docIdOf` returns the id of a frame's document, from its node or the node's JSON.
+文档框会显示 `docId` 指定 ID 对应的文档。没有 `docId` 的文档框会使用自身的形状 ID，因此仍会拥有自己的文档。`docIdOf` 会从文档框的节点或节点 JSON 中返回其文档 ID。
 
-## Edit a document
+## 编辑文档
 
-The board selects, moves and resizes a frame like other shapes. Its height follows its document. The editor of the document is read-only until editing starts: with a click on the selected frame, with <kbd>Enter</kbd>, or with `editShapeText`:
+白板可以像选择、移动和调整其他形状一样操作文档框。文档框的高度会随文档内容变化。在开始编辑前，文档的编辑器处于只读状态。你可以点击已选中的文档框、按 <kbd>Enter</kbd>，或调用 `editShapeText` 开始编辑：
 
 ```js
 editor.commands.editShapeText({ id: 'frame' })
 ```
 
-While the document is edited, presses and keys inside the frame belong to its editor. <kbd>Escape</kbd> stops editing and selects the frame again. A press on another shape stops editing, too, and so does [making the board read-only](/editor/whiteboard/guides/shapes-and-tools#read-only-boards).
+编辑文档时，在文档框内的点击和按键操作都由其编辑器处理。按 <kbd>Escape</kbd> 会停止编辑并重新选中文档框。点击其他形状也会停止编辑；将[白板设为只读](/editor/whiteboard/guides/shapes-and-tools#read-only-boards)同样如此。
 
-### Format the edited document
+### 设置编辑中文档的格式
 
-Your toolbar can work on the edited document and on the text of shapes alike. `getEditedDocEditor` returns the editor of the document that a frame edits, or `null` while none is edited:
+工具栏可以同时操作正在编辑的文档和形状中的文本。`getEditedDocEditor` 会返回文档框当前正在编辑的文档所对应的编辑器；如果没有正在编辑的文档，则返回 `null`：
 
 ```js
 import { getEditedDocEditor } from '@tiptap-pro/extension-whiteboard'
@@ -102,7 +102,7 @@ const textEditor = getEditedDocEditor(editor) ?? editor
 textEditor.commands.toggleBold()
 ```
 
-The board's editor emits `docChange` on every transaction of a document's editor, also one that only moves the caret, when its editing starts or stops, and when its editor is created or destroyed. Use it to update the toolbar, but not to save documents:
+文档编辑器的每次事务都会使白板编辑器触发 `docChange`，包括仅移动光标的事务。此外，开始或停止编辑，以及创建或销毁文档编辑器时，也会触发此事件。你可以用它更新工具栏，但不要用它保存文档：
 
 ```js
 editor.on('docChange', ({ docId }) => {
@@ -110,9 +110,9 @@ editor.on('docChange', ({ docId }) => {
 })
 ```
 
-## Read all documents
+## 读取所有文档
 
-`getDocEditors` returns the editors of the documents that the frames on the board show:
+`getDocEditors` 会返回白板上各文档框所显示文档的编辑器：
 
 ```js
 import { getDocEditors } from '@tiptap-pro/extension-whiteboard'
@@ -120,11 +120,11 @@ import { getDocEditors } from '@tiptap-pro/extension-whiteboard'
 const contents = getDocEditors(editor).map((docEditor) => docEditor.getJSON())
 ```
 
-It returns no editors once the board's editor is destroyed.
+白板编辑器销毁后，此方法不会返回任何编辑器。
 
-## Documents that arrive later
+## 延迟到达的文档
 
-A frame grows as tall as its document after each change in this editor. Other users' editors measure the changes that they make. When the document arrives after the frame, like when an AI adds a frame and writes its document later, keep the height that you gave the frame with `keepShapeHeights`:
+当前编辑器中的每次更改后，文档框都会调整高度以适应文档。其他用户的编辑器会测量其所做更改的尺寸。如果文档在文档框之后才到达，例如 AI 添加文档框后才写入文档，可以使用 `keepShapeHeights` 保留为文档框设置的高度：
 
 ```js
 import { keepShapeHeights } from '@tiptap-pro/extension-whiteboard'
@@ -134,8 +134,8 @@ const { tr } = editor.state
 editor.view.dispatch(keepShapeHeights(tr))
 ```
 
-## Next steps
+## 后续步骤
 
-- Edit a board together with [collaboration](/editor/whiteboard/guides/collaboration)
-- Save a board with its documents to a file with [export and import](/editor/whiteboard/guides/export-and-import)
-- See the [`BoardDocs` type](/editor/whiteboard/api-reference/types#boarddocs)
+- 通过[协作](/editor/whiteboard/guides/collaboration)共同编辑白板
+- 使用[导出和导入](/editor/whiteboard/guides/export-and-import)将白板及其文档保存到文件
+- 查看 [`BoardDocs` 类型](/editor/whiteboard/api-reference/types#boarddocs)
