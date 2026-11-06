@@ -1,25 +1,25 @@
 ---
-title: Compare versions
+title: 比较版本
 tags:
   - type: addon
-    tooltip: Contact our team to add Compare to your plan
+    tooltip: 联系我们的团队，将 Compare 添加到您的套餐中
 meta:
-  title: Compare versions | Tiptap Compare Docs
-  description: Compare two Tiptap Collaboration version updates and display their differences.
+  title: 比较版本 | Tiptap Compare 文档
+  description: 比较两个 Tiptap Collaboration 版本更新并显示它们之间的差异。
   category: Compare
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-Use the [`compareVersions` command](/compare/api-reference/commands#compareversions) to compare two Yjs version updates and display the changes.
+使用 [`compareVersions` 命令](/compare/api-reference/commands#compareversions)比较两个 Yjs 版本更新并显示更改。
 
 <CodeDemo isPro path="/Extensions/CompareVersions" />
 
-## Get the versions
+## 获取版本
 
-First, retrieve the versions using the [`getVersions` method](/compare/api-reference/utilities#getversions). If you're using the [Snapshot extension](/collaboration/documents/snapshot), you can access the available versions from `editor.storage.snapshot.versions`. Each item in this array includes a `version` property containing the version ID. Pass these version IDs to `getVersions`.
+首先，使用 [`getVersions` 方法](/compare/api-reference/utilities#getversions)获取版本。如果您使用 [Snapshot 扩展](/collaboration/documents/snapshot)，可以从 `editor.storage.snapshot.versions` 访问可用版本。此数组中的每一项都包含一个 `version` 属性，其中存储了版本 ID。将这些版本 ID 传递给 `getVersions`。
 
-To learn how to save snapshots and retrieve version data, see the [Snapshot guide](/collaboration/documents/snapshot#access-version-data-directly-from-storage).
+要了解如何保存快照并获取版本数据，请参阅 [Snapshot 指南](/collaboration/documents/snapshot#access-version-data-directly-from-storage)。
 
 ```ts
 import { getVersions } from '@tiptap-pro/compare'
@@ -35,9 +35,9 @@ const { prevSnapshot: versionA, snapshot: versionB } = await getVersions({
 })
 ```
 
-## Compare versions
+## 比较版本
 
-Add the `Compare` extension to the editor where you want to display the changes. Then call `compareVersions` with the two Yjs versions.
+将 `Compare` 扩展添加到要显示更改的编辑器中。然后使用这两个 Yjs 版本调用 `compareVersions`。
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -57,11 +57,11 @@ editor.commands.compareVersions({
 })
 ```
 
-The [`compareVersions` command](/compare/api-reference/commands#compareversions) compares the two versions and immediately displays the changes.
+[`compareVersions` 命令](/compare/api-reference/commands#compareversions)会比较这两个版本，并立即显示更改。
 
-## Style the changes
+## 设置更改的样式
 
-`compareVersions` adds the user ID to each change's metadata when it is available. Use `renderDecorations` to give each user a color.
+如果有用户 ID，`compareVersions` 会将其添加到每项更改的元数据中。使用 `renderDecorations` 为每位用户设置颜色。
 
 ```ts
 const colors = [
@@ -126,7 +126,7 @@ const getNestedChangeAttributes = ({ nestedChange }) =>
   getAddedDecorationAttributes(nestedChange.metadata?.userId)
 ```
 
-Pass the custom renderer to `compareVersions`.
+将自定义渲染器传递给 `compareVersions`。
 
 ```ts
 editor.commands.compareVersions({
@@ -136,7 +136,7 @@ editor.commands.compareVersions({
 })
 ```
 
-Add these styles to your stylesheet. They use the CSS variables set by `renderDecorations` and show the user ID on hover.
+将以下样式添加到样式表中。这些样式使用 `renderDecorations` 设置的 CSS 变量，并在悬停时显示用户 ID。
 
 ```css
 [data-diff-user-id] {
