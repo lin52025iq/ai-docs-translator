@@ -1,11 +1,11 @@
 ---
-title: Compare documents with Tiptap
+title: 使用 Tiptap 比较文档
 tags:
   - type: addon
-    tooltip: Contact our team to add Compare to your plan
+    tooltip: 联系我们的团队，将 Compare 添加到您的套餐中
 meta:
-  title: Compare documents with Tiptap | Tiptap Compare Docs
-  description: Compare Tiptap documents and versions and display the changes in the editor.
+  title: 使用 Tiptap 比较文档 | Tiptap Compare 文档
+  description: 比较 Tiptap 文档及其版本，并在编辑器中显示更改。
   category: Compare
 ---
 
@@ -16,40 +16,36 @@ import { Requirements, RequirementItem } from '@/components/Requirements'
 import { EnterpriseCallout } from '@/components/EnterpriseCallout'
 
 <Requirements>
-  <RequirementItem label="1. Get the add-on">
-    Compare is a paid add-on that you can purchase and add to your plan. [Contact our
-    team](https://tiptap.dev/contact-sales) to get access.
+  <RequirementItem label="1. 获取附加组件">
+    Compare 是一款付费附加组件，您可以购买并将其添加到套餐中。[联系我们的团队](https://tiptap.dev/contact-sales)以获取使用权限。
   </RequirementItem>
-  <RequirementItem label="2. Access the private registry">
-    The Compare extension is published in Tiptap's private npm registry. Authenticate to Tiptap's
-    private npm registry by following the [setup guide](/guides/pro-extensions).
+  <RequirementItem label="2. 访问私有注册表">
+    Compare 扩展发布在 Tiptap 的私有 npm 注册表中。按照[设置指南](/guides/pro-extensions)进行身份验证，以访问 Tiptap 的私有 npm 注册表。
   </RequirementItem>
-  <RequirementItem label="3. Install the extension">
-    Install the `@tiptap-pro/compare` package from the private registry using npm or your preferred
-    package manager.
+  <RequirementItem label="3. 安装扩展">
+    使用 npm 或您首选的包管理器，从私有注册表安装 `@tiptap-pro/compare` 包。
   </RequirementItem>
 </Requirements>
 
-**Tiptap Compare** finds and displays the changes between two documents or two versions of the same document.
+**Tiptap Compare** 可查找并显示两份文档之间的更改，或同一文档两个版本之间的更改。
 
 <CodeDemo isPro path="/Extensions/CompareDocuments" />
 
-Tiptap Compare is headless: you have full control over how changes are displayed and styled. The comparison itself runs without an editor instance, so you can deploy it client-side or server-side.
+Tiptap Compare 是无头的：您可以完全控制更改的显示方式和样式。比较过程本身无需编辑器实例，因此可以部署在客户端或服务器端。
 
-## Install
+## 安装
 
-First, [contact our team](https://tiptap.dev/contact-sales) to purchase the Compare add-on and add it to your plan.
+首先，[联系我们的团队](https://tiptap.dev/contact-sales)，购买 Compare 附加组件并将其添加到您的套餐中。
 
-After gaining access, configure your package manager by following the [private registry
-guide](/guides/pro-extensions).
+获得使用权限后，请按照[私有注册表指南](/guides/pro-extensions)配置您的包管理器。
 
-Then, install the package:
+然后安装该包：
 
 ```bash
 npm install @tiptap-pro/compare
 ```
 
-Add the `Compare` extension to the editor that displays the changes between the two documents.
+将 `Compare` 扩展添加到用于显示两份文档之间更改的编辑器中。
 
 ```ts
 import { Compare } from '@tiptap-pro/compare'
@@ -62,9 +58,9 @@ const editor = new Editor({
 })
 ```
 
-## Use cases
+## 使用场景
 
-With Tiptap Compare, you can find the changes between two documents or two versions of the same document.
+使用 Tiptap Compare，您可以查找两份文档之间的更改，或同一文档两个版本之间的更改。
 
 <div className="grid md:grid-cols-2 gap-6 mt-6 md:items-start">
   <Link
@@ -72,11 +68,11 @@ With Tiptap Compare, you can find the changes between two documents or two versi
     className="flex flex-col p-4 border border-grayAlpha-200 rounded-lg hover:border-grayAlpha-300 transition-colors cursor-pointer no-underline"
   >
     <div className="flex items-center justify-between mb-2">
-      <h4 className="font-semibold text-black">Compare documents</h4>
-      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">More →</span>
+      <h4 className="font-semibold text-black">比较文档</h4>
+      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">了解更多 →</span>
     </div>
     <div className="text-sm text-grayAlpha-700">
-      Compare two documents, find what changed, and review the differences.
+      比较两份文档，查找更改并查看差异。
     </div>
   </Link>
   <Link
@@ -84,11 +80,11 @@ With Tiptap Compare, you can find the changes between two documents or two versi
     className="flex flex-col p-4 border border-grayAlpha-200 rounded-lg hover:border-grayAlpha-300 transition-colors cursor-pointer no-underline"
   >
     <div className="flex items-center justify-between mb-2">
-      <h4 className="font-semibold text-black">Compare versions</h4>
-      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">More →</span>
+      <h4 className="font-semibold text-black">比较版本</h4>
+      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">了解更多 →</span>
     </div>
     <div className="text-sm text-grayAlpha-700">
-      Compare two different versions of a collaborative document.
+      比较协作文档的两个不同版本。
     </div>
   </Link>
 </div>
