@@ -1,0 +1,776 @@
+---
+title: 扩展 API
+meta:
+  title: 扩展 API | Tiptap 编辑器文档
+  description: 为 Tiptap 编辑器创建新扩展，从头开始打造独特的编辑器体验。欢迎阅读文档了解更多！
+  category: 编辑器
+---
+
+import { Callout } from '@/components/ui/Callout'
+
+Tiptap 的强大之处在于其灵活性。你可以从头开始创建自己的扩展，打造符合需求的独特编辑器体验。
+
+无论你是创建节点、标记还是修改功能，所有扩展的基本结构都相同。而且，Tiptap 中的一切都基于扩展。
+
+## 创建扩展
+
+扩展为 Tiptap 添加新功能。在文档中，你会经常看到“扩展”这个词，即使是在介绍节点和标记时也是如此。不过，也有字面意义上的扩展。它们不能像标记和节点那样扩展 schema，但可以添加功能或改变编辑器的行为。
+
+一个很好的例子是监听编辑器事件并对事件执行操作，例如：
+
+```typescript
+import { Extension } from '@tiptap/core'
+
+const CustomExtension = Extension.create({
+  name: 'customExtension',
+
+  onUpdate() {
+    console.log(this.editor.getJSON())
+  },
+})
+```
+
+你也可以使用回调函数创建扩展。如果你想封装扩展逻辑，例如定义事件处理程序或其他自定义逻辑，这种方式就很有用。
+
+```js
+import { Extension } from '@tiptap/core'
+
+const CustomExtension = Extension.create(() => {
+  // Define variables or functions to use inside your extension
+  const customVariable = 'foo'
+
+  function onCreate() {}
+  function onUpdate() {}
+
+  return {
+    name: 'customExtension',
+    onCreate,
+    onUpdate,
+
+    // Your code goes here.
+  }
+})
+```
+
+此扩展会监听编辑器的 `update` 事件，并将编辑器当前的 JSON 表示形式输出到控制台。
+
+可以这样将它安装到编辑器中：
+
+```typescript
+import { Editor } from '@tiptap/core'
+
+const editor = new Editor({
+  extensions: [CustomExtension],
+})
+
+// Or if using React or Vue
+
+const editor = useEditor({
+  extensions: [CustomExtension],
+})
+```
+
+扩展数组可以包含任意数量的扩展。它们会按照列出的顺序安装，也可以根据其 `priority` 属性排序。
+
+了解了扩展的基本结构后，接下来我们来看看创建自定义扩展时可以使用的所有扩展选项。
+
+## 扩展选项
+
+创建扩展时，你可以定义一组供用户配置的选项。这些选项可用于自定义扩展行为或提供其他功能。
+
+### `name`
+
+扩展的名称，用于在编辑器的扩展管理器中标识该扩展。
+
+```typescript
+const CustomExtension = Extension.create({
+  name: 'customExtension',
+})
+```
+
+如果扩展是节点或标记，那么该名称用于在编辑器 schema 中标识节点或标记，因此会保存在编辑器内容的 JSON 表示中。有关详情，请参阅[将内容存储为 JSON](/guides/output-json-html#option-1-json)。
+
+### `priority`
+
+优先级定义扩展的注册顺序。默认优先级为 `100`，大多数扩展都使用此值。优先级较高的扩展会更早加载。
+
+```js
+import Link from '@tiptap/extension-link'
+
+const CustomLink = Link.extend({
+  priority: 1000,
+})
+```
+
+扩展的加载顺序会影响以下两项：
+
+1. 插件顺序（优先级较高的扩展所包含的 ProseMirror 插件会先运行。）
+2. Schema 顺序
+
+例如，[`Link`](/editor/extensions/marks/link) 标记的优先级较高，因此它会被渲染为 `<a href="…"><strong>Example</strong></a>`，而不是 `<strong><a href="…">Example</a></strong>`。
+
+### `addOptions`
+
+`addOptions` 方法用于定义扩展选项。此方法应返回一个对象，其中包含可由用户配置的选项。
+
+```typescript
+type CustomExtensionOptions = {
+  customOption: string
+}
+
+declare module '@tiptap/core' {
+  interface ExtensionOptions {
+    customOption: CustomExtensionOptions
+  }
+}
+
+const CustomExtension = Extension.create<CustomExtensionOptions>({
+  name: 'customExtension',
+
+  addOptions() {
+    return {
+      customOption: 'default value',
+    }
+  },
+})
+```
+
+这样，安装扩展时就可以设置配置项：
+
+```typescript
+const editor = new Editor({
+  extensions: [CustomExtension.configure({ customOption: 'new value' })],
+})
+```
+
+### `addStorage`
+
+`addStorage` 方法用于定义扩展的存储（本质上是一个简单的状态管理器）。此方法应返回一个对象，其中包含扩展可以使用的存储。
+
+```typescript
+type CustomExtensionStorage = {
+  customValue: string
+}
+
+declare module '@tiptap/core' {
+  interface ExtensionStorage {
+    customExtension: CustomExtensionStorage
+  }
+}
+
+const CustomExtension = Extension.create<any, CustomExtensionStorage>({
+  name: 'customExtension',
+
+  addStorage() {
+    return {
+      customValue: 'default value',
+    }
+  },
+})
+```
+
+这样，扩展内部就可以访问该存储：
+
+```typescript
+const CustomExtension = Extension.create<any, CustomExtensionStorage>({
+  name: 'customExtension',
+
+  addStorage() {
+    return {
+      customValue: 'default value',
+    }
+  },
+
+  onUpdate() {
+    console.log(this.storage.customValue) // 'default value'
+  },
+})
+```
+
+也可以通过编辑器访问：
+
+```typescript
+const editor = new Editor({
+  extensions: [CustomExtension],
+})
+
+editor.storage.customExtension.customValue // 'default value'
+```
+
+<Callout title="注意" variant="info">
+  `editor.storage` 使用扩展的名称作为命名空间。
+</Callout>
+
+### `addCommands`
+
+`addCommands` 方法用于定义扩展的命令。此方法应返回一个对象，其中包含用户可以执行的命令。
+
+```typescript
+declare module '@tiptap/core' {
+  interface Commands<ReturnType> {
+    customExtension: {
+      customCommand: () => ReturnType
+    }
+  }
+}
+
+const CustomExtension = Extension.create({
+  name: 'customExtension',
+
+  addCommands() {
+    return {
+      customCommand:
+        () =>
+        ({ commands }) => {
+          return commands.setContent('Custom command executed')
+        },
+    }
+  },
+})
+```
+
+<Callout title="在 addCommands 中使用 commands 参数" variant="warning">
+  要在 `addCommands` 中访问其他命令，请使用传入的 `commands` 参数。
+</Callout>
+
+这样，用户就可以执行这些命令：
+
+```typescript
+const editor = new Editor({
+  extensions: [CustomExtension],
+})
+
+editor.commands.customCommand() // 'Custom command executed'
+editor.chain().customCommand().run() // 'Custom command executed'
+```
+
+### `addKeyboardShortcuts`
+
+`addKeyboardShortcuts` 方法用于定义键盘快捷键。此方法应返回一个对象，其中包含用户可以使用的键盘快捷键。
+
+```typescript
+const CustomExtension = Extension.create({
+  name: 'customExtension',
+
+  addKeyboardShortcuts() {
+    return {
+      'Mod-k': () => {
+        console.log('Keyboard shortcut executed')
+      },
+    }
+  },
+})
+```
+
+这样，用户就可以使用这些键盘快捷键。
+
+### `addInputRules`
+
+使用输入规则可以定义正则表达式来监听用户输入。它们可用于 Markdown 快捷输入；例如，[`Typography`](/editor/extensions/functionality/typography) 扩展可以将 `(c)` 这样的文本转换为 `©`（还支持许多其他转换）。标记使用 `markInputRule` 辅助函数，节点使用 `nodeInputRule`。
+
+默认情况下，两个波浪号之间的文本会转换为 ~~删除线文本~~。如果你希望每侧一个波浪号就足够，可以像这样覆盖输入规则：
+
+```typescript
+import { Extension } from '@tiptap/core'
+import { markInputRule } from '@tiptap/core'
+
+const CustomExtension = Extension.create({
+  name: 'customExtension',
+
+  addInputRules() {
+    return [
+      markInputRule({
+        find: /(?:~)((?:[^~]+))(?:~)$/,
+        type: this.editor.schema.marks.strike,
+      }),
+    ]
+  },
+})
+```
+
+现在，输入 `~striked text~` 时，它会转换为 ~~删除线文本~~。
+
+想进一步了解输入规则？请参阅[输入规则](/editor/api/input-rules)文档。
+
+### `addPasteRules`
+
+粘贴规则的工作方式与输入规则（见上文）类似，但它们针对的是粘贴的内容，而不是监听用户输入的内容。
+
+正则表达式有一个细微差异。输入规则通常以 `$` 美元符号结尾（表示“匹配行尾的位置”），而粘贴规则通常会检查全部内容，因此没有这个 `$` 美元符号。
+
+将上面的示例改为粘贴规则后，代码如下：
+
+```typescript
+import { Extension } from '@tiptap/core'
+import { markPasteRule } from '@tiptap/core'
+
+const CustomExtension = Extension.create({
+  name: 'customExtension',
+
+  addPasteRules() {
+    return [
+      markPasteRule({
+        find: /(?:~)((?:[^~]+))(?:~)/g,
+        type: this.editor.schema.marks.strike,
+      }),
+    ]
+  },
+})
+```
+
+想进一步了解粘贴规则？请参阅[粘贴规则](/editor/api/paste-rules)文档。
+
+### `transformPastedHTML`
+
+`transformPastedHTML` 方法允许你在粘贴的 HTML 内容被解析并插入编辑器之前对其进行转换。它适用于清理样式、移除危险内容，或修改粘贴的 HTML 以满足编辑器的要求。
+
+#### 工作原理
+
+用户向编辑器粘贴内容时：
+
+1. 扩展按优先级排序（优先级越高，越先运行）
+2. 按顺序调用每个扩展的 `transformPastedHTML`
+3. 每次转换都会接收上一次转换的输出
+4. 最终转换后的 HTML 会被解析并插入编辑器
+
+#### 基本示例
+
+```typescript
+import { Extension } from '@tiptap/core'
+
+const CleanStylesExtension = Extension.create({
+  name: 'cleanStyles',
+
+  transformPastedHTML(html) {
+    // Remove all inline style attributes
+    return html.replace(/\s+style="[^"]*"/gi, '')
+  },
+})
+```
+
+#### 转换链示例
+
+多个扩展可以转换同一段粘贴内容。使用 `priority` 选项控制执行顺序：
+
+```typescript
+// Extension 1: Remove scripts (runs first, priority: 110)
+const SecurityExtension = Extension.create({
+  name: 'security',
+  priority: 110,
+
+  transformPastedHTML(html) {
+    let cleanHtml = html
+
+    // Remove script tags
+    cleanHtml = cleanHtml.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+
+    // Remove event handler attributes (onclick, onerror, etc.)
+    cleanHtml = cleanHtml.replace(/\s+on\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]*)/gi, '')
+
+    // Remove javascript: protocol from href (handles double-quoted, single-quoted, and unquoted attributes)
+    cleanHtml = cleanHtml.replace(
+      /href\s*=\s*(?:"javascript:[^"]*"|'javascript:[^']*'|javascript:[^\s>]*)/gi,
+      'href="#"',
+    )
+
+    return cleanHtml
+  },
+})
+
+// Extension 2: Remove styles (runs second, priority: 100)
+const CleanStylesExtension = Extension.create({
+  name: 'cleanStyles',
+  priority: 100,
+
+  transformPastedHTML(html) {
+    return html.replace(/\s+style="[^"]*"/gi, '')
+  },
+})
+```
+
+在此示例中：
+
+1. `SecurityExtension` 首先运行（优先级 110），移除危险内容
+2. `CleanStylesExtension` 接收 `SecurityExtension` 的输出并移除样式
+3. 最终清理后的 HTML 会被插入编辑器
+
+#### 使用扩展上下文
+
+你可以通过 `this` 访问扩展上下文：
+
+```typescript
+const ConditionalCleanup = Extension.create({
+  name: 'conditionalCleanup',
+
+  addOptions() {
+    return {
+      removeStyles: true,
+      removeClasses: false,
+    }
+  },
+
+  transformPastedHTML(html) {
+    let cleanHtml = html
+
+    // Access extension options
+    if (this.options.removeStyles) {
+      cleanHtml = cleanHtml.replace(/\s+style="[^"]*"/gi, '')
+    }
+
+    if (this.options.removeClasses) {
+      cleanHtml = cleanHtml.replace(/\s+class="[^"]*"/gi, '')
+    }
+
+    // Access editor instance
+    this.editor.emit('htmlTransformed', { original: html, transformed: cleanHtml })
+
+    return cleanHtml
+  },
+})
+```
+
+#### 常见使用场景
+
+移除 Google 文档格式：
+
+```typescript
+const GoogleDocsCleanup = Extension.create({
+  name: 'googleDocsCleanup',
+
+  transformPastedHTML(html) {
+    return (
+      html
+        // Remove Google Docs spans with inline styles
+        .replace(/<span[^>]*style="[^"]*"[^>]*>(.*?)<\/span>/gi, '$1')
+        // Remove Google Docs IDs
+        .replace(/\s+id="docs-internal-[^"]*"/gi, '')
+        // Remove empty spans
+        .replace(/<span>(.*?)<\/span>/gi, '$1')
+    )
+  },
+})
+```
+
+移除 Microsoft Word 格式：
+
+```typescript
+const WordCleanup = Extension.create({
+  name: 'wordCleanup',
+
+  transformPastedHTML(html) {
+    return (
+      html
+        // Remove Word-specific classes
+        .replace(/\s+class="Mso[^"]*"/gi, '')
+        // Remove Word-specific tags
+        .replace(/<o:p>.*?<\/o:p>/gi, '')
+        // Remove conditional comments
+        .replace(/<!--\[if.*?<!\[endif\]-->/gs, '')
+    )
+  },
+})
+```
+
+### 事件
+
+你甚至可以将[事件监听器](/editor/api/events)移到单独的扩展中。下面是一个监听所有事件的示例：
+
+```typescript
+import { Extension } from '@tiptap/core'
+
+const CustomExtension = Extension.create({
+  onBeforeCreate() {
+    // The editor is about to be created.
+  },
+  onCreate() {
+    // The editor is ready.
+  },
+  onUpdate() {
+    // The content has changed.
+  },
+  onSelectionUpdate({ editor }) {
+    // The selection has changed.
+  },
+  onTransaction({ transaction }) {
+    // The editor state has changed.
+  },
+  onFocus({ event }) {
+    // The editor is focused.
+  },
+  onBlur({ event }) {
+    // The editor isn’t focused anymore.
+  },
+  onDestroy() {
+    // The editor is being destroyed.
+  },
+})
+```
+
+### `dispatchTransaction`
+
+此钩子允许你在事务派发前拦截并修改事务。它采用类似 Koa 或 Express 的**中间件模式**，每个扩展都会收到 `transaction` 和一个 `next` 函数。
+
+#### 工作原理
+
+1. **中间件链**：派发事务时，Tiptap 会将所有定义了 `dispatchTransaction` 钩子的扩展串联起来。
+2. **按优先级排序**：链会按[扩展优先级](#priority)排序。优先级**较高**（例如 `1000`）的扩展会在链中**更早**调用，并包裹优先级较低的扩展。
+3. **传递事务**：你必须调用 `next(transaction)`，将事务传递给链中的下一个扩展。最后一次 `next()` 调用会将事务传递给编辑器的基础派发函数（或者在已定义时传递给自定义的 `editorProps.dispatchTransaction`）。
+4. **阻止事务**：如果不调用 `next(transaction)`，事务就会被阻止，无法到达编辑器。
+
+```typescript
+import { Extension } from '@tiptap/core'
+
+const LoggingExtension = Extension.create({
+  name: 'loggingExtension',
+  priority: 1000, // Runs early
+
+  dispatchTransaction({ transaction, next }) {
+    console.log('Intercepting transaction before others...')
+
+    // You can modify the transaction here if needed
+    // transaction.setMeta('customMeta', true)
+
+    // Call next to pass it to the next extension
+    next(transaction)
+
+    console.log('Transaction has been processed by the rest of the chain.')
+  },
+})
+```
+
+#### 中间件生命周期
+
+由于每个扩展都会“包裹”下一个扩展，因此你可以在事务由链中其余扩展（以及编辑器本身）处理之前和之后执行代码。
+
+```typescript
+dispatchTransaction({ transaction, next }) {
+  // 1. Pre-processing: Code before next()
+  const start = performance.now()
+
+  next(transaction)
+
+  // 2. Post-processing: Code after next()
+  const end = performance.now()
+  console.log(`Dispatch took ${end - start}ms`)
+}
+```
+
+### `addProseMirrorPlugins`
+
+你可以将 ProseMirror 插件添加到扩展中。当你想通过 ProseMirror 插件扩展编辑器时，这很有用。
+
+#### 使用现有的 ProseMirror 插件
+
+你可以像下面的示例那样，将现有的 ProseMirror 插件封装到 Tiptap 扩展中。
+
+```typescript
+import { history } from '@tiptap/pm/history'
+
+const History = Extension.create({
+  addProseMirrorPlugins() {
+    return [
+      history(),
+      // …
+    ]
+  },
+})
+```
+
+#### 创建 ProseMirror 插件
+
+你也可以创建自定义 ProseMirror 插件。下面的示例创建了一个会向控制台输出消息的自定义 ProseMirror 插件。
+
+```typescript
+import { Plugin, PluginKey } from '@tiptap/pm/state'
+import { Extension } from '@tiptap/core'
+
+const CustomExtension = Extension.create({
+  name: 'customExtension',
+
+  addProseMirrorPlugins() {
+    return [
+      new Plugin({
+        key: new PluginKey('customPlugin'),
+        view() {
+          return {
+            update() {
+              console.log('Custom plugin updated')
+            },
+          }
+        },
+      }),
+    ]
+  },
+})
+```
+
+想进一步了解 ProseMirror 插件？请参阅 [ProseMirror 文档](https://prosemirror.net/docs/ref/#state.Plugin)。
+
+### `addDecorations`
+
+`addDecorations` 方法会向编辑器添加[装饰](/editor/core-concepts/decorations)。装饰可用于高亮、搜索结果和小型控件。它们会改变用户看到的内容，但不会修改保存的文档。
+
+使用从 `@tiptap/core` 导入的 `Decoration` 类来构建装饰：
+
+```ts
+import { Decoration, Extension } from '@tiptap/core'
+
+const MyExtension = Extension.create({
+  name: 'myExtension',
+
+  addDecorations() {
+    return {
+      create: ({ editor, state, view }) => [Decoration.Inline(1, 5, { class: 'highlight' })],
+    }
+  },
+})
+```
+
+`Decoration` 类有三个静态方法：`Decoration.Node`（节点 DOM 包装元素上的属性）、`Decoration.Inline`（覆盖某个范围的样式化 span）和 `Decoration.Widget`（位于某个位置的 DOM 节点或框架组件）。对于大型文档，可以使用 `shouldUpdate` 控制是否重新计算，或通过 `update: 'changedRanges'` 仅重建发生编辑的区块。你也可以随时使用 `editor.commands.updateDecorations()` 强制完整重建。
+
+<Callout title="装饰适用于仅影响视图的标记" variant="info">
+  当标记纯粹用于视觉呈现时，请使用 `addDecorations`。如果需要持久化的自定义文档内容或可编辑的自定义区块，请改用[节点视图](/editor/extensions/custom-extensions/node-views)。
+</Callout>
+
+阅读[装饰指南](/editor/core-concepts/decorations)，了解三种装饰及性能优化策略；学习 [Vanilla JS](/guides/decorations-vanilla)、[React](/guides/decorations-react) 或 [Vue 3](/guides/decorations-vue) 教程；如需查看每个签名，请参阅[装饰 API 参考](/editor/api/decorations)。
+
+### `addGlobalAttributes`
+
+`addGlobalAttributes` 方法用于添加可同时应用于多个扩展的属性。这适用于文本对齐、行高或其他样式相关属性，尤其是需要用于多种节点和标记类型的属性。
+
+你可以指定 `types` 属性，以控制哪些扩展会接收该属性：
+
+- `types: ['heading', 'paragraph']` - 应用于指定类型名称
+- `types: '*'` - 应用于所有节点类型（不包括内置文本节点）和所有标记类型
+- `types: 'nodes'` - 应用于所有节点类型（不包括内置文本节点）
+- `types: 'marks'` - 应用于所有标记类型
+
+下面是将属性应用于特定类型的示例：
+
+```typescript
+const TextAlign = Extension.create({
+  name: 'textAlign',
+
+  addGlobalAttributes() {
+    return [
+      {
+        types: ['heading', 'paragraph'],
+        attributes: {
+          textAlign: {
+            default: 'left',
+            renderHTML: (attributes) => ({
+              style: `text-align: ${attributes.textAlign}`,
+            }),
+            parseHTML: (element) => element.style.textAlign || 'left',
+          },
+        },
+      },
+    ]
+  },
+})
+```
+
+如需了解所有选项（包括字符串简写语法），请参阅[应用全局属性](/editor/extensions/custom-extensions/extend-existing#apply-global-attributes-to-all-extensions)指南。
+
+### `addExtensions`
+
+你可以在扩展中添加更多扩展。这在创建一组相关扩展时很有用。
+
+```typescript
+import { Extension } from '@tiptap/core'
+import CustomExtension1 from './CustomExtension1'
+
+const CustomExtension = Extension.create({
+  name: 'customExtension',
+
+  addExtensions() {
+    return [
+      CustomExtension1.configure({
+        name: 'customExtension1',
+      }),
+    ]
+  },
+})
+```
+
+### `extendNodeSchema`
+
+你可以使用 `extendNodeSchema` 方法扩展编辑器的 NodeConfig。这适用于向节点 schema 添加其他属性。
+
+```typescript
+import { Extension } from '@tiptap/core'
+
+declare module '@tiptap/core' {
+  // This adds a new configuration option to the NodeConfig
+  interface NodeConfig {
+    customAttribute: {
+      default: null
+    }
+  }
+}
+
+const CustomExtension = Extension.create({
+  name: 'customExtension',
+
+  extendNodeSchema() {
+    return {
+      customAttribute: {
+        default: null,
+      },
+    }
+  },
+})
+```
+
+### `extendMarkSchema`
+
+你可以使用 `extendMarkSchema` 方法扩展编辑器的 MarkConfig。这适用于向标记 schema 添加其他属性。
+
+```typescript
+import { Extension } from '@tiptap/core'
+
+declare module '@tiptap/core' {
+  // This adds a new configuration option to the MarkConfig
+  interface MarkConfig {
+    customAttribute: {
+      default: null
+    }
+  }
+}
+
+const CustomExtension = Extension.create({
+  name: 'customExtension',
+
+  extendMarkSchema() {
+    return {
+      customAttribute: {
+        default: null,
+      },
+    }
+  },
+})
+```
+
+## 这里有哪些可用内容？
+
+这些扩展不是类，但在扩展中的任何位置，你仍然可以通过 `this` 访问一些重要内容。
+
+```js
+// Name of the extension, for example 'bulletList'
+this.name
+
+// Editor instance
+this.editor
+
+// ProseMirror type (if a node or mark)
+this.type
+
+// Object with all settings
+this.options
+
+// Everything that’s in the extended extension
+this.parent
+
+// Storage object
+this.storage
+```
