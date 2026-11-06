@@ -1,52 +1,46 @@
 ---
-title: Install the Tracked Changes extension
+title: 安装修订跟踪扩展
 tags:
   - type: addon
 meta:
-  title: Install Tracked Changes | Tiptap Tracked Changes Docs
-  description: Install and configure the Tracked Changes extension for suggestion mode in your Tiptap editor.
-  category: Tracked Changes
+  title: 安装修订跟踪 | Tiptap 修订跟踪文档
+  description: 在 Tiptap 编辑器中安装并配置修订跟踪扩展，以启用建议模式。
+  category: 修订跟踪
 ---
 
 import { Callout } from '@/components/ui/Callout'
 import { Requirements, RequirementItem } from '@/components/Requirements'
 import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 
-Install and configure the Tracked Changes extension by following this guide.
+按照本指南安装并配置修订跟踪扩展。
 
 <Requirements>
-  <RequirementItem label="1. Get the add-on">
-    Tracked Changes is a paid add-on that isn't included in any plan. Test it during your [free
-    trial](https://cloud.tiptap.dev/v2?trial=true) or purchase it in [your
-    dashboard](https://cloud.tiptap.dev/v2/billing).
+  <RequirementItem label="1. 获取附加组件">
+    修订跟踪是付费附加组件，不包含在任何套餐中。你可以在[免费试用](https://cloud.tiptap.dev/v2?trial=true)期间进行测试，也可以在[控制台](https://cloud.tiptap.dev/v2/billing)中购买。
   </RequirementItem>
-  <RequirementItem label="2. Access the private registry">
-    The Tracked Changes extension is published in Tiptap's private npm registry. Authenticate to
-    Tiptap's private npm registry by following the [setup guide](/guides/pro-extensions).
+  <RequirementItem label="2. 访问私有注册表">
+    修订跟踪扩展发布在 Tiptap 的私有 npm 注册表中。请按照[设置指南](/guides/pro-extensions)进行身份验证，以访问 Tiptap 的私有 npm 注册表。
   </RequirementItem>
-  <RequirementItem label="3. Install the extension">
-    Install the extension from the private registry using npm or your preferred package manager.
+  <RequirementItem label="3. 安装扩展">
+    使用 npm 或你偏好的包管理器，从私有注册表安装该扩展。
   </RequirementItem>
 </Requirements>
 
 <EnterpriseCalloutAuto variant="tracked-changes" renderMode="sidebar" />
 
-## Install
+## 安装
 
-Tracked Changes is a paid add-on that isn't included in any plan. Test it during your [free
-trial](https://cloud.tiptap.dev/v2?trial=true) or purchase it in [your
-dashboard](https://cloud.tiptap.dev/v2/billing).
+修订跟踪是付费附加组件，不包含在任何套餐中。你可以在[免费试用](https://cloud.tiptap.dev/v2?trial=true)期间进行测试，也可以在[控制台](https://cloud.tiptap.dev/v2/billing)中购买。
 
-Then configure your package manager by following the [private registry
-guide](/guides/pro-extensions).
+然后按照[私有注册表指南](/guides/pro-extensions)配置包管理器。
 
-Then, install the package:
+接着安装该包：
 
 ```bash
 npm install @tiptap-pro/extension-tracked-changes
 ```
 
-## Basic setup
+## 基本设置
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -63,13 +57,13 @@ const editor = new Editor({
 })
 ```
 
-## Settings
+## 设置项
 
 ### enabled
 
-Enable or disable track changes mode. When enabled, all edits become suggestions instead of direct changes.
+启用或禁用修订模式。启用后，所有编辑都会变成建议，而不是直接修改内容。
 
-Default: `false`
+默认值：`false`
 
 ```js
 TrackedChanges.configure({
@@ -79,9 +73,9 @@ TrackedChanges.configure({
 
 ### userId
 
-The ID of the current user making suggestions. This should come from your authentication system.
+提交建议的当前用户 ID。该值应来自你的身份验证系统。
 
-Default: `'anonymous'`
+默认值：`'anonymous'`
 
 ```js
 TrackedChanges.configure({
@@ -91,9 +85,9 @@ TrackedChanges.configure({
 
 ### userMetadata
 
-Arbitrary metadata about the current user, stored as a JSON-serializable object on each suggestion. Useful for storing display names, avatars, or other custom data alongside the suggestion without requiring a separate user store.
+当前用户的任意元数据，以可序列化为 JSON 的对象形式存储在每条建议中。适合在建议中存储显示名称、头像或其他自定义数据，无需单独维护用户存储。
 
-Default: `null`
+默认值：`null`
 
 ```js
 TrackedChanges.configure({
@@ -108,9 +102,9 @@ TrackedChanges.configure({
 
 ### nodeTypeChangeTypes
 
-Schema names of textblocks eligible for node type suggestions. Include both the source and target types. Converting a paragraph to a heading then creates one `attributeChange` suggestion while keeping one copy of the text. Conversions outside the configured pair keep the existing replacement behavior.
+可创建节点类型建议的文本块 schema 名称。请同时包含源类型和目标类型。将段落转换为标题时，会创建一条 `attributeChange` 建议，同时保留一份文本。对于配置类型对之外的转换，则继续采用现有的替换行为。
 
-Default: `[]`
+默认值：`[]`
 
 ```js
 TrackedChanges.configure({
@@ -118,13 +112,13 @@ TrackedChanges.configure({
 })
 ```
 
-The opt-in `nodeTypeChangeTypes` setting is available for local editors. When using Tiptap Collaboration (Y.js document), leave it at its default `[]` to keep tracking type conversions as replacements. Configuring a nonempty list when using Tiptap Collaboration (Y.js document) throws during editor initialization. See [node type changes](/tracked-changes/usage/advanced-usage#node-type-changes) for supported conversions and review behavior.
+`nodeTypeChangeTypes` 是供本地编辑器使用的可选设置。使用 Tiptap Collaboration（Y.js 文档）时，请保留默认值 `[]`，以便继续将类型转换跟踪为替换操作。在使用 Tiptap Collaboration（Y.js 文档）时配置非空列表，会在编辑器初始化期间抛出错误。支持的转换方式和审阅行为请参阅[节点类型变更](/tracked-changes/usage/advanced-usage#node-type-changes)。
 
 ### onSuggestionCreate
 
-Callback fired when a new suggestion is created. Receives the suggestion object containing id, type, userId, createdAt, from, to, and text.
+创建新建议时触发的回调。接收包含 id、type、userId、createdAt、from、to 和 text 的建议对象。
 
-Default: `undefined`
+默认值：`undefined`
 
 ```js
 TrackedChanges.configure({
@@ -137,9 +131,9 @@ TrackedChanges.configure({
 
 ### onSuggestionAccept
 
-Callback fired when a suggestion is accepted. Receives the suggestion ID.
+接受建议时触发的回调。接收建议 ID。
 
-Default: `undefined`
+默认值：`undefined`
 
 ```js
 TrackedChanges.configure({
@@ -151,9 +145,9 @@ TrackedChanges.configure({
 
 ### onSuggestionReject
 
-Callback fired when a suggestion is rejected. Receives the suggestion ID.
+拒绝建议时触发的回调。接收建议 ID。
 
-Default: `undefined`
+默认值：`undefined`
 
 ```js
 TrackedChanges.configure({
@@ -165,11 +159,11 @@ TrackedChanges.configure({
 
 ### blockSplitMarker
 
-The marker shown where a [block split](/tracked-changes/usage/advanced-usage#block-splits) was suggested. It is rendered at the end of the block before the split.
+在建议进行[块拆分](/tracked-changes/usage/advanced-usage#block-splits)的位置显示的标记。标记会渲染在拆分前的块末尾。
 
-Default: `'¶'`
+默认值：`'¶'`
 
-Pass a string to change the character:
+传入字符串即可更改标记字符：
 
 ```js
 TrackedChanges.configure({
@@ -177,7 +171,7 @@ TrackedChanges.configure({
 })
 ```
 
-Pass an element, or a function returning an element, for full control over the markup:
+传入元素或返回元素的函数，即可完全控制标记的标记语言：
 
 ```js
 TrackedChanges.configure({
@@ -193,7 +187,7 @@ TrackedChanges.configure({
 })
 ```
 
-Pass `null` to render no marker at all:
+传入 `null` 可完全隐藏标记：
 
 ```js
 TrackedChanges.configure({
@@ -201,4 +195,4 @@ TrackedChanges.configure({
 })
 ```
 
-A single `HTMLElement` also works and is cloned for each marker. Whatever you return, the extension sets `data-tracked-change-split="true"`, `contenteditable="false"`, and disables selection and pointer events on it, so the marker never becomes editable content. See [styling](/tracked-changes/api-reference/styling#block-split-marker) for the default CSS.
+也可以传入单个 `HTMLElement`，该元素会为每个标记克隆一份。无论返回什么，扩展都会为其设置 `data-tracked-change-split="true"` 和 `contenteditable="false"`，并禁用选择和指针事件，因此标记不会成为可编辑内容。默认 CSS 请参阅[样式](/tracked-changes/api-reference/styling#block-split-marker)。
