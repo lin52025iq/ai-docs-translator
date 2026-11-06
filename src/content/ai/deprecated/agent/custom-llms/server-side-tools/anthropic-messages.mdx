@@ -1,21 +1,21 @@
 ---
-title: Server-side tools (Anthropic Claude Messages API)
+title: 服务器端工具（Anthropic Claude Messages API）
 meta:
-  title: Server-side tools (Anthropic Claude Messages API) | Tiptap Content AI
-  description: Learn how to call server-side tools using the Anthropic Claude Messages API.
+  title: 服务器端工具（Anthropic Claude Messages API）| Tiptap Content AI
+  description: 了解如何使用 Anthropic Claude Messages API 调用服务器端工具。
   category: Content AI
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-This guide explains how to call server-side tools using the Anthropic Claude Messages API. It presents an example of a tool that returns the weather in a given location.
+本指南介绍如何使用 Anthropic Claude Messages API 调用服务器端工具，并以一个返回指定位置天气信息的工具为例。
 
-<Callout title="Code demo available" variant="info">
-  This guide includes a code demo to help you get started. See the [GitHub
-  repository](https://github.com/ueberdosis/ai-agent-custom-llm-demos).
+<Callout title="提供代码示例" variant="info">
+  本指南包含代码示例，帮助你快速上手。请参阅 [GitHub
+  仓库](https://github.com/ueberdosis/ai-agent-custom-llm-demos)。
 </Callout>
 
-First, define the tool in the [Anthropic Claude Messages API tool format](https://docs.anthropic.com/en/docs/tool-use):
+首先，按照 [Anthropic Claude Messages API 工具格式](https://docs.anthropic.com/en/docs/tool-use)定义工具：
 
 ```ts
 const weatherTool = {
@@ -34,7 +34,7 @@ const weatherTool = {
 }
 ```
 
-Then, when you call the Anthropic API, include the tool in the `tools` array.
+然后，调用 Anthropic API 时，将该工具添加到 `tools` 数组中。
 
 ```ts
 import {
@@ -74,15 +74,15 @@ ${toolkit.getSystemPrompt()}
 })
 ```
 
-First, add the response to the formatter so that it is included in the conversation.
+首先，将响应添加到 formatter 中，使其包含在对话中。
 
 ```ts
 formatter.addAiResponse(response)
 ```
 
-Then, check if the response contains a server-side tool call like the weather tool. If so, call the tool and add the result to the formatter. Then, call the Anthropic API again.
+然后，检查响应中是否包含服务器端工具调用，例如天气工具。如果包含，则调用该工具，并将结果添加到 formatter 中。之后，再次调用 Anthropic API。
 
-Repeat this process until there are no more server-side tool calls in the response.
+重复此过程，直到响应中不再包含服务器端工具调用。
 
 ```ts
 const isGetWeatherToolUse = (
@@ -124,10 +124,10 @@ while (!response || response.content.some(isGetWeatherToolUse)) {
 }
 ```
 
-Finally, when there are no more server-side tool calls, use the `formatter` to convert the response to the format expected by the AI Agent extension.
+最后，当响应中不再包含服务器端工具调用时，使用 `formatter` 将响应转换为 AI Agent 扩展所需的格式。
 
 ```ts
 const response = formatter.getResolverResponse()
 ```
 
-The value returned from `formatter.getResolverResponse()` should be the response of your API endpoint and the return value of the resolver function.
+`formatter.getResolverResponse()` 返回的值应作为 API 端点的响应，也是 resolver 函数的返回值。
