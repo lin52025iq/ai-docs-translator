@@ -1,12 +1,12 @@
 ---
-title: Integrate the Card UI component
+title: 集成 Card UI 组件
 meta:
-  title: Card | Tiptap UI Components
-  description: Integrate a flexible container component that groups related content and actions. Learn more in the docs.
-  category: UI Components
+  title: Card | Tiptap UI 组件
+  description: 集成一个灵活的容器组件，用于将相关内容和操作组合在一起。请参阅文档了解详情。
+  category: UI 组件
 component:
   name: Card
-  description: A flexible container that groups related content and actions in a unified way.
+  description: 一种灵活的容器，可将相关内容和操作统一组合在一起。
   type: primitive
   isFree: true
   isCloud: false
@@ -17,19 +17,19 @@ component:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A flexible container component that groups related content and actions in a visually distinct way, commonly used to display information in cards, dialogs, and panels.
+一种灵活的容器组件，可将相关内容和操作以醒目的方式组合在一起，常用于在卡片、对话框和面板中展示信息。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui-primitive/card" />
 
-## Install
+## 安装
 
-You can add the primitive via Tiptap CLI
+你可以通过 Tiptap CLI 添加此基础组件
 
 ```bash
 npx @tiptap/cli@latest add card
 ```
 
-## Usage
+## 用法
 
 ```tsx
 import {
@@ -64,17 +64,17 @@ export default function MyComponent() {
 }
 ```
 
-## Props
+## 属性
 
 ### CardItemGroup
 
-| Name        | Type                         | Default    | Description                                |
-| ----------- | ---------------------------- | ---------- | ------------------------------------------ |
-| orientation | `'horizontal' \| 'vertical'` | 'vertical' | Layout direction of the items in the group |
+| 名称        | 类型                         | 默认值     | 说明                     |
+| ----------- | ---------------------------- | ---------- | ------------------------ |
+| orientation | `'horizontal' \| 'vertical'` | 'vertical' | 组内项目的布局方向       |
 
-## Styling
+## 样式
 
-The Card component uses CSS custom properties for theming:
+Card 组件使用 CSS 自定义属性进行主题设置：
 
 ```scss
 :root {
@@ -90,4 +90,4 @@ The Card component uses CSS custom properties for theming:
 }
 ```
 
-You can customize these properties to match your design system.
+你可以自定义这些属性，使其符合你的设计系统。
