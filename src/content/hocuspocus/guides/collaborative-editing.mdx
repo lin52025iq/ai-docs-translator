@@ -1,30 +1,30 @@
 ---
-title: Collaborative editing
+title: 协同编辑
 meta:
-    title: Collaborative editing | Hocuspocus Docs
+    title: 协同编辑 | Hocuspocus 文档
     category: Hocuspocus
 ---
 
-## Introduction
-Real-time collaboration, syncing between different devices and working offline used to be hard. We provide everything you need to keep everything in sync with the power of [Y.js](https://github.com/yjs/yjs). The following guide helps you get started with collaborative editing in Tiptap with Hocuspocus. Don’t worry, a production-grade setup doesn’t require much code.
+## 简介
+实时协作、在不同设备间同步以及离线工作曾经都很困难。借助 [Y.js](https://github.com/yjs/yjs) 的强大功能，我们提供了让所有内容保持同步所需的一切。以下指南将帮助你开始使用 Hocuspocus 在 Tiptap 中进行协同编辑。别担心，搭建可用于生产环境的方案并不需要编写很多代码。
 
-## Configure the editor
-The underyling schema Tiptap uses is an excellent foundation to sync documents. With the [`Collaboration`](https://tiptap.dev/docs/editor/api/extensions/collaboration) extension you can tell Tiptap to track changes to the document with [Y.js](https://github.com/yjs/yjs).
+## 配置编辑器
+Tiptap 使用的底层 schema 是同步文档的绝佳基础。借助 [`Collaboration`](https://tiptap.dev/docs/editor/api/extensions/collaboration) 扩展，你可以让 Tiptap 使用 [Y.js](https://github.com/yjs/yjs) 跟踪文档变更。
 
-Y.js is a conflict-free replicated data types implementation, or in other words: It’s really good in merging changes. And to achieve that, changes don’t even have to come in order. It’s totally fine to change a document while being offline and merge it with other changes when the device is online again.
+Y.js 是一种无冲突复制数据类型（CRDT）的实现，换句话说：它非常擅长合并变更。为此，变更甚至不需要按顺序到达。离线时修改文档完全没问题，设备重新上线后再与其他变更合并即可。
 
-Somehow, all clients need to interchange document modifications at some point. The most popular technologies to do that are [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API) and [WebSockets](https://developer.mozilla.org/de/docs/Web/API/WebSocket), so let’s have a closer look at those:
+所有客户端最终都需要以某种方式交换文档变更。最常用的技术是 [WebRTC](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API) 和 [WebSockets](https://developer.mozilla.org/de/docs/Web/API/WebSocket)，下面我们来仔细了解一下：
 
 ### WebRTC
-WebRTC uses a server only to connect clients with each other. The actual data is then flowing between the clients, without the server knowing anything about it and that’s great to take the first steps with collaborative editing.
+WebRTC 只使用服务器来连接客户端。实际数据随后在客户端之间传输，服务器并不了解数据内容。这非常适合用来初步体验协同编辑。
 
-First, install the dependencies:
+首先，安装依赖：
 
 ```bash
 npm install @tiptap/extension-collaboration yjs y-webrtc y-prosemirror
 ```
 
-Now, create a new Y document, and register it with Tiptap:
+接着，创建一个新的 Y 文档，并将其注册到 Tiptap：
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -52,32 +52,32 @@ const editor = new Editor({
 })
 ```
 
-This should be enough to create a collaborative instance of Tiptap. Crazy, isn’t it? Try it out, and open the editor in two different browsers. Changes should be synced between different windows.
+这样就足以创建一个 Tiptap 协作实例。很神奇吧？试试看，在两个不同的浏览器中打开编辑器，两个窗口中的变更应该会同步。
 
-So how does this magic work? All clients need to connect with eachother, that’s the job of a *provider*. The [WebRTC provider](https://github.com/yjs/y-webrtc) is the easiest way to get started with, as it uses a public server to connect clients directly with each other, but not to sync the actual changes. This has two downsides, though.
+那么，这种魔法是如何实现的呢？所有客户端都需要彼此连接，这正是 *provider* 的职责。[WebRTC provider](https://github.com/yjs/y-webrtc) 是最容易上手的方式，因为它使用公共服务器让客户端直接彼此连接，但不会通过服务器同步实际变更。不过，它有两个缺点：
 
-1. Browsers refuse to connect with too many clients. With Y.js it’s enough if all clients are connected indirectly, but even that isn’t possible at some point. Or in other words, it doesn’t scale well for more than 100+ concurrent clients in the same document.
-2. It’s likely you want to involve a server to persist changes anyway. But the WebRTC signaling server (which connects all clients with eachother) doesn’t receive the changes and therefore doesn’t know what’s in the document.
+1. 浏览器不允许连接过多客户端。使用 Y.js 时，所有客户端间接连接也足够了，但即便如此，客户端数量达到一定程度后也无法实现。换句话说，同一文档中有 100 多个客户端同时在线时，扩展性并不好。
+2. 你很可能无论如何都需要服务器来持久化变更。但 WebRTC 信令服务器（负责将所有客户端连接起来）不会收到这些变更，因此也不知道文档中的内容。
 
-Anyway, if you want to dive deeper, head over to [the Y WebRTC repository](https://github.com/yjs/y-webrtc) on GitHub.
+无论如何，如果你想深入了解，可以访问 GitHub 上的 [Y WebRTC 仓库](https://github.com/yjs/y-webrtc)。
 
-### WebSocket (Recommended)
-For most uses cases, a WebSocket provider is the recommended choice. It’s very flexible and can scale very well. To make it even easier, we released [Hocuspocus](/hocuspocus/introduction) as an open source backend for Tiptap.
+### WebSocket（推荐）
+对于大多数使用场景，我们推荐使用 WebSocket provider。它非常灵活，扩展性也很好。为了让这一切更加简单，我们推出了 [Hocuspocus](/hocuspocus/introduction)，这是一个面向 Tiptap 的开源后端。
 
-Pick the client path that matches your app:
+根据你的应用选择合适的客户端接入方式：
 
-- **React apps** → use [`@hocuspocus/provider-react`](/hocuspocus/provider/react). It wraps the provider in components (`HocuspocusProviderWebsocketComponent`, `HocuspocusRoom`) and hooks so React handles the lifecycle for you — including StrictMode double-mounts.
-- **Vanilla JS or other frameworks** → use the bare `HocuspocusProvider` directly and manage its lifecycle yourself.
+- **React 应用** → 使用 [`@hocuspocus/provider-react`](/hocuspocus/provider/react)。它通过组件（`HocuspocusProviderWebsocketComponent`、`HocuspocusRoom`）和 hooks 封装 provider，让 React 为你管理生命周期，包括 StrictMode 下的双重挂载。
+- **原生 JS 或其他框架** → 直接使用基础的 `HocuspocusProvider`，并自行管理其生命周期。
 
 #### React
 
-Install the React bindings alongside the collaboration extension:
+安装 React 绑定包以及协作扩展：
 
 ```bash
 npm install @tiptap/extension-collaboration @hocuspocus/provider @hocuspocus/provider-react y-prosemirror yjs
 ```
 
-Wrap your collaborative subtree in `HocuspocusProviderWebsocketComponent` + `HocuspocusRoom`, and read the provider from the `useHocuspocusProvider` hook inside your editor component:
+使用 `HocuspocusProviderWebsocketComponent` 和 `HocuspocusRoom` 包裹协作子树，然后在编辑器组件中通过 `useHocuspocusProvider` hook 获取 provider：
 
 ```tsx
 import {
@@ -116,17 +116,17 @@ export function App() {
 }
 ```
 
-The websocket component manages the shared socket. Multiple `HocuspocusRoom`s can share it — handy when a user has several documents open at once. See the [React bindings reference](/hocuspocus/provider/react) for connection/sync status, awareness, and event hooks.
+WebSocket 组件负责管理共享 socket。多个 `HocuspocusRoom` 可以共用它，这对于用户同时打开多个文档很方便。有关连接/同步状态、awareness 和事件 hooks，请参阅 [React 绑定参考](/hocuspocus/provider/react)。
 
-#### Vanilla JS
+#### 原生 JS
 
-Install the dependencies:
+安装依赖：
 
 ```bash
 npm install @tiptap/extension-collaboration @hocuspocus/provider y-prosemirror yjs
 ```
 
-And register the WebSocket provider with Tiptap directly:
+然后直接将 WebSocket provider 注册到 Tiptap：
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -154,18 +154,18 @@ const editor = new Editor({
 })
 ```
 
-Both examples above expect a WebSocket server at `ws://127.0.0.1:1234` — let's set that up next.
+以上两个示例都需要一个位于 `ws://127.0.0.1:1234` 的 WebSocket 服务器——接下来我们来启动它。
 
-#### The WebSocket backend
-To make the server part as easy as possible, we provide an opinionated server package, called [Hocuspocus](/hocuspocus/introduction). It’s a flexible Node.js package, that you can use to build your custom backend.
+#### WebSocket 后端
+为了尽可能简化服务器端的配置，我们提供了一个名为 [Hocuspocus](/hocuspocus/introduction) 的约定式服务器包。它是一个灵活的 Node.js 包，可用于构建自定义后端。
 
-For the purpose of that guide, let’s just use the command-line interface which boots a minimal server literally in seconds:
+本指南中，我们直接使用命令行界面，只需几秒钟就能启动一个最简服务器：
 
 ```bash
 npx @hocuspocus/cli --port 1234 --sqlite
 ```
 
-This command downloads the Hocuspocus command-line interface, starts a server listening on port 1234 and persists changes to a local SQLite file (drop the `--sqlite` flag to keep changes in memory only). The output should look like this:
+此命令会下载 Hocuspocus 命令行界面，启动一个监听 1234 端口的服务器，并将变更持久化到本地 SQLite 文件中（移除 `--sqlite` 标志即可仅在内存中保存变更）。输出应如下所示：
 
 ```
 Hocuspocus running at:
@@ -176,13 +176,13 @@ Hocuspocus running at:
 Ready.
 ```
 
-Try opening http://127.0.0.1:1234 in your browser. You should see a plain text `OK` if everything works fine.
+尝试在浏览器中打开 http://127.0.0.1:1234。如果一切正常，你应该会看到纯文本 `OK`。
 
-Go back to your Tiptap editor and hit reload, it should now connect to the Hocuspocus WebSocket server and changes should sync with all other clients. Amazing, isn’t it?
+回到 Tiptap 编辑器并重新加载页面。此时编辑器应该会连接到 Hocuspocus WebSocket 服务器，并与所有其他客户端同步变更。很棒吧？
 
 
-### Multiple network providers
-You can even combine multiple providers. That’s not needed, but could keep clients connected, even if one connection - for example the WebSocket server - goes down for a while. Here is an example:
+### 多个网络 provider
+你甚至可以组合使用多个 provider。虽然通常不需要这么做，但这样即使某个连接（例如 WebSocket 服务器）暂时中断，客户端仍可能保持连接。示例如下：
 
 ```js
 new WebrtcProvider('example-document', ydoc)
@@ -193,12 +193,12 @@ new HocuspocusProvider({
 })
 ```
 
-Yes, that’s all.
+没错，就这么简单。
 
-Keep in mind that WebRTC needs a signaling server to connect clients. This signaling server doesn’t receive the synced data, but helps to let clients find each other. You can [run your own signaling server](https://github.com/yjs/y-webrtc#signaling), if you like. Otherwise it’s using a default URL baked into the package.
+请注意，WebRTC 需要信令服务器来连接客户端。信令服务器不会收到同步的数据，但会帮助客户端彼此发现。如果愿意，你可以[运行自己的信令服务器](https://github.com/yjs/y-webrtc#signaling)。否则，它会使用包中内置的默认 URL。
 
-### Show other carets
-To enable users to see the caret and text selections of each other, add the [`CollaborationCaret`](https://tiptap.dev/docs/editor/api/extensions/collaboration-caret) extension.
+### 显示其他用户的光标
+要让用户看到彼此的光标和文本选区，请添加 [`CollaborationCaret`](https://tiptap.dev/docs/editor/api/extensions/collaboration-caret) 扩展。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -234,9 +234,9 @@ const editor = new Editor({
 })
 ```
 
-As you can see, you can pass a name and color for every user. Look at the [collaborative editing example](https://tiptap.dev/docs/editor/examples/collaborative-editing), to see a more advanced example.
+如你所见，可以为每位用户指定姓名和颜色。请参阅[协同编辑示例](https://tiptap.dev/docs/editor/examples/collaborative-editing)，了解更高级的用法。
 
-The extension doesn't ship default styles. Drop these selectors into your stylesheet so remote carets, selections, and name labels are visible. The colors come from `user.color` via `currentColor`, so each user automatically gets their own tint:
+该扩展不提供默认样式。将以下选择器添加到样式表中，即可显示远程光标、选区和姓名标签。颜色通过 `currentColor` 从 `user.color` 获取，因此每位用户都会自动使用自己的色调：
 
 ```css
 .collaboration-carets__caret {
@@ -271,14 +271,14 @@ The extension doesn't ship default styles. Drop these selectors into your styles
 }
 ```
 
-### Offline support
-Adding offline support to your collaborative editor is basically a one-liner, thanks to the fantastic [Y IndexedDB adapter](https://github.com/yjs/y-indexeddb). Install it:
+### 离线支持
+多亏了出色的 [Y IndexedDB 适配器](https://github.com/yjs/y-indexeddb)，为协作编辑器添加离线支持基本上只需一行代码。先安装它：
 
 ```bash
 npm install y-indexeddb
 ```
 
-And connect it with a Y document:
+然后将它与 Y 文档连接：
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -301,23 +301,23 @@ const editor = new Editor({
 })
 ```
 
-All changes will be stored in the browser then, even if you close the tab, go offline, or make changes while working offline. Next time you are online, the WebSocket provider will try to find a connection and eventually sync the changes.
+这样，所有变更都会存储在浏览器中，即使你关闭标签页、断开网络，或在离线时进行修改也不例外。下次联网时，WebSocket provider 会尝试建立连接，并最终同步这些变更。
 
-Yes, it’s magic. As already mentioned, that is all based on the fantastic Y.js framework. And if you’re using it, or our integration, you should definitely [sponsor Kevin Jahns on GitHub](https://github.com/dmonad), he is the brain behind Y.js.
+没错，这就是魔法。如前所述，这一切都基于出色的 Y.js 框架。如果你正在使用它或我们的集成，强烈建议你在 GitHub 上[赞助 Kevin Jahns](https://github.com/dmonad)，他是 Y.js 背后的核心开发者。
 
-## Our plug & play collaboration backend
-Our collaborative editing backend Hocuspocus handles the syncing, authorization, persistence and scaling. Let’s go through a few common use cases here!
+## 我们即插即用的协作后端
+我们的协同编辑后端 Hocuspocus 负责同步、授权、持久化和扩展。下面来看看几个常见用例！
 
-### The document name
-The document name is `'example-document'` in all examples here, but it could be any string. In a real-world app you’d probably add the name of your entity and the ID of the entity. Here is how that could look like:
+### 文档名称
+这里所有示例中的文档名称都是 `'example-document'`，但它可以是任意字符串。在实际应用中，你可能会使用实体名称和实体 ID。示例如下：
 
 ```js
 const documentName = 'page.140'
 ```
 
-In the backend, you can split the string to know the user is typing on a page with the ID 140 to manage authorization and such accordingly. New documents are created on the fly, no need to tell the backend about them, besides passing a string to the provider.
+在后端，你可以拆分这个字符串，判断用户正在编辑 ID 为 140 的页面，并据此管理授权等事项。新文档会按需自动创建；除了向 provider 传递一个字符串之外，无需专门告知后端。
 
-And if you would like to sync multiple fields with one Y.js document, just pass different fragment names to the collaboration extension:
+如果你想在一个 Y.js 文档中同步多个字段，只需向协作扩展传入不同的 fragment 名称：
 
 ```js
 // a Tiptap instance for the field
@@ -333,7 +333,7 @@ Collaboration.configure({
 })
 ```
 
-If your setup is somehow more complex, for example with nested fragments, you can pass a raw Y.js fragment too. `document` and `field` will be ignored then.
+如果你的配置更复杂，例如涉及嵌套 fragment，也可以直接传入原始 Y.js fragment。此时会忽略 `document` 和 `field`。
 
 ```js
 // a raw Y.js fragment
@@ -342,10 +342,10 @@ Collaboration.configure({
 })
 ```
 
-### Authentication & Authorization
-With the `onAuthenticate` hook you can check if a client is authenticated and authorized to view the current document. In a real world application this would probably be a request to an API, a database query or something else.
+### 身份验证与授权
+使用 `onAuthenticate` hook，你可以检查客户端是否通过身份验证，并且是否有权查看当前文档。在实际应用中，这通常会涉及调用 API、查询数据库或其他操作。
 
-When throwing an error (or rejecting the returned Promise), the connection to the client will be terminated. If the client is authorized and authenticated you can also return contextual data which will be accessible in other hooks. But you don’t need to.
+如果抛出错误（或返回被拒绝的 Promise），与客户端的连接就会终止。如果客户端通过身份验证且获得授权，你还可以返回上下文数据，供其他 hooks 使用，但这并非必需。
 
 ```js
 import { Server } from '@hocuspocus/server'
@@ -370,25 +370,25 @@ const server = Server.configure({
 server.listen()
 ```
 
-## Tiptap Collaboration – our hosted solution
+## Tiptap Collaboration——我们的托管解决方案
 
-If you don’t want the struggle of self-hosting and scaling Hocuspocus, make sure to check out our managed solution [Tiptap Collaboration](https://tiptap.dev/docs/editor/collaboration/overview).
+如果你不想费力自行托管和扩展 Hocuspocus，不妨了解我们的托管解决方案 [Tiptap Collaboration](https://tiptap.dev/docs/editor/collaboration/overview)。
 
-It’s just a click away, really.
+真的，只需点击一下即可开始使用。
 
-## Pitfalls
+## 注意事项
 
-### Schema updates
-Tiptap is very strict with the [schema](https://tiptap.dev/docs/editor/api/schema), that means, if you add something that’s not allowed according to the configured schema it’ll be thrown away. That can lead to a strange behaviour when multiple clients with different schemas share changes to a document.
+### Schema 更新
+Tiptap 对 [schema](https://tiptap.dev/docs/editor/api/schema) 的要求非常严格：如果添加了配置的 schema 不允许的内容，该内容就会被丢弃。当多个 schema 不同的客户端共享文档变更时，这可能会导致异常行为。
 
-Let’s say you added an editor to your app and the first people use it already. They have all a loaded instance of Tiptap with all default extensions, and therefor a schema that only allows those. But you want to add task lists in the next update, so you add the extension and deploy again.
+假设你在应用中添加了编辑器，并且已经有用户开始使用。他们都加载了包含所有默认扩展的 Tiptap 实例，因此 schema 也只允许这些扩展所定义的内容。但你想在下次更新中添加任务列表，于是添加了相应扩展并重新部署。
 
-A new user opens your app and has the updated schema (with task lists), while all others still have the old schema (without task lists). The new user checks out the newly added tasks lists and adds it to a document to show that feature to other users in that document. But then, it magically disappears right after she added it. What happened?
+新用户打开应用时使用的是更新后的 schema（包含任务列表），而其他用户仍在使用旧 schema（不包含任务列表）。新用户看到新添加的任务列表功能后，在文档中添加了一个任务列表，想让其他用户也看看这个功能。但任务列表刚添加进去就神奇地消失了。发生了什么？
 
-When one user adds a new node (or mark), that change will be synced to all other connected clients. The other connected clients apply those changes to the editor, and Tiptap, strict as it is, removes the newly added node, because it’s not allowed according to their (old) schema. Those changes will be synced to other connected clients and oops, it’s removed everywhere. To avoid this you have a few options:
+当一位用户添加新的节点（或标记）时，该变更会同步给所有其他已连接的客户端。其他客户端将变更应用到编辑器中，而严格的 Tiptap 会根据它们的旧 schema 移除不允许的新节点。这个移除操作也会同步给其他已连接的客户端，于是新节点就从所有地方消失了。为避免这种情况，你有几个选择：
 
-1. Never change the schema (not cool).
-2. Force clients to update when you deploy a new schema (tough).
-3. Keep track of the schema version and disable the editor for clients with an outdated schema (depends on your setup).
+1. 永远不要更改 schema（不太现实）。
+2. 部署新 schema 时强制客户端更新（不太容易）。
+3. 跟踪 schema 版本，并对使用旧版 schema 的客户端禁用编辑器（取决于你的配置）。
 
-It’s on our list to provide features to make that easier. If you’ve got an idea how to improve that, share it with us!
+我们计划提供一些功能，让这件事变得更容易。如果你有改进建议，欢迎告诉我们！
