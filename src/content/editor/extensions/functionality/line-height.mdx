@@ -1,39 +1,39 @@
 ---
-title: Line Height extension
+title: 行高扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-text-style?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-text-style
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-text-style.svg
     url: https://npmcharts.com/compare/@tiptap/extension-text-style?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  title: Line Height extension | Tiptap Editor Docs
-  description: Add text line-height support to your Tiptap editor with the Line Height extension. Learn more in our documentation.
-  category: Editor
+  title: 行高扩展 | Tiptap 编辑器文档
+  description: 使用行高扩展为 Tiptap 编辑器添加文本行高支持。请参阅我们的文档了解更多信息。
+  category: 编辑器
 extension:
-  name: Line Height
+  name: 行高
   link:
-  description: Add text line-height support to your editor.
+  description: 为编辑器添加文本行高支持。
   type: extension
   icon: LetterText
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-This extension enables you to set the *line height* in the editor. It uses the [`TextStyle`](/editor/extensions/marks/text-style) mark, which renders a `<span>` tag (and only that). The line height is applied as inline style then, for example `<span style="line-height: 1.5">`.
+此扩展可让你在编辑器中设置*行高*。它使用 [`TextStyle`](/editor/extensions/marks/text-style) 标记，该标记会渲染 `<span>` 标签（且只会渲染该标签）。行高随后会以内联样式应用，例如 `<span style="line-height: 1.5">`。
 
 <CodeDemo path="/Extensions/LineHeight" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-text-style
 ```
 
-This extension requires the [`TextStyle`](/editor/extensions/marks/text-style) mark.
+此扩展需要 [`TextStyle`](/editor/extensions/marks/text-style) 标记。
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -44,7 +44,7 @@ new Editor({
 })
 ```
 
-This extension is installed by default with the `TextStyleKit` extension, so you don’t need to install it separately.
+此扩展默认随 `TextStyleKit` 扩展一同安装，因此无需单独安装。
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -55,13 +55,13 @@ new Editor({
 })
 ```
 
-## Settings
+## 设置
 
 ### types
 
-A list of marks to which the lineHeight attribute should be applied to.
+指定要应用 lineHeight 属性的标记列表。
 
-Default: `['textStyle']`
+默认值：`['textStyle']`
 
 ```js
 LineHeight.configure({
@@ -69,11 +69,11 @@ LineHeight.configure({
 })
 ```
 
-## Commands
+## 命令
 
 ### setLineHeight()
 
-Applies the given line height as inline style.
+以内联样式应用指定的行高。
 
 ```js
 editor.commands.setLineHeight('1.1')
@@ -81,17 +81,17 @@ editor.commands.setLineHeight('1.1')
 
 ### unsetLineHeight()
 
-Removes any line height.
+移除所有行高设置。
 
 ```js
 editor.commands.unsetLineHeight()
 ```
 
-## Source code
+## 源代码
 
 [packages/extension-text-style/src/line-height/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-text-style/src/line-height/)
 
-## Minimal Install
+## 最小化安装
 
 ```js
 import { Editor } from '@tiptap/core'
