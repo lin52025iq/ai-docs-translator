@@ -1,0 +1,746 @@
+---
+title: 表格节点
+meta:
+  title: 表格节点 | Tiptap UI 组件
+  description: 为 Tiptap 编辑器添加表格节点 UI 组件。更多信息请参阅文档！
+  category: UI 组件
+component:
+  name: 表格节点
+  description: 添加表格 UI 节点组件
+  type: node-component
+  isFree: false
+  isCloud: false
+  isOpen: false
+  isNew: true
+  icon: Table
+tags:
+  - type: start
+---
+
+import { CodeDemo } from '@/components/CodeDemo'
+import { Callout } from '@/components/ui/Callout'
+
+这是一款增强型表格节点组件，适用于 Tiptap 编辑器，提供用于操作行和列的表格手柄，以及单元格对齐控制。它支持添加、删除、移动和复制，还具备高级表格管理功能、响应式样式和无障碍功能。
+
+<CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-node/table-node" />
+
+## 安装
+
+使用 Tiptap CLI 添加此组件：
+
+```bash
+npx @tiptap/cli@latest add table-node
+```
+
+## 用法
+
+### 基本集成
+
+按照以下步骤为 Tiptap 编辑器添加表格功能：
+
+**1. 导入所需的扩展和组件：**
+
+```tsx
+import { Highlight } from '@tiptap/extension-highlight'
+import { TextStyle } from '@tiptap/extension-text-style'
+
+import { NodeBackground } from '@/components/tiptap-extension/node-background-extension'
+import { NodeAlignment } from '@/components/tiptap-extension/node-alignment-extension'
+
+import { TableKit } from '@/components/tiptap-node/table-node/extensions/table-node-extension'
+import { TableHandleExtension } from '@/components/tiptap-node/table-node/extensions/table-handle'
+
+import { TableTriggerButton } from '@/components/tiptap-node/table-node/ui/table-trigger-button'
+import { TableHandle } from '@/components/tiptap-node/table-node/ui/table-handle/table-handle'
+import { TableSelectionOverlay } from '@/components/tiptap-node/table-node/ui/table-selection-overlay'
+import { TableCellHandleMenu } from '@/components/tiptap-node/table-node/ui/table-cell-handle-menu'
+import { TableExtendRowColumnButtons } from '@/components/tiptap-node/table-node/ui/table-extend-row-column-button'
+
+// Import required styles
+import '@/components/tiptap-node/table-node/styles/prosemirror-table.scss'
+import '@/components/tiptap-node/table-node/styles/table-node.scss'
+```
+
+**2. 将扩展添加到编辑器配置中：**
+
+```tsx
+const editor = useEditor({
+  extensions: [
+    StarterKit,
+    TableKit.configure({
+      table: {
+        resizable: true, // Enable column resizing
+      },
+    }),
+    TableHandleExtension, // Required for row/column manipulation
+    NodeAlignment, // For cell alignment
+    NodeBackground, // For cell background colors
+    TextStyle, // For text styling
+    Highlight.configure({ multicolor: true }), // For highlighting
+  ],
+  content: '<p>Your content here</p>',
+})
+```
+
+**3. 定义稳定的单元格菜单，然后将表格组件添加到编辑器：**
+
+<Callout title="传入稳定的 cellMenu 引用" variant="warning">
+  在模块作用域中定义 `cellMenu` 组件（或用 `useMemo` 包装）。内联箭头函数 —
+  `cellMenu={(props) => <TableCellHandleMenu ... />}` — 会在每次渲染时创建新的组件类型，
+  导致整个菜单子树重新挂载；对于频繁重新渲染的编辑器，还可能触发 `Maximum update depth exceeded` 错误。
+</Callout>
+
+```tsx
+// Module scope — stable identity across renders.
+const CellMenu = (props) => (
+  <TableCellHandleMenu
+    editor={props.editor}
+    onMouseDown={(e) => props.onResizeStart?.('br')(e)}
+  />
+)
+```
+
+```tsx
+<EditorContext.Provider value={{ editor }}>
+  {/* Add table button to your toolbar */}
+  <div className="toolbar">
+    <TableTriggerButton />
+  </div>
+
+  <EditorContent editor={editor} />
+
+  {/* Add these components outside EditorContent for proper positioning */}
+  <TableHandle />
+  <TableSelectionOverlay showResizeHandles={true} cellMenu={CellMenu} />
+  <TableExtendRowColumnButtons />
+</EditorContext.Provider>
+```
+
+**完成！** 现在，编辑器已具备完整的表格功能，包括：
+
+- 可视化插入表格
+- 通过手柄操作行和列
+- 选择和调整单元格大小
+- 用于表格操作的上下文菜单
+
+如需查看包含所有功能的完整示例，请参阅下方的 [TableNode 组件示例](#lesstablenode-greater)。
+
+## 创建表格
+
+### `<TableTriggerButton />`
+
+**用于在编辑器中插入表格的主要组件。** 此按钮会打开交互式网格选择器，让用户在插入表格前通过可视化方式选择表格尺寸。
+
+#### 主要功能
+
+- **可视化网格选择器**：通过交互式网格界面选择表格尺寸
+- **快速插入**：单击即可立即创建最大为 8×8 的表格（可自定义）
+- **无障碍支持**：支持完整的键盘导航和 ARIA 标签
+
+#### 用法
+
+```tsx
+import { TableTriggerButton } from '@/components/tiptap-node/table-node/ui/table-trigger-button'
+
+function MyToolbar() {
+  return (
+    <TableTriggerButton
+      editor={editor}
+      maxRows={8}
+      maxCols={8}
+      hideWhenUnavailable={true}
+      text="Insert Table"
+      onInserted={(rows, cols) => console.log(`Inserted ${rows}×${cols} table`)}
+    />
+  )
+}
+```
+
+#### 属性
+
+- `editor?: Editor | null` - 编辑器实例
+- `hideWhenUnavailable?: boolean` - 无法插入表格时隐藏（默认值：false）
+- `maxRows?: number` - 网格选择器中的最大行数（默认值：8）
+- `maxCols?: number` - 网格选择器中的最大列数（默认值：8）
+- `onInserted?: (rows: number, cols: number) => void` - 成功插入后的回调
+- `text?: string` - 可选文本，与图标一同显示
+- 所有标准按钮属性（className、disabled 等）
+
+#### 使用 Hook 自定义实现
+
+如需自定义按钮实现，请使用 `useTableTriggerButton` hook：
+
+```tsx
+import { useTableTriggerButton } from '@/components/tiptap-node/table-node/ui/table-trigger-button'
+
+function CustomTableButton() {
+  const {
+    isVisible,
+    canInsert,
+    isOpen,
+    setIsOpen,
+    hoveredCell,
+    handleCellHover,
+    handleCellClick,
+    resetHoveredCell,
+    label,
+    Icon,
+  } = useTableTriggerButton({
+    editor,
+    hideWhenUnavailable: true,
+    maxRows: 10,
+    maxCols: 10,
+    onInserted: (rows, cols) => {
+      console.log(`Created ${rows}×${cols} table`)
+    },
+  })
+
+  if (!isVisible) return null
+
+  return (
+    <button onClick={() => setIsOpen(true)} disabled={!canInsert}>
+      <Icon /> {label}
+    </button>
+  )
+}
+```
+
+---
+
+## 组件
+
+### `<TableNode />`
+
+增强型表格节点组件，提供表格手柄、行列操作和高级管理功能。
+
+#### 用法
+
+```tsx
+import { useEditor, EditorContent, EditorContext } from '@tiptap/react'
+import { StarterKit } from '@tiptap/starter-kit'
+import { TextStyle } from '@tiptap/extension-text-style'
+import { Highlight } from '@tiptap/extension-highlight'
+
+import { NodeBackground } from '@/components/tiptap-extension/node-background-extension'
+import { NodeAlignment } from '@/components/tiptap-extension/node-alignment-extension'
+
+import { ButtonGroup } from '@/components/tiptap-ui-primitive/button-group'
+
+import { TableTriggerButton } from '@/components/tiptap-node/table-node/ui/table-trigger-button'
+import { TableKit } from '@/components/tiptap-node/table-node/extensions/table-node-extension'
+import { TableHandleExtension } from '@/components/tiptap-node/table-node/extensions/table-handle'
+import { TableHandle } from '@/components/tiptap-node/table-node/ui/table-handle/table-handle'
+import { TableSelectionOverlay } from '@/components/tiptap-node/table-node/ui/table-selection-overlay'
+import { TableCellHandleMenu } from '@/components/tiptap-node/table-node/ui/table-cell-handle-menu'
+import { TableExtendRowColumnButtons } from '@/components/tiptap-node/table-node/ui/table-extend-row-column-button'
+import '@/components/tiptap-node/table-node/styles/prosemirror-table.scss'
+import '@/components/tiptap-node/table-node/styles/table-node.scss'
+
+// --- Tiptap Node Styles ---
+import '@/components/tiptap-node/heading-node/heading-node.scss'
+import '@/components/tiptap-node/paragraph-node/paragraph-node.scss'
+
+// Define the cell menu at module scope so its identity is stable across renders.
+// An inline `cellMenu` arrow would remount the menu on every render and can throw
+// "Maximum update depth exceeded".
+const CellMenu = (props) => (
+  <TableCellHandleMenu
+    editor={props.editor}
+    onMouseDown={(e) => props.onResizeStart?.('br')(e)}
+  />
+)
+
+export default function BasicEditor() {
+  const editor = useEditor({
+    immediatelyRender: false,
+    extensions: [
+      StarterKit,
+      TableKit.configure({
+        table: {
+          resizable: true,
+        },
+      }),
+      TableHandleExtension,
+      NodeBackground,
+      NodeAlignment,
+      TextStyle,
+      Highlight.configure({ multicolor: true }),
+    ],
+    content: `
+      <h2>Table Node Demo</h2>
+      <p>
+        This demo shows the table functionality with all features enabled.
+      </p>
+
+      <table>
+        <tbody>
+          <tr>
+            <th>
+              <p><strong>Name</strong></p>
+            </th>
+            <th>
+              <p><strong>Role</strong></p>
+            </th>
+            <th>
+              <p><strong>Department</strong></p>
+            </th>
+          </tr>
+          <tr>
+            <td>
+              <p>Alice Johnson</p>
+            </td>
+            <td>
+              <p>Senior Developer</p>
+            </td>
+            <td>
+              <p>Engineering</p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p>Bob Smith</p>
+            </td>
+            <td>
+              <p>Product Manager</p>
+            </td>
+            <td>
+              <p>Product</p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <p>Carol White</p>
+            </td>
+            <td>
+              <p>UX Designer</p>
+            </td>
+            <td>
+              <p>Design</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        You can click inside the table to see the selection overlay and resize handles. Use the extend buttons to add more rows or columns.
+      </p>
+    `,
+  })
+
+  return (
+    <EditorContext.Provider value={{ editor }}>
+      <div className="controls-bar">
+        <div className="control-item">
+          <ButtonGroup orientation="horizontal">
+            <TableTriggerButton />
+          </ButtonGroup>
+        </div>
+      </div>
+
+      <EditorContent editor={editor} role="presentation" className="control-showcase" />
+
+      <TableHandle />
+      <TableSelectionOverlay showResizeHandles={true} cellMenu={CellMenu} />
+      <TableExtendRowColumnButtons />
+    </EditorContext.Provider>
+  )
+}
+```
+
+## 扩展
+
+### `TableKit`
+
+一套全面的表格扩展工具包，集成了多个与表格相关的扩展。
+
+## 表格操作组件
+
+每个组件都提供 React 组件和可组合的 hook 两种形式：
+
+### 行/列操作组件
+
+#### `<TableAddRowColumnButton />` / `useTableAddRowColumn()`
+
+在表格的指定位置添加行或列。
+
+**属性：**
+
+- `editor?: Editor | null` - 编辑器实例
+- `index?: number` - 行/列索引
+- `orientation?: Orientation` - "row" 或 "column"
+- `direction?: "before" | "after"` - 在指定索引之前或之后添加
+- `tablePos?: number` - 表格在文档中的位置
+- `hideWhenUnavailable?: boolean` - 操作不可用时隐藏
+- `onAdded?: () => void` - 成功添加后的回调
+
+**用法：**
+
+```tsx
+import { TableAddRowColumnButton } from '@/components/tiptap-node/table-node/ui/table-add-row-column-button'
+
+function MyToolbar() {
+  return <TableAddRowColumnButton orientation="row" direction="after" />
+}
+```
+
+#### `<TableDeleteRowColumnButton />` / `useTableDeleteRowColumn()`
+
+删除表格中的行或列。
+
+**属性：**
+
+- `editor?: Editor | null`
+- `index?: number`
+- `orientation?: Orientation`
+- `tablePos?: number`
+- `hideWhenUnavailable?: boolean`
+- `onDeleted?: () => void`
+
+**用法：**
+
+```tsx
+import { TableDeleteRowColumnButton } from '@/components/tiptap-node/table-node/ui/table-delete-row-column-button'
+
+function MyToolbar() {
+  return <TableDeleteRowColumnButton orientation="column" />
+}
+```
+
+#### `<TableMoveRowColumnButton />` / `useTableMoveRowColumn()`
+
+在表格中向上/下或向左/右移动行或列。
+
+**属性：**
+
+- `editor?: Editor | null`
+- `index?: number`
+- `orientation?: Orientation`
+- `direction?: "up" | "down" | "left" | "right"`
+- `tablePos?: number`
+- `hideWhenUnavailable?: boolean`
+- `onMoved?: () => void`
+
+**用法：**
+
+```tsx
+import { TableMoveRowColumnButton } from '@/components/tiptap-node/table-node/ui/table-move-row-column-button'
+
+function MyToolbar() {
+  return <TableMoveRowColumnButton orientation="row" direction="up" />
+}
+```
+
+#### `<TableDuplicateRowColumnButton />` / `useTableDuplicateRowColumn()`
+
+复制行或列，并保留其内容和格式。
+
+**属性：**
+
+- `editor?: Editor | null`
+- `index?: number`
+- `orientation?: Orientation`
+- `tablePos?: number`
+- `hideWhenUnavailable?: boolean`
+- `onDuplicated?: () => void`
+
+**用法：**
+
+```tsx
+import { TableDuplicateRowColumnButton } from '@/components/tiptap-node/table-node/ui/table-duplicate-row-column-button'
+
+function MyToolbar() {
+  return <TableDuplicateRowColumnButton orientation="row" />
+}
+```
+
+#### `<TableSortRowColumnButton />` / `useTableSortRowColumn()`
+
+按字母顺序（A-Z 或 Z-A）对行或列排序。标题会自动排除在排序之外，并保留在原位置。空单元格始终排在末尾。
+
+**属性：**
+
+- `editor?: Editor | null`
+- `index?: number`
+- `orientation?: Orientation`
+- `direction: "asc" | "desc"` - 排序方向
+- `tablePos?: number`
+- `hideWhenUnavailable?: boolean`
+- `onSorted?: () => void`
+
+**用法：**
+
+```tsx
+import { TableSortRowColumnButton } from '@/components/tiptap-node/table-node/ui/table-sort-row-column-button'
+
+function MyToolbar() {
+  return <TableSortRowColumnButton orientation="column" direction="asc" />
+}
+```
+
+### 单元格操作组件
+
+#### `<TableMergeSplitCellButton />` / `useTableMergeSplitCell()`
+
+合并多个选中的单元格，或拆分已合并的单元格。
+
+**属性：**
+
+- `editor?: Editor | null`
+- `action: "merge" | "split"` - 要执行的操作
+- `hideWhenUnavailable?: boolean`
+- `onExecuted?: (action: "merge" | "split") => void`
+
+**用法：**
+
+```tsx
+import { TableMergeSplitCellButton } from '@/components/tiptap-node/table-node/ui/table-merge-split-cell-button'
+
+function MyToolbar() {
+  return (
+    <>
+      <TableMergeSplitCellButton action="merge" />
+      <TableMergeSplitCellButton action="split" />
+    </>
+  )
+}
+```
+
+#### `<TableAlignCellButton />` / `useTableAlignCell()`
+
+对齐单元格内容（文本对齐和垂直对齐）。
+
+**属性：**
+
+- `editor?: Editor | null`
+- `alignment: string` - 对齐值（例如 "left"、"center"、"right"、"top"、"middle"、"bottom"）
+- `type: "textAlign" | "verticalAlign"` - 对齐类型
+- `hideWhenUnavailable?: boolean`
+- `onAligned?: () => void`
+
+**用法：**
+
+```tsx
+import { TableAlignCellButton } from '@/components/tiptap-node/table-node/ui/table-align-cell-button'
+
+function MyToolbar() {
+  return (
+    <>
+      <TableAlignCellButton type="textAlign" alignment="center" />
+      <TableAlignCellButton type="verticalAlign" alignment="middle" />
+    </>
+  )
+}
+```
+
+#### `<TableClearRowColumnContentButton />` / `useTableClearRowColumnContent()`
+
+清除行、列或选中区域中单元格的内容。
+
+**属性：**
+
+- `editor?: Editor | null`
+- `index?: number`
+- `orientation?: Orientation`
+- `tablePos?: number`
+- `resetAttrs?: boolean` - 同时重置单元格属性（颜色、对齐方式等）
+- `hideWhenUnavailable?: boolean`
+- `onCleared?: () => void`
+
+**用法：**
+
+```tsx
+import { TableClearRowColumnContentButton } from '@/components/tiptap-node/table-node/ui/table-clear-row-column-content-button'
+
+function MyToolbar() {
+  return <TableClearRowColumnContentButton orientation="row" resetAttrs={true} />
+}
+```
+
+### 标题和布局组件
+
+#### `<TableHeaderRowColumnButton />` / `useTableHeaderRowColumn()`
+
+将首行或首列切换为标题行/列。
+
+**属性：**
+
+- `editor?: Editor | null`
+- `index?: number` - 首行/列应为 0
+- `orientation?: Orientation`
+- `tablePos?: number`
+- `hideWhenUnavailable?: boolean`
+- `onToggled?: () => void`
+
+**用法：**
+
+```tsx
+import { TableHeaderRowColumnButton } from '@/components/tiptap-node/table-node/ui/table-header-row-column-button'
+
+function MyToolbar() {
+  return <TableHeaderRowColumnButton index={0} orientation="row" />
+}
+```
+
+#### `<TableFitToWidthButton />` / `useTableFitToWidth()`
+
+自动调整表格列宽，使其适应编辑器容器的宽度。
+
+**属性：**
+
+- `editor?: Editor | null`
+- `hideWhenUnavailable?: boolean`
+- `onWidthAdjusted?: () => void`
+
+**用法：**
+
+```tsx
+import { TableFitToWidthButton } from '@/components/tiptap-node/table-node/ui/table-fit-to-width-button'
+
+function MyToolbar() {
+  return <TableFitToWidthButton />
+}
+```
+
+### 菜单组件
+
+#### `<TableAlignMenu />`
+
+提供表格单元格对齐选项的菜单组件。
+
+**属性：**
+
+- `index?: number`
+- `orientation?: Orientation`
+
+**用法：**
+
+```tsx
+import { TableAlignMenu } from '@/components/tiptap-node/table-node/ui/table-alignment-menu'
+
+function MyToolbar() {
+  return <TableAlignMenu orientation="row" index={0} />
+}
+```
+
+### 直接使用 Hooks
+
+所有按钮组件都有对应的 hook，可用于构建自定义 UI：
+
+```tsx
+import { useTableDeleteRowColumn } from '@/components/tiptap-node/table-node/ui/table-delete-row-column-button'
+
+function CustomDeleteButton() {
+  const { isVisible, canDeleteRowColumn, handleDelete, label, Icon } = useTableDeleteRowColumn({
+    orientation: 'row',
+    hideWhenUnavailable: true,
+  })
+
+  if (!isVisible) return null
+
+  return (
+    <button onClick={handleDelete} disabled={!canDeleteRowColumn}>
+      <Icon /> {label}
+    </button>
+  )
+}
+```
+
+每个 hook 都会返回：
+
+- `isVisible: boolean` - 是否应显示该操作
+- `can[Action]: boolean` - 是否可以执行该操作
+- `handle[Action]: () => boolean` - 执行该操作
+- `label: string` - 操作的 UI 标签
+- `Icon: ComponentType` - 操作对应的图标组件
+
+## 分页支持
+
+表格节点内置了集成支持，可与 [Pages 扩展](/pages/getting-started/overview)兼容。在编辑器中注册 Pages 后，表格会自动按行跨页拆分：列宽、合并单元格和单元格边框都会保留；跨越分页符的纵向合并（rowspan）单元格会延续到下一页；高度超过页面内容区域的单元格则会变为可滚动，以确保分页稳定。
+
+无需额外配置 — 表格会自动检测 Pages 扩展并进行适配。未使用 Pages 时，表格的渲染效果与之前完全相同。
+
+<Callout title="Pages Pro 用户" variant="info">
+  如果你直接使用 `@tiptap-pro` Pages 包（而非这些可复制粘贴的 UI 组件）进行开发，请改用专用的 `@tiptap-pro/extension-pages-tablekit` 包 — 请参阅
+  [在 Pages 中使用 TableKit](/pages/guides/table-with-pages)。
+</Callout>
+
+## 样式
+
+表格节点需要两个样式表：
+
+```tsx
+import '@/components/tiptap-node/table-node/styles/prosemirror-table.scss'
+import '@/components/tiptap-node/table-node/styles/table-node.scss'
+```
+
+### CSS 变量
+
+表格节点使用 CSS 变量进行主题设置：
+
+```css
+:root {
+  --tt-table-border-color: var(--tt-gray-light-a-300);
+  --tt-table-selected-bg: rgba(195, 189, 255, 0.4);
+  --tt-table-selected-stroke: var(--tt-brand-color-400);
+  --tt-table-column-resize-handle-bg: var(--tt-brand-color-400);
+  --tt-table-cell-padding: 0.5rem;
+  --tt-table-margin-block: 1.25rem;
+  --tt-table-pad-block-start: 1rem;
+  --tt-table-pad-block-end: 1.5rem;
+  --tt-table-pad-inline-start: 1rem;
+  --tt-table-pad-inline-end: 1.5rem;
+  --tt-table-handle-bg-color: var(--tt-gray-light-a-100);
+  --tt-table-extend-icon-color: var(--tt-gray-light-a-400);
+}
+```
+
+使用 `.dark` 类时，会自动应用深色模式变体。
+
+## 依赖项
+
+### 必需的软件包
+
+- `@tiptap/extension-table` - 核心表格扩展（Table、TableRow、TableCell、TableHeader）
+- `@tiptap/pm/tables` - ProseMirror 表格工具
+- `@tiptap/pm/state` - ProseMirror 状态管理
+- `@tiptap/pm/view` - ProseMirror 视图工具
+- `@tiptap/react` - React 集成
+- `@floating-ui/react` - 用于定位的 Floating UI
+- `sass` / `sass-embedded` - 用于编译 SCSS
+
+### 必需的扩展
+
+- `table-handle-extension` - 表格手柄扩展，用于提供行/列操作上下文
+
+### 引用的组件
+
+表格节点组件内部使用：
+
+- `use-tiptap-editor`（hook）
+- `tiptap-utils`（库）
+- `tiptap-table-utils`（库）
+- 各种表格操作组件和工具
+
+## 功能
+
+- ✅ **创建表格**：通过可视化网格选择器快速插入表格
+- ✅ **行/列操作**：添加、删除、移动和复制行/列
+- ✅ **拖放操作**：拖动手柄重新排列行和列
+- ✅ **单元格操作**：合并、拆分单元格并清除其内容
+- ✅ **对齐控制**：设置单元格的文本对齐和垂直对齐方式
+- ✅ **调整列宽**：交互式调整列宽
+- ✅ **选择覆盖层**：为选中的单元格提供可视化反馈
+- ✅ **分页**：适配 Pages 扩展 — 表格可跨页拆分
+- ✅ **键盘快捷键**：高效的键盘导航
+- ✅ **响应式设计**：适用于桌面和移动设备
+- ✅ **深色模式支持**：内置深色模式主题
+- ✅ **无障碍支持**：提供 ARIA 标签和键盘导航
+
+## 相关扩展
+
+- **Node Alignment Extension** - 单元格对齐功能所必需
+- **UniqueID Extension** - 可选，用于在示例模板中为表格分配唯一 ID（也用于其他块级节点）
+- **Color Extension** - 用于设置单元格背景颜色
+- **TextStyle Extension** - 用于设置单元格中的文本样式
+
+</
