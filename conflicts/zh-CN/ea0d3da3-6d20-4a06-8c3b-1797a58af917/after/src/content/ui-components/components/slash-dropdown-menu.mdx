@@ -1,0 +1,265 @@
+---
+title: 斜杠菜单
+meta:
+  title: 斜杠菜单 | Tiptap UI 组件
+  description: 为 Tiptap 编辑器提供功能全面的命令面板，支持搜索内容块、AI 集成、自定义菜单项、键盘导航和智能筛选。
+  category: UI 组件
+component:
+  name: 斜杠菜单
+  description: 一个预构建的 React 组件，提供斜杠命令界面，方便快速插入和设置内容格式。
+  type: component
+  isFree: false
+  isCloud: false
+  isOpen: false
+  isNew: false
+  icon: SlashIcon
+tags:
+  - type: start
+---
+
+import { CodeDemo } from '@/components/CodeDemo'
+
+为 Tiptap 编辑器提供完全无障碍的斜杠命令下拉菜单。输入“/”，即可从上下文相关的菜单中选择并快速插入内容、设置格式或使用 AI 功能；菜单项和分组均可自定义。
+
+<CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui/slash-dropdown-menu" />
+
+## 安装
+
+通过 Tiptap CLI 添加此组件：
+
+```bash
+npx @tiptap/cli@latest add slash-dropdown-menu
+```
+
+## 组件
+
+### `<SlashDropdownMenu />`
+
+一个预构建的 React 组件，提供斜杠命令界面，方便快速插入和设置内容格式。
+
+#### 用法
+
+```tsx
+function MySlashMenu() {
+  return (
+    <SlashDropdownMenu
+      editor={editor}
+      config={{
+        enabledItems: ['text', 'heading_1', 'heading_2', 'bullet_list', 'quote'],
+        showGroups: true,
+        itemGroups: {
+          text: 'Style',
+          heading_1: 'Style',
+          heading_2: 'Style',
+          bullet_list: 'Lists',
+          quote: 'Style',
+        },
+      }}
+    />
+  )
+}
+```
+
+#### 属性
+
+| 名称     | 类型              | 默认值      | 说明                         |
+| -------- | ----------------- | ----------- | ---------------------------- |
+| `editor` | `Editor \| null`  | `undefined` | Tiptap 编辑器实例            |
+| `config` | `SlashMenuConfig` | `undefined` | 菜单项和行为的配置           |
+
+## Hooks
+
+### `useSlashDropdownMenu()`
+
+一个自定义 Hook，可用于构建自己的斜杠命令菜单，并全面控制菜单项和行为。
+
+#### 用法
+
+```tsx
+function MySlashMenu() {
+  const { getSlashMenuItems, config } = useSlashDropdownMenu({
+    enabledItems: ['text', 'heading_1', 'bullet_list', 'quote'],
+    showGroups: true,
+    customItems: [
+      {
+        title: 'Custom Item',
+        subtext: 'Custom functionality',
+        aliases: ['custom'],
+        badge: MyIcon,
+        group: 'Custom',
+        onSelect: ({ editor }) => {
+          // Custom action
+          console.log('Custom item selected!')
+        },
+      },
+    ],
+  })
+
+  // Use with SuggestionMenu or custom implementation
+  return (
+    <SuggestionMenu
+      char="/"
+      items={({ query, editor }) => filterSuggestionItems(getSlashMenuItems(editor), query)}
+    >
+      {(props) => <MyCustomList {...props} />}
+    </SuggestionMenu>
+  )
+}
+```
+
+#### 配置
+
+`SlashMenuConfig` 接口支持以下选项：
+
+| 名称           | 类型                     | 说明                           |
+| -------------- | ------------------------ | ------------------------------ |
+| `enabledItems` | `SlashMenuItemType[]`    | 启用的菜单项类型数组           |
+| `customItems`  | `SuggestionItem[]`       | 要添加的自定义菜单项           |
+| `itemGroups`   | `Record<string, string>` | 菜单项的分组设置               |
+| `showGroups`   | `boolean`                | 是否显示分组标签（默认：true） |
+
+#### 返回值
+
+| 名称                | 类型                                   | 说明                       |
+| ------------------- | -------------------------------------- | -------------------------- |
+| `getSlashMenuItems` | `(editor: Editor) => SuggestionItem[]` | 获取可用菜单项的函数       |
+| `config`            | `SlashMenuConfig`                      | 处理后的配置对象           |
+
+## 用法示例
+
+### 基本设置
+
+```tsx
+import { SlashDropdownMenu } from '@/components/tiptap-ui/slash-dropdown-menu'
+
+function MyEditor() {
+  return (
+    <div>
+      <EditorContent editor={editor} />
+      <SlashDropdownMenu editor={editor} />
+    </div>
+  )
+}
+```
+
+### 自定义配置
+
+```tsx
+<SlashDropdownMenu
+  editor={editor}
+  config={{
+    enabledItems: [
+      'text',
+      'heading_1',
+      'heading_2',
+      'bullet_list',
+      'ordered_list',
+      'quote',
+      'code_block',
+    ],
+    showGroups: true,
+    itemGroups: {
+      text: 'Formatting',
+      heading_1: 'Formatting',
+      heading_2: 'Formatting',
+      bullet_list: 'Lists',
+      ordered_list: 'Lists',
+      quote: 'Blocks',
+      code_block: 'Blocks',
+    },
+  }}
+/>
+```
+
+### 添加自定义菜单项
+
+```tsx
+<SlashDropdownMenu
+  editor={editor}
+  config={{
+    enabledItems: ['text', 'heading_1', 'bullet_list'],
+    customItems: [
+      {
+        title: 'Insert Table',
+        subtext: 'Add a data table',
+        aliases: ['table', 'grid'],
+        badge: TableIcon,
+        group: 'Content',
+        onSelect: ({ editor }) => {
+          editor
+            .chain()
+            .focus()
+            .insertTable({
+              rows: 3,
+              cols: 3,
+              withHeaderRow: true,
+            })
+            .run()
+        },
+      },
+      {
+        title: 'Call to Action',
+        subtext: 'Insert CTA button',
+        aliases: ['cta', 'button'],
+        badge: ButtonIcon,
+        group: 'Content',
+        onSelect: ({ editor }) => {
+          editor.chain().focus().insertContent('<button>Click me</button>').run()
+        },
+      },
+    ],
+  }}
+/>
+```
+
+### 不显示分组
+
+```tsx
+<SlashDropdownMenu
+  editor={editor}
+  config={{
+    enabledItems: ['text', 'heading_1', 'bullet_list', 'quote'],
+    showGroups: false,
+  }}
+/>
+```
+
+## 键盘导航
+
+斜杠菜单支持完整的键盘导航：
+
+- **方向键** - 在菜单项之间上下移动
+- **Enter** - 选择高亮的菜单项
+- **Escape** - 关闭菜单
+- **Tab** - 关闭菜单并继续输入
+- **输入文字** - 根据搜索词筛选菜单项
+
+## 要求
+
+### 依赖项
+
+- `@tiptap/react` - Tiptap React 核心集成
+- `@tiptap-pro/extension-ai` - 提供 AI 功能的 AI 扩展
+- `@tiptap/extension-mention` - 提及扩展
+- `@tiptap/extension-emoji` - 表情符号扩展
+
+### 引用的组件
+
+- `suggestion-menu` (ui-utils)
+- `button` (primitive)
+- `card` (primitive)
+- `tiptap-utils` (lib)
+- `code-block-icon` (icon)
+- `heading-one-icon` (icon)
+- `heading-two-icon` (icon)
+- `heading-three-icon` (icon)
+- `image-icon` (icon)
+- `list-icon` (icon)
+- `list-ordered-icon` (icon)
+- `block-quote-icon` (icon)
+- `list-todo-icon` (icon)
+- `ai-sparkles-icon` (icon)
+- `minus-icon` (icon)
+- `type-icon` (icon)
+- `at-sign-icon` (icon)
+- `smile-plus-icon` (icon)
