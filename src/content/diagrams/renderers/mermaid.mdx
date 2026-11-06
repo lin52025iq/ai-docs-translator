@@ -1,23 +1,22 @@
 ---
-title: 'Mermaid Renderer'
-intro: 'The Mermaid Renderer draws pie, doughnut (as a pie), line, bar, sankey, radar and treemap charts with Mermaid. A second Renderer from the same entry point draws Mermaid diagrams. Mermaid runs in a sandboxed iframe, and the editor shows the result as an image. So nothing Mermaid produces runs in your page.'
+title: 'Mermaid 渲染器'
+intro: 'Mermaid 渲染器使用 Mermaid 绘制饼图、圆环图（按饼图绘制）、折线图、柱状图、桑基图、雷达图和树图。同一入口点还提供另一个渲染器来绘制 Mermaid 图示。Mermaid 在沙盒 iframe 中运行，编辑器会将结果显示为图像。因此，Mermaid 生成的内容不会在你的页面中运行。'
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Mermaid Renderer | Tiptap Diagrams Docs'
-  description: 'Draw flowcharts, sequence diagrams and other Mermaid diagrams, and simple charts, with Mermaid in a sandbox.'
-  category: Diagrams
+  title: 'Mermaid 渲染器 | Tiptap 图表文档'
+  description: '在沙盒中使用 Mermaid 绘制流程图、时序图和其他 Mermaid 图示，以及简单图表。'
+  category: 图表
 ---
 
-## Quick start
+## 快速开始
 
 ```bash
 npm install mermaid@11
 ```
 
-The Renderer supports Mermaid 11.16.1 and later 11.x releases. It refuses Mermaid 12, which draws
-existing diagrams differently.
+该渲染器支持 Mermaid 11.16.1 及之后的 11.x 版本。它不接受 Mermaid 12，因为 Mermaid 12 绘制现有图示的方式有所不同。
 
 ```ts
 import { mermaidRenderer } from '@tiptap-pro/extension-diagrams/mermaid'
@@ -27,59 +26,49 @@ import rendererUrl from '@tiptap-pro/extension-diagrams/mermaid-renderer?url&no-
 Diagrams.configure({ renderers: [mermaidRenderer({ mermaidUrl, rendererUrl })] })
 ```
 
-The `?url` imports work in Vite and give you the URL of a file. `no-inline` keeps Vite from
-turning a small file into a `data:` URL, which the iframe cannot load. With another bundler,
-serve both files yourself and pass their URLs.
+`?url` 导入方式适用于 Vite，并会返回文件的 URL。`no-inline` 可避免 Vite 将小文件转换为 iframe 无法加载的 `data:` URL。使用其他打包器时，请自行提供这两个文件，并传入它们的 URL。
 
-## Options
+## 选项
 
-| Option        | Type             | Description                                                                                                    |
-| ------------- | ---------------- | -------------------------------------------------------------------------------------------------------------- |
-| `mermaidUrl`  | `string`         | Required. The URL of Mermaid's single-file build, `mermaid/dist/mermaid.min.js`, 11.16.1 or later and below 12 |
-| `rendererUrl` | `string`         | Required. The URL of `@tiptap-pro/extension-diagrams/mermaid-renderer`, the script that draws in the iframe    |
-| `scriptNonce` | `string \| null` | The nonce for pages with a nonce-based Content Security Policy. Default `null`                                 |
-| `id`          | `string`         | The id charts store. Default `'mermaid'`                                                                       |
-| `label`       | `string`         | The name for a menu. Default `'Mermaid'`                                                                       |
+| 选项          | 类型             | 说明                                                                                              |
+| ------------- | ---------------- | ------------------------------------------------------------------------------------------------- |
+| `mermaidUrl`  | `string`         | 必填。Mermaid 单文件构建产物 `mermaid/dist/mermaid.min.js` 的 URL，版本需为 11.16.1 或更高且低于 12 |
+| `rendererUrl` | `string`         | 必填。`@tiptap-pro/extension-diagrams/mermaid-renderer` 的 URL，即在 iframe 中绘图的脚本             |
+| `scriptNonce` | `string \| null` | 使用基于 nonce 的内容安全策略的页面所需的 nonce。默认值为 `null`                                     |
+| `id`          | `string`         | 图表存储使用的 id。默认值为 `'mermaid'`                                                              |
+| `label`       | `string`         | 菜单中显示的名称。默认值为 `'Mermaid'`                                                               |
 
-## Limits
+## 限制
 
-The Mermaid Renderer declines the charts below, so another registered Renderer draws them. If no
-other Renderer draws the chart's type, Mermaid draws it after all, as the second column says. See
-[When a Renderer declines a chart](/diagrams/renderers/overview#when-a-renderer-declines-a-chart).
+对于下面这些图表，Mermaid 渲染器会放弃处理，由其他已注册的渲染器绘制。如果没有其他渲染器能绘制该类型的图表，最终仍会由 Mermaid 绘制，具体情况见第二列。请参阅[渲染器放弃处理图表时](/diagrams/renderers/overview#when-a-renderer-declines-a-chart)。
 
-| Chart                                                                                                                                                              | Drawn by Mermaid                                                                                     |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- |
-| A bar chart with several series                                                                                                                                    | The bars lie on top of each other, without a legend                                                  |
-| A bar chart with `spec.orientation: 'horizontal'`                                                                                                                  | The bars stand upright                                                                               |
-| A line chart with `spec.series` set                                                                                                                                | Plain lines. Mermaid has no dashes, widths, markers or curves                                        |
-| A chart with styled grid or axis lines, `axes.y.step`, `axes.x.labels` or `references`, such as a radar with styled rings or spokes (`axes.y.grid`, `axes.x.line`) | Without them                                                                                         |
-| A radar or a treemap with a value below zero                                                                                                                       | Mermaid reads no minus sign. A radar shows the value at zero, and a treemap leaves it out            |
-| A treemap with a node at the top that has no children, such as `Gifts \| 30` beside `Products / Books \| 40`                                                       | Such nodes share one section, named after the value column                                           |
-| An area or a scatter chart                                                                                                                                         | Not drawn. The chart shows what [`unavailable`](/diagrams/api-reference/options#unavailable) returns |
+| 图表                                                                                                                                                          | Mermaid 的绘制结果                                                              |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| 包含多个系列的柱状图                                                                                                                                          | 柱子彼此重叠，且没有图例                                                        |
+| `spec.orientation: 'horizontal'` 的柱状图                                                                                                                     | 柱子竖直排列                                                                    |
+| 设置了 `spec.series` 的折线图                                                                                                                                 | 普通线条。Mermaid 不支持虚线、线宽、标记或曲线                                  |
+| 带有样式化网格线或轴线、`axes.y.step`、`axes.x.labels` 或 `references` 的图表，例如带有样式化圆环或辐射线的雷达图（`axes.y.grid`、`axes.x.line`）             | 不显示这些设置                                                                  |
+| 值小于零的雷达图或树图                                                                                                                                        | Mermaid 不识别负号。雷达图会将值显示为零，树图则会忽略该值                      |
+| 顶层有无子节点的节点的树图，例如 `Gifts \| 30` 与 `Products / Books \| 40` 并列                                                                               | 此类节点会合并到同一部分，该部分以值列命名                                      |
+| 面积图或散点图                                                                                                                                               | 不绘制。图表会显示 [`unavailable`](/diagrams/api-reference/options#unavailable) 返回的内容 |
 
-Mermaid also draws these charts differently, whatever else is registered:
+无论还注册了哪些渲染器，Mermaid 绘制以下图表时也会有这些不同之处：
 
-- **A doughnut** is drawn as a pie.
-- **A missing value** is drawn as zero.
-- **A sankey link that closes a loop** is left out. The other Renderers leave it out too.
-- **A sankey's title** is drawn above the chart by the Renderer, because Mermaid draws none.
-- **A radar's legend** is always at the top right. `legend.show: false` hides it.
-- **A double click on a text** opens nothing. You cannot
-  [rename a text in the chart](/diagrams/charts/editing).
-- **Export on a server** is not possible, because `toSVG` needs a browser.
+- **圆环图**会按饼图绘制。
+- **缺失值**会按零绘制。
+- **闭合成环的桑基图连线**会被省略。其他渲染器也会省略这类连线。
+- **桑基图标题**由渲染器绘制在图表上方，因为 Mermaid 不会绘制标题。
+- **雷达图图例**始终位于右上角。`legend.show: false` 可将其隐藏。
+- **双击文本**不会打开任何内容。你无法[重命名图表中的文本](/diagrams/charts/editing)。
+- **无法在服务器上导出**，因为 `toSVG` 需要浏览器。
 
-## Importing Mermaid
+## 导入 Mermaid
 
-Mermaid `pie`, `xychart`, `sankey-beta`, `radar-beta` and `treemap-beta` source becomes a chart
-with data you can edit, through [`importMermaidChart`](/diagrams/charts/overview#importmermaidchart)
-or by [pasting](/diagrams/data/pasting) it. Any chart Renderer draws the result, so you do not need
-the Mermaid Renderer for this.
+Mermaid 的 `pie`、`xychart`、`sankey-beta`、`radar-beta` 和 `treemap-beta` 源码可以转换为可编辑数据的图表，方法是使用 [`importMermaidChart`](/diagrams/charts/overview#importmermaidchart) 或[粘贴](/diagrams/data/pasting)。转换后的图表可由任意图表渲染器绘制，因此无需使用 Mermaid 渲染器。
 
-## Diagrams
+## 图示
 
-`mermaidDiagramRenderer`, from the same entry point, draws Mermaid diagrams. It draws all 25
-[Mermaid kinds](/diagrams/flow-diagrams/overview#mermaid-kinds) a diagram holds, such as flowchart,
-sequence, class, Gantt, mind map and timeline.
+同一入口点提供的 `mermaidDiagramRenderer` 可绘制 Mermaid 图示。它支持图示包含的全部 25 种 [Mermaid 类型](/diagrams/flow-diagrams/overview#mermaid-kinds)，例如流程图、时序图、类图、甘特图、思维导图和时间线。
 
 ```ts
 import { mermaidDiagramRenderer, mermaidRenderer } from '@tiptap-pro/extension-diagrams/mermaid'
@@ -90,12 +79,9 @@ Diagrams.configure({
 })
 ```
 
-- **Its options** are the same as for `mermaidRenderer`.
-- **It uses the same sandboxed iframe** as `mermaidRenderer`. If you register both, Mermaid loads
-  once.
-- **Colors and the font** come from the `--tt-flow-diagram-*` custom properties, not from the
-  source. See [Diagrams](/diagrams/flow-diagrams/overview), which also has a demo.
-- **It draws only in a browser**, like the chart Renderer.
+- **选项**与 `mermaidRenderer` 相同。
+- **它使用的沙盒 iframe** 与 `mermaidRenderer` 相同。如果同时注册两者，Mermaid 只会加载一次。
+- **颜色和字体**来自 `--tt-flow-diagram-*` 自定义属性，而非源代码。请参阅[图示](/diagrams/flow-diagrams/overview)，其中也包含演示。
+- **它只能在浏览器中绘制**，与图表渲染器一样。
 
-[Pele](/diagrams/renderers/pele) is a second Diagram Renderer for Mermaid source. It draws in a Web
-Worker and also on a server.
+[Pele](/diagrams/renderers/pele) 是另一个用于 Mermaid 源码的图示渲染器。它在 Web Worker 中绘制，也支持在服务器上绘制。
