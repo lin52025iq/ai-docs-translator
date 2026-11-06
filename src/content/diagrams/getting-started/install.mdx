@@ -1,52 +1,49 @@
 ---
-title: 'Install Diagrams'
-intro: 'A chart library, such as ECharts, draws the charts. A Renderer connects the extension to one library. You register one Renderer for each library you use.'
+title: '安装 Diagrams'
+intro: '图表由 ECharts 等图表库绘制。渲染器将扩展连接到某个图表库。每使用一个图表库，就需要注册一个对应的渲染器。'
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Install Diagrams | Tiptap Diagrams Docs'
-  description: 'Install the Diagrams extension, register a Renderer and insert a first chart.'
+  title: '安装 Diagrams | Tiptap Diagrams 文档'
+  description: '安装 Diagrams 扩展，注册渲染器并插入第一个图表。'
   category: Diagrams
 ---
 
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-<Callout title="Alpha" variant="info">
-  Diagrams is in alpha and available through a pilot program. The API may change in future releases.
+<Callout title="Alpha 阶段" variant="info">
+  Diagrams 目前处于 Alpha 阶段，可通过试点计划使用。后续版本中的 API 可能会发生变化。
 </Callout>
 
-## Install
+## 安装
 
-1. [Contact our team](https://tiptap.dev/contact-sales?form=pilot-program) to join the Tiptap Diagrams pilot program.
-2. Configure your package manager by following the [private registry guide](/guides/pro-extensions).
-3. Install the package and the library of each Renderer you use:
+1. [联系我们的团队](https://tiptap.dev/contact-sales?form=pilot-program)，加入 Tiptap Diagrams 试点计划。
+2. 按照[私有注册表指南](/guides/pro-extensions)配置包管理器。
+3. 安装 Diagrams 包，以及所用每个渲染器对应的图表库：
 
 ```bash
 npm install @tiptap-pro/extension-diagrams
 npm install echarts
 ```
 
-| Package                      | Kind                     | Version                              |
-| ---------------------------- | ------------------------ | ------------------------------------ |
-| `@tiptap/core`, `@tiptap/pm` | Peer dependency          | 3.31 or later                        |
-| `echarts`                    | Optional peer dependency | `^6.0.0`                             |
-| `d3`                         | Optional peer dependency | `^7.9.0`                             |
-| `d3-sankey`                  | Optional peer dependency | `^0.12.3`, for sankey charts with D3 |
-| `mermaid`                    | Optional peer dependency | `>=11.16.1 <12`                      |
-| `pele`                       | Optional peer dependency | `1.6.0`, for the Pele Renderer       |
+| 包                           | 类型                   | 版本                                 |
+| ---------------------------- | ---------------------- | ------------------------------------ |
+| `@tiptap/core`, `@tiptap/pm` | 对等依赖               | 3.31 或更高版本                      |
+| `echarts`                    | 可选对等依赖           | `^6.0.0`                             |
+| `d3`                         | 可选对等依赖           | `^7.9.0`                             |
+| `d3-sankey`                  | 可选对等依赖           | `^0.12.3`，用于 D3 桑基图             |
+| `mermaid`                    | 可选对等依赖           | `>=11.16.1 <12`                      |
+| `pele`                       | 可选对等依赖           | `1.6.0`，用于 Pele 渲染器            |
 
-The examples below also use `@tiptap/starter-kit` and `@tiptap/extension-table`. Install them
-too if your editor does not have them yet.
+以下示例还会用到 `@tiptap/starter-kit` 和 `@tiptap/extension-table`。如果编辑器中还没有这些包，也请安装。
 
-The draw.io and BPMN Renderers load their library from a file you serve. See
-[draw.io](/diagrams/renderers/drawio) and [BPMN](/diagrams/renderers/bpmn).
-[Renderers](/diagrams/renderers/overview) lists every Renderer.
+draw.io 和 BPMN 渲染器会从你提供的文件中加载对应的图表库。请参阅 [draw.io](/diagrams/renderers/drawio) 和 [BPMN](/diagrams/renderers/bpmn)。[渲染器](/diagrams/renderers/overview)页面列出了所有渲染器。
 
-## A first chart
+## 第一个图表
 
-In the demo, write rows as text, insert them as a chart, then change its type:
+在演示中，先将行作为文本输入，再将其插入为图表，最后更改图表类型：
 
 <CodeDemo isPro viewer view="preview" path="/Extensions/DiagramsInsertChart" />
 
@@ -79,48 +76,40 @@ editor.commands.insertChartFrom({
 })
 ```
 
-The editor now holds a bar chart with three bars, and the chart is selected.
+此时，编辑器中会有一个包含三根柱子的柱状图，并且该图表处于选中状态。
 
-- `chartStyleRules()` returns the stylesheet the charts need.
-- `TableKit` is optional. With it, you can turn a chart into a table and back.
-- `chart: { defaultType: 'bar' }` gives a new chart the type `bar`. See
-  [`defaultType`](/diagrams/api-reference/options#defaulttype).
-- `chart-syntax` is the [Chart syntax](/diagrams/data/chart-syntax): one row per line, with the cells
-  separated by `|`.
+- `chartStyleRules()` 返回图表所需的样式表。
+- `TableKit` 是可选的。使用它可以将图表转换为表格，也可以再转换回来。
+- `chart: { defaultType: 'bar' }` 会将新图表的类型设为 `bar`。请参阅
+  [`defaultType`](/diagrams/api-reference/options#defaulttype)。
+- `chart-syntax` 是[图表语法](/diagrams/data/chart-syntax)：每行一条数据，单元格之间用 `|` 分隔。
 
-## Change it
+## 更改图表
 
-`updateChartSpec` and `updateChartAxis` change the selected chart, such as the one
-[A first chart](#a-first-chart) inserts:
+`updateChartSpec` 和 `updateChartAxis` 可更改当前选中的图表，例如[第一个图表](#第一个图表)中插入的图表：
 
 ```ts
 editor.commands.updateChartSpec({ spec: { type: 'line', title: 'Revenue' } })
 editor.commands.updateChartAxis({ axis: 'y', changes: { title: 'EUR', min: 0 } })
 ```
 
-The Chart Spec holds how a chart shows its data: type, title, colors and axes. Without a selected
-chart, both commands return `false`. Every change is a [command](/diagrams/api-reference/commands),
-so the user can undo it and collaborators receive it. An AI model calls them through
-[tools](/diagrams/guides/ai).
+图表规格定义了图表如何展示数据，包括类型、标题、颜色和坐标轴。如果没有选中的图表，这两个命令都会返回 `false`。每次更改都会作为一个[命令](/diagrams/api-reference/commands)执行，因此用户可以撤销更改，协作者也会收到更改。AI 模型可通过[工具](/diagrams/guides/ai)调用这些命令。
 
-## A second chart from the Quick Input
+## 从快速输入创建第二个图表
 
-1. Type `:::` in an empty paragraph to open the [Quick Input](/diagrams/data/quick-input), a text field
-   inside the document.
-2. Enter rows such as `Apr | 130`.
-3. Press Enter on an empty last line.
+1. 在空段落中输入 `:::`，打开[快速输入](/diagrams/data/quick-input)，这是文档中的一个文本输入框。
+2. 输入数据行，例如 `Apr | 130`。
+3. 在末尾的空行按 Enter。
 
-## A first diagram
+## 第一个图示
 
-A flow diagram needs a Diagram Renderer. The one for Mermaid, a library that draws diagrams from
-text, needs `mermaid`:
+流程图需要图示渲染器。Mermaid 是一个根据文本绘制图示的图表库；要使用 Mermaid 渲染器，需要安装 `mermaid`：
 
 ```bash
 npm install mermaid@11
 ```
 
-This is the editor from [A first chart](#a-first-chart) with the Mermaid Diagram Renderer and the
-diagram styles, inserting a flowchart:
+下面的示例使用[第一个图表](#第一个图表)中的编辑器，加入 Mermaid 图示渲染器和图示样式，并插入一个流程图：
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -155,34 +144,30 @@ editor.commands.insertFlowDiagram({
 })
 ```
 
-The editor shows a flowchart with two boxes, and the diagram is selected.
+编辑器会显示一个包含两个方框的流程图，并且该图示处于选中状态。
 
-Mermaid draws in a sandboxed iframe from two files your bundler serves: `mermaidUrl` is Mermaid,
-`rendererUrl` the script that draws with it. In Vite, `?url` gives a file's URL, and `no-inline`
-keeps a small file from becoming a data URL, which the iframe cannot load. The
-[Mermaid Renderer](/diagrams/renderers/mermaid#quick-start) covers other bundlers.
+Mermaid 会在沙盒 iframe 中绘制图示，所需的两个文件由打包工具提供：`mermaidUrl` 指向 Mermaid，`rendererUrl` 指向使用 Mermaid 进行绘制的脚本。在 Vite 中，`?url` 会返回文件的 URL；`no-inline` 可避免小文件被转换为 iframe 无法加载的 data URL。[Mermaid 渲染器](/diagrams/renderers/mermaid#quick-start)介绍了如何配置其他打包工具。
 
-## Entry points
+## 入口点
 
-Each Renderer is its own entry point of the package. Your bundle then holds only the libraries
-you use.
+每个渲染器都是包的独立入口点，因此打包产物只会包含你使用的图表库。
 
-| Import from                                                             | What it holds                                                                                                                        |
-| ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `@tiptap-pro/extension-diagrams`                                        | `Diagrams`, its nodes and commands, Data Sources, export, styling and tools for an AI model                                          |
-| `@tiptap-pro/extension-diagrams/core`                                   | The chart data types, parsers and formats, and the Word writer. It needs no Tiptap and no DOM, so it runs on a server or in a worker |
-| `@tiptap-pro/extension-diagrams/export`                                 | Turning an SVG into a PNG, WebP or a download, in the browser                                                                        |
-| `@tiptap-pro/extension-diagrams/theme`                                  | Reading chart and diagram colors from CSS custom properties, in the browser                                                          |
-| [`@tiptap-pro/extension-diagrams/echarts`](/diagrams/renderers/echarts) | Charts drawn with ECharts                                                                                                            |
-| [`@tiptap-pro/extension-diagrams/d3`](/diagrams/renderers/d3)           | Charts drawn with D3                                                                                                                 |
-| [`@tiptap-pro/extension-diagrams/mermaid`](/diagrams/renderers/mermaid) | Charts and diagrams drawn with Mermaid                                                                                               |
-| [`@tiptap-pro/extension-diagrams/drawio`](/diagrams/renderers/drawio)   | draw.io diagrams                                                                                                                     |
-| [`@tiptap-pro/extension-diagrams/bpmn`](/diagrams/renderers/bpmn)       | BPMN process models                                                                                                                  |
-| [`@tiptap-pro/extension-diagrams/pele`](/diagrams/renderers/pele)       | Mermaid diagrams drawn by Pele in a Web Worker. Pele is smaller than mermaid.js                                                      |
+| 导入路径                                                                | 包含内容                                                                                                                            |
+| ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `@tiptap-pro/extension-diagrams`                                        | `Diagrams`、其节点和命令、数据源、导出、样式以及供 AI 模型使用的工具                                                                  |
+| `@tiptap-pro/extension-diagrams/core`                                   | 图表数据类型、解析器和格式，以及 Word 写入器。它不依赖 Tiptap 或 DOM，因此可在服务器或 worker 中运行                                  |
+| `@tiptap-pro/extension-diagrams/export`                                 | 在浏览器中将 SVG 转换为 PNG、WebP 或可下载文件                                                                                        |
+| `@tiptap-pro/extension-diagrams/theme`                                  | 在浏览器中从 CSS 自定义属性读取图表和图示颜色                                                                                         |
+| [`@tiptap-pro/extension-diagrams/echarts`](/diagrams/renderers/echarts) | 使用 ECharts 绘制的图表                                                                                                              |
+| [`@tiptap-pro/extension-diagrams/d3`](/diagrams/renderers/d3)           | 使用 D3 绘制的图表                                                                                                                   |
+| [`@tiptap-pro/extension-diagrams/mermaid`](/diagrams/renderers/mermaid) | 使用 Mermaid 绘制的图表和图示                                                                                                        |
+| [`@tiptap-pro/extension-diagrams/drawio`](/diagrams/renderers/drawio)   | draw.io 图示                                                                                                                         |
+| [`@tiptap-pro/extension-diagrams/bpmn`](/diagrams/renderers/bpmn)       | BPMN 流程模型                                                                                                                        |
+| [`@tiptap-pro/extension-diagrams/pele`](/diagrams/renderers/pele)       | 由 Pele 在 Web Worker 中绘制的 Mermaid 图示。Pele 比 mermaid.js 更小                                                                  |
 
-## Next
+## 下一步
 
-- [Data](/diagrams/data/overview): typed rows, tables and Data Sources
-- [Charts](/diagrams/charts/overview): types, appearance, axes, reference lines
-- [Diagrams](/diagrams/flow-diagrams/overview): Mermaid, draw.io and BPMN
-- [Styling](/diagrams/guides/styling): colors, dark mode, your own classes
+- [数据](/diagrams/data/overview)：类型化行、表格和数据源
+- [图表](/diagrams/charts/overview)：类型、外观、坐标轴和参考线
+- [图示](/diagrams/flow-diagrams/overview)：Mermaid、draw.io 和 BPMN
+- [样式](/diagrams/guides/styling)：颜色、深色模式和自定义类
