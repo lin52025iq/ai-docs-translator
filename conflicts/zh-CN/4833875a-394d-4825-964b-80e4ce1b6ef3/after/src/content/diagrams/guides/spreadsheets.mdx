@@ -1,0 +1,370 @@
+---
+title: 'Google Sheets、Excel 和 Airtable'
+intro: '图表可以关联 Google Sheets 中的区域、Excel 工作簿中的表格，或 Airtable 表中的记录。对于每项服务，你都需要编写一个小型提供程序，将其注册到 <code>Diagrams</code>，然后将图表关联到该服务中的地址。'
+tags:
+  - type: alpha
+  - type: restricted
+meta:
+  title: 'Google Sheets、Excel 和 Airtable | Tiptap Diagrams 文档'
+  description: '使用自定义的数据源提供程序，将图表关联到 Google Sheet、Excel 工作簿或 Airtable 表。'
+  category: Diagrams
+---
+
+## 工作原理
+
+提供程序会调用服务的 API 并返回图表数据。与所有[数据源](/diagrams/data/sources)一样，文档会存储地址和快照。创建提供程序时，它会从你的登录会话或服务器获取令牌，而不会从地址获取。
+
+| 服务          | 提供程序 ID     | 地址                                                | 凭据                         |
+| ------------- | --------------- | --------------------------------------------------- | ---------------------------- |
+| Google Sheets | `google-sheets` | `{ spreadsheetId, range }`                         | 用户的 Google 登录（OAuth）  |
+| Excel         | `excel`         | `{ itemId, table }` 或 `{ itemId, worksheet, range }` | 用户的 Microsoft 登录（MSAL） |
+| Airtable      | `airtable`      | `{ baseId, table, fields }`                         | 服务器上的令牌               |
+
+提供程序 ID 由你自行选择。[编写提供程序](/diagrams/data/sources#writing-a-provider)介绍了提供程序必须包含的内容。
+
+## Google Sheets
+
+### 已发布的表格，无需凭据
+
+以 CSV 格式发布的表格无需自定义提供程序，内置的 `url-csv` 提供程序即可读取。
+
+1. 在 Google Sheets 中，选择“文件”“共享”“发布到网络”。
+2. 选择工作表和“逗号分隔值 (.csv)”，然后点击“发布”。
+3. 将图表关联到显示的 URL。
+
+```ts
+editor.commands.linkChartSource({
+  provider: 'url-csv',
+  address: {
+    url: 'https://docs.google.com/spreadsheets/d/e/2PACX-…/pub?gid=0&single=true&output=csv',
+  },
+  readOnly: true,
+})
+```
+
+- 任何拥有该 URL 的人都可以读取已发布的表格。
+- 表格发生更改后，Google 通常会在几分钟后更新发布内容，而不是立即更新。
+
+### 通过 Sheets API 读取私有表格
+
+需要进行以下设置：
+
+- 启用了 Google Sheets API 的 Google Cloud 项目。
+- 类型为 Web 应用的 OAuth 客户端 ID，并将你的网站设为获授权的 JavaScript 来源。
+- `https://www.googleapis.com/auth/spreadsheets.readonly` 范围。
+- 可返回访问令牌的登录方式，例如 Google Identity Services 的令牌客户端。
+
+提供程序通过 [`spreadsheets.values.get`](https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.values/get) 读取一个区域：
+
+```ts
+import {
+  ChartSourceError,
+  gridToChartData,
+  type ChartSourceProvider,
+} from '@tiptap-pro/extension-diagrams/core'
+
+function sheetAddress(address: unknown): { spreadsheetId: string; range: string } {
+  if (
+    typeof address === 'object' &&
+    address !== null &&
+    'spreadsheetId' in address &&
+    typeof address.spreadsheetId === 'string' &&
+    'range' in address &&
+    typeof address.range === 'string'
+  ) {
+    return { spreadsheetId: address.spreadsheetId, range: address.range }
+  }
+  throw new ChartSourceError('The address needs a spreadsheetId and a range.')
+}
+
+/** Reads a range of a Google Sheet. `getAccessToken` comes from your own Google sign-in. */
+export function googleSheetsSource(options: {
+  getAccessToken: () => Promise<string>
+}): ChartSourceProvider {
+  return {
+    id: 'google-sheets',
+    read: async (address, { fetch }) => {
+      const { spreadsheetId, range } = sheetAddress(address)
+      const url =
+        `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}` +
+        `/values/${encodeURIComponent(range)}` +
+        '?valueRenderOption=UNFORMATTED_VALUE&dateTimeRenderOption=FORMATTED_STRING'
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${await options.getAccessToken()}` },
+      })
+      if (!response.ok) throw new ChartSourceError(`Google Sheets answered ${response.status}.`)
+
+      const { values = [] }: { values?: unknown[][] } = await response.json()
+      return gridToChartData(
+        values.map((row) => row.map((cell) => String(cell ?? ''))),
+        { decimalSeparator: '.' },
+      )
+    },
+    describe: (address) => `Google Sheet, ${sheetAddress(address).range}`,
+  }
+}
+```
+
+注册提供程序并关联图表：
+
+- `getGoogleAccessToken` 是你编写的函数，用于返回已登录用户的访问令牌。
+- `spreadsheetId` 是表格 URL 中较长的 ID。
+- `range` 使用 A1 表示法，并包含工作表名称。
+
+```ts
+import { Diagrams } from '@tiptap-pro/extension-diagrams'
+
+Diagrams.configure({
+  sources: [googleSheetsSource({ getAccessToken: getGoogleAccessToken })],
+})
+
+editor.commands.linkChartSource({
+  provider: 'google-sheets',
+  address: { spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms', range: 'Sales!A1:D13' },
+  readOnly: true,
+})
+```
+
+第一行是标题行，第一列存放标签。数字会以数字形式返回，因为 `UNFORMATTED_VALUE` 返回的是 `1200.5`，而不是 `$1,200.50`。日期则通过 `FORMATTED_STRING` 按表格中显示的形式返回。API 会省略每行末尾的空单元格，图表会将它们显示为无值。
+
+Sheets API 对每个项目每分钟允许 300 次读取请求，对每位用户每分钟允许 60 次。超过限制后，API 会返回 429。
+
+## Excel
+
+该提供程序通过 Microsoft Graph 读取 OneDrive 或 SharePoint 中的 Excel 工作簿。
+
+需要进行以下设置：
+
+- 在 Microsoft Entra ID 中注册应用，并设置单页应用重定向 URI。
+- 委托权限 `Files.ReadWrite`。提供程序只读取数据，但 Microsoft Graph 将 `Files.ReadWrite` 列为读取区域所需的权限。
+- 使用 MSAL（`@azure/msal-browser`）让用户登录并获取令牌。
+- 工作簿必须是 `.xlsx` 文件。其 `itemId` 是 Microsoft Graph 为该文件返回的云盘项目 ID。
+
+提供程序读取[表格区域](https://learn.microsoft.com/en-us/graph/api/table-range?view=graph-rest-1.0)或[工作表区域](https://learn.microsoft.com/en-us/graph/api/range-get?view=graph-rest-1.0)：
+
+```ts
+import {
+  ChartSourceError,
+  gridToChartData,
+  type ChartSourceProvider,
+} from '@tiptap-pro/extension-diagrams/core'
+
+const text = (value: unknown): string => (typeof value === 'string' ? value : '')
+
+/** `{ itemId, table }` or `{ itemId, worksheet, range }`, with a `driveId` for SharePoint. */
+function rangePath(address: unknown): string {
+  const field = (key: string) =>
+    typeof address === 'object' && address !== null && key in address
+      ? text(Reflect.get(address, key))
+      : ''
+  if (!field('itemId')) throw new ChartSourceError('The address needs an itemId.')
+
+  const drive = field('driveId') ? `drives/${field('driveId')}` : 'me/drive'
+  const workbook = `${drive}/items/${field('itemId')}/workbook`
+  if (field('table')) return `${workbook}/tables/${encodeURIComponent(field('table'))}/range`
+  const sheet = encodeURIComponent(field('worksheet'))
+  return `${workbook}/worksheets/${sheet}/range(address='${field('range')}')`
+}
+
+/** Reads an Excel workbook in OneDrive or SharePoint. `getAccessToken` comes from MSAL. */
+export function excelSource(options: {
+  getAccessToken: () => Promise<string>
+}): ChartSourceProvider {
+  return {
+    id: 'excel',
+    read: async (address, { fetch }) => {
+      const url = `https://graph.microsoft.com/v1.0/${rangePath(address)}?$select=values,text`
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${await options.getAccessToken()}` },
+      })
+      if (!response.ok) throw new ChartSourceError(`Microsoft Graph answered ${response.status}.`)
+
+      const range: { values: unknown[][]; text: string[][] } = await response.json()
+      // A date is a number in Excel, so the label column is read as the workbook shows it
+      return gridToChartData(
+        range.values.map((row, r) =>
+          row.map((value, c) =>
+            c > 0 && typeof value === 'number' ? String(value) : text(range.text[r]?.[c]),
+          ),
+        ),
+        { decimalSeparator: '.' },
+      )
+    },
+  }
+}
+```
+
+使用 MSAL 获取令牌：如果可以，就静默登录；否则弹出登录窗口：
+
+```ts
+import { PublicClientApplication } from '@azure/msal-browser'
+
+const msal = new PublicClientApplication({ auth: { clientId: 'your-client-id' } })
+await msal.initialize()
+
+async function getAccessToken(): Promise<string> {
+  const request = { scopes: ['Files.ReadWrite'], account: msal.getAllAccounts()[0] }
+  try {
+    return (await msal.acquireTokenSilent(request)).accessToken
+  } catch {
+    return (await msal.acquireTokenPopup(request)).accessToken
+  }
+}
+```
+
+注册提供程序，并将图表关联到名为 `Sales` 的表格：
+
+```ts
+Diagrams.configure({ sources: [excelSource({ getAccessToken })] })
+
+editor.commands.linkChartSource({
+  provider: 'excel',
+  address: { itemId: '01BYE5RZ6QN3ZWBTUFOFD3GSPGOHDJD36K', table: 'Sales' },
+  readOnly: true,
+})
+```
+
+建议使用表格作为地址。表格会随新增行扩展，而像 `A1:D13` 这样的区域不会扩展。对于 SharePoint 中的工作簿或与用户共享的工作簿，地址还需要包含其 `driveId`。
+
+数字取自 `values`，标签取自 `text`，两者均按工作簿中的显示形式处理。
+
+在一个租户中，Microsoft Graph 对每个应用每 10 秒允许 1,500 次请求。超过限制后，API 会返回 429。
+
+## Airtable
+
+该提供程序通过你服务器上的一个路由读取 Airtable 表中的记录，并由该路由添加令牌。
+
+需要进行以下设置：
+
+- 具有 `data.records:read` 范围并可访问该 base 的个人访问令牌。令牌应保存在服务器上。
+- base ID（`app…`）以及表名或表 ID（`tbl…`），两者都可在表格 URL 中找到。
+- 在服务器上部署下方的路由。
+
+任何打开你应用网页的人都可能读取到其中的令牌，而该令牌可以访问它获准访问的所有 base。该路由只发送 `GET` 请求，并且只访问你允许的 base：
+
+```ts
+/**
+ * Runs on your server. Forwards `GET /api/airtable/<baseId>/<table>?…` to Airtable with a
+ * personal access token, for the bases you allow.
+ */
+export function airtableProxy(options: {
+  token: string
+  bases: string[]
+}): (request: Request) => Promise<Response> {
+  return async (request) => {
+    const url = new URL(request.url)
+    const path = url.pathname.replace(/^\/api\/airtable\//, '')
+    if (request.method !== 'GET' || !options.bases.includes(path.split('/')[0] ?? '')) {
+      return new Response('Not allowed', { status: 403 })
+    }
+
+    const response = await fetch(`https://api.airtable.com/v0/${path}${url.search}`, {
+      headers: { Authorization: `Bearer ${options.token}` },
+    })
+    return new Response(response.body, {
+      status: response.status,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  }
+}
+```
+
+在服务器接收请求的位置挂载该路由，例如 `app.get('/api/airtable/*', …)`。请在此处检查已登录用户是否有权读取该 base。
+
+该提供程序读取[表中的记录](https://airtable.com/developers/web/api/list-records)，每页 100 条，并通过 `offset` 获取下一页：
+
+```ts
+import {
+  ChartSourceError,
+  gridToChartData,
+  type ChartSourceProvider,
+} from '@tiptap-pro/extension-diagrams/core'
+
+function tableAddress(address: unknown): { baseId: string; table: string; fields: string[] } {
+  if (
+    typeof address === 'object' &&
+    address !== null &&
+    'baseId' in address &&
+    typeof address.baseId === 'string' &&
+    'table' in address &&
+    typeof address.table === 'string' &&
+    'fields' in address &&
+    Array.isArray(address.fields)
+  ) {
+    return { baseId: address.baseId, table: address.table, fields: address.fields.map(String) }
+  }
+  throw new ChartSourceError('The address needs a baseId, a table and its fields.')
+}
+
+/** Reads the records of an Airtable table through `proxyUrl`, a route of your server. */
+export function airtableSource(options: { proxyUrl: string }): ChartSourceProvider {
+  return {
+    id: 'airtable',
+    read: async (address, { fetch }) => {
+      const { baseId, table, fields } = tableAddress(address)
+      const records: Record<string, unknown>[] = []
+      let offset = ''
+      do {
+        const query = new URLSearchParams(offset ? { offset } : {})
+        for (const field of fields) query.append('fields[]', field)
+        const path = `${encodeURIComponent(baseId)}/${encodeURIComponent(table)}`
+        const response = await fetch(`${options.proxyUrl}/${path}?${query}`)
+        if (!response.ok) throw new ChartSourceError(`Airtable answered ${response.status}.`)
+
+        const page: { records: { fields: Record<string, unknown> }[]; offset?: string } =
+          await response.json()
+        records.push(...page.records.map((record) => record.fields))
+        offset = page.offset ?? ''
+      } while (offset)
+
+      // Airtable leaves out empty fields, so the columns are the fields the address names
+      const cell = (value: unknown) =>
+        typeof value === 'string' || typeof value === 'number' ? String(value) : ''
+      return gridToChartData(
+        [fields, ...records.map((record) => fields.map((field) => cell(record[field])))],
+        { decimalSeparator: '.' },
+      )
+    },
+    describe: (address) => `Airtable, ${tableAddress(address).table}`,
+  }
+}
+```
+
+注册提供程序，并将图表关联到表中的两个字段：
+
+```ts
+Diagrams.configure({ sources: [airtableSource({ proxyUrl: '/api/airtable' })] })
+
+editor.commands.linkChartSource({
+  provider: 'airtable',
+  address: { baseId: 'appXXXXXXXXXXXXXX', table: 'Deals', fields: ['Stage', 'Count'] },
+  readOnly: true,
+})
+```
+
+地址中的 `fields` 是列名，顺序即列的顺序。Airtable 会从记录中省略空字段，因此仅凭记录无法得知有哪些列。第一个字段存放标签。该提供程序读取文本和数字。其他类型的字段（例如附件或关联记录）会显示为无值。
+
+Airtable 对每个 base 每秒允许 5 次请求。超过限制后，API 会返回 429，并在 30 秒后重新接受请求。读取包含 1,000 条记录的表需要 10 次请求。
+
+## 让图表保持最新
+
+关联的图表会一直显示其快照，直到你对其进行同步。
+
+```ts
+// The selected chart
+editor.commands.syncChartData()
+
+// Every chart that reads this range
+await editor.storage.diagrams.requestSync({
+  provider: 'google-sheets',
+  address: { spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms', range: 'Sales!A1:D13' },
+})
+```
+
+读取失败时会调用 `onSourceError` 选项。上述提供程序在地址无效或服务返回错误响应时会抛出 `ChartSourceError`。其他错误（例如连接中断或令牌请求失败）则会以其自身的错误类型传入。[图表同步时](/diagrams/data/sources#when-a-chart-synchronizes)介绍了读取失败的处理规则、使用 `requestSync` 和 `setInterval` 设置计划，以及服务限制。
+
+## 注意事项
+
+- 切勿将令牌放入地址，因为文档会与所有打开它的人共享该地址。
+- 所有数据源都适用以下规则：关联时设置 `readOnly: true`（[只读](/diagrams/data/sources#read-only)）；设置 `encoding` 以仅显示部分列（[仅显示部分列](/diagrams/data/sources#showing-only-some-columns)）；手动编辑时使用 `detachChartSource` 和 `relinkChartSource`（[已关联或已分离](/diagrams/data/sources#linked-or-detached)）。
+- 对于 Google Sheets 和 Excel，每个人都使用自己的账户登录。没有访问权限的人仍能看到快照，但无法同步。
