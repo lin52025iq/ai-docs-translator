@@ -1,0 +1,138 @@
+---
+title: 创建新扩展
+meta:
+  title: 创建扩展 | Tiptap 编辑器文档
+  description: 为你的 Tiptap 编辑器创建一个新扩展，从零开始打造独特的编辑体验。了解更多，请参阅文档！
+  category: 编辑器
+---
+
+你可以从零开始构建自己的扩展。你知道吗？这与上文介绍的扩展现有扩展使用的是同一种语法。
+
+### 创建扩展
+
+扩展可以为 Tiptap 添加新功能。你会经常看到“扩展”这个词，甚至在讨论节点和标记时也是如此。不过，还有专指扩展的 Extension。它们无法像标记和节点那样扩展 schema，但可以为编辑器添加功能或改变其行为。
+
+[`TextAlign`](/editor/extensions/functionality/textalign) 大概是一个很好的参考示例。
+
+```js
+import { Extension } from '@tiptap/core'
+
+const CustomExtension = Extension.create({
+  name: 'customExtension',
+
+  // Your code goes here.
+})
+```
+
+你也可以使用回调函数创建扩展。如果你想封装扩展的逻辑，这种方式就很实用，例如定义事件处理程序或其他自定义逻辑。
+
+```js
+import { Extension } from '@tiptap/core'
+
+const CustomExtension = Extension.create(() => {
+  // Define variables or functions to use inside your extension
+  const customVariable = 'foo'
+
+  function onCreate() {}
+  function onUpdate() {}
+
+  return {
+    name: 'customExtension',
+    onCreate,
+    onUpdate,
+
+    // Your code goes here.
+  }
+})
+```
+
+了解更多，请参阅 [Extension API](/editor/extensions/custom-extensions/create-new/extension)。
+
+### 创建节点
+
+如果把文档看作一棵树，那么[节点](/editor/extensions/nodes)就是树中的一种内容类型。值得参考的示例包括 [`Paragraph`](/editor/extensions/nodes/paragraph)、[`Heading`](/editor/extensions/nodes/heading) 和 [`CodeBlock`](/editor/extensions/nodes/code-block)。
+
+```js
+import { Node } from '@tiptap/core'
+
+const CustomNode = Node.create({
+  name: 'customNode',
+
+  // Your code goes here.
+})
+```
+
+你也可以使用回调函数创建节点。如果你想封装扩展的逻辑，这种方式就很实用，例如定义事件处理程序或其他自定义逻辑。
+
+```js
+import { Node } from '@tiptap/core'
+
+const CustomNode = Node.create(() => {
+  // Define variables or functions to use inside your extension
+  const customVariable = 'foo'
+
+  function onCreate() {}
+  function onUpdate() {}
+
+  return {
+    name: 'customNode',
+    onCreate,
+    onUpdate,
+
+    // Your code goes here.
+  }
+})
+```
+
+节点不一定是块级元素。它们也可以与文本一起以内联形式呈现，例如 [@提及](/editor/extensions/nodes/mention)。
+
+了解更多，请参阅 [Node API](/editor/extensions/custom-extensions/create-new/node)。
+
+### 创建标记
+
+可以将一个或多个标记应用于[节点](/editor/extensions/nodes)，例如添加行内格式。值得参考的示例包括 [`Bold`](/editor/extensions/marks/bold)、[`Italic`](/editor/extensions/marks/italic) 和 [`Highlight`](/editor/extensions/marks/highlight)。
+
+```js
+import { Mark } from '@tiptap/core'
+
+const CustomMark = Mark.create({
+  name: 'customMark',
+
+  // Your code goes here.
+})
+```
+
+你也可以使用回调函数创建标记。如果你想封装扩展的逻辑，这种方式就很实用，例如定义事件处理程序或其他自定义逻辑。
+
+```js
+import { Mark } from '@tiptap/core'
+
+const CustomMark = Mark.create(() => {
+  // Define variables or functions to use inside your extension
+  const customVariable = 'foo'
+
+  function onCreate() {}
+  function onUpdate() {}
+
+  return {
+    name: 'customMark',
+    onCreate,
+    onUpdate,
+
+    // Your code goes here.
+  }
+})
+```
+
+了解更多，请参阅 [Mark API](/editor/extensions/custom-extensions/create-new/mark)。
+
+## 发布独立扩展
+
+如果你想为 Tiptap 创建并发布自己的扩展，可以使用我们的 CLI 工具来搭建项目。
+只需运行 `npm init tiptap-extension` 并按照说明操作。CLI 会创建一个新文件夹，其中包含预先配置好的项目，以及一个使用 Rollup 运行的构建脚本。
+
+如果想在本地测试扩展，可以在项目文件夹中运行 `npm link`，然后在你的项目（例如 Vite 应用）中运行 `npm link YOUR_EXTENSION`。
+
+## 分享
+
+一切运行正常后，别忘了在[社区](https://github.com/ueberdosis/tiptap/issues/819)或我们的 [awesome-tiptap](https://github.com/ueberdosis/awesome-tiptap) 仓库中分享你的扩展。
