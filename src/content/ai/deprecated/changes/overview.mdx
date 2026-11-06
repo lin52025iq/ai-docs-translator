@@ -1,8 +1,8 @@
 ---
-title: Track and review AI-generated changes
+title: 跟踪和审阅 AI 生成的更改
 meta:
-  title: AI Changes | Tiptap Content AI
-  description: Track, review, and accept or reject AI-generated content modifications with visual change highlighting in your Tiptap editor.
+  title: AI 更改 | Tiptap Content AI
+  description: 在 Tiptap 编辑器中通过可视化高亮跟踪、审阅并接受或拒绝 AI 生成的内容修改。
   category: Content AI
 tags:
   - type: beta
@@ -13,17 +13,16 @@ import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 
-<Callout title="Deprecated" variant="warning">
-  This extension is being phased out in favor of the AI Toolkit, which offers enhanced capabilities
-  and a modernized API. While you can continue using this extension, we recommend exploring the AI
-  Toolkit for new implementations.
+<Callout title="已弃用" variant="warning">
+  此扩展正逐步淘汰，取而代之的是功能更强、API 更现代化的 AI Toolkit。你仍可继续使用此扩展，但我们建议在新项目中探索使用 AI
+  Toolkit。
 </Callout>
 
 <EnterpriseCalloutAuto variant="deprecated" renderMode="sidebar" />
 
-The AI Changes extension enables you to track, review, and manage content modifications made by AI in your editor. It clearly highlights changes, making it easy to see what has been added or removed.
+AI Changes 扩展可帮助你跟踪、审阅和管理编辑器中由 AI 修改的内容。它会清晰地突出显示更改，让你轻松查看新增或删除的内容。
 
-Combine it with the [Basic AI Generation extension](/ai/basic/overview) to create content and provide your users with a seamless review workflow.
+将它与 [Basic AI Generation 扩展](/ai/basic/overview) 结合使用，即可生成内容，并为用户提供流畅的审阅工作流。
 
 <CodeDemo
   isPro
@@ -31,25 +30,23 @@ Combine it with the [Basic AI Generation extension](/ai/basic/overview) to creat
   src="https://feature-beta-ai-extensions--tiptap-pro.netlify.app/preview/Extensions/AiChanges"
 />
 
-## AI Changes features
+## AI Changes 功能
 
-- Integrates seamlessly with our [Basic AI Generation extension](/ai/basic/text-generation) and [AI Agent extension](/examples/experiments/ai-agent)
-- Supports rich text formatting, including images, links, and mentions
-- Enables users to [accept and reject individual changes](/ai/deprecated/changes/features/review-changes) or make adjustments to generated content
-- Provides a [fully customizable UI](/ai/deprecated/changes/features/display-changes) for displaying changes
+- 与我们的 [Basic AI Generation 扩展](/ai/basic/text-generation) 和 [AI Agent 扩展](/examples/experiments/ai-agent) 无缝集成
+- 支持富文本格式，包括图片、链接和提及
+- 用户可以[接受或拒绝单项更改](/ai/deprecated/changes/features/review-changes)，也可以调整生成的内容
+- 提供用于显示更改的[完全可自定义 UI](/ai/deprecated/changes/features/display-changes)
 
-<Callout title="When to use AI Changes?" variant="warning">
-  The AI Changes extension displays changes **after** they are applied to the document. To preview
-  changes before they are applied, use the [AI
-  Suggestion](/ai/deprecated/suggestion/overview) extension. Follow the [diff
-  view](/ai/deprecated/suggestion/features/diff-view) guide.
+<Callout title="何时使用 AI Changes？" variant="warning">
+  AI Changes 扩展会在更改应用到文档**之后**显示这些更改。如需在应用更改之前预览，请使用 [AI
+  Suggestion](/ai/deprecated/suggestion/overview) 扩展。请参阅[差异视图](/ai/deprecated/suggestion/features/diff-view)指南。
 </Callout>
 
-## How it works
+## 工作原理
 
-The AI Changes extension adapts to your specific text editing workflow. Integrate it in four simple steps:
+AI Changes 扩展可适应你特定的文本编辑工作流。只需四个简单步骤即可完成集成：
 
-1. [Install](/ai/deprecated/changes/install) and [configure](/ai/deprecated/changes/configure) the extension
-2. Edit the editor's content (for example, by inserting AI-generated text)
-3. [Display changes](/ai/deprecated/changes/features/display-changes) in the editor
-4. [Review changes](/ai/deprecated/changes/features/review-changes) made by AI
+1. [安装](/ai/deprecated/changes/install)并[配置](/ai/deprecated/changes/configure)此扩展
+2. 编辑器中的内容（例如，插入 AI 生成的文本）
+3. 在编辑器中[显示更改](/ai/deprecated/changes/features/display-changes)
+4. [审阅](/ai/deprecated/changes/features/review-changes) AI 所做的更改
