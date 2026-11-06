@@ -1,12 +1,12 @@
 ---
-title: Review options
+title: 审阅选项
 meta:
-  title: Review options | Tiptap Server AI Toolkit
-  description: Configure tracked changes review behavior for Server AI Toolkit tool execution.
+  title: 审阅选项 | Tiptap Server AI Toolkit
+  description: 配置 Server AI Toolkit 工具执行时的修订审阅行为。
   category: AI Toolkit
 ---
 
-The Server AI Toolkit `execute-tool` endpoint accepts a `reviewOptions` property. Use it to control how `tiptapEdit` writes reviewable changes instead of directly mutating the document.
+Server AI Toolkit 的 `execute-tool` 端点接受 `reviewOptions` 属性。使用此属性可控制 `tiptapEdit` 如何写入可审阅的更改，而不是直接修改文档。
 
 ```ts
 import { getAuthHeaders } from '@/lib/server-ai-toolkit/get-auth-headers'
@@ -28,28 +28,28 @@ const response = await fetch(`${apiBaseUrl}/v4/ai/toolkit/execute-tool`, {
 })
 ```
 
-The `reviewOptions` property takes a `ReviewOptions` configuration object.
+`reviewOptions` 属性接受一个 `ReviewOptions` 配置对象。
 
 ## `ReviewOptions`
 
-- `mode?` (`'disabled' | 'trackedChanges'`): Controls whether edits are applied directly or written as tracked changes. Default: `'disabled'`
-  - `'disabled'`: The edit is applied directly to the document.
-  - `'trackedChanges'`: The edit is encoded as tracked changes using the [Tracked Changes](/tracked-changes/getting-started/overview) extension so users can accept or reject individual changes.
-- `trackedChangesOptions?` (`{ userId?: string, userMetadata?: Record<string, unknown> | null }`): Author metadata for the `trackedChanges` mode. `userId` identifies the suggestion author. Defaults to the request `user` when ommitted and, if that is not available, it defaults to `'AI'`. `userMetadata` stores additional author information such as a display name. Defaults to `null`.
-- `diffUtilityOptions?` (`object`): Advanced options for reconstructing tracked changes from the before/after document state.
-  - `simplifyChanges?` (`boolean`, default: `true`): Simplify nearby changes before tracked changes are generated.
-  - `ignoreAttributes?` (`string[]`, default: `['id', 'data-thread-id', '_hash']`): Ignore specific node attributes during diffing.
-  - `ignoreMarks?` (`string[]`, default: `['inlineThread']`): Ignore specific marks during diffing.
-  - `changeMergeDistance?` (`number | null`, default: auto-calculated): Merge nearby changes within this distance. Set to `null` to disable merging.
-  - `mode?` (`'inline' | 'block' | 'smart'`, default: `'smart'`): Diff strategy to use when generating tracked changes.
-  - `groupInlineChanges?` (`number`, default: `1`): Group inline edits that are within this distance.
-  - `expandBlockChanges?` (`string[]`, default: `['listItem']`): Node types that should be expanded as block changes.
+- `mode?` (`'disabled' | 'trackedChanges'`)：控制是直接应用编辑，还是将编辑记录为修订。默认值：`'disabled'`
+  - `'disabled'`：直接将编辑应用到文档。
+  - `'trackedChanges'`：使用 [修订](/tracked-changes/getting-started/overview)扩展将编辑记录为修订，以便用户接受或拒绝单项更改。
+- `trackedChangesOptions?` (`{ userId?: string, userMetadata?: Record<string, unknown> | null }`)：`trackedChanges` 模式的作者元数据。`userId` 用于标识建议的作者。默认使用请求中的 `user`；如果该值不可用，则默认为 `'AI'`。`userMetadata` 用于存储作者的其他信息，例如显示名称。默认值为 `null`。
+- `diffUtilityOptions?` (`object`)：根据文档修改前后的状态重建修订的高级选项。
+  - `simplifyChanges?` (`boolean`，默认值：`true`)：生成修订前，简化彼此相邻的更改。
+  - `ignoreAttributes?` (`string[]`，默认值：`['id', 'data-thread-id', '_hash']`)：比较差异时忽略指定的节点属性。
+  - `ignoreMarks?` (`string[]`，默认值：`['inlineThread']`)：比较差异时忽略指定的标记。
+  - `changeMergeDistance?` (`number | null`，默认值：自动计算)：合并此距离范围内的相邻更改。设为 `null` 可禁用合并。
+  - `mode?` (`'inline' | 'block' | 'smart'`，默认值：`'smart'`)：生成修订时使用的差异比较策略。
+  - `groupInlineChanges?` (`number`，默认值：`1`)：将此距离范围内的行内编辑分组。
+  - `expandBlockChanges?` (`string[]`，默认值：`['listItem']`)：应展开为块级更改的节点类型。
 
-## Typical configurations
+## 常见配置
 
-### Direct edits
+### 直接编辑
 
-Skip review mode and apply edits immediately:
+跳过审阅模式，立即应用编辑：
 
 ```ts
 reviewOptions: {
@@ -57,9 +57,9 @@ reviewOptions: {
 }
 ```
 
-### Tracked changes with AI author metadata
+### 使用 AI 作者元数据记录修订
 
-Attach a stable AI identity to the generated suggestions:
+为生成的建议附加稳定的 AI 身份：
 
 ```ts
 reviewOptions: {
@@ -73,9 +73,9 @@ reviewOptions: {
 }
 ```
 
-### Tracked changes with custom diff behavior
+### 使用自定义差异行为记录修订
 
-Tune how edits are grouped and displayed:
+调整编辑的分组和显示方式：
 
 ```ts
 reviewOptions: {
