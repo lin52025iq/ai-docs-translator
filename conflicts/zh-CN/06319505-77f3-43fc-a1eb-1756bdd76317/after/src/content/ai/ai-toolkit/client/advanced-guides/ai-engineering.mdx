@@ -1,0 +1,197 @@
+---
+title: 使用 AI Toolkit 进行 AI 工程开发
+meta:
+  title: AI 工程指南 | Tiptap AI Toolkit
+  description: 了解如何针对不同场景选择最合适的 AI 模型和提示词，以便与 AI Toolkit 配合使用。
+  category: AI Toolkit
+---
+
+针对不同场景选择最合适的 AI 模型和提示词，充分发挥 AI Toolkit 的作用。
+
+## 选择 AI 模型
+
+AI Toolkit 的工具旨在与任何支持函数调用的 AI 模型配合使用，并已通过多家 AI 服务提供商的众多模型进行测试。
+
+选择合适的 AI 模型时，一个关键区别在于你要构建的是[智能体还是工作流](https://www.anthropic.com/engineering/building-effective-agents)：
+
+- AI 智能体会接收一项任务并独立完成，在每一步中自行决定下一步要采取的行动。例如：[AI 聊天机器人助手](/ai/ai-toolkit/client/agents/ai-agent-chatbot)
+- 在 AI 工作流中，AI 会执行一个或多个预定义操作，但不能自行选择下一步操作。比如[简单的 AI 内容生成](/ai/ai-toolkit/client/workflows/insert-content)或自动补全。
+
+### 适用于智能体任务的最佳模型
+
+对于复杂的智能体 AI 助手（例如 [AI 智能体聊天机器人](/ai/ai-toolkit/client/agents/ai-agent-chatbot)指南中的示例），建议使用具备工具调用能力的前沿模型。以下模型表现尤为出色：
+
+- OpenAI 模型：GPT-5.6 Sol、Terra 和 Luna
+- Anthropic 模型：Opus 和 Sonnet（4 及更高版本）
+- Google 模型：Gemini Pro、Gemini Flash（3 及更高版本）
+- Mistral 模型：Mistral Large、Mistral Medium
+- Moonshot 模型：Kimi-K2
+- xAI 模型：Grok 4.1 Fast 及更高版本
+- Z.ai 模型：GLM-4.5 及更高版本
+
+### 适用于智能体任务的高性价比模型
+
+如果你的场景涉及智能体文档编辑，同时又希望控制成本，可以使用仍支持函数调用的较小型模型。尤其可以考虑以下模型：
+
+- GPT-5.6 Luna（OpenAI）
+- Claude Haiku 4.5（Anthropic）及更高版本
+- Gemini 3 Flash（Google）及更高版本
+- Mistral Medium 3.1（Mistral）及更高版本
+
+### 为非智能体工作流选择模型
+
+并非所有用于文档编辑的 AI 应用都基于智能体。有时，AI 只需完成一项明确的任务，例如改写文档的一部分。在这种情况下，任何小型、高性价比的模型都适用，例如上一节提到的模型。
+
+### 是否应该启用推理？
+
+根据我们的内部测试，在文档编辑任务中启用推理后，准确度和性能略有提升。不过，推理力度从低到高似乎并不会带来明显改善。由于推理会增加 token 消耗和延迟，**建议将推理级别设为低**；但如果 AI 智能体还要将推理用于其他目的（例如规划或解决复杂的数学问题），则不在此限。
+
+## 编写合适的提示词
+
+你可以通过提供自定义系统提示词，调整 AI 模型的行为和内容生成方式。
+
+```ts
+// app/api/chat/route.ts
+import { openai } from '@ai-sdk/openai'
+import { toolDefinitions } from '@tiptap-pro/client-ai-toolkit-ai-sdk'
+import { createAgentUIStreamResponse, ToolLoopAgent, UIMessage } from 'ai'
+
+export async function POST(req: Request) {
+  const { messages }: { messages: UIMessage[] } = await req.json()
+
+  const agent = new ToolLoopAgent({
+    model: openai('gpt-5.6-luna'),
+    instructions: `You are an assistant that edits rich text documents in the style of Shakespeare. 
+    You should respond in the style of Shakespeare, and when editing the document, 
+    the content you generate and add to the document should be written in the style
+    of Shakespeare's plays.`,
+    tools: toolDefinitions(),
+  })
+
+  return createAgentUIStreamResponse({
+    agent,
+    uiMessages: messages,
+  })
+}
+```
+
+系统提示词中无需说明 AI 模型可以使用哪些工具。由于工具已包含在工具定义中，AI 模型会自动了解这些工具。
+
+不过，你可以在系统提示词中按名称引用[可用工具](/ai/ai-toolkit/client/agents/tools)。这样就能指示 AI 模型如何以及何时使用这些工具，并引导它生成更详尽、更有创意或更周全的内容。
+
+```ts
+// app/api/chat/route.ts
+import { openai } from '@ai-sdk/openai'
+import { toolDefinitions } from '@tiptap-pro/client-ai-toolkit-ai-sdk'
+import { createAgentUIStreamResponse, ToolLoopAgent, UIMessage } from 'ai'
+
+export async function POST(req: Request) {
+  const { messages }: { messages: UIMessage[] } = await req.json()
+
+  const agent = new ToolLoopAgent({
+    model: openai('gpt-5.6-luna'),
+    instructions: `You are an assistant that can edit rich text documents. 
+    Before calling the document editing tools like tiptapEdit,
+    you should first read the document to get a sense of the content and context.
+    Then, you should inform the user of the plan of action you will take to edit
+    the document, in a very detailed step-by-step description. Only after planning
+    in detail, you should call the document editing tools.`,
+    tools: toolDefinitions(),
+  })
+
+  return createAgentUIStreamResponse({
+    agent,
+    uiMessages: messages,
+  })
+}
+```
+
+以下资源有助于你进一步了解提示词工程和 AI 工程开发：
+
+- [Anthropic 提示词工程指南](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview)
+- [GPT-5.6 Luna 模型文档](https://developers.openai.com/api/docs/models/gpt-5.6-luna)
+- [OpenAI 提示词工程指南](https://platform.openai.com/docs/guides/prompt-engineering)
+- [构建智能体实用指南](https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf)
+
+## 提升速度并降低延迟
+
+你可以采用以下策略来提升 AI Toolkit 的速度：
+
+### 实现响应流式传输
+
+将内容流式传输到编辑器中，能让用户感觉响应更快。请按照[流式传输指南](/ai/ai-toolkit/client/agents/streaming)进行实现。
+
+### 选择速度更快的模型或服务提供商
+
+选择模型时，请考虑其速度和延迟。可以参考 [Artificial Analysis](https://artificialanalysis.ai/#intelligence-vs-output-speed) 等排行榜，比较模型在不同指标上的表现。
+
+速度和延迟取决于模型以及托管该模型的服务提供商。如果你优先考虑输出速度，可以选择专门提供快速推理服务的提供商，例如 [groq](https://groq.com/)、[SambaNova](https://www.sambanova.com/) 或 [Cerebras](https://www.cerebras.ai/)。
+
+### 降低推理力度
+
+推理会增加 token 消耗和延迟。将提供商选项 `reasoningEffort` 设为 `'low'`，可以减少推理 token 的消耗。
+
+```ts
+// app/api/chat/route.ts
+import { openai } from '@ai-sdk/openai'
+import { toolDefinitions } from '@tiptap-pro/client-ai-toolkit-ai-sdk'
+import { createAgentUIStreamResponse, ToolLoopAgent, UIMessage } from 'ai'
+
+export async function POST(req: Request) {
+  const { messages }: { messages: UIMessage[] } = await req.json()
+
+  const agent = new ToolLoopAgent({
+    model: openai('gpt-5.6-luna'),
+    instructions: `You are an assistant that can edit rich text documents.`,
+    tools: toolDefinitions(),
+    // Reduce reasoning effort
+    providerOptions: {
+      openai: {
+        reasoningEffort: 'low',
+      },
+    },
+  })
+
+  return createAgentUIStreamResponse({
+    agent,
+    uiMessages: messages,
+  })
+}
+```
+
+### 为 AI 模型提供充足的上下文
+
+编辑文档前，AI 模型需要先读取文档。你可以将文档内容加入用户消息或系统提示词，从而加快处理速度。
+
+```ts
+const toolkit = getAiToolkit(editor)
+
+// Before sending the user message, read the beginning of the document
+const { output } = toolkit.executeTool({
+  toolName: 'tiptapRead',
+  input: {
+    from: 0,
+  },
+})
+
+// Then, include the content of the document in the user message
+let userMessage = `Replace the last paragraph with a short story`
+
+userMessage += `
+
+---
+
+The user already called the 'tiptapRead' tool and it returned the following content:
+
+${output}`
+
+// Send the user message to the AI model
+```
+
+这样，AI 模型就不必调用 `tiptapRead` 工具来读取文档，可以直接开始编辑。
+
+### 优先选择工作流而非智能体
+
+[工作流](/ai/ai-toolkit/client/workflows)比 AI 智能体更容易实现。它们通常只需 AI 生成较少的 token，因此执行速度更快。此外，工作流往往可以使用速度更快、规模更小的模型。
+
+AI Toolkit 内置了[工作流](/ai/ai-toolkit/client/workflows)，可用于执行简单的文档编辑任务。
