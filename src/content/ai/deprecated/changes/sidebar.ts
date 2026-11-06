@@ -3,24 +3,24 @@ import { SidebarConfig } from '@/types'
 export const sidebarConfig: SidebarConfig = {
   id: 'ai-changes',
   rootHref: '/ai/deprecated/changes/overview',
-  title: 'AI Changes (Legacy)',
+  title: 'AI 更改（旧版）',
   items: [
     {
       type: 'link',
-      title: '← Back to Content AI',
+      title: '← 返回 Content AI',
       href: '/ai/ai-toolkit/overview',
     },
     {
       type: 'group',
       href: '/ai/deprecated/changes/overview',
-      title: 'Get started',
+      title: '开始使用',
       children: [
         {
-          title: 'Overview',
+          title: '概览',
           href: '/ai/deprecated/changes/overview',
         },
         {
-          title: 'Install',
+          title: '安装',
           href: '/ai/deprecated/changes/install',
         },
       ],
@@ -28,14 +28,14 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/ai/deprecated/changes/features/review-changes',
-      title: 'Features',
+      title: '功能',
       children: [
         {
-          title: 'Review changes',
+          title: '审查更改',
           href: '/ai/deprecated/changes/features/review-changes',
         },
         {
-          title: 'Display changes',
+          title: '显示更改',
           href: '/ai/deprecated/changes/features/display-changes',
         },
       ],
@@ -43,18 +43,18 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/ai/deprecated/changes/configure',
-      title: 'Reference',
+      title: '参考',
       children: [
         {
-          title: 'Configure',
+          title: '配置',
           href: '/ai/deprecated/changes/configure',
         },
         {
-          title: 'API Reference',
+          title: 'API 参考',
           href: '/ai/deprecated/changes/api-reference',
         },
         {
-          title: 'Changelog',
+          title: '更新日志',
           href: '/ai/deprecated/changes/changelog',
         },
       ],
