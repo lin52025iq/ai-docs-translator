@@ -1,18 +1,18 @@
 ---
-title: Markdown Types API
+title: Markdown 类型 API
 tags:
   - type: beta
 meta:
-  title: Markdown Types API | Tiptap Editor Docs
-  description: Detailed documentation of all types related to the Markdown extension in Tiptap.
+  title: Markdown 类型 API | Tiptap 编辑器文档
+  description: Tiptap 中 Markdown 扩展相关类型的详细文档。
   category: Editor
 ---
 
-## Types
+## 类型
 
 ### `MarkdownExtensionOptions`
 
-Options for configuring the Markdown extension.
+用于配置 Markdown 扩展的选项。
 
 ```typescript
 type MarkdownExtensionOptions = {
@@ -29,7 +29,7 @@ type MarkdownExtensionOptions = {
 
 ### `MarkdownExtensionSpec`
 
-Configuration for Markdown support in extensions.
+用于在扩展中配置 Markdown 支持。
 
 ```typescript
 type MarkdownExtensionSpec = {
@@ -47,7 +47,7 @@ type MarkdownExtensionSpec = {
 
 ### `MarkdownToken`
 
-Token structure from MarkedJS.
+来自 MarkedJS 的令牌结构。
 
 ```typescript
 type MarkdownToken = {
@@ -63,7 +63,7 @@ type MarkdownToken = {
 
 ### `MarkdownParseHelpers`
 
-Helpers passed to parse handlers.
+传递给解析处理程序的辅助函数。
 
 ```typescript
 type MarkdownParseHelpers = {
@@ -79,7 +79,7 @@ type MarkdownParseHelpers = {
 
 ### `MarkdownRendererHelpers`
 
-Helpers passed to render handlers.
+传递给渲染处理程序的辅助函数。
 
 ```typescript
 type MarkdownRendererHelpers = {
@@ -93,7 +93,7 @@ type MarkdownRendererHelpers = {
 
 ### `RenderContext`
 
-Context information passed to render handlers.
+传递给渲染处理程序的上下文信息。
 
 ```typescript
 type RenderContext = {
@@ -108,7 +108,7 @@ type RenderContext = {
 
 ### `MarkdownTokenizer`
 
-Custom tokenizer for MarkedJS.
+用于 MarkedJS 的自定义分词器。
 
 ```typescript
 type MarkdownTokenizer = {
@@ -123,7 +123,7 @@ type MarkdownTokenizer = {
 
 ### `MarkdownLexerConfiguration`
 
-Lexer helpers for custom tokenizers.
+为自定义分词器提供的词法分析器辅助函数。
 
 ```typescript
 type MarkdownLexerConfiguration = {
@@ -136,7 +136,7 @@ type MarkdownLexerConfiguration = {
 
 ### `MarkdownParseResult`
 
-Result type for parse handlers.
+解析处理程序的结果类型。
 
 ```typescript
 type MarkdownParseResult = JSONContent | JSONContent[] | { mark: string; content: JSONContent[]; attrs?: any } | null
@@ -146,7 +146,7 @@ type MarkdownParseResult = JSONContent | JSONContent[] | { mark: string; content
 
 ### `ExtendableMarkdownSpec`
 
-Markdown configuration in extensions.
+扩展中的 Markdown 配置。
 
 ```typescript
 type ExtendableMarkdownSpec = {
