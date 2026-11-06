@@ -1,37 +1,37 @@
 ---
-title: Authenticate and authorize in Collaboration
+title: 在 Collaboration 中进行身份验证和授权
 meta:
-  title: Auth Guide | Tiptap Collaboration Docs
-  description: Authorize collaborative editing with Tiptap authentication. Scope a token to the Documents service and grant per-document read, write, and comment access.
-  category: Collaboration
+  title: 身份验证指南 | Tiptap Collaboration 文档
+  description: 使用 Tiptap 身份验证授权协同编辑。将令牌限定为 Documents 服务，并授予对各个文档的读取、写入和评论权限。
+  category: 协作
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Collaboration authenticates against the Documents service. You sign a JWT on your server and pass it to the provider when a client connects. The token names which documents a user can reach and what they may do with them.
+Collaboration 通过 Documents 服务进行身份验证。你可以在服务器上签发 JWT，并在客户端连接时将其传递给 provider。令牌会指定用户可以访问哪些文档，以及可以对这些文档执行哪些操作。
 
-<Callout title="New to Tiptap authentication?" variant="hint">
-  This page covers the Documents-specific claims. To create a key pair and sign a token, see [Authentication](/authentication). For the previous `allowedDocumentNames` model, see [Legacy authentication](/authentication/legacy).
+<Callout title="刚开始使用 Tiptap 身份验证？" variant="hint">
+  本页介绍 Documents 专用的声明。要创建密钥对并签发令牌，请参阅[身份验证](/authentication)。如需了解旧版 `allowedDocumentNames` 模型，请参阅[旧版身份验证](/authentication/legacy)。
 </Callout>
 
-## Audience and actions
+## 受众和操作
 
-Set the `aud` claim to `"Documents"`. Collaboration recognizes these actions:
+将 `aud` 声明设置为 `"Documents"`。Collaboration 支持以下操作：
 
-| Action | Grants |
+| 操作 | 授予的权限 |
 | --- | --- |
-| `Documents:Read` | Open and read a document |
-| `Documents:Write` | Edit a document. Implies `Documents:Read` and `Documents:Comment` |
-| `Documents:Comment` | Add comments without editing |
-| `Documents:Api:All` | Full access to every Document Server API endpoint, including settings. Keep this token server-side. See [REST API](/collaboration/documents/rest-api) |
+| `Documents:Read` | 打开并读取文档 |
+| `Documents:Write` | 编辑文档。隐含 `Documents:Read` 和 `Documents:Comment` 权限 |
+| `Documents:Comment` | 添加评论，但不能编辑 |
+| `Documents:Api:All` | 完全访问 Document Server 的所有 API 端点，包括设置。请将此令牌保留在服务器端。请参阅 [REST API](/collaboration/documents/rest-api) |
 
-Because `Documents:Write` implies read and comment, granting write alone is enough for full editing access.
+由于 `Documents:Write` 隐含读取和评论权限，因此仅授予写入权限即可获得完整的编辑权限。
 
-## Authorize per document
+## 按文档授权
 
-The `resource` field names the document a permission applies to. Use `"*"` for every document, an exact document name for a single one, or `"*"` with constraints to match a group.
+`resource` 字段用于指定权限适用的文档。使用 `"*"` 表示所有文档，使用确切的文档名称表示单个文档，或将 `"*"` 与约束条件结合使用以匹配一组文档。
 
-### Full access to every document
+### 访问所有文档
 
 ```json
 {
@@ -40,11 +40,11 @@ The `resource` field names the document a permission applies to. Use `"*"` for e
 }
 ```
 
-<Callout title="Caution" variant="warning">
-  A permission with `"resource": "*"` and no constraints matches every document in your environment. Scope the resource when a user should only reach specific documents.
+<Callout title="注意" variant="warning">
+  如果权限中的 `"resource": "*"` 没有约束条件，就会匹配你所在环境中的所有文档。若用户只能访问特定文档，请限定资源范围。
 </Callout>
 
-### Specific documents
+### 指定文档
 
 ```json
 {
@@ -55,9 +55,9 @@ The `resource` field names the document a permission applies to. Use `"*"` for e
 }
 ```
 
-### Read-only access
+### 只读访问
 
-Grant `Documents:Read` without `Documents:Write`:
+授予 `Documents:Read`，但不授予 `Documents:Write`：
 
 ```json
 {
@@ -65,7 +65,7 @@ Grant `Documents:Read` without `Documents:Write`:
 }
 ```
 
-### Comment without editing
+### 允许评论但不能编辑
 
 ```json
 {
@@ -76,9 +76,9 @@ Grant `Documents:Read` without `Documents:Write`:
 }
 ```
 
-### A group of documents
+### 一组文档
 
-Use a `prefix` constraint instead of listing each document by name:
+使用 `prefix` 约束，而不是逐一列出文档名称：
 
 ```json
 {
@@ -92,11 +92,11 @@ Use a `prefix` constraint instead of listing each document by name:
 }
 ```
 
-This grants access to every document whose name starts with `project-alpha/`. See [Permissions](/authentication#permissions) for the full constraint reference, including `suffix` and `in`.
+这将授予对所有名称以 `project-alpha/` 开头的文档的访问权限。约束条件的完整参考（包括 `suffix` 和 `in`），请参阅[权限](/authentication#permissions)。
 
-## Connect the provider
+## 连接 provider
 
-Pass the signed token to `TiptapCollabProvider` as `token`, alongside your `appId`. Generate the token on your server and send it to the client. Never expose your signing key in client code.
+将签名后的令牌作为 `token` 传递给 `TiptapCollabProvider`，并同时提供 `appId`。在服务器上生成令牌，然后发送给客户端。切勿在客户端代码中暴露签名密钥。
 
 ```ts
 const doc = new Y.Doc()
@@ -110,13 +110,13 @@ const provider = new TiptapCollabProvider({
 })
 ```
 
-## Handle token expiry
+## 处理令牌过期
 
-Keep tokens short-lived by setting `exp`. Tokens are validated every few seconds, so an expired token is rejected shortly after expiration and cannot reconnect.
+设置 `exp`，让令牌保持较短的有效期。令牌每隔几秒就会验证一次，因此过期后不久便会被拒绝，且无法重新连接。
 
-- If the token is invalid when connecting or reconnecting, the `onAuthenticationFailed` callback fires with reason `permission-denied`.
-- If the token expires during an established connection, the `onClose` callback fires with reason `JWT verification failed`.
+- 如果连接或重新连接时令牌无效，`onAuthenticationFailed` 回调会以 `permission-denied` 为原因触发。
+- 如果令牌在连接建立后过期，`onClose` 回调会以 `JWT verification failed` 为原因触发。
 
-In both cases, create a fresh token and re-create the provider. Users may leave tabs open for a long time, so handle expiry on reconnect to avoid losing [unsynced changes](/collaboration/provider/integration#unsynced-changes).
+这两种情况下，都应创建新令牌并重新创建 provider。用户可能长时间不关闭标签页，因此请在重新连接时处理令牌过期，以免丢失[未同步的更改](/collaboration/provider/integration#unsynced-changes)。
 
-To invalidate a token before it expires, Collaboration provides a [Revoke JWT API](https://www.postman.com/tiptap-platform/workspace/tiptap-workspace/request/33042171-63ed5bbe-f54d-4a85-b2d0-5c1bc215d2fc). Because revocation is available, you do not need to make tokens extremely short-lived.
+如需在令牌过期前将其失效，Collaboration 提供了 [Revoke JWT API](https://www.postman.com/tiptap-platform/workspace/tiptap-workspace/request/33042171-63ed5bbe-f54d-4a85-b2d0-5c1bc215d2fc)。由于支持撤销令牌，你无需将令牌的有效期设得极短。
