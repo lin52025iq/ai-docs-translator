@@ -1,21 +1,21 @@
 ---
 tags:
   - type: editor
-title: Collaboration API
+title: 协作 API
 meta:
-  title: Collaboration API | Tiptap Editor Docs
-  description: Collaboration API
-  category: Editor
+  title: 协作 API | Tiptap 编辑器文档
+  description: 协作 API
+  category: 编辑器
 ---
 
-## Add initial content to a document
+## 为文档添加初始内容
 
-In order to add initial content to a document (or create an empty document), you can use our create document API.
+若要为文档添加初始内容（或创建空文档），可以使用我们的创建文档 API。
 
-Note that you need to replace `APP_ID` and `DOCUMENT_NAME` with your own values, and `YOUR_JWT` with a signed token carrying `Documents:Api:All` (see [Authentication](/authentication)). Keep that token server-side, since it grants full API access. The `APP_ID` is your document server ID, labeled "Document server ID" in the [Cloud dashboard](https://cloud.tiptap.dev/v2/configuration/document-server).
-If you want to just create an empty document, you can send an empty array as `content`.
+请注意，你需要将 `APP_ID` 和 `DOCUMENT_NAME` 替换为自己的值，并将 `YOUR_JWT` 替换为携带 `Documents:Api:All` 权限的签名令牌（参见[身份验证](/authentication)）。请将该令牌保存在服务器端，因为它授予完整的 API 访问权限。`APP_ID` 是你的文档服务器 ID，在 [Cloud 控制台](https://cloud.tiptap.dev/v2/configuration/document-server)中标记为“Document server ID”。
+如果只想创建空文档，可以将空数组作为 `content` 发送。
 
-The payload of the request should be Tiptap JSON, which you can get by calling `editor.getJSON()` (see [Get JSON](/guides/output-json-html#option-1-json))
+请求负载应为 Tiptap JSON，可通过调用 `editor.getJSON()` 获取（参见[获取 JSON](/guides/output-json-html#option-1-json)）。
 
 ```curl
 curl --location \
@@ -42,11 +42,11 @@ curl --location \
 }'
 ```
 
-## Update the full content of a document
+## 更新文档的全部内容
 
-Updating a document is as simple as fetching the current JSON document, applying your changes to it, and sending it back to us.
+更新文档很简单：获取当前的 JSON 文档，对其进行修改，然后将其发送回我们即可。
 
-Use the following request to fetch the current JSON document.
+使用以下请求获取当前的 JSON 文档。
 
 ```curl
 curl --location \
@@ -54,8 +54,8 @@ curl --location \
 --header 'Authorization: Bearer YOUR_JWT' \
 ```
 
-Now, you can apply your changes to the JSON, and then send it back to us. We will calculate the diff between your new JSON and the current state of the document, and apply it in a collaborative way.
-If you only want to update a single node, see [Update a single node in a document](#update-a-single-node-in-a-document).
+现在，你可以修改 JSON，然后将其发送回我们。我们会计算新 JSON 与文档当前状态之间的差异，并以协作方式应用这些更改。
+如果只想更新单个节点，请参阅[更新文档中的单个节点](#更新文档中的单个节点)。
 
 ```curl
 curl --location --request PATCH \
@@ -65,9 +65,9 @@ curl --location --request PATCH \
 --data 'UPDATED_JSON'
 ```
 
-## Update a single node in a document
+## 更新文档中的单个节点
 
-Use the following request to fetch the current JSON document.
+使用以下请求获取当前的 JSON 文档。
 
 ```curl
 curl --location \
@@ -75,9 +75,8 @@ curl --location \
 --header 'Authorization: Bearer YOUR_JWT'
 ```
 
-Now, you can identify the node that you want to update and apply your update in the JSON. You then need to send only that updated node back to us, but in the full Tiptap JSON format.
-To tell us which node you want to update, you need to pass query parameters `nodeAttributeName` and `nodeAttributeValue`. For example, if you use our unique-id
-extension and the target node has an `id` attribute with value `12345`, you would pass `nodeAttributeName=id&nodeAttributeValue=12345`. Note that this only works for top-level nodes.
+现在，你可以找到要更新的节点，并在 JSON 中进行修改。然后，你需要以完整的 Tiptap JSON 格式，仅将更新后的节点发送回我们。
+要指定要更新的节点，需要传递查询参数 `nodeAttributeName` 和 `nodeAttributeValue`。例如，如果你使用我们的 unique-id 扩展，且目标节点的 `id` 属性值为 `12345`，则需要传递 `nodeAttributeName=id&nodeAttributeValue=12345`。请注意，这仅适用于顶层节点。
 
 ```curl
 curl --location --request PATCH \
@@ -87,7 +86,7 @@ curl --location --request PATCH \
 --data 'UPDATED_JSON'
 ```
 
-An example of `UPDATED_JSON` can be found below. Only include the node that should be updated and omit all others (from the "content" array).
+下面是 `UPDATED_JSON` 的示例。只包含要更新的节点，并省略其他所有节点（即 `content` 数组中的其他节点）。
 
 ```json
 {
@@ -109,11 +108,11 @@ An example of `UPDATED_JSON` can be found below. Only include the node that shou
 }
 ```
 
-## Delete a node in a document
+## 删除文档中的节点
 
-In order to delete an entire node in a document, you can send a request like this.
+若要删除文档中的整个节点，可以发送如下请求。
 
-Make sure to replace `ATTR_NAME` and `ATTR_VALUE` with your own values, for example "id" and "12345".
+请务必将 `ATTR_NAME` 和 `ATTR_VALUE` 替换为自己的值，例如 `id` 和 `12345`。
 
 ```curl
 curl --location --request PATCH \
@@ -121,13 +120,12 @@ curl --location --request PATCH \
 --header 'Authorization: Bearer YOUR_JWT'
 ```
 
-## Update attributes of a node in a document
+## 更新文档中节点的属性
 
-If you want to update the attributes of a node, you can send a request like below.
-Note that this deletes all attributes that are not part of the request, if you don't want that,
-you can add `mergeAttributes=1` to the URL.
+若要更新节点的属性，可以发送如下请求。
+请注意，此操作会删除请求中未包含的所有属性。如果不希望如此，可以在 URL 中添加 `mergeAttributes=1`。
 
-Make sure to replace `ATTR_NAME` and `ATTR_VALUE` with your own values, for example "id" and "12345".
+请务必将 `ATTR_NAME` 和 `ATTR_VALUE` 替换为自己的值，例如 `id` 和 `12345`。
 
 ```curl
 curl --location --request PATCH \
