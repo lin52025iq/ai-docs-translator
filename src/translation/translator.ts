@@ -84,10 +84,12 @@ export function createTranslator() {
         if (response.status !== 'completed' || !response.output_parsed) {
             throw new TranslationError('INCOMPLETE_RESPONSE', 'failed', '模型未完成翻译或拒绝了请求')
         }
-        const content = response.output_parsed.content
-        const unchanged = content === input.sourceContent
+        const generatedContent = response.output_parsed.content
+        // 模型可能省略文件末尾换行；仅有此差异时保留原文，不触发额外审查。
+        const unchanged = generatedContent.replace(/(?:\r?\n)+$/, '') === input.sourceContent.replace(/(?:\r?\n)+$/, '')
+        const content = unchanged ? input.sourceContent : generatedContent
         logProgress(
-            `[${context.targetLanguage}] ${input.path} ${unchanged ? '结果与原文完全一致，直接通过，跳过 Decisions 审查' : '模型翻译返回，开始输出检查'}`
+            `[${context.targetLanguage}] ${input.path} ${unchanged ? '结果与原文内容一致，保留原文并跳过 Decisions 审查' : '模型翻译返回，开始输出检查'}`
         )
         const localConflict =
             !content.trim() && input.sourceContent.trim()

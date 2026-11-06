@@ -58,6 +58,8 @@ export async function buildTranslationContext(
                 reviewInstructions,
                 // 输入组织方式变化会影响模型结果，应使此前失败任务重新进入规划。
                 inputFormat: 'dynamic-tagged-file-v2',
+                // 输出比较规则变化后，允许此前因末尾换行差异产生的冲突重新处理。
+                outputComparison: 'ignore-terminal-newlines-v1',
                 sourceLanguage: source,
                 locale
             })
