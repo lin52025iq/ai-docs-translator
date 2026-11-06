@@ -1,12 +1,12 @@
 ---
-title: Add a tooltip UI component to your Editor
+title: 向编辑器添加工具提示 UI 组件
 meta:
-  title: Tooltip | Tiptap UI Components
-  description: Add a small informational popup that appears when hovering over an element. More in the docs!
-  category: UI Components
+  title: 工具提示 | Tiptap UI 组件
+  description: 添加一个小型信息弹窗，悬停在元素上时显示。更多内容请参阅文档！
+  category: UI 组件
 component:
   name: Tooltip
-  description: Add a popup that appears when you hover over elements.
+  description: 添加一个悬停在元素上时显示的弹窗。
   type: primitive
   isFree: true
   isCloud: false
@@ -19,7 +19,7 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A small informational popup that appears when hovering over an element.
+悬停在元素上时显示的小型信息弹窗。
 
 <CodeDemo
   isScrollable
@@ -27,15 +27,15 @@ A small informational popup that appears when hovering over an element.
   src="https://template.tiptap.dev/preview/tiptap-ui-primitive/tooltip"
 />
 
-## Install
+## 安装
 
-You can add the primitive via Tiptap CLI
+你可以通过 Tiptap CLI 添加此基础组件。
 
 ```bash
 npx @tiptap/cli@latest add tooltip
 ```
 
-## Usage
+## 使用方法
 
 ```tsx
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/tiptap-ui-primitive/tooltip'
@@ -55,27 +55,27 @@ export default function MyComponent() {
 }
 ```
 
-## Props
+## 属性
 
 ### Tooltip
 
-| Name              | Type                    | Default   | Description                             |
-| ----------------- | ----------------------- | --------- | --------------------------------------- |
-| open              | boolean                 | undefined | Controlled open state                   |
-| onOpenChange      | (open: boolean) => void | undefined | Callback when open state changes        |
-| defaultOpen       | boolean                 | false     | Default open state                      |
-| delayDuration     | number                  | 300       | Delay before tooltip appears (ms)       |
-| skipDelayDuration | number                  | 300       | Skip delay when moving between tooltips |
+| Name              | Type                    | Default   | Description                      |
+| ----------------- | ----------------------- | --------- | -------------------------------- |
+| open              | boolean                 | undefined | 受控的打开状态                   |
+| onOpenChange      | (open: boolean) => void | undefined | 打开状态变化时触发的回调         |
+| defaultOpen       | boolean                 | false     | 默认打开状态                     |
+| delayDuration     | number                  | 300       | 工具提示显示前的延迟时间（毫秒） |
+| skipDelayDuration | number                  | 300       | 在不同工具提示之间移动时跳过延迟 |
 
 ### TooltipTrigger
 
-| Name    | Type    | Default | Description                       |
-| ------- | ------- | ------- | --------------------------------- |
-| asChild | boolean | false   | Whether to merge props with child |
+| Name    | Type    | Default | Description             |
+| ------- | ------- | ------- | ----------------------- |
+| asChild | boolean | false   | 是否将属性与子元素合并  |
 
 ### TooltipContent
 
-| Name  | Type                                   | Default  | Description                       |
-| ----- | -------------------------------------- | -------- | --------------------------------- |
-| side  | 'top' \| 'right' \| 'bottom' \| 'left' | 'top'    | Preferred side to display content |
-| align | 'start' \| 'center' \| 'end'           | 'center' | Alignment along the edge          |
+| Name  | Type                                   | Default  | Description       |
+| ----- | -------------------------------------- | -------- | ----------------- |
+| side  | 'top' \| 'right' \| 'bottom' \| 'left' | 'top'    | 内容优先显示的位置 |
+| align | 'start' \| 'center' \| 'end'           | 'center' | 沿边缘的对齐方式   |
