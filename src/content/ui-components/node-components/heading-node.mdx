@@ -1,12 +1,12 @@
 ---
-title: Heading Node
+title: 标题节点
 meta:
-  title: Heading Node | Tiptap UI Components
-  description: Integrate a node component displaying headings in your Tiptap Editor. More in our docs!
-  category: UI Components
+  title: 标题节点 | Tiptap UI 组件
+  description: 在 Tiptap 编辑器中集成用于显示标题的节点组件。更多内容请参阅我们的文档！
+  category: UI 组件
 component:
-  name: Heading UI node
-  description: Add a heading node component to your editor.
+  name: 标题 UI 节点
+  description: 在编辑器中添加标题节点组件。
   type: node-component
   isFree: true
   isCloud: false
@@ -17,21 +17,21 @@ component:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A styled heading node for displaying formatted headings in the editor.
+用于在编辑器中显示格式化标题的样式化标题节点。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-node/heading-node" />
 
-## Installation
+## 安装
 
-You can add the node component via Tiptap CLI
+你可以通过 Tiptap CLI 添加节点组件：
 
 ```bash
 npx @tiptap/cli@latest add heading-node
 ```
 
-## Usage
+## 用法
 
-The HeadingNode is primarily a styling component that enhances the appearance of headings in the editor. To use it, simply include it in your project and ensure you're using the Heading extension from Tiptap.
+HeadingNode 主要是一个样式组件，可美化编辑器中标题的外观。使用时，只需将其添加到项目中，并确保使用 Tiptap 的 Heading 扩展。
 
 ```tsx
 import { useEditor, EditorContent } from '@tiptap/react'
@@ -58,9 +58,9 @@ export default function EditorWithHeading() {
 }
 ```
 
-## Features
+## 功能
 
-- Syntax highlighting styles for headings
-- Dark mode support
-- Proper spacing and margins
-- Enhanced readability with monospace font
+- 为标题提供语法高亮样式
+- 支持深色模式
+- 合理的间距和边距
+- 使用等宽字体提升可读性
