@@ -1,14 +1,14 @@
 ---
-title: joinForward command
+title: joinForward 命令
 meta:
-  title: joinForward command | Tiptap Editor Docs
-  description: Join two nodes forwards from the current selection in the Tiptap Editor with the joinForward command. Learn more in our docs!
-  category: Editor
+  title: joinForward 命令 | Tiptap 编辑器文档
+  description: 使用 joinForward 命令，根据 Tiptap 编辑器中的当前选区向前合并两个节点。了解更多信息，请参阅我们的文档！
+  category: 编辑器
 ---
 
-The `joinForward` command joins two nodes forwards from the current selection. If the selection is empty and at the end of a textblock, `joinForward` will try to reduce the distance between that block and the block after it. [See also](https://prosemirror.net/docs/ref/#commands.joinForward)
+`joinForward` 命令会根据当前选区向前合并两个节点。如果选区为空且位于文本块末尾，`joinForward` 会尝试缩短该文本块与其后文本块之间的距离。[另请参阅](https://prosemirror.net/docs/ref/#commands.joinForward)
 
-## Use the joinForward command
+## 使用 joinForward 命令
 
 ```js
 editor.commands.joinForward()
