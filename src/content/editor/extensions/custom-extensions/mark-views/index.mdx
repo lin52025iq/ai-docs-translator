@@ -1,17 +1,18 @@
 ---
-title: Create a custom mark view
+title: 创建自定义标记视图
 meta:
-  description: Customize and create mark views in your Tiptap editor with interactive mark views. More in the docs!
-  title: Mark views | Tiptap Editor Docs
-  category: Editor
+  description: 使用交互式标记视图，在 Tiptap 编辑器中自定义并创建标记视图。更多内容请参阅文档！
+  title: 标记视图 | Tiptap 编辑器文档
+  category: 编辑器
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-While [node views](/editor/extensions/custom-extensions/node-views) are used to render nodes, mark views are used to render marks. They are a little bit simpler, because they don’t have to deal with the complexity of a node and come with a simpler API.
+[节点视图](/editor/extensions/custom-extensions/node-views)用于渲染节点，而标记视图用于渲染标记。标记视图稍微简单一些，因为它们无需处理节点的复杂性，而且 API 也更简单。
 
-Mark views are amazing to improve the in-editor experience, but can also be used in a read-only instance of Tiptap. They are unrelated to the HTML output by design, so you have full control about the in-editor experience _and_ the output.
+标记视图可以显著改善编辑器内的体验，也可以用于 Tiptap 的只读实例。按照设计，它们与 HTML 输出无关，因此你可以完全掌控编辑器内的体验_以及_输出。
 
-### Render JavaScript/Vue/React
+### 渲染 JavaScript/Vue/React
 
-But what if you want to render your actual JavaScript/Vue/React code? Use the [Static Renderer](/editor/api/utilities/static-renderer). This utility lets you render your content as HTML, Markdown, or React components, without an Editor instance.
+但如果你想渲染实际的 JavaScript/Vue/React 代码，该怎么办？请使用[静态渲染器](/editor/api/utilities/static-renderer)。借助此工具，无需创建 Editor 实例，即可将内容渲染为 HTML、Markdown 或 React 组件。
+
