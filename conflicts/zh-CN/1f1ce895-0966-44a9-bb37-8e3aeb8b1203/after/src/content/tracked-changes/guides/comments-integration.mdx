@@ -1,0 +1,354 @@
+---
+title: 带评论的修订跟踪
+tags:
+  - type: addon
+meta:
+  title: 带评论的修订跟踪 | Tiptap 修订跟踪文档
+  description: 结合修订跟踪和评论，构建完整的文档审阅工作流。
+  category: 修订跟踪
+---
+
+import { Callout } from '@/components/ui/Callout'
+
+了解如何将修订跟踪与评论扩展结合，打造完整的文档审阅体验。用户可以通过评论讨论建议；接受或拒绝建议时，评论串状态也会自动同步。
+
+<Callout title="框架说明" variant="hint">
+  本指南使用 React，但同样的概念也适用于 Vue 以及 Tiptap 支持的其他框架。
+</Callout>
+
+## 前置条件
+
+- 已配置可正常使用的编辑器，并启用[修订跟踪](/tracked-changes/guides/editor-setup)
+- 已安装并配置[评论扩展](/comments/getting-started/install)
+- 已设置[协作提供程序](/collaboration/getting-started/overview)（评论持久化所必需）
+
+## 设置编辑器
+
+需要同时注册这两个扩展。由于评论需要协作提供程序才能持久化，因此还需要设置 Yjs 和 `TiptapCollabProvider`。
+
+```jsx
+import { useEditor, EditorContent } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+import { Collaboration } from '@tiptap/extension-collaboration'
+import { CommentsKit } from '@tiptap-pro/extension-comments'
+import { TrackedChanges } from '@tiptap-pro/extension-tracked-changes'
+import { TiptapCollabProvider } from '@tiptap-pro/provider'
+import { useMemo } from 'react'
+import * as Y from 'yjs'
+
+function ReviewEditor({ user }) {
+  const { ydoc, provider } = useMemo(() => {
+    const doc = new Y.Doc()
+    const collabProvider = new TiptapCollabProvider({
+      appId: 'your-app-id',
+      name: 'your-document-name',
+      document: doc,
+    })
+    return { ydoc: doc, provider: collabProvider }
+  }, [])
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({
+        undoRedo: false,
+      }),
+      Collaboration.configure({
+        document: ydoc,
+      }),
+      CommentsKit.configure({
+        provider,
+        onClickThread: (threadId) => {
+          // Handle thread selection in your UI
+        },
+      }),
+      TrackedChanges.configure({
+        enabled: true,
+        userId: user.id,
+        userMetadata: {
+          name: user.name,
+        },
+      }),
+    ],
+  })
+
+  if (!editor) {
+    return null
+  }
+
+  return <EditorContent editor={editor} />
+}
+```
+
+<Callout title="撤销/重做" variant="hint">
+  使用协作功能时，请禁用 StarterKit 内置的 `undoRedo`。在协作环境中，Yjs 会原生处理撤销和重做。
+</Callout>
+
+## 订阅评论串
+
+使用评论扩展中的 `subscribeToThreads` hook，让界面与评论串状态变化保持同步。
+
+```jsx
+import { subscribeToThreads } from '@tiptap-pro/extension-comments'
+import { useState, useEffect } from 'react'
+
+function useThreads(provider) {
+  const [threads, setThreads] = useState([])
+
+  useEffect(() => {
+    if (!provider) return
+
+    const unsubscribe = subscribeToThreads({
+      provider,
+      callback: (currentThreads) => {
+        setThreads(currentThreads)
+      },
+    })
+
+    return () => unsubscribe()
+  }, [provider])
+
+  return threads
+}
+```
+
+## 创建评论串
+
+允许用户针对选中的文本创建评论串。其用法与标准的评论扩展相同：
+
+```jsx
+const createThread = () => {
+  const content = window.prompt('Add a comment')
+  if (!content || !editor) return
+
+  editor
+    .chain()
+    .focus()
+    .setThread({
+      content,
+      commentData: {
+        userName: user.name,
+      },
+    })
+    .run()
+}
+```
+
+```jsx
+<button
+  onClick={createThread}
+  disabled={!editor?.state.selection || editor.state.selection.empty}
+>
+  Add comment
+</button>
+```
+
+## 建议与评论串之间的双向同步
+
+同时启用这两个扩展时，修订跟踪扩展会自动同步建议和评论串的状态。这意味着：
+
+- **解决**与建议关联的评论串 → **接受**该建议
+- **删除**与建议关联的评论串 → **拒绝**该建议
+- **接受**建议 → **解决**关联的评论串
+- **拒绝**建议 → **删除**关联的评论串
+
+这一过程会自动完成，无需额外配置。用户可以通过建议列表或评论面板审阅更改，两者的状态会保持一致。
+
+## 构建评论串侧边栏
+
+创建一个用于显示评论串的侧边栏。与建议关联的评论串包含元数据，可用于呈现建议预览。
+
+```jsx
+function ThreadsSidebar({ threads, provider, editor }) {
+  const [showResolved, setShowResolved] = useState(false)
+
+  const filteredThreads = threads.filter((t) =>
+    showResolved ? !!t.resolvedAt : !t.resolvedAt,
+  )
+
+  return (
+    <div style={{ width: 320, padding: '1rem' }}>
+      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+        <button onClick={() => setShowResolved(false)}>
+          Open
+        </button>
+        <button onClick={() => setShowResolved(true)}>
+          Resolved
+        </button>
+      </div>
+
+      {filteredThreads.length === 0 ? (
+        <p>No threads</p>
+      ) : (
+        filteredThreads.map((thread) => (
+          <ThreadItem
+            key={thread.id}
+            thread={thread}
+            provider={provider}
+            editor={editor}
+          />
+        ))
+      )}
+    </div>
+  )
+}
+```
+
+## 渲染与建议关联的评论串
+
+与建议关联的评论串会在 `thread.data` 中存储元数据。利用这些数据，可以在评论卡片中显示建议预览，并直接提供接受/拒绝操作。
+
+```jsx
+function ThreadItem({ thread, provider, editor }) {
+  const comments = provider.getThreadComments(thread.id, true)
+  const firstComment = comments?.[0]
+
+  // Check if this thread is linked to a suggestion
+  const isSuggestionThread = thread.data?.source === 'suggestion'
+  const suggestionType = thread.data?.suggestionType
+  const suggestionText = thread.data?.suggestionText
+  const suggestionId = thread.data?.suggestionId
+
+  return (
+    <div style={{
+      padding: '0.75rem',
+      marginBottom: '0.5rem',
+      border: '1px solid #e2e8f0',
+      borderRadius: '0.375rem',
+    }}>
+      {/* Suggestion preview for linked threads */}
+      {isSuggestionThread && (
+        <div style={{
+          padding: '0.5rem',
+          marginBottom: '0.5rem',
+          borderRadius: '0.25rem',
+          backgroundColor: suggestionType === 'add' ? '#f0fdf4' : '#fef2f2',
+        }}>
+          <div style={{ fontSize: '0.75rem', fontWeight: 600 }}>
+            {suggestionType === 'add' ? '+ Addition' : '− Deletion'}
+          </div>
+          <div style={{ fontSize: '0.875rem' }}>
+            "{suggestionText}"
+          </div>
+          {!thread.resolvedAt && (
+            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+              <button onClick={() => editor.commands.acceptSuggestion({ id: suggestionId })}>
+                Accept
+              </button>
+              <button onClick={() => editor.commands.rejectSuggestion({ id: suggestionId })}>
+                Reject
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Comment content */}
+      {firstComment && (
+        <div>
+          <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
+            {firstComment.data?.userName}
+            {' · '}
+            {new Date(firstComment.createdAt).toLocaleTimeString()}
+          </div>
+          <p style={{ fontSize: '0.875rem' }}>{firstComment.content}</p>
+        </div>
+      )}
+
+      {/* Thread actions */}
+      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+        {!thread.resolvedAt ? (
+          <button onClick={() => editor.commands.resolveThread({ id: thread.id })}>
+            {isSuggestionThread ? 'Accept & Resolve' : 'Resolve'}
+          </button>
+        ) : (
+          <button onClick={() => editor.commands.unresolveThread({ id: thread.id })}>
+            Unresolve
+          </button>
+        )}
+        <button onClick={() => editor.commands.removeThread({ id: thread.id, deleteThread: true })}>
+          {isSuggestionThread ? 'Reject & Delete' : 'Delete'}
+        </button>
+      </div>
+    </div>
+  )
+}
+```
+
+## 整合所有部分
+
+将编辑器、工具栏和评论串侧边栏组合起来，构建完整的审阅布局。
+
+```jsx
+function ReviewApp() {
+  const user = { id: 'user-123', name: 'John Doe' }
+  const { ydoc, provider } = useMemo(() => {
+    const doc = new Y.Doc()
+    const collabProvider = new TiptapCollabProvider({
+      appId: 'your-app-id',
+      name: 'your-document-name',
+      document: doc,
+    })
+    return { ydoc: doc, provider: collabProvider }
+  }, [])
+
+  const [isEnabled, setIsEnabled] = useState(true)
+  const threads = useThreads(provider)
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({ undoRedo: false }),
+      Collaboration.configure({ document: ydoc }),
+      CommentsKit.configure({ provider }),
+      TrackedChanges.configure({
+        enabled: true,
+        userId: user.id,
+        userMetadata: { name: user.name },
+      }),
+    ],
+  })
+
+  if (!editor) return null
+
+  return (
+    <div style={{ display: 'flex' }}>
+      <div style={{ flex: 1 }}>
+        <div className="toolbar">
+          <button onClick={() => {
+            editor.commands.toggleTrackedChanges()
+            setIsEnabled(!isEnabled)
+          }}>
+            {isEnabled ? 'Disable' : 'Enable'} Track Changes
+          </button>
+          <button
+            onClick={() => {
+              const content = window.prompt('Add a comment')
+              if (content) {
+                editor.chain().focus().setThread({
+                  content,
+                  commentData: { userName: user.name },
+                }).run()
+              }
+            }}
+            disabled={editor.state.selection.empty}
+          >
+            Add comment
+          </button>
+        </div>
+        <EditorContent editor={editor} />
+      </div>
+
+      <ThreadsSidebar
+        threads={threads}
+        provider={provider}
+        editor={editor}
+      />
+    </div>
+  )
+}
+```
+
+## 后续步骤
+
+- 详细了解[双向同步行为](/tracked-changes/usage/advanced-usage#comments-integration)
+- 浏览[评论文档](/comments/getting-started/overview)，了解更多评论串管理选项
+- 查看[事件 API](/tracked-changes/api-reference/events)，以监听建议和评论串状态变化
