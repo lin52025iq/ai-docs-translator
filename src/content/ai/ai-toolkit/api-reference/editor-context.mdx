@@ -1,67 +1,64 @@
 ---
-title: Editor context
+title: 编辑器上下文
 meta:
-  title: Editor context | Tiptap Server AI Toolkit
-  description: Get editor context data from your Tiptap editor for use with the Server AI Toolkit API.
+  title: 编辑器上下文 | Tiptap Server AI Toolkit
+  description: 获取 Tiptap 编辑器的上下文数据，以便与 Server AI Toolkit API 配合使用。
   category: AI Toolkit
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Before using the Server AI Toolkit API, you need to get editor context data from your Tiptap editor.
+使用 Server AI Toolkit API 之前，需要先从 Tiptap 编辑器获取编辑器上下文数据。
 
-The `getEditorContext` function retrieves schema information from your Tiptap editor and converts it to a format suitable for the Server AI Toolkit API. This data describes the document structure and helps the AI understand what content is valid.
+`getEditorContext` 函数会从 Tiptap 编辑器中提取架构信息，并将其转换为适用于 Server AI Toolkit API 的格式。这些数据描述了文档结构，可帮助 AI 理解哪些内容有效。
 
 ## `getEditorContext`
 
-Returns editor context data that describes the document structure for the Server AI Toolkit API.
+返回描述文档结构的编辑器上下文数据，供 Server AI Toolkit API 使用。
 
-This function collects schema information from extensions and converts it to a format suitable for AI model consumption. The returned data is used by the Server AI Toolkit API to understand what content is valid in your document.
+此函数会收集扩展中的架构信息，并将其转换为适合 AI 模型处理的格式。Server AI Toolkit API 会使用返回的数据来理解文档中哪些内容有效。
 
-<Callout title="Deprecated alias" variant="warning">
-  `getSchemaAwarenessData` is still available for backward compatibility, but it is deprecated. Use
-  `getEditorContext` for new integrations.
+<Callout title="已弃用的别名" variant="warning">
+  `getSchemaAwarenessData` 仍可用于向后兼容，但已弃用。对于新的集成，请使用
+  `getEditorContext`。
 </Callout>
 
-<Callout title="Store the editor context data" variant="info">
-  The editor context data returned by `getEditorContext` is a JSON-serializable object that you can
-  store in your database. You don't need to generate it every time—only update it when your Editor
-  extensions or schema change.
+<Callout title="存储编辑器上下文数据" variant="info">
+  `getEditorContext` 返回的编辑器上下文数据是可序列化为 JSON 的对象，可以存储在数据库中。
+  无需每次都重新生成——只需在 Editor 扩展或架构发生变化时更新即可。
 </Callout>
 
-<Callout title="Where to call getEditorContext" variant="info">
-  `getEditorContext` needs a configured Tiptap editor instance. Generate it in the client-side
-  editor setup or another environment that can instantiate the same editor extensions, then reuse
-  the stored JSON in server-side API calls.
+<Callout title="何处调用 getEditorContext" variant="info">
+  `getEditorContext` 需要一个已配置的 Tiptap 编辑器实例。请在客户端编辑器设置过程中，或在其他能够实例化相同编辑器扩展的环境中生成该数据，然后在服务器端 API 调用中重用已存储的 JSON。
 </Callout>
 
-See an example of how to use it in the [custom nodes guide](/ai/ai-toolkit/advanced-guides/custom-nodes).
+请参阅[自定义节点指南](/ai/ai-toolkit/advanced-guides/custom-nodes)中的使用示例。
 
-### Parameters
+### 参数
 
 #### `editor` (`Editor`)
 
-The Tiptap editor instance from which to extract editor context data.
+用于提取编辑器上下文数据的 Tiptap 编辑器实例。
 
 #### `options?` (`GetEditorContextOptions`)
 
-Configuration options for editor context:
+编辑器上下文的配置选项：
 
-- `customNodes?` (`JsonItem[]`): Custom editor context items to include in addition to the default ones. This allows extending the schema information with custom node types or modifications to existing node definitions for AI model consumption. Default: `[]`.
+- `customNodes?` (`JsonItem[]`)：除默认项之外要包含的自定义编辑器上下文项。可通过此选项添加自定义节点类型，或修改现有节点定义，从而扩展供 AI 模型使用的架构信息。默认值：`[]`。
 
-Every `JsonItem` object contains these properties:
+每个 `JsonItem` 对象包含以下属性：
 
-- `extensionName` (`string`): The name of the extension that provides this element
-- `name` (`string`): The human-readable name of the element in English
-- `description?` (`string`): Explanation of what the element is and how it is displayed
-- `isMark?` (`boolean`): Whether this item is a mark (as opposed to a node)
-- `attributes?` (`Record<string, unknown>`): Possible attributes of the element, defined as Zod schemas that will be converted to JSON schemas
+- `extensionName` (`string`)：提供此元素的扩展名称
+- `name` (`string`)：元素的英文可读名称
+- `description?` (`string`)：对元素及其显示方式的说明
+- `isMark?` (`boolean`)：此项是否为标记（而非节点）
+- `attributes?` (`Record<string, unknown>`)：元素可能具有的属性，以 Zod 架构定义，并将转换为 JSON 架构
 
-### Returns
+### 返回值
 
-`EditorContext`: Editor context data that describes the document structure. This data is passed to the Server AI Toolkit API endpoints.
+`EditorContext`：描述文档结构的编辑器上下文数据。此数据会传递给 Server AI Toolkit API 端点。
 
-### Example
+### 示例
 
 ```ts
 import { Editor } from '@tiptap/core'
