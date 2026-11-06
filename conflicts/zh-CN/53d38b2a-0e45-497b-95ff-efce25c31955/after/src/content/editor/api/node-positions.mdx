@@ -1,0 +1,345 @@
+---
+title: 节点位置
+meta:
+  title: 节点位置 | Tiptap 编辑器文档
+  description: 了解 Tiptap 中的节点位置，以及如何导航和操作文档。更多信息请参阅文档！
+  category: Editor
+---
+
+节点位置（`NodePos`）描述节点、其子节点及其父节点的具体位置，便于在它们之间轻松导航。节点位置的设计深受 DOM 启发，并基于 ProseMirror 的 [ResolvedPos](https://prosemirror.net/docs/ref/#model.ResolvedPos) 实现。
+
+## 使用节点位置
+
+创建新节点位置最简单的方法是使用 Editor 实例中的辅助函数。这样可以确保始终使用正确的编辑器实例，并直接访问 API。
+
+```js
+// set up your editor somewhere up here
+
+// The NodePosition for the outermost document node
+const $doc = editor.$doc
+
+// Get all nodes of type 'heading' in the document
+const $headings = editor.$nodes('heading')
+
+// Filter by attributes
+const $h1 = editor.$nodes('heading', { level: 1 })
+
+// Pick nodes directly
+const $firstHeading = editor.$node('heading', { level: 1 })
+
+// Create a new NodePos via the $pos method when the type is unknown
+const $myCustomPos = editor.$pos(30)
+```
+
+你也可以自行创建 `NodePos` 实例：
+
+```js
+// You need to have an editor instance and a resolved document position.
+// Prefer editor.$pos() when you only have a numeric position.
+const myNodePos = new NodePos(editor.state.doc.resolve(100), editor)
+```
+
+## 可以用 NodePos 做什么？
+
+`NodePos` 让你能够像遍历浏览器中的文档 DOM 一样遍历文档。你可以访问父节点、子节点和同级节点。
+
+**示例：** 获取并更新 `codeBlock` 节点的内容
+
+```js
+// get the first codeBlock from your document
+const $codeBlock = editor.$node('codeBlock')
+
+// get the previous NodePos of your codeBlock node
+const $previousItem = $codeBlock.before
+
+// easily update the content
+$previousItem.content = '<p>Updated content</p>'
+```
+
+如果你熟悉 DOM，这个示例会让你感到熟悉：
+
+**示例：** 选中列表项，并在项目符号列表中插入新项
+
+```js
+// get a bullet list from your doc
+const $bulletList = editor.$node('bulletList')
+
+// get all listItems from your bulletList
+const $listItems = $bulletList.querySelectorAll('listItem')
+
+// get the last listItem
+const $lastListItem = $listItems[0]
+
+// insert a new listItem after the last one
+editor.commands.insertContentAt($lastListItem.after, '<li>New item</li>')
+```
+
+## API
+
+### NodePos
+
+`NodePos` 类是你主要使用的类。它描述节点、其子节点及其父节点的具体位置，并提供在它们之间轻松导航的方法。其设计深受 DOM 启发，并基于 ProseMirror 的 [ResolvedPos](https://prosemirror.net/docs/ref/#model.ResolvedPos) 实现。
+
+#### 方法
+
+| 方法 | 参数 | 返回值 | 描述 |
+| ---------------- | --------------------------------- | --------------------- | --------------------------------------------------------------------------------------------------------- |
+| `constructor` | `pos` (ResolvedPos), `editor` (object) | `NodePos` | 在指定 `editor` 实例中的给定已解析位置创建一个新的 `NodePos` 实例 |
+| `closest` | `nodeType` (string) | `NodePos` 或 `null` | 沿文档结构向上查找最近的匹配 `NodePos`。如果找不到匹配项，则返回 `null` |
+| `querySelector` | `nodeType` (string), `attributes` (object) | `NodePos` 或 `null` | 沿文档结构向下查找第一个匹配的 `NodePos`。可以按属性筛选 |
+| `querySelectorAll` | `nodeType` (string), `attributes` (object) | `Array<NodePos>` | 沿文档结构向下查找所有匹配的 `NodePos` 实例。可以按属性筛选 |
+| `setAttribute` | `attributes` (object) | `NodePos` | 为当前 `NodePos` 设置指定属性 |
+
+##### constructor
+
+**参数**
+
+- `pos` – 要包装的 `ResolvedPos` 实例（例如 `editor.state.doc.resolve(100)`）
+- `editor` – 要使用的编辑器实例
+
+**返回值** `NodePos`
+
+```js
+const myNodePos = new NodePos(editor.state.doc.resolve(100), editor)
+```
+
+##### closest
+
+沿深度向上查找与你的 NodePosition 最近的 `NodePos` 实例。如果没有匹配的 `NodePos`，则返回 `null`。
+
+**返回值** `NodePos | null`
+
+```js
+const closest = myNodePos.closest('bulletList')
+```
+
+##### querySelector
+
+沿深度向下查找与你的 NodePosition 匹配的第一个 `NodePos` 实例。如果没有匹配的 `NodePos`，则返回 `null`。
+
+你也可以通过第二个参数按属性筛选。
+
+**返回值** `NodePos | null`
+
+```js
+const firstHeading = myNodePos.querySelector('heading')
+const firstH1 = myNodePos.querySelector('heading', { level: 1 })
+```
+
+##### querySelectorAll
+
+沿深度向下查找与你的 NodePosition 匹配的所有 `NodePos` 实例。如果没有匹配项，则返回空数组。
+
+你也可以通过第二个参数按属性筛选。
+
+**返回值** `Array<NodePos>`
+
+```js
+const headings = myNodePos.querySelectorAll('heading')
+const h1s = myNodePos.querySelectorAll('heading', { level: 1 })
+```
+
+##### setAttribute
+
+为当前 `NodePos` 设置属性。
+
+**返回值** `NodePos`
+
+```js
+myNodePos.setAttribute({ level: 1 })
+```
+
+#### 属性
+
+| 属性 | 类型 | 描述 |
+| --------------- | ---------------- | -------------------------------------------------------------------------------------------------------- |
+| `node` | `Node` (ProseMirror Node) | 当前 `NodePos` 处的 ProseMirror 节点 |
+| `parent` | `NodePos` | 当前 `NodePos` 的父节点 |
+| `children` | `Array<NodePos>` | 当前 `NodePos` 的子节点 |
+| `firstChild` | `NodePos` 或 `null` | 当前 `NodePos` 的第一个子节点；如果不存在，则为 `null` |
+| `lastChild` | `NodePos` 或 `null` | 当前 `NodePos` 的最后一个子节点；如果不存在，则为 `null` |
+| `pos` | `number` | 节点在文档中的位置 |
+| `from` | `number` | 节点的起始位置 |
+| `to` | `number` | 节点的结束位置 |
+| `range` | `number` | 当前 `NodePos` 处节点的范围（from–to） |
+| `content` | `string` | 当前 `NodePos` 处节点的内容。可以设置此属性以更新节点内容 |
+| `attributes` | `Object` | 当前 `NodePos` 处节点的属性 |
+| `textContent` | `string` | 当前 `NodePos` 处节点的文本内容 |
+| `depth` | `number` | 节点在文档结构中的深度（层级） |
+| `size` | `number` | 当前 `NodePos` 处节点的大小 |
+| `before` | `NodePos` 或 `null` | 当前 `NodePos` 之前的节点；如果不存在，则为 `null` |
+| `after` | `NodePos` 或 `null` | 当前 `NodePos` 之后的节点；如果不存在，则为 `null` |
+
+##### node
+
+当前节点位置处的 ProseMirror Node。
+
+**返回值** `Node`
+
+```js
+const node = myNodePos.node
+node.type.name // 'paragraph'
+```
+
+##### element
+
+当前节点位置处的 DOM 元素。
+
+**返回值** `Element`
+
+```js
+const element = myNodePos.element
+element.tagName // 'P'
+```
+
+##### content
+
+NodePosition 的内容。你可以将其设置为新值，以更新节点内容。
+
+**返回值** `string`
+
+```js
+const content = myNodePos.content
+myNodePos.content = '<p>Updated content</p>'
+```
+
+##### attributes
+
+NodePosition 的属性。
+
+**返回值** `Object`
+
+```js
+const attributes = myNodePos.attributes
+attributes.level // 1
+```
+
+##### textContent
+
+NodePosition 的文本内容。
+
+**返回值** `string`
+
+```js
+const textContent = myNodePos.textContent
+```
+
+##### depth
+
+NodePosition 的深度。
+
+**返回值** `number`
+
+```js
+const depth = myNodePos.depth
+```
+
+##### pos
+
+NodePosition 的位置。
+
+**返回值** `number`
+
+```js
+const pos = myNodePos.pos
+```
+
+##### size
+
+NodePosition 的大小。
+
+**返回值** `number`
+
+```js
+const size = myNodePos.size
+```
+
+##### from
+
+NodePosition 的起始位置。
+
+**返回值** `number`
+
+```js
+const from = myNodePos.from
+```
+
+##### to
+
+NodePosition 的结束位置。
+
+**返回值** `number`
+
+```js
+const to = myNodePos.to
+```
+
+##### range
+
+NodePosition 的范围。
+
+**返回值** `number`
+
+```js
+const range = myNodePos.range
+```
+
+##### parent
+
+NodePosition 的父 `NodePos`。
+
+**返回值** `NodePos`
+
+```js
+const parent = myNodePos.parent
+```
+
+##### before
+
+NodePosition 之前的 `NodePos`。如果之前没有 `NodePos`，则返回 `null`。
+
+**返回值** `NodePos | null`
+
+```js
+const before = myNodePos.before
+```
+
+##### after
+
+NodePosition 之后的 `NodePos`。如果之后没有 `NodePos`，则返回 `null`。
+
+**返回值** `NodePos | null`
+
+```js
+const after = myNodePos.after
+```
+
+##### children
+
+NodePosition 的子 `NodePos` 实例。
+
+**返回值** `Array<NodePos>`
+
+```js
+const children = myNodePos.children
+```
+
+##### firstChild
+
+NodePosition 的第一个子 `NodePos` 实例。如果没有子节点，则返回 `null`。
+
+**返回值** `NodePos | null`
+
+```js
+const firstChild = myNodePos.firstChild
+```
+
+##### lastChild
+
+NodePosition 的最后一个子 `NodePos` 实例。如果没有子节点，则返回 `null`。
+
+**返回值** `NodePos | null`
+
+```js
+const lastChild = myNodePos.lastChild
+```
