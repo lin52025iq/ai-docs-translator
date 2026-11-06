@@ -1,16 +1,16 @@
 ---
-title: 'ECharts Renderer'
-intro: 'The ECharts Renderer draws charts with ECharts, as SVG. It draws every built-in chart type.'
+title: 'ECharts 渲染器'
+intro: 'ECharts 渲染器使用 ECharts 将图表绘制为 SVG，并支持所有内置图表类型。'
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'ECharts Renderer | Tiptap Diagrams Docs'
-  description: 'The ECharts Renderer draws charts with ECharts, as SVG.'
-  category: Diagrams
+  title: 'ECharts 渲染器 | Tiptap Diagrams 文档'
+  description: 'ECharts 渲染器使用 ECharts 将图表绘制为 SVG。'
+  category: 图表
 ---
 
-## Quick start
+## 快速开始
 
 ```bash
 npm install echarts
@@ -22,31 +22,27 @@ import { echartsRenderer } from '@tiptap-pro/extension-diagrams/echarts'
 Diagrams.configure({ renderers: [echartsRenderer()] })
 ```
 
-## Chart types
+## 图表类型
 
-The ECharts Renderer draws line, bar, area, scatter, pie, doughnut, matrix, radar, funnel, gauge,
-treemap, combo, tree, sankey and network charts.
+ECharts 渲染器支持折线图、柱状图、面积图、散点图、饼图、圆环图、矩阵图、雷达图、漏斗图、仪表盘、
+树图、组合图、树形图、桑基图和网络图。
 
-- **Matrix** is a heatmap of colored cells with their text inside. Its legend lists each value.
-- **Network** is laid out on a circle, so it looks the same every time it is drawn.
-- **Bars on their side** in bar and combo charts, every field of
-  [series line styles](/diagrams/charts/appearance#series-line-styles) and of
-  [axes](/diagrams/charts/axes), and [reference lines](/diagrams/charts/references) are drawn.
-- **A double click on a text** renames it, see [Editing in the chart](/diagrams/charts/editing).
-- **Animation.** It animates a chart in the editor, unless the
-  [`animation`](/diagrams/api-reference/options#animation) option or the user's system turns it off.
+- **矩阵图**是由彩色单元格组成的热力图，单元格中显示文本。图例会列出每个值。
+- **网络图**按圆形布局，因此每次绘制的效果都相同。
+- **横向柱形图**（用于柱状图和组合图）、[系列线条样式](/diagrams/charts/appearance#series-line-styles)和[坐标轴](/diagrams/charts/axes)的所有字段，以及[参考线](/diagrams/charts/references)都会绘制出来。
+- **双击文本**可将其重命名，参见[编辑图表](/diagrams/charts/editing)。
+- **动画。** 编辑器中的图表会播放动画，除非[`animation`](/diagrams/api-reference/options#animation)选项或用户的系统设置将其关闭。
 
-## Options
+## 选项
 
-| Option  | Type     | Description                              |
-| ------- | -------- | ---------------------------------------- |
-| `id`    | `string` | The id charts store. Default `'echarts'` |
-| `label` | `string` | The name for a menu. Default `'ECharts'` |
+| 选项    | 类型     | 说明                          |
+| ------- | -------- | ----------------------------- |
+| `id`    | `string` | 图表存储的 id。默认值为 `'echarts'` |
+| `label` | `string` | 菜单中显示的名称。默认值为 `'ECharts'` |
 
-## Options a chart can store
+## 图表可存储的选项
 
-A chart can store ECharts options under `spec.renderer.echarts`. The Renderer lays them over the
-ECharts option it builds, one level deep:
+图表可以在 `spec.renderer.echarts` 下存储 ECharts 选项。渲染器会将这些选项覆盖到它生成的 ECharts 选项上，合并深度为一层：
 
 ```ts
 editor.commands.updateChartSpec({
@@ -54,18 +50,15 @@ editor.commands.updateChartSpec({
 })
 ```
 
-- **An object** merges with the option of the same name.
-- **Any other value** replaces it.
-- **A tooltip's `formatter` and `extraCssText`** are ignored.
-- **A color** must be a CSS color, such as `#1d3557`, `rgb(…)` or `var(…)`. Any other color is
-  ignored.
-- **Text with a double quote** is ignored. So is a font family with `;`, `<`, `>` or brackets.
-- **A `link` or `sublink`** that is not an `http:` or `https:` address is ignored.
+- **对象**会与同名选项合并。
+- **其他任何值**都会替换原值。
+- **工具提示的 `formatter` 和 `extraCssText`**会被忽略。
+- **颜色**必须是 CSS 颜色，例如 `#1d3557`、`rgb(…)` 或 `var(…)`。其他颜色都会被忽略。
+- **包含双引号的文本**会被忽略。包含 `;`、`<`、`>` 或方括号的字体系列也会被忽略。
+- **不是 `http:` 或 `https:` 地址的 `link` 或 `sublink`**会被忽略。
 
-## Export and servers
+## 导出与服务器
 
-`toSVG` uses ECharts' server-side rendering and needs no DOM, so you can make SVG files in
-Node.js.
+`toSVG` 使用 ECharts 的服务端渲染，无需 DOM，因此你可以在 Node.js 中生成 SVG 文件。
 
-`toEChartsOption(data, spec, theme)` returns the ECharts option for a chart, to draw it with
-your own ECharts setup.
+`toEChartsOption(data, spec, theme)` 会返回图表对应的 ECharts 选项，供你使用自己的 ECharts 配置来绘制图表。
