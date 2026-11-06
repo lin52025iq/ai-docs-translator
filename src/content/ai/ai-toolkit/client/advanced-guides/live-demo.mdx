@@ -1,11 +1,11 @@
 ---
-title: AI Toolkit Live Demo
+title: AI Toolkit 实时演示
 tags:
   - type: addon
   - type: beta
 meta:
-  title: AI Toolkit Live Demo | Tiptap AI Toolkit
-  description: Explore a live demonstration of the AI Toolkit with an interactive AI agent that can read, edit, and manipulate documents.
+  title: AI Toolkit 实时演示 | Tiptap AI Toolkit
+  description: 通过交互式 AI 代理，体验 AI Toolkit 的实时演示。该代理能够读取、编辑和操作文档。
   category: AI Toolkit
 sidebars:
   hideSecondary: true
@@ -16,7 +16,7 @@ import { CodeDemo } from '@/components/CodeDemo'
 import { Link } from '@/components/Link'
 import { Callout } from '@/components/ui/Callout'
 
-This interactive demo showcases the AI Toolkit's capabilities in a real document editing environment. The demo features an AI agent that can read, edit, and manipulate documents using the toolkit's methods.
+这个交互式演示展示了 AI Toolkit 在真实文档编辑环境中的功能。演示中包含一个 AI 代理，可使用工具包提供的方法读取、编辑和操作文档。
 
 <CodeDemo
   isScrollable
@@ -24,8 +24,7 @@ This interactive demo showcases the AI Toolkit's capabilities in a real document
   src="https://template.tiptap.dev/page-ai-toolkit"
   caption={
     <>
-      <strong>Try the AI Toolkit</strong> in action with this interactive demo featuring an AI agent
-      that can read, edit, and manipulate documents.
+      <strong>体验 AI Toolkit</strong> 的实际效果：在这个交互式演示中，AI 代理可以读取、编辑和操作文档。
     </>
   }
   captionActions={
@@ -35,7 +34,7 @@ This interactive demo showcases the AI Toolkit's capabilities in a real document
         target="_blank"
         className="flex items-center gap-1 text-grayAlpha-600 hover:text-grayAlpha-800 font-medium whitespace-nowrap"
       >
-        Full screen
+        全屏
         <Expand className="size-3" />
       </a>
       <span className="text-grayAlpha-300">|</span>
@@ -43,28 +42,26 @@ This interactive demo showcases the AI Toolkit's capabilities in a real document
         href="/ai/ai-toolkit/client/advanced-guides/live-demo"
         className="flex items-center gap-1 text-grayAlpha-600 hover:text-grayAlpha-800 font-medium whitespace-nowrap"
       >
-        Learn more
+        了解更多
         <ExternalLinkIcon className="size-3" />
       </Link>
     </>
   }
 />
 
-### Document Operations
+### 文档操作
 
-- **Reading**: The AI can read and analyze document content in chunks, handling large documents efficiently
-- **Editing**: Precisely edit specific sections without replacing entire content
-- **Inserting**: Stream content directly into the editor
-- **Suggestions**: Review AI-generated changes before accepting or rejecting them
+- **读取**：AI 可以分块读取和分析文档内容，高效处理大型文档
+- **编辑**：精准编辑特定部分，而不替换整个文档内容
+- **插入**：将内容直接流式插入编辑器
+- **建议**：在接受或拒绝 AI 生成的更改前先进行审核
 
-### Advanced Capabilities
+### 高级功能
 
-- **Schema awareness**: The AI understands custom nodes and marks in your document
-- **Selection-aware prompts**: Operations work on selected text or the entire document
-- **Change tracking**: Google Docs-style accept/reject workflow for AI edits
+- **架构感知**：AI 能够理解文档中的自定义节点和标记
+- **选择感知提示**：操作可针对选中的文本，也可针对整个文档
+- **更改跟踪**：采用类似 Google 文档的接受/拒绝工作流来处理 AI 编辑
 
-<Callout title="Access the source code" variant="info">
-  The complete source code for this demo is available once you add the AI Toolkit to your
-  subscription. We'll provide access during your onboarding call. Usage is subject to our [Terms of
-  Service](https://tiptap.dev/terms-of-service) and [Pro License](https://tiptap.dev/pro-license).
+<Callout title="获取源代码" variant="info">
+  将 AI Toolkit 添加到订阅后，即可获取此演示的完整源代码。我们会在入门沟通电话中提供访问权限。使用须遵守我们的[服务条款](https://tiptap.dev/terms-of-service)和 [Pro 许可证](https://tiptap.dev/pro-license)。
 </Callout>
