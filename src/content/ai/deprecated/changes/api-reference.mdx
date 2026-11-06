@@ -1,130 +1,121 @@
 ---
-title: AI Changes extension API reference
+title: AI Changes 扩展 API 参考
 meta:
-  title: API Reference | Tiptap AI Changes
-  description: API reference for the Tiptap AI Changes extension.
-  category: Content AI
+  title: API 参考 | Tiptap AI Changes
+  description: Tiptap AI Changes 扩展的 API 参考。
+  category: 内容 AI
 ---
 
-## Extension options
+## 扩展选项
 
 ```ts
 /**
- * Configuration options for the AI Changes extension
+ * AI Changes 扩展的配置选项
  */
 export interface AiChangesOptions {
   /**
-   * Creates the decorations for an AI Change
+   * 创建 AI 更改的装饰
    *
-   * @default getDefaultDecorations parameter
+   * @default getDefaultDecorations 参数
    *
-   * @param options The current change, the list of changes, whether the current
-   * change is selected, a function to get the default decorations, the editor
-   * instance, the previous document before the AI made changes, and the current
-   * document after the AI made changes.
-   * @returns A list of ProseMirror decorations to be applied to document
+   * @param options 当前更改、更改列表、当前更改是否已选中、用于获取默认装饰的函数、编辑器实例、AI 更改前的文档，以及 AI 更改后的当前文档。
+   * @returns 要应用于文档的 ProseMirror 装饰列表
    */
   getCustomDecorations: (options: GetCustomDecorationsOptions) => Decoration[]
 }
 
 /**
- * Options for the `getCustomDecorations` function
+ * `getCustomDecorations` 函数的选项
  */
 export interface GetCustomDecorationsOptions {
   /**
-   * The current change being processed
+   * 当前正在处理的更改
    */
   change: AiChange
   /**
-   * The list of changes made by the AI
+   * AI 所做的更改列表
    */
   changes: AiChange[]
   /**
-   * Whether the current change is selected
+   * 当前更改是否已选中
    */
   isSelected: boolean
   /**
-   * Get the default decorations that the extension would apply to the document
-   * if the `getCustomDecorations` function was not provided.
+   * 获取扩展在未提供 `getCustomDecorations` 函数时会应用于文档的默认装饰。
    *
-   * @returns A list of default decorations to be applied to the document
+   * @returns 要应用于文档的默认装饰列表
    */
   getDefaultDecorations: () => Decoration[]
   /**
-   * The Tiptap Editor instance
+   * Tiptap 编辑器实例
    */
   editor: Editor
   /**
-   * The previous document before the AI made changes
+   * AI 更改前的文档
    */
   previousDoc: Node | null
   /**
-   * The current document after the AI made changes
+   * AI 更改后的当前文档
    */
   currentDoc: Node
 }
 ```
 
-## Extension commands
+## 扩展命令
 
 ```ts
 /**
- * Commands of the AI Changes extension
+ * AI Changes 扩展的命令
  */
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     aiChanges: {
       /**
-       * Starts tracking AI changes in the document, and showing the differences
-       * between the current document and the initial document in the editor.
+       * 开始跟踪文档中的 AI 更改，并显示编辑器中当前文档与初始文档之间的差异。
        *
-       * @param doc The initial document to compare against. If not provided, the current document will be used.
+       * @param doc 用于比较的初始文档。如果未提供，则使用当前文档。
        */
       startTrackingAiChanges: (doc?: Node) => ReturnType
 
       /**
-       * Finishes tracking AI changes in the document. Sets the initial document
-       * to `null`, and stops showing the differences between the current document.
+       * 停止跟踪文档中的 AI 更改。将初始文档设为 `null`，并停止显示当前文档与初始文档之间的差异。
        */
       stopTrackingAiChanges: () => ReturnType
 
       /**
-       * Accepts all AI changes in the document. Sets the initial document to
-       * the current document.
+       * 接受文档中的所有 AI 更改。将初始文档设为当前文档。
        */
       acceptAllAiChanges: () => ReturnType
 
       /**
-       * Undoes all AI changes in the document, and restores the initial document.
+       * 撤销文档中的所有 AI 更改，并恢复初始文档。
        */
       rejectAllAiChanges: () => ReturnType
 
       /**
-       * Accepts a specific AI change in the document. It modifies the initial document
-       * so that it has the same content as the current document in that specific change
-       * @param id The ID of the change to accept
+       * 接受文档中的特定 AI 更改。修改初始文档，使其在该更改处与当前文档内容一致。
+       * @param id 要接受的更改 ID
        */
       acceptAiChange: (id: string) => ReturnType
 
       /**
-       * Rejects a specific AI change in the document. The current document will have the
-       * same content as the initial document in that specific change
+       * 拒绝文档中的特定 AI 更改。当前文档在该更改处的内容将与初始文档一致。
        *
-       * @param id The ID of the change to reject
+       * @param id 要拒绝的更改 ID
        * @returns
        */
       rejectAiChange: (id: string) => ReturnType
 
       /**
-       * Show or hide the AI changes in the document.
+       * 显示或隐藏文档中的 AI 更改。
        *
-       * @param show Whether to show the AI changes or not
+       * @param show 是否显示 AI 更改
        */
       setShowAiChanges: (show: boolean) => ReturnType
       /**
-       * Sets a change as selected. Sets the cursor at the beginning of the change's range.
+       * 将某项更改设为选中状态，并将光标置于该更改范围的起始位置。
        *
-       * @param id The ID of the change to select
+       * @param id 要选中的更改 ID
        */
       selectAiChange: (id: string) => ReturnType
     }
@@ -132,77 +123,71 @@ declare module '@tiptap/core' {
 }
 ```
 
-## Extension storage
+## 扩展存储
 
 ```ts
 /**
- * Internal storage properties for the AI Changes extension.
+ * AI Changes 扩展的内部存储属性。
  */
 export interface AiChangesStorage {
-  /** Key for the ProseMirror plugin used by the extension */
+  /** AI Changes 扩展使用的 ProseMirror 插件的键 */
   pluginKey: PluginKey<AiChangesProsemirrorPluginState>
   /**
-   * Returns a list of changes made to the document by the AI
+   * 返回 AI 对文档所做的更改列表
    *
-   * @returns The list of changes made to the document
+   * @returns 文档更改列表
    */
   getChanges: () => AiChange[]
   /**
-   * Returns the currently selected change in the document. The selected change
-   * has the cursor inside its range.
+   * 返回文档中当前选中的更改。光标位于所选更改的范围内。
    *
-   * @returns The currently selected change in the document, or null if no change is selected
+   * @returns 当前选中的文档更改；如果未选中任何更改，则返回 null
    */
   getSelectedChange: () => AiChange | null
   /**
-   * Returns the previous document before the AI made changes. If the extension is
-   * currently not tracking changes, this will be `null`.
+   * 返回 AI 更改前的文档。如果扩展当前未跟踪更改，则返回 `null`。
    *
-   * @returns The previous document before the AI made changes, or null if no changes are being tracked
+   * @returns AI 更改前的文档；如果未跟踪任何更改，则返回 null
    */
   getPreviousDoc: () => Node | null
   /**
-   * Returns `true` if the extension is currently tracking changes made by the AI
-   * or `false` if it is not.
+   * 如果扩展当前正在跟踪 AI 所做的更改，则返回 `true`；否则返回 `false`。
    *
-   * @returns `true` if the extension is currently tracking changes made by the AI, or `false` if it is not
+   * @returns 如果扩展当前正在跟踪 AI 所做的更改，则返回 `true`；否则返回 `false`
    */
   getIsTrackingAiChanges: () => boolean
   /**
-   * Returns `true` if the extension is currently showing the changes made by the AI
-   * or `false` if it is not.
+   * 如果扩展当前正在显示 AI 所做的更改，则返回 `true`；否则返回 `false`。
    *
-   * @returns `true` if the extension is currently showing the changes made by the AI, or `false` if it is not
+   * @returns 如果扩展当前正在显示 AI 所做的更改，则返回 `true`；否则返回 `false`
    */
   getIsShowingAiChanges: () => boolean
 }
 ```
 
-## Extension types
+## 扩展类型
 
-### Changes
+### 更改
 
 ```ts
 import { Range } from '@tiptap/core'
 
 /**
- * A change made by the AI agent. The changes are computed by making a diff
- * between the old and new document (before and after the AI agent's changes).
- * The change objects are stored in the extension storage of the AI Changes
- * extension and used to render the changes in the editor.
+ * AI 代理所做的一项更改。通过比较新旧文档（即 AI 代理更改前后的文档）计算差异，
+ * 得到更改对象。更改对象存储在 AI Changes 扩展的存储中，并用于在编辑器中呈现更改。
  */
 export interface AiChange {
   /**
-   * Unique identifier for the change.
+   * 更改的唯一标识符。
    */
   id: string
   /**
-   * The range of content that was deleted in the old document.
+   * 旧文档中已删除内容的范围。
    */
   oldRange: Range
   /**
-   * The range of content that was added in the new document.
-   * This is the range of content that was inserted by the AI agent.
+   * 新文档中新增内容的范围。
+   * 这是 AI 代理插入内容的范围。
    */
   newRange: Range
 }
