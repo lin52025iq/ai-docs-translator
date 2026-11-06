@@ -1,6 +1,6 @@
 ---
-title: 'Quick Input'
-intro: 'The Quick Input is a text field inside the document. To open it, type <code>:::</code> in an empty paragraph. When you confirm it, what you typed or pasted becomes a chart or a diagram.'
+title: '快速输入'
+intro: '快速输入是文档中的一个文本字段。要打开它，请在空段落中输入 <code>:::</code>。确认后，你输入或粘贴的内容会变成图表或图示。'
 headerDemo:
   path: '/Extensions/DiagramsChartText'
   isPro: true
@@ -8,16 +8,16 @@ tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Quick Input | Tiptap Diagrams Docs'
-  description: 'The Quick Input is a text field inside the document.'
-  category: Diagrams
+  title: '快速输入 | Tiptap Diagrams 文档'
+  description: '快速输入是文档中的一个文本字段。'
+  category: 图表
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-## Quick start
+## 快速开始
 
-Rows become a chart. The first line may name its type:
+行数据会生成图表。第一行可以指定图表类型：
 
 ```txt
 bar
@@ -26,207 +26,186 @@ Jan   | 42     | 30
 Feb   | 48     | 28
 ```
 
-Mermaid becomes a diagram:
+Mermaid 内容会生成图示：
 
 ```txt
 flowchart LR
   idea[Idea] --> draft[Draft]
 ```
 
-To confirm, press Escape, or press Enter on an empty last line. When you edit a text in a
-[chart](/diagrams/charts/editing) or a [diagram](/diagrams/flow-diagrams/editing), Escape does the opposite:
-it closes the field and drops the change.
+要确认，请按 Escape，或在最后一行为空时按 Enter。编辑[图表](/diagrams/charts/editing)或[图示](/diagrams/flow-diagrams/editing)中的文本时，Escape 的作用正好相反：它会关闭输入框并丢弃更改。
 
-## What the text becomes
+## 文本会转换成什么
 
-| Text in the Quick Input                        | Becomes   | Read as                                                           |
-| ---------------------------------------------- | --------- | ----------------------------------------------------------------- |
-| Rows, with an optional type line such as `bar` | A chart   | [Writing a chart](/diagrams/data/quick-input#writing-a-chart)     |
-| A Mermaid chart, such as `pie` or `sankey`     | A chart   | Mermaid, with its type and title from its header                  |
-| Any other Mermaid diagram                      | A diagram | [Writing a diagram](/diagrams/data/quick-input#writing-a-diagram) |
-| draw.io XML or BPMN XML, pasted                | A diagram | Its source                                                        |
+| 快速输入中的文本                                  | 转换结果 | 说明                                                              |
+| ---------------------------------------------- | -------- | ----------------------------------------------------------------- |
+| 行数据，可选地带有 `bar` 之类的类型行             | 图表     | [编写图表](/diagrams/data/quick-input#writing-a-chart)             |
+| Mermaid 图表，例如 `pie` 或 `sankey`             | 图表     | Mermaid 图表，类型和标题取自其标头                                |
+| 其他任何 Mermaid 图示                            | 图示     | [编写图示](/diagrams/data/quick-input#writing-a-diagram)           |
+| 粘贴的 draw.io XML 或 BPMN XML                  | 图示     | 其源内容                                                          |
 
-`pie` above rows, such as `Dogs, 3`, is a type line, not Mermaid. The Quick Input reads text with
-the same rules as a [paste](/diagrams/data/pasting#how-pasted-text-is-read).
+在行数据（例如 `Dogs, 3`）上方的 `pie` 是类型行，不是 Mermaid。快速输入读取文本时，遵循与[粘贴](/diagrams/data/pasting#how-pasted-text-is-read)相同的规则。
 
-The Quick Input is a node named `diagramInput`. The commands below drive it from a toolbar of
-your own.
+快速输入是一个名为 `diagramInput` 的节点。你可以用下面的命令通过自定义工具栏来控制它。
 
-## Writing a chart
+## 编写图表
 
-A chart is written in the [Chart syntax](/diagrams/data/chart-syntax): rows, and a first line that may name
-the type. That page has the header rule, the default type, delimiters, numbers and quotes.
+图表使用 [Chart 语法](/diagrams/data/chart-syntax)编写：行数据，以及可用于指定类型的第一行。该页面介绍了标头规则、默认类型、分隔符、数字和引号。
 
-## Writing a diagram
+## 编写图示
 
-You write a diagram in its own language. The Quick Input keeps the text as you typed it.
+图示使用各自的语言编写。快速输入会保留你输入的文本。
 
-- **Mermaid**, such as `flowchart LR` with a line `A --> B`. Its first line names the kind of
-  diagram. See [Diagrams](/diagrams/flow-diagrams/overview).
-- **draw.io XML or BPMN XML**, which you paste from the tools you draw them in. See
-  [draw.io](/diagrams/renderers/drawio) and [BPMN](/diagrams/renderers/bpmn).
+- **Mermaid**，例如 `flowchart LR`，并包含一行 `A --> B`。第一行指定图示类型。参见[图示](/diagrams/flow-diagrams/overview)。
+- **draw.io XML 或 BPMN XML**，从绘制图示的工具中复制并粘贴。参见 [draw.io](/diagrams/renderers/drawio) 和 [BPMN](/diagrams/renderers/bpmn)。
 
-## Back into text
+## 重新转换为文本
 
-`editChartAsText` and `editDiagramAsText` open a chart or a Mermaid diagram in the Quick Input
-again. If you change the first line, a chart becomes another chart type or a diagram.
+`editChartAsText` 和 `editDiagramAsText` 会再次在快速输入中打开图表或 Mermaid 图示。如果更改第一行，图表会变成另一种图表类型，或变成图示。
 
-Open a chart as text, then write `flowchart LR` and a line such as `A --> B`:
+以文本形式打开图表，然后输入 `flowchart LR` 和类似 `A --> B` 的一行：
 
 <CodeDemo isPro viewer view="preview" path="/Extensions/DiagramsOverview" />
 
-## Keys in the Quick Input
+## 快速输入中的按键
 
-Mod is Cmd on macOS and Ctrl on other systems.
+在 macOS 上，Mod 表示 Cmd；在其他系统上表示 Ctrl。
 
-| Key               | In the Quick Input                                                |
+| 按键              | 在快速输入中的作用                                                |
 | ----------------- | ----------------------------------------------------------------- |
-| Enter             | A new line. On an empty last line, draws the chart or the diagram |
-| Shift-Enter       | A new line, also on an empty last line                            |
-| Mod-Enter, Escape | Draws the chart or the diagram                                    |
-| Mod-Shift-A       | Selects everything typed into the Quick Input                     |
-| Mod-A             | Still selects the whole document                                  |
-| Backspace         | In an empty Quick Input, removes it                               |
+| Enter             | 换行。在最后一行为空时，生成图表或图示                            |
+| Shift-Enter       | 换行，即使最后一行为空也一样                                      |
+| Mod-Enter, Escape | 生成图表或图示                                                    |
+| Mod-Shift-A       | 选中快速输入中的所有内容                                          |
+| Mod-A             | 仍然会选中整个文档                                                |
+| Backspace         | 快速输入为空时，将其移除                                          |
 
-After a first line that holds only a type name, such as `pie` or `bar`, Enter starts a new line
-and the name stays as the type line. Below a lone type line, the Quick Input shows example rows
-for that type until you type a row.
+如果第一行只有类型名称（例如 `pie` 或 `bar`），按 Enter 会开始新的一行，而类型名称仍保留为类型行。在单独的类型行下方，快速输入会显示该类型的示例行，直到你输入一行数据。
 
-### When the Quick Input closes
+### 快速输入关闭时
 
-- **Moving the selection out of the Quick Input** draws it, as confirming does.
-- **An empty Quick Input** becomes an empty paragraph.
-- **Text that cannot be read** keeps the Quick Input open, and `confirmDiagramInput` returns
-  `false`.
+- **将选区移出快速输入**会生成图表或图示，效果与确认相同。
+- **空的快速输入**会变成空段落。
+- **无法读取的文本**会使快速输入保持打开状态，并且 `confirmDiagramInput` 会返回 `false`。
 
-## Mod-Enter in a code block
+## 代码块中的 Mod-Enter
 
-The key that confirms the Quick Input also turns a code block into a chart or a diagram.
+用于确认快速输入的按键也可以将代码块转换为图表或图示。
 
-- [Mermaid chart source](/diagrams/charts/overview#importmermaidchart), such as `pie` or
-  `sankey-beta`, becomes a chart, as with `convertCodeBlockToChart`.
-- Other Mermaid source becomes a diagram, as with `convertCodeBlockToDiagram`.
-- In a code block of anything else, the key does what it did before. In Tiptap, that is leaving
-  the code block.
+- [Mermaid 图表源代码](/diagrams/charts/overview#importmermaidchart)，例如 `pie` 或 `sankey-beta`，会变成图表，效果与 `convertCodeBlockToChart` 相同。
+- 其他 Mermaid 源代码会变成图示，效果与 `convertCodeBlockToDiagram` 相同。
+- 对于其他类型的代码块，该按键仍执行原有操作。在 Tiptap 中，也就是离开代码块。
 
-Any node with `code: true` in its spec counts as a code block. Set another key, or `false` for no
-key, with the [`codeBlockShortcut`](/diagrams/api-reference/options#codeblockshortcut) option.
+规范中带有 `code: true` 的任何节点都视为代码块。使用 [`codeBlockShortcut`](/diagrams/api-reference/options#codeblockshortcut) 选项可以设置其他按键；若不需要按键，则设为 `false`。
 
-## Commands
+## 命令
 
 ### confirmDiagramInput
 
-Turns the open Quick Input, or a Quick Input shown as a table, into a chart or a diagram.
+将打开的快速输入或以表格形式显示的快速输入转换为图表或图示。
 
 ```ts
 editor.commands.confirmDiagramInput()
 ```
 
-| Option | Type     | Description                                            |
-| ------ | -------- | ------------------------------------------------------ |
-| `pos`  | `number` | A position inside the input. Defaults to the selection |
+| 选项  | 类型     | 描述                                         |
+| ----- | -------- | -------------------------------------------- |
+| `pos` | `number` | 输入内容中的一个位置。默认为当前选区的位置   |
 
-`detectDiagramInput` decides what the text becomes. Mermaid diagram source, draw.io XML or BPMN
-XML becomes a diagram when the `flowDiagram` node is in the schema.
+`detectDiagramInput` 会决定文本的转换结果。如果 schema 中包含 `flowDiagram` 节点，Mermaid 图示源代码、draw.io XML 或 BPMN XML 会转换为图示。
 
-Returns `false` without an open input, or when the text cannot be read.
+没有打开的输入框，或文本无法读取时，返回 `false`。
 
 ### setDiagramInputType
 
-Sets the chart type the open input becomes. A type line already there is rewritten to the new
-type.
+设置打开的输入框将生成的图表类型。如果已有类型行，会将其改写为新类型。
 
 ```ts
 editor.commands.setDiagramInputType('bar')
 ```
 
-| Parameter | Type        | Description                                               |
-| --------- | ----------- | --------------------------------------------------------- |
-| `type`    | `ChartType` | A built-in chart type or one registered with `chartTypes` |
+| 参数   | 类型        | 描述                                               |
+| ------ | ----------- | -------------------------------------------------- |
+| `type` | `ChartType` | 内置图表类型，或通过 `chartTypes` 注册的类型       |
 
-Returns `false` for an unknown type or without an open input.
+类型未知或没有打开的输入框时，返回 `false`。
 
 ### setDiagramInputView
 
-Switches the open input between the text field and a table you fill in. It keeps what you typed.
+在文本字段和可填写的表格之间切换打开的输入框视图。切换时会保留已输入的内容。
 
 ```ts
 editor.commands.setDiagramInputView('table')
 ```
 
-| Parameter | Type                        | Description                                                |
-| --------- | --------------------------- | ---------------------------------------------------------- |
-| `view`    | `'chart-syntax' \| 'table'` | `'chart-syntax'` for the text field, `'table'` for a table |
+| 参数   | 类型                        | 描述                                           |
+| ------ | --------------------------- | ---------------------------------------------- |
+| `view` | `'chart-syntax' \| 'table'` | `'chart-syntax'` 表示文本字段，`'table'` 表示表格 |
 
-The table view needs table nodes in the schema.
+表格视图要求 schema 中包含表格节点。
 
-Returns `false` without an open input, or for `'table'` without a table in the schema.
+没有打开的输入框，或 schema 中不包含表格却指定了 `'table'` 时，返回 `false`。
 
 ### setDiagramInputDelimiter
 
-Makes the open Quick Input split its text at one configured delimiter, instead of the one it
-finds.
+设置打开的快速输入使用指定的分隔符拆分文本，而不是自动检测分隔符。
 
 ```ts
 editor.commands.setDiagramInputDelimiter(';')
 ```
 
-| Parameter   | Type             | Description                                                        |
-| ----------- | ---------------- | ------------------------------------------------------------------ |
-| `delimiter` | `string \| null` | One of the configured `delimiters`. `null` goes back to finding it |
+| 参数        | 类型             | 描述                                                   |
+| ----------- | ---------------- | ------------------------------------------------------ |
+| `delimiter` | `string \| null` | 已配置的 `delimiters` 之一。`null` 表示恢复自动检测   |
 
-The choice lasts while the Quick Input is open. The chart it becomes remembers the delimiter it
-was split with.
+该设置在快速输入保持打开期间有效。生成的图表会记住用于拆分文本的分隔符。
 
-Returns `false` without an open Quick Input, or for a delimiter that is not configured.
+没有打开的快速输入，或指定的分隔符未配置时，返回 `false`。
 
 ### editChartAsText
 
-Turns a chart into a Quick Input with its data in the Chart syntax.
+将图表转换为快速输入，并以 Chart 语法显示其数据。
 
 ```ts
 editor.commands.editChartAsText()
 ```
 
-| Option | Type     | Description                                          |
-| ------ | -------- | ---------------------------------------------------- |
-| `pos`  | `number` | The chart's position. Defaults to the selected chart |
+| 选项  | 类型     | 描述                                   |
+| ----- | -------- | -------------------------------------- |
+| `pos` | `number` | 图表的位置。默认为选中的图表           |
 
-When you confirm the Quick Input, the chart gets back its spec, its Renderer and its Data
-Source.
+确认快速输入后，图表会恢复其 spec、Renderer 和 Data Source。
 
-Returns `false` for a chart whose linked source is read-only.
+关联数据源为只读的图表会返回 `false`。
 
 ### editDiagramAsText
 
-Turns a Mermaid diagram into a Quick Input that holds its source.
+将 Mermaid 图示转换为包含其源内容的快速输入。
 
 ```ts
 editor.commands.editDiagramAsText()
 ```
 
-| Option | Type     | Description                                              |
-| ------ | -------- | -------------------------------------------------------- |
-| `pos`  | `number` | The diagram's position. Defaults to the selected diagram |
+| 选项  | 类型     | 描述                                   |
+| ----- | -------- | -------------------------------------- |
+| `pos` | `number` | 图示的位置。默认为选中的图示           |
 
-When you confirm it, the text is read like any other. Rows below a type line such as `bar` make
-it a chart. A diagram that keeps its kind, such as a flowchart, gets back its title,
-description, view and node positions.
+确认后，文本会像其他文本一样进行读取。`bar` 之类的类型行下方如果有行数据，就会生成图表。对于保留原有类型（例如流程图）的图示，其标题、描述、视图和节点位置都会恢复。
 
-Returns `false` for draw.io and BPMN, and for a diagram drawn from a table.
+draw.io 和 BPMN 图示，以及由表格绘制的图示，都会返回 `false`。
 
 ### editChartAsTable
 
-Turns a chart into a table of its data, to edit the data.
+将图表转换为包含其数据的表格，以便编辑数据。
 
 ```ts
 editor.commands.editChartAsTable()
 ```
 
-| Option | Type     | Description                                          |
-| ------ | -------- | ---------------------------------------------------- |
-| `pos`  | `number` | The chart's position. Defaults to the selected chart |
+| 选项  | 类型     | 描述                                   |
+| ----- | -------- | -------------------------------------- |
+| `pos` | `number` | 图表的位置。默认为选中的图表           |
 
-When you move the selection out of the table, it becomes a chart again.
+将选区移出表格后，表格会重新变成图表。
 
-Returns `false` for a read-only chart or without a table in the schema.
+对于只读图表，或 schema 中不包含表格时，返回 `false`。
