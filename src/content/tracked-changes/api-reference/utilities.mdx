@@ -1,36 +1,36 @@
 ---
-title: Utilities
+title: 实用工具
 tags:
   - type: addon
 meta:
-  title: Utilities | Tiptap Tracked Changes Docs
-  description: Utility functions for querying suggestions and exporting base document JSON in the Tiptap Tracked Changes extension.
+  title: 实用工具 | Tiptap Tracked Changes 文档
+  description: Tiptap Tracked Changes 扩展中用于查询建议和导出基础文档 JSON 的实用函数。
   category: Tracked Changes
 ---
 
-The extension exports utility functions for querying suggestions and exporting base document JSON.
+该扩展提供用于查询建议和导出基础文档 JSON 的实用函数。
 
 ## findSuggestions()
 
-Find all suggestions in the document, with optional filtering.
+查找文档中的所有建议，可选择性地进行筛选。
 
-| Argument | Type | Default | Description |
+| 参数 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
-| `editor` | `Editor` | — | The Tiptap editor instance |
-| `markName` | `string` | `'suggestion'` | The name of the suggestion mark |
-| `options` | `FindSuggestionsOptions` | `{}` | Optional filters (see below) |
+| `editor` | `Editor` | — | Tiptap 编辑器实例 |
+| `markName` | `string` | `'suggestion'` | 建议标记的名称 |
+| `options` | `FindSuggestionsOptions` | `{}` | 可选筛选条件（见下文） |
 
-### Options
+### 选项
 
-| Option | Type | Description |
+| 选项 | 类型 | 描述 |
 | --- | --- | --- |
-| `type` | `SuggestionType` | Filter by [suggestion type](/tracked-changes/api-reference/types#suggestiontype) |
-| `userId` | `string` | Filter by user ID |
-| `id` | `string` | Filter by suggestion ID |
+| `type` | `SuggestionType` | 按[建议类型](/tracked-changes/api-reference/types#suggestiontype)筛选 |
+| `userId` | `string` | 按用户 ID 筛选 |
+| `id` | `string` | 按建议 ID 筛选 |
 
-### Returns
+### 返回值
 
-`Suggestion[]` — Array of suggestions found in the document.
+`Suggestion[]` — 在文档中找到的建议数组。
 
 ```js
 import { findSuggestions } from '@tiptap-pro/extension-tracked-changes'
@@ -50,17 +50,17 @@ const userSuggestions = findSuggestions(editor, 'suggestion', { userId: 'user-12
 
 ## findSuggestionById()
 
-Find a specific suggestion by ID.
+按 ID 查找指定建议。
 
-| Argument | Type | Default | Description |
+| 参数 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
-| `editor` | `Editor` | — | The Tiptap editor instance |
-| `id` | `string` | — | The suggestion ID to find |
-| `markName` | `string` | `'suggestion'` | The name of the suggestion mark |
+| `editor` | `Editor` | — | Tiptap 编辑器实例 |
+| `id` | `string` | — | 要查找的建议 ID |
+| `markName` | `string` | `'suggestion'` | 建议标记的名称 |
 
-### Returns
+### 返回值
 
-`Suggestion | undefined` — The suggestion if found, `undefined` otherwise.
+`Suggestion | undefined` — 找到时返回该建议，否则返回 `undefined`。
 
 ```js
 import { findSuggestionById } from '@tiptap-pro/extension-tracked-changes'
@@ -74,17 +74,17 @@ if (suggestion) {
 
 ## findSuggestionRanges()
 
-Find all document ranges covered by a suggestion. A single suggestion may span multiple text nodes when it crosses formatting boundaries.
+查找建议覆盖的所有文档范围。当建议跨越格式边界时，单个建议可能跨越多个文本节点。
 
-| Argument | Type | Default | Description |
+| 参数 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
-| `editor` | `Editor` | — | The Tiptap editor instance |
-| `id` | `string` | — | The suggestion ID to find |
-| `markName` | `string` | `'suggestion'` | The name of the suggestion mark |
+| `editor` | `Editor` | — | Tiptap 编辑器实例 |
+| `id` | `string` | — | 要查找的建议 ID |
+| `markName` | `string` | `'suggestion'` | 建议标记的名称 |
 
-### Returns
+### 返回值
 
-`Array<{ from: number; to: number }>` — Array of position ranges covered by this suggestion. Adjacent ranges are automatically merged.
+`Array<{ from: number; to: number }>` — 此建议覆盖的位置范围数组。相邻范围会自动合并。
 
 ```js
 import { findSuggestionRanges } from '@tiptap-pro/extension-tracked-changes'
@@ -95,16 +95,16 @@ const ranges = findSuggestionRanges(editor, 'suggestion-123')
 
 ## getSuggestionAtSelection()
 
-Get the suggestion at the current selection position. Works with both mark-based suggestions (text) and attribute-based suggestions (atom nodes).
+获取当前选区位置处的建议。适用于基于标记的建议（文本）和基于属性的建议（原子节点）。
 
-| Argument | Type | Default | Description |
+| 参数 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
-| `editor` | `Editor` | — | The Tiptap editor instance |
-| `markName` | `string` | `'suggestion'` | The name of the suggestion mark |
+| `editor` | `Editor` | — | Tiptap 编辑器实例 |
+| `markName` | `string` | `'suggestion'` | 建议标记的名称 |
 
-### Returns
+### 返回值
 
-`Suggestion | undefined` — The suggestion at the current cursor position, or `undefined` if none.
+`Suggestion | undefined` — 当前光标位置处的建议；如果没有，则返回 `undefined`。
 
 ```js
 import { getSuggestionAtSelection } from '@tiptap-pro/extension-tracked-changes'
@@ -119,17 +119,17 @@ if (suggestion) {
 
 ## getSuggestionAtPosition()
 
-Get the suggestion at a specific document position.
+获取指定文档位置处的建议。
 
-| Argument | Type | Default | Description |
+| 参数 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
-| `editor` | `Editor` | — | The Tiptap editor instance |
-| `pos` | `number` | — | The document position to check |
-| `markName` | `string` | `'suggestion'` | The name of the suggestion mark |
+| `editor` | `Editor` | — | Tiptap 编辑器实例 |
+| `pos` | `number` | — | 要检查的文档位置 |
+| `markName` | `string` | `'suggestion'` | 建议标记的名称 |
 
-### Returns
+### 返回值
 
-`Suggestion | null` — The suggestion at the position, or `null` if none found.
+`Suggestion | null` — 该位置处的建议；如果未找到，则返回 `null`。
 
 ```js
 import { getSuggestionAtPosition } from '@tiptap-pro/extension-tracked-changes'
@@ -139,19 +139,19 @@ const suggestion = getSuggestionAtPosition(editor, 42)
 
 ## findSuggestionsInRange()
 
-Find all suggestions that overlap with a specific document range.
+查找与指定文档范围重叠的所有建议。
 
-| Argument | Type | Default | Description |
+| 参数 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
-| `editor` | `Editor` | — | The Tiptap editor instance |
-| `from` | `number` | — | Start position of the range |
-| `to` | `number` | — | End position of the range |
-| `filters` | `{ userId?: string; type?: SuggestionType }` | `undefined` | Optional filters |
-| `markName` | `string` | `'suggestion'` | The name of the suggestion mark |
+| `editor` | `Editor` | — | Tiptap 编辑器实例 |
+| `from` | `number` | — | 范围的起始位置 |
+| `to` | `number` | — | 范围的结束位置 |
+| `filters` | `{ userId?: string; type?: SuggestionType }` | `undefined` | 可选筛选条件 |
+| `markName` | `string` | `'suggestion'` | 建议标记的名称 |
 
-### Returns
+### 返回值
 
-`Suggestion[]` — Array of suggestions overlapping the range.
+`Suggestion[]` — 与该范围重叠的建议数组。
 
 ```js
 import { findSuggestionsInRange } from '@tiptap-pro/extension-tracked-changes'
@@ -168,17 +168,17 @@ const userInsertions = findSuggestionsInRange(editor, 10, 50, {
 
 ## suggestionExists()
 
-Check whether a suggestion still exists in the document.
+检查建议是否仍存在于文档中。
 
-| Argument | Type | Default | Description |
+| 参数 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
-| `editor` | `Editor` | — | The Tiptap editor instance |
-| `suggestionId` | `string` | — | The suggestion ID to check |
-| `markName` | `string` | `'suggestion'` | The name of the suggestion mark |
+| `editor` | `Editor` | — | Tiptap 编辑器实例 |
+| `suggestionId` | `string` | — | 要检查的建议 ID |
+| `markName` | `string` | `'suggestion'` | 建议标记的名称 |
 
-### Returns
+### 返回值
 
-`boolean` — `true` if the suggestion exists.
+`boolean` — 如果建议存在，则为 `true`。
 
 ```js
 import { suggestionExists } from '@tiptap-pro/extension-tracked-changes'
@@ -190,17 +190,17 @@ if (suggestionExists(editor, 'suggestion-123')) {
 
 ## getSuggestionRange()
 
-Get the bounding position range of a suggestion.
+获取建议所覆盖的边界位置范围。
 
-| Argument | Type | Default | Description |
+| 参数 | 类型 | 默认值 | 描述 |
 | --- | --- | --- | --- |
-| `editor` | `Editor` | — | The Tiptap editor instance |
-| `suggestionId` | `string` | — | The suggestion ID |
-| `markName` | `string` | `'suggestion'` | The name of the suggestion mark |
+| `editor` | `Editor` | — | Tiptap 编辑器实例 |
+| `suggestionId` | `string` | — | 建议 ID |
+| `markName` | `string` | `'suggestion'` | 建议标记的名称 |
 
-### Returns
+### 返回值
 
-`{ from: number; to: number } | null` — The bounding range, or `null` if not found.
+`{ from: number; to: number } | null` — 边界范围；如果未找到，则返回 `null`。
 
 ```js
 import { getSuggestionRange } from '@tiptap-pro/extension-tracked-changes'
@@ -214,16 +214,16 @@ if (range) {
 
 ## acceptSuggestions()
 
-Accept multiple suggestions by their IDs. Processes each suggestion individually.
+按 ID 接受多个建议。每条建议会单独处理。
 
-| Argument | Type | Description |
+| 参数 | 类型 | 描述 |
 | --- | --- | --- |
-| `editor` | `Editor` | The Tiptap editor instance |
-| `suggestionIds` | `string[]` | Array of suggestion IDs to accept |
+| `editor` | `Editor` | Tiptap 编辑器实例 |
+| `suggestionIds` | `string[]` | 要接受的建议 ID 数组 |
 
-### Returns
+### 返回值
 
-`boolean` — `true` if at least one suggestion was accepted.
+`boolean` — 如果至少接受了一条建议，则为 `true`。
 
 ```js
 import { acceptSuggestions } from '@tiptap-pro/extension-tracked-changes'
@@ -233,16 +233,16 @@ acceptSuggestions(editor, ['suggestion-1', 'suggestion-2', 'suggestion-3'])
 
 ## rejectSuggestions()
 
-Reject multiple suggestions by their IDs. Processes each suggestion individually.
+按 ID 拒绝多个建议。每条建议会单独处理。
 
-| Argument | Type | Description |
+| 参数 | 类型 | 描述 |
 | --- | --- | --- |
-| `editor` | `Editor` | The Tiptap editor instance |
-| `suggestionIds` | `string[]` | Array of suggestion IDs to reject |
+| `editor` | `Editor` | Tiptap 编辑器实例 |
+| `suggestionIds` | `string[]` | 要拒绝的建议 ID 数组 |
 
-### Returns
+### 返回值
 
-`boolean` — `true` if at least one suggestion was rejected.
+`boolean` — 如果至少拒绝了一条建议，则为 `true`。
 
 ```js
 import { rejectSuggestions } from '@tiptap-pro/extension-tracked-changes'
@@ -252,20 +252,20 @@ rejectSuggestions(editor, ['suggestion-1', 'suggestion-2'])
 
 ## withoutTrackedChanges()
 
-Returns the base document by rejecting every pending suggestion on a copy. Suggested additions are removed, suggested deletions are restored, and replacements revert to their original content. Pending formatting, attribute, node type, list nesting, and block split changes are also reverted. Node type proposals restore the original type and attributes while retaining current content after other suggestions are rejected.
+通过在副本上拒绝所有待处理建议，返回基础文档。建议添加的内容会被移除，建议删除的内容会被恢复，替换则会还原为原始内容。待处理的格式、属性、节点类型、列表嵌套和块拆分更改也会被还原。节点类型提案会恢复原始类型和属性，同时保留拒绝其他建议后的当前内容。
 
-| Option | Type | Description |
+| 选项 | 类型 | 描述 |
 | --- | --- | --- |
-| `content` | `string \| JSONContent` | HTML or a complete document JSON object. JSON strings and content arrays are not supported. |
-| `schema` | `Schema` | The source document's ProseMirror schema, including `TrackedChanges` and all custom nodes and marks. |
+| `content` | `string \| JSONContent` | HTML 或完整的文档 JSON 对象。不支持 JSON 字符串和内容数组。 |
+| `schema` | `Schema` | 源文档的 ProseMirror schema，包含 `TrackedChanges` 以及所有自定义节点和标记。 |
 
-Both options are required. The options type is exported as [`WithoutTrackedChangesOptions`](/tracked-changes/api-reference/types#withouttrackedchangesoptions).
+两个选项均为必填项。选项类型导出为 [`WithoutTrackedChangesOptions`](/tracked-changes/api-reference/types#withouttrackedchangesoptions)。
 
-### Returns
+### 返回值
 
-`JSONContent` — A complete document JSON object without suggestion marks or reserved tracking attributes, including null tracking defaults. Other content, marks, and attributes are preserved as represented by the schema after rejection.
+`JSONContent` — 完整的文档 JSON 对象，不包含建议标记或保留的跟踪属性，并包含值为 null 的跟踪默认属性。拒绝建议后，其他内容、标记和属性会按照 schema 的表示方式予以保留。
 
-The utility leaves the input and source editor unchanged, including pending suggestions, selection, history, callbacks, comment threads, and the collaboration provider. Content without pending suggestions is supported. Repeated exports with the same content and schema produce deeply equal JSON.
+此实用函数不会更改输入内容或源编辑器，包括待处理建议、选区、历史记录、回调、评论串和协作提供程序。也支持不含待处理建议的内容。对于相同的内容和 schema，重复导出会生成深度相等的 JSON。
 
 ```js
 import { withoutTrackedChanges } from '@tiptap-pro/extension-tracked-changes'
@@ -282,11 +282,11 @@ const baseFromHTML = withoutTrackedChanges({
 })
 ```
 
-For example, a pending insertion of ` world` after `Hello` produces base JSON containing only `Hello`. The insertion stays pending in the source editor.
+例如，在 `Hello` 后有一个待处理的 ` world` 插入建议时，生成的基础 JSON 只包含 `Hello`。该插入建议仍会在源编辑器中保持待处理状态。
 
-### Use without an editor
+### 不使用编辑器
 
-JSON input works without a DOM. Build the schema with `getSchema` and the same extensions used by the source document, including custom extensions.
+不依赖 DOM 即可处理 JSON 输入。使用 `getSchema` 和源文档中使用的相同扩展（包括自定义扩展）构建 schema。
 
 ```js
 import { getSchema } from '@tiptap/core'
@@ -301,23 +301,23 @@ const base = withoutTrackedChanges({
 })
 ```
 
-### Limits and errors
+### 限制和错误
 
-HTML input requires a DOM environment and preserves text whitespace. Custom HTML renderers must retain suggestion data for the parser to restore the base content. HTML cannot restore data discarded by an earlier export or unsupported by the schema.
+HTML 输入需要 DOM 环境，并会保留文本空白。自定义 HTML 渲染器必须保留建议数据，以便解析器恢复基础内容。对于先前导出时已丢弃或 schema 不支持的数据，HTML 无法恢复。
 
-The utility throws an error for invalid document JSON, missing tracking schema support, or suggestions that cannot be restored. HTML input without a DOM also throws. Source content stays unchanged if export fails.
+对于无效的文档 JSON、缺少跟踪 schema 支持，或无法还原的建议，此实用函数会抛出错误。没有 DOM 时传入 HTML 也会抛出错误。若导出失败，源内容不会改变。
 
-Inline atom suggestions must use node attributes. Suggestion marks on non-text nodes cause an error. Explicit list nesting deltas must be nonzero safe integers, positive for `sink` and negative for `lift`. Omitted or null deltas remain supported for older documents.
+行内原子建议必须使用节点属性。非文本节点上的建议标记会导致错误。显式的列表嵌套增量必须是非零安全整数；`sink` 对应正数，`lift` 对应负数。旧文档仍支持省略增量或将其设为 null。
 
-Only pending suggestions are reverted. The utility cannot undo accepted changes or edits made without tracking.
+只有待处理的建议会被还原。此实用函数无法撤销已接受的更改或未通过跟踪功能进行的编辑。
 
 ## generateSuggestionId()
 
-Generate a unique suggestion ID. Combines timestamp with random string for uniqueness.
+生成唯一的建议 ID。通过组合时间戳和随机字符串确保唯一性。
 
-### Returns
+### 返回值
 
-`string` — A unique suggestion ID in the format `suggestion-{timestamp}-{random}`.
+`string` — 格式为 `suggestion-{timestamp}-{random}` 的唯一建议 ID。
 
 ```js
 import { generateSuggestionId } from '@tiptap-pro/extension-tracked-changes'
@@ -328,11 +328,11 @@ const id = generateSuggestionId()
 
 ## getTimestamp()
 
-Get the current time as an ISO 8601 timestamp string.
+获取当前时间，返回 ISO 8601 时间戳字符串。
 
-### Returns
+### 返回值
 
-`string` — Current time as ISO 8601 string.
+`string` — ISO 8601 格式的当前时间字符串。
 
 ```js
 import { getTimestamp } from '@tiptap-pro/extension-tracked-changes'
@@ -343,35 +343,35 @@ const timestamp = getTimestamp()
 
 ## getSuggestionHTMLAttributes()
 
-Reads suggestion data from a live ProseMirror node and returns the corresponding `data-suggestion-*` DOM attributes, safe to spread onto a NodeView's root element.
+从实时的 ProseMirror 节点读取建议数据，并返回对应的 `data-suggestion-*` DOM 属性，可安全地展开到 NodeView 的根元素上。
 
-| Argument | Type | Description |
+| 参数 | 类型 | 描述 |
 | --- | --- | --- |
-| `node` | `Node` | The ProseMirror node received as the `node` prop in your NodeView component |
+| `node` | `Node` | NodeView 组件中作为 `node` 属性接收的 ProseMirror 节点 |
 
-### Returns
+### 返回值
 
-`SuggestionHTMLAttributes` — An object containing only the `data-suggestion-*` attributes derived from `node.attrs`. Keys whose value is `null` or `undefined` are omitted, so non-suggestion nodes return `{}`.
+`SuggestionHTMLAttributes` — 仅包含从 `node.attrs` 派生的 `data-suggestion-*` 属性的对象。值为 `null` 或 `undefined` 的键会被省略，因此非建议节点会返回 `{}`。
 
-The attributes produced are:
+生成的属性如下：
 
-| Output key | Source (`node.attrs`) |
+| 输出键 | 来源（`node.attrs`） |
 | --- | --- |
 | `data-suggestion-id` | `suggestionId` |
 | `data-suggestion-type` | `suggestionType` |
 | `data-suggestion-user` | `suggestionUserId` |
 | `data-suggestion-created` | `suggestionCreatedAt` |
 | `data-suggestion-updated` | `suggestionUpdatedAt` |
-| `data-suggestion-user-metadata` | `suggestionUserMetadata` (JSON-serialized) |
+| `data-suggestion-user-metadata` | `suggestionUserMetadata`（序列化为 JSON） |
 | `data-suggestion-nesting-delta` | `suggestionNestingDelta` |
 
-Node type proposals additionally produce `data-suggestion-node-type-change` from `suggestionNodeTypeChange`, even when a deletion or split uses the node's primary suggestion identity. For standalone type proposals, the helper supplies the usual `attributeChange` identity attributes too.
+节点类型提案还会根据 `suggestionNodeTypeChange` 生成 `data-suggestion-node-type-change`，即使删除或拆分使用的是节点的主要建议标识也是如此。对于独立的类型提案，该辅助函数也会提供常见的 `attributeChange` 标识属性。
 
-### Why `node`, not `HTMLAttributes`
+### 为什么使用 `node` 而不是 `HTMLAttributes`
 
-The `HTMLAttributes` prop in a NodeView is computed once at creation time and never updated. Passing it to this utility would produce stale attributes whenever suggestion state changes — for example, after a remote collaboration update or when a suggestion is accepted or rejected. The `node` prop is the reactive source of truth and is updated on every render, so always pass `node`.
+NodeView 中的 `HTMLAttributes` 属性在创建时计算一次，之后不会更新。将它传给此实用函数会导致建议状态改变时属性过时，例如收到远程协作更新，或建议被接受或拒绝之后。`node` 属性是响应式的真实数据源，每次渲染都会更新，因此请始终传入 `node`。
 
-### Usage
+### 用法
 
 ```jsx
 import { getSuggestionHTMLAttributes } from '@tiptap-pro/extension-tracked-changes'
@@ -387,4 +387,4 @@ function MyNodeView({ node }) {
 }
 ```
 
-For detailed guidance on integrating NodeViews with Tracked Changes, see the [NodeView Support guide](/tracked-changes/guides/nodeview-support).
+如需了解将 NodeView 与 Tracked Changes 集成的详细指导，请参阅 [NodeView 支持指南](/tracked-changes/guides/nodeview-support)。
