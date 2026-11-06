@@ -1,9 +1,9 @@
 ---
-title: Content reference
+title: 内容参考
 meta:
-  title: Content Reference | Tiptap Conversion
-  description: Detailed per-feature documentation for how each document element behaves across the DOCX import, editor rendering, and export pipeline.
-  category: Conversion
+  title: 内容参考 | Tiptap 转换
+  description: 详细介绍各文档元素在 DOCX 导入、编辑器渲染和导出流程中的行为。
+  category: 转换
 tags:
   - type: beta
 sidebars:
@@ -14,9 +14,9 @@ import Link from '@/components/Link'
 import { Card } from '@/components/ui/Card'
 import { Pilcrow, Heading1, AlignCenter, Bold, Subscript, Palette, Type, List, IndentIncrease, Table2, ImageIcon, Link2, SquareCode, Sigma, FootprintsIcon, BookType, PanelTop, SeparatorHorizontal, Columns3 } from 'lucide-react'
 
-Every document feature behaves differently as it moves through import, editor rendering, and export. These pages document exactly what happens at each stage, what extensions you need, and what to expect.
+文档中的每种内容在导入、编辑器渲染和导出过程中都有不同的表现。这些页面将详细说明各阶段的具体行为、所需扩展，以及需要注意的事项。
 
-For a quick overview of what is and is not supported, see the [Supported features](/conversion/getting-started/feature-support-matrix) matrix.
+如需快速了解支持和不支持的功能，请参阅[支持的功能](/conversion/getting-started/feature-support-matrix)对照表。
 
 export const ContentCard = ({ href, icon: Icon, title, description }) => (
   <Card isClickable asChild>
@@ -30,36 +30,36 @@ export const ContentCard = ({ href, icon: Icon, title, description }) => (
   </Card>
 )
 
-## Text and formatting
+## 文本与格式
 
 <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-4 xl:gap-5">
-  <ContentCard href="/conversion/content-types/text-and-formatting/paragraphs" icon={Pilcrow} title="Paragraphs" description="Text content, spacing, indentation, and line height across the pipeline." />
-  <ContentCard href="/conversion/content-types/text-and-formatting/headings" icon={Heading1} title="Headings" description="Heading levels 1 through 9, title and subtitle styles, and style resolution." />
-  <ContentCard href="/conversion/content-types/text-and-formatting/text-alignment" icon={AlignCenter} title="Text alignment" description="Left, center, right, and justify alignment on paragraphs and headings." />
-  <ContentCard href="/conversion/content-types/text-and-formatting/bold-italic-underline-strike" icon={Bold} title="Bold, italic, underline, strike" description="Inline text marks from Word run properties and their round-trip behavior." />
-  <ContentCard href="/conversion/content-types/text-and-formatting/subscript-superscript" icon={Subscript} title="Subscript and superscript" description="Vertical alignment marks for formulas and notation. Import works, export does not." />
-  <ContentCard href="/conversion/content-types/text-and-formatting/text-color-highlight" icon={Palette} title="Text color and highlight" description="Text color, character shading, and highlight marks with multicolor support." />
-  <ContentCard href="/conversion/content-types/text-and-formatting/font-family-size" icon={Type} title="Font family and size" description="Font extraction from Word run properties and pixel-to-half-point conversion." />
-  <ContentCard href="/conversion/content-types/text-and-formatting/lists" icon={List} title="Lists" description="Bullet lists, ordered lists, nesting, numbering formats, and task lists." />
-  <ContentCard href="/conversion/content-types/text-and-formatting/tabs" icon={IndentIncrease} title="Tabs" description="Tab characters are converted to spaces on import. Tab stop positions are not preserved." />
+  <ContentCard href="/conversion/content-types/text-and-formatting/paragraphs" icon={Pilcrow} title="段落" description="文本内容、间距、缩进和行高在整个流程中的表现。" />
+  <ContentCard href="/conversion/content-types/text-and-formatting/headings" icon={Heading1} title="标题" description="1 到 9 级标题、标题和副标题样式，以及样式解析。" />
+  <ContentCard href="/conversion/content-types/text-and-formatting/text-alignment" icon={AlignCenter} title="文本对齐" description="段落和标题的左对齐、居中、右对齐和两端对齐。" />
+  <ContentCard href="/conversion/content-types/text-and-formatting/bold-italic-underline-strike" icon={Bold} title="粗体、斜体、下划线和删除线" description="来自 Word 文本运行属性的行内文本标记及其往返转换行为。" />
+  <ContentCard href="/conversion/content-types/text-and-formatting/subscript-superscript" icon={Subscript} title="下标和上标" description="用于公式和记号的垂直对齐标记。支持导入，不支持导出。" />
+  <ContentCard href="/conversion/content-types/text-and-formatting/text-color-highlight" icon={Palette} title="文本颜色和突出显示" description="支持多种颜色的文本颜色、字符底纹和突出显示标记。" />
+  <ContentCard href="/conversion/content-types/text-and-formatting/font-family-size" icon={Type} title="字体和字号" description="从 Word 文本运行属性中提取字体，以及像素到半磅的转换。" />
+  <ContentCard href="/conversion/content-types/text-and-formatting/lists" icon={List} title="列表" description="项目符号列表、有序列表、嵌套、编号格式和任务列表。" />
+  <ContentCard href="/conversion/content-types/text-and-formatting/tabs" icon={IndentIncrease} title="制表符" description="导入时，制表符会转换为空格；制表位的位置不会保留。" />
 </div>
 
-## Structures and media
+## 结构与媒体
 
 <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-4 xl:gap-5">
-  <ContentCard href="/conversion/content-types/structures-and-media/tables" icon={Table2} title="Tables" description="Table structure, merged cells, column widths, cell backgrounds, and borders." />
-  <ContentCard href="/conversion/content-types/structures-and-media/images" icon={ImageIcon} title="Images" description="Inline and floating images, dimensions, alt text, and the upload flow." />
-  <ContentCard href="/conversion/content-types/structures-and-media/hyperlinks-bookmarks" icon={Link2} title="Hyperlinks and bookmarks" description="External links, email links, internal anchors, and bookmark targets." />
-  <ContentCard href="/conversion/content-types/structures-and-media/block-elements" icon={SquareCode} title="Block elements" description="Blockquotes, code blocks, horizontal rules, and hard breaks." />
-  <ContentCard href="/conversion/content-types/structures-and-media/math-equations" icon={Sigma} title="Math and equations" description="LaTeX math in the editor and OMML in DOCX. Export works, import does not." />
-  <ContentCard href="/conversion/content-types/structures-and-media/footnotes-endnotes" icon={FootprintsIcon} title="Footnotes and endnotes" description="Extracted via REST API but not surfaced in the editor extension callback." />
-  <ContentCard href="/conversion/content-types/structures-and-media/word-styles" icon={BookType} title="Word styles" description="How Word paragraph and character styles map to Tiptap nodes and marks." />
+  <ContentCard href="/conversion/content-types/structures-and-media/tables" icon={Table2} title="表格" description="表格结构、合并单元格、列宽、单元格背景和边框。" />
+  <ContentCard href="/conversion/content-types/structures-and-media/images" icon={ImageIcon} title="图像" description="行内和浮动图像、尺寸、替代文本及上传流程。" />
+  <ContentCard href="/conversion/content-types/structures-and-media/hyperlinks-bookmarks" icon={Link2} title="超链接和书签" description="外部链接、电子邮件链接、内部锚点和书签目标。" />
+  <ContentCard href="/conversion/content-types/structures-and-media/block-elements" icon={SquareCode} title="块级元素" description="引用块、代码块、水平线和硬换行。" />
+  <ContentCard href="/conversion/content-types/structures-and-media/math-equations" icon={Sigma} title="数学公式和方程" description="编辑器中的 LaTeX 数学公式和 DOCX 中的 OMML。支持导出，不支持导入。" />
+  <ContentCard href="/conversion/content-types/structures-and-media/footnotes-endnotes" icon={FootprintsIcon} title="脚注和尾注" description="可通过 REST API 提取，但不会在编辑器扩展回调中提供。" />
+  <ContentCard href="/conversion/content-types/structures-and-media/word-styles" icon={BookType} title="Word 样式" description="Word 段落样式和字符样式如何映射到 Tiptap 节点和标记。" />
 </div>
 
-## Page layout
+## 页面布局
 
 <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-4 xl:gap-5">
-  <ContentCard href="/conversion/content-types/page-layout/headers-footers" icon={PanelTop} title="Headers and footers" description="Default, first-page, and odd/even variants across import and export." />
-  <ContentCard href="/conversion/content-types/page-layout/page-breaks" icon={SeparatorHorizontal} title="Page breaks" description="The only page-structure element that fully round-trips through the pipeline." />
-  <ContentCard href="/conversion/content-types/page-layout/page-structure" icon={Columns3} title="Page structure" description="Page size, margins, sections, columns, and page numbers." />
+  <ContentCard href="/conversion/content-types/page-layout/headers-footers" icon={PanelTop} title="页眉和页脚" description="导入和导出过程中默认、首页以及奇偶页的变体。" />
+  <ContentCard href="/conversion/content-types/page-layout/page-breaks" icon={SeparatorHorizontal} title="分页符" description="唯一能在整个流程中完整往返转换的页面结构元素。" />
+  <ContentCard href="/conversion/content-types/page-layout/page-structure" icon={Columns3} title="页面结构" description="页面大小、边距、分节、分栏和页码。" />
 </div>
