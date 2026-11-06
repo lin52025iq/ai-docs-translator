@@ -1,0 +1,322 @@
+---
+title: 评论 Webhook
+tags:
+  - type: team
+meta:
+  title: Webhook | Tiptap 评论文档
+  description: 在 Tiptap 中启用和管理评论 Webhook，以接收讨论串和评论活动通知。了解更多，请参阅文档！
+  category: 评论
+---
+import { Requirements, RequirementItem } from '@/components/Requirements'
+import { Callout } from '@/components/ui/Callout'
+
+设置和管理 Webhook，提升评论功能的集成体验。评论 Webhook 的常见用途包括：
+
+- 在讨论串创建、解决、更新或删除时发送通知。
+- 在评论添加、更新或删除时通知用户。
+- 配合 [提及扩展](/editor/extensions/nodes/mention)，在评论中提及用户时向其发送电子邮件或通知。
+
+
+<Requirements>
+    <RequirementItem label="1. 开通试用或订阅">
+        在账户中开始[免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Team 计划](https://cloud.tiptap.dev/v2/billing)。
+    </RequirementItem>
+    <RequirementItem label="2. 启动文档服务器">
+        启动[环境](https://cloud.tiptap.dev/v2/configuration/document-server)后，配置[评论 Webhook](https://cloud.tiptap.dev/v2/configuration/document-server)。
+    </RequirementItem>
+</Requirements>
+
+## 启用评论事件
+
+对于 2024 年 3 月 1 日之后创建的账户，评论 Webhook 默认已启用。否则，您可能仍在使用较旧版本的 Webhook 系统，需要手动升级：
+
+1. 如果您之前实现过协作 Webhook，请在处理收到的 Webhook 时检查 `type` 和 `trigger` 字段。（[文档](/collaboration/core-concepts/webhooks)）
+2. 前往[协作设置](https://cloud.tiptap.dev/v2/configuration/document-server)。
+3. 在 Webhooks 部分中，点击 **升级**。
+
+此升级是必需的，因为现在多个新事件会被发送到同一个 Webhook 端点，并通过新增的 `type` 和 `trigger` 字段加以区分。
+
+## 配置 Webhook
+
+如需配置评论通知的 Webhook：
+
+1. 前往账户中的[协作设置](https://cloud.tiptap.dev/v2/configuration/document-server)。
+2. 在 Webhooks 部分中，添加所需的端点 URL。
+
+添加 URL 后，Webhook 会立即生效。您将马上开始接收指定事件的通知。
+
+## Webhook 事件
+
+评论 Webhook 会针对评论扩展中的讨论串和评论相关的各类事件触发通知。评论中发生相应操作后，这些事件会立即触发。
+
+- `comment.added`
+- `comment.updated`
+- `comment.deleted`
+- `thread.created`（仅当创建讨论串时没有添加首条评论才会触发，通常通过我们的“创建讨论串”API 创建。使用官方 Tiptap 扩展时，您只会看到 `comment.added`）
+- `thread.resolved`
+- `thread.updated`
+- `thread.deleted`
+
+## 示例负载
+
+以下是不同类型 Webhook 事件的示例负载：
+
+### 创建讨论串/评论
+
+```json
+{
+  "trigger": "comment.added",
+  "thread": {
+    "id": "128ba3a9-c684-4956-8c9f-fe5dc147c7e5",
+    "createdAt": "2024-03-02T22:17:51.304Z",
+    "comments": [
+      {
+        "id": "0259e4cb-43ad-4eb2-a7e9-a7a7d5207a76",
+        "createdAt": "2024-03-02T22:17:51.307Z",
+        "updatedAt": "2024-03-02T22:17:51.307Z",
+        "data": {
+          "userName": "Cyndi Lauper",
+          "userAvatar": "https://api.dicebear.com/7.x/lorelei/svg?seed=Cyndi Lauper"
+        },
+        "content": "Threaderstellungskommentar"
+      }
+    ],
+    "updatedAt": "2024-03-02T22:17:51.305Z"
+  },
+  "comment": {
+    "id": "0259e4cb-43ad-4eb2-a7e9-a7a7d5207a76",
+    "createdAt": "2024-03-02T22:17:51.307Z",
+    "updatedAt": "2024-03-02T22:17:51.307Z",
+    "data": {
+      "userName": "Cyndi Lauper",
+      "userAvatar": "https://api.dicebear.com/7.x/lorelei/svg?seed=Cyndi Lauper"
+    },
+    "content": "Threaderstellungskommentar"
+  },
+  "selection": [
+    {
+      "type": "text",
+      "text": "in my opinion",
+      "marks": [
+        {
+          "type": "inlineThread",
+          "attrs": {
+            "data-thread-id": "128ba3a9-c684-4956-8c9f-fe5dc147c7e5"
+          }
+        }
+      ]
+    }
+  ],
+  "appName": "",
+  "user": "",
+  "name": "documentName",
+  "type": "THREAD"
+}
+```
+
+### 更新评论
+
+```json
+{
+  "trigger": "comment.updated",
+  "thread": [
+    {
+      "id": "0259e4cb-43ad-4eb2-a7e9-a7a7d5207a76",
+      "createdAt": "2024-03-02T22:17:51.307Z",
+      "updatedAt": "2024-03-02T22:18:04.246Z",
+      "data": {
+        "userName": "Cyndi Lauper",
+        "userAvatar": "https://api.dicebear.com/7.x/lorelei/svg?seed=Cyndi Lauper"
+      },
+      "content": "Threaderstellungskommentar (bearbeitet)"
+    }
+  ],
+  "comment": {
+    "id": "0259e4cb-43ad-4eb2-a7e9-a7a7d5207a76",
+    "createdAt": "2024-03-02T22:17:51.307Z",
+    "updatedAt": "2024-03-02T22:18:04.246Z",
+    "data": {
+      "userName": "Cyndi Lauper",
+      "userAvatar": "https://api.dicebear.com/7.x/lorelei/svg?seed=Cyndi Lauper"
+    },
+    "content": "Threaderstellungskommentar (bearbeitet)"
+  },
+  "selection": [
+    {
+      "type": "text",
+      "text": "in my opinion",
+      "marks": [
+        {
+          "type": "inlineThread",
+          "attrs": {
+            "data-thread-id": "0259e4cb-43ad-4eb2-a7e9-a7a7d5207a76"
+          }
+        }
+      ]
+    }
+  ],
+  "appName": "",
+  "user": "",
+  "name": "documentName",
+  "type": "THREAD"
+}
+```
+
+### 删除评论
+
+```json
+{
+  "trigger": "comment.deleted",
+  "thread": {
+    "id": "128ba3a9-c684-4956-8c9f-fe5dc147c7e5",
+    "createdAt": "2024-03-02T22:17:51.304Z",
+    "comments": [
+      {
+        "id": "0259e4cb-43ad-4eb2-a7e9-a7a7d5207a76",
+        "createdAt": "2024-03-02T22:17:51.307Z",
+        "updatedAt": "2024-03-02T22:18:04.246Z",
+        "data": {
+          "userName": "Cyndi Lauper",
+          "userAvatar": "https://api.dicebear.com/7.x/lorelei/svg?seed=Cyndi Lauper"
+        },
+        "content": "Threaderstellungskommentar (bearbeitet)"
+      }
+    ],
+    "updatedAt": "2024-03-02T22:17:51.305Z"
+  },
+  "comment": {
+    "id": "1841e650-2202-42b6-a868-907fee42ccf7",
+    "createdAt": "2024-03-02T22:18:20.974Z",
+    "updatedAt": "2024-03-02T22:18:20.975Z",
+    "data": {
+      "userName": "Cyndi Lauper",
+      "userAvatar": "https://api.dicebear.com/7.x/lorelei/svg?seed=Cyndi Lauper"
+    },
+    "content": "Zweites Kommentar, selber Thread"
+  },
+  "selection": [], // selection is not sent for deleted comments
+  "appName": "",
+  "user": "",
+  "name": "documentName",
+  "type": "THREAD"
+}
+```
+
+### 删除讨论串
+
+```json
+{
+  "trigger": "thread.deleted",
+  "thread": {
+    "id": "128ba3a9-c684-4956-8c9f-fe5dc147c7e5",
+    "createdAt": "2024-03-02T22:17:51.304Z",
+    "comments": [
+      {
+        "id": "0259e4cb-43ad-4eb2-a7e9-a7a7d5207a76",
+        "createdAt": "2024-03-02T22:17:51.307Z",
+        "updatedAt": "2024-03-02T22:18:04.246Z",
+        "data": {
+          "userName": "Cyndi Lauper",
+          "userAvatar": "https://api.dicebear.com/7.x/lorelei/svg?seed=Cyndi Lauper"
+        },
+        "content": "Threaderstellungskommentar (bearbeitet)"
+      }
+    ],
+    "updatedAt": "2024-03-02T22:18:52.050Z",
+    "resolvedAt": null
+  },
+  "selection": [], // selection is not sent for deleted threads
+  "appName": "",
+  "user": "",
+  "name": "documentName",
+  "type": "THREAD"
+}
+```
+
+### 解决讨论串
+
+```json
+{
+  "trigger": "thread.resolved",
+  "thread": {
+    "id": "128ba3a9-c684-4956-8c9f-fe5dc147c7e5",
+    "createdAt": "2024-03-02T22:17:51.304Z",
+    "comments": [
+      {
+        "id": "0259e4cb-43ad-4eb2-a7e9-a7a7d5207a76",
+        "createdAt": "2024-03-02T22:17:51.307Z",
+        "updatedAt": "2024-03-02T22:18:04.246Z",
+        "data": {
+          "userName": "Cyndi Lauper",
+          "userAvatar": "https://api.dicebear.com/7.x/lorelei/svg?seed=Cyndi Lauper"
+        },
+        "content": "Threaderstellungskommentar (bearbeitet)"
+      }
+    ],
+    "updatedAt": "2024-03-02T22:18:48.531Z",
+    "resolvedAt": "2024-03-02T22:18:48.531Z"
+  },
+  "selection": [
+    {
+      "type": "text",
+      "text": "in my opinion",
+      "marks": [
+        {
+          "type": "inlineThread",
+          "attrs": {
+            "data-thread-id": "128ba3a9-c684-4956-8c9f-fe5dc147c7e5"
+          }
+        }
+      ]
+    }
+  ],
+  "appName": "",
+  "user": "",
+  "name": "documentName",
+  "type": "THREAD"
+}
+```
+
+### 更新讨论串（即重新打开）
+
+```json
+{
+  "trigger": "thread.updated",
+  "thread": {
+    "id": "128ba3a9-c684-4956-8c9f-fe5dc147c7e5",
+    "createdAt": "2024-03-02T22:17:51.304Z",
+    "comments": [
+      {
+        "id": "0259e4cb-43ad-4eb2-a7e9-a7a7d5207a76",
+        "createdAt": "2024-03-02T22:17:51.307Z",
+        "updatedAt": "2024-03-02T22:18:04.246Z",
+        "data": {
+          "userName": "Cyndi Lauper",
+          "userAvatar": "https://api.dicebear.com/7.x/lorelei/svg?seed=Cyndi Lauper"
+        },
+        "content": "Threaderstellungskommentar (bearbeitet)"
+      }
+    ],
+    "updatedAt": "2024-03-02T22:18:52.050Z",
+    "resolvedAt": null
+  },
+  "selection": [
+    {
+      "type": "text",
+      "text": "in my opinion",
+      "marks": [
+        {
+          "type": "inlineThread",
+          "attrs": {
+            "data-thread-id": "128ba3a9-c684-4956-8c9f-fe5dc147c7e5"
+          }
+        }
+      ]
+    }
+  ],
+  "appName": "",
+  "user": "",
+  "name": "documentName",
+  "type": "THREAD"
+}
+```
