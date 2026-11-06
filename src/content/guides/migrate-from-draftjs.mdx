@@ -1,24 +1,24 @@
 ---
 tags:
   - type: editor
-title: Migrate from Draft.js to Tiptap
+title: 从 Draft.js 迁移到 Tiptap
 meta:
-  title: Migrate from Draft.js | Tiptap Editor Docs
-  description: Learn how to migrate your existing Draft.js editor to Tiptap. Complete guide covering content migration, setup, and feature mapping.
-  category: Editor
+  title: 从 Draft.js 迁移 | Tiptap 编辑器文档
+  description: 了解如何将现有的 Draft.js 编辑器迁移到 Tiptap。本指南涵盖内容迁移、设置和功能映射。
+  category: 编辑器
 ---
 
 import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 
 <EnterpriseCalloutAuto variant="migration" renderMode="sidebar" disableWaitlist/>
 
-Tiptap is a popular alternative to Draft.js and migrating from Draft.js to Tiptap is straightforward. This guide will help you transition from Draft.js's immutable state model to Tiptap's extension system.
+Tiptap 是 Draft.js 的热门替代方案，从 Draft.js 迁移到 Tiptap 非常简单。本指南将帮助你从 Draft.js 的不可变状态模型过渡到 Tiptap 的扩展系统。
 
-## Content migration
+## 内容迁移
 
-### HTML content compatibility
+### HTML 内容兼容性
 
-Draft.js uses ContentState which needs to be converted to HTML for Tiptap:
+Draft.js 使用 ContentState，需要将其转换为 HTML 才能用于 Tiptap：
 
 ```ts
 // Convert Draft.js ContentState to HTML
@@ -39,7 +39,7 @@ const editor = new Editor({
 })
 ```
 
-If you already have HTML output from Draft.js, you can use it directly:
+如果你已经有 Draft.js 输出的 HTML，可以直接使用：
 
 ```ts
 // Your existing Draft.js HTML content
@@ -52,23 +52,23 @@ const editor = new Editor({
 })
 ```
 
-While HTML works perfectly, we recommend converting it to Tiptap's JSON format for better performance and readability. For batch conversion of existing content, use the [HTML utility](/editor/api/utilities/html) to convert HTML to JSON programmatically.
+虽然 HTML 可以正常使用，但我们建议将其转换为 Tiptap 的 JSON 格式，以提升性能和可读性。要批量转换现有内容，可以使用 [HTML 工具](/editor/api/utilities/html)以编程方式将 HTML 转换为 JSON。
 
-## Editor setup
+## 编辑器设置
 
-### Installation
+### 安装
 
-First, install Tiptap and its dependencies:
+首先，安装 Tiptap 及其依赖：
 
 ```bash
 npm install @tiptap/core @tiptap/starter-kit
 ```
 
-Tiptap supports all modern frontend UI frameworks like React and Vue. Follow the framework-specific installation instructions in our [installation guides](/editor/getting-started/install).
+Tiptap 支持所有现代前端 UI 框架，例如 React 和 Vue。请按照[安装指南](/editor/getting-started/install)中针对相应框架的说明进行安装。
 
-### Basic editor setup
+### 基本编辑器设置
 
-Replace your Draft.js editor with Tiptap:
+将 Draft.js 编辑器替换为 Tiptap：
 
 ```tsx
 // Draft.js (before)
@@ -110,33 +110,33 @@ function MyTiptapEditor() {
 }
 ```
 
-## Extensions
+## 扩展
 
-### Understanding Tiptap's extension system
+### 了解 Tiptap 的扩展系统
 
-Tiptap uses a modular extension system that resembles Draft.js's entity and decorator system. Each feature is an independent extension with clear APIs.
+Tiptap 采用模块化扩展系统，与 Draft.js 的实体和装饰器系统类似。每项功能都是一个独立的扩展，并提供清晰的 API。
 
-The [StarterKit](/editor/extensions/functionality/starterkit) is a bundle of all the basic extensions, and you can add or remove other extensions as needed.
+[StarterKit](/editor/extensions/functionality/starterkit) 集成了所有基础扩展，你可以根据需要添加或移除其他扩展。
 
-Explore all available extensions in our [extensions guide](/editor/extensions/overview), or [create your own](/editor/extensions/custom-extensions) to support custom functionality and HTML elements.
+查看[扩展指南](/editor/extensions/overview)了解所有可用扩展，或[创建自己的扩展](/editor/extensions/custom-extensions)以支持自定义功能和 HTML 元素。
 
-### Common Draft.js feature equivalents
+### Draft.js 常见功能的对应项
 
-| Draft.js Feature       | Tiptap Extension          | Notes                  |
+| Draft.js 功能 | Tiptap 扩展 | 说明 |
 | ---------------------- | ------------------------- | ---------------------- |
-| Bold inline style      | `Bold`                    | Included in StarterKit |
-| Italic inline style    | `Italic`                  | Included in StarterKit |
-| Underline inline style | `Underline`               | Included in StarterKit |
-| Code inline style      | `Code`                    | Included in StarterKit |
-| Link entity            | `Link`                    | Included in StarterKit |
-| Image entity           | `Image`                   | Available separately   |
-| Header block           | `Heading`                 | Included in StarterKit |
-| Blockquote block       | `Blockquote`              | Included in StarterKit |
-| Code block             | `CodeBlock`               | Included in StarterKit |
-| Unordered list         | `BulletList`, `ListItem`  | Included in StarterKit |
-| Ordered list           | `OrderedList`, `ListItem` | Included in StarterKit |
+| 粗体行内样式 | `Bold` | 已包含在 StarterKit 中 |
+| 斜体行内样式 | `Italic` | 已包含在 StarterKit 中 |
+| 下划线行内样式 | `Underline` | 已包含在 StarterKit 中 |
+| 代码行内样式 | `Code` | 已包含在 StarterKit 中 |
+| 链接实体 | `Link` | 已包含在 StarterKit 中 |
+| 图片实体 | `Image` | 需单独安装 |
+| 标题块 | `Heading` | 已包含在 StarterKit 中 |
+| 引用块 | `Blockquote` | 已包含在 StarterKit 中 |
+| 代码块 | `CodeBlock` | 已包含在 StarterKit 中 |
+| 无序列表 | `BulletList`, `ListItem` | 已包含在 StarterKit 中 |
+| 有序列表 | `OrderedList`, `ListItem` | 已包含在 StarterKit 中 |
 
-### Extension configuration
+### 配置扩展
 
 ```ts
 import { useEditor } from '@tiptap/react'
@@ -164,15 +164,15 @@ const editor = useEditor({
 })
 ```
 
-### Custom extensions
+### 自定义扩展
 
-For Draft.js custom entities or decorators, create custom Tiptap extensions. See our [custom extensions guide](/editor/extensions/custom-extensions) for detailed instructions.
+对于 Draft.js 自定义实体或装饰器，可以创建自定义 Tiptap 扩展。详细说明请参阅[自定义扩展指南](/editor/extensions/custom-extensions)。
 
-## UI implementation
+## UI 实现
 
-### Toolbar implementation
+### 工具栏实现
 
-Draft.js's RichUtils-based toolbar translates to Tiptap UI components:
+基于 Draft.js RichUtils 的工具栏可以转换为 Tiptap UI 组件：
 
 ```tsx
 // Draft.js toolbar (before)
@@ -225,16 +225,16 @@ function Toolbar({ editor }) {
 }
 ```
 
-### Pre-built UI components
+### 预构建 UI 组件
 
-For faster development, use Tiptap's pre-built UI components:
+为加快开发进度，可以使用 Tiptap 预构建的 UI 组件：
 
-- Explore our [UI components](/ui-components/getting-started/overview) for ready-to-use components
-- Check out practical examples in our [default text editor example](/examples/basics/default-text-editor)
+- 查看我们的 [UI 组件](/ui-components/getting-started/overview)，获取可直接使用的组件
+- 查看[默认文本编辑器示例](/examples/basics/default-text-editor)中的实用示例
 
-### Inline toolbar
+### 行内工具栏
 
-Create an inline toolbar similar to Draft.js's inline styling:
+创建一个类似于 Draft.js 行内样式工具栏的行内工具栏：
 
 ```tsx
 import { BubbleMenu } from '@tiptap/react'
@@ -272,9 +272,9 @@ function MyEditor() {
 }
 ```
 
-### Entity replacement (node views)
+### 替换实体（节点视图）
 
-Draft.js entities can be replaced with Tiptap's [Node Views](/editor/extensions/custom-extensions/node-views):
+Draft.js 实体可以替换为 Tiptap 的[节点视图](/editor/extensions/custom-extensions/node-views)：
 
 ```tsx
 // Draft.js entity (before)
@@ -300,28 +300,28 @@ const CustomLink = Node.create({
 })
 ```
 
-## Migration checklist
+## 迁移检查清单
 
 <Checklist>
-  <CheckboxItem>Install Tiptap packages</CheckboxItem>
-  <CheckboxItem>Convert Draft.js ContentState to HTML</CheckboxItem>
-  <CheckboxItem>Replace Draft.js editor with Tiptap setup</CheckboxItem>
-  <CheckboxItem>Map Draft.js inline styles to Tiptap marks</CheckboxItem>
-  <CheckboxItem>Map Draft.js block types to Tiptap nodes</CheckboxItem>
-  <CheckboxItem>Migrate entities to [Node Views](/editor/extensions/custom-extensions/node-views) or extensions</CheckboxItem>
-  <CheckboxItem>Migrate toolbar components to Tiptap UI</CheckboxItem>
-  <CheckboxItem>Test content compatibility</CheckboxItem>
-  <CheckboxItem>Convert existing content to JSON format (recommended)</CheckboxItem>
-  <CheckboxItem>Implement custom extensions for any missing functionality</CheckboxItem>
-  <CheckboxItem>Update event handlers and key commands</CheckboxItem>
-  <CheckboxItem>Test inline toolbar functionality</CheckboxItem>
-  <CheckboxItem>Verify link and image handling</CheckboxItem>
-  <CheckboxItem>Test list functionality</CheckboxItem>
+  <CheckboxItem>安装 Tiptap 软件包</CheckboxItem>
+  <CheckboxItem>将 Draft.js ContentState 转换为 HTML</CheckboxItem>
+  <CheckboxItem>用 Tiptap 设置替换 Draft.js 编辑器</CheckboxItem>
+  <CheckboxItem>将 Draft.js 行内样式映射为 Tiptap 标记</CheckboxItem>
+  <CheckboxItem>将 Draft.js 块类型映射为 Tiptap 节点</CheckboxItem>
+  <CheckboxItem>将实体迁移到[节点视图](/editor/extensions/custom-extensions/node-views)或扩展</CheckboxItem>
+  <CheckboxItem>将工具栏组件迁移到 Tiptap UI</CheckboxItem>
+  <CheckboxItem>测试内容兼容性</CheckboxItem>
+  <CheckboxItem>将现有内容转换为 JSON 格式（推荐）</CheckboxItem>
+  <CheckboxItem>为缺失的功能实现自定义扩展</CheckboxItem>
+  <CheckboxItem>更新事件处理程序和按键命令</CheckboxItem>
+  <CheckboxItem>测试行内工具栏功能</CheckboxItem>
+  <CheckboxItem>验证链接和图片处理</CheckboxItem>
+  <CheckboxItem>测试列表功能</CheckboxItem>
 </Checklist>
 
-## Next steps
+## 后续步骤
 
-- Explore the [extension overview](/editor/extensions/overview) to discover all available extensions
-- Learn about [custom extensions](/editor/extensions/custom-extensions) for advanced customization
-- Check out our [examples](/examples) for implementation inspiration
-- Review the [performance guide](/guides/performance) for optimization tips
+- 浏览[扩展概览](/editor/extensions/overview)，了解所有可用扩展
+- 了解用于高级自定义的[自定义扩展](/editor/extensions/custom-extensions)
+- 查看我们的[示例](/examples)，获取实现灵感
+- 阅读[性能指南](/guides/performance)，了解优化技巧
