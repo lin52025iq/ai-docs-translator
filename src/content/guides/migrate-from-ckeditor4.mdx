@@ -1,57 +1,57 @@
 ---
 tags:
   - type: editor
-title: Migrate from CKEditor 4 to Tiptap
+title: 从 CKEditor 4 迁移到 Tiptap
 meta:
-  title: Migrate from CKEditor 4 | Tiptap Editor Docs
-  description: Learn how to migrate your existing CKEditor 4 editor to Tiptap. Complete guide covering content migration, setup, and feature mapping.
-  category: Editor
+  title: 从 CKEditor 4 迁移 | Tiptap 编辑器文档
+  description: 了解如何将现有的 CKEditor 4 编辑器迁移到 Tiptap。本指南涵盖内容迁移、设置和功能映射。
+  category: 编辑器
 ---
 
 import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 
 <EnterpriseCalloutAuto variant="migration" renderMode="sidebar" disableWaitlist/>
 
-Migrating from CKEditor 4 to Tiptap is straightforward and offers significant benefits in terms of modern architecture and flexibility. This guide will walk you through the migration process step by step.
+从 CKEditor 4 迁移到 Tiptap 非常简单，还能在现代化架构和灵活性方面带来显著优势。本指南将逐步带你完成迁移过程。
 
-## Content migration
+## 内容迁移
 
-### HTML content compatibility
+### HTML 内容兼容性
 
-CKEditor 4 stores content as HTML, which makes migration to Tiptap seamless. Tiptap can directly use HTML content without any conversion:
+CKEditor 4 以 HTML 格式存储内容，因此迁移到 Tiptap 非常顺畅。Tiptap 可以直接使用 HTML 内容，无需进行任何转换：
 
 ```ts
-// Your existing CKEditor 4 content
+// 现有的 CKEditor 4 内容
 const existingContent =
   '<p>Hello <strong>world</strong>!</p><ul><li>Item 1</li><li>Item 2</li></ul>'
 
-// Use directly in Tiptap
+// 在 Tiptap 中直接使用
 const editor = new Editor({
   content: existingContent,
   extensions: [StarterKit],
 })
 ```
 
-While HTML works perfectly, we recommend converting it to Tiptap's JSON format for better performance and readability. For batch conversion of existing content, use the [HTML utility](/editor/api/utilities/html) to convert HTML to JSON programmatically.
+虽然 HTML 可以正常使用，但我们建议将其转换为 Tiptap 的 JSON 格式，以提升性能和可读性。如需批量转换现有内容，可使用 [HTML 工具](/editor/api/utilities/html)以编程方式将 HTML 转换为 JSON。
 
-## Editor setup
+## 编辑器设置
 
-### Installation
+### 安装
 
-First, install Tiptap and its dependencies:
+首先，安装 Tiptap 及其依赖项：
 
 ```bash
 npm install @tiptap/core @tiptap/starter-kit
 ```
 
-Tiptap supports all modern frontend UI frameworks like React and Vue. Follow the framework-specific installation instructions in our [installation guides](/editor/getting-started/install).
+Tiptap 支持所有现代前端 UI 框架，例如 React 和 Vue。请按照[安装指南](/editor/getting-started/install)中针对相应框架的说明进行安装。
 
-### Basic editor setup
+### 编辑器基本设置
 
-Replace your CKEditor 4 initialization with Tiptap:
+将 CKEditor 4 的初始化代码替换为 Tiptap：
 
 ```ts
-// CKEditor 4 (before)
+// CKEditor 4（之前）
 CKEDITOR.replace('editor', {
   toolbar: [
     { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline'] },
@@ -61,7 +61,7 @@ CKEDITOR.replace('editor', {
   height: 300,
 })
 
-// Tiptap (after)
+// Tiptap（之后）
 import { Editor } from '@tiptap/core'
 import StarterKit from '@tiptap/starter-kit'
 
@@ -72,35 +72,35 @@ const editor = new Editor({
 })
 ```
 
-## Extensions
+## 扩展
 
-### Understanding Tiptap's extension system
+### 了解 Tiptap 的扩展系统
 
-Tiptap uses a modular extension system that replaces CKEditor 4's plugin architecture. Each feature is an independent extension that can be configured and customized.
+Tiptap 使用模块化扩展系统取代 CKEditor 4 的插件架构。每项功能都是一个独立的扩展，可以进行配置和自定义。
 
-The [StarterKit](/editor/extensions/functionality/starterkit) is a bundle of all the basic extensions, and you can add or remove other extensions as needed.
+[StarterKit](/editor/extensions/functionality/starterkit) 集成了所有基础扩展，你也可以根据需要添加或移除其他扩展。
 
-Explore all available extensions in our [extensions guide](/editor/extensions/overview), or [create your own](/editor/extensions/custom-extensions) to support custom functionality and HTML elements.
+可在[扩展指南](/editor/extensions/overview)中查看所有可用扩展，也可以[创建自己的扩展](/editor/extensions/custom-extensions)，以支持自定义功能和 HTML 元素。
 
-### Common CKEditor 4 plugin equivalents
+### 常见的 CKEditor 4 插件对应项
 
-| CKEditor 4 Plugin | Tiptap Extension                        | Notes                  |
-| ----------------- | --------------------------------------- | ---------------------- |
-| `basicstyles`     | `Bold`, `Italic`, `Underline`           | Included in StarterKit |
-| `list`            | `BulletList`, `OrderedList`, `ListItem` | Included in StarterKit |
-| `link`            | `Link`                                  | Included in StarterKit |
-| `image`           | `Image`                                 | Available separately   |
-| `table`           | `Table`                                 | Available separately   |
-| `sourcearea`      | `CodeBlock`                             | Included in StarterKit |
-| `format`          | `Heading`                               | Included in StarterKit |
-| `blockquote`      | `Blockquote`                            | Included in StarterKit |
-| `justify`         | `TextAlign`                             | Available separately   |
-| `colorbutton`     | `TextStyle`, `Color`                    | Available separately   |
-| `font`            | `TextStyle`, `FontSize`                 | Available separately   |
-| `indentlist`      | Built into list extensions              | Included in StarterKit |
-| `horizontalrule`  | `HorizontalRule`                        | Included in StarterKit |
+| CKEditor 4 插件 | Tiptap 扩展                             | 备注             |
+| ---------------- | --------------------------------------- | ---------------- |
+| `basicstyles`    | `Bold`, `Italic`, `Underline`           | 包含在 StarterKit 中 |
+| `list`           | `BulletList`, `OrderedList`, `ListItem` | 包含在 StarterKit 中 |
+| `link`           | `Link`                                  | 包含在 StarterKit 中 |
+| `image`          | `Image`                                 | 可单独使用       |
+| `table`          | `Table`                                 | 可单独使用       |
+| `sourcearea`     | `CodeBlock`                             | 包含在 StarterKit 中 |
+| `format`         | `Heading`                               | 包含在 StarterKit 中 |
+| `blockquote`     | `Blockquote`                            | 包含在 StarterKit 中 |
+| `justify`        | `TextAlign`                             | 可单独使用       |
+| `colorbutton`    | `TextStyle`, `Color`                    | 可单独使用       |
+| `font`           | `TextStyle`, `FontSize`                 | 可单独使用       |
+| `indentlist`     | 内置于列表扩展中                        | 包含在 StarterKit 中 |
+| `horizontalrule` | `HorizontalRule`                        | 包含在 StarterKit 中 |
 
-### Extension configuration
+### 配置扩展
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -134,25 +134,25 @@ const editor = new Editor({
 })
 ```
 
-### Custom extensions
+### 自定义扩展
 
-For CKEditor 4 custom plugins, create custom Tiptap extensions. See our [custom extensions guide](/editor/extensions/custom-extensions) for detailed instructions.
+对于 CKEditor 4 的自定义插件，可以创建自定义 Tiptap 扩展。详细说明请参阅[自定义扩展指南](/editor/extensions/custom-extensions)。
 
-## UI implementation
+## UI 实现
 
-### Toolbar implementation
+### 工具栏实现
 
-CKEditor 4's toolbar configuration translates to custom UI components in Tiptap:
+在 Tiptap 中，CKEditor 4 的工具栏配置对应的是自定义 UI 组件：
 
 ```tsx
-// CKEditor 4 toolbar config
-toolbar: [
+// CKEditor 4 工具栏配置
+ toolbar: [
   { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline'] },
   { name: 'paragraph', items: ['NumberedList', 'BulletedList'] },
   { name: 'links', items: ['Link', 'Unlink'] },
 ]
 
-// Tiptap equivalent (React example)
+// Tiptap 对应实现（React 示例）
 function Toolbar({ editor }) {
   if (!editor) return null
 
@@ -162,35 +162,35 @@ function Toolbar({ editor }) {
         onClick={() => editor.chain().focus().toggleBold().run()}
         className={editor.isActive('bold') ? 'active' : ''}
       >
-        Bold
+        加粗
       </button>
 
       <button
         onClick={() => editor.chain().focus().toggleItalic().run()}
         className={editor.isActive('italic') ? 'active' : ''}
       >
-        Italic
+        斜体
       </button>
 
       <button
         onClick={() => editor.chain().focus().toggleUnderline().run()}
         className={editor.isActive('underline') ? 'active' : ''}
       >
-        Underline
+        下划线
       </button>
 
       <button
         onClick={() => editor.chain().focus().toggleBulletList().run()}
         className={editor.isActive('bulletList') ? 'active' : ''}
       >
-        Bullet List
+        项目符号列表
       </button>
 
       <button
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
         className={editor.isActive('orderedList') ? 'active' : ''}
       >
-        Numbered List
+        编号列表
       </button>
 
       <button
@@ -202,44 +202,44 @@ function Toolbar({ editor }) {
         }}
         className={editor.isActive('link') ? 'active' : ''}
       >
-        Link
+        链接
       </button>
 
       <button
         onClick={() => editor.chain().focus().unsetLink().run()}
         disabled={!editor.isActive('link')}
       >
-        Unlink
+        取消链接
       </button>
     </div>
   )
 }
 ```
 
-### Pre-built UI components
+### 预构建 UI 组件
 
-For faster development, consider using Tiptap's pre-built UI components:
+为了加快开发，可以考虑使用 Tiptap 预构建的 UI 组件：
 
-- Explore our [UI components](/ui-components/getting-started/overview) for ready-to-use toolbar and menu components
-- Check out practical examples in our [default text editor example](/examples/basics/default-text-editor)
+- 浏览我们的 [UI 组件](/ui-components/getting-started/overview)，获取可直接使用的工具栏和菜单组件
+- 查看[默认文本编辑器示例](/examples/basics/default-text-editor)中的实用示例
 
-## Migration checklist
+## 迁移清单
 
-1. Install Tiptap packages
-2. Replace CKEditor 4 initialization with Tiptap setup
-3. Map CKEditor 4 plugins to Tiptap extensions
-4. Migrate toolbar configuration to custom UI components
-5. Test content compatibility
-6. Convert existing content to JSON format (recommended)
-7. Implement custom extensions for any missing functionality
-8. Update event handlers and API calls
-9. Test image upload and handling if used
-10. Verify table functionality if used
-11. Test user interactions
+1. 安装 Tiptap 软件包
+2. 将 CKEditor 4 初始化代码替换为 Tiptap 设置
+3. 将 CKEditor 4 插件映射到 Tiptap 扩展
+4. 将工具栏配置迁移到自定义 UI 组件
+5. 测试内容兼容性
+6. 将现有内容转换为 JSON 格式（推荐）
+7. 为缺少的功能实现自定义扩展
+8. 更新事件处理程序和 API 调用
+9. 如有使用图片，请测试图片上传和处理
+10. 如有使用表格，请验证表格功能
+11. 测试用户交互
 
-## Next steps
+## 后续步骤
 
-- Explore the [extension overview](/editor/extensions/overview) to discover all available extensions
-- Learn about [custom extensions](/editor/extensions/custom-extensions) for advanced customization
-- Check out our [examples](/examples) for implementation inspiration
-- Review the [performance guide](/guides/performance) for optimization tips
+- 浏览[扩展概览](/editor/extensions/overview)，了解所有可用扩展
+- 了解[自定义扩展](/editor/extensions/custom-extensions)，进行高级自定义
+- 查看我们的[示例](/examples)，获取实现灵感
+- 阅读[性能指南](/guides/performance)，了解优化建议
