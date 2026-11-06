@@ -1,24 +1,24 @@
 ---
 tags:
   - type: collaboration
-title: Add offline support to your editor
+title: 为编辑器添加离线支持
 meta:
-  title: Offline support | Tiptap Collaboration Docs
-  description: Add offline functionality to your Collaborative Editor and enable local data storage and automatic sync when online.
+  title: 离线支持 | Tiptap 协作文档
+  description: 为协作编辑器添加离线功能，实现本地数据存储，并在联网时自动同步。
   category: Collaboration
 ---
 
-Easily add offline functionality to your collaborative editor by using the [Y IndexedDB](https://docs.yjs.dev/ecosystem/database-provider/y-indexeddb) extension. This tool from the Y.js ecosystem enhances your editor with offline data storage and sync capabilities.
+使用 [Y IndexedDB](https://docs.yjs.dev/ecosystem/database-provider/y-indexeddb) 扩展，即可轻松为协作编辑器添加离线功能。这个来自 Y.js 生态系统的工具可为编辑器提供离线数据存储和同步能力。
 
-## Integrating offline support
+## 集成离线支持
 
-Begin by adding the Y IndexedDB adapter to your project:
+首先，将 Y IndexedDB 适配器添加到项目中：
 
 ```bash
 npm install y-indexeddb
 ```
 
-Connect Y Indexeddb with a Y document to store it locally.
+将 Y IndexedDB 与 Y 文档连接，以便在本地存储文档。
 
 ```typescript
 import { Editor } from '@tiptap/core'
@@ -28,12 +28,12 @@ import { IndexeddbPersistence } from 'y-indexeddb'
 
 const ydoc = new Y.Doc()
 
-// Set up IndexedDB for local storage of the Y document
+// 设置 IndexedDB，以便在本地存储 Y 文档
 new IndexeddbPersistence('example-document', ydoc)
 
 const editor = new Editor({
   extensions: [
-    // Other extensions...
+    // 其他扩展...
     Collaboration.configure({
       document: ydoc,
     }),
@@ -41,4 +41,4 @@ const editor = new Editor({
 })
 ```
 
-The IndexedDB adapter ensures that every change to your document is stored locally in the browser. This means your work is saved even if you close the tab, lose your internet connection, or edit offline. When you're back online, it automatically syncs these changes.
+IndexedDB 适配器会确保文档的每次更改都存储在浏览器本地。这意味着即使关闭标签页、断开网络连接或离线编辑，您的工作也会得到保存。恢复联网后，这些更改会自动同步。
