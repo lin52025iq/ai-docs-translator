@@ -1,50 +1,50 @@
 ---
-title: Italic extension
+title: 斜体扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-italic?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-italic
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-italic.svg
     url: https://npmcharts.com/compare/@tiptap/extension-italic?minimal=true
-    label: Downloads
+    label: 下载量
 extension:
-  name: Italic
+  name: 斜体
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-italic
   icon: Italic
-  description: Helps to emphasize your text; it doesn’t bring you closer to Italy, though.
+  description: 帮助你突出文本；不过，它可不能让你离意大利更近。
   type: mark
 meta:
-  title: Italic extension | Tiptap Editor Docs
-  description: Use the Italic extension in your Tiptap Editor to emphasize your text with italics. Learn more in our docs!
-  category: Editor
+  title: 斜体扩展 | Tiptap 编辑器文档
+  description: 在 Tiptap 编辑器中使用斜体扩展，以斜体突出文本。了解更多信息，请参阅我们的文档！
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-Use this extension to render text in _italic_. If you pass `<em>`, `<i>` tags, or text with inline `style` attributes setting `font-style: italic` in the editor’s initial content, they all will be rendered accordingly.
+使用此扩展可将文本渲染为_斜体_。如果编辑器的初始内容中包含 `<em>`、`<i>` 标签，或带有 `font-style: italic` 行内 `style` 属性的文本，这些内容都会相应地渲染。
 
-Type `*one asterisk*` or `_one underline_` and it will magically transform to _italic_ text while you type.
+输入 `*一个星号*` 或 `_一个下划线_`，文本便会在输入时自动转换为_斜体_。
 
 <CodeDemo path="/Marks/Italic" />
 
-<Callout title="Restrictions" variant="default">
-    The extension will generate the corresponding `<em>` HTML tags when reading contents of the `Editor` instance. All text marked italic, regardless of the method will be normalized to `<em>` HTML tags.
+<Callout title="限制" variant="default">
+    读取 `Editor` 实例的内容时，此扩展会生成相应的 `<em>` HTML 标签。所有标记为斜体的文本，无论使用何种方式设置，都会统一转换为 `<em>` HTML 标签。
 </Callout>
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-italic
 ```
 
-## Settings
+## 设置
 
 ### HTMLAttributes
 
-Custom HTML attributes that should be added to the rendered HTML tag.
+要添加到渲染后 HTML 标签中的自定义 HTML 属性。
 
 ```js
 Italic.configure({
@@ -54,11 +54,11 @@ Italic.configure({
 })
 ```
 
-## Commands
+## 命令
 
 ### setItalic()
 
-Mark the text italic.
+将文本标记为斜体。
 
 ```js
 editor.commands.setItalic()
@@ -66,7 +66,7 @@ editor.commands.setItalic()
 
 ### toggleItalic()
 
-Toggle the italic mark.
+切换斜体标记。
 
 ```js
 editor.commands.toggleItalic()
@@ -74,18 +74,18 @@ editor.commands.toggleItalic()
 
 ### unsetItalic()
 
-Remove the italic mark.
+移除斜体标记。
 
 ```js
 editor.commands.unsetItalic()
 ```
 
-## Keyboard shortcuts
+## 键盘快捷键
 
-| Command        | Windows/Linux                     | macOS                         |
+| 命令           | Windows/Linux                     | macOS                         |
 | -------------- | --------------------------------- | ----------------------------- |
 | toggleItalic() | <kbd>Control</kbd> + <kbd>I</kbd> | <kbd>Cmd</kbd> + <kbd>I</kbd> |
 
-## Source code
+## 源代码
 
 [packages/extension-italic/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-italic/)
