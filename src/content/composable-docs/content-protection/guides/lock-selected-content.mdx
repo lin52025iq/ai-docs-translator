@@ -1,15 +1,15 @@
 ---
-title: Lock selected content
+title: 锁定选定内容
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Lock selected content | Tiptap Content Protection Docs
-  description: Let users select content and mark it as locked so that it cannot be edited.
-  category: Composable Docs
+  title: 锁定选定内容 | Tiptap 内容保护文档
+  description: 允许用户选择内容并将其标记为锁定状态，使其无法编辑。
+  category: 可组合文档
 ---
 
-To let users select arbitrary content and lock it:
+若要让用户选择任意内容并将其锁定：
 
-1. Define a [custom Mark or Node](/editor/extensions/custom-extensions/create-new) in your schema. Add an editor command that applies it to the selection.
-2. Define a [protection rule](/composable-docs/content-protection/api-reference/policy) that selects content with that Mark or Node and sets the permission to `edit: false` so that its content cannot be edited. Use `target: 'mark'` to protect the marked content and its Mark, or `target: 'node'` to protect the Node, its attributes and all its content.
+1. 在架构中定义一个[自定义 Mark 或 Node](/editor/extensions/custom-extensions/create-new)，并添加一条编辑器命令，将其应用于选区。
+2. 定义一条[保护规则](/composable-docs/content-protection/api-reference/policy)，用于选择带有该 Mark 或 Node 的内容，并将权限设为 `edit: false`，使其内容无法编辑。使用 `target: 'mark'` 可保护带标记的内容及其 Mark；使用 `target: 'node'` 可保护 Node、其属性及其全部内容。
