@@ -1,18 +1,18 @@
 ---
-title: Basic usage
+title: 基本用法
 tags:
   - type: addon
 meta:
-  title: Basic usage | Tiptap Tracked Changes Docs
-  description: Learn how to enable tracked changes, manage users, and accept or reject suggestions in your Tiptap editor.
-  category: Tracked Changes
+  title: 基本用法 | Tiptap 修订文档
+  description: 了解如何在 Tiptap 编辑器中启用修订、管理用户，以及接受或拒绝建议。
+  category: 修订
 ---
 
-Learn the essential workflows for using the Tracked Changes extension — enabling suggestion mode, managing users, and reviewing suggestions.
+了解使用修订扩展的基本工作流程：启用建议模式、管理用户和审阅建议。
 
-## Enabling and disabling tracked changes
+## 启用和禁用修订
 
-Toggle track changes mode on and off:
+开启或关闭修订模式：
 
 ```js
 // Enable track changes
@@ -25,9 +25,9 @@ editor.commands.disableTrackedChanges()
 editor.commands.toggleTrackedChanges()
 ```
 
-## Setting the current user
+## 设置当前用户
 
-Change the user for new suggestions:
+更改新建议所使用的用户：
 
 ```js
 editor.commands.setTrackedChangesUser({
@@ -36,9 +36,9 @@ editor.commands.setTrackedChangesUser({
 })
 ```
 
-## Accepting and rejecting suggestions
+## 接受和拒绝建议
 
-Accept or reject suggestions individually:
+逐条接受或拒绝建议：
 
 ```js
 // Accept suggestion at current selection
@@ -54,13 +54,13 @@ editor.commands.acceptSuggestion({ id: 'suggestion-123' })
 editor.commands.rejectSuggestion({ id: 'suggestion-123' })
 ```
 
-Formatting changes are reviewed through the same suggestion workflow. A tracked bold, italic, link, or other mark change appears as a `markChange` suggestion and can be accepted or rejected just like an insertion, deletion, or replacement.
+格式更改也通过相同的建议工作流程进行审阅。加粗、斜体、链接或其他标记的修订会显示为 `markChange` 建议，与插入、删除或替换一样，可以接受或拒绝。
 
-If you need to create formatting suggestions from application logic, use the programmatic mark commands described in the [commands reference](/tracked-changes/api-reference/commands): `addTrackedMark`, `removeTrackedMark`, and `toggleTrackedMark`.
+如果需要通过应用逻辑创建格式建议，请使用[命令参考](/tracked-changes/api-reference/commands)中介绍的程序化标记命令：`addTrackedMark`、`removeTrackedMark` 和 `toggleTrackedMark`。
 
-## Batch operations
+## 批量操作
 
-Accept or reject all suggestions at once:
+一次性接受或拒绝所有建议：
 
 ```js
 // Accept all suggestions
@@ -70,7 +70,7 @@ editor.commands.acceptAllSuggestions()
 editor.commands.rejectAllSuggestions()
 ```
 
-Accept or reject suggestions within a specific document range:
+接受或拒绝文档特定范围内的建议：
 
 ```js
 // Accept suggestions in a range
@@ -80,7 +80,7 @@ editor.commands.acceptSuggestionsInRange({ from: 10, to: 50 })
 editor.commands.rejectSuggestionsInRange({ from: 10, to: 50 })
 ```
 
-Accept or reject all suggestions by a specific user:
+接受或拒绝特定用户提交的所有建议：
 
 ```js
 // Accept all suggestions from a user
