@@ -1,27 +1,24 @@
 ---
-title: 'Versions'
-intro: 'When you compare two versions of a document, charts and diagrams are compared by what the document stores, never by how they look. A chart or a diagram has changed when any of its stored attributes differs, except the ones you tell the comparison to ignore.'
+title: '版本'
+intro: '比较文档的两个版本时，图表和示意图是根据文档中存储的内容进行比较，而不是根据它们的外观进行比较。只要图表或示意图的任一已存储属性发生变化，它就会被视为已更改；但你指定比较时忽略的属性除外。'
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Versions | Tiptap Diagrams Docs'
-  description: 'When you compare two versions of a document, charts and diagrams are compared by what the document stores, never by how they look.'
-  category: Diagrams
+  title: '版本 | Tiptap 示意图文档'
+  description: '比较文档的两个版本时，图表和示意图是根据文档中存储的内容进行比较，而不是根据它们的外观进行比较。'
+  category: 示意图
 ---
 
-## What is compared
+## 比较哪些内容
 
-A chart is compared by its data, spec, Renderer, Data Source, delimiter and when that source was
-last read. The table under [With Tiptap's Compare](/diagrams/guides/versions#with-tiptaps-compare) says when each changes.
-A diagram is compared by its source text, format, title, description, view and options. Add
-`'view'` to `ignoreAttributes` if switching to the code view should not count as a change.
+图表会根据其数据、规格、渲染器、数据源、分隔符，以及上次读取该数据源的时间进行比较。[使用 Tiptap Compare]( /diagrams/guides/versions#with-tiptaps-compare) 下方的表格说明了各项在何时会发生变化。
+示意图会根据其源文本、格式、标题、说明、视图和选项进行比较。如果切换到代码视图不应算作变更，请将
+`'view'` 添加到 `ignoreAttributes`。
 
-## With Tiptap's Compare
+## 使用 Tiptap Compare
 
-`@tiptap-pro/compare` compares the JSON of two documents. It reports a chart or a diagram whose
-attributes differ as a changed block. Leave out the attributes that only matter for showing or
-editing, so they do not show up as changes:
+`@tiptap-pro/compare` 会比较两个文档的 JSON。图表或示意图的属性不同时，会将其报告为已更改的块。省略那些仅影响显示或编辑的属性，避免它们被报告为变更：
 
 ```ts
 import { compareDocuments } from '@tiptap-pro/compare'
@@ -37,21 +34,20 @@ const changeset = compareDocuments({
 })
 ```
 
-| Attribute                   | Changes when                                                    | In a comparison                                                   |
+| 属性                         | 发生变化的情况                                                   | 在比较中的结果                                                       |
 | --------------------------- | --------------------------------------------------------------- | ----------------------------------------------------------------- |
-| `data`                      | values are edited, or a synchronization brings different data   | a change                                                          |
-| `spec`                      | the type, title, colors, axes or references change              | a change                                                          |
-| `renderer`                  | another Renderer is chosen. The data stays the same             | a change                                                          |
-| `source`                    | the Data Source is linked or detached, or its address changes   | a change                                                          |
-| `delimiter`                 | the rows are changed as text with another delimiter             | a change. Add `'delimiter'` to `ignoreAttributes` to leave it out |
-| `syncedAt`                  | the chart reads its Data Source, also when the data is the same | a change. Add `'syncedAt'` to `ignoreAttributes` to leave it out  |
-| `previewUrl`                | a preview image is uploaded after a change                      | leave out                                                         |
-| `diagramInput` (on a table) | the table is used as the Quick Input's table view               | leave out                                                         |
+| `data`                      | 值被编辑，或同步带来了不同的数据                                 | 变更                                                              |
+| `spec`                      | 类型、标题、颜色、坐标轴或引用发生变化                           | 变更                                                              |
+| `renderer`                  | 选择了另一个渲染器，但数据保持不变                               | 变更                                                              |
+| `source`                    | 数据源被关联或解除关联，或其地址发生变化                         | 变更                                                              |
+| `delimiter`                 | 使用不同的分隔符以文本形式更改了行                               | 变更。将 `'delimiter'` 添加到 `ignoreAttributes` 可忽略此项        |
+| `syncedAt`                  | 图表读取其数据源时，即使数据相同也会发生                         | 变更。将 `'syncedAt'` 添加到 `ignoreAttributes` 可忽略此项         |
+| `previewUrl`                | 变更后上传了预览图                                               | 忽略                                                              |
+| `diagramInput`（在表格上）    | 该表格被用作 Quick Input 的表格视图                              | 忽略                                                              |
 
-## Saying what changed in a chart
+## 描述图表中的变更
 
-`describeChartChange` from `@tiptap-pro/extension-diagrams/core` tells you what changed inside a
-chart, for a line such as "February: 4 → 5, type: bar → line" next to the change:
+`@tiptap-pro/extension-diagrams/core` 中的 `describeChartChange` 会告诉你图表内部发生了什么变化，便于在变更旁显示类似“February: 4 → 5, type: bar → line”的说明：
 
 ```ts
 import { describeChartChange } from '@tiptap-pro/extension-diagrams/core'
@@ -70,18 +66,16 @@ if (change.changed) {
 }
 ```
 
-It returns:
+它会返回：
 
-| Field                            | What it holds                                                                     |
+| 字段                             | 内容                                                                              |
 | -------------------------------- | --------------------------------------------------------------------------------- |
-| `changed`                        | Whether anything below differs                                                    |
-| `data`                           | `{ columnsAdded, columnsRemoved, rowsAdded, rowsRemoved, cells }`, or `null`      |
-| `spec`                           | `{ path, before, after }` for every spec field that differs, such as `axes.y.min` |
-| `renderer`, `source`, `syncedAt` | `{ before, after }`, or `null` when unchanged                                     |
+| `changed`                        | 下方任意内容是否存在差异                                                          |
+| `data`                           | `{ columnsAdded, columnsRemoved, rowsAdded, rowsRemoved, cells }`，或 `null`      |
+| `spec`                           | 每个发生变化的规格字段对应的 `{ path, before, after }`，例如 `axes.y.min`           |
+| `renderer`, `source`, `syncedAt` | `{ before, after }`；未发生变化时为 `null`                                        |
 
-- **Rows** are named by their label when every row has a different label. Otherwise they are named
-  by their position.
-- **Cells** are named by their row and their column header.
-- **Attributes from any document** work, also from documents made before `syncedAt` was an
-  attribute of its own.
-- **Attributes it cannot read** count as an empty chart.
+- **行**：如果每一行的标签都不同，则使用标签命名；否则使用行的位置命名。
+- **单元格**：使用其所在行和列标题命名。
+- **来自任何文档的属性**均可使用，包括在 `syncedAt` 成为独立属性之前创建的文档。
+- **无法读取的属性**会被视为空图表。
