@@ -1,46 +1,46 @@
 ---
-title: Drag Handle extension
+title: 拖拽手柄扩展
 extension:
   name: Drag Handle
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-drag-handle
-  description: Have you ever wanted to drag nodes around your editor? Well, we did too.
+  description: 你是否曾想在编辑器中拖动节点？我们也想过，所以为此推出了这个扩展。
   type: extension
   icon: GripVertical
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-drag-handle.svg?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-drag-handle
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-drag-handle.svg
     url: https://npmcharts.com/compare/@tiptap/extension-drag-handle?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  category: Editor
-  title: Drag Handle extension | Tiptap Editor Docs
-  description: Enable dragging nodes around your Tiptap Editor with the Drag Handle Extension. Learn how to set it up here in the Docs!
+  category: 编辑器
+  title: 拖拽手柄扩展 | Tiptap 编辑器文档
+  description: 使用拖拽手柄扩展，在 Tiptap 编辑器中拖动节点。请在此处查看文档，了解如何进行设置！
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-Have you ever wanted to drag nodes around your editor? Well, we did too—so here's an extension for that.
+你是否曾想在编辑器中拖动节点？我们也想过，所以为此推出了这个扩展。
 
-The `DragHandle` extension allows you to easily handle dragging nodes around in the editor. You can define custom render functions, placement, and more.
+`DragHandle` 扩展让你可以轻松地在编辑器中拖动节点。你可以自定义渲染函数、位置等。
 
 <CodeDemo path="/Extensions/DragHandle" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-drag-handle
 ```
 
-## Settings
+## 设置
 
 ### render
 
-Renders an element that is positioned with the floating-ui/dom package. This is the element that will be displayed as the handle when dragging a node around.
+使用 floating-ui/dom 包渲染一个定位元素。拖动节点时，该元素会显示为拖拽手柄。
 
 ```js
 DragHandle.configure({
@@ -57,9 +57,9 @@ DragHandle.configure({
 
 ### computePositionConfig
 
-Configuration for position computation of the drag handle using the floating-ui/dom package. You can pass any options that are available in the [floating-ui documentation](https://floating-ui.com/docs/computePosition).
+使用 floating-ui/dom 包计算拖拽手柄位置的配置。你可以传入 [floating-ui 文档](https://floating-ui.com/docs/computePosition)中提供的任意选项。
 
-Default: `{ placement: 'left-start', strategy: 'absolute' }`
+默认值：`{ placement: 'left-start', strategy: 'absolute' }`
 
 ```js
 DragHandle.configure({
@@ -72,9 +72,9 @@ DragHandle.configure({
 
 ### getReferencedVirtualElement
 
-A function that returns the virtual element for the drag handle. This is useful when the menu needs to be positioned relative to a specific DOM element.
+返回拖拽手柄虚拟元素的函数。如果需要相对于特定 DOM 元素定位菜单，这个函数会很有用。
 
-Default: `undefined`
+默认值：`undefined`
 
 ```js
 DragHandle.configure({
@@ -87,9 +87,9 @@ DragHandle.configure({
 
 ### locked
 
-Locks the draghandle in place and visibility. If the drag handle was visible, it will remain visible until unlocked. If it was hidden, it will remain hidden until unlocked.
+锁定拖拽手柄的位置和可见状态。如果拖拽手柄当前可见，它会一直保持可见，直到解除锁定；如果当前隐藏，则会一直保持隐藏，直到解除锁定。
 
-Default: `false`
+默认值：`false`
 
 ```js
 DragHandle.configure({
@@ -99,9 +99,9 @@ DragHandle.configure({
 
 ### onNodeChange
 
-Returns a node or null when a node is hovered over. This can be used to highlight the node that is currently hovered over.
+当鼠标悬停在节点上时，返回该节点或 `null`。你可以用它高亮当前悬停的节点。
 
-Default: `undefined`
+默认值：`undefined`
 
 ```js
 DragHandle.configure({
@@ -118,11 +118,11 @@ DragHandle.configure({
 
 ### onElementDragStart
 
-A function that is called when the element starts to be dragged. This can be used to add custom logic when dragging starts.
+元素开始被拖动时调用的函数。你可以在拖动开始时添加自定义逻辑。
 
-Signature: `(event: DragEvent) => void`
+签名：`(event: DragEvent) => void`
 
-Default: `undefined`
+默认值：`undefined`
 
 ```js
 DragHandle.configure({
@@ -134,11 +134,11 @@ DragHandle.configure({
 
 ### onElementDragEnd
 
-A function that is called when the element stops being dragged. This can be used to add custom logic when dragging ends.
+元素停止被拖动时调用的函数。你可以在拖动结束时添加自定义逻辑。
 
-Signature: `(event: DragEvent) => void`
+签名：`(event: DragEvent) => void`
 
-Default: `undefined`
+默认值：`undefined`
 
 ```js
 DragHandle.configure({
@@ -150,11 +150,11 @@ DragHandle.configure({
 
 ### nested
 
-Enable drag handles for nested content such as list items, blockquotes, and other nested structures.
+为列表项、引用块和其他嵌套结构等内容启用拖拽手柄。
 
-When enabled, the drag handle will appear for nested blocks, not just top-level blocks. A rule-based scoring system determines which node to target based on cursor position and configured rules.
+启用后，拖拽手柄不仅会出现在顶层区块，也会显示在嵌套区块上。系统会根据光标位置和配置的规则，通过基于规则的评分来确定目标节点。
 
-Default: `false`
+默认值：`false`
 
 ```js
 // Enable with defaults
@@ -172,15 +172,15 @@ DragHandle.configure({
 })
 ```
 
-See the [Nested Drag Handle](#nested-drag-handle) section below for detailed configuration options.
+详细配置选项请参阅下文的[嵌套拖拽手柄](#nested-drag-handle)部分。
 
-## Commands
+## 命令
 
 ### lockDragHandle()
 
-Locks the draghandle in place and visibility. If the drag handle was visible, it will remain visible until unlocked. If it was hidden, it will remain hidden until unlocked.
+锁定拖拽手柄的位置和可见状态。如果拖拽手柄当前可见，它会一直保持可见，直到解除锁定；如果当前隐藏，则会一直保持隐藏，直到解除锁定。
 
-This can be useful if you want to have a menu inside of the drag handle and want it to remain visible whether the drag handle is moused over or not.
+如果你想在拖拽手柄中放置菜单，并希望无论鼠标是否悬停在拖拽手柄上，菜单都保持可见，此命令会很有用。
 
 ```js
 editor.commands.lockDragHandle()
@@ -188,7 +188,7 @@ editor.commands.lockDragHandle()
 
 ### unlockDragHandle()
 
-Unlocks the draghandle. Resets to default visibility and behavior.
+解除拖拽手柄的锁定，并将其恢复为默认的可见状态和行为。
 
 ```js
 editor.commands.unlockDragHandle()
@@ -196,17 +196,17 @@ editor.commands.unlockDragHandle()
 
 ### toggleDragHandle()
 
-Toggle draghandle lock state. If the drag handle is locked, it will be unlocked and vice versa.
+切换拖拽手柄的锁定状态。如果拖拽手柄已锁定，则解除锁定；反之亦然。
 
 ```js
 editor.commands.toggleDragHandle()
 ```
 
-## Nested Drag Handle
+## 嵌套拖拽手柄
 
-By default, the drag handle only appears for top-level blocks. When `nested` is enabled, it also works with nested content like list items, blockquote paragraphs, and other nested structures.
+默认情况下，拖拽手柄只会出现在顶层区块上。启用 `nested` 后，它也会应用于列表项、引用块段落和其他嵌套结构等内容。
 
-### Basic Usage
+### 基本用法
 
 ```js
 // Enable with all defaults
@@ -215,9 +215,9 @@ DragHandle.configure({
 })
 ```
 
-### Configuration Options
+### 配置选项
 
-When you need more control, pass an options object:
+如需更精细地控制，可以传入一个选项对象：
 
 ```js
 DragHandle.configure({
@@ -237,11 +237,11 @@ DragHandle.configure({
 })
 ```
 
-### Edge Detection
+### 边缘检测
 
-Edge detection controls when to prefer the parent node over a nested node. When the cursor is near an edge of the content area, you often want to select the parent container rather than its nested content.
+边缘检测控制何时优先选择父节点而不是嵌套节点。当光标靠近内容区域边缘时，通常希望选中父容器，而不是其中的嵌套内容。
 
-#### Presets
+#### 预设
 
 ```js
 DragHandle.configure({
@@ -261,9 +261,9 @@ DragHandle.configure({
 })
 ```
 
-#### Custom Configuration
+#### 自定义配置
 
-For fine-tuned control, pass a configuration object:
+如需精细控制，可以传入一个配置对象：
 
 ```js
 DragHandle.configure({
@@ -282,7 +282,7 @@ DragHandle.configure({
 })
 ```
 
-You can also pass a partial configuration to override specific values while keeping defaults:
+你也可以传入部分配置，只覆盖指定值并保留其他默认值：
 
 ```js
 DragHandle.configure({
@@ -293,36 +293,36 @@ DragHandle.configure({
 })
 ```
 
-#### How Strength Works
+#### strength 的作用方式
 
-The `strength` value controls how aggressively the system prefers parent nodes when the cursor is near an edge. It works together with the scoring system:
+`strength` 值控制光标靠近边缘时系统优先选择父节点的程度。它与评分系统配合使用：
 
-1. Each candidate node starts with a base score of **1000**
-2. When the cursor is near a configured edge, a deduction is calculated as: `strength × depth`
-3. The node with the highest remaining score is selected
+1. 每个候选节点的初始基础分为 **1000**。
+2. 光标靠近已配置的边缘时，扣分值按以下公式计算：`strength × depth`。
+3. 选择剩余分数最高的节点。
 
-With the default strength of **500**:
+默认 `strength` 值为 **500**：
 
-| Node Depth | Deduction | Remaining Score | Effect |
+| 节点深度 | 扣分 | 剩余分数 | 效果 |
 |------------|-----------|-----------------|--------|
-| 1 (shallow) | 500 | 500 | Still selectable, but deprioritized |
-| 2 | 1000 | 0 | Barely selectable, loses to non-edge nodes |
-| 3+ (deep) | 1500+ | negative | Effectively excluded |
+| 1（较浅） | 500 | 500 | 仍可选中，但优先级降低 |
+| 2 | 1000 | 0 | 几乎无法选中，会输给不在边缘的节点 |
+| 3+（较深） | 1500+ | 负数 | 实际上会被排除 |
 
-This means deeper nested nodes are more aggressively deprioritized near edges, making it easier to select their parent containers.
+这意味着，光标靠近边缘时，越深层的嵌套节点优先级降低得越明显，因此更容易选中其父容器。
 
-**Examples:**
-- `strength: 250` - Gentler preference; even depth-3 nodes remain somewhat selectable near edges
-- `strength: 500` - Default; depth-2+ nodes are strongly deprioritized near edges
-- `strength: 1000` - Aggressive; any nested node near an edge is effectively excluded
+**示例：**
+- `strength: 250` - 优先级调整较温和；即使光标靠近边缘，深度为 3 的节点仍有一定机会被选中。
+- `strength: 500` - 默认值；光标靠近边缘时，深度为 2 或更深的节点优先级会大幅降低。
+- `strength: 1000` - 调整较强；光标靠近边缘时，任何嵌套节点实际上都会被排除。
 
-<Callout title="Negative Threshold Values" variant="info">
-  Using a negative threshold value (e.g., `-16`) effectively reduces the area where edge detection triggers, making it easier to select nested items even when the cursor is near the edge. The cursor must be further inside the element before edge detection activates.
+<Callout title="负阈值" variant="info">
+  使用负阈值（例如 `-16`）会有效缩小触发边缘检测的区域，因此即使光标靠近边缘，也更容易选中嵌套项。光标需要进一步移入元素内部，边缘检测才会触发。
 </Callout>
 
-### Allowed Containers
+### 允许的容器
 
-Restrict nested drag handles to specific container types:
+将嵌套拖拽手柄限制在特定容器类型中：
 
 ```js
 DragHandle.configure({
@@ -333,13 +333,13 @@ DragHandle.configure({
 })
 ```
 
-When set, the drag handle will only appear for nested content inside the specified container types. Top-level blocks are always draggable regardless of this setting.
+设置此项后，拖拽手柄只会出现在指定容器类型内部的嵌套内容上。无论此设置如何，顶层区块始终可以拖动。
 
-### Custom Rules
+### 自定义规则
 
-The drag handle uses a scoring system to determine which node to select. Each candidate node starts with a score of 1000, and rules modify this score. The node with the highest final score is selected.
+拖拽手柄使用评分系统来确定要选中的节点。每个候选节点的初始分数为 1000，规则会修改该分数。最终分数最高的节点将被选中。
 
-#### Creating Custom Rules
+#### 创建自定义规则
 
 ```js
 DragHandle.configure({
@@ -365,38 +365,38 @@ DragHandle.configure({
 })
 ```
 
-#### Score Modifiers Explained
+#### 评分调整值说明
 
-| Return Value | Effect | Example Use Case |
+| 返回值 | 效果 | 示例用途 |
 |--------------|--------|------------------|
-| `-500` | Boost score by 500 | Strongly prefer this node type |
-| `-100` | Boost score by 100 | Slightly prefer this node |
-| `0` | No change | Node is neutral |
-| `100` | Reduce score by 100 | Slightly deprioritize |
-| `500` | Reduce score by 500 | Strongly deprioritize |
-| `1000+` | Effectively exclude | Never select this node |
+| `-500` | 加 500 分 | 强烈优先选择此节点类型 |
+| `-100` | 加 100 分 | 略微优先选择此节点 |
+| `0` | 不变 | 节点保持中立 |
+| `100` | 减 100 分 | 略微降低优先级 |
+| `500` | 减 500 分 | 大幅降低优先级 |
+| `1000+` | 实际上排除 | 永不选择此节点 |
 
-Since all nodes start at 1000, a node with a -200 boost ends up at 1200, while a node with a 100 penalty ends up at 900. The node with 1200 wins.
+所有节点的初始分数都是 1000，因此加 200 分的节点最终得分为 1200，而扣 100 分的节点最终得分为 900。得分为 1200 的节点胜出。
 
-#### Rule Context
+#### 规则上下文
 
-Each rule receives a context object with the following properties:
+每条规则都会接收一个上下文对象，其中包含以下属性：
 
-| Property | Type | Description |
+| 属性 | 类型 | 说明 |
 |----------|------|-------------|
-| `node` | `Node` | The node being evaluated |
-| `pos` | `number` | Absolute position in the document |
-| `depth` | `number` | Depth in the document tree (0 = doc root) |
-| `parent` | `Node \| null` | Parent node (null if this is the doc) |
-| `index` | `number` | Index among siblings (0-based) |
-| `isFirst` | `boolean` | True if this is the first child |
-| `isLast` | `boolean` | True if this is the last child |
-| `$pos` | `ResolvedPos` | Resolved position for advanced queries |
-| `view` | `EditorView` | Editor view for DOM access |
+| `node` | `Node` | 正在评估的节点 |
+| `pos` | `number` | 节点在文档中的绝对位置 |
+| `depth` | `number` | 节点在文档树中的深度（0 = doc 根节点） |
+| `parent` | `Node \| null` | 父节点（如果是 doc，则为 null） |
+| `index` | `number` | 节点在同级节点中的索引（从 0 开始） |
+| `isFirst` | `boolean` | 是否为第一个子节点 |
+| `isLast` | `boolean` | 是否为最后一个子节点 |
+| `$pos` | `ResolvedPos` | 供高级查询使用的解析后位置 |
+| `view` | `EditorView` | 用于访问 DOM 的编辑器视图 |
 
-#### Example: Custom Question Block
+#### 示例：自定义问题区块
 
-If you have a custom question block with alternatives, you might want to only allow dragging the alternatives:
+如果你有一个包含选项的自定义问题区块，可能只希望选项可以拖动：
 
 ```js
 DragHandle.configure({
@@ -417,19 +417,19 @@ DragHandle.configure({
 })
 ```
 
-#### Building Custom List-Like Nodes
+#### 构建自定义列表类节点
 
-If you create a custom node that behaves like a list (a wrapper containing draggable child items), the drag handle needs guidance to prioritize the child items over the wrapper. Without this, users may find it difficult to target individual items.
+如果你创建的自定义节点行为类似列表（即容器中包含可拖动的子项），拖拽手柄需要相应指引，以便优先选择子项而不是容器。否则，用户可能难以选中单个子项。
 
-The default rules automatically deprioritize any node whose first child is a `listItem` or `taskItem`. For custom list-like structures with different node names, you have two options:
+默认规则会自动降低首个子节点为 `listItem` 或 `taskItem` 的节点的优先级。对于节点名称不同的自定义列表结构，你有两个选择：
 
-**Option 1: Name your item nodes `listItem` or `taskItem`**
+**选项 1：将子项节点命名为 `listItem` 或 `taskItem`**
 
-If your custom items extend or behave like standard list items, consider using the same type name. The default rules will handle them automatically.
+如果你的自定义子项扩展了标准列表项，或行为与标准列表项相同，可以考虑使用相同的类型名称。默认规则会自动处理。
 
-**Option 2: Add a custom rule to deprioritize the wrapper**
+**选项 2：添加自定义规则以降低容器的优先级**
 
-For custom node names, add a rule that deducts points from the wrapper:
+对于使用自定义节点名称的情况，可以添加一条规则来扣减容器的分数：
 
 ```js
 DragHandle.configure({
@@ -450,9 +450,9 @@ DragHandle.configure({
 })
 ```
 
-**Styling considerations for custom list-like nodes:**
+**自定义列表类节点的样式注意事项：**
 
-Custom list wrappers benefit from adequate padding or margins to give edge detection room to function. This allows users to target the wrapper itself when needed (by moving the cursor to the edge) while still making it easy to select individual items in the main content area.
+为自定义列表容器设置足够的内边距或外边距，有利于边缘检测正常工作。这样，用户既可以在需要时（将光标移到边缘）选中容器本身，也可以轻松选中主要内容区域中的单个子项。
 
 ```css
 .my-custom-list {
@@ -467,9 +467,9 @@ Custom list wrappers benefit from adequate padding or margins to give edge detec
 }
 ```
 
-#### Disabling Default Rules
+#### 禁用默认规则
 
-If you want complete control over node selection, disable the default rules:
+如果你想完全控制节点选择，可以禁用默认规则：
 
 ```js
 DragHandle.configure({
@@ -482,17 +482,17 @@ DragHandle.configure({
 })
 ```
 
-<Callout title="Default Rules" variant="warning">
-  The default rules handle common cases like excluding inline content and handling list items correctly. Only disable them if you have specific requirements and understand the implications.
+<Callout title="默认规则" variant="warning">
+  默认规则会处理常见情况，例如排除行内内容并正确处理列表项。只有在有特定需求且了解其影响时，才应禁用默认规则。
 </Callout>
 
-### Styling Considerations
+### 样式注意事项
 
-For nested drag handles to work well, your editor styles may need adjustments. The drag handle needs physical space to appear, and the edge detection threshold needs room to function.
+为了让嵌套拖拽手柄正常工作，可能需要调整编辑器样式。拖拽手柄需要一定的实际空间才能显示，边缘检测阈值也需要有足够的空间才能生效。
 
-#### Add Left Margin or Padding
+#### 增加左侧外边距或内边距
 
-The drag handle is positioned to the left of content. Without sufficient margin, it may overlap with text or appear outside the visible area:
+拖拽手柄位于内容左侧。如果外边距不足，它可能会与文本重叠，或显示在可视区域之外：
 
 ```css
 .ProseMirror {
@@ -506,9 +506,9 @@ The drag handle is positioned to the left of content. Without sufficient margin,
 }
 ```
 
-#### Nested Content Spacing
+#### 嵌套内容间距
 
-For nested elements like list items, ensure there's enough indentation for the drag handle to appear at each nesting level:
+对于列表项等嵌套元素，请确保缩进足够，使拖拽手柄能在每个嵌套层级显示：
 
 ```css
 .ProseMirror ul,
@@ -523,9 +523,9 @@ For nested elements like list items, ensure there's enough indentation for the d
 }
 ```
 
-#### Edge Detection and Threshold
+#### 边缘检测与阈值
 
-The `threshold` value in edge detection is measured in pixels from the element's edge. If your content has no padding, a threshold of 12px means the cursor must be within 12px of the actual text. Adding padding to your content areas makes edge detection feel more natural:
+边缘检测中的 `threshold` 值以像素为单位，从元素边缘开始计算。如果内容没有内边距，阈值为 12px 就意味着光标必须位于距离实际文本 12px 的范围内。在内容区域添加内边距，能让边缘检测更加自然：
 
 ```css
 .ProseMirror blockquote {
@@ -539,7 +539,7 @@ The `threshold` value in edge detection is measured in pixels from the element's
 }
 ```
 
-#### Example: Complete Nested Drag Handle Styles
+#### 示例：完整的嵌套拖拽手柄样式
 
 ```css
 .ProseMirror {
@@ -588,6 +588,6 @@ The `threshold` value in edge detection is measured in pixels from the element's
 }
 ```
 
-<Callout title="Negative Thresholds" variant="info">
-  If adding padding is not possible, you can use a negative `threshold` value (e.g., `-16`) to reduce the edge detection area. This makes the system less likely to prefer parent nodes, allowing nested items to be selected even when the cursor is near the edge.
+<Callout title="负阈值" variant="info">
+  如果无法添加内边距，可以使用负的 `threshold` 值（例如 `-16`）来缩小边缘检测区域。这样系统就不容易优先选择父节点，即使光标靠近边缘，也能选中嵌套项。
 </Callout>
