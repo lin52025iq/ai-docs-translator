@@ -1,38 +1,38 @@
 ---
-title: Using the Tiptap CLI
+title: 使用 Tiptap CLI
 meta:
   title: Tiptap CLI
-  description: A command-line interface to quickly install and configure Tiptap UI components. Learn how to get started in the docs!
-  category: UI Components
+  description: 通过命令行界面快速安装和配置 Tiptap UI 组件。查看文档，了解如何开始！
+  category: UI 组件
 ---
 
-The Tiptap CLI helps you scaffold editors, install UI components or primitives, and configure Tiptap faster. It removes much of the manual work so you can start building editor features faster.
+Tiptap CLI 可帮助你搭建编辑器、安装 UI 组件或基础组件，并更快地配置 Tiptap。它能减少大量手动操作，让你更快开始构建编辑器功能。
 
-It’s designed for Vite or Next.js projects. If you use another framework, you’ll need to integrate Tiptap manually from the [open-source repository](https://github.com/ueberdosis/tiptap-ui-components).
+它专为 Vite 或 Next.js 项目设计。如果你使用其他框架，则需要从[开源仓库](https://github.com/ueberdosis/tiptap-ui-components)手动集成 Tiptap。
 
-## Usage
+## 用法
 
 ```bash
 npx @tiptap/cli@latest [command] [options]
 ```
 
-## Commands
+## 命令
 
 ### `init`
 
-Initialize your project and install dependencies. This command sets up your project configuration and adds any specified components as editable source files.
+初始化项目并安装依赖。此命令会设置项目配置，并将指定组件添加为可编辑的源文件。
 
-Run in an empty directory, it scaffolds a new Vite or Next.js project; run in an existing project, it configures it. Either way, the components are copied into your `components/` folder — you then import and render them in your own page. They are not wired into a page for you, so a freshly scaffolded app still shows the framework's default starter page until you render a component. See the [Next.js](/ui-components/install/next) or [Vite](/ui-components/install/vite) guide for the full flow.
+在空目录中运行时，它会搭建一个新的 Vite 或 Next.js 项目；在现有项目中运行时，则会配置该项目。无论哪种情况，组件都会复制到你的 `components/` 文件夹中，然后你可以在自己的页面中导入并渲染它们。CLI 不会替你将组件接入页面，因此新搭建的应用仍会显示框架默认的起始页面，直到你渲染某个组件。完整流程请参阅 [Next.js](/ui-components/install/next) 或 [Vite](/ui-components/install/vite) 指南。
 
 ```bash
 npx @tiptap/cli@latest init
 ```
 
-#### Arguments
+#### 参数
 
-- components: the components to add
+- components：要添加的组件
 
-#### Options
+#### 选项
 
 ```bash
 Usage: @tiptap/cli@latest init [options] [components...]
@@ -46,19 +46,19 @@ Options:
 
 ### `add`
 
-Add a Tiptap UI component or template to your project.
+将 Tiptap UI 组件或模板添加到项目中。
 
 ```bash
 npx @tiptap/cli@latest add [components...]
 ```
 
-#### Example
+#### 示例
 
 ```bash
 npx @tiptap/cli@latest add button
 ```
 
-#### Options
+#### 选项
 
 ```bash
 Usage: @tiptap/cli@latest add [options] [components...]
@@ -75,13 +75,13 @@ Options:
 
 ### `info`
 
-Get information about your project configuration and setup.
+查看项目配置和设置信息。
 
 ```bash
 npx @tiptap/cli@latest info
 ```
 
-#### Options
+#### 选项
 
 ```bash
 Usage: @tiptap/cli@latest info [options]
@@ -92,13 +92,13 @@ Options:
 
 ### `login`
 
-Log in to your Tiptap Cloud account to access paid components and templates.
+登录 Tiptap Cloud 帐户，以使用付费组件和模板。
 
 ```bash
 npx @tiptap/cli@latest login
 ```
 
-#### Options
+#### 选项
 
 ```bash
 Usage: @tiptap/cli@latest login [options]
@@ -112,7 +112,7 @@ Options:
 
 ### `logout`
 
-Log out from your Tiptap Cloud account.
+退出 Tiptap Cloud 帐户。
 
 ```bash
 npx @tiptap/cli@latest logout
@@ -120,13 +120,13 @@ npx @tiptap/cli@latest logout
 
 ### `status`
 
-Review your Tiptap Cloud authentication status and active plans.
+查看 Tiptap Cloud 的身份验证状态和当前套餐。
 
 ```bash
 npx @tiptap/cli@latest status
 ```
 
-#### Options
+#### 选项
 
 ```bash
 Usage: @tiptap/cli@latest status [options]
