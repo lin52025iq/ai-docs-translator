@@ -1,27 +1,27 @@
 ---
-title: Node view examples
+title: 节点视图示例
 meta:
-  title: Node view examples | Tiptap Editor Docs
-  description: Review customizable node view examples and create drag handles, dynamic tables of contents, and interactive drawing tools. More in the docs!
-  category: Editor
+  title: 节点视图示例 | Tiptap 编辑器文档
+  description: 查看可自定义的节点视图示例，创建拖动手柄、动态目录和交互式绘图工具。更多内容请参阅文档！
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-Node views enable you to fully customize your nodes. We are collecting a few different examples here. Feel free to copy them and start building on them.
+节点视图让你能够完全自定义节点。我们在这里收集了一些不同的示例。欢迎复制这些示例，并以此为基础进行构建。
 
-Keep in mind that those are just examples to get you started, not officially supported extensions. We don’t have tests for them, and don’t plan to maintain them with the same attention as we do with official extensions.
+请注意，这些示例只是为了帮助你入门，并非官方支持的扩展。我们没有为它们编写测试，也不打算像维护官方扩展那样投入同等精力来维护它们。
 
-## Drag handles
+## 拖动手柄
 
-Drag handles aren’t that easy to add. We are still on the lookout what’s the best way to add them. Official support will come at some point, but there’s no timeline yet.
+添加拖动手柄并不容易。我们仍在寻找添加它们的最佳方式。未来某个时候会提供官方支持，但目前还没有具体时间表。
 
 <CodeDemo path="/GuideNodeViews/DragHandle" />
 
-## Drawing in the editor
+## 在编辑器中绘图
 
-The drawing example shows a SVG that enables you to draw inside the editor.
+绘图示例展示了一个 SVG，可让你在编辑器中绘图。
 
 <CodeDemo path="/Examples/Drawing" />
 
-It’s not working very well with the Collaboration extension. It’s sending all data on every change, which can get pretty huge with Y.js. If you plan to use those two in combination, you need to improve it or your WebSocket backend will melt.
+它与 Collaboration 扩展配合得不太好。每次更改都会发送所有数据，对于 Y.js 来说，数据量可能会变得非常大。如果你计划同时使用这两者，就需要对其进行改进，否则你的 WebSocket 后端会不堪重负。
