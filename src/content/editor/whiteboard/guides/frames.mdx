@@ -1,21 +1,21 @@
 ---
-title: Whiteboard frames
+title: 白板框架
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Whiteboard frames | Tiptap Editor Docs
-  description: Group shapes on a whiteboard in frames, which take their shapes along and cut them off at their edges.
-  category: Editor
+  title: 白板框架 | Tiptap 编辑器文档
+  description: 在白板上用框架将形状编组。形状会随框架一起移动，并在框架边缘处被裁切。
+  category: 编辑器
 ---
 
-A frame groups shapes. The shapes in it move along with it and are cut off at its edges, and its name shows above its top left corner. Unlike a [doc frame](/editor/whiteboard/guides/doc-frames), which shows a document, a frame holds other shapes.
+框架用于将形状编组。框架中的形状会随框架一起移动，并在框架边缘处被裁切；框架名称显示在左上角上方。与用于显示文档的[文档框架](/editor/whiteboard/guides/doc-frames)不同，框架用于容纳其他形状。
 
-## Add frames
+## 添加框架
 
-With the `frame` tool, users draw a frame with a drag, or add one with a click. Its key is <kbd>F</kbd>. A new frame takes in the shapes that lie all in it and are in no other frame.
+使用 `frame` 工具，用户可以拖动绘制框架，也可以单击添加框架。对应的快捷键是 <kbd>F</kbd>。新建框架会包含完全位于其中且不在其他框架中的形状。
 
-`frameShapes` puts shapes in a new frame around them, with 32 board units of room, and selects the frame:
+`frameShapes` 会在所选形状周围创建一个新框架，四周留出 32 个画板单位的空间，并选中该框架：
 
 ```js
 import { getSelectedShapeIds } from '@tiptap-pro/extension-whiteboard'
@@ -23,41 +23,41 @@ import { getSelectedShapeIds } from '@tiptap-pro/extension-whiteboard'
 editor.commands.frameShapes({ ids: getSelectedShapeIds(editor.state), name: 'Ideas' })
 ```
 
-`insertShape` adds a frame like other shapes:
+`insertShape` 可以像添加其他形状一样添加框架：
 
 ```js
 editor.commands.insertShape({ type: 'frame', name: 'Ideas', width: 600, height: 400 })
 ```
 
-## Shapes in a frame
+## 框架中的形状
 
-The `frameId` of a shape is the id of its frame, or `null`. The board keeps it as the board changes:
+形状的 `frameId` 是其所属框架的 ID；如果不属于任何框架，则为 `null`。画板内容发生变化时，画板会维护形状与框架的关系：
 
-- A shape that is added, moved or resized goes into the frontmost frame under its middle, or out of its frame. A shape added with the id of a frame that it overlaps stays in it.
-- A frame that moves takes its shapes along, also when `updateShapes` or `moveShapes` moves it.
-- A frame that is resized lets go of the shapes that it no longer overlaps. Its shapes keep their size.
-- A copy of a frame, made by `duplicateShapes` or a paste, comes with copies of its shapes, which are in the copy. It takes in no other shapes.
+- 添加、移动或调整大小的形状会进入其中心点下方最靠前的框架，或者移出当前框架。若添加形状时指定的 ID 属于它所重叠的框架，则该形状会留在该框架中。
+- 框架移动时会带动其中的形状一起移动；通过 `updateShapes` 或 `moveShapes` 移动框架时也一样。
+- 调整框架大小时，不再与框架重叠的形状会脱离框架。框架中的形状会保持原有大小。
+- 通过 `duplicateShapes` 或粘贴复制框架时，其中的形状也会一并复制，并归入副本框架。副本框架不会包含其他形状。
 
-Frames and arrows are in no frame, so a frame holds no other frames. A change that comes through Yjs keeps the frames that the editor that made it gave the shapes. Changes of two editors at the same time can leave a shape apart from its frame, like a shape that one adds in a frame that the other moves away. A shape that doesn't overlap its frame counts as in no frame.
+框架和箭头不属于任何框架，因此框架不能包含其他框架。通过 Yjs 同步的更改会保留发起更改的编辑器为形状指定的框架。如果两个编辑器同时进行更改，形状可能会与其框架分离，例如，一个编辑器在框架中添加形状，而另一个编辑器将框架移开。与所属框架不重叠的形状会被视为不属于任何框架。
 
-## Select, delete and stack
+## 选择、删除和层叠顺序
 
-- A press inside a frame goes to the board and the shapes there, so a drag there draws a selection box. Users select and move a frame by its edge or its name. A selection box picks a frame only when the frame lies all in it.
-- `deleteShapes` deletes a frame with its shapes. `removeFrame` removes the frame and keeps its shapes:
+- 在框架内部按下鼠标时，操作会传递给画板及其中的形状，因此在框架内拖动会绘制选择框。用户可以通过框架边缘或名称来选择和移动框架。只有当框架完全位于选择框内时，选择框才会选中该框架。
+- `deleteShapes` 会连同框架中的形状一起删除框架。`removeFrame` 会移除框架，但保留其中的形状：
 
 ```js
 editor.commands.removeFrame('frame-1')
 ```
 
-- Frames are behind all other shapes, whatever their `zIndex`. The eraser leaves them alone.
-- A shape in a frame shows only as far as the frame reaches, unless the shape is selected. Image exports, the fit to the shapes, the selection box and the eraser count it only that far too.
-- An image export of a frame draws its shapes and its name too.
+- 无论 `zIndex` 为何，框架都会显示在所有其他形状后面。橡皮擦不会擦除框架。
+- 除非形状处于选中状态，否则框架中的形状只会显示到框架边缘为止。导出图像、适配形状、选择框和橡皮擦也都只会将框架范围内的部分计算在内。
+- 导出框架图像时，也会绘制框架中的形状及其名称。
 
-## Names
+## 名称
 
-The `name` of a frame shows above its top left corner, or "Frame" when it has none. A name wider than the frame ends in an ellipsis. A double click on the name renames the frame in a field, unless the board is read-only. <kbd>Enter</kbd> keeps the new name, and <kbd>Escape</kbd> drops it. Style the name through `data-frame-title`, see [Styling](/editor/whiteboard/api-reference/styling#parts-of-shapes).
+框架的 `name` 会显示在其左上角上方；如果没有名称，则显示“框架”。如果名称宽于框架，末尾会以省略号显示。除非画板为只读，否则双击名称即可在输入框中重命名框架。按 <kbd>Enter</kbd> 确认新名称，按 <kbd>Escape</kbd> 放弃更改。通过 `data-frame-title` 设置名称样式，详见[样式设置](/editor/whiteboard/api-reference/styling#parts-of-shapes)。
 
-## Next steps
+## 后续步骤
 
-- Choose the tools and their keys in [Shapes and tools](/editor/whiteboard/guides/shapes-and-tools)
-- See all [commands](/editor/whiteboard/api-reference/commands)
+- 在[形状和工具](/editor/whiteboard/guides/shapes-and-tools)中选择工具及其快捷键
+- 查看所有[命令](/editor/whiteboard/api-reference/commands)
