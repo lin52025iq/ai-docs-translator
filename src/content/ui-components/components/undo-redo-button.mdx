@@ -1,12 +1,12 @@
 ---
-title: Undo Redo Button
+title: 撤销/重做按钮
 meta:
-  title: Undo Redo Button | Tiptap UI Components
-  description: Integrate a button that helps undo and redo editor actions for your Tiptap editor. More in the docs
-  category: UI Components
+  title: 撤销/重做按钮 | Tiptap UI 组件
+  description: 为 Tiptap 编辑器集成一个可撤销和重做编辑操作的按钮。更多信息请参阅文档
+  category: UI 组件
 component:
-  name: Un/redo button
-  description: Undo or redo an action with a button
+  name: 撤销/重做按钮
+  description: 使用按钮撤销或重做操作
   type: component
   isFree: true
   isCloud: false
@@ -19,7 +19,7 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A fully accessible undo redo button for Tiptap editors. Easily undo or redo editor actions with keyboard shortcut support and flexible customization options.
+适用于 Tiptap 编辑器的无障碍撤销/重做按钮。支持键盘快捷键和灵活的自定义选项，轻松撤销或重做编辑操作。
 
 <CodeDemo
   isScrollable
@@ -27,21 +27,21 @@ A fully accessible undo redo button for Tiptap editors. Easily undo or redo edit
   src="https://template.tiptap.dev/preview/tiptap-ui/undo-redo-button"
 />
 
-## Installation
+## 安装
 
-Add the component via the Tiptap CLI:
+通过 Tiptap CLI 添加此组件：
 
 ```bash
 npx @tiptap/cli@latest add undo-redo-button
 ```
 
-## Components
+## 组件
 
 ### `<UndoRedoButton />`
 
-A prebuilt React component that performs undo or redo actions for a specific action type.
+预构建的 React 组件，可针对指定的操作类型执行撤销或重做操作。
 
-#### Usage
+#### 用法
 
 ```tsx
 import { EditorContent, EditorContext, useEditor } from '@tiptap/react'
@@ -84,24 +84,24 @@ export default function MyEditor() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type             | Default     | Description                                        |
-| --------------------- | ---------------- | ----------- | -------------------------------------------------- |
-| `editor`              | `Editor \| null` | `undefined` | The Tiptap editor instance                         |
-| `action`              | `UndoRedoAction` | `required`  | The action type (`"undo"` or `"redo"`)             |
-| `text`                | `string`         | `undefined` | Optional text label for the button                 |
-| `hideWhenUnavailable` | `boolean`        | `false`     | Hides the button when action is not available      |
-| `onExecuted`          | `() => void`     | `undefined` | Callback fired after a successful action execution |
-| `showShortcut`        | `boolean`        | `false`     | Shows a keyboard shortcut badge (if available)     |
+| 名称                  | 类型             | 默认值      | 说明                                       |
+| --------------------- | ---------------- | ----------- | ------------------------------------------ |
+| `editor`              | `Editor \| null` | `undefined` | Tiptap 编辑器实例                          |
+| `action`              | `UndoRedoAction` | `required`  | 操作类型（`"undo"` 或 `"redo"`）          |
+| `text`                | `string`         | `undefined` | 按钮的可选文本标签                         |
+| `hideWhenUnavailable` | `boolean`        | `false`     | 操作不可用时隐藏按钮                       |
+| `onExecuted`          | `() => void`     | `undefined` | 操作成功执行后触发的回调                   |
+| `showShortcut`        | `boolean`        | `false`     | 显示键盘快捷键徽标（如果有）               |
 
 ## Hooks
 
 ### `useUndoRedo()`
 
-A custom hook to build your own undo redo button with full control over rendering and behavior.
+自定义 Hook，可用于构建自己的撤销/重做按钮，并完全控制其渲染和行为。
 
-#### Usage
+#### 用法
 
 ```tsx
 function MyUndoRedoButton() {
@@ -124,31 +124,31 @@ function MyUndoRedoButton() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type             | Default     | Description                                        |
-| --------------------- | ---------------- | ----------- | -------------------------------------------------- |
-| `editor`              | `Editor \| null` | `undefined` | The Tiptap editor instance                         |
-| `action`              | `UndoRedoAction` | `required`  | The action type to perform                         |
-| `hideWhenUnavailable` | `boolean`        | `false`     | Hides the button if action is not available        |
-| `onExecuted`          | `() => void`     | `undefined` | Callback fired after a successful action execution |
+| 名称                  | 类型             | 默认值      | 说明                             |
+| --------------------- | ---------------- | ----------- | -------------------------------- |
+| `editor`              | `Editor \| null` | `undefined` | Tiptap 编辑器实例                |
+| `action`              | `UndoRedoAction` | `required`  | 要执行的操作类型                 |
+| `hideWhenUnavailable` | `boolean`        | `false`     | 操作不可用时隐藏按钮             |
+| `onExecuted`          | `() => void`     | `undefined` | 操作成功执行后触发的回调         |
 
-#### Return Values
+#### 返回值
 
-| Name           | Type            | Description                               |
-| -------------- | --------------- | ----------------------------------------- |
-| `isVisible`    | `boolean`       | Whether the button should be rendered     |
-| `canExecute`   | `boolean`       | If the specific action can be executed    |
-| `handleAction` | `() => boolean` | Function to execute the history action    |
-| `label`        | `string`        | Accessible label text for the button      |
-| `shortcutKeys` | `string`        | Keyboard shortcut for the specific action |
-| `Icon`         | `React.FC`      | Icon component for the undo redo button   |
+| 名称           | 类型            | 说明                             |
+| -------------- | --------------- | -------------------------------- |
+| `isVisible`    | `boolean`       | 是否应渲染该按钮                 |
+| `canExecute`   | `boolean`       | 是否可以执行指定操作             |
+| `handleAction` | `() => boolean` | 执行历史记录操作的函数           |
+| `label`        | `string`        | 按钮的无障碍标签文本             |
+| `shortcutKeys` | `string`        | 指定操作对应的键盘快捷键         |
+| `Icon`         | `React.FC`      | 撤销/重做按钮的图标组件          |
 
-## Utilities
+## 工具函数
 
 ### `canExecuteUndoRedoAction(editor, action)`
 
-Checks if a specific history action can be executed in the current editor state.
+检查当前编辑器状态下是否可以执行指定的历史记录操作。
 
 ```tsx
 import { canExecuteUndoRedoAction } from '@/components/tiptap-ui/undo-redo-button'
@@ -159,7 +159,7 @@ const canRedo = canExecuteUndoRedoAction(editor, 'redo') // Check if redo is ava
 
 ### `executeUndoRedoAction(editor, action)`
 
-Programmatically executes a history action for the specified type.
+以编程方式执行指定类型的历史记录操作。
 
 ```tsx
 import { executeUndoRedoAction } from '@/components/tiptap-ui/undo-redo-button'
@@ -175,28 +175,28 @@ if (success2) {
 }
 ```
 
-## Keyboard Shortcuts
+## 键盘快捷键
 
-Each action type has its own keyboard shortcut:
+每种操作类型都有对应的键盘快捷键：
 
-- **Cmd/Ctrl + Z**: Undo last action
-- **Cmd/Ctrl + Shift + Z**: Redo last undone action
+- **Cmd/Ctrl + Z**：撤销上一步操作
+- **Cmd/Ctrl + Shift + Z**：重做上一次撤销的操作
 
-The shortcuts are automatically registered when using either the `<UndoRedoButton />` component or the `useUndoRedo()` hook.
+使用 `<UndoRedoButton />` 组件或 `useUndoRedo()` Hook 时，系统会自动注册这些快捷键。
 
-## Requirements
+## 要求
 
-### Dependencies
+### 依赖项
 
-- `@tiptap/react` - Core Tiptap React integration
-- `@tiptap/extension-history` - History extension for undo/redo
-- `react-hotkeys-hook` - Keyboard shortcut management
+- `@tiptap/react` - Tiptap 的核心 React 集成
+- `@tiptap/extension-history` - 用于撤销/重做的历史记录扩展
+- `react-hotkeys-hook` - 键盘快捷键管理
 
-### Referenced Components
+### 引用的组件
 
-- `use-tiptap-editor` (hook)
-- `button` (primitive)
-- `badge` (primitive)
-- `tiptap-utils` (lib)
-- `undo-icon` (icon)
-- `redo-icon` (icon)
+- `use-tiptap-editor`（Hook）
+- `button`（基础组件）
+- `badge`（基础组件）
+- `tiptap-utils`（库）
+- `undo-icon`（图标）
+- `redo-icon`（图标）
