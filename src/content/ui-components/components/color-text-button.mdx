@@ -1,12 +1,12 @@
 ---
-title: Color Text Button
+title: 文本颜色按钮
 meta:
-  title: Color Text Button | Tiptap UI Components
-  description: Apply custom text colors in Tiptap editors with predefined color options, keyboard shortcuts, and full accessibility support.
-  category: UI Components
+  title: 文本颜色按钮 | Tiptap UI 组件
+  description: 在 Tiptap 编辑器中应用自定义文本颜色，支持预设颜色选项、键盘快捷键和完整的无障碍功能。
+  category: UI 组件
 component:
-  name: Color Text Button
-  description: Apply custom text colors in Tiptap editors with predefined color options, keyboard shortcuts, and full accessibility support.
+  name: 文本颜色按钮
+  description: 在 Tiptap 编辑器中应用自定义文本颜色，支持预设颜色选项、键盘快捷键和完整的无障碍功能。
   type: component
   isFree: false
   isCloud: false
@@ -19,25 +19,25 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A fully accessible text color button for Tiptap editors. Apply foreground colors to selected text with keyboard shortcut support and flexible customization options.
+这是一款完全支持无障碍访问的 Tiptap 编辑器文本颜色按钮。可为选中的文本应用前景色，并支持键盘快捷键和灵活的自定义选项。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui/color-text-button" />
 
-## Installation
+## 安装
 
-Add the component via the Tiptap CLI:
+通过 Tiptap CLI 添加此组件：
 
 ```bash
 npx @tiptap/cli@latest add color-text-button
 ```
 
-## Components
+## 组件
 
 ### `<ColorTextButton />`
 
-A prebuilt React component that applies text colors to selected text.
+一个预构建的 React 组件，可为选中的文本应用文本颜色。
 
-#### Usage
+#### 用法
 
 ```tsx
 export default function MyEditor() {
@@ -54,24 +54,24 @@ export default function MyEditor() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type                         | Default     | Description                                        |
-| --------------------- | ---------------------------- | ----------- | -------------------------------------------------- |
-| `editor`              | `Editor \| null`             | `undefined` | The Tiptap editor instance                         |
-| `textColor`           | `string`                     | `required`  | The text color to apply (CSS color value)          |
-| `text`                | `string`                     | `undefined` | Optional text label for the button                 |
-| `hideWhenUnavailable` | `boolean`                    | `false`     | Hides the button when text color is not applicable |
-| `onApplied`           | `({ color, label }) => void` | `undefined` | Callback fired after applying a text color         |
-| `showShortcut`        | `boolean`                    | `false`     | Shows a keyboard shortcut badge (if available)     |
+| 名称                  | 类型                         | 默认值      | 说明                                             |
+| --------------------- | ---------------------------- | ----------- | ------------------------------------------------ |
+| `editor`              | `Editor \| null`             | `undefined` | Tiptap 编辑器实例                                |
+| `textColor`           | `string`                     | `required`  | 要应用的文本颜色（CSS 颜色值）                   |
+| `text`                | `string`                     | `undefined` | 按钮的可选文本标签                               |
+| `hideWhenUnavailable` | `boolean`                    | `false`     | 不适用文本颜色时隐藏按钮                         |
+| `onApplied`           | `({ color, label }) => void` | `undefined` | 应用文本颜色后触发的回调                         |
+| `showShortcut`        | `boolean`                    | `false`     | 显示键盘快捷键徽标（如果有）                     |
 
 ## Hooks
 
 ### `useColorText(config)`
 
-A custom hook to build your own color text button with full control over rendering and behavior.
+自定义 Hook，可用于构建自己的文本颜色按钮，并完全掌控其渲染方式和行为。
 
-#### Usage
+#### 用法
 
 ```tsx
 function MyColorTextButton() {
@@ -102,33 +102,33 @@ function MyColorTextButton() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type                         | Default     | Description                                      |
-| --------------------- | ---------------------------- | ----------- | ------------------------------------------------ |
-| `editor`              | `Editor \| null`             | `undefined` | The Tiptap editor instance                       |
-| `textColor`           | `string`                     | `required`  | The text color to apply                          |
-| `label`               | `string`                     | `required`  | Accessible label for the button                  |
-| `hideWhenUnavailable` | `boolean`                    | `false`     | Hides the button if text color cannot be applied |
-| `onApplied`           | `({ color, label }) => void` | `undefined` | Callback fired after applying text color         |
+| 名称                  | 类型                         | 默认值      | 说明                                           |
+| --------------------- | ---------------------------- | ----------- | ---------------------------------------------- |
+| `editor`              | `Editor \| null`             | `undefined` | Tiptap 编辑器实例                              |
+| `textColor`           | `string`                     | `required`  | 要应用的文本颜色                               |
+| `label`               | `string`                     | `required`  | 按钮的无障碍标签                               |
+| `hideWhenUnavailable` | `boolean`                    | `false`     | 无法应用文本颜色时隐藏按钮                     |
+| `onApplied`           | `({ color, label }) => void` | `undefined` | 应用文本颜色后触发的回调                       |
 
-#### Return Values
+#### 返回值
 
-| Name              | Type            | Description                              |
-| ----------------- | --------------- | ---------------------------------------- |
-| `isVisible`       | `boolean`       | Whether the button should be rendered    |
-| `isActive`        | `boolean`       | If the text color is currently active    |
-| `canColorText`    | `boolean`       | If the text color can be applied         |
-| `handleColorText` | `() => boolean` | Function to apply the text color         |
-| `label`           | `string`        | Accessible label text for the button     |
-| `shortcutKeys`    | `string`        | Keyboard shortcut (Cmd/Ctrl + Shift + T) |
-| `Icon`            | `React.FC`      | Icon component for the text color button |
+| 名称              | 类型            | 说明                               |
+| ----------------- | --------------- | ---------------------------------- |
+| `isVisible`       | `boolean`       | 是否应渲染按钮                     |
+| `isActive`        | `boolean`       | 当前文本颜色是否处于激活状态       |
+| `canColorText`    | `boolean`       | 是否可以应用文本颜色               |
+| `handleColorText` | `() => boolean` | 应用文本颜色的函数                 |
+| `label`           | `string`        | 按钮的无障碍标签文本               |
+| `shortcutKeys`    | `string`        | 键盘快捷键（Cmd/Ctrl + Shift + T） |
+| `Icon`            | `React.FC`      | 文本颜色按钮的图标组件             |
 
-## Utilities
+## 实用工具
 
 ### `canColorText(editor)`
 
-Checks if text color can be applied in the current editor state.
+检查当前编辑器状态下是否可以应用文本颜色。
 
 ```tsx
 import { canColorText } from '@/components/tiptap-ui/color-text-button'
@@ -138,7 +138,7 @@ const canApply = canColorText(editor)
 
 ### `isColorTextActive(editor, color)`
 
-Checks if a specific text color is currently active in the selection.
+检查选区中是否已启用指定的文本颜色。
 
 ```tsx
 import { isColorTextActive } from '@/components/tiptap-ui/color-text-button'
@@ -147,26 +147,26 @@ const isRedActive = isColorTextActive(editor, 'red')
 const isBlueActive = isColorTextActive(editor, 'var(--tt-color-text-blue)')
 ```
 
-## Keyboard Shortcuts
+## 键盘快捷键
 
-The color text button supports the following keyboard shortcut:
+文本颜色按钮支持以下键盘快捷键：
 
-- **Cmd/Ctrl + Shift + T**: Apply text color
+- **Cmd/Ctrl + Shift + T**：应用文本颜色
 
-The shortcut is automatically registered when using either the `<ColorTextButton />` component or the `useColorText()` hook. It applies the configured text color to the current selection.
+使用 `<ColorTextButton />` 组件或 `useColorText()` Hook 时，都会自动注册此快捷键。它会将配置的文本颜色应用到当前选区。
 
-## Requirements
+## 要求
 
-### Dependencies
+### 依赖项
 
-- `@tiptap/react` - Core Tiptap React integration
-- `@tiptap/extension-text-style` - Text style extension for color support
-- `react-hotkeys-hook` - Keyboard shortcut management
+- `@tiptap/react` - Tiptap React 核心集成
+- `@tiptap/extension-text-style` - 支持颜色的文本样式扩展
+- `react-hotkeys-hook` - 键盘快捷键管理
 
-### Referenced Components
+### 引用的组件
 
-- `use-tiptap-editor` (hook)
-- `button` (primitive)
-- `badge` (primitive)
-- `tiptap-utils` (lib)
-- `text-color-small-icon` (icon)
+- `use-tiptap-editor`（Hook）
+- `button`（基础组件）
+- `badge`（基础组件）
+- `tiptap-utils`（库）
+- `text-color-small-icon`（图标）
