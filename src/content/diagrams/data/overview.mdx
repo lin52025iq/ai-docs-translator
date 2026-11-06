@@ -1,109 +1,96 @@
 ---
-title: 'Data'
-intro: 'A chart stores its values in the document as Chart Data, a list of columns and a list of rows. However the values arrive, they end up there, so the chart draws offline, in an export and for every collaborator.'
+title: '数据'
+intro: '图表会将数值以图表数据的形式存储在文档中，其中包含列列表和行列表。无论数值来自何处，最终都会存入其中，因此图表可以离线绘制、导出，也能供每位协作者查看。'
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Data | Tiptap Diagrams Docs'
-  description: 'A chart stores its values in the document as Chart Data, a list of columns and a list of rows.'
-  category: Diagrams
+  title: '数据 | Tiptap Diagrams 文档'
+  description: '图表会将数值以图表数据的形式存储在文档中，其中包含列列表和行列表。'
+  category: 图表
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A column has an `id`, a `label` and a `role`: `'label'` for the column that names the rows,
-`'series'` for a column of values. A row is a list of cells, one per column.
+每列都有一个 `id`、一个 `label` 和一个 `role`：`'label'` 表示用于命名各行的列，`'series'` 表示数值列。每一行都是一个单元格列表，每列对应一个单元格。
 
-## Where the data comes from
+## 数据来源
 
-| Way in              | What happens                                                                 | Page                                         |
-| ------------------- | ---------------------------------------------------------------------------- | -------------------------------------------- |
-| Typed rows          | Rows such as `Jan \| 2`, typed after `:::`, become a chart                   | [Quick Input](/diagrams/data/quick-input)    |
-| A table             | A table becomes a chart, or a chart follows a table while you edit the table | [Tables](/diagrams/data/tables)              |
-| A file or a service | A chart keeps a snapshot of a CSV or JSON URL, or of a provider you write    | [Data Sources](/diagrams/data/sources)       |
-| Pasted text         | A Mermaid chart becomes a chart, rows become a selected chart's new data     | [Pasting](/diagrams/data/pasting)            |
-| Code                | `insertChart` with Chart Data, or `insertChartFrom` with text in a format    | [Charts](/diagrams/charts/overview#commands) |
-| An AI model         | Tool calls that write through the same commands                              | [Tools for a model](/diagrams/guides/ai)     |
+| 来源       | 说明                                                                       | 页面                                         |
+| ---------- | -------------------------------------------------------------------------- | -------------------------------------------- |
+| 输入行     | 在 `:::` 后输入 `Jan \| 2` 这样的行，即可生成图表                          | [快速输入](/diagrams/data/quick-input)       |
+| 表格       | 表格可以转换为图表；编辑表格时，图表也会随之更新                           | [表格](/diagrams/data/tables)                |
+| 文件或服务 | 图表会保存 CSV 或 JSON URL 的快照，也可以保存你编写的提供程序的数据快照    | [数据源](/diagrams/data/sources)             |
+| 粘贴文本   | Mermaid 图表会转换为图表；行数据会成为所选图表的新数据                     | [粘贴](/diagrams/data/pasting)               |
+| 代码       | 使用图表数据调用 `insertChart`，或使用某种格式的文本调用 `insertChartFrom`  | [图表](/diagrams/charts/overview#commands)   |
+| AI 模型    | 通过相同命令写入数据的工具调用                                             | [模型工具](/diagrams/guides/ai)              |
 
-## Which columns are drawn
+## 绘制哪些列
 
-The Chart Data keeps every column. The `encoding` field of the Chart Spec, the chart's settings,
-holds the ids of the columns the chart draws, in the editor and in every export:
+图表数据会保留所有列。图表规范中的 `encoding` 字段是图表的设置，其中保存了图表在编辑器和所有导出内容中要绘制的列的 id：
 
-| Field      | Description                                                                                         |
-| ---------- | --------------------------------------------------------------------------------------------------- |
-| `label`    | The column that names the rows                                                                      |
-| `series`   | The columns drawn, in that order                                                                    |
-| `seriesIn` | `'rows'` swaps rows and columns, see [`setChartSeriesIn`](/diagrams/data/overview#setchartseriesin) |
+| 字段       | 说明                                                                                                 |
+| ---------- | ---------------------------------------------------------------------------------------------------- |
+| `label`    | 用于命名各行的列                                                                                     |
+| `series`   | 要绘制的列，按此顺序排列                                                                             |
+| `seriesIn` | `'rows'` 会交换行和列，参见 [`setChartSeriesIn`](/diagrams/data/overview#setchartseriesin)            |
 
-- Without `label`, the column with the role `'label'` names the rows.
-- Without `series`, every other column with the role `'series'` is drawn.
-- An id that is not in the data is ignored, so a chart still draws after a source renames a
-  column.
-- When no id in `series` is in the data, every series is drawn.
-- A synchronization replaces all columns and keeps `encoding`, see
-  [Data Sources](/diagrams/data/sources#showing-only-some-columns).
+- 未设置 `label` 时，具有 `'label'` 角色的列用于命名各行。
+- 未设置 `series` 时，其他所有具有 `'series'` 角色的列都会绘制。
+- 如果某个 id 不在数据中，则会被忽略，因此即使数据源重命名了列，图表仍可绘制。
+- 如果 `series` 中没有任何 id 存在于数据中，则会绘制所有系列。
+- 同步会替换所有列并保留 `encoding`，参见[数据源](/diagrams/data/sources#showing-only-some-columns)。
 
-Set `encoding` with [`updateChartSpec`](/diagrams/charts/appearance#updatechartspec), or with the
-commands below.
+使用 [`updateChartSpec`](/diagrams/charts/appearance#updatechartspec) 或以下命令设置 `encoding`。
 
-## Commands
+## 命令
 
 ### updateChartData
 
-Replaces the Chart Data.
+替换图表数据。
 
 ```ts
 editor.commands.updateChartData({ data })
 ```
 
-| Option | Type        | Description                                          |
-| ------ | ----------- | ---------------------------------------------------- |
-| `data` | `ChartData` | The new Chart Data                                   |
-| `pos`  | `number`    | The chart's position. Defaults to the selected chart |
+| 选项   | 类型        | 说明                                     |
+| ------ | ----------- | ---------------------------------------- |
+| `data` | `ChartData` | 新的图表数据                             |
+| `pos`  | `number`    | 图表的位置。默认为当前选中的图表         |
 
-Returns `false` when there is no chart at `pos` or selected, or when the chart's linked source is
-read-only and the new data differs from the current data.
+当 `pos` 处或当前选中位置没有图表，或者图表关联的数据源为只读且新数据与当前数据不同时，返回 `false`。
 
 ### setChartLabelColumn
 
-Makes one column name the rows. `encoding.series` becomes every other column the chart type can
-draw.
+将某一列设为行名列。`encoding.series` 会设为图表类型可绘制的其他所有列。
 
 ```ts
 editor.commands.setChartLabelColumn({ label: 'region' })
 ```
 
-| Option  | Type     | Description                                          |
-| ------- | -------- | ---------------------------------------------------- |
-| `label` | `string` | The id of the column that names the rows             |
-| `pos`   | `number` | The chart's position. Defaults to the selected chart |
+| 选项    | 类型     | 说明                                     |
+| ------- | -------- | ---------------------------------------- |
+| `label` | `string` | 用于命名各行的列的 id                    |
+| `pos`   | `number` | 图表的位置。默认为当前选中的图表         |
 
-For most types, the drawn columns are those with the role `'series'`. For a type that reads
-its rows with the `matrix` shape, such as the `matrix` chart type, it is every column, see
-[Register your own chart type](/diagrams/renderers/custom-chart-types#fields-of-a-chart-type).
-Choosing the first column removes `label` and `series` from `encoding`. `encoding.seriesIn` is
-always kept.
+对于大多数类型，可绘制的列是具有 `'series'` 角色的列。对于使用 `matrix` 形状读取行的类型（例如 `matrix` 图表类型），则会使用所有列；参见[注册自定义图表类型](/diagrams/renderers/custom-chart-types#fields-of-a-chart-type)。选择第一列时，会从 `encoding` 中移除 `label` 和 `series`。`encoding.seriesIn` 始终保留。
 
-Returns `false` for a column the data does not have.
+如果数据中不存在指定的列，则返回 `false`。
 
 ### setChartSeriesIn
 
-Decides whether each column or each row of the data is a series. A series is one set of values
-the chart draws, such as one line or one color of bars.
+决定数据中的每列还是每行代表一个系列。一个系列是一组图表要绘制的数值，例如一条线或一种颜色的柱形。
 
 ```ts
 editor.commands.setChartSeriesIn({ seriesIn: 'rows' })
 ```
 
-| Option     | Type                  | Description                                          |
-| ---------- | --------------------- | ---------------------------------------------------- |
-| `seriesIn` | `'columns' \| 'rows'` | `'columns'` is the default. `'rows'` swaps the two   |
-| `pos`      | `number`              | The chart's position. Defaults to the selected chart |
+| 选项       | 类型                  | 说明                                                |
+| ---------- | --------------------- | --------------------------------------------------- |
+| `seriesIn` | `'columns' \| 'rows'` | 默认值为 `'columns'`。`'rows'` 会交换二者          |
+| `pos`      | `number`              | 图表的位置。默认为当前选中的图表                    |
 
-With `'rows'`, each row becomes a series named by its label, and each drawn column becomes a
-category. Take a bar chart of this data:
+设为 `'rows'` 时，每一行会成为一个以其标签命名的系列，每个绘制的列则会成为一个类别。以这份数据的柱形图为例：
 
 ```txt
 Month | Visitors
@@ -112,19 +99,16 @@ Feb   | 150
 Mar   | 170
 ```
 
-| `seriesIn`  | Categories    | Bars in each category     |
-| ----------- | ------------- | ------------------------- |
-| `'columns'` | Jan, Feb, Mar | One bar, Visitors         |
-| `'rows'`    | Visitors      | Three bars, Jan, Feb, Mar |
+| `seriesIn`  | 类别          | 每个类别中的柱形       |
+| ----------- | ------------- | ---------------------- |
+| `'columns'` | Jan, Feb, Mar | 一根柱形：Visitors     |
+| `'rows'`    | Visitors      | 三根柱形：Jan, Feb, Mar |
 
-Only `spec.encoding.seriesIn` changes. `label` and `series` are kept. After the swap,
-`spec.series` styles are keyed by the row labels, and `spec.palette` colors the series in the
-order they are drawn.
+只有 `spec.encoding.seriesIn` 会改变。`label` 和 `series` 会保留。交换后，`spec.series` 的样式会以行标签为键，`spec.palette` 则会按系列的绘制顺序为其配色。
 
 ### updateChartFrom
 
-Replaces the data and the spec from content in a registered format. Read a chart as Chart
-syntax, Chart JSON or Mermaid, change the text and write it back:
+根据已注册格式的内容替换数据和规范。以图表语法、图表 JSON 或 Mermaid 格式读取图表，修改文本后再写回：
 
 <CodeDemo isPro viewer view="preview" path="/Extensions/DiagramsFormats" />
 
@@ -132,54 +116,53 @@ syntax, Chart JSON or Mermaid, change the text and write it back:
 editor.commands.updateChartFrom({ format: 'chart-syntax', content: 'Jan | 2\nFeb | 3' })
 ```
 
-| Option    | Type     | Description                                          |
-| --------- | -------- | ---------------------------------------------------- |
-| `format`  | `string` | The id of a registered format                        |
-| `content` | `string` | The content in that format                           |
-| `pos`     | `number` | The chart's position. Defaults to the selected chart |
+| 选项      | 类型     | 说明                                     |
+| --------- | -------- | ---------------------------------------- |
+| `format`  | `string` | 已注册格式的 id                          |
+| `content` | `string` | 该格式的内容                             |
+| `pos`     | `number` | 图表的位置。默认为当前选中的图表         |
 
-Returns `false` when the content cannot be read or the chart is read-only.
+如果无法读取内容，或图表为只读，则返回 `false`。
 
 ### updateChartFromGrid
 
-Replaces the data from a grid of strings.
+根据字符串网格替换数据。
 
 ```ts
 editor.commands.updateChartFromGrid({ grid })
 ```
 
-| Option | Type         | Description                                          |
-| ------ | ------------ | ---------------------------------------------------- |
-| `grid` | `string[][]` | Row 0 is the header, column 0 the labels             |
-| `pos`  | `number`     | The chart's position. Defaults to the selected chart |
+| 选项  | 类型         | 说明                                     |
+| ----- | ------------ | ---------------------------------------- |
+| `grid` | `string[][]` | 第 0 行为表头，第 0 列为标签             |
+| `pos` | `number`     | 图表的位置。默认为当前选中的图表         |
 
-Use it with [`readGrid`](/diagrams/api-reference/storage#reading-a-charts-data) to edit the data in a form of input fields. Spreadsheet
-rows [pasted onto a selected chart](/diagrams/data/pasting#onto-a-selected-chart) go through it.
+可将它与 [`readGrid`](/diagrams/api-reference/storage#reading-a-charts-data) 搭配使用，以便通过输入字段编辑数据。粘贴到[当前选中图表](/diagrams/data/pasting#onto-a-selected-chart)上的电子表格行也会通过此命令处理。
 
-Returns `false` in the same cases as `updateChartData`.
+在与 `updateChartData` 相同的情况下返回 `false`。
 
 ### updateChartFromTable
 
-Replaces the data from table JSON.
+根据表格 JSON 替换数据。
 
 ```ts
 editor.commands.updateChartFromTable({ table })
 ```
 
-| Option  | Type       | Description                                          |
-| ------- | ---------- | ---------------------------------------------------- |
-| `table` | `JSONNode` | A table node as JSON                                 |
-| `pos`   | `number`   | The chart's position. Defaults to the selected chart |
+| 选项    | 类型       | 说明                                     |
+| ------- | ---------- | ---------------------------------------- |
+| `table` | `JSONNode` | 以 JSON 表示的表格节点                   |
+| `pos`   | `number`   | 图表的位置。默认为当前选中的图表         |
 
-Use it with [`readTable`](/diagrams/api-reference/storage#reading-a-charts-data), which returns a chart's data as table JSON.
+可将它与 [`readTable`](/diagrams/api-reference/storage#reading-a-charts-data) 搭配使用；该方法会以表格 JSON 的形式返回图表数据。
 
-Returns `false` in the same cases as `updateChartData`.
+在与 `updateChartData` 相同的情况下返回 `false`。
 
-## Helpers for tooling
+## 工具辅助函数
 
-From `@tiptap-pro/extension-diagrams/core`:
+来自 `@tiptap-pro/extension-diagrams/core`：
 
-| Function                               | Returns                                                    |
-| -------------------------------------- | ---------------------------------------------------------- |
-| `encodeChartData(data, encoding)`      | The Chart Data a Renderer draws                            |
-| `encodingForLabel(data, label, shape)` | The encoding `setChartLabelColumn` writes, without writing |
+| 函数                                   | 返回值                                         |
+| -------------------------------------- | ---------------------------------------------- |
+| `encodeChartData(data, encoding)`      | 渲染器绘制的图表数据                           |
+| `encodingForLabel(data, label, shape)` | `setChartLabelColumn` 将写入的编码，不实际写入 |
