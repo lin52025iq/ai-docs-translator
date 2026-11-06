@@ -1,30 +1,30 @@
 ---
-title: Commands
+title: 命令
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Commands | Tiptap Slots Docs
-  description: Typed Slot authoring, filling and navigation commands.
-  category: Composable Docs
+  title: 命令 | Tiptap 插槽文档
+  description: 插槽的类型化编写、填充与导航命令。
+  category: 可组合文档
 ---
 
-Add `Slot` before using `editor.commands`, `editor.chain()` or `editor.can()`. Each command accepts one options object unless stated otherwise.
+使用 `editor.commands`、`editor.chain()` 或 `editor.can()` 之前，请先添加 `Slot`。除非另有说明，每个命令都接受一个选项对象。
 
-Commands return `false` for invalid arguments, missing or ambiguous targets, schema violations or denied permissions. Invalid draft content is accepted; validation does not block edits.
+如果参数无效、目标不存在或不明确、违反 schema，或权限被拒绝，命令将返回 `false`。无效的草稿内容仍会被接受；验证不会阻止编辑。
 
-With the [Variable extension](/composable-docs/variables/guides/bind-slots), a slot controlled by an explicit value or resolver refuses content writes with `false`. This includes filling, clearing, removing, dissolving, or moving the controlled slot, and writes through parent or nested slots. Inserting or wrapping content inside it is also refused. These refusals emit `slotCommandRejected` with `code: 'variableControlled'`; `editor.can()` returns `false` without emitting an event. An explicit `null` or `undefined` still controls the slot. Slots bound to variables without an explicit definition remain editable.
+使用 [Variable 扩展](/composable-docs/variables/guides/bind-slots)时，由显式值或解析器控制的插槽会拒绝内容写入，并返回 `false`。这包括填充、清空、移除、解除封装或移动受控插槽，以及通过父级或嵌套插槽进行的写入。也会拒绝在其中插入或封装内容。这些拒绝操作会触发 `slotCommandRejected`，其 `code` 为 `'variableControlled'`；`editor.can()` 会返回 `false`，但不会触发事件。显式设置为 `null` 或 `undefined` 仍会使插槽处于受控状态。绑定到变量但没有显式定义的插槽仍可编辑。
 
-- Each call writes at most one transaction. No-op calls add no undo entry.
-- A refused Slot command cancels the writes assembled in its chain.
-- `editor.can()` emits no events, runs no validators and generates no real IDs. Dispatch checks again using the actual IDs.
-- JSON content must fit the schema. Commands do not parse HTML or silently coerce content.
+- 每次调用最多写入一个事务。无操作的调用不会新增撤销记录。
+- 被拒绝的插槽命令会取消其调用链中已组装的写入操作。
+- `editor.can()` 不会触发事件、运行验证器或生成真实 ID。分发时会使用实际 ID 再次检查。
+- JSON 内容必须符合 schema。命令不会解析 HTML，也不会静默强制转换内容。
 
-`JSONContent` comes from `@tiptap/core`. [Configuration](/composable-docs/slots/api-reference/concepts) and [result types](/composable-docs/slots/api-reference/types) are exported by the Slot package.
+`JSONContent` 来自 `@tiptap/core`。[配置](/composable-docs/slots/api-reference/concepts)和[结果类型](/composable-docs/slots/api-reference/types)由 Slot 包导出。
 
-## Value slot commands
+## 值插槽命令
 
-`insertSlot` also accepts `mode?: 'content' | 'value'` and `value?: JsonValue`. Mode defaults to `content`. Value insertion refuses `content`; content insertion refuses `value`. Placement still uses `kind`.
+`insertSlot` 还接受 `mode?: 'content' | 'value'` 和 `value?: JsonValue`。`mode` 默认为 `content`。值插槽的插入会拒绝 `content`；内容插槽的插入会拒绝 `value`。放置方式仍由 `kind` 决定。
 
 ```ts
 editor.commands.insertSlot({
@@ -37,240 +37,240 @@ editor.commands.setSlotValue({ id: 'budget', value: '2.50' })
 editor.commands.setSlotValues({ values: [{ id: 'budget', value: '3.00' }] })
 ```
 
-`setSlotValue({ id, value })` replaces one value attribute. `setSlotValues({ values })` applies a batch atomically. Both require unique IDs targeting value slots and finite JSON values. They respect protection, variable control, history, and dry runs. Duplicate batch targets are refused. Validation constraints do not block draft writes.
+`setSlotValue({ id, value })` 会替换一个值属性。`setSlotValues({ values })` 会以原子方式应用一批更新。两者都要求目标为值插槽，且 ID 唯一、JSON 值有限。它们遵守保护机制、变量控制、历史记录和试运行规则。批处理中若有重复目标，则会被拒绝。验证约束不会阻止草稿写入。
 
-`clearSlot` writes `null` for value slots. `moveSlot`, `removeSlot`, `repairSlotIds`, and `updateSlotConfig` support both modes. `focusSlot` selects a value slot and focuses its first input, select, textarea, button, or element with a tabindex when present. `fillSlot`, `fillSlots`, `dissolveSlot`, and `selectSlotContent` refuse value slots. Wrapping content creates a content slot.
+对于值插槽，`clearSlot` 会将值写为 `null`。`moveSlot`、`removeSlot`、`repairSlotIds` 和 `updateSlotConfig` 同时支持两种模式。`focusSlot` 会选中值插槽，并在存在输入框、选择框、文本区域、按钮或带有 tabindex 的元素时聚焦其中第一个。`fillSlot`、`fillSlots`、`dissolveSlot` 和 `selectSlotContent` 会拒绝值插槽。封装内容会创建内容插槽。
 
 ## `insertSlot`
 
-Inserts a Slot or replaces the current selection.
+插入一个插槽，或替换当前选区。
 
 ```ts
 editor.commands.insertSlot()
 ```
 
-### Parameters (`InsertSlotOptions`, optional)
+### 参数（`InsertSlotOptions`，可选）
 
-- `mode?` (`SlotMode`): `'content'` or `'value'`. Default: `'content'`.
-- `kind?` (`SlotKind`): `'block'` or `'inline'`. Omitted: `'inline'` when the parent at the insertion position accepts inline content (including an empty paragraph); otherwise `'block'`. Uses `at` or the current selection start.
-- `id?` (`string`): Unique, nonempty ID. Omitted: generated.
-- `config?` (`SlotConfig`): Embedded configuration. Default: `{}`.
-- `content?` (`JSONContent[]`): Initial content for content slots only. Omitted: `defaultContent`, then empty content for the kind.
-- `value?` (`JsonValue`): Initial answer for value slots only. Omitted: `defaultValue`, then `null`. Explicit `null` overrides the default.
-- `at?` (`number`): Document position. Omitted: replace the current selection.
+- `mode?`（`SlotMode`）：`'content'` 或 `'value'`。默认值：`'content'`。
+- `kind?`（`SlotKind`）：`'block'` 或 `'inline'`。省略时：如果插入位置的父级接受行内内容（包括空段落），则为 `'inline'`；否则为 `'block'`。使用 `at` 或当前选区的起始位置。
+- `id?`（`string`）：唯一的非空 ID。省略时自动生成。
+- `config?`（`SlotConfig`）：内嵌配置。默认值：`{}`。
+- `content?`（`JSONContent[]`）：仅用于内容插槽的初始内容。省略时，依次使用 `defaultContent`，然后使用该类型的空内容。
+- `value?`（`JsonValue`）：仅用于值插槽的初始答案。省略时，依次使用 `defaultValue`，然后使用 `null`。显式设置为 `null` 会覆盖默认值。
+- `at?`（`number`）：文档位置。省略时，替换当前选区。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-`true` when inserted; otherwise `false`. Placement must fit without wrapping or lifting surrounding content.
+插入成功时返回 `true`；否则返回 `false`。放置位置必须能够容纳插槽，且不需要封装或提升周围内容。
 
-Nested Slots in `defaultContent` receive fresh IDs on each insertion, with references between them remapped. Explicit `content` keeps supplied IDs and is refused if they duplicate existing IDs.
+每次插入时，`defaultContent` 中的嵌套插槽都会获得新的 ID，且它们之间的引用会相应重映射。显式提供的 `content` 会保留原有 ID；如果这些 ID 与现有 ID 重复，则会被拒绝。
 
 ## `setSlotValue`
 
-Replaces a value slot's answer while preserving its ID and configuration.
+替换值插槽的答案，同时保留其 ID 和配置。
 
-### Parameters (`SetSlotValueOptions`)
+### 参数（`SetSlotValueOptions`）
 
-- `id` (`string`): Unique target value Slot ID.
-- `value` (`JsonValue`): Replacement finite JSON value, including `null`.
+- `id`（`string`）：目标值插槽的唯一 ID。
+- `value`（`JsonValue`）：要替换为的有限 JSON 值，包括 `null`。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-`true` when accepted, including an unchanged value; otherwise `false`. Content slots, invalid values, and denied writes are refused. Validation constraints do not block draft writes.
+接受时返回 `true`，即使值未改变也如此；否则返回 `false`。内容插槽、无效值和权限被拒绝的写入都会被拒绝。验证约束不会阻止草稿写入。
 
 ## `setSlotValues`
 
-Updates multiple value slots atomically.
+以原子方式更新多个值插槽。
 
-### Parameters
+### 参数
 
-- `values` (`SetSlotValueOptions[]`): IDs and replacement values.
+- `values`（`SetSlotValueOptions[]`）：ID 和要替换的值。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-`true` when all writes succeed, including an empty batch. `false` for duplicate targets or any refused write, with no slots changed.
+所有写入均成功时返回 `true`，空批次也如此。目标重复或任何写入被拒绝时返回 `false`，且不会更改任何插槽。
 
 ## `wrapInSlot`
 
-Wraps existing content in a Slot.
+将现有内容封装在插槽中。
 
-### Parameters (`WrapSlotOptions`)
+### 参数（`WrapSlotOptions`）
 
-- `kind` (`SlotKind`): `'block'` or `'inline'`.
-- `id?` (`string`): Unique, nonempty ID. Omitted: generated.
-- `config?` (`SlotConfig`): Embedded configuration. Default: `{}`.
-- `range?` (`{ from: number; to: number }`): Nonempty range. Default: current selection.
+- `kind`（`SlotKind`）：`'block'` 或 `'inline'`。
+- `id?`（`string`）：唯一的非空 ID。省略时自动生成。
+- `config?`（`SlotConfig`）：内嵌配置。默认值：`{}`。
+- `range?`（`{ from: number; to: number }`）：非空范围。默认值：当前选区。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-`true` when wrapped; otherwise `false`. Inline ranges must share one inline parent; block ranges must contain complete sibling blocks.
+封装成功时返回 `true`；否则返回 `false`。行内范围必须共用同一个行内父级；块级范围必须包含完整的同级块。
 
 ## `fillSlot`
 
-Replaces content while preserving the Slot ID and configuration.
+替换内容，同时保留插槽的 ID 和配置。
 
-### Parameters (`FillSlotOptions`)
+### 参数（`FillSlotOptions`）
 
-- `id` (`string`): Target Slot ID.
-- `content` (`JSONContent[]`): Replacement content. `[]` creates an empty paragraph for a block Slot.
+- `id`（`string`）：目标插槽 ID。
+- `content`（`JSONContent[]`）：替换内容。对于块级插槽，`[]` 会创建一个空段落。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-`true` when accepted; otherwise `false`. Replacing a parent can remove nested Slots and requires permission to remove them.
+接受时返回 `true`；否则返回 `false`。替换父级插槽可能会移除嵌套插槽，因此需要具有移除这些插槽的权限。
 
-Returns `false` when a variable controls the target or any affected nested slot, even for a replacement matching the current content.
+如果变量控制目标插槽或任何受影响的嵌套插槽，即使替换内容与当前内容相同，也会返回 `false`。
 
 ## `fillSlots`
 
-Fills multiple Slots atomically.
+以原子方式填充多个插槽。
 
-### Parameters
+### 参数
 
-- `values` (`FillSlotOptions[]`): IDs and replacement content.
+- `values`（`FillSlotOptions[]`）：ID 和要替换的内容。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-`true` when all fills succeed, including an empty batch. `false` for duplicate targets, ancestor/descendant targets or any refused fill.
+所有填充操作均成功时返回 `true`，空批次也如此。目标重复、目标之间存在祖先/后代关系，或任何填充操作被拒绝时，返回 `false`。
 
-If any target is variable-controlled, the entire batch returns `false` and no slot changes.
+如果任何目标受变量控制，整个批次都会返回 `false`，且不会更改任何插槽。
 
 ## `clearSlot`
 
-For content slots, replaces content with the kind’s empty content and removes nested Slots. For value slots, writes `null` to the value attribute.
+对于内容插槽，将内容替换为该类型的空内容，并移除嵌套插槽。对于值插槽，将值属性写为 `null`。
 
-### Parameters (`SlotTarget`)
+### 参数（`SlotTarget`）
 
-- `id` (`string`): Target Slot ID.
+- `id`（`string`）：目标插槽 ID。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-`true` when cleared; otherwise `false`. Does not restore `defaultContent` or `defaultValue`.
+清空成功时返回 `true`；否则返回 `false`。不会恢复 `defaultContent` 或 `defaultValue`。
 
 ## `dissolveSlot`
 
-Removes the wrapper and preserves its contents, including nested Slots.
+移除外层包装，同时保留其内容，包括嵌套插槽。
 
-### Parameters (`SlotTarget`)
+### 参数（`SlotTarget`）
 
-- `id` (`string`): Target Slot ID.
+- `id`（`string`）：目标插槽 ID。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-`true` when dissolved; `false` if the result cannot fit the parent or the edit is refused.
+解除封装成功时返回 `true`；如果结果不符合父级要求或编辑被拒绝，则返回 `false`。
 
 ## `removeSlot`
 
-Removes the wrapper and all its contents.
+移除外层包装及其所有内容。
 
-### Parameters (`SlotTarget`)
+### 参数（`SlotTarget`）
 
-- `id` (`string`): Target Slot ID.
+- `id`（`string`）：目标插槽 ID。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-`true` when removed; `false` if the parent would become schema-invalid or the edit is refused.
+移除成功时返回 `true`；如果父级会因此不符合 schema，或编辑被拒绝，则返回 `false`。
 
 ## `selectSlotContent`
 
-Selects the contents without the wrapper.
+选中插槽内容，不包括外层包装。
 
-### Parameters (`SlotTarget`)
+### 参数（`SlotTarget`）
 
-- `id` (`string`): Target Slot ID.
+- `id`（`string`）：目标插槽 ID。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-`true` when selected; `false` for a missing, ambiguous or concealed target.
+选中成功时返回 `true`；如果目标不存在、不明确或被隐藏，则返回 `false`。
 
 ## `moveSlot`
 
-Moves the complete Slot Node.
+移动整个插槽节点。
 
-### Parameters (`SlotTarget & { to: number }`)
+### 参数（`SlotTarget & { to: number }`）
 
-- `id` (`string`): Target Slot ID.
-- `to` (`number`): Destination in pre-transaction coordinates.
+- `id`（`string`）：目标插槽 ID。
+- `to`（`number`）：事务执行前坐标系中的目标位置。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-`true` when moved; `false` for a destination inside the Slot, an invalid parent or a refused edit.
+移动成功时返回 `true`；如果目标位置在插槽内部、父级无效或编辑被拒绝，则返回 `false`。
 
 ## `updateSlotConfig`
 
-Replaces the complete configuration in one undoable edit.
+通过一次可撤销的编辑替换完整配置。
 
-### Parameters (`SlotTarget & { config: SlotConfig }`)
+### 参数（`SlotTarget & { config: SlotConfig }`）
 
-- `id` (`string`): Target Slot ID.
-- `config` (`SlotConfig`): Complete replacement; not a patch.
+- `id`（`string`）：目标插槽 ID。
+- `config`（`SlotConfig`）：完整替换配置；不是补丁。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-`true` when accepted; otherwise `false`. Existing content is unchanged and may become invalid under the new rules.
+接受时返回 `true`；否则返回 `false`。现有内容不会更改，但可能会因新规则而变为无效。
 
 ## `repairSlotIds`
 
-Keeps the first valid occurrence of each ID and assigns new IDs to missing or later duplicate entries.
+保留每个 ID 首次出现的有效实例，并为缺失 ID 或后续重复项分配新 ID。
 
-### Parameters
+### 参数
 
-None.
+无。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-`true` when repaired or already valid; `false` if generation or protection refuses the repair. Ambiguous cross-field references remain unchanged.
+修复成功或 ID 已有效时返回 `true`；如果 ID 生成或保护机制阻止修复，则返回 `false`。有歧义的跨字段引用保持不变。
 
 ## `focusSlot`
 
-Focuses a reachable position inside a Slot and scrolls it into view.
+聚焦插槽内可到达的位置，并将其滚动到视野中。
 
-### Parameters (`SlotTarget & { edge?: 'start' | 'end' }`)
+### 参数（`SlotTarget & { edge?: 'start' | 'end' }`）
 
-- `id` (`string`): Target Slot ID.
-- `edge?` (`'start' | 'end'`): End to focus. Default: `'start'`.
+- `id`（`string`）：目标插槽 ID。
+- `edge?`（`'start' | 'end'`）：要聚焦的一端。默认值：`'start'`。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-`true` when focused; `false` for a concealed target or no reachable content position.
+聚焦成功时返回 `true`；如果目标被隐藏或没有可到达的内容位置，则返回 `false`。
 
 ## `focusNextSlot`
 
-Focuses the next Slot in document order, including nested Slots. Concealed Slots are skipped.
+按文档顺序聚焦下一个插槽，包括嵌套插槽。跳过隐藏的插槽。
 
-### Parameters (`NavigateSlotOptions`)
+### 参数（`NavigateSlotOptions`）
 
-- `fromId?` (`string`): Starting Slot. Default: current innermost Slot.
-- `wrap?` (`boolean`): Continue at the opposite end. Default: `false`.
+- `fromId?`（`string`）：起始插槽。默认值：当前最内层插槽。
+- `wrap?`（`boolean`）：从另一端继续。默认值：`false`。
 
-The entire options object is optional.
+整个选项对象为可选项。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-`true` when focus moves; otherwise `false`. Without an active Slot, starts at the first reachable Slot.
+焦点移动时返回 `true`；否则返回 `false`。如果没有活动插槽，则从第一个可到达的插槽开始。
 
 ## `focusPreviousSlot`
 
-Focuses the previous Slot in document order, including nested Slots. Concealed Slots are skipped.
+按文档顺序聚焦上一个插槽，包括嵌套插槽。跳过隐藏的插槽。
 
-### Parameters (`NavigateSlotOptions`)
+### 参数（`NavigateSlotOptions`）
 
-- `fromId?` (`string`): Starting Slot. Default: current innermost Slot.
-- `wrap?` (`boolean`): Continue at the opposite end. Default: `false`.
+- `fromId?`（`string`）：起始插槽。默认值：当前最内层插槽。
+- `wrap?`（`boolean`）：从另一端继续。默认值：`false`。
 
-The entire options object is optional.
+整个选项对象为可选项。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-`true` when focus moves; otherwise `false`. Without an active Slot, starts at the last reachable Slot.
+焦点移动时返回 `true`；否则返回 `false`。如果没有活动插槽，则从最后一个可到达的插槽开始。
 
 ## `invalidateSlotValidation`
 
-Increments the context revision, aborts pending validation and clears the cached result.
+递增上下文版本号、中止待处理的验证，并清除缓存结果。
 
-### Parameters
+### 参数
 
-None.
+无。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-`true` after invalidation. Changes no document content or undo history; emits `slotValidationUpdate`.
+失效处理后返回 `true`。不会更改文档内容或撤销历史记录；会触发 `slotValidationUpdate`。
