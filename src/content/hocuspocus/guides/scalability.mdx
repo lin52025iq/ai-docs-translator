@@ -1,15 +1,12 @@
 ---
-title: Scalability
+title: 可扩展性
 meta:
-  title: Scalability | Hocuspocus Docs
+  title: 可扩展性 | Hocuspocus 文档
   category: Hocuspocus
 ---
 
-If you are trying to deploy Hocuspocus in a HA setup or solve issues due to too many connections / network traffic,
-you can use our redis extension: [extension-redis](/hocuspocus/server/extensions/redis).
+如果你想在高可用（HA）环境中部署 Hocuspocus，或解决连接数过多／网络流量过大的问题，可以使用我们的 Redis 扩展：[extension-redis](/hocuspocus/server/extensions/redis)。
 
-Yjs is really efficient (see https://blog.kevinjahns.de/are-crdts-suitable-for-shared-editing/), so if you're having issues about
-cpu / memory usage, our suggested solution at the moment is to deploy multiple independent Hocuspocus instances and split users by a document
-identifier.
+Yjs 的效率很高（参见 https://blog.kevinjahns.de/are-crdts-suitable-for-shared-editing/）。因此，如果你遇到 CPU／内存使用方面的问题，目前我们建议部署多个相互独立的 Hocuspocus 实例，并按文档标识符拆分用户。
 
 TODO
