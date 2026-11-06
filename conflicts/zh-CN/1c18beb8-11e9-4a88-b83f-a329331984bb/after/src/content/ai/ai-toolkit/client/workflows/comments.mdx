@@ -1,0 +1,267 @@
+---
+title: 评论工作流
+meta:
+  title: 评论工作流 | Tiptap AI Toolkit
+  description: 使用 Tiptap AI Toolkit 构建工作流，在文档中管理评论和讨论串。
+  category: AI Toolkit
+---
+
+import { CodeDemo } from '@/components/CodeDemo'
+import { Callout } from '@/components/ui/Callout'
+
+构建一个工作流，让 AI 管理 Tiptap 文档中的评论和讨论串。
+
+<CodeDemo
+  isLarge
+  path=""
+  isScrollable
+  src="https://ai-toolkit-demos.vercel.app/comments-workflow"
+/>
+
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
+
+## 技术栈
+
+- [React](https://react.dev/) + [Next.js](https://nextjs.org/)
+- [Vercel AI SDK](https://ai-sdk.dev/) + [Anthropic](https://www.anthropic.com/) 模型
+- Tiptap AI Toolkit
+- Tiptap Comments 扩展
+
+## 项目概览
+
+此演示使用 AI Toolkit 的 Comments 工作流来管理文档中的讨论串和评论。AI 可以创建新的讨论串、添加评论、更新评论、删除评论以及管理讨论串状态。
+
+## 安装
+
+创建一个 [Next.js](https://nextjs.org/) 项目：
+
+```bash
+npx create-next-app@latest comments-workflow
+```
+
+安装 Tiptap 核心包和用于 Anthropic 的 [Vercel AI SDK](https://ai-sdk.dev/)：
+
+```bash
+npm install @tiptap/react @tiptap/starter-kit ai @ai-sdk/react @ai-sdk/anthropic zod uuid
+```
+
+安装 Tiptap AI Toolkit 和 Comments 扩展：
+
+<Callout title="Pro 套件" variant="hint">
+  AI Toolkit 是 Pro 套件。安装前，请按照[私有注册表指南](/guides/pro-extensions)设置私有 NPM 注册表的访问权限。
+</Callout>
+
+```bash
+npm install @tiptap-pro/client-ai-toolkit @tiptap-pro/client-ai-toolkit-tool-definitions @tiptap-pro/extension-comments
+```
+
+## 服务器设置
+
+创建一个 API 端点，使用 [Vercel AI SDK](https://ai-sdk.dev/) 调用 Anthropic 模型。
+
+如果你的后端使用 TypeScript 以外的编程语言，请参阅[本指南](/ai/ai-toolkit/client/advanced-guides/non-typescript-backends)。
+
+在 API 端点中，使用 `createEditThreadsWorkflow` 函数创建并配置 Comments 工作流。该工作流包含可直接使用的系统提示词，用于指导 AI 模型管理评论。
+
+用户消息应包含：
+
+- `content`：文档内容（通过 `tiptapRead` 获取）
+- `threads`：文档中现有的讨论串（通过 `getThreads` 获取）
+- `task`：要由 AI 执行的任务。例如：`添加一条评论，为引言部分提出改进建议`。
+
+```ts
+// app/api/comments-workflow/route.ts
+import { openai } from '@ai-sdk/openai'
+import { createEditThreadsWorkflow } from '@tiptap-pro/client-ai-toolkit-tool-definitions'
+import { createTextStreamResponse, Output, streamText, toTextStream } from 'ai'
+
+export async function POST(req: Request) {
+  const { content, threads, task } = await req.json()
+
+  // Create and configure the Comments workflow (with the default settings).
+  // It includes the ready-to-use system prompt and the output schema.
+  const workflow = createEditThreadsWorkflow()
+
+  const result = streamText({
+    model: openai('gpt-5.6-luna'),
+    // System prompt
+    instructions: workflow.systemPrompt,
+    // User message
+    prompt: JSON.stringify({
+      content,
+      threads,
+      task,
+    }),
+    output: Output.object({ schema: workflow.zodOutputSchema }),
+  })
+
+  return createTextStreamResponse({ stream: toTextStream({ stream: result.stream }) })
+}
+```
+
+## 客户端设置
+
+创建一个 React 组件，使用 Comments 扩展渲染编辑器并应用评论操作。
+
+该工作流支持流式处理，也就是说，随着 AI 模型生成操作，系统会逐步应用这些操作，为用户提供实时反馈。
+
+工作流启动时，首先调用 `tiptapRead` 方法获取文档内容，并调用 `getThreads` 方法获取现有讨论串。
+
+然后调用 API 端点启动工作流。使用 `editThreadsWorkflow` 方法应用评论操作。`isStreaming` 参数可确保随着操作流入而逐步应用。
+
+```tsx
+// app/comments-workflow/page.tsx
+'use client'
+
+import { useObject } from '@ai-sdk/react'
+import { EditorContent, useEditor } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+import {
+  AiToolkit,
+  getAiToolkit,
+  editThreadsWorkflowOutputSchema,
+} from '@tiptap-pro/client-ai-toolkit'
+import { Comments } from '@tiptap-pro/extension-comments'
+import { useEffect, useState } from 'react'
+import { v4 as uuid } from 'uuid'
+
+// Create a simple comments provider
+const commentsProvider = {
+  threads: [],
+  getThreads: () => commentsProvider.threads,
+  createThread: (thread) => {
+    commentsProvider.threads.push(thread)
+    return thread
+  },
+  updateThread: (id, data) => {
+    const index = commentsProvider.threads.findIndex((t) => t.id === id)
+    if (index !== -1) {
+      commentsProvider.threads[index] = { ...commentsProvider.threads[index], ...data }
+    }
+  },
+  deleteThread: (id) => {
+    commentsProvider.threads = commentsProvider.threads.filter((t) => t.id !== id)
+  },
+}
+
+export default function Page() {
+  const editor = useEditor({
+    immediatelyRender: false,
+    extensions: [
+      StarterKit,
+      AiToolkit,
+      Comments.configure({
+        provider: commentsProvider,
+      }),
+    ],
+    content: `<h1>Document with Comments</h1><p>This is a sample document where AI can add and manage comments.</p>`,
+  })
+
+  const [workflowId, setWorkflowId] = useState('')
+  const [task, setTask] = useState('Add a comment suggesting improvements to this document')
+
+  const { submit, isLoading, object } = useObject({
+    api: '/api/comments-workflow',
+    schema: editThreadsWorkflowOutputSchema,
+  })
+
+  // Apply operations as they stream in
+  useEffect(() => {
+    if (!editor || !object?.operations) return
+
+    const toolkit = getAiToolkit(editor)
+    toolkit.editThreadsWorkflow({
+      operations: object.operations,
+      workflowId,
+      isStreaming: isLoading,
+    })
+  }, [editor, object, workflowId, isLoading])
+
+  if (!editor) return null
+
+  const manageComments = () => {
+    setWorkflowId(uuid())
+
+    const toolkit = getAiToolkit(editor)
+
+    // Get the document content and existing threads
+    const { content } = toolkit.tiptapRead()
+    const { threads } = toolkit.getThreads()
+
+    // Call the API endpoint to start the workflow
+    submit({ content, threads, task })
+  }
+
+  return (
+    <div>
+      <EditorContent editor={editor} />
+
+      <input
+        type="text"
+        value={task}
+        onChange={(e) => setTask(e.target.value)}
+        placeholder="Enter task for comments..."
+      />
+
+      <button onClick={manageComments} disabled={isLoading}>
+        {isLoading ? 'Processing...' : 'Manage Comments with AI'}
+      </button>
+    </div>
+  )
+}
+```
+
+## 可用操作
+
+Comments 工作流支持以下操作：
+
+| 操作 | 说明 |
+| ---------------- | ------------------------------------------- |
+| 创建讨论串 | 在指定位置创建新的讨论串 |
+| 创建评论 | 向现有讨论串添加评论 |
+| 更新评论 | 更新现有评论 |
+| 删除评论 | 从讨论串中删除评论 |
+| 删除讨论串 | 删除整个讨论串 |
+| 解决讨论串 | 将讨论串标记为已解决 |
+| 取消解决讨论串 | 将讨论串标记为未解决 |
+
+## 最终效果
+
+添加 CSS 样式后，即可得到一款完善的评论管理应用：
+
+<CodeDemo
+  isLarge
+  path=""
+  isScrollable
+  src="https://ai-toolkit-demos.vercel.app/comments-workflow"
+/>
+
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
+
+## 针对文档部分内容添加评论
+
+若只想针对文档的某个子部分添加评论，请在 `tiptapRead` 上设置 `range` 选项。此参数接受一个 [Range](/ai/ai-toolkit/client/advanced-guides/concepts#range)，用于指定要读取的区域。
+
+例如，只对选中的内容添加评论：
+
+```ts
+const range = editor.state.selection
+
+// Read only the selected part of the document
+const { content } = toolkit.tiptapRead({ range })
+const { threads } = toolkit.getThreads()
+
+const operations = callApi(content, threads)
+
+// Apply comment operations
+toolkit.editThreadsWorkflow({ operations, workflowId })
+```
+
+对于较大的文档，可以使用 [`tiptapReadChunks`](/ai/ai-toolkit/client/api-reference/read-the-document#tiptapreadchunks) 方法将文档拆分为多个区块并并行处理。每个区块都包含一个 [Range](/ai/ai-toolkit/client/advanced-guides/concepts#range)，用于指定该区块对应的区域。
+
+## 相关指南
+
+- `tiptapRead` 方法的 [API 参考](/ai/ai-toolkit/client/api-reference/read-the-document#tiptapread)
+- `getThreads` 方法的 [API 参考](/ai/ai-toolkit/client/api-reference/workflows#getthreads)
+- `editThreadsWorkflow` 方法的 [API 参考](/ai/ai-toolkit/client/api-reference/workflows#editthreadsworkflow)
+- [Comments 扩展](/comments/getting-started/overview)：详细了解 Comments 扩展。
