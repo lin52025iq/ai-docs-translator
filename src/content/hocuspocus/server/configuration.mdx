@@ -1,32 +1,32 @@
 ---
-title: Configure Hocuspocus Server
+title: 配置 Hocuspocus 服务器
 meta:
-  title: Configure Hocuspocus Server | Tiptap Collaboration Docs
+  title: 配置 Hocuspocus 服务器 | Tiptap 协作文档
   description:
   category: Hocuspocus
 ---
 
-## Introduction
+## 简介
 
-There are only a few settings to pass for now. Most things are controlled through [hooks](/hocuspocus/server/hooks).
+目前只需传入少量设置。大多数功能都通过 [hooks](/hocuspocus/server/hooks) 控制。
 
-## Settings
+## 设置
 
-| Setting            | Description                                                                                                                          | Default value   |
+| 设置            | 描述                                                                                                                          | 默认值   |
 |--------------------|--------------------------------------------------------------------------------------------------------------------------------------|-----------------|
-| `name`             | A name for the instance, used for logging.                                                                                           |                 |
-| `port`             | The port the server should listen on.                                                                                                | `80`            |
-| `address`          | The host/interface the server should bind to, e.g. `127.0.0.1`. If not set, the server listens on all interfaces.                    |                 |
-| `timeout`          | A connection healthcheck interval in milliseconds. Increased from 30s to 60s in v4.                                                  | `60000 (= 60s)` |
-| `debounce`         | Debounces the call of the onStoreDocument hook for the given amount of time in ms. Otherwise every single update would be persisted. | `2000 (= 2s)`   |
-| `maxDebounce`      | Makes sure to call onStoreDocument at least in the given amount of time (ms).                                                        | `10000 (= 10s)` |
-| `quiet`            | By default, the servers show a start screen. If passed false, the server will start quietly.                                         | `false`         |
-| `websocketOptions` | Options forwarded to the underlying WebSocket server (e.g. `{ maxPayload: 1024 * 1024 }`). Moved inside the config object in v4.     | `{}`            |
-| `maxUnauthenticatedQueueSize`     | Maximum number of bytes buffered (across all documents) for a single connection while it is still unauthenticated. The connection is closed when exceeded. See [Pre-authentication resource limits](#pre-authentication-resource-limits). | `5242880 (= 5 MiB)` |
-| `maxUnauthenticatedQueueMessages` | Maximum number of messages buffered (across all documents) for a single connection while it is still unauthenticated. The connection is closed when exceeded.                                                                            | `1000`              |
-| `maxPendingDocuments`             | Maximum number of distinct documents a single connection may open before any of them is authenticated. The connection is closed when exceeded.                                                                                          | `100`               |
+| `name`             | 实例名称，用于日志记录。                                                                                           |                 |
+| `port`             | 服务器监听的端口。                                                                                                | `80`            |
+| `address`          | 服务器绑定的主机/接口，例如 `127.0.0.1`。如果未设置，服务器会监听所有接口。                    |                 |
+| `timeout`          | 连接健康检查间隔，单位为毫秒。v4 中从 30 秒增加到 60 秒。                                                  | `60000 (= 60s)` |
+| `debounce`         | 在指定时间内（毫秒）对 `onStoreDocument` hook 的调用进行防抖处理。否则，每次更新都会被持久化。 | `2000 (= 2s)`   |
+| `maxDebounce`      | 确保至少每隔指定时间（毫秒）调用一次 `onStoreDocument`。                                                        | `10000 (= 10s)` |
+| `quiet`            | 默认情况下，服务器会显示启动界面。设为 `false` 时，服务器将静默启动。                                         | `false`         |
+| `websocketOptions` | 传递给底层 WebSocket 服务器的选项（例如 `{ maxPayload: 1024 * 1024 }`）。v4 中移入了配置对象。     | `{}`            |
+| `maxUnauthenticatedQueueSize`     | 单个连接尚未通过身份验证时，所有文档合计可缓冲的最大字节数。超出后将关闭连接。请参阅[身份验证前的资源限制](#pre-authentication-resource-limits)。 | `5242880 (= 5 MiB)` |
+| `maxUnauthenticatedQueueMessages` | 单个连接尚未通过身份验证时，所有文档合计可缓冲的最大消息数。超出后将关闭连接。                                                                            | `1000`              |
+| `maxPendingDocuments`             | 单个连接在任何文档通过身份验证之前可以打开的不同文档的最大数量。超出后将关闭连接。                                                                                          | `100`               |
 
-## Usage
+## 用法
 
 ```js
 import { Server } from '@hocuspocus/server'
@@ -44,9 +44,9 @@ const server = new Server({
 server.listen()
 ```
 
-## Generic Context type
+## 泛型 Context 类型
 
-Since v4, the server accepts a generic `Context` type parameter for end-to-end type safety across all hooks:
+从 v4 开始，服务器支持泛型 `Context` 类型参数，可在所有 hooks 中实现端到端类型安全：
 
 ```ts
 import { Server } from '@hocuspocus/server'
@@ -68,17 +68,17 @@ const server = new Server<MyContext>({
 })
 ```
 
-The generic defaults to `any`, so existing code without explicit typing continues to work.
+泛型默认值为 `any`，因此不显式指定类型的现有代码仍可正常工作。
 
-## Pre-authentication resource limits
+## 身份验证前的资源限制
 
-Messages received before authentication completes are buffered in memory per connection. Without a bound, an unauthenticated client could exhaust server memory (see [GHSA-xwhh-v746-pj9m](https://github.com/ueberdosis/hocuspocus/security/advisories/GHSA-xwhh-v746-pj9m)). Three settings cap this buffering, and the connection is closed as soon as any limit is exceeded:
+身份验证完成前收到的消息会按连接缓存在内存中。如果不加限制，未经身份验证的客户端可能会耗尽服务器内存（参见 [GHSA-xwhh-v746-pj9m](https://github.com/ueberdosis/hocuspocus/security/advisories/GHSA-xwhh-v746-pj9m)）。以下三个设置用于限制缓冲量，任一限制超出时都会立即关闭连接：
 
-- `maxUnauthenticatedQueueSize` (default 5 MiB) — total buffered bytes per connection.
-- `maxUnauthenticatedQueueMessages` (default 1000) — total buffered messages per connection.
-- `maxPendingDocuments` (default 100) — distinct not-yet-authenticated documents a single connection may have open at once. Each pending document holds its own queue and hook payload, so this stops a client from fanning out across many document names while staying under the per-connection queue limits.
+- `maxUnauthenticatedQueueSize`（默认值为 5 MiB）——每个连接缓冲的总字节数。
+- `maxUnauthenticatedQueueMessages`（默认值为 1000）——每个连接缓冲的总消息数。
+- `maxPendingDocuments`（默认值为 100）——单个连接一次可以打开的、尚未通过身份验证的不同文档数。每个待处理文档都有自己的队列和 hook 负载，因此，即使客户端将数据分散到许多文档名称上，也无法绕过每个连接的队列限制。
 
-In addition, the idle `timeout` is enforced as an *absolute* pre-authentication deadline (measured from when the connection was established and not refreshed by inbound traffic) until the connection authenticates its first document. After the first successful authentication, `timeout` reverts to the normal idle behavior for the rest of the socket's life.
+此外，在连接首次完成某个文档的身份验证之前，空闲 `timeout` 会作为*绝对*的身份验证前期限执行（从建立连接时开始计时，不会因收到入站流量而重置）。首次成功完成身份验证后，在该 WebSocket 连接的剩余生命周期内，`timeout` 将恢复为常规的空闲超时行为。
 
 ```js
 import { Server } from '@hocuspocus/server'
