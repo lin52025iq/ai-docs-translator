@@ -1,18 +1,18 @@
 ---
-title: deleteRange commands
+title: deleteRange 命令
 meta:
-  title: deleteRange command | Tiptap Editor Docs
-  description: Use the deleteRange command in Tiptap to remove content within a specific range in your document. Learn more in our docs!
-  category: Editor
+  title: deleteRange 命令 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 deleteRange 命令删除文档中特定范围内的内容。了解更多信息，请参阅我们的文档！
+  category: 编辑器
 ---
 
-The `deleteRange` command deletes everything in a given range. It requires a `range` attribute of type `Range`.
+`deleteRange` 命令会删除指定范围内的所有内容。它需要一个 `Range` 类型的 `range` 属性。
 
-## Parameters
+## 参数
 
 `range: Range`
 
-## Use the deleteRange command
+## 使用 deleteRange 命令
 
 ```js
 editor.commands.deleteRange({ from: 0, to: 12 })
