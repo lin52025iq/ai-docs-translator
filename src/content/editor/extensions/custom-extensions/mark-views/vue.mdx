@@ -1,26 +1,26 @@
 ---
-title: Mark views with Vue
+title: 使用 Vue 构建标记视图
 meta:
-  title: Vue mark views | Tiptap Editor Docs
-  description: Use Vue to build custom mark views in Tiptap.
+  title: Vue 标记视图 | Tiptap 编辑器文档
+  description: 使用 Vue 在 Tiptap 中构建自定义标记视图。
   category: Editor
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-Using Vanilla JavaScript can feel complex if you are used to work in Vue. Good news: You can use regular Vue components in your mark views, too. There is just a little bit you need to know, but let’s go through this one by one.
+如果你习惯使用 Vue，原生 JavaScript 可能会让你觉得有些复杂。好消息是，你也可以在标记视图中使用常规 Vue 组件。只需了解一点相关知识，下面我们逐步介绍。
 
-## Render a Vue component
+## 渲染 Vue 组件
 
-Here is what you need to do to render Vue components inside your editor:
+要在编辑器中渲染 Vue 组件，你需要：
 
-1. [Create a mark extension](/editor/extensions/custom-extensions/create-new/mark)
-2. Create a Vue component
-3. Pass that component to the provided `VueNodeViewRenderer`
-4. Register it with `addMarkView()`
-5. [Configure Tiptap to use your new mark extension](/editor/getting-started/configure)
+1. [创建一个标记扩展](/editor/extensions/custom-extensions/create-new/mark)
+2. 创建一个 Vue 组件
+3. 将该组件传给提供的 `VueNodeViewRenderer`
+4. 使用 `addMarkView()` 注册它
+5. [配置 Tiptap 以使用新的标记扩展](/editor/getting-started/configure)
 
-This is how your node extension could look like:
+你的节点扩展可以这样编写：
 
 ```ts
 import { Mark } from '@tiptap/core'
@@ -37,7 +37,7 @@ export default Mark.create({
 })
 ```
 
-And here is an example of a Vue component:
+下面是一个 Vue 组件示例：
 
 ```vue
 <template>
@@ -73,13 +73,13 @@ export default {
 </script>
 ```
 
-Got it? Let’s see it in action. Feel free to copy the below example to get started.
+明白了吗？下面来看看实际效果。你可以复制以下示例，快速开始。
 
 <CodeDemo path="/GuideMarkViews/VueComponent?inline=false&hideSource=false" />
 
-## Updating the mark view attributes
+## 更新标记视图属性
 
-Updating your mark view's attributes is very straightforward. You can use the `updateAttributes` method provided by the component's props.
+更新标记视图的属性非常简单。你可以使用组件 props 提供的 `updateAttributes` 方法。
 
 ```vue
 <template>
