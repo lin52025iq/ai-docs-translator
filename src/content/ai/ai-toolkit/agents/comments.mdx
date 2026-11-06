@@ -1,9 +1,9 @@
 ---
-title: Server comments
+title: 服务端评论
 meta:
-  title: Server comments | Tiptap Server AI Toolkit
-  description: Enable server-side AI agents to read and edit comments in Tiptap documents using the Server AI Toolkit.
-  category: AI Toolkit
+  title: 服务端评论 | Tiptap Server AI Toolkit
+  description: 使用 Server AI Toolkit，让服务端 AI 代理能够读取和编辑 Tiptap 文档中的评论。
+  category: AI 工具包
 sidebars:
   hideSecondary: true
 ---
@@ -11,20 +11,20 @@ sidebars:
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-Give your AI agents the ability to read, write and edit comments in your document, fully server-side.
+为 AI 代理提供完全在服务端读取、撰写和编辑文档评论的能力。
 
 <CodeDemo isLarge path="" isScrollable src="https://ai-toolkit-demos.vercel.app/server-comments" />
 
-See the [source code on GitHub](https://github.com/ueberdosis/ai-toolkit-demos).
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
 
-<Callout title="Continuation from the AI agent chatbot guide" variant="info">
-  This guide continues the [AI agent chatbot
-  guide](/ai/ai-toolkit/agents/ai-agent-chatbot). Read it first.
+<Callout title="延续 AI 代理聊天机器人指南" variant="info">
+  本指南接续 [AI 代理聊天机器人
+  指南](/ai/ai-toolkit/agents/ai-agent-chatbot)。请先阅读该指南。
 </Callout>
 
-## Enable comment tools
+## 启用评论工具
 
-To enable comment tools, pass the `getThreads` and `editThreads` options when fetching tool definitions from the Server AI Toolkit API.
+要启用评论工具，请在从 Server AI Toolkit API 获取工具定义时传入 `getThreads` 和 `editThreads` 选项。
 
 ```ts
 import { getAuthHeaders } from '@/lib/server-ai-toolkit/get-auth-headers'
@@ -46,16 +46,16 @@ const response = await fetch(`${apiBaseUrl}/v4/ai/toolkit/fetch-tools`, {
 })
 ```
 
-## Execute comment tools
+## 执行评论工具
 
-Comment tools require a **Tiptap Cloud document** because threads and comments are stored on the Tiptap Document Server. Pass `document: { type: 'cloud', id }` so the AI Server can fetch it from the Document Server automatically.
+评论工具需要 **Tiptap Cloud 文档**，因为评论串和评论都存储在 Tiptap Document Server 上。传入 `document: { type: 'cloud', id }`，这样 AI Server 就能自动从 Document Server 获取文档。
 
-### Request body
+### 请求正文
 
-Include the cloud document reference in the request body:
+在请求正文中加入云端文档引用：
 
-- `document.id` (`string`, required): The ID of the document.
-- `user` (`string`, optional): The ID of the user creating comments. If omitted, comments are created without user attribution.
+- `document.id`（`string`，必填）：文档 ID。
+- `user`（`string`，可选）：创建评论的用户 ID。若省略，创建的评论不会关联用户。
 
 ```ts
 const result = await fetch(`${apiBaseUrl}/v4/ai/toolkit/execute-tool`, {
@@ -85,14 +85,14 @@ const result = await fetch(`${apiBaseUrl}/v4/ai/toolkit/execute-tool`, {
 })
 ```
 
-## End result
+## 最终效果
 
-The result is a simple but polished AI chatbot application:
+最终会得到一个简单而精致的 AI 聊天机器人应用：
 
 <CodeDemo isLarge path="" isScrollable src="https://ai-toolkit-demos.vercel.app/server-comments" />
 
-See the [source code on GitHub](https://github.com/ueberdosis/ai-toolkit-demos).
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
 
-## Next steps
+## 后续步骤
 
-- Explore the [REST API reference](/ai/ai-toolkit/api-reference/rest-api)
+- 查看 [REST API 参考](/ai/ai-toolkit/api-reference/rest-api)
