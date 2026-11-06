@@ -8,22 +8,22 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/hocuspocus/getting-started',
-      title: 'Get started',
+      title: '开始使用',
       children: [
         {
-          title: 'Overview',
+          title: '概览',
           href: '/hocuspocus/getting-started/overview',
         },
         {
-          title: 'About the project',
+          title: '关于项目',
           href: '/hocuspocus/getting-started/sponsor',
         },
         {
-          title: 'Contributing',
+          title: '参与贡献',
           href: '/hocuspocus/getting-started/contributing',
         },
         {
-          title: 'Upgrade Guide',
+          title: '升级指南',
           href: '/hocuspocus/getting-started/upgrade',
         },
       ],
@@ -31,22 +31,22 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/hocuspocus/provider',
-      title: 'Provider',
+      title: '提供者',
       children: [
         {
-          title: 'Overview',
+          title: '概览',
           href: '/hocuspocus/provider/overview',
         },
         {
-          title: 'Install',
+          title: '安装',
           href: '/hocuspocus/provider/install',
         },
         {
-          title: 'Configuration',
+          title: '配置',
           href: '/hocuspocus/provider/configuration',
         },
         {
-          title: 'Events',
+          title: '事件',
           href: '/hocuspocus/provider/events',
         },
         {
@@ -54,7 +54,7 @@ export const sidebarConfig: SidebarConfig = {
           href: '/hocuspocus/provider/react',
         },
         {
-          title: 'Examples',
+          title: '示例',
           href: '/hocuspocus/provider/examples',
         },
       ],
@@ -62,22 +62,22 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/hocuspocus/server',
-      title: 'Server',
+      title: '服务器',
       children: [
         {
-          title: 'Configuration',
+          title: '配置',
           href: '/hocuspocus/server/configuration',
         },
         {
-          title: 'Hooks',
+          title: '钩子',
           href: '/hocuspocus/server/hooks',
         },
         {
-          title: 'Usage',
+          title: '用法',
           href: '/hocuspocus/server/usage',
         },
         {
-          title: 'Examples',
+          title: '示例',
           href: '/hocuspocus/server/examples',
         },
       ],
@@ -85,18 +85,18 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/hocuspocus/server/extensions',
-      title: 'Server Extensions',
+      title: '服务器扩展',
       children: [
         {
-          title: 'Overview',
+          title: '概览',
           href: '/hocuspocus/server/extensions/overview',
         },
         {
-          title: 'Database',
+          title: '数据库',
           href: '/hocuspocus/server/extensions/database',
         },
         {
-          title: 'Logger',
+          title: '日志记录器',
           href: '/hocuspocus/server/extensions/logger',
         },
         {
@@ -108,7 +108,7 @@ export const sidebarConfig: SidebarConfig = {
           href: '/hocuspocus/server/extensions/sqlite',
         },
         {
-          title: 'Throttle',
+          title: '限流',
           href: '/hocuspocus/server/extensions/throttle',
         },
         {
@@ -124,34 +124,34 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/hocuspocus/guides',
-      title: 'Guides',
+      title: '指南',
       children: [
         {
-          title: 'Authentication',
+          title: '身份验证',
           href: '/hocuspocus/guides/authentication',
         },
         {
-          title: 'Persistence',
+          title: '持久化',
           href: '/hocuspocus/guides/persistence',
         },
         {
-          title: 'Collaborative Editing',
+          title: '协同编辑',
           href: '/hocuspocus/guides/collaborative-editing',
         },
         {
-          title: 'Custom Extensions',
+          title: '自定义扩展',
           href: '/hocuspocus/guides/custom-extensions',
         },
         {
-          title: 'Awareness',
+          title: '感知',
           href: '/hocuspocus/guides/awareness',
         },
         {
-          title: 'Multi Subdocuments',
+          title: '多个子文档',
           href: '/hocuspocus/guides/multi-subdocuments',
         },
         {
-          title: 'Scalability',
+          title: '可扩展性',
           href: '/hocuspocus/guides/scalability',
         },
       ],
