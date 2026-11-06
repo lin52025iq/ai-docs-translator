@@ -1,12 +1,12 @@
 ---
-title: Integrate the Menu UI component
+title: 集成 Menu UI 组件
 meta:
-  title: Menu | Tiptap UI Components
-  description: Integrate a flexible menu system with search, filtering, and hierarchical navigation. Built on Ariakit for accessibility with seamless keyboard navigation. Learn more in the docs.
-  category: UI Components
+  title: Menu | Tiptap UI 组件
+  description: 集成灵活的菜单系统，支持搜索、筛选和分层导航。基于 Ariakit 构建，提供无障碍支持和流畅的键盘导航。详见文档。
+  category: UI 组件
 component:
   name: Menu
-  description: A comprehensive menu system that supports hierarchical navigation, search functionality, filtering, and keyboard interactions with full accessibility support.
+  description: 功能全面的菜单系统，支持分层导航、搜索、筛选和键盘交互，并提供完整的无障碍支持。
   type: primitive
   isFree: false
   isCloud: false
@@ -17,19 +17,19 @@ component:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A powerful menu component built on Ariakit that provides hierarchical navigation, search functionality, filtering capabilities, and full keyboard accessibility. Perfect for command palettes, dropdown menus, and complex navigation systems.
+Menu 是一个基于 Ariakit 构建的强大菜单组件，支持分层导航、搜索、筛选和完整的键盘无障碍操作。非常适合用于命令面板、下拉菜单和复杂的导航系统。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui-primitive/menu" />
 
-## Install
+## 安装
 
-You can add the primitive via Tiptap CLI
+你可以通过 Tiptap CLI 添加此基础组件
 
 ```bash
 npx @tiptap/cli@latest add menu
 ```
 
-## Usage
+## 用法
 
 ```tsx
 import {
@@ -74,83 +74,83 @@ export default function MyComponent() {
 }
 ```
 
-## Components
+## 组件
 
 ### Menu
 
-The root menu provider that handles state management and context.
+负责处理状态管理和上下文的根菜单提供器。
 
-| Name           | Type                         | Default | Description                                 |
+| 名称           | 类型                         | 默认值 | 说明                                     |
 | -------------- | ---------------------------- | ------- | ------------------------------------------- |
-| trigger        | `React.ReactNode`            | -       | Element that triggers the menu              |
-| value          | `string`                     | -       | Current search value (for searchable menus) |
-| onOpenChange   | `(open: boolean) => void`    | -       | Callback when menu open state changes       |
-| onValueChange  | `(value: string) => void`    | -       | Callback when search value changes          |
-| onValuesChange | `(values: string[]) => void` | -       | Callback for multi-selection                |
-| open           | `boolean`                    | -       | Controlled open state                       |
+| trigger        | `React.ReactNode`            | -       | 用于触发菜单的元素              |
+| value          | `string`                     | -       | 当前搜索值（用于可搜索菜单） |
+| onOpenChange   | `(open: boolean) => void`    | -       | 菜单打开状态变化时调用的回调       |
+| onValueChange  | `(value: string) => void`    | -       | 搜索值变化时调用的回调          |
+| onValuesChange | `(values: string[]) => void` | -       | 多选时调用的回调                |
+| open           | `boolean`                    | -       | 受控的打开状态                       |
 
 ### MenuContent
 
-The container for menu items with positioning and styling.
+用于容纳菜单项，并负责定位和样式设置。
 
-| Name           | Type                                                      | Default | Description                         |
+| 名称           | 类型                                                      | 默认值 | 说明                         |
 | -------------- | --------------------------------------------------------- | ------- | ----------------------------------- |
-| onClickOutside | `(event: MouseEvent \| TouchEvent \| FocusEvent) => void` | -       | Callback when clicking outside menu |
+| onClickOutside | `(event: MouseEvent \| TouchEvent \| FocusEvent) => void` | -       | 在菜单外部点击时调用的回调 |
 
 ### MenuItem
 
-Individual selectable menu item.
+可单独选择的菜单项。
 
-| Name         | Type                 | Default | Description                             |
+| 名称         | 类型                 | 默认值 | 说明                             |
 | ------------ | -------------------- | ------- | --------------------------------------- |
-| group        | `string`             | -       | Group identifier for the item           |
-| name         | `string`             | -       | Name identifier for the item            |
-| parentGroup  | `string`             | -       | Parent group identifier                 |
-| preventClose | `boolean`            | false   | Prevent menu from closing when selected |
-| render       | `React.ReactElement` | -       | Custom render element                   |
+| group        | `string`             | -       | 菜单项所属组的标识符           |
+| name         | `string`             | -       | 菜单项的名称标识符            |
+| parentGroup  | `string`             | -       | 父级组的标识符                 |
+| preventClose | `boolean`            | false   | 选中时阻止菜单关闭 |
+| render       | `React.ReactElement` | -       | 自定义渲染元素                   |
 
 ## Hooks
 
 ### useComboboxValueState
 
-Hook for accessing and updating the search value in searchable menus.
+用于访问和更新可搜索菜单中搜索值的 Hook。
 
 ```tsx
 const [searchValue, setSearchValue] = useComboboxValueState()
 ```
 
-**Returns:** `readonly [string, (value: string) => void]`
+**返回值：** `readonly [string, (value: string) => void]`
 
 ### useMenuPlacement
 
-Hook for getting the current menu positioning side.
+用于获取当前菜单定位方向的 Hook。
 
 ```tsx
 const side = useMenuPlacement()
 ```
 
-**Returns:** `string` - The current side ("top", "bottom", "left", "right")
+**返回值：** `string` - 当前方向（"top"、"bottom"、"left"、"right"）
 
 ### useMenuItemClick
 
-Hook for handling menu item clicks with optional close prevention.
+用于处理菜单项点击，并可选择阻止菜单关闭的 Hook。
 
 ```tsx
 const handleClick = useMenuItemClick(menu, preventClose)
 ```
 
-**Parameters:**
+**参数：**
 
-- `menu?: Ariakit.MenuStore` - Menu store instance
-- `preventClose?: boolean` - Whether to prevent menu from closing
+- `menu?: Ariakit.MenuStore` - 菜单存储实例
+- `preventClose?: boolean` - 是否阻止菜单关闭
 
-## Filtering and Search
+## 筛选与搜索
 
-The Menu component includes powerful filtering capabilities:
+Menu 组件提供强大的筛选功能：
 
 ### filterMenuItems
 
-Utility function for filtering menu items based on search criteria.
+根据搜索条件筛选菜单项的实用函数。
 
 ```tsx
 import { filterMenuItems } from '@/components/tiptap-ui-primitive/menu'
@@ -160,7 +160,7 @@ const filteredItems = filterMenuItems({ items: menuItems, label: 'Actions' }, se
 
 ### filterMenuGroups
 
-Utility function for filtering entire menu groups.
+筛选整个菜单组的实用函数。
 
 ```tsx
 import { filterMenuGroups } from '@/components/tiptap-ui-primitive/menu'
@@ -168,11 +168,11 @@ import { filterMenuGroups } from '@/components/tiptap-ui-primitive/menu'
 const filteredGroups = filterMenuGroups(menuGroups, searchValue)
 ```
 
-## Dependencies
+## 依赖项
 
-- **@ariakit/react** - Accessibility and interaction primitives
-- **combobox** - Search functionality
-- **separator** - Visual separation between groups
-- **label** - Group labeling
-- **use-on-click-outside** - Outside click detection
-- **use-composed-ref** - Ref composition utilities
+- **@ariakit/react** - 无障碍和交互基础组件
+- **combobox** - 搜索功能
+- **separator** - 组间视觉分隔
+- **label** - 组标签
+- **use-on-click-outside** - 检测外部点击
+- **use-composed-ref** - Ref 组合工具
