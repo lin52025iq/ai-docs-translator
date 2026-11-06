@@ -1,6 +1,6 @@
 ---
-title: 'Flow diagrams'
-intro: 'A diagram shows steps, states or things and the links between them, such as a flowchart, a sequence diagram or a mind map. You write it as text, and the extension draws it.'
+title: '流程图'
+intro: '图表用于展示步骤、状态或事物及其相互关系，例如流程图、时序图或思维导图。你以文本形式编写，扩展会将其绘制出来。'
 headerDemo:
   path: '/Extensions/DiagramsMermaid'
   isPro: true
@@ -8,29 +8,26 @@ tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Flow diagrams | Tiptap Diagrams Docs'
-  description: 'A diagram shows steps, states or things and the links between them, such as a flowchart, a sequence diagram or a mind map.'
-  category: Diagrams
+  title: '流程图 | Tiptap Diagrams 文档'
+  description: '图表用于展示步骤、状态或事物及其相互关系，例如流程图、时序图或思维导图。'
+  category: 图表
 ---
 
-The `flowDiagram` node stores a diagram's text, called the source, in one of three formats:
+`flowDiagram` 节点以以下三种格式之一存储图表文本（称为 source）：
 
-- Mermaid text, for a flowchart, a sequence diagram, a Gantt chart, a mind map and
-  [every other Mermaid kind](/diagrams/flow-diagrams/overview#mermaid-kinds).
-- draw.io XML, for a diagram drawn with shapes in the draw.io editor.
-- BPMN XML, for a business process model.
+- Mermaid 文本，用于流程图、时序图、甘特图、思维导图以及[其他所有 Mermaid 类型](/diagrams/flow-diagrams/overview#mermaid-kinds)。
+- draw.io XML，用于在 draw.io 编辑器中使用形状绘制的图表。
+- BPMN XML，用于业务流程模型。
 
-## Quick start
+## 快速入门
 
-Install the package and mermaid.js, the library that draws Mermaid diagrams. The example also
-uses `@tiptap/core` and `@tiptap/starter-kit`. Install them too if your project does not have
-them yet:
+安装程序包和用于绘制 Mermaid 图表的库 mermaid.js。此示例还使用了 `@tiptap/core` 和 `@tiptap/starter-kit`。如果项目尚未安装它们，也请一并安装：
 
 ```bash
 npm install @tiptap-pro/extension-diagrams mermaid
 ```
 
-Then register a Diagram Renderer for Mermaid and insert a first diagram:
+然后为 Mermaid 注册一个图表渲染器，并插入第一个图表：
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -60,32 +57,27 @@ editor.commands.insertFlowDiagram({
 })
 ```
 
-A Diagram Renderer draws diagrams with one library, as a [Renderer](/diagrams/renderers/overview) draws
-charts. You pass it in the `diagramRenderers` option. [Mermaid](/diagrams/renderers/mermaid#quick-start)
-explains `mermaidUrl`, `rendererUrl` and the `?url` imports.
+图表渲染器使用一个库绘制图表，正如[渲染器](/diagrams/renderers/overview)使用一个库绘制图表。将它传入 `diagramRenderers` 选项即可。[Mermaid](/diagrams/renderers/mermaid#quick-start)介绍了 `mermaidUrl`、`rendererUrl` 和 `?url` 导入。
 
-## More about diagrams
+## 了解更多图表信息
 
-| Page                                                            | Covers                                                         |
-| --------------------------------------------------------------- | -------------------------------------------------------------- |
-| [Formats](/diagrams/flow-diagrams/formats)                      | Mermaid, draw.io, BPMN and formats of your own                 |
-| [Editing in the diagram](/diagrams/flow-diagrams/editing)       | Changing a text by a double click, moving a flowchart's shapes |
-| [A diagram from a table](/diagrams/flow-diagrams/from-table)    | A flowchart drawn from a table, one row per step               |
-| [Renderers](/diagrams/renderers/overview#which-renderer-to-use) | Mermaid, Pele, draw.io and BPMN, and what each one draws       |
+| 页面                                                            | 内容                                                         |
+| --------------------------------------------------------------- | ------------------------------------------------------------ |
+| [格式](/diagrams/flow-diagrams/formats)                         | Mermaid、draw.io、BPMN 以及自定义格式                        |
+| [在图表中编辑](/diagrams/flow-diagrams/editing)                 | 双击更改文本、移动流程图中的形状                             |
+| [根据表格生成图表](/diagrams/flow-diagrams/from-table)          | 从表格绘制流程图，每行对应一个步骤                           |
+| [渲染器](/diagrams/renderers/overview#which-renderer-to-use)    | Mermaid、Pele、draw.io 和 BPMN，以及它们各自可绘制的内容     |
 
-## Mermaid kinds
+## Mermaid 类型
 
-The first line of Mermaid source names its kind, such as `flowchart` or `sequenceDiagram`. A
-Mermaid diagram can be any kind that Mermaid 11.17 knows, except five kinds that become
-[charts](/diagrams/flow-diagrams/overview#diagram-or-chart). `MERMAID_DIAGRAM_KINDS` lists the kinds, and
-`mermaidDiagramKind(source)` returns the kind of a source.
+Mermaid source 的第一行会标明其类型，例如 `flowchart` 或 `sequenceDiagram`。Mermaid 图表可以是 Mermaid 11.17 支持的任何类型，但会变成[图表数据可视化](/diagrams/flow-diagrams/overview#diagram-or-chart)的五种类型除外。`MERMAID_DIAGRAM_KINDS` 列出了这些类型，`mermaidDiagramKind(source)` 会返回 source 的类型。
 
-| Kind            | First line                                                                       |
+| 类型            | 第一行                                                                           |
 | --------------- | -------------------------------------------------------------------------------- |
-| `flowchart`     | `flowchart`, `graph`                                                             |
+| `flowchart`     | `flowchart`、`graph`                                                             |
 | `sequence`      | `sequenceDiagram`                                                                |
-| `state`         | `stateDiagram-v2`, `stateDiagram`                                                |
-| `class`         | `classDiagram`, `classDiagram-v2`                                                |
+| `state`         | `stateDiagram-v2`、`stateDiagram`                                                |
+| `class`         | `classDiagram`、`classDiagram-v2`                                                |
 | `er`            | `erDiagram`                                                                      |
 | `journey`       | `journey`                                                                        |
 | `gantt`         | `gantt`                                                                          |
@@ -94,90 +86,73 @@ Mermaid diagram can be any kind that Mermaid 11.17 knows, except five kinds that
 | `quadrant`      | `quadrantChart`                                                                  |
 | `git`           | `gitGraph`                                                                       |
 | `kanban`        | `kanban`                                                                         |
-| `architecture`  | `architecture-beta`, `architecture`                                              |
-| `block`         | `block-beta`, `block`                                                            |
-| `c4`            | `C4Context`, `C4Container`, `C4Component`, `C4Dynamic`, `C4Deployment`           |
-| `requirement`   | `requirementDiagram`, `requirement`                                              |
-| `packet`        | `packet-beta`, `packet`                                                          |
+| `architecture`  | `architecture-beta`、`architecture`                                              |
+| `block`         | `block-beta`、`block`                                                            |
+| `c4`            | `C4Context`、`C4Container`、`C4Component`、`C4Dynamic`、`C4Deployment`           |
+| `requirement`   | `requirementDiagram`、`requirement`                                              |
+| `packet`        | `packet-beta`、`packet`                                                          |
 | `venn`          | `venn-beta`                                                                      |
-| `ishikawa`      | `ishikawa-beta`, `ishikawa`                                                      |
+| `ishikawa`      | `ishikawa-beta`、`ishikawa`                                                      |
 | `treeView`      | `treeView-beta`                                                                  |
 | `wardley`       | `wardley-beta`                                                                   |
 | `cynefin`       | `cynefin-beta`                                                                   |
 | `swimlane`      | `swimlane-beta`                                                                  |
-| `railroad`      | `railroad-beta`, `railroad-ebnf-beta`, `railroad-abnf-beta`, `railroad-peg-beta` |
+| `railroad`      | `railroad-beta`、`railroad-ebnf-beta`、`railroad-abnf-beta`、`railroad-peg-beta` |
 | `eventModeling` | `eventmodeling`                                                                  |
 
-Both Diagram Renderers for Mermaid, mermaid.js and [Pele](/diagrams/renderers/pele#next-to-mermaidjs),
-draw every kind in this list. For a kind that no registered Diagram Renderer draws, see
-[Which Renderer draws a diagram](/diagrams/renderers/custom-diagrams#which-renderer-draws-a-diagram).
-[Editing in the diagram](/diagrams/flow-diagrams/editing) lists the kinds whose text you can change in the diagram.
+Mermaid 的两种图表渲染器 mermaid.js 和 [Pele](/diagrams/renderers/pele#next-to-mermaidjs) 都能绘制此列表中的所有类型。对于没有已注册图表渲染器支持的类型，请参阅[哪个渲染器可以绘制图表](/diagrams/renderers/custom-diagrams#which-renderer-draws-a-diagram)。[在图表中编辑](/diagrams/flow-diagrams/editing)列出了可以在图表中更改文本的类型。
 
-## Diagram or chart
+## 图表还是数据可视化
 
-Mermaid `pie`, `xychart`, `sankey`, `radar` and `treemap` become a `chart` node with data you can
-edit, see [`importMermaidChart`](/diagrams/charts/overview#importmermaidchart). Every other kind in
-[the list](/diagrams/flow-diagrams/overview#mermaid-kinds) becomes a diagram. [`insertFlowDiagram`](/diagrams/flow-diagrams/overview#insertflowdiagram) and
-[`updateFlowDiagram`](/diagrams/flow-diagrams/overview#updateflowdiagram) refuse chart source.
+Mermaid 的 `pie`、`xychart`、`sankey`、`radar` 和 `treemap` 会成为 `chart` 节点，其数据可以编辑；请参阅 [`importMermaidChart`](/diagrams/charts/overview#importmermaidchart)。[列表](/diagrams/flow-diagrams/overview#mermaid-kinds)中的其他类型都会成为图表。对于数据可视化 source，[`insertFlowDiagram`](/diagrams/flow-diagrams/overview#insertflowdiagram) 和 [`updateFlowDiagram`](/diagrams/flow-diagrams/overview#updateflowdiagram) 会拒绝处理。
 
-## How a diagram is stored
+## 图表的存储方式
 
-| Attribute     | Content                                                                          |
-| ------------- | -------------------------------------------------------------------------------- |
-| `format`      | `'mermaid'`, `'drawio'`, `'bpmn'` or the id of a format a Diagram Renderer draws |
-| `source`      | The Mermaid text, at most 50,000 characters, or the XML                          |
-| `title`       | Shown as a caption below the diagram, or `null`                                  |
-| `description` | Alt text and accessible description, or `null`                                   |
-| `view`        | `'diagram'` shows the drawn diagram, `'code'` shows the source                   |
-| `options`     | Settings beyond the source, in the table below. Anything else is kept as it is   |
+| 属性          | 内容                                                                          |
+| ------------- | ----------------------------------------------------------------------------- |
+| `format`      | `'mermaid'`、`'drawio'`、`'bpmn'`，或图表渲染器可绘制的格式 ID                |
+| `source`      | Mermaid 文本（最多 50,000 个字符）或 XML                                      |
+| `title`       | 显示在图表下方的标题，或 `null`                                                |
+| `description` | 替代文本和无障碍描述，或 `null`                                                |
+| `view`        | `'diagram'` 显示绘制后的图表，`'code'` 显示 source                            |
+| `options`     | 除 source 外的设置，见下表。其他设置会原样保留                                 |
 
-| Key in `options` | Content                                                                                         |
-| ---------------- | ----------------------------------------------------------------------------------------------- |
-| `size`           | The diagram's size, see [setDiagramSize](/diagrams/guides/size-and-view#setdiagramsize)         |
-| `link`           | The table the diagram is drawn from                                                             |
-| `positions`      | The offsets of moved shapes, see [Moving shapes](/diagrams/flow-diagrams/editing#moving-shapes) |
+| `options` 中的键 | 内容                                                                                         |
+| ---------------- | -------------------------------------------------------------------------------------------- |
+| `size`           | 图表大小，请参阅 [setDiagramSize](/diagrams/guides/size-and-view#setdiagramsize)             |
+| `link`           | 用于绘制图表的表格                                                                           |
+| `positions`      | 移动过的形状的偏移量，请参阅[移动形状](/diagrams/flow-diagrams/editing#moving-shapes)         |
 
-The document never stores the drawn diagram, its size on screen or its loading state.
+文档不会存储绘制后的图表、图表在屏幕上的大小或其加载状态。
 
-### Source is data
+### Source 是数据
 
-The source never runs as code in your app's web page. When a diagram is written, the extension
-removes `%%{init: …}%%` directives and the frontmatter block, so a document cannot
-change how Mermaid runs. A `title` in the frontmatter becomes the diagram's title, unless you give one. The colors come
-from your page's CSS, not from the source.
+source 不会作为代码在应用的网页中运行。写入图表时，扩展会移除 `%%{init: …}%%` 指令和 frontmatter 区块，因此文档无法改变 Mermaid 的运行方式。frontmatter 中的 `title` 会成为图表标题，除非你另行指定标题。颜色来自页面的 CSS，而不是 source。
 
-### In HTML and plain text
+### HTML 和纯文本中的表示
 
-In HTML, a diagram is a `<figure data-type="flow-diagram">`. It holds its source in
-`<pre><code class="language-mermaid">` and its title in a `<figcaption>`. A draw.io diagram uses
-`language-drawio`, and a BPMN diagram uses `language-bpmn`.
+在 HTML 中，图表是一个 `<figure data-type="flow-diagram">`。其中的 `<pre><code class="language-mermaid">` 保存 source，`<figcaption>` 保存标题。draw.io 图表使用 `language-drawio`，BPMN 图表使用 `language-bpmn`。
 
-An HTML or Markdown export made without the extension keeps the source as a code block. If you
-paste that HTML into an editor that has the extension, you get the diagram back.
+不使用此扩展生成的 HTML 或 Markdown 导出会将 source 保留为代码块。将该 HTML 粘贴到安装了此扩展的编辑器中，即可还原为图表。
 
-As plain text, a Mermaid diagram is `[diagram: title]` followed by its source. A diagram in any
-other format is only `[diagram: title]`, or `[diagram]` without a title.
+在纯文本中，Mermaid 图表表示为 `[diagram: title]`，后面跟着 source。其他格式的图表只表示为 `[diagram: title]`；如果没有标题，则表示为 `[diagram]`。
 
-## Changing a diagram
+## 更改图表
 
-You change a diagram with a [command](/diagrams/flow-diagrams/overview#commands):
+使用[命令](/diagrams/flow-diagrams/overview#commands)更改图表：
 
 ```ts
 editor.commands.updateFlowDiagram({ source: 'sequenceDiagram\n  A->>B: Hello' })
 editor.commands.setFlowDiagramView({ view: 'code' })
 ```
 
-A form of your own can call `updateFlowDiagram` on every input, while someone types. Each call is
-one undo step.
+你可以创建自己的表单，让用户输入时在每次输入后调用 `updateFlowDiagram`。每次调用都是一个撤销步骤。
 
-The diagram is drawn again after every change. When a drawing finishes after a newer change, it
-is dropped. Mermaid source with a syntax error shows the error state and its message until the
-source is valid again.
+每次更改后都会重新绘制图表。如果较新的更改完成后，较早的绘制才完成，则会丢弃较早的结果。Mermaid source 存在语法错误时，会显示错误状态及错误信息，直到 source 再次有效。
 
-### Diagram or source for every diagram
+### 切换所有图表的视图或 source
 
-Each diagram has its own view. To switch them all at once, as the Mermaid demo does, chain
-`setFlowDiagramView` for every diagram:
+每个图表都有自己的视图。若要像 Mermaid 演示一样一次切换所有图表，请对每个图表串联调用 `setFlowDiagramView`：
 
 ```ts
 const chain = editor.chain()
@@ -187,39 +162,34 @@ for (const { pos } of editor.storage.diagrams.listDiagrams()) {
 chain.run()
 ```
 
-## Listing, zooming and exporting diagrams
+## 列出、缩放和导出图表
 
-### Listing diagrams
+### 列出图表
 
-`editor.storage.diagrams.listDiagrams()` returns every diagram with:
+`editor.storage.diagrams.listDiagrams()` 会返回所有图表及以下信息：
 
-| Field      | Content                                                                                           |
+| 字段       | 内容                                                                                              |
 | ---------- | ------------------------------------------------------------------------------------------------- |
-| `pos`      | Its position                                                                                      |
-| Attributes | Its attributes                                                                                    |
-| `kind`     | The kind of Mermaid diagram, or `null` when the source is empty, not a kind that is drawn, or XML |
-| `drawable` | Whether a Diagram Renderer for its format can draw the source                                     |
+| `pos`      | 图表的位置                                                                                        |
+| 属性       | 图表的属性                                                                                        |
+| `kind`     | Mermaid 图表的类型；如果 source 为空、不是可绘制的类型或是 XML，则为 `null`                       |
+| `drawable` | 该格式的图表渲染器是否能够绘制此 source                                                           |
 
-### Zoom and maximize
+### 缩放和最大化
 
-`setZoom`, `getZoom`, `setMaximized` and `getMaximized` take a diagram's position, as they take a
-chart's. See [Size and view](/diagrams/guides/size-and-view).
+`setZoom`、`getZoom`、`setMaximized` 和 `getMaximized` 接受图表的位置，与它们接受数据可视化图表的位置相同。请参阅[大小和视图](/diagrams/guides/size-and-view)。
 
-### Export
+### 导出
 
-`export({ pos })`, `exportAll()` and `exportDocx()` include diagrams as they include charts. In
-Word, a diagram is a PNG image. [Export](/diagrams/export) has the options and what comes back.
+`export({ pos })`、`exportAll()` 和 `exportDocx()` 导出图表的方式与导出数据可视化图表相同。在 Word 中，图表是 PNG 图像。[导出](/diagrams/export)介绍了可用选项和返回内容。
 
-The mermaid.js, draw.io and BPMN Diagram Renderers draw only in a browser. On a server, `export`
-throws for a diagram, and `exportDocx` leaves the diagram out with a note. Pele's
-[`renderPeleDiagram`](/diagrams/renderers/pele#on-a-server) can still draw Mermaid source on a
-server.
+mermaid.js、draw.io 和 BPMN 图表渲染器只能在浏览器中绘制图表。在服务器上，对图表调用 `export` 会抛出异常，而 `exportDocx` 会在备注中说明并省略该图表。Pele 的 [`renderPeleDiagram`](/diagrams/renderers/pele#on-a-server) 仍可在服务器上绘制 Mermaid source。
 
-## Commands
+## 命令
 
 ### insertFlowDiagram
 
-Inserts a diagram at the selection, or at `pos`, and selects it unless `select` is `false`.
+在当前选区或 `pos` 处插入图表；除非 `select` 为 `false`，否则会选中该图表。
 
 ```ts
 editor.commands.insertFlowDiagram({
@@ -228,72 +198,64 @@ editor.commands.insertFlowDiagram({
 })
 ```
 
-| Option        | Type             | Description                                                                                                         |
-| ------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `source`      | `string`         | Mermaid source, draw.io XML with `format: 'drawio'`, or BPMN 2.0 XML with `format: 'bpmn'`. Empty source is allowed |
-| `format`      | `string`         | `'mermaid'` (default), `'drawio'`, `'bpmn'`, or another format when a registered Diagram Renderer lists it          |
-| `title`       | `string \| null` | The diagram's title                                                                                                 |
-| `description` | `string \| null` | Alt text and accessible description                                                                                 |
-| `pos`         | `number`         | The position to insert at. Defaults to the selection                                                                |
-| `select`      | `boolean`        | `false` leaves the selection where it is. Default `true`                                                            |
+| 选项          | 类型             | 说明                                                                                                                 |
+| ------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `source`      | `string`         | Mermaid source、设置 `format: 'drawio'` 时的 draw.io XML，或设置 `format: 'bpmn'` 时的 BPMN 2.0 XML。允许为空 source |
+| `format`      | `string`         | `'mermaid'`（默认）、`'drawio'`、`'bpmn'`，或已注册图表渲染器列出的其他格式                                          |
+| `title`       | `string \| null` | 图表标题                                                                                                             |
+| `description` | `string \| null` | 替代文本和无障碍描述                                                                                                 |
+| `pos`         | `number`         | 插入位置，默认为当前选区                                                                                             |
+| `select`      | `boolean`        | `false` 会保留当前选区；默认为 `true`                                                                                |
 
-An empty paragraph at the selection is replaced. [Pasting](/diagrams/data/pasting) diagram source
-runs this command.
+如果选区中有一个空段落，则会将其替换。[粘贴](/diagrams/data/pasting)图表 source 时会运行此命令。
 
-Returns `false` for Mermaid chart source (`pie`, `xychart`, `sankey`, `radar`, `treemap`), for a
-kind not in [the list](/diagrams/flow-diagrams/overview#mermaid-kinds), such as `zenuml`, and, with `format: 'drawio'` or `'bpmn'`, for source that
-is not that XML.
+对于 Mermaid 数据可视化 source（`pie`、`xychart`、`sankey`、`radar`、`treemap`）、[列表](/diagrams/flow-diagrams/overview#mermaid-kinds)中没有的类型（例如 `zenuml`），以及设置 `format: 'drawio'` 或 `'bpmn'` 但 source 不是相应 XML 的情况，此命令会返回 `false`。
 
 ### updateFlowDiagram
 
-Changes the source, the format, the title or the description of the selected diagram, or the one
-at `pos`. A field you leave out keeps its value.
+更改选中的图表或 `pos` 处图表的 source、格式、标题或描述。未提供的字段会保留原值。
 
 ```ts
 editor.commands.updateFlowDiagram({ title: 'Order flow, revised' })
 ```
 
-| Option        | Type             | Description                                                                                           |
-| ------------- | ---------------- | ----------------------------------------------------------------------------------------------------- |
-| `source`      | `string`         | The new source. On a diagram drawn from a table, the diagram keeps it and no longer follows the table |
-| `format`      | `string`         | The new format. Needs `source` in that format                                                         |
-| `title`       | `string \| null` | The new title. `null` removes it                                                                      |
-| `description` | `string \| null` | The new description. `null` removes it                                                                |
-| `pos`         | `number`         | The diagram's position. Defaults to the selected diagram                                              |
+| 选项          | 类型             | 说明                                                                                              |
+| ------------- | ---------------- | ------------------------------------------------------------------------------------------------- |
+| `source`      | `string`         | 新 source。对于根据表格绘制的图表，更改后图表会保留新 source，不再跟随表格                        |
+| `format`      | `string`         | 新格式。需要提供该格式的 `source`                                                                 |
+| `title`       | `string \| null` | 新标题。`null` 会移除标题                                                                          |
+| `description` | `string \| null` | 新描述。`null` 会移除描述                                                                          |
+| `pos`         | `number`         | 图表位置，默认为选中的图表                                                                          |
 
-Returns `false` and changes nothing when the new source is not a kind that is drawn in the
-diagram's format, or when `format` changes without `source`.
+如果新 source 不是相应格式可绘制的类型，或者更改 `format` 时没有提供 `source`，则会返回 `false` 且不做任何更改。
 
 ### setFlowDiagramView
 
-Shows the drawn diagram or its source.
+显示绘制后的图表或其 source。
 
 ```ts
 editor.commands.setFlowDiagramView({ view: 'code' })
 ```
 
-| Option | Type                  | Description                                                    |
-| ------ | --------------------- | -------------------------------------------------------------- |
-| `view` | `'diagram' \| 'code'` | `'diagram'` shows the drawn diagram, `'code'` shows the source |
-| `pos`  | `number`              | The diagram's position. Defaults to the selected diagram       |
+| 选项  | 类型                  | 说明                                                           |
+| ----- | --------------------- | -------------------------------------------------------------- |
+| `view` | `'diagram' \| 'code'` | `'diagram'` 显示绘制后的图表，`'code'` 显示 source             |
+| `pos`  | `number`              | 图表位置，默认为选中的图表                                     |
 
-The view is stored in the document, so everyone who opens the document sees the same view.
+视图会存储在文档中，因此所有打开文档的人都会看到相同的视图。
 
 ### convertCodeBlockToDiagram
 
-Replaces the code block at the selection, or at `pos`, with a diagram of its Mermaid source and
-selects the diagram.
+将当前选区或 `pos` 处的代码块替换为使用其中 Mermaid source 生成的图表，并选中该图表。
 
 ```ts
 if (editor.can().convertCodeBlockToDiagram()) editor.commands.convertCodeBlockToDiagram()
 ```
 
-| Option | Type     | Description                                                 |
-| ------ | -------- | ----------------------------------------------------------- |
-| `pos`  | `number` | A position inside the code block. Defaults to the selection |
+| 选项 | 类型     | 说明                                             |
+| ---- | -------- | ------------------------------------------------ |
+| `pos` | `number` | 代码块内的位置，默认为当前选区                   |
 
-Mod-Enter in the code block runs it too, see
-[Mod-Enter in a code block](/diagrams/data/quick-input#mod-enter-in-a-code-block).
+在代码块中按 Mod-Enter 也会运行此命令，请参阅[在代码块中按 Mod-Enter](/diagrams/data/quick-input#mod-enter-in-a-code-block)。
 
-Returns `false` for a code block that holds chart source or anything that is not a Mermaid
-diagram.
+如果代码块中包含数据可视化 source，或内容不是 Mermaid 图表，则会返回 `false`。
