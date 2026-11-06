@@ -1,71 +1,70 @@
 ---
-title: Insert content workflow
+title: 插入内容工作流
 meta:
-  title: Insert content workflow | Tiptap AI Toolkit
-  description: Use the Tiptap AI Toolkit to build a workflow that inserts or replaces content in your documents.
+  title: 插入内容工作流 | Tiptap AI Toolkit
+  description: 使用 Tiptap AI Toolkit 构建工作流，在文档中插入或替换内容。
   category: AI Toolkit
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-Build a workflow that inserts or replaces content in your Tiptap documents.
+构建工作流，在 Tiptap 文档中插入或替换内容。
 
 <CodeDemo path="" isScrollable src="https://ai-toolkit-demos.vercel.app/insert-content-workflow" />
 
-See the [source code on GitHub](https://github.com/ueberdosis/ai-toolkit-demos).
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
 
-## Tech stack
+## 技术栈
 
 - [React](https://react.dev/) + [Next.js](https://nextjs.org/)
-- [AI SDK by Vercel](https://ai-sdk.dev/) + [OpenAI](https://openai.com/) models
+- [Vercel AI SDK](https://ai-sdk.dev/) + [OpenAI](https://openai.com/) 模型
 - Tiptap AI Toolkit
 
-## Project overview
+## 项目概览
 
-This demo uses the AI Toolkit's Insert content workflow to replace selected content with AI-generated content in real-time.
+此演示使用 AI Toolkit 的插入内容工作流，实时将选中的内容替换为 AI 生成的内容。
 
-## Installation
+## 安装
 
-Create a [Next.js](https://nextjs.org/) project:
+创建一个 [Next.js](https://nextjs.org/) 项目：
 
 ```bash
 npx create-next-app@latest insert-content-workflow
 ```
 
-Install the core Tiptap packages and the [Vercel AI SDK](https://ai-sdk.dev/) for OpenAI:
+安装 Tiptap 核心包和用于 OpenAI 的 [Vercel AI SDK](https://ai-sdk.dev/)：
 
 ```bash
 npm install @tiptap/react @tiptap/starter-kit ai @ai-sdk/react @ai-sdk/openai
 ```
 
-Install the Tiptap AI Toolkit:
+安装 Tiptap AI Toolkit：
 
-<Callout title="Pro package" variant="hint">
-  The AI Toolkit is a pro package. Before installation, set up access to the private NPM registry by
-  following the [private registry guide](/guides/pro-extensions).
+<Callout title="Pro 套件" variant="hint">
+  AI Toolkit 是 Pro 套件。安装前，请按照[私有注册表指南](/guides/pro-extensions)配置私有 NPM 注册表的访问权限。
 </Callout>
 
 ```bash
 npm install @tiptap-pro/client-ai-toolkit @tiptap-pro/client-ai-toolkit-tool-definitions
 ```
 
-## Server setup
+## 服务端设置
 
-Create an API endpoint that uses the [Vercel AI SDK](https://ai-sdk.dev/) to call the OpenAI model.
+创建一个 API 端点，使用 [Vercel AI SDK](https://ai-sdk.dev/) 调用 OpenAI 模型。
 
-If your backend is in another programming language than TypeScript, see [this guide](/ai/ai-toolkit/client/advanced-guides/non-typescript-backends).
+如果你的后端使用的编程语言不是 TypeScript，请参阅[本指南](/ai/ai-toolkit/client/advanced-guides/non-typescript-backends)。
 
-Inside the API endpoint, create and configure the insert content workflow, using the `createInsertContentWorkflow` function. The workflow includes a ready-to-use system prompt that instructs the AI model on how to generate the content.
+在 API 端点中，使用 `createInsertContentWorkflow` 函数创建并配置插入内容工作流。该工作流包含一个可直接使用的系统提示词，用于指导 AI 模型生成内容。
 
-The user message should be a JSON object with the following properties:
+用户消息应为包含以下属性的 JSON 对象：
 
-- `task`: the task to complete
-- `replace`: the HTML content to be replaced (optional)
-- `before`: the HTML content before (optional)
-- `after`: the HTML content after (optional)
+- `task`：要完成的任务
+- `replace`：要替换的 HTML 内容（可选）
+- `before`：之前的 HTML 内容（可选）
+- `after`：之后的 HTML 内容（可选）
 
-As the AI model generates its response, the API endpoint streams the HTML content to the client.
+AI 模型生成回复时，API 端点会将 HTML 内容流式传输到客户端。
 
 ```ts
 // app/api/insert-content-workflow/route.ts
@@ -95,11 +94,11 @@ export async function POST(req: Request) {
 }
 ```
 
-## Client setup
+## 客户端设置
 
-Create a React component that renders the editor and streams the AI-generated content into the selection.
+创建一个 React 组件来渲染编辑器，并将 AI 生成的内容流式传输到选区中。
 
-First, when the workflow starts, get the current selection with the `getHtmlRange` method of the AI Toolkit. Then, call the API endpoint to start the workflow. The API endpoint will return a stream of HTML that can be inserted into the editor with the `streamHtml` method of the AI Toolkit.
+首先，在工作流启动时，使用 AI Toolkit 的 `getHtmlRange` 方法获取当前选区。然后调用 API 端点启动工作流。API 端点会返回 HTML 流，可通过 AI Toolkit 的 `streamHtml` 方法插入编辑器。
 
 ```tsx
 // app/insert-content-workflow/page.tsx
@@ -187,17 +186,17 @@ export default function Page() {
 }
 ```
 
-## End result
+## 最终效果
 
-With additional CSS styles, the result is a polished application that can insert or replace content with AI-generated content in real-time:
+添加 CSS 样式后，即可得到一个精致的应用，实时插入或替换为 AI 生成的内容：
 
 <CodeDemo path="" isScrollable src="https://ai-toolkit-demos.vercel.app/insert-content-workflow" />
 
-See the [source code on GitHub](https://github.com/ueberdosis/ai-toolkit-demos).
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
 
-## Show the AI Caret
+## 显示 AI 光标
 
-You can add the `AiCaret` extension to display a cursor that indicates where the AI is inserting content. This gives users real-time visual feedback during streaming.
+你可以添加 `AiCaret` 扩展，以显示一个指示 AI 正在何处插入内容的光标。这样用户在内容流式传输期间可以获得实时视觉反馈。
 
 ```tsx
 import { AiCaret, AiToolkit, getAiToolkit } from '@tiptap-pro/client-ai-toolkit'
@@ -207,22 +206,22 @@ const editor = useEditor({
 })
 ```
 
-See the [AI Caret guide](/ai/ai-toolkit/client/advanced-guides/ai-caret) for configuration options and CSS styles.
+有关配置选项和 CSS 样式，请参阅 [AI Caret 指南](/ai/ai-toolkit/client/advanced-guides/ai-caret)。
 
-## Disable streaming
+## 禁用流式传输
 
-To insert content into the document without streaming it, use the `insertHtml` method. This method has the same options as `streamHtml`, only that it is called once with the full HTML content as argument. [See the API reference](/ai/ai-toolkit/client/api-reference/edit-the-document#inserthtml).
+若要在不进行流式传输的情况下向文档插入内容，请使用 `insertHtml` 方法。此方法与 `streamHtml` 的选项相同，只不过它只调用一次，并将完整的 HTML 内容作为参数传入。[查看 API 参考](/ai/ai-toolkit/client/api-reference/edit-the-document#inserthtml)。
 
-## Show a review UI
+## 显示审阅界面
 
-Display changes in a review UI, so users can accept or reject them.
+在审阅界面中显示更改，让用户接受或拒绝这些更改。
 
-There are two approaches:
+有两种方式：
 
-- Use the [**Tracked Changes**](/tracked-changes/getting-started/overview) extension to render the review UI. Changes persist as part of the document and are visible to other users.
-- **AI Toolkit suggestions**: a decoration-based UI that's ephemeral and only visible to the current user of the document.
+- 使用 [**Tracked Changes**](/tracked-changes/getting-started/overview) 扩展渲染审阅界面。更改会作为文档的一部分保存，并对其他用户可见。
+- **AI Toolkit 建议**：基于装饰的临时界面，仅对当前文档用户可见。
 
-Configure the review UI by setting the `reviewOptions` parameter. Changes will show up as suggestions that users can accept or reject.
+设置 `reviewOptions` 参数以配置审阅界面。更改将显示为建议，用户可以接受或拒绝。
 
 ```tsx
 await toolkit.streamHtml(readableStream, {
@@ -242,7 +241,7 @@ await toolkit.streamHtml(readableStream, {
 })
 ```
 
-See the [review changes](/ai/ai-toolkit/client/agents/review-changes) guide to learn more about the review UI.
+若要详细了解审阅界面，请参阅[审阅更改](/ai/ai-toolkit/client/agents/review-changes)指南。
 
 <CodeDemo
   path=""
@@ -250,12 +249,12 @@ See the [review changes](/ai/ai-toolkit/client/agents/review-changes) guide to l
   src="https://ai-toolkit-demos.vercel.app/insert-content-workflow-preview"
 />
 
-See the [AI Toolkit demos](https://github.com/ueberdosis/ai-toolkit-demos) for examples on how to use AI Toolkit workflows with the review UI.
+查看 [AI Toolkit 演示](https://github.com/ueberdosis/ai-toolkit-demos)，了解如何在审阅界面中使用 AI Toolkit 工作流。
 
-## Next steps
+## 后续步骤
 
-- [API reference](/ai/ai-toolkit/client/api-reference/workflows#createinsertcontentworkflow-server-side-utility) of the `createInsertContentWorkflow` function
-- [API reference](/ai/ai-toolkit/client/api-reference/read-the-document#gethtmlrange) of the `getHtmlRange` method
-- [API reference](/ai/ai-toolkit/client/api-reference/edit-the-document#streamhtml) of the `streamHtml` method
-- [Suggestions](/ai/ai-toolkit/client/agents/review-changes): Learn about reviewing the document and displaying suggestions in the editor.
-- [AI Caret](/ai/ai-toolkit/client/advanced-guides/ai-caret): Show a cursor where the AI is inserting content.
+- `createInsertContentWorkflow` 函数的 [API 参考](/ai/ai-toolkit/client/api-reference/workflows#createinsertcontentworkflow-server-side-utility)
+- `getHtmlRange` 方法的 [API 参考](/ai/ai-toolkit/client/api-reference/read-the-document#gethtmlrange)
+- `streamHtml` 方法的 [API 参考](/ai/ai-toolkit/client/api-reference/edit-the-document#streamhtml)
+- [建议](/ai/ai-toolkit/client/agents/review-changes)：了解如何审阅文档并在编辑器中显示建议。
+- [AI Caret](/ai/ai-toolkit/client/advanced-guides/ai-caret)：显示 AI 正在何处插入内容的光标。
