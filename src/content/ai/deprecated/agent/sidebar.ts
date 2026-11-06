@@ -3,24 +3,24 @@ import { SidebarConfig } from '@/types'
 export const sidebarConfig: SidebarConfig = {
   id: 'ai-assistant',
   rootHref: '/ai/deprecated/agent/overview',
-  title: 'AI Assistant (Legacy)',
+  title: 'AI 助手（旧版）',
   items: [
     {
       type: 'link',
-      title: '← Back to Content AI',
+      title: '← 返回 Content AI',
       href: '/ai/ai-toolkit/overview',
     },
     {
       type: 'group',
       href: '/ai/deprecated/agent/overview',
-      title: 'Get started',
+      title: '快速入门',
       children: [
         {
-          title: 'Overview',
+          title: '概述',
           href: '/ai/deprecated/agent/overview',
         },
         {
-          title: 'Install',
+          title: '安装',
           href: '/ai/deprecated/agent/install',
         },
       ],
@@ -28,22 +28,22 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/ai/deprecated/agent/use-with-content-ai-cloud',
-      title: 'Integration',
+      title: '集成',
       children: [
         {
-          title: 'Use with Tiptap Cloud',
+          title: '与 Tiptap Cloud 搭配使用',
           href: '/ai/deprecated/agent/use-with-content-ai-cloud',
         },
         {
-          title: 'Use with your AI agent',
+          title: '与自己的 AI 智能体搭配使用',
           href: '/ai/deprecated/agent/custom-llms/overview',
           children: [
             {
-              title: 'Overview',
+              title: '概述',
               href: '/ai/deprecated/agent/custom-llms/overview',
             },
             {
-              title: 'Get started',
+              title: '快速入门',
               href: '/ai/deprecated/agent/custom-llms/get-started',
               children: [
                 {
@@ -65,15 +65,15 @@ export const sidebarConfig: SidebarConfig = {
               ],
             },
             {
-              title: 'Tools overview',
+              title: '工具概述',
               href: '/ai/deprecated/agent/custom-llms/tools',
             },
             {
-              title: 'Client-side tools',
+              title: '客户端工具',
               href: '/ai/deprecated/agent/custom-llms/client-side-tools',
             },
             {
-              title: 'Server-side tools',
+              title: '服务端工具',
               href: '/ai/deprecated/agent/custom-llms/server-side-tools',
               children: [
                 {
@@ -101,38 +101,38 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/ai/deprecated/agent/features/state',
-      title: 'Features',
+      title: '功能',
       children: [
         {
-          title: 'State',
+          title: '状态',
           href: '/ai/deprecated/agent/features/state',
         },
         {
-          title: 'Events',
+          title: '事件',
           href: '/ai/deprecated/agent/features/events',
         },
         {
-          title: 'Methods',
+          title: '方法',
           href: '/ai/deprecated/agent/features/methods',
         },
         {
-          title: 'Lifecycle',
+          title: '生命周期',
           href: '/ai/deprecated/agent/features/lifecycle',
         },
         {
-          title: 'Checkpoints',
+          title: '检查点',
           href: '/ai/deprecated/agent/features/checkpoints',
         },
         {
-          title: 'Provide context',
+          title: '提供上下文',
           href: '/ai/deprecated/agent/features/context',
         },
         {
-          title: 'Selection awareness',
+          title: '感知选区',
           href: '/ai/deprecated/agent/features/selection-awareness',
         },
         {
-          title: 'Read large documents',
+          title: '读取大型文档',
           href: '/ai/deprecated/agent/features/large-documents',
         },
       ],
@@ -140,18 +140,18 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/ai/deprecated/agent/configure/options',
-      title: 'Configuration',
+      title: '配置',
       children: [
         {
-          title: 'Configuration options',
+          title: '配置选项',
           href: '/ai/deprecated/agent/configure/options',
         },
         {
-          title: 'System prompt',
+          title: '系统提示词',
           href: '/ai/deprecated/agent/configure/system-prompt',
         },
         {
-          title: 'Custom nodes/marks',
+          title: '自定义节点/标记',
           href: '/ai/deprecated/agent/configure/custom-nodes',
         },
       ],
@@ -159,14 +159,14 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/ai/deprecated/agent/review',
-      title: 'Review changes',
+      title: '审阅更改',
       children: [
         {
-          title: 'With AI Changes',
+          title: '使用 AI Changes',
           href: '/ai/deprecated/agent/review/ai-changes',
         },
         {
-          title: 'With AI Suggestion',
+          title: '使用 AI Suggestion',
           href: '/ai/deprecated/agent/review/ai-suggestion',
         },
       ],
@@ -174,14 +174,14 @@ export const sidebarConfig: SidebarConfig = {
     {
       type: 'group',
       href: '/ai/deprecated/agent/api-reference',
-      title: 'Reference',
+      title: '参考',
       children: [
         {
-          title: 'API Reference',
+          title: 'API 参考',
           href: '/ai/deprecated/agent/api-reference',
         },
         {
-          title: 'Changelog',
+          title: '更新日志',
           href: '/ai/deprecated/agent/changelog',
         },
       ],
