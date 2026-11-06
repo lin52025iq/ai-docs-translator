@@ -1,12 +1,12 @@
 ---
-title: Integrate the Label UI component
+title: 集成 Label UI 组件
 meta:
-  title: Label | Tiptap UI Components
-  description: Integrate a semantic label component for forms and UI elements. Supports both label and div elements with consistent styling. Learn more in the docs.
-  category: UI Components
+  title: Label | Tiptap UI 组件
+  description: 为表单和 UI 元素集成语义化标签组件。支持 label 和 div 元素，并提供一致的样式。更多信息请参阅文档。
+  category: UI 组件
 component:
   name: Label
-  description: A semantic label component that can render as either a label or div element with consistent typography and interaction handling.
+  description: 语义化标签组件，可渲染为 label 或 div 元素，并提供一致的排版和交互处理。
   type: primitive
   isFree: true
   isCloud: false
@@ -17,19 +17,19 @@ component:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A flexible label component that provides consistent typography for form labels and UI element labels, with smart interaction handling to prevent unwanted text selection.
+灵活的标签组件，为表单标签和 UI 元素标签提供一致的排版，并通过智能交互处理避免意外的文本选中。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui-primitive/label" />
 
-## Install
+## 安装
 
-You can add the primitive via Tiptap CLI
+你可以通过 Tiptap CLI 添加此基础组件：
 
 ```bash
 npx @tiptap/cli@latest add label
 ```
 
-## Usage
+## 用法
 
 ```tsx
 import { Label } from '@/components/tiptap-ui-primitive/label'
@@ -57,12 +57,12 @@ export default function MyComponent() {
 }
 ```
 
-## Props
+## 属性
 
 ### Label
 
-A flexible label component that can render as either a `label` or `div` element.
+灵活的标签组件，可渲染为 `label` 或 `div` 元素。
 
-| Name | Type               | Default | Description                |
+| 名称 | 类型 | 默认值 | 说明 |
 | ---- | ------------------ | ------- | -------------------------- |
-| as   | `"label" \| "div"` | `"div"` | The HTML element to render |
+| as   | `"label" \| "div"` | `"div"` | 要渲染的 HTML 元素 |
