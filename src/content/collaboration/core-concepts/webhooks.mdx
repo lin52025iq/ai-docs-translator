@@ -1,36 +1,35 @@
 ---
-title: Webhooks in Collaboration
+title: 协作中的 Webhook
 tags:
   - type: team
 meta:
   title: Webhooks | Tiptap Collaboration Docs
-  description: Set up and understand webhook payloads, and manage settings to integrate advanced features. Learn more in the docs!
+  description: 配置并了解 Webhook 负载，并管理设置以集成高级功能。更多信息请参阅文档！
   category: Collaboration
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-You can define a URL and we will call it every time a document has changed. This is useful for getting the JSON representation of the Yjs document in your own application.
+你可以指定一个 URL，每当文档发生更改时，我们都会向该 URL 发起请求。这样，你就可以在自己的应用中获取 Yjs 文档的 JSON 表示。
 
-We call your webhook URL when the document is saved to our database. This operation is debounced by 2-10 seconds. So your application won't be flooded by us. Right now we're only exporting the fragment `default` of the Yjs document.
+当文档保存到我们的数据库时，我们会调用你的 Webhook URL。此操作会进行 2–10 秒的防抖处理，因此不会让你的应用收到大量请求。目前，我们只会导出 Yjs 文档的 `default` 片段。
 
-## Configure Webhooks
+## 配置 Webhook
 
-To configure webhooks for document and comments notifications:
+要配置文档和评论通知的 Webhook：
 
-1. Navigate to the [Collaboration settings](https://cloud.tiptap.dev/v2/configuration/document-server) in your account.
-2. Find the webhooks section and add your desired endpoint URL.
+1. 在你的账户中前往[协作设置](https://cloud.tiptap.dev/v2/configuration/document-server)。
+2. 找到 Webhook 部分，并添加你想要的端点 URL。
 
-After adding your URL, the webhook is immediately live. You'll start receiving notifications for the specified events without any delay.
+添加 URL 后，Webhook 会立即生效。你将马上开始接收指定事件的通知。
 
-<Callout title="Add Comments support to your webhook" variant="warning">
-  If you want to add webhook support for the comments feature and your Document server was created
-  before March 2024, please upgrade your webhook as described [below](#enable-the-comments-webhook).
+<Callout title="为 Webhook 添加评论支持" variant="warning">
+  如果你想为评论功能添加 Webhook 支持，且你的 Document server 是在 2024 年 3 月之前创建的，请按[下文](#enable-the-comments-webhook)所述升级 Webhook。
 </Callout>
 
-## Example payload
+## 示例负载
 
-All requests to your webhook URL will contain a header called `X-Hocuspocus-Signature-256` that signs the entire message with your secret. You can find it in the [settings](https://collab.tiptap.dev/apps/settings) of your document server.
+发往 Webhook URL 的所有请求都会包含名为 `X-Hocuspocus-Signature-256` 的请求头，该请求头使用你的密钥对整个消息进行签名。你可以在 Document server 的[设置](https://collab.tiptap.dev/apps/settings)中找到该密钥。
 
 ```json
 {
@@ -48,20 +47,15 @@ All requests to your webhook URL will contain a header called `X-Hocuspocus-Sign
 }
 ```
 
-## Content changes
+## 内容更改
 
-`document.saved` fires every time a document is written to our database, and not every write
-is a content change. The most common example: when you pass `user` to the
-`TiptapCollabProvider`, the provider records that client in the document on every connection,
-so merely opening a document produces a save — and therefore a webhook — even though nobody
-typed anything.
+每次文档写入我们的数据库时都会触发 `document.saved`，但并非每次写入都代表内容发生了更改。最常见的情况是：当你向 `TiptapCollabProvider` 传入 `user` 时，Provider 会在每次连接时将该客户端记录到文档中。因此，即使没有人输入任何内容，仅仅打开文档也会产生一次保存，进而触发 Webhook。
 
-There are two ways to tell the difference.
+有两种方法可以区分这两种情况。
 
-### The `changedFields` array
+### `changedFields` 数组
 
-Every `document.saved` and `content.changed` payload lists the document fields whose content
-differs from the last change we reported:
+每个 `document.saved` 和 `content.changed` 负载都会列出内容与上次报告的更改不同的文档字段：
 
 ```json
 {
@@ -69,82 +63,60 @@ differs from the last change we reported:
 }
 ```
 
-Opening a document without editing it gives you `"changedFields": []`, because the client
-record the provider writes is an internal field and is not counted as content.
+如果打开文档但不进行编辑，得到的会是 `"changedFields": []`，因为 Provider 写入的客户端记录属于内部字段，不计为内容。
 
-`changedFields` is sent on every webhook version.
+所有版本的 Webhook 都会发送 `changedFields`。
 
-<Callout title="An empty array is not a guarantee" variant="warning">
-  `changedFields` is empty when nothing changed, but it is *also* empty when the server could not
-  determine what changed — for instance when a document is written without ever having been loaded.
-  Treat an empty array as "no change reported", not as "nothing changed". If you need a signal you
-  can act on, use `content.changed` below: it is only ever sent when a content change was positively
-  identified.
+<Callout title="空数组不代表一定没有更改" variant="warning">
+  如果没有更改，`changedFields` 会是空数组；但如果服务器无法确定发生了什么更改，它也会是空数组，例如文档在从未加载过的情况下就被写入。应将空数组理解为“未报告更改”，而不是“没有更改”。如果你需要可据此采取行动的信号，请使用下文的 `content.changed`：只有在确认内容确实发生更改时，才会发送此事件。
 </Callout>
 
-### The `content.changed` event
+### `content.changed` 事件
 
-`content.changed` is a separate trigger, delivered to the same webhook URL with the same
-payload as `document.saved`, but **only** when the content actually changed. If your
-integration currently listens for `document.saved` and ignores the saves that carry no edit,
-you can subscribe to `content.changed` instead and drop that check.
+`content.changed` 是一种独立的触发事件，会发送到同一个 Webhook URL，负载与 `document.saved` 相同，但**只有在内容确实发生更改时**才会触发。如果你的集成目前监听 `document.saved`，并忽略没有编辑内容的保存事件，那么可以改为订阅 `content.changed`，无需再进行该检查。
 
-It also covers one case `document.saved` does not: if the server that observed an edit
-shuts down before its scheduled save runs, another server persists the content and reports
-it as `content.changed`. No `document.saved` is sent for that save.
+它还涵盖了 `document.saved` 不会涵盖的一种情况：如果发现编辑的服务器在计划的保存执行前关闭，另一台服务器会持久化该内容，并将其报告为 `content.changed`。这次保存不会发送 `document.saved`。
 
-Two requirements:
+需要满足两个条件：
 
-1. Set `webhook_version` to `2` or higher. On version 1 the payload carries no `trigger`
-   field, so you would not be able to tell the two events apart.
-2. Subscribe to it explicitly with `webhook_events` — see below.
+1. 将 `webhook_version` 设置为 `2` 或更高版本。版本 1 的负载不包含 `trigger` 字段，因此你无法区分这两种事件。
+2. 使用 `webhook_events` 显式订阅该事件，见下文。
 
-### Choosing which events you receive
+### 选择要接收的事件
 
-`webhook_events` is a comma-separated allowlist of the triggers you want delivered:
+`webhook_events` 是一个逗号分隔的允许列表，用于指定要接收的触发事件：
 
-| Value                            | Result                                                                                         |
-| -------------------------------- | ---------------------------------------------------------------------------------------------- |
-| unset                            | every event except `content.changed` — what your endpoint received before this setting existed |
-| `document.saved,content.changed` | exactly those two                                                                              |
-| `*`                              | every event, including ones added in future releases                                           |
-| `none`                           | nothing                                                                                        |
+| 值                                | 结果                                                                 |
+| --------------------------------- | -------------------------------------------------------------------- |
+| 未设置                            | 除 `content.changed` 外的所有事件——即此设置推出前端点接收的事件       |
+| `document.saved,content.changed`  | 仅这两个事件                                                         |
+| `*`                               | 所有事件，包括未来版本中新增的事件                                   |
+| `none`                            | 不接收任何事件                                                       |
 
-Unrecognised entries are ignored, and a value containing _only_ unrecognised entries
-delivers nothing rather than falling back to the default — so a typo fails loudly instead of
-quietly restoring full delivery.
+无法识别的条目会被忽略。如果某个值中只有无法识别的条目，则不会回退到默认值，而是什么都不发送。因此，拼写错误会明确报错，而不会悄悄恢复为完整发送。
 
-Available events: `document.saved`, `content.changed`, `user.connected`, `user.disconnected`,
-`thread.added`, `thread.updated`, `thread.resolved`, `thread.deleted`, `comment.added`,
-`comment.updated`, `comment.deleted`, `document.reverted`, `version.created`.
+可用事件：`document.saved`、`content.changed`、`user.connected`、`user.disconnected`、`thread.added`、`thread.updated`、`thread.resolved`、`thread.deleted`、`comment.added`、`comment.updated`、`comment.deleted`、`document.reverted`、`version.created`。
 
-### Choosing which fields count as content
+### 选择哪些字段计为内容
 
-By default every field that is not internal to Tiptap Collaboration counts as content —
-that is, every field whose name does not start with `__tiptapcollab__`. Set `content_fields`
-to change that:
+默认情况下，所有非 Tiptap Collaboration 内部字段都会计为内容，也就是说，字段名称不以 `__tiptapcollab__` 开头的字段都会计为内容。设置 `content_fields` 可更改此规则：
 
-| Value                     | Result                                                                |
-| ------------------------- | --------------------------------------------------------------------- |
-| unset                     | every field not prefixed `__tiptapcollab__`                           |
-| `default`                 | only the main editor field                                            |
-| `default,body`            | those two                                                             |
-| `body*`                   | one `*` per entry globs, so this matches every field with that prefix |
-| `__tiptapcollab__threads` | makes comment activity count as a content change                      |
-| `*`                       | every field, internal ones included                                   |
+| 值                        | 结果                                                                     |
+| ------------------------- | ------------------------------------------------------------------------ |
+| 未设置                     | 所有不带 `__tiptapcollab__` 前缀的字段                                   |
+| `default`                 | 仅主编辑器字段                                                           |
+| `default,body`            | 这两个字段                                                               |
+| `body*`                   | 每个条目中的 `*` 都是通配符，因此会匹配所有具有该前缀的字段             |
+| `__tiptapcollab__threads` | 使评论活动计为内容更改                                                   |
+| `*`                       | 所有字段，包括内部字段                                                   |
 
-A value **replaces** the default rule rather than narrowing it, which is what lets you opt an
-internal field such as `__tiptapcollab__threads` back in. Entries are case-sensitive, since
-these are Yjs field names.
+此值会**取代**默认规则，而不是缩小默认规则的范围，因此你可以重新纳入 `__tiptapcollab__threads` 这样的内部字段。条目区分大小写，因为它们是 Yjs 字段名称。
 
-Changing this setting takes effect on the next save. A field you have just added to the set
-has no recorded state yet, so it reports a change once and then settles. Removing a field is
-not itself a change — it means "stop watching this".
+更改此设置后，会从下一次保存开始生效。刚添加到集合中的字段尚无已记录状态，因此会报告一次更改，之后便恢复正常。移除字段本身不算更改，意思是“停止监视此字段”。
 
-## Conflict-safe updates from a webhook
+## 通过 Webhook 安全地处理冲突更新
 
-`document.saved` and `content.changed` payloads include a `checksums` object with one entry
-per field in `tiptapJson`:
+`document.saved` 和 `content.changed` 负载中包含一个 `checksums` 对象，其中为 `tiptapJson` 中的每个字段各提供一个条目：
 
 ```json
 {
@@ -153,54 +125,47 @@ per field in `tiptapJson`:
 }
 ```
 
-Each value is the checksum the [get document](/collaboration/documents/rest-api#get-a-document)
-call returns in its `x-<field>-checksum` header for the same document state. To update the
-document only if nobody edited it after the webhook was sent, pass the checksum to the
-[update call](/collaboration/documents/content-injection#conflict-safe-update-with-checksum)
-as `?checksum=`. If the document changed in the meantime, the update fails with `409 Checksum
-mismatch` and nothing is written. You don't need to fetch the document first.
+每个值都是对同一文档状态发起的[获取文档](/collaboration/documents/rest-api#get-a-document)调用在 `x-<field>-checksum` 请求头中返回的校验和。若要仅在 Webhook 发送后无人编辑文档的情况下更新文档，请将校验和作为 `?checksum=` 参数传入[更新调用](/collaboration/documents/content-injection#conflict-safe-update-with-checksum)。如果期间文档发生了更改，更新会失败，并返回 `409 Checksum mismatch`，且不会写入任何内容。你无需事先获取文档。
 
-Use the value from the payload rather than hashing `tiptapJson` yourself. Different JSON
-libraries serialize the same content differently, so your hash would not match ours.
+请使用负载中的值，而不要自行对 `tiptapJson` 进行哈希。不同的 JSON 库对相同内容的序列化方式可能不同，因此你计算出的哈希值可能与我们的不一致。
 
-## Retries
+## 重试
 
-Webhooks are not retried by default, but you can enable retries by setting `webhook_retries` to `1` (see [Configure Runtime](/collaboration/operations/configure)).
-The retry schedule is as follows:
+默认情况下，Webhook 不会重试，但你可以将 `webhook_retries` 设置为 `1` 来启用重试（参见[配置运行时](/collaboration/operations/configure)）。重试计划如下：
 
-- 1st retry: 5 seconds after the initial attempt
-- 2nd retry: 15 seconds after the last attempt
-- 3rd retry: 2 minutes after the last attempt
-- 4th retry: 10 minute after the last attempt
-- 5th retry: 30 minutes after the last attempt
-- 6th retry: 3 hours after the last attempt
+- 第 1 次重试：初次尝试后 5 秒
+- 第 2 次重试：上次尝试后 15 秒
+- 第 3 次重试：上次尝试后 2 分钟
+- 第 4 次重试：上次尝试后 10 分钟
+- 第 5 次重试：上次尝试后 30 分钟
+- 第 6 次重试：上次尝试后 3 小时
 
-All retries include a header `X-Hocuspocus-Retry` with the current retry count. The `time` property in the payload is the timestamp of the initial attempt.
+所有重试请求都会包含 `X-Hocuspocus-Retry` 请求头，其中包含当前重试次数。负载中的 `time` 属性是初次尝试的时间戳。
 
-## Enable the Comments webhook
+## 启用评论 Webhook
 
-The webhook that supports comments is automatically enabled for all users that have created their account after March, 2024.
+对于 2024 年 3 月之后创建账户的所有用户，支持评论的 Webhook 都会自动启用。
 
-If your account was created before March, 2024 and you're using an older version of the webhook system, you'll need to manually enable the new comments webhooks. Here's how:
+如果你的账户是在 2024 年 3 月之前创建的，并且你正在使用较旧版本的 Webhook 系统，则需要手动启用新的评论 Webhook。操作步骤如下：
 
-1. In case you’ve already implemented a previous Collaboration webhook, make sure to check the `type` and `trigger` fields when processing incoming webhooks.
-2. Navigate to the [Collaboration settings](https://cloud.tiptap.dev/v2/configuration/document-server) in your account.
-3. Locate the Webhook section and click on the "Update" button.
+1. 如果你已经实现了旧版 Collaboration Webhook，请确保在处理传入的 Webhook 时检查 `type` 和 `trigger` 字段。
+2. 在你的账户中前往[协作设置](https://cloud.tiptap.dev/v2/configuration/document-server)。
+3. 找到 Webhook 部分，然后点击“Update”按钮。
 
-This upgrade is necessary to accommodate the introduction of multiple new events being routed to the same webhook endpoint, distinguished by a new `type` and `trigger` field.
+此次升级是必要的，因为多个新事件会被路由到同一个 Webhook 端点，并通过新的 `type` 和 `trigger` 字段进行区分。
 
-If you do not wish to use the comments webhook, no upgrade is necessary.
+如果你不想使用评论 Webhook，则无需升级。
 
 ## Loader Webhook
 
-In order to initialize documents, you can use the `webhook_loader_url` setting (see [configure runtime](/collaboration/operations/configure)). This URL will be called if a new document is requested.
-The webhook will contain a header `Authorization` with your secret, and `document-name` with the name of the requested document.
+要初始化文档，可以使用 `webhook_loader_url` 设置（参见[配置运行时](/collaboration/operations/configure)）。请求新文档时，系统会调用此 URL。
+Webhook 请求会包含一个值为你的密钥的 `Authorization` 请求头，以及一个值为所请求文档名称的 `document-name` 请求头。
 
-If you return a yjs update (Y.encodeStateAsUpdate on your side), it will be applied to the document. You can also return Tiptap JSON, if you send `Content-Type: application/json` (from January 2026 / v3.67.0).
-If you return anything else, the document will be initialized with an empty document.
-Note that the loader webhook is called only once when the document is created.
+如果你返回 Yjs 更新（由你这边调用 `Y.encodeStateAsUpdate` 生成），该更新会应用到文档中。你也可以返回 Tiptap JSON，但需要发送 `Content-Type: application/json`（自 2026 年 1 月 / v3.67.0 起支持）。
+如果返回其他内容，文档将以空文档初始化。
+请注意，文档创建时只会调用一次 Loader Webhook。
 
-The request looks like this:
+请求如下所示：
 ```
 GET {{webhook_loader_url}}
 
@@ -208,12 +173,12 @@ Authorization: {{jwt secret}}
 document-name: {{requested document name}}
 ```
 
-## Awareness Webhooks
+## Awareness Webhook
 
-If you want to get notified whenever a user connects to or disconnects from a document, you can enable awareness webhooks [here](/collaboration/operations/configure#settings-overview).
-If you need the user parameter, please make sure to pass it to the TiptapCollabProvider, as mentioned [here](/collaboration/provider/integration#configure-the-collaboration-provider).
+如果你想在用户连接到文档或断开连接时收到通知，可以[在此处](/collaboration/operations/configure#settings-overview)启用 Awareness Webhook。
+如果你需要 `user` 参数，请确保按照[此处](/collaboration/provider/integration#configure-the-collaboration-provider)所述将其传递给 `TiptapCollabProvider`。
 
-The events look like this:
+事件如下所示：
 
 ```json
 {
@@ -227,9 +192,9 @@ The events look like this:
 }
 ```
 
-## Version Webhooks
+## 版本 Webhook
 
-When a new version is created, a `version.created` webhook is sent to your configured webhook URL. The payload includes the version's metadata, including the automatically generated `__tiptap` metadata.
+创建新版本时，系统会向你配置的 Webhook URL 发送 `version.created` Webhook。负载中包含该版本的元数据，包括自动生成的 `__tiptap` 元数据。
 
 ```json
 {
@@ -251,12 +216,12 @@ When a new version is created, a `version.created` webhook is sent to your confi
 }
 ```
 
-For more details on the `meta.__tiptap` fields, see [automatic version metadata](/collaboration/documents/snapshot#automatic-version-metadata).
+有关 `meta.__tiptap` 字段的详细信息，请参阅[自动版本元数据](/collaboration/documents/snapshot#automatic-version-metadata)。
 
-## Custom fields
+## 自定义字段
 
-If you use custom fields in Yjs, you can add them to the webhook by setting `webhook_include_fields=1` in the [runtime configuration](/collaboration/operations/configure).
-In order for us to identify the correct type of the yjs field, you need to configure them in the Tiptap Typemap.
+如果你在 Yjs 中使用自定义字段，可以在[运行时配置](/collaboration/operations/configure)中将 `webhook_include_fields=1`，以便在 Webhook 中包含这些字段。
+为了让我们识别 Yjs 字段的正确类型，你需要在 Tiptap Typemap 中配置这些字段。
 
 ```typescript
 // store any data in Yjs. See the official docs: https://docs.yjs.dev/api/shared-types
