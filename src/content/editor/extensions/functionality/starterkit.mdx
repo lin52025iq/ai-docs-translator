@@ -1,41 +1,41 @@
 ---
-title: StarterKit extension
+title: StarterKit 扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/starter-kit?label=version
     url: https://www.npmjs.com/package/@tiptap/starter-kit
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/starter-kit.svg
     url: https://npmcharts.com/compare/@tiptap/starter-kit?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  title: StarterKit extension | Tiptap Editor Docs
-  description: All the popular extensions in one extension with StarterKit. Perfect for getting started with Tiptap. More in the docs!
+  title: StarterKit 扩展 | Tiptap 编辑器文档
+  description: StarterKit 将所有热门扩展集于一身，是开始使用 Tiptap 的理想选择。更多内容请参阅文档！
   category: Editor
 extension:
   name: StarterKit
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/starter-kit
-  description: All the popular extensions in a one. It doesn’t get much better than this.
+  description: 一套囊括所有热门扩展的工具包。体验无可挑剔。
   type: extension
   icon: Package
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-The `StarterKit` is a collection of the most popular Tiptap extensions. If you’re just getting started, this extension is for you.
+`StarterKit` 集合了最受欢迎的 Tiptap 扩展。如果你刚开始使用 Tiptap，这个扩展正适合你。
 
 <CodeDemo path="/Examples/Default" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/starter-kit
 ```
 
-## Included extensions
+## 包含的扩展
 
-### Nodes
+### 节点
 
 - [`Blockquote`](/editor/extensions/nodes/blockquote)
 - [`BulletList`](/editor/extensions/nodes/bullet-list)
@@ -49,30 +49,30 @@ npm install @tiptap/starter-kit
 - [`Paragraph`](/editor/extensions/nodes/paragraph)
 - [`Text`](/editor/extensions/nodes/text)
 
-### Marks
+### 标记
 
 - [`Bold`](/editor/extensions/marks/bold)
 - [`Code`](/editor/extensions/marks/code)
 - [`Italic`](/editor/extensions/marks/italic)
-- [`Link`](/editor/extensions/marks/link) (New in v3)
+- [`Link`](/editor/extensions/marks/link)（v3 新增）
 - [`Strike`](/editor/extensions/marks/strike)
-- [`Underline`](/editor/extensions/marks/underline) (New in v3)
+- [`Underline`](/editor/extensions/marks/underline)（v3 新增）
 
-### Extensions
+### 扩展
 
 - [`Dropcursor`](/editor/extensions/functionality/dropcursor)
 - [`Gapcursor`](/editor/extensions/functionality/gapcursor)
 - [`Undo/Redo`](/editor/extensions/functionality/undo-redo)
-- [`ListKeymap`](/editor/extensions/functionality/listkeymap) (New in v3)
-- [`TrailingNode`](/editor/extensions/functionality/trailing-node) (New in v3)
+- [`ListKeymap`](/editor/extensions/functionality/listkeymap)（v3 新增）
+- [`TrailingNode`](/editor/extensions/functionality/trailing-node)（v3 新增）
 
-## Source code
+## 源代码
 
 [packages/starter-kit/](https://github.com/ueberdosis/tiptap/blob/main/packages/starter-kit/)
 
-## Using the StarterKit extension
+## 使用 StarterKit 扩展
 
-Pass `StarterKit` to the editor to load all included extension at once.
+将 `StarterKit` 传递给编辑器，即可一次性加载所有包含的扩展。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -84,7 +84,7 @@ const editor = new Editor({
 })
 ```
 
-You can configure the included extensions, or even disable a few of them, like shown below.
+你可以配置包含的扩展，也可以禁用其中一些，如下所示。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -106,7 +106,7 @@ const editor = new Editor({
 })
 ```
 
-Tiptap does not allow two extensions with the same `name` property. If a custom extension has the same name as one of the extensions included in StarterKit, disable it:
+Tiptap 不允许两个扩展具有相同的 `name` 属性。如果某个自定义扩展与 StarterKit 中的扩展同名，请禁用 StarterKit 中的对应扩展：
 
 ```js
 import { Editor, Mark } from '@tiptap/core'
