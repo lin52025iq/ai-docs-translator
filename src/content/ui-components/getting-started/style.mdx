@@ -1,25 +1,25 @@
 ---
-title: Style Tiptap UI Components
+title: 设置 Tiptap UI 组件样式
 meta:
-  title: UI Components | Tiptap
-  description: Style Tiptap UI Components to match your design system or application theme.
-  category: UI Components
+  title: UI 组件 | Tiptap
+  description: 设置 Tiptap UI 组件的样式，使其符合你的设计系统或应用主题。
+  category: UI 组件
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-### Add Styles
+### 添加样式
 
-Component styles are written in SCSS. The SCSS compiler (`sass` or `sass-embedded`) is installed automatically when you install a component or template using the Tiptap CLI. If you follow a manual setup, you'll need to install it manually.
+组件样式使用 SCSS 编写。使用 Tiptap CLI 安装组件或模板时，SCSS 编译器（`sass` 或 `sass-embedded`）会自动安装。如果你选择手动设置，则需要手动安装。
 
-<Callout title="Styles are added automatically" variant="info">
-  When you install your first Tiptap UI Component, the CLI automatically injects the required{' '}
-  <code>.scss</code> imports into your project’s global stylesheet. In most cases,{' '}
-  <strong>no manual setup is needed</strong>.
+<Callout title="样式会自动添加" variant="info">
+  安装第一个 Tiptap UI 组件时，CLI 会自动将所需的{' '}
+  <code>.scss</code> 导入语句注入项目的全局样式表。大多数情况下，{' '}
+  <strong>无需手动设置</strong>。
 </Callout>
 
-<Callout title="Bun projects automatically convert SCSS to CSS" variant="warning">
-If you’re using <strong>Bun</strong>, the CLI converts all <code>.scss</code> files into <code>.css</code> files at install time and updates the imports accordingly. Your project will use:
+<Callout title="Bun 项目会自动将 SCSS 转换为 CSS" variant="warning">
+如果你使用 <strong>Bun</strong>，CLI 会在安装时将所有 <code>.scss</code> 文件转换为 <code>.css</code> 文件，并相应地更新导入语句。项目将使用：
 
 ```css
 @import './styles/_variables.css';
@@ -28,29 +28,29 @@ If you’re using <strong>Bun</strong>, the CLI converts all <code>.scss</code> 
 
 </Callout>
 
-#### Where Styles Are Imported
+#### 样式导入位置
 
-The CLI injects these imports into your global stylesheet:
+CLI 会将以下导入语句注入全局样式表：
 
 ```css
 @import '<path-to-styles>/_variables.scss';
 @import '<path-to-styles>/_keyframe-animations.scss';
 ```
 
-If you use a custom entry stylesheet, make sure the imports exist there.
+如果你使用自定义入口样式表，请确保其中包含这些导入语句。
 
-#### Framework-Specific Setup
+#### 特定框架的设置
 
-Below are the locations where the CLI adds the global stylesheet imports for each framework.
+以下是 CLI 为各框架添加全局样式表导入语句的位置。
 
-#### Next.js (App Router)
+#### Next.js（App Router）
 
-Injected into one of:
+注入到以下文件之一：
 
 - `app/globals.css`
 - `src/app/globals.css`
 
-File: `app/globals.css` or `src/app/globals.css`
+文件：`app/globals.css` 或 `src/app/globals.css`
 
 ```css
 @import '<path-to-styles>/_variables.scss';
@@ -59,52 +59,52 @@ File: `app/globals.css` or `src/app/globals.css`
 
 #### Vite + React
 
-Injected into:
+注入到：
 
 - `src/index.css`
 
-File: `src/index.css`
+文件：`src/index.css`
 
 ```css
 @import '<path-to-styles>/_variables.scss';
 @import '<path-to-styles>/_keyframe-animations.scss';
 ```
 
-Paths may differ slightly depending on your project structure.
+具体路径可能会因项目结构而略有不同。
 
 #### Astro
 
-Injected into your global stylesheet, typically:
+注入到全局样式表，通常是：
 
-- `src/styles/global.css` or whatever file you’ve designated as a global stylesheet
+- `src/styles/global.css`，或你指定为全局样式表的文件
 
-File: `src/styles/global.css` (or your custom entry)
+文件：`src/styles/global.css`（或你的自定义入口文件）
 
 ```css
 @import '<path-to-styles>/_variables.scss';
 @import '<path-to-styles>/_keyframe-animations.scss';
 ```
 
-#### Laravel (Vite)
+#### Laravel（Vite）
 
-Injected into:
+注入到：
 
 - `resources/css/app.css`
 
-File: `resources/css/app.css`
+文件：`resources/css/app.css`
 
 ```css
 @import '<path-to-styles>/_variables.scss';
 @import '<path-to-styles>/_keyframe-animations.scss';
 ```
 
-#### React Router (Vanilla React)
+#### React Router（原生 React）
 
-Injected into:
+注入到：
 
 - `src/index.css`
 
-File: `src/index.css`
+文件：`src/index.css`
 
 ```css
 @import '<path-to-styles>/_variables.scss';
