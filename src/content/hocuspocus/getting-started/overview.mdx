@@ -1,62 +1,51 @@
 ---
 title: Hocuspocus
 meta:
-  title: Hocuspocus | Tiptap Collaboration Docs
+  title: Hocuspocus | Tiptap 协作文档
   description: Hocuspocus
   category: Hocuspocus
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@hocuspocus/server.svg?label=version
     url: https://www.npmjs.com/package/@hocuspocus/server
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@hocuspocus/server.svg
     url: https://npmcharts.com/compare/@hocuspocus/server?minimal=true
-    label: Downloads
+    label: 下载量
   - type: image
     src: https://img.shields.io/npm/l/@hocuspocus/server.svg
     url: https://www.npmjs.com/package/@hocuspocus/server
-    label: License
+    label: 许可证
   - type: image
     src: https://img.shields.io/badge/chat-on%20discord-7289da.svg?sanitize=true
     url: https://discord.gg/WtJ49jGshW
-    label: Chat
+    label: 聊天
 ---
 
-Hocuspocus is a suite of tools to bring collaboration to your application. It’s based
-on [Y.js](https://github.com/yjs/yjs) (by Kevin Jahns), which is amazing to sync and merge changes
-from clients in real-time. But you can also use it to build offline-first apps, and sync changes
-later. We’ll make sure to resolve conflicts and keep everything in sync, always.
+Hocuspocus 是一套帮助你在应用中实现协作功能的工具。它基于 [Y.js](https://github.com/yjs/yjs)（由 Kevin Jahns 开发），非常适合实时同步和合并客户端的更改。你也可以用它构建离线优先应用，稍后再同步更改。我们会确保解决冲突并始终保持数据同步。
 
-## What is Y.js?
+## 什么是 Y.js？
 
-Y.js merges changes from users without conflicts and in real-time. Compared to other
-implementations, it is super performant and “kicks the pants off” (Joseph Gentle, Ex-Google Wave
-Engineer, [source](https://josephg.com/blog/crdts-are-the-future/)).
+Y.js 能够实时、无冲突地合并用户所做的更改。与其他实现相比，它的性能极高，甚至可以说远胜于其他方案（Joseph Gentle，前 Google Wave 工程师，[来源](https://josephg.com/blog/crdts-are-the-future/)）。
 
-For such a Conflict-free Replication Data Type (CRDT), it doesn’t matter in which order changes are
-applied. It’s a little bit like Git, where it doesn’t matter when changes are committed. Also, every
-copy of the data is worth the same.
+对于这种无冲突复制数据类型（CRDT）来说，更改的应用顺序并不重要。这有点像 Git：更改在何时提交并不重要。此外，每一份数据副本的地位都相同。
 
-This enables you to build performant real-time applications, add collaboration to your existing app,
-sync awareness states and think offline-first.
+借助它，你可以构建高性能实时应用，为现有应用添加协作功能，同步感知状态，并采用离线优先的设计思路。
 
-## The Hocuspocus Server
+## Hocuspocus 服务器
 
-With Y.js, you can use whatever network protocol you like to send changes to other clients, but the
-most popular one is a WebSocket. The Hocuspocus Server is a WebSocket backend, which has everything
-to get started quickly, to integrate Y.js in your existing infrastructure and to scale to a million
-users.
+使用 Y.js 时，你可以选择任意网络协议，将更改发送给其他客户端；其中最常用的是 WebSocket。Hocuspocus 服务器是一个 WebSocket 后端，提供了快速上手、将 Y.js 集成到现有基础架构中，以及扩展至百万用户所需的一切。
 
-## Features
+## 功能
 
-- Merges changes without conflicts
-- Doesn’t care when changes come in
-- Can sync your whole application state
-- Collaborative text editing (with Tiptap, Slate, Quill, Monaco or ProseMirror)
-- Integrates into existing applications
-- Sends changes to Webhooks
-- Scales to millions of users with Redis
-- Written in TypeScript
-- Runs on Node.js, Bun, Deno, and Cloudflare Workers (since v4)
-- First-class React bindings via [`@hocuspocus/provider-react`](/hocuspocus/provider/react)
+- 无冲突地合并更改
+- 更改何时到达都无关紧要
+- 可以同步整个应用状态
+- 协作式文本编辑（支持 Tiptap、Slate、Quill、Monaco 或 ProseMirror）
+- 可集成到现有应用中
+- 将更改发送到 Webhook
+- 借助 Redis 扩展至数百万用户
+- 使用 TypeScript 编写
+- 可在 Node.js、Bun、Deno 和 Cloudflare Workers 上运行（v4 起支持）
+- 通过 [`@hocuspocus/provider-react`](/hocuspocus/provider/react) 提供一流的 React 绑定
