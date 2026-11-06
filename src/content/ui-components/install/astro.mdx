@@ -2,21 +2,21 @@
 title: Astro
 meta:
   title: Astro | Tiptap UI Components
-  description: Install and configure Tiptap UI Components in your Astro project.
-  category: UI Components
+  description: 在 Astro 项目中安装和配置 Tiptap UI Components。
+  category: UI 组件
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Use the command below to scaffold a new Astro project with TypeScript.
+使用以下命令创建一个带 TypeScript 的 Astro 项目。
 
 ```bash
 npx create-astro@latest astro-app  --template with-tailwindcss --install --add react --git
 ```
 
-## Edit tsconfig.json file
+## 编辑 tsconfig.json 文件
 
-Add the following code to the `tsconfig.json` file to resolve paths:
+将以下代码添加到 `tsconfig.json` 文件中，以配置路径解析：
 
 ```json
 {
@@ -30,15 +30,15 @@ Add the following code to the `tsconfig.json` file to resolve paths:
 }
 ```
 
-## Add Tiptap components
+## 添加 Tiptap 组件
 
-Install Tiptap UI components using the CLI. For example, to add the `HeadingButton` component:
+使用 CLI 安装 Tiptap UI 组件。例如，要添加 `HeadingButton` 组件，请运行：
 
 ```bash
 npx @tiptap/cli@latest add heading-button
 ```
 
-The command above will install the `HeadingButton` component and its dependencies. You can then import and use it in your **Tiptap** project:
+上述命令会安装 `HeadingButton` 组件及其依赖项。然后，你可以在 **Tiptap** 项目中导入并使用它：
 
 ```tsx
 import React from 'react'
@@ -60,27 +60,28 @@ export default function EditorPage() {
 }
 ```
 
-## Add Styles
+## 添加样式
 
-<Callout title="Styles are added automatically" variant="info">
-  When you install your first Tiptap UI Component, the CLI automatically adds the required{' '}
-  <code>.scss</code> imports to your main stylesheet. In most cases, **no manual setup is needed**.
+<Callout title="样式会自动添加" variant="info">
+  安装首个 Tiptap UI 组件时，CLI 会自动将所需的{' '}
+  <code>.scss</code> 导入语句添加到主样式表中。大多数情况下，**无需手动配置**。
 </Callout>
 
-Before proceeding, ensure your project includes a CSS reset.
-If you are using Tailwind CSS, you already have one.
+继续操作之前，请确保项目中包含 CSS 重置样式。
+如果你使用 Tailwind CSS，则项目中已包含 CSS 重置样式。
 
-#### Where styles are imported
+#### 样式的导入位置
 
-The CLI automatically injects style imports into your global stylesheet, such as:
+CLI 会自动将样式导入语句注入全局样式表，例如：
 
 - `styles/global.css`
 
-**File:** `styles/global.css` (depending on your project)
+**文件：** `styles/global.css`（具体取决于你的项目）
 
 ```css
 @import '<path-to-styles>/_variables.scss';
 @import '<path-to-styles>/_keyframe-animations.scss';
 ```
 
-Learn more about configuring styles in the [style setup guide](/ui-components/getting-started/style).
+如需了解样式配置的更多信息，请参阅[样式设置指南](/ui-components/getting-started/style)。
+
