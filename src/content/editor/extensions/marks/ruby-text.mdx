@@ -1,42 +1,42 @@
 ---
-title: Ruby Text extension
+title: Ruby Text 扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-ruby-text?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-ruby-text
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-ruby-text.svg
     url: https://npmcharts.com/compare/@tiptap/extension-ruby-text?minimal=true
-    label: Downloads
+    label: 下载量
 extension:
   name: Ruby Text
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-ruby-text
-  description: Add reading guides, including furigana, with HTML ruby annotations.
+  description: 使用 HTML ruby 注音标记添加阅读指南，包括振假名。
   type: mark
   icon: Languages
 meta:
-  title: Ruby Text extension | Tiptap Editor Docs
-  description: Add HTML ruby text annotations and furigana to your Tiptap Editor.
-  category: Editor
+  title: Ruby Text 扩展 | Tiptap 编辑器文档
+  description: 为 Tiptap 编辑器添加 HTML ruby 注音标记和振假名。
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-The Ruby Text extension adds support for [HTML ruby annotations](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ruby). Ruby annotations provide reading guides for CJK text, such as furigana for Japanese. It is not related to the Ruby programming language.
+Ruby Text 扩展支持 [HTML ruby 注音标记](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/ruby)。Ruby 注音标记可为中日韩文字提供阅读指南，例如日语中的振假名。它与 Ruby 编程语言无关。
 
 <CodeDemo path="/Marks/RubyText" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-ruby-text
 ```
 
-## Usage
+## 用法
 
-Add the extension to your editor, then apply an annotation to the selected text.
+将扩展添加到编辑器，然后为选中的文本添加注音。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -52,24 +52,24 @@ const editor = new Editor({
 editor.commands.setRubyText({ rt: 'とうきょう' })
 ```
 
-The extension renders the annotation as HTML ruby text.
+该扩展会将注音渲染为 HTML ruby 文本。
 
 ```html
 <ruby><rb>東京</rb><rt>とうきょう</rt></ruby>
 ```
 
-<Callout title="HTML parsing" variant="info">
-  The extension accepts ruby elements with an `rb` child or direct base text. It ignores `rp`
-  fallback elements. Ruby elements without an `rt` annotation are not parsed as Ruby Text marks.
+<Callout title="HTML 解析" variant="info">
+  该扩展支持包含 `rb` 子元素或直接包含基底文本的 ruby 元素。它会忽略 `rp`
+  回退元素。没有 `rt` 注音的 ruby 元素不会被解析为 Ruby Text 标记。
 </Callout>
 
-## Settings
+## 设置
 
 ### HTMLAttributes
 
-Custom HTML attributes to add to the rendered `<ruby>` element.
+添加到所渲染 `<ruby>` 元素的自定义 HTML 属性。
 
-Default: `{}`
+默认值：`{}`
 
 ```js
 RubyText.configure({
@@ -81,9 +81,9 @@ RubyText.configure({
 
 ### allowClickToEdit
 
-Controls whether clicking an annotation opens the inline editor.
+控制点击注音时是否打开内联编辑器。
 
-Default: `true`
+默认值：`true`
 
 ```js
 RubyText.configure({
@@ -91,13 +91,13 @@ RubyText.configure({
 })
 ```
 
-The inline editor is only available when the Tiptap editor is editable. When disabled, annotations are displayed without interactive editing.
+只有在 Tiptap 编辑器处于可编辑状态时，才能使用内联编辑器。禁用此选项后，注音只会显示，不支持交互式编辑。
 
 ### renderAnnotationEditor
 
-Renders a custom element for editing an annotation. The returned element replaces the default input inside the `<rt>` element.
+渲染用于编辑注音的自定义元素。返回的元素会替代 `<rt>` 元素中的默认输入框。
 
-The callback receives the current `annotation`, the Tiptap `editor`, and `submit` and `dismiss` functions. Call `submit(value)` to save an annotation or `dismiss()` to close the editor without changing it. Add `autofocus` to the returned element, or one of its descendants, to receive focus when editing opens.
+回调会接收当前的 `annotation`、Tiptap `editor`，以及 `submit` 和 `dismiss` 函数。调用 `submit(value)` 可保存注音；调用 `dismiss()` 可关闭编辑器而不做更改。为返回的元素或其某个后代添加 `autofocus`，即可在打开编辑器时使其获得焦点。
 
 ```js
 RubyText.configure({
@@ -121,13 +121,13 @@ RubyText.configure({
 })
 ```
 
-Without this option, the extension renders a text input. Press <kbd>Enter</kbd> to save the annotation, or <kbd>Escape</kbd> or blur the input to dismiss it. Enter and Escape do not close the input while an IME composition is active.
+未设置此选项时，扩展会渲染一个文本输入框。按 <kbd>Enter</kbd> 保存注音；按 <kbd>Escape</kbd> 或让输入框失去焦点则会取消编辑。输入法组合输入期间，按 Enter 和 Escape 不会关闭输入框。
 
-## Commands
+## 命令
 
 ### setRubyText()
 
-Adds a ruby annotation to the selected text.
+为选中的文本添加 ruby 注音。
 
 ```js
 editor.commands.setRubyText({ rt: 'かんじ' })
@@ -135,7 +135,7 @@ editor.commands.setRubyText({ rt: 'かんじ' })
 
 ### toggleRubyText()
 
-Adds or removes a ruby annotation on the selected text.
+为选中的文本添加或移除 ruby 注音。
 
 ```js
 editor.commands.toggleRubyText({ rt: 'かんじ' })
@@ -143,12 +143,12 @@ editor.commands.toggleRubyText({ rt: 'かんじ' })
 
 ### unsetRubyText()
 
-Removes the ruby annotation from the selected text.
+移除选中文本的 ruby 注音。
 
 ```js
 editor.commands.unsetRubyText()
 ```
 
-## Source code
+## 源代码
 
 [packages/extension-ruby-text/](https://github.com/ueberdosis/tiptap/tree/main/packages/extension-ruby-text/)
