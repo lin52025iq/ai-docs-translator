@@ -1,154 +1,154 @@
 ---
-title: Utilities
+title: 工具
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Utilities | Tiptap Slots Docs
-  description: Slot readers, view subscriptions and filling policies.
-  category: Composable Docs
+  title: 工具 | Tiptap 插槽文档
+  description: 插槽读取器、视图订阅和填充策略。
+  category: 组合式文档
 ---
 
-Import these functions from `@tiptap-pro/extension-slot`. Each accepts one options object; `createSlotFillingPolicy` also accepts no arguments.
+从 `@tiptap-pro/extension-slot` 导入这些函数。每个函数都接受一个选项对象；`createSlotFillingPolicy` 也可以不传参数。
 
-`Editor` comes from `@tiptap/core`; `Schema` comes from `@tiptap/pm/model`. See [shared types](/composable-docs/slots/api-reference/types).
+`Editor` 来自 `@tiptap/core`；`Schema` 来自 `@tiptap/pm/model`。请参阅[共享类型](/composable-docs/slots/api-reference/types)。
 
 ## `createSlotSnapshot`
 
-Captures an immutable document and Slot index without an editor.
+无需编辑器即可捕获不可变文档及其插槽索引。
 
-### Parameters
+### 参数
 
-- `document` (`SlotDocument`): Complete document.
-- `schema?` (`Schema`): Schema to check JSON against. For a ProseMirror Node, its schema is used automatically.
+- `document`（`SlotDocument`）：完整文档。
+- `schema?`（`Schema`）：用于检查 JSON 的 Schema。对于 ProseMirror Node，会自动使用其 Schema。
 
-### Returns (`SlotSnapshot`)
+### 返回值（`SlotSnapshot`）
 
-Document, entries and an opaque snapshot ID. Both revisions are `null`. Throws `SlotInputError` for malformed input.
+文档、条目和不透明的快照 ID。两个版本号均为 `null`。输入格式错误时会抛出 `SlotInputError`。
 
-Without a schema, JSON checks cover structure and Slot data; they do not certify compatibility with an editor's schema.
+如果未提供 Schema，JSON 检查仅涵盖结构和插槽数据；无法据此确认其与编辑器 Schema 兼容。
 
 ## `getSlots`
 
-Reads every Slot in document order, including nested Slots.
+按文档顺序读取所有插槽，包括嵌套插槽。
 
-### Parameters
+### 参数
 
-Pass `{ document, schema? }` or `{ snapshot }`.
+传入 `{ document, schema? }` 或 `{ snapshot }`。
 
-- `document` (`SlotDocument`): Complete document.
-- `schema?` (`Schema`): Optional schema for JSON checks; implicit for a ProseMirror Node.
-- `snapshot` (`SlotSnapshot`): Existing snapshot to read instead of creating a new one.
+- `document`（`SlotDocument`）：完整文档。
+- `schema?`（`Schema`）：用于检查 JSON 的可选 Schema；对于 ProseMirror Node，会自动使用其 Schema。
+- `snapshot`（`SlotSnapshot`）：要读取的现有快照，而不是新建快照。
 
-### Returns (`SlotEntry[]`)
+### 返回值（`SlotEntry[]`）
 
-Read-only entries. Throws `SlotInputError` for malformed input.
+只读条目。输入格式错误时会抛出 `SlotInputError`。
 
 ## `getSlot`
 
-Reads one Slot by ID.
+按 ID 读取一个插槽。
 
-### Parameters
+### 参数
 
-Pass `{ document, schema?, id }` or `{ snapshot, id }`.
+传入 `{ document, schema?, id }` 或 `{ snapshot, id }`。
 
-- `document` (`SlotDocument`): Complete document.
-- `id` (`string`): Exact Slot ID.
-- `schema?` (`Schema`): Optional schema for JSON checks; implicit for a ProseMirror Node.
-- `snapshot` (`SlotSnapshot`): Existing snapshot to search instead of creating a new one.
+- `document`（`SlotDocument`）：完整文档。
+- `id`（`string`）：完全匹配的插槽 ID。
+- `schema?`（`Schema`）：用于检查 JSON 的可选 Schema；对于 ProseMirror Node，会自动使用其 Schema。
+- `snapshot`（`SlotSnapshot`）：要搜索的现有快照，而不是新建快照。
 
-### Returns (`SlotEntry | null`)
+### 返回值（`SlotEntry | null`）
 
-Matching entry, or `null` if absent. Throws `SlotInputError` for duplicate matches or malformed input.
+匹配的条目；如果不存在，则返回 `null`。存在重复匹配或输入格式错误时会抛出 `SlotInputError`。
 
 ## `subscribeSlotViewUpdates`
 
-Subscribes application UI or NodeViews to editor state changes. Requires `Slot`.
+订阅编辑器状态变更，以便应用 UI 或 NodeView 响应更新。需要 `Slot`。
 
-### Parameters
+### 参数
 
-- `editor` (`Editor`): Editor to observe.
-- `onUpdate` (`() => void`): Reads refreshed public storage. Called immediately, then on document, selection, validation and transaction updates.
+- `editor`（`Editor`）：要观察的编辑器。
+- `onUpdate`（`() => void`）：读取刷新的公共存储。该函数会立即调用，之后在文档、选区、验证和事务更新时调用。
 
-### Returns (`() => void`)
+### 返回值（`() => void`）
 
-Idempotent unsubscribe function. Call it when disposing the view. The subscription does not edit content or start validation.
+可重复调用且安全的取消订阅函数。销毁视图时调用。此订阅不会编辑内容或启动验证。
 
 ## `createSlotFillingPolicy`
 
-Creates a policy allowing users to fill existing Slots while protecting the surrounding document and field definitions. Requires [Content Protection](/composable-docs/content-protection/getting-started/overview) to enforce it.
+创建一项策略，允许用户填充现有插槽，同时保护周围的文档和字段定义。要强制执行该策略，需要使用[内容保护](/composable-docs/content-protection/getting-started/overview)。
 
 ```ts
 const policy = createSlotFillingPolicy({ editableSlotIds: ['summary', 'decision'] })
 ```
 
-### Parameters (`SlotFillingPolicyOptions`)
+### 参数（`SlotFillingPolicyOptions`）
 
-- `editableSlotIds?` (`string[]`): Fillable IDs and their descendant contents. Omitted: every Slot, including future fields. `[]`: no editable fields.
-- `documentType?` (`string`): Root Node name. Default: `'doc'`.
-- `ruleIdPrefix?` (`string`): Generated rule-ID prefix. Default: `'slotFilling'`.
+- `editableSlotIds?`（`string[]`）：可填充的 ID 及其后代内容。省略时：所有插槽均可填充，包括未来新增的字段。`[]`：没有可编辑字段。
+- `documentType?`（`string`）：根 Node 的名称。默认值：`'doc'`。
+- `ruleIdPrefix?`（`string`）：生成的规则 ID 前缀。默认值：`'slotFilling'`。
 
-### Returns (`SlotFillingPolicy`)
+### 返回值（`SlotFillingPolicy`）
 
-Ordinary policy JSON, assignable to `ContentProtectionPolicy`. Does not inspect or change a document. Invalid arguments throw `SlotInputError`; duplicate IDs are deduplicated and sorted. Unknown IDs match nothing.
+普通策略 JSON，可赋值给 `ContentProtectionPolicy`。不会检查或更改文档。参数无效时会抛出 `SlotInputError`；重复 ID 会去重并排序。未知 ID 不会匹配任何内容。
 
-### Generated rules
+### 生成的规则
 
-IDs use `<ruleIdPrefix>.<suffix>`.
+ID 使用 `<ruleIdPrefix>.<suffix>` 格式。
 
-| Suffix               | Priority | Effect                                                       |
-| -------------------- | -------- | ------------------------------------------------------------ |
-| `documentContent`    | `0`      | Deny edits to root content.                                  |
-| `documentAttributes` | `0`      | Deny edits to all root attributes.                           |
-| `fillableContent`    | `10`     | Allow content edits in selected Slots and their descendants. |
-| `slotStructure`      | `20`     | Deny insertion, removal, retyping or movement of Slot Nodes. |
-| `slotAttributes`     | `20`     | Deny changes to all Slot attributes.                         |
-| `fillableValue`      | `30`     | Allow only the value attribute on selected value Slots.      |
+| 后缀                 | 优先级 | 效果                                           |
+| -------------------- | ------ | ---------------------------------------------- |
+| `documentContent`    | `0`    | 禁止编辑根内容。                               |
+| `documentAttributes` | `0`    | 禁止编辑所有根属性。                           |
+| `fillableContent`    | `10`   | 允许编辑所选插槽及其后代中的内容。             |
+| `slotStructure`      | `20`   | 禁止插入、移除、重新设置类型或移动插槽节点。   |
+| `slotAttributes`     | `20`   | 禁止更改所有插槽属性。                         |
+| `fillableValue`      | `30`   | 仅允许更改所选值插槽的 value 属性。            |
 
-### Behavior
+### 行为
 
-- Allowing a parent also permits content edits inside unlisted nested Slots. Add a content deny above priority `10` to restrict a descendant. A listed child can be edited inside an unlisted parent.
-- Clearing or replacing a parent is refused if it would remove nested Slots.
-- Ordinary text and formatting remain editable within allowed Slots. Slot validation remains non-blocking.
-- No read rules are generated. Existing read restrictions still apply.
-- IDs select every matching occurrence. Validate imported identity issues before assigning fields.
-- Replace assignments with `setContentProtectionPolicy({ policy })`; mutating an installed object has no effect.
-- Higher-priority application rules can override these rules. Use unique prefixes when composing policies.
+- 允许编辑父插槽，也会允许编辑其中未列出的嵌套插槽内容。若要限制某个后代，可添加优先级高于 `10` 的内容拒绝规则。即使父插槽未列出，已列出的子插槽仍可编辑。
+- 如果清空或替换父插槽会移除嵌套插槽，则操作会被拒绝。
+- 在允许编辑的插槽中，普通文本和格式仍可编辑。插槽验证不会阻止编辑。
+- 不会生成读取规则。现有读取限制仍然有效。
+- ID 会匹配所有符合条件的实例。分配字段之前，请先验证导入数据中的身份问题。
+- 使用 `setContentProtectionPolicy({ policy })` 替换策略赋值；修改已安装的对象不会生效。
+- 更高优先级的应用规则可以覆盖这些规则。组合策略时，请使用唯一前缀。
 
 ## `SlotFillingPolicy`
 
-### Properties
+### 属性
 
-- `version` (`1`): Policy format version.
-- `rules` (`SlotFillingRule[]`): Six generated rules, including `fillableValue`.
+- `version`（`1`）：策略格式版本。
+- `rules`（`SlotFillingRule[]`）：六条生成的规则，包括 `fillableValue`。
 
 ## `SlotFillingRule`
 
-### Properties
+### 属性
 
-- `id` (`string`): Generated unique rule ID.
-- `priority` (`number`): Rule precedence.
-- `selector` (`{ target: 'nodeType'; node: SlotFillingNodeMatch } | { target: 'nodeContent'; node: SlotFillingNodeMatch } | { target: 'attribute'; node: SlotFillingNodeMatch; names?: string[] }`): Target and matching criteria.
-- `permissions` (`{ edit: boolean }`): Whether edits are allowed.
-- `reason?` (`string`): Optional diagnostic explanation.
+- `id`（`string`）：生成的唯一规则 ID。
+- `priority`（`number`）：规则优先级。
+- `selector`（`{ target: 'nodeType'; node: SlotFillingNodeMatch } | { target: 'nodeContent'; node: SlotFillingNodeMatch } | { target: 'attribute'; node: SlotFillingNodeMatch; names?: string[] }`）：目标和匹配条件。
+- `permissions`（`{ edit: boolean }`）：是否允许编辑。
+- `reason?`（`string`）：可选的诊断说明。
 
-### Selector properties
+### 选择器属性
 
-- `target` (`'nodeType' | 'nodeContent' | 'attribute'`): Protected operation category.
-- `node` (`SlotFillingNodeMatch`): Nodes to match.
-- `names?` (`string[]`): Attribute names for `attribute` rules. Omitted: all attributes.
+- `target`（`'nodeType' | 'nodeContent' | 'attribute'`）：受保护的操作类别。
+- `node`（`SlotFillingNodeMatch`）：要匹配的节点。
+- `names?`（`string[]`）：`attribute` 规则的属性名称。省略时：匹配所有属性。
 
 ## `SlotFillingNodeMatch`
 
-### Properties
+### 属性
 
-- `types` (`string[]`): Exact Node type names.
-- `attributes?` (`{ name: 'id'; operator: 'in'; values: string[] }[]`): ID filters. Omitted: match every Node of the selected types.
+- `types`（`string[]`）：精确匹配的 Node 类型名称。
+- `attributes?`（`{ name: 'id'; operator: 'in'; values: string[] }[]`）：ID 筛选条件。省略时：匹配所选类型的所有 Node。
 
-### Attribute filter properties
+### 属性筛选条件
 
-- `name` (`'id'`): Slot identity attribute.
-- `operator` (`'in'`): Membership comparison.
-- `values` (`string[]`): Accepted exact, case-sensitive IDs.
+- `name`（`'id'`）：插槽身份属性。
+- `operator`（`'in'`）：成员关系比较。
+- `values`（`string[]`）：可接受的 ID，必须完全匹配且区分大小写。
 
-See the [policy language](/composable-docs/content-protection/api-reference/policy) for precedence and selector behavior. Validation functions are documented separately under [Validation](/composable-docs/slots/api-reference/validation).
+有关优先级和选择器行为，请参阅[策略语言](/composable-docs/content-protection/api-reference/policy)。验证函数另见[验证](/composable-docs/slots/api-reference/validation)。
