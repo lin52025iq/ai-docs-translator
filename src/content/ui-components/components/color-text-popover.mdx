@@ -1,12 +1,12 @@
 ---
-title: Color Text Popover
+title: 文字颜色弹出框
 meta:
-  title: Color Text Popover | Tiptap UI Components
-  description: A comprehensive color picker popover for both text and highlight colors in Tiptap editors with recent colors, keyboard navigation, and visual color feedback.
-  category: UI Components
+  title: 文字颜色弹出框 | Tiptap UI 组件
+  description: 一款功能全面的颜色选择弹出框，可在 Tiptap 编辑器中设置文字颜色和高亮颜色，并支持最近使用的颜色、键盘导航和直观的颜色反馈。
+  category: UI 组件
 component:
-  name: Color Text Popover
-  description: A comprehensive color picker popover for both text and highlight colors in Tiptap editors with recent colors, keyboard navigation, and visual color feedback.
+  name: 文字颜色弹出框
+  description: 一款功能全面的颜色选择弹出框，可在 Tiptap 编辑器中设置文字颜色和高亮颜色，并支持最近使用的颜色、键盘导航和直观的颜色反馈。
   type: component
   isFree: false
   isCloud: false
@@ -19,25 +19,25 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A fully accessible text color button for Tiptap editors. Apply foreground colors to selected text with keyboard shortcut support and flexible customization options.
+这是一款完全无障碍的 Tiptap 编辑器文字颜色按钮。可为选中的文字应用前景色，并支持键盘快捷键和灵活的自定义选项。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-ui/color-text-popover" />
 
-## Installation
+## 安装
 
-Add the component via the Tiptap CLI:
+使用 Tiptap CLI 添加此组件：
 
 ```bash
 npx @tiptap/cli@latest add color-text-popover
 ```
 
-## Components
+## 组件
 
 ### `<ColorTextPopover />`
 
-A prebuilt React component that provides text and highlight color selection in a popover interface.
+预构建的 React 组件，可通过弹出框界面选择文字颜色和高亮颜色。
 
-#### Usage
+#### 用法
 
 ```tsx
 export default function MyEditor() {
@@ -53,21 +53,21 @@ export default function MyEditor() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type                 | Default     | Description                                           |
+| 名称                  | 类型                 | 默认值      | 描述                                           |
 | --------------------- | -------------------- | ----------- | ----------------------------------------------------- |
-| `editor`              | `Editor \| null`     | `undefined` | The Tiptap editor instance                            |
-| `hideWhenUnavailable` | `boolean`            | `false`     | Hides the popover when color styling is not available |
-| `onColorChanged`      | `ColorChangeHandler` | `undefined` | Callback fired when a color is applied                |
+| `editor`              | `Editor \| null`     | `undefined` | Tiptap 编辑器实例                            |
+| `hideWhenUnavailable` | `boolean`            | `false`     | 颜色样式不可用时隐藏弹出框 |
+| `onColorChanged`      | `ColorChangeHandler` | `undefined` | 应用颜色时触发的回调                |
 
 ## Hooks
 
 ### `useColorTextPopover()`
 
-A custom hook to build your own color popover with full control over behavior and rendering.
+自定义 Hook，可完全控制行为和渲染方式，以构建自己的颜色弹出框。
 
-#### Usage
+#### 用法
 
 ```tsx
 function MyColorPopover() {
@@ -109,31 +109,31 @@ function MyColorPopover() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type                 | Default     | Description                                |
+| 名称                  | 类型                 | 默认值      | 描述                                |
 | --------------------- | -------------------- | ----------- | ------------------------------------------ |
-| `editor`              | `Editor \| null`     | `undefined` | The Tiptap editor instance                 |
-| `hideWhenUnavailable` | `boolean`            | `false`     | Hide when color features are not available |
-| `onColorChanged`      | `ColorChangeHandler` | `undefined` | Callback for color changes                 |
+| `editor`              | `Editor \| null`     | `undefined` | Tiptap 编辑器实例                 |
+| `hideWhenUnavailable` | `boolean`            | `false`     | 颜色功能不可用时隐藏弹出框 |
+| `onColorChanged`      | `ColorChangeHandler` | `undefined` | 颜色更改时触发的回调                 |
 
-#### Return Values
+#### 返回值
 
-| Name                 | Type                 | Description                                    |
+| 名称                 | 类型                 | 描述                                    |
 | -------------------- | -------------------- | ---------------------------------------------- |
-| `isVisible`          | `boolean`            | Whether the popover should be rendered         |
-| `canToggle`          | `boolean`            | If color changes are currently allowed         |
-| `activeTextStyle`    | `object`             | Current text style attributes (includes color) |
-| `activeHighlight`    | `object`             | Current highlight attributes (includes color)  |
-| `handleColorChanged` | `ColorChangeHandler` | Function to handle color selection             |
-| `label`              | `string`             | Accessible label text for the trigger button   |
-| `Icon`               | `React.FC`           | Icon component for the color popover button    |
+| `isVisible`          | `boolean`            | 是否应渲染弹出框         |
+| `canToggle`          | `boolean`            | 当前是否允许更改颜色         |
+| `activeTextStyle`    | `object`             | 当前文字样式属性（包括颜色） |
+| `activeHighlight`    | `object`             | 当前高亮属性（包括颜色）  |
+| `handleColorChanged` | `ColorChangeHandler` | 处理颜色选择的函数             |
+| `label`              | `string`             | 触发按钮的无障碍标签文本   |
+| `Icon`               | `React.FC`           | 颜色弹出框按钮的图标组件    |
 
-## Color Management
+## 颜色管理
 
-### Recent Colors
+### 最近使用的颜色
 
-The popover automatically tracks and displays recently used colors using the `useRecentColors` hook:
+弹出框使用 `useRecentColors` Hook 自动跟踪并显示最近使用的颜色：
 
 ```tsx
 const { recentColors, addRecentColor, isInitialized } = useRecentColors(3)
@@ -141,11 +141,11 @@ const { recentColors, addRecentColor, isInitialized } = useRecentColors(3)
 // Recent colors are automatically stored in localStorage
 ```
 
-## Utility Functions
+## 工具函数
 
 ### `getColorByValue(value, colorArray)`
 
-Finds a color object by its value from a color array.
+根据颜色值从颜色数组中查找对应的颜色对象。
 
 ```tsx
 import { getColorByValue } from '@/components/tiptap-ui/color-text-popover'
@@ -157,7 +157,7 @@ const blueColor = getColorByValue('var(--tt-color-text-blue)', TEXT_COLORS)
 
 ### `shouldShowColorTextPopover(params)`
 
-Determines if the color popover should be visible based on editor state.
+根据编辑器状态判断是否应显示颜色弹出框。
 
 ```tsx
 import { shouldShowColorTextPopover } from '@/components/tiptap-ui/color-text-popover'
@@ -168,23 +168,23 @@ const shouldShow = shouldShowColorTextPopover({
 })
 ```
 
-## Requirements
+## 要求
 
-### Dependencies
+### 依赖项
 
-- `@tiptap/react` - Core Tiptap React integration
-- `@tiptap/extension-text-style` - Text style extension for color support
-- `@tiptap/extension-highlight` - Highlight extension for text highlighting
+- `@tiptap/react` - Tiptap React 核心集成
+- `@tiptap/extension-text-style` - 提供颜色支持的文字样式扩展
+- `@tiptap/extension-highlight` - 用于文字高亮的高亮扩展
 
-### Referenced Components
+### 引用的组件
 
-- `use-tiptap-editor` (hook)
-- `use-menu-navigation` (hook)
-- `button` (primitive)
-- `popover` (primitive)
-- `card` (primitive)
-- `chevron-down-icon` (icon)
-- `text-color-small-icon` (icon)
-- `color-text-button` (component)
-- `color-highlight-button` (component)
-- `tiptap-utils` (lib)
+- `use-tiptap-editor`（Hook）
+- `use-menu-navigation`（Hook）
+- `button`（基础组件）
+- `popover`（基础组件）
+- `card`（基础组件）
+- `chevron-down-icon`（图标）
+- `text-color-small-icon`（图标）
+- `color-text-button`（组件）
+- `color-highlight-button`（组件）
+- `tiptap-utils`（库）
