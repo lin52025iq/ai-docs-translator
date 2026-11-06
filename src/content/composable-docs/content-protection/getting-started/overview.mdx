@@ -1,34 +1,33 @@
 ---
-title: Content Protection
+title: 内容保护
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Content Protection | Tiptap Docs
-  description: Control which parts of a Tiptap document users can edit or read.
-  category: Composable Docs
+  title: 内容保护 | Tiptap 文档
+  description: 控制用户可以编辑或读取 Tiptap 文档中的哪些部分。
+  category: 可组合文档
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Content Protection controls which parts of a document users can edit or read. Define permissions for Nodes, Marks, attributes and content with a policy.
+内容保护用于控制用户可以编辑或读取文档中的哪些部分。通过策略为节点、标记、属性和内容定义权限。
 
-<Callout title="Client-side only" variant="info">
-  Content protection is applied only client-side. For server-side content protection, [contact
-  us](https://tiptap.dev/contact-sales?form=pilot-program).
+<Callout title="仅限客户端" variant="info">
+  内容保护仅在客户端生效。如需服务端内容保护，请[联系我们](https://tiptap.dev/contact-sales?form=pilot-program)。
 </Callout>
 
-## Install
+## 安装
 
-First, [contact our team](https://tiptap.dev/contact-sales?form=pilot-program) for access to the Content Protection pilot program.
+首先，[联系我们的团队](https://tiptap.dev/contact-sales?form=pilot-program)，申请加入内容保护试点计划。
 
-After gaining access, follow the [private registry setup guide](/guides/pro-extensions), then install the package:
+获得访问权限后，请按照[私有注册表设置指南](/guides/pro-extensions)操作，然后安装此软件包：
 
 ```bash
 npm install @tiptap/core @tiptap/starter-kit @tiptap/y-tiptap yjs @tiptap-pro/extension-content-protection
 ```
 
-Add the extension to your editor.
+将扩展添加到编辑器中。
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -53,19 +52,19 @@ const editor = new Editor({
 })
 ```
 
-Provide a [policy](/composable-docs/content-protection/api-reference/policy) that defines what can be edited.
+提供一个用于定义可编辑内容的[策略](/composable-docs/content-protection/api-reference/policy)。
 
-You can also update the content protection rules while the editor is running:
+你也可以在编辑器运行时更新内容保护规则：
 
 ```ts
 editor.commands.setContentProtectionPolicy({ policy })
 ```
 
-See the [API reference](/composable-docs/content-protection/api-reference/extension) and [policy language](/composable-docs/content-protection/api-reference/policy).
+请参阅 [API 参考](/composable-docs/content-protection/api-reference/extension)和[策略语言](/composable-docs/content-protection/api-reference/policy)。
 
-## Collaboration
+## 协作
 
-Content Protection supports [Tiptap Collaboration](/editor/extensions/functionality/collaboration). Each collaborator can have a different local policy. Local edits are checked against that policy; updates from the collaboration binding are accepted so all editors stay synchronized with the shared document. This includes initial synchronization and collaborative undo/redo, even if the current local policy would reject the corresponding edit. Read permissions still control what each collaborator sees and copies.
+内容保护支持 [Tiptap 协作](/editor/extensions/functionality/collaboration)。每位协作者都可以使用不同的本地策略。本地编辑会根据该策略进行检查；协作绑定传入的更新则会被接受，以确保所有编辑器与共享文档保持同步。这包括初始同步和协作撤销/重做，即使当前本地策略会拒绝相应的编辑也不例外。读取权限仍会控制每位协作者可以查看和复制的内容。
 
 ```ts
 import Collaboration from '@tiptap/extension-collaboration'
@@ -79,4 +78,4 @@ const editor = new Editor({
 })
 ```
 
-Here, `ydoc` is the shared Y.Doc connected to your collaboration provider, and `localPolicy` is the policy your application assigns to this user. Install `@tiptap/extension-collaboration` to use this setup. Policies remain local and are not stored in the shared document. These client-side permissions do not authorize incoming collaboration updates; enforce access to the shared document in your application and collaboration service.
+这里，`ydoc` 是连接到协作服务提供程序的共享 Y.Doc，`localPolicy` 是你的应用为该用户指定的策略。要使用此配置，请安装 `@tiptap/extension-collaboration`。策略仅保存在本地，不会存储在共享文档中。这些客户端权限不会授权传入的协作更新；请在你的应用和协作服务中强制实施对共享文档的访问控制。
