@@ -3,56 +3,56 @@ import { SidebarConfig } from '@/types'
 export const sidebarConfig: SidebarConfig = {
   id: 'ai',
   rootHref: '/ai/ai-toolkit/overview',
-  title: 'AI Toolkit',
+  title: 'AI 工具包',
   items: [
     {
       href: '/ai/ai-toolkit/getting-started/overview',
-      title: 'AI Toolkit',
+      title: 'AI 工具包',
       type: 'group',
-      tags: ['Add-on'],
+      tags: ['附加组件'],
       children: [
         {
-          title: 'Overview',
+          title: '概览',
           releaseTag: 'beta',
           href: '/ai/ai-toolkit/overview',
         },
         {
-          title: 'Install',
+          title: '安装',
           href: '/ai/ai-toolkit/install',
         },
         {
-          title: 'Agents',
+          title: '智能体',
           href: '/ai/ai-toolkit/agents',
           children: [
             {
-              title: 'AI agent chatbot',
+              title: 'AI 智能体聊天机器人',
               href: '/ai/ai-toolkit/agents/ai-agent-chatbot',
             },
             {
-              title: 'With Tracked Changes',
+              title: '含修订跟踪',
               href: '/ai/ai-toolkit/agents/tracked-changes',
             },
             {
-              title: 'Comments',
+              title: '评论',
               href: '/ai/ai-toolkit/agents/comments',
             },
             {
-              title: 'With Whiteboard',
+              title: '含白板',
               href: '/ai/ai-toolkit/agents/whiteboard',
               releaseTag: 'alpha',
             },
             {
-              title: 'Selection awareness',
+              title: '选区感知',
               href: '/ai/ai-toolkit/agents/selection-awareness',
             },
             {
-              title: 'Streaming',
+              title: '流式传输',
               href: '/ai/ai-toolkit/agents/streaming',
             },
           ],
         },
         {
-          title: 'API reference',
+          title: 'API 参考',
           href: '/ai/ai-toolkit/api-reference',
           children: [
             {
@@ -65,25 +65,25 @@ export const sidebarConfig: SidebarConfig = {
               releaseTag: 'alpha',
             },
             {
-              title: 'Editor context',
+              title: '编辑器上下文',
               href: '/ai/ai-toolkit/api-reference/editor-context',
             },
             {
-              title: 'Review options',
+              title: '审阅选项',
               href: '/ai/ai-toolkit/api-reference/review-options',
             },
             {
-              title: 'REST API (legacy v3)',
+              title: 'REST API（旧版 v3）',
               href: '/ai/ai-toolkit/api-reference/rest-api-v3',
             },
           ],
         },
         {
-          title: 'Advanced guides',
+          title: '高级指南',
           href: '/ai/ai-toolkit/advanced-guides',
           children: [
             {
-              title: 'Custom nodes',
+              title: '自定义节点',
               href: '/ai/ai-toolkit/advanced-guides/custom-nodes',
             },
             {
@@ -92,14 +92,14 @@ export const sidebarConfig: SidebarConfig = {
               releaseTag: 'alpha',
             },
             {
-              title: 'Security',
+              title: '安全',
               href: '/ai/ai-toolkit/advanced-guides/security',
             },
           ],
         },
         /*
         {
-          title: 'Changelog',
+          title: '更新日志',
           href: '/resources/changelog/server-ai-toolkit',
         },
         */
@@ -107,83 +107,83 @@ export const sidebarConfig: SidebarConfig = {
     },
     {
       type: 'group',
-      // Not a real URL and as far as I can see doesn't need to be...
+      // 这不是真实 URL，而且据我所知也不需要是 URL……
       href: '/ai/other-options',
-      title: 'Other Options',
+      title: '其他选项',
       children: [
         {
-          title: 'Client Toolkit',
+          title: '客户端工具包',
           href: '/ai/ai-toolkit/client',
-          tags: ['Add-on'],
+          tags: ['附加组件'],
           children: [
             {
-              title: 'Overview',
+              title: '概览',
               href: '/ai/ai-toolkit/client/overview',
             },
             {
-              title: 'Use cases',
+              title: '使用场景',
               href: '/ai/ai-toolkit/client/use-cases',
             },
             {
-              title: 'Install',
+              title: '安装',
               href: '/ai/ai-toolkit/client/install',
             },
             {
-              title: 'Agents',
+              title: '智能体',
               href: '/ai/ai-toolkit/client/agents',
               children: [
                 {
-                  title: 'AI agent chatbot',
+                  title: 'AI 智能体聊天机器人',
                   href: '/ai/ai-toolkit/client/agents/ai-agent-chatbot',
                 },
                 {
-                  title: 'Review changes',
+                  title: '审阅更改',
                   href: '/ai/ai-toolkit/client/agents/review-changes',
                   children: [
                     {
-                      title: 'With Tracked Changes',
+                      title: '含修订跟踪',
                       href: '/ai/ai-toolkit/client/agents/review-changes/tracked-changes',
                     },
                     {
-                      title: 'Tracked changes with comments',
+                      title: '带评论的修订跟踪',
                       href: '/ai/ai-toolkit/client/agents/review-changes/tracked-changes-with-comments',
                     },
                     {
-                      title: 'Suggestions',
+                      title: '建议',
                       href: '/ai/ai-toolkit/client/agents/review-changes/suggestions',
                     },
                     {
-                      title: 'Suggestions with comments',
+                      title: '带评论的建议',
                       href: '/ai/ai-toolkit/client/agents/review-changes/suggestions-with-comments',
                     },
                     {
-                      title: 'Style suggestions',
+                      title: '样式建议',
                       href: '/ai/ai-toolkit/client/agents/review-changes/style-suggestions',
                     },
                   ],
                 },
                 {
-                  title: 'Streaming',
+                  title: '流式传输',
                   href: '/ai/ai-toolkit/client/agents/streaming',
                 },
                 {
-                  title: 'Comments',
+                  title: '评论',
                   href: '/ai/ai-toolkit/client/agents/comments',
                 },
                 {
-                  title: 'Multi-document',
+                  title: '多文档',
                   href: '/ai/ai-toolkit/client/agents/multi-document',
                 },
                 {
-                  title: 'Selection awareness',
+                  title: '选区感知',
                   href: '/ai/ai-toolkit/client/agents/selection-awareness',
                 },
                 {
-                  title: 'Schema awareness',
+                  title: 'Schema 感知',
                   href: '/ai/ai-toolkit/client/agents/schema-awareness',
                 },
                 {
-                  title: 'Tool definitions',
+                  title: '工具定义',
                   href: '/ai/ai-toolkit/client/agents/tools',
                   children: [
                     {
@@ -207,7 +207,7 @@ export const sidebarConfig: SidebarConfig = {
                       href: '/ai/ai-toolkit/client/agents/tools/mastra',
                     },
                     {
-                      title: 'Other providers',
+                      title: '其他提供商',
                       href: '/ai/ai-toolkit/client/agents/tools/other-providers',
                     },
                   ],
@@ -215,15 +215,15 @@ export const sidebarConfig: SidebarConfig = {
               ],
             },
             {
-              title: 'Workflows',
+              title: '工作流',
               href: '/ai/ai-toolkit/client/workflows',
               children: [
                 {
-                  title: 'Insert content',
+                  title: '插入内容',
                   href: '/ai/ai-toolkit/client/workflows/insert-content',
                 },
                 {
-                  title: 'Proofreader',
+                  title: '校对',
                   href: '/ai/ai-toolkit/client/workflows/proofreader',
                 },
                 {
@@ -231,69 +231,69 @@ export const sidebarConfig: SidebarConfig = {
                   href: '/ai/ai-toolkit/client/workflows/tiptap-edit',
                 },
                 {
-                  title: 'Comments',
+                  title: '评论',
                   href: '/ai/ai-toolkit/client/workflows/comments',
                 },
                 {
-                  title: 'Template',
+                  title: '模板',
                   href: '/ai/ai-toolkit/client/workflows/template',
                 },
               ],
             },
             {
-              title: 'Advanced guides',
+              title: '高级指南',
               href: '/ai/ai-toolkit/client/advanced-guides',
               children: [
                 {
-                  title: 'Live demo',
+                  title: '实时演示',
                   href: '/ai/ai-toolkit/client/advanced-guides/live-demo',
                 },
                 {
-                  title: 'Concepts',
+                  title: '概念',
                   href: '/ai/ai-toolkit/client/advanced-guides/concepts',
                 },
                 {
-                  title: 'AI engineering',
+                  title: 'AI 工程',
                   href: '/ai/ai-toolkit/client/advanced-guides/ai-engineering',
                 },
                 {
-                  title: 'Compare documents',
+                  title: '比较文档',
                   href: '/ai/ai-toolkit/client/advanced-guides/compare-documents',
                 },
                 {
-                  title: 'Split view',
+                  title: '分屏视图',
                   href: '/ai/ai-toolkit/client/advanced-guides/split-view',
                 },
                 {
-                  title: 'Tiptap Edit hooks',
+                  title: 'Tiptap Edit 钩子',
                   href: '/ai/ai-toolkit/client/advanced-guides/tiptap-edit-hooks',
                 },
                 {
-                  title: 'AI Caret',
+                  title: 'AI 光标',
                   href: '/ai/ai-toolkit/client/advanced-guides/ai-caret',
                 },
                 {
-                  title: 'Non-TypeScript backends',
+                  title: '非 TypeScript 后端',
                   href: '/ai/ai-toolkit/client/advanced-guides/non-typescript-backends',
                 },
                 {
-                  title: 'Migration guides',
+                  title: '迁移指南',
                   href: '/ai/ai-toolkit/client/advanced-guides/migration-guides',
                   children: [
                     {
-                      title: 'Basic AI Generation',
+                      title: '基础 AI 生成',
                       href: '/ai/ai-toolkit/client/advanced-guides/migration-guides/ai-generation',
                     },
                     {
-                      title: 'AI Suggestion',
+                      title: 'AI 建议',
                       href: '/ai/ai-toolkit/client/advanced-guides/migration-guides/ai-suggestion',
                     },
                     {
-                      title: 'AI Changes',
+                      title: 'AI 更改',
                       href: '/ai/ai-toolkit/client/advanced-guides/migration-guides/ai-changes',
                     },
                     {
-                      title: 'AI Assistant',
+                      title: 'AI 助手',
                       href: '/ai/ai-toolkit/client/advanced-guides/migration-guides/ai-assistant',
                     },
                   ],
@@ -301,118 +301,118 @@ export const sidebarConfig: SidebarConfig = {
               ],
             },
             {
-              title: 'API reference',
+              title: 'API 参考',
               href: '/ai/ai-toolkit/client/api-reference',
               children: [
                 {
-                  title: 'Read the document',
+                  title: '读取文档',
                   href: '/ai/ai-toolkit/client/api-reference/read-the-document',
                 },
                 {
-                  title: 'Edit the document',
+                  title: '编辑文档',
                   href: '/ai/ai-toolkit/client/api-reference/edit-the-document',
                 },
                 {
-                  title: 'Tool execution',
+                  title: '工具执行',
                   href: '/ai/ai-toolkit/client/api-reference/execute-tool',
                 },
                 {
-                  title: 'Workflows',
+                  title: '工作流',
                   href: '/ai/ai-toolkit/client/api-reference/workflows',
                 },
                 {
-                  title: 'Schema awareness',
+                  title: 'Schema 感知',
                   href: '/ai/ai-toolkit/client/api-reference/schema-awareness',
                 },
                 {
-                  title: 'Review options',
+                  title: '审阅选项',
                   href: '/ai/ai-toolkit/client/api-reference/review-options',
                 },
                 {
-                  title: 'Suggestions',
+                  title: '建议',
                   href: '/ai/ai-toolkit/client/api-reference/suggestions',
                 },
                 {
-                  title: 'Diff utility',
+                  title: '差异工具',
                   href: '/ai/ai-toolkit/client/api-reference/diff-utility',
                 },
                 {
-                  title: 'Split view',
+                  title: '分屏视图',
                   href: '/ai/ai-toolkit/client/api-reference/split-view',
                 },
               ],
             },
             {
-              title: 'Changelog',
+              title: '更新日志',
               href: '/ai/ai-toolkit/client/changelog',
             },
           ],
         },
         {
-          title: 'Basic AI Generation',
-          tags: ['Start'],
+          title: '基础 AI 生成',
+          tags: ['开始'],
           href: '/ai/basic',
           children: [
             {
-              title: 'Overview',
+              title: '概览',
               href: '/ai/basic/overview',
             },
             {
-              title: 'Use cases',
+              title: '使用场景',
               href: '/ai/basic/use-cases',
             },
             {
-              title: 'Install',
+              title: '安装',
               href: '/ai/basic/install',
             },
             {
-              title: 'Text generation',
+              title: '文本生成',
               href: '/ai/basic/text-generation',
               children: [
                 {
-                  title: 'Built-in commands',
+                  title: '内置命令',
                   href: '/ai/basic/text-generation/built-in-commands',
                 },
                 {
-                  title: 'Autocompletion',
+                  title: '自动补全',
                   href: '/ai/basic/text-generation/autocompletion',
                 },
                 {
-                  title: 'Provide context',
+                  title: '提供上下文',
                   href: '/ai/basic/text-generation/provide-context',
                 },
                 {
-                  title: 'Formatted responses',
+                  title: '格式化响应',
                   href: '/ai/basic/text-generation/format',
                 },
                 {
-                  title: 'Manage responses',
+                  title: '管理响应',
                   href: '/ai/basic/text-generation/manage-responses',
                 },
                 {
-                  title: 'Custom commands',
+                  title: '自定义命令',
                   href: '/ai/basic/text-generation/custom-commands',
                 },
                 {
-                  title: 'Stream content (Advanced)',
+                  title: '流式传输内容（高级）',
                   href: '/ai/basic/text-generation/stream',
                 },
               ],
             },
             {
-              title: 'Image generation',
+              title: '图像生成',
               href: '/ai/basic/image-generation',
             },
             {
-              title: 'With Collaboration',
+              title: '协作功能',
               href: '/ai/basic/collaboration',
             },
             {
-              title: 'Integrate your LLM',
+              title: '集成你的 LLM',
               href: '/ai/basic/custom-llms',
             },
             {
-              title: 'Configure',
+              title: '配置',
               href: '/ai/basic/configure',
             },
           ],
