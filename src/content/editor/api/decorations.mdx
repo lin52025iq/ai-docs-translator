@@ -1,20 +1,20 @@
 ---
-title: Decorations API
+title: 装饰 API
 meta:
-  title: Decorations API | Tiptap Editor Docs
-  description: API reference for addDecorations, the Decoration class, updateDecorations, and React and Vue widget renderers.
-  category: Editor
+  title: 装饰 API | Tiptap 编辑器文档
+  description: addDecorations、Decoration 类、updateDecorations 以及 React 和 Vue widget 渲染器的 API 参考。
+  category: 编辑器
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Decorations are view-only markers attached to positions or ranges in the document. They are declared by extensions and never modify or serialize the document. For concepts, examples, and guidance on when to use decorations, read the [Decorations guide](/editor/core-concepts/decorations). This page is the API reference.
+装饰是附加到文档中某个位置或范围的仅用于视图的标记。它们由扩展声明，不会修改或序列化文档。有关装饰的概念、示例以及适用场景，请阅读[装饰指南](/editor/core-concepts/decorations)。本页是 API 参考。
 
 ## `addDecorations`
 
-A lifecycle hook on every extension (including nodes and marks). It returns a `DecorationSpec` describing the decorations the extension contributes, or `null` for none. All declarations from all extensions are aggregated into a single ProseMirror plugin by Tiptap's internal decoration manager.
+每个扩展（包括节点和标记）都有的生命周期钩子。它会返回一个 `DecorationSpec`，用于描述扩展提供的装饰；如果没有，则返回 `null`。Tiptap 的内部装饰管理器会将所有扩展的声明汇总到一个 ProseMirror 插件中。
 
-`addDecorations()` is bound to `this` (`{ name, options, storage, editor, type, parent }`) like other extension hooks.
+与其他扩展钩子一样，`addDecorations()` 绑定到 `this`（`{ name, options, storage, editor, type, parent }`）。
 
 ```ts
 import { Decoration, Extension } from '@tiptap/core'
@@ -32,27 +32,25 @@ const MyExtension = Extension.create({
 
 ### `DecorationSpec`
 
-`DecorationSpec` is a discriminated union selected by its `update` strategy. Every strategy uses `create` for initialization and forced updates.
+`DecorationSpec` 是一个判别联合类型，由其 `update` 策略决定。每种策略都会在初始化和强制更新时使用 `create`。
 
-| Property        | Type                                                                   | Description                                                                                                         |
+| 属性 | 类型 | 说明 |
 | --------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `update`        | `'document' \| 'changedRanges' \| 'manual'`                            | Controls how decorations update. Defaults to `'document'`.                                                          |
-| `create`        | `(props: { editor; state; view }) => Decoration[]`           | **Required.** Builds the full set. Used for initialization and `updateDecorations()`.                               |
-| `shouldUpdate`  | `(props: { editor; tr; oldState; newState }) => boolean`               | Optional for `document` and `changedRanges`. Return `false` to map without rebuilding. Defaults to `tr.docChanged`. |
-| `createInRange` | `(props: { editor; state; view; from; to }) => Decoration[]` | Required only for `changedRanges`. Returns decorations anchored within the supplied block-aligned range.            |
+| `update` | `'document' \| 'changedRanges' \| 'manual'` | 控制装饰的更新方式。默认值为 `'document'`。 |
+| `create` | `(props: { editor; state; view }) => Decoration[]` | **必填。** 构建完整集合。用于初始化和 `updateDecorations()`。 |
+| `shouldUpdate` | `(props: { editor; tr; oldState; newState }) => boolean` | `document` 和 `changedRanges` 策略可选。返回 `false` 时只映射而不重新构建。默认值为 `tr.docChanged`。 |
+| `createInRange` | `(props: { editor; state; view; from; to }) => Decoration[]` | 仅 `changedRanges` 策略必填。返回锚定在提供的、与块对齐的范围内的装饰。 |
 
-<Callout title="Read state from the state argument, not editor.state" variant="warning">
-  Inside `create()` and `createInRange()`, always read the document from the `state` argument, not
-  `editor.state`. During a transaction, the editor's view state has not been updated yet, so
-  `editor.state` points at the pre-transaction document. The `state` argument is the correct state
-  being built. Tiptap logs a development warning if it detects `editor.state` being read inside
-  `create()`.
+<Callout title="从 state 参数读取状态，而非 editor.state" variant="warning">
+  在 `create()` 和 `createInRange()` 中，始终从 `state` 参数读取文档，而不是从
+  `editor.state` 读取。在事务处理期间，编辑器的视图状态尚未更新，因此
+  `editor.state` 指向事务处理前的文档。`state` 参数才是当前正在构建的正确状态。如果 Tiptap 检测到在
+  `create()` 中读取了 `editor.state`，就会在开发环境中记录警告。
 </Callout>
 
-<Callout title="create and createInRange must not throw" variant="warning">
-  `create()` and `createInRange()` run inside ProseMirror's state update cycle. If they throw, the
-  editor can end up in an inconsistent state. Wrap any fallible logic (regex compilation, external
-  data access) in try/catch and return an empty array on failure.
+<Callout title="create 和 createInRange 不得抛出异常" variant="warning">
+  `create()` 和 `createInRange()` 会在 ProseMirror 的状态更新周期中运行。如果它们抛出异常，
+  编辑器可能会进入不一致状态。请将任何可能失败的逻辑（正则表达式编译、外部数据访问）放入 try/catch 中，并在失败时返回空数组。
 </Callout>
 
 ### `DecorationUpdateStrategy`
@@ -61,39 +59,37 @@ const MyExtension = Extension.create({
 type DecorationUpdateStrategy = 'document' | 'changedRanges' | 'manual'
 ```
 
-- `document` rebuilds the full set with `create` after document changes. This is the default and is always correct.
-- `changedRanges` maps existing decorations and calls `createInRange` only for changed, block-aligned ranges. Use it only for block-local decorations.
-- `manual` keeps the current decorations until you call `updateDecorations()`.
+- `document` 会在文档更改后使用 `create` 重新构建完整集合。这是默认策略，始终能确保正确性。
+- `changedRanges` 会映射现有装饰，并仅对发生变化且与块对齐的范围调用 `createInRange`。仅当装饰局限于块内时才使用此策略。
+- `manual` 会保留当前装饰，直到你调用 `updateDecorations()`。
 
-You can use `shouldUpdate` with `document` and `changedRanges`. You cannot use it with `manual`, because manual decorations only update when you ask them to.
+你可以将 `shouldUpdate` 与 `document` 和 `changedRanges` 搭配使用。不能与 `manual` 搭配使用，因为手动装饰只会在你主动要求时更新。
 
-<Callout title="createInRange contract" variant="warning">
-  `createInRange` must return **only** decorations whose start position lies within `[from, to)`.
-  Use `from` for inline and node decorations, and `pos` for widget decorations. `to` is exclusive:
-  it is the next block's start, and that block rebuilds it, so decorations anchored at `to` are
-  ignored. The last block is the exception, because it owns the end of the document. If a decoration
-  depends on content outside the supplied range, use the `document` strategy instead.
+<Callout title="createInRange 的约定" variant="warning">
+  `createInRange` 必须**仅**返回起始位置位于 `[from, to)` 内的装饰。
+  对于行内和节点装饰，使用 `from`；对于 widget 装饰，使用 `pos`。`to` 不包含在范围内：
+  它是下一个块的起始位置，而该块会自行重新构建，因此锚定在 `to` 的装饰会被忽略。最后一个块是例外，因为它包含文档末尾。如果装饰依赖所提供范围之外的内容，请改用 `document` 策略。
 </Callout>
 
-See [Performance](/editor/core-concepts/decorations#performance) for strategy selection and changed-range correctness constraints.
+有关策略选择和变更范围正确性约束，请参阅[性能](/editor/core-concepts/decorations#performance)。
 
 ## `Decoration`
 
-Import `Decoration` from `@tiptap/core`. Its static methods build decoration instances that describe what Tiptap should show. Return these instances from `create` and `createInRange`.
+从 `@tiptap/core` 导入 `Decoration`。它的静态方法会构建描述 Tiptap 应显示内容的装饰实例。在 `create` 和 `createInRange` 中返回这些实例。
 
-All three return a `Decoration` (one of `InlineDecoration`, `NodeDecoration`, or `WidgetDecoration`).
+这三种方法都会返回一个 `Decoration`（类型为 `InlineDecoration`、`NodeDecoration` 或 `WidgetDecoration` 之一）。
 
-| Method              | Returns             | Description                                                            |
+| 方法 | 返回值 | 说明 |
 | ------------------- | ------------------- | ---------------------------------------------------------------------- |
-| `Decoration.Node`   | `NodeDecoration`    | Adds attributes to a single node's DOM wrapper.                        |
-| `Decoration.Inline` | `InlineDecoration`  | Wraps a range of inline content in a styled span.                      |
-| `Decoration.Widget` | `WidgetDecoration`  | Inserts a widget (a DOM node) at a single position. `key` is required. |
+| `Decoration.Node` | `NodeDecoration` | 为单个节点的 DOM 包装元素添加属性。 |
+| `Decoration.Inline` | `InlineDecoration` | 将一段行内内容包裹在带样式的 span 中。 |
+| `Decoration.Widget` | `WidgetDecoration` | 在单个位置插入一个 widget（DOM 节点）。必须提供 `key`。 |
 
-### Decoration classes
+### 装饰类
 
-`Decoration` is an abstract base class. `InlineDecoration`, `NodeDecoration`, and `WidgetDecoration` extend it. Every instance has a `kind` (`'inline' | 'node' | 'widget'`), an `anchor` (the start position), and a `toPMDecoration(extensionName?)` method that converts it to a ProseMirror decoration.
+`Decoration` 是抽象基类。`InlineDecoration`、`NodeDecoration` 和 `WidgetDecoration` 都继承自它。每个实例都有一个 `kind`（`'inline' | 'node' | 'widget'`）、一个 `anchor`（起始位置），以及一个 `toPMDecoration(extensionName?)` 方法，可将其转换为 ProseMirror 装饰。
 
-Tiptap converts these instances to ProseMirror decorations for you.
+Tiptap 会为你将这些实例转换为 ProseMirror 装饰。
 
 ### `Decoration.Node`
 
@@ -106,12 +102,12 @@ Decoration.Node(
 )
 ```
 
-**Arguments**
+**参数**
 
-- `pos` – start position of the node.
-- `to` – end position of the node.
-- `attrs` – optional. `DecorationAttrs`: `class`, `style`, `nodeName`, and any other HTML attribute.
-- `spec` – optional ProseMirror decoration spec.
+- `pos` – 节点的起始位置。
+- `to` – 节点的结束位置。
+- `attrs` – 可选。`DecorationAttrs`：`class`、`style`、`nodeName` 以及其他任意 HTML 属性。
+- `spec` – 可选的 ProseMirror 装饰规范。
 
 ```ts
 Decoration.Node(pos, pos + node.nodeSize, { class: 'is-heading' })
@@ -128,12 +124,12 @@ Decoration.Inline(
 )
 ```
 
-**Arguments**
+**参数**
 
-- `from` – start of the inline range.
-- `to` – end of the inline range.
-- `attrs` – optional. `DecorationAttrs`: `class`, `style`, `nodeName`, and any other HTML attribute.
-- `spec` – optional ProseMirror decoration spec.
+- `from` – 行内范围的起始位置。
+- `to` – 行内范围的结束位置。
+- `attrs` – 可选。`DecorationAttrs`：`class`、`style`、`nodeName` 以及其他任意 HTML 属性。
+- `spec` – 可选的 ProseMirror 装饰规范。
 
 ```ts
 Decoration.Inline(matchFrom, matchTo, { class: 'is-match' })
@@ -158,17 +154,17 @@ Decoration.Widget(
 )
 ```
 
-**Arguments**
+**参数**
 
-- `pos` – the position to render the widget at.
-- `render` – a callback that receives the `view` and a `getPos` accessor and returns an `HTMLElement`.
-- `options.key` – **required.** A stable, position-independent, globally unique key. See [Widget keys](/editor/core-concepts/decorations#widget-keys). Tiptap logs a development warning when it detects two widget decorations with the same key in a single build.
-- `options.side` – optional. Which side of the position the widget biases to (see ProseMirror's [`Decoration.widget`](https://prosemirror.net/docs/ref/#view.Decoration%5Ewidget)).
-- `options.relaxedSide` – optional. Allow the DOM selection to remain on either side of the widget.
-- `options.marks` – optional. Marks applied to the widget.
-- `options.stopEvent` – optional. Return `true` to stop ProseMirror from handling an event originating in the widget.
-- `options.ignoreSelection` – optional. Prevent selection changes inside the widget from being synchronized by ProseMirror.
-- `options.destroy` – optional. Called with the widget DOM node when ProseMirror removes it or destroys the editor. Skipped for widgets created with `ReactWidgetRenderer` or `VueWidgetRenderer`, because the framework renderers handle their own cleanup.
+- `pos` – 渲染 widget 的位置。
+- `render` – 接收 `view` 和 `getPos` 访问器并返回 `HTMLElement` 的回调。
+- `options.key` – **必填。** 稳定、不依赖位置且全局唯一的键。请参阅 [Widget 键](/editor/core-concepts/decorations#widget-keys)。如果 Tiptap 检测到单次构建中有两个 widget 装饰使用相同的键，就会在开发环境中记录警告。
+- `options.side` – 可选。指定 widget 相对于该位置偏向哪一侧（请参阅 ProseMirror 的 [`Decoration.widget`](https://prosemirror.net/docs/ref/#view.Decoration%5Ewidget)）。
+- `options.relaxedSide` – 可选。允许 DOM 选区保留在 widget 的任意一侧。
+- `options.marks` – 可选。应用于 widget 的标记。
+- `options.stopEvent` – 可选。返回 `true` 可阻止 ProseMirror 处理源自 widget 的事件。
+- `options.ignoreSelection` – 可选。阻止 ProseMirror 同步 widget 内部的选区变化。
+- `options.destroy` – 可选。当 ProseMirror 移除 widget 或销毁编辑器时，会传入 widget DOM 节点并调用此回调。对于使用 `ReactWidgetRenderer` 或 `VueWidgetRenderer` 创建的 widget，不会调用此回调，因为框架渲染器会自行清理。
 
 ```ts
 Decoration.Widget(
@@ -183,30 +179,28 @@ Decoration.Widget(
 )
 ```
 
-<Callout title="Widget keys must be stable and unique" variant="warning">
-  ProseMirror reuses a widget's DOM across redraws only when the key matches the previous render,
-  and keys must be globally unique. Duplicate or position-derived keys cause flicker, lost state, or
-  crashes. See [Widget keys](/editor/core-concepts/decorations#widget-keys) for the full rules.
+<Callout title="Widget 键必须稳定且唯一" variant="warning">
+  只有当键与上次渲染的键相同时，ProseMirror 才会在重绘时重用 widget 的 DOM；键还必须全局唯一。重复键或基于位置的键会导致闪烁、状态丢失或崩溃。完整规则请参阅 [Widget 键](/editor/core-concepts/decorations#widget-keys)。
 </Callout>
 
 ## `updateDecorations`
 
-This command builds the decorations again for the full document. It ignores the extension's update strategy and `shouldUpdate` for this update. Use it after changing a value outside the document, such as a search term.
+此命令会重新构建整个文档的装饰。本次更新会忽略扩展的更新策略和 `shouldUpdate`。当文档以外的值发生变化时（例如搜索词），请使用此命令。
 
 ```ts
 editor.commands.updateDecorations() // Update every extension.
 editor.commands.updateDecorations('myExtension') // Update one extension.
 ```
 
-**Arguments**
+**参数**
 
-- `extensionName` is optional. Pass an extension name to update only that extension. Leave it out to update every extension.
+- `extensionName` 为可选参数。传入扩展名称可仅更新该扩展。不传入则更新所有扩展。
 
-See the [runtime parameters via storage](/editor/core-concepts/decorations#runtime-parameters-via-storage) pattern for the common use case.
+常见用法请参阅[通过 storage 管理运行时参数](/editor/core-concepts/decorations#runtime-parameters-via-storage)模式。
 
 ## `ReactWidgetRenderer`
 
-Import: `import { ReactWidgetRenderer } from '@tiptap/react'`. Returns a `WidgetDecoration` you return from `create` or `createInRange`. It reuses Tiptap's `ReactRenderer` portal infrastructure, so the component lives in the editor's React tree (context and hooks work as usual). Your component additionally receives `editor` and `getPos` as props.
+导入：`import { ReactWidgetRenderer } from '@tiptap/react'`。它会返回一个 `WidgetDecoration`，供你从 `create` 或 `createInRange` 中返回。它会复用 Tiptap 的 `ReactRenderer` portal 基础设施，因此组件位于编辑器的 React 树中（上下文和 hooks 均可照常使用）。组件还会通过 props 接收 `editor` 和 `getPos`。
 
 ```tsx
 import { Extension } from '@tiptap/core'
@@ -235,32 +229,30 @@ const Comments = Extension.create({
 })
 ```
 
-| Option            | Type                        | Description                                                                           |
+| 选项 | 类型 | 说明 |
 | ----------------- | --------------------------- | ------------------------------------------------------------------------------------- |
-| `editor`          | `Editor`                    | The editor instance.                                                                  |
-| `pos`             | `number`                    | The document position to render at.                                                   |
-| `key`             | `string`                    | Stable, unique key. See [Widget keys](/editor/core-concepts/decorations#widget-keys). |
-| `props`           | `P`                         | Props for your component.                                                             |
-| `as`              | `string`                    | Wrapper tag, defaults to `'span'`.                                                    |
-| `className`       | `string`                    | Class applied to the wrapper element.                                                 |
-| `side`            | `number`                    | ProseMirror widget side bias.                                                         |
-| `relaxedSide`     | `boolean`                   | Allow the DOM selection on either side of the widget.                                 |
-| `marks`           | `readonly Mark[]`           | Marks applied to the widget.                                                          |
-| `stopEvent`       | `(event: Event) => boolean` | Stop selected widget events from reaching ProseMirror.                                |
-| `ignoreSelection` | `boolean`                   | Prevent selection changes inside the widget from syncing.                             |
-| `destroy`         | `(node: Node) => void`      | Run custom cleanup after the framework renderer is removed.                           |
+| `editor` | `Editor` | 编辑器实例。 |
+| `pos` | `number` | 要渲染的位置。 |
+| `key` | `string` | 稳定且唯一的键。请参阅 [Widget 键](/editor/core-concepts/decorations#widget-keys)。 |
+| `props` | `P` | 传递给组件的 props。 |
+| `as` | `string` | 包装标签，默认为 `'span'`。 |
+| `className` | `string` | 应用于包装元素的类名。 |
+| `side` | `number` | ProseMirror widget 的侧向偏置。 |
+| `relaxedSide` | `boolean` | 允许 DOM 选区位于 widget 的任意一侧。 |
+| `marks` | `readonly Mark[]` | 应用于 widget 的标记。 |
+| `stopEvent` | `(event: Event) => boolean` | 阻止选定的 widget 事件传递给 ProseMirror。 |
+| `ignoreSelection` | `boolean` | 阻止同步 widget 内部的选区变化。 |
+| `destroy` | `(node: Node) => void` | 框架渲染器移除后执行自定义清理。 |
 
-<Callout title="Props and renderer caching" variant="info">
-  Fresh `props` are pushed each time `create`/`createInRange` re-runs (ProseMirror skips `toDOM`
-  when it reuses the DOM, so props can't ride along there). The renderer for a key is cached and
-  reused so component state survives across edits. The cache is swept when the editor is destroyed.
+<Callout title="Props 与渲染器缓存" variant="info">
+  每次重新运行 `create`/`createInRange` 时都会传入最新的 `props`（ProseMirror 重用 DOM 时会跳过 `toDOM`，因此无法通过这种方式传递 props）。每个键对应的渲染器都会被缓存并重用，因此组件状态会在编辑过程中保留。编辑器销毁时会清除缓存。
 </Callout>
 
-Follow the [React decorations tutorial](/guides/decorations-react) for a complete example.
+完整示例请参阅 [React 装饰教程](/guides/decorations-react)。
 
 ## `VueWidgetRenderer`
 
-Import: `import { VueWidgetRenderer } from '@tiptap/vue-3'` (or `'@tiptap/vue-2'`). Same idea as the React renderer; it reuses Tiptap's `VueRenderer`, so the component shares the editor's app context (`provide`/`inject` work). The component receives `editor` and `getPos` in addition to your `props`.
+导入：`import { VueWidgetRenderer } from '@tiptap/vue-3'`（或 `'@tiptap/vue-2'`）。它与 React 渲染器的思路相同；它会复用 Tiptap 的 `VueRenderer`，因此组件共享编辑器的应用上下文（`provide`/`inject` 可正常使用）。除了你提供的 `props`，组件还会接收 `editor` 和 `getPos`。
 
 ```ts
 import { Extension } from '@tiptap/core'
@@ -286,29 +278,28 @@ const Comments = Extension.create({
 })
 ```
 
-| Option            | Type                        | Description                                                                           |
+| 选项 | 类型 | 说明 |
 | ----------------- | --------------------------- | ------------------------------------------------------------------------------------- |
-| `editor`          | `Editor`                    | The editor instance.                                                                  |
-| `pos`             | `number`                    | The document position to render at.                                                   |
-| `key`             | `string`                    | Stable, unique key. See [Widget keys](/editor/core-concepts/decorations#widget-keys). |
-| `props`           | `Record<string, any>`       | Props for your component.                                                             |
-| `side`            | `number`                    | ProseMirror widget side bias.                                                         |
-| `relaxedSide`     | `boolean`                   | Allow the DOM selection on either side of the widget.                                 |
-| `marks`           | `readonly Mark[]`           | Marks applied to the widget.                                                          |
-| `stopEvent`       | `(event: Event) => boolean` | Stop selected widget events from reaching ProseMirror.                                |
-| `ignoreSelection` | `boolean`                   | Prevent selection changes inside the widget from syncing.                             |
-| `destroy`         | `(node: Node) => void`      | Run custom cleanup after the framework renderer is removed.                           |
+| `editor` | `Editor` | 编辑器实例。 |
+| `pos` | `number` | 要渲染的位置。 |
+| `key` | `string` | 稳定且唯一的键。请参阅 [Widget 键](/editor/core-concepts/decorations#widget-keys)。 |
+| `props` | `Record<string, any>` | 传递给组件的 props。 |
+| `side` | `number` | ProseMirror widget 的侧向偏置。 |
+| `relaxedSide` | `boolean` | 允许 DOM 选区位于 widget 的任意一侧。 |
+| `marks` | `readonly Mark[]` | 应用于 widget 的标记。 |
+| `stopEvent` | `(event: Event) => boolean` | 阻止选定的 widget 事件传递给 ProseMirror。 |
+| `ignoreSelection` | `boolean` | 阻止同步 widget 内部的选区变化。 |
+| `destroy` | `(node: Node) => void` | 框架渲染器移除后执行自定义清理。 |
 
-<Callout title="Vue-specific requirements" variant="warning">
-  The component **must render a single root element**. The `editor` is passed raw (with `markRaw`)
-  on purpose. Do not wrap it in reactivity.
+<Callout title="Vue 特定要求" variant="warning">
+  组件**必须只渲染一个根元素**。有意将 `editor` 原样传入（使用 `markRaw`）。不要将其包装为响应式对象。
 </Callout>
 
-Follow the [Vue 3 decorations tutorial](/guides/decorations-vue) for a complete example.
+完整示例请参阅 [Vue 3 装饰教程](/guides/decorations-vue)。
 
 ## `liveWidgetKeys`
 
-Import: `import { liveWidgetKeys } from '@tiptap/core'`.
+导入：`import { liveWidgetKeys } from '@tiptap/core'`。
 
 ```ts
 import { liveWidgetKeys } from '@tiptap/core'
@@ -316,18 +307,17 @@ import { liveWidgetKeys } from '@tiptap/core'
 const keys = liveWidgetKeys(editor)
 ```
 
-Returns the keys of all widget decorations currently live. The framework widget renderers use it internally to decide whether a widget being torn down is genuinely gone or just being reassigned to a new position (so they don't destroy a renderer whose key is still live).
+返回当前所有存活 widget 装饰的键。框架 widget 渲染器会在内部使用它来判断即将卸载的 widget 是确实已被移除，还是仅被重新分配到新位置（从而避免销毁键仍然存活的渲染器）。
 
-<Callout title="Advanced use only" variant="hint">
-  Most users won't need `liveWidgetKeys`. It exists for advanced authors building custom widget
-  renderers.
+<Callout title="仅供高级用途" variant="hint">
+  大多数用户不需要使用 `liveWidgetKeys`。它面向构建自定义 widget 渲染器的高级开发者。
 </Callout>
 
 ## `createWidgetDecoration`
 
-Import: `import { createWidgetDecoration } from '@tiptap/core'`.
+导入：`import { createWidgetDecoration } from '@tiptap/core'`。
 
-A framework-agnostic helper that `ReactWidgetRenderer` and `VueWidgetRenderer` are built on. It owns the per-editor renderer cache, prop diffing, the deferred prop flush, the key reassignment guard, and the ProseMirror option pass-through. Use it when you need a widget backed by a custom renderer that is not React or Vue.
+这是一个与框架无关的辅助函数，`ReactWidgetRenderer` 和 `VueWidgetRenderer` 都基于它构建。它负责管理每个编辑器的渲染器缓存、props 差异比较、延迟刷新 props、键重新分配保护，以及传递 ProseMirror 选项。如果你需要由 React 或 Vue 以外的自定义渲染器支持的 widget，请使用它。
 
 ```ts
 import { createWidgetDecoration } from '@tiptap/core'
@@ -363,24 +353,24 @@ createWidgetDecoration<MyRenderer>({
 })
 ```
 
-| Option         | Type                                              | Description                                                                                                  |
+| 选项 | 类型 | 说明 |
 | -------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `editor`       | `Editor`                                          | The editor instance. The renderer cache is stored on it.                                                     |
-| `pos`          | `number`                                          | The document position to render at.                                                                          |
-| `key`          | `string`                                          | Stable, unique key. See [Widget keys](/editor/core-concepts/decorations#widget-keys).                        |
-| `props`        | `Record<string, any>`                             | Props passed to the renderer, merged with `context` on each render.                                          |
-| `cacheKey`     | `symbol`                                          | The symbol the renderer cache is stored under. Use one per framework so caches never mix.                   |
-| `context`      | `(getPos) => Record<string, any>`                 | Extra props merged into every render, for example `editor` and `getPos`. Called on each materialization.     |
-| `create`       | `(props) => WidgetRenderer`                       | Creates the renderer on first mount. Receives `props` and `context` already merged.                          |
-| `materialize`  | `(renderer) => HTMLElement`                       | Returns the element ProseMirror inserts.                                                                     |
-| `side`         | `number`                                          | ProseMirror widget side bias.                                                                                |
-| `relaxedSide`  | `boolean`                                         | Allow the DOM selection on either side of the widget.                                                        |
-| `marks`        | `readonly Mark[]`                                 | Marks applied to the widget.                                                                                 |
-| `stopEvent`    | `(event: Event) => boolean`                       | Stop selected widget events from reaching ProseMirror.                                                       |
-| `ignoreSelection` | `boolean`                                      | Prevent selection changes inside the widget from syncing.                                                    |
-| `destroy`      | `(node: Node) => void`                            | Run custom cleanup after the renderer is removed.                                                            |
+| `editor` | `Editor` | 编辑器实例。渲染器缓存保存在该实例上。 |
+| `pos` | `number` | 要渲染的位置。 |
+| `key` | `string` | 稳定且唯一的键。请参阅 [Widget 键](/editor/core-concepts/decorations#widget-keys)。 |
+| `props` | `Record<string, any>` | 传递给渲染器的 props，每次渲染时都会与 `context` 合并。 |
+| `cacheKey` | `symbol` | 用于存储渲染器缓存的 symbol。每个框架使用一个，避免缓存混用。 |
+| `context` | `(getPos) => Record<string, any>` | 合并到每次渲染中的额外 props，例如 `editor` 和 `getPos`。每次实例化时都会调用。 |
+| `create` | `(props) => WidgetRenderer` | 首次挂载时创建渲染器。接收已合并 `props` 和 `context` 的参数。 |
+| `materialize` | `(renderer) => HTMLElement` | 返回由 ProseMirror 插入的元素。 |
+| `side` | `number` | ProseMirror widget 的侧向偏置。 |
+| `relaxedSide` | `boolean` | 允许 DOM 选区位于 widget 的任意一侧。 |
+| `marks` | `readonly Mark[]` | 应用于 widget 的标记。 |
+| `stopEvent` | `(event: Event) => boolean` | 阻止选定的 widget 事件传递给 ProseMirror。 |
+| `ignoreSelection` | `boolean` | 阻止同步 widget 内部的选区变化。 |
+| `destroy` | `(node: Node) => void` | 渲染器移除后执行自定义清理。 |
 
-<Callout title="Advanced use only" variant="hint">
-  Most users should use `ReactWidgetRenderer` or `VueWidgetRenderer` instead. `createWidgetDecoration`
-  exists for authors building custom framework renderers (Solid, Svelte, etc.).
+<Callout title="仅供高级用途" variant="hint">
+  大多数用户应改用 `ReactWidgetRenderer` 或 `VueWidgetRenderer`。`createWidgetDecoration`
+  面向构建自定义框架渲染器（Solid、Svelte 等）的开发者。
 </Callout>
