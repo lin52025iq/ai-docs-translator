@@ -1,50 +1,50 @@
 ---
-title: Strike extension
+title: 删除线扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-strike?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-strike
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-strike.svg
     url: https://npmcharts.com/compare/@tiptap/extension-strike?minimal=true
-    label: Downloads
+    label: 下载量
 extension:
   name: Strike
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-strike
-  description: Cut through the words you wrote if you’re too afraid to delete them.
+  description: 如果你不敢删除写下的文字，就用删除线划掉它们。
   type: mark
   icon: Strikethrough
 meta:
-  title: Strike extension | Tiptap Editor Docs
-  description: Learn how to use the Strike extension in Tiptap to cut through the words you wrote if you're too afraid to delete it.
-  category: Editor
+  title: 删除线扩展 | Tiptap 编辑器文档
+  description: 了解如何在 Tiptap 中使用删除线扩展：如果你不敢删除写下的文字，就用删除线划掉它们。
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-Use this extension to render ~~striked text~~. If you pass `<s>`, `<del>`, `<strike>` tags, or text with inline `style` attributes setting `text-decoration: line-through` in the editor’s initial content, they all will be rendered accordingly.
+使用此扩展来显示 ~~删除线文本~~。如果编辑器初始内容中包含 `<s>`、`<del>`、`<strike>` 标签，或设置了 `text-decoration: line-through` 的内联 `style` 属性，这些内容都会相应地显示为删除线。
 
-Type <code>~~ text between tildes ~~</code> and it will be magically ~~striked through~~ while you type.
+输入 <code>~~波浪号之间的文本~~</code>，打字时文本就会神奇地 ~~加上删除线~~。
 
-<Callout title="Restrictions" variant="default">
-    The extension will generate the corresponding `<s>` HTML tags when reading contents of the `Editor` instance. All text striked through, regardless of the method will be normalized to `<s>` HTML tags.
+<Callout title="限制" variant="default">
+    读取 `Editor` 实例的内容时，此扩展会生成相应的 `<s>` HTML 标签。无论使用哪种方式添加删除线，所有带删除线的文本都会统一转换为 `<s>` HTML 标签。
 </Callout>
 
 <CodeDemo path="/Marks/Strike" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-strike
 ```
 
-## Settings
+## 设置
 
 ### HTMLAttributes
 
-Custom HTML attributes that should be added to the rendered HTML tag.
+要添加到渲染后 HTML 标签的自定义 HTML 属性。
 
 ```js
 Strike.configure({
@@ -54,11 +54,11 @@ Strike.configure({
 })
 ```
 
-## Commands
+## 命令
 
 ### setStrike()
 
-Mark text as striked.
+为文本添加删除线标记。
 
 ```js
 editor.commands.setStrike()
@@ -66,7 +66,7 @@ editor.commands.setStrike()
 
 ### toggleStrike()
 
-Toggle strike mark.
+切换删除线标记。
 
 ```js
 editor.commands.toggleStrike()
@@ -74,18 +74,18 @@ editor.commands.toggleStrike()
 
 ### unsetStrike()
 
-Remove strike mark.
+移除删除线标记。
 
 ```js
 editor.commands.unsetStrike()
 ```
 
-## Keyboard shortcuts
+## 键盘快捷键
 
-| Command        | Windows/Linux                                        | macOS                                            |
+| 命令           | Windows/Linux                                        | macOS                                            |
 | -------------- | ---------------------------------------------------- | ------------------------------------------------ |
 | toggleStrike() | <kbd>Control</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> | <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> |
 
-## Source code
+## 源代码
 
 [packages/extension-strike/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-strike/)
