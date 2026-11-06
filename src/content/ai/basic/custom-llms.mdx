@@ -1,29 +1,28 @@
 ---
-title: Integrate a custom LLM
+title: 集成自定义 LLM
 meta:
-  title: Custom LLM | Tiptap Basic AI Generation
-  description: Implement custom LLMs with the Basic AI Generation extension and override resolver functions in your editor. Learn more in the docs!
-  category: Basic AI Generation
+  title: 自定义 LLM | Tiptap 基础 AI 生成
+  description: 使用基础 AI 生成扩展实现自定义 LLM，并在编辑器中覆盖解析器函数。了解更多信息，请参阅文档！
+  category: 基础 AI 生成
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-If you want to use a your own backend which provides access to a custom LLM, you can override the resolver functions defined below on the extension configuration.
+如果你想使用自己的后端来访问自定义 LLM，可以在扩展配置中覆盖下文定义的解析器函数。
 
-Make sure you’re returning the correct type of response and that you handle errors correctly.
+请确保返回正确类型的响应，并正确处理错误。
 
-<Callout title="Heads up!" variant="hint">
-  We strongly advise you not to call OpenAI directly in your frontend, as this could lead to API
-  token leakage! You should use a proxy on your backend to keep your API tokens secret.
+<Callout title="请注意！" variant="hint">
+  我们强烈建议不要在前端直接调用 OpenAI，否则可能导致 API 令牌泄露！你应该在后端使用代理来保护 API 令牌。
 </Callout>
 
-## Access the private registry
+## 访问私有仓库
 
-The Advanced AI Extension is published in Tiptap’s private npm registry. Integrate the extension by following the [private registry guide](/guides/pro-extensions). If you already authenticated your Tiptap account you can go straight to [#Install](#install).
+高级 AI 扩展发布在 Tiptap 的私有 npm 仓库中。请按照[私有仓库指南](/guides/pro-extensions)集成此扩展。如果你已经登录 Tiptap 账户，可以直接跳转到 [#Install](#install)。
 
-<Callout title="Pro Extension" variant="warning">
+<Callout title="专业版扩展" variant="warning">
 
-    This extension requires a valid subscription in an eligible plan and [access to our private registry](/guides/pro-extensions), set this up first.
+    此扩展要求你订阅符合条件的有效套餐，并[有权访问我们的私有仓库](/guides/pro-extensions)。请先完成设置。
 
 </Callout>
 
@@ -31,32 +30,32 @@ The Advanced AI Extension is published in Tiptap’s private npm registry. Integ
 npm install @tiptap-pro/extension-ai
 ```
 
-### Use both custom LLM and Tiptap AI Cloud
+### 同时使用自定义 LLM 和 Tiptap AI Cloud
 
-If you want to rely on our cloud in some cases, make sure that you [setup your team as described here](/ai/basic/install#start-your-basic-ai-generation-app).
+如果你希望在某些情况下使用我们的云服务，请确保已[按照此处的说明设置团队](/ai/basic/install#start-your-basic-ai-generation-app)。
 
-## Resolver Functions
+## 解析器函数
 
-You can define custom resolver functions on the extension options. Be aware that they expect the following return types.
+你可以在扩展选项中定义自定义解析器函数。请注意，这些函数必须返回以下类型的值。
 
-| Type       | Method name            | Return Type                                   |
+| 类型 | 方法名 | 返回类型 |
 | ---------- | ---------------------- | --------------------------------------------- |
-| completion | `aiCompletionResolver` | `Promise<string \| null>`                     |
-| streaming  | `aiStreamResolver`     | `Promise<ReadableStream<Uint8Array> \| null>` |
-| image      | `aiImageResolver`      | `Promise<string \| null>`                     |
+| 补全 | `aiCompletionResolver` | `Promise<string \| null>` |
+| 流式 | `aiStreamResolver` | `Promise<ReadableStream<Uint8Array> \| null>` |
+| 图像 | `aiImageResolver` | `Promise<string \| null>` |
 
-Use `aiCompletionResolver` to add text to the editor in a non-streaming manner.
+使用 `aiCompletionResolver` 以非流式方式向编辑器添加文本。
 
-Use the `aiStreamResolver` to stream content directly into the editor. This gives the editor typewritter effect.
+使用 `aiStreamResolver` 将内容直接流式传输到编辑器，从而实现打字机效果。
 
-Make sure that the stream returns HTML to allow Tiptap to render the content directly as rich text. This approach removes the need for a Markdown parser and keeps the frontend lightweight.
+请确保流返回 HTML，以便 Tiptap 能够将内容直接渲染为富文本。这种方式无需使用 Markdown 解析器，也能让前端保持轻量。
 
-## Examples
+## 示例
 
-### Override a specific command resolution in completion mode
+### 在补全模式下覆盖特定命令的解析
 
-In this example we want to call our custom backend when the `rephrase` action/command is called.
-Everything else should be handled by the default backend in the Tiptap Cloud.
+在此示例中，当调用 `rephrase` 操作/命令时，我们希望调用自定义后端。
+其他所有操作都由 Tiptap Cloud 中的默认后端处理。
 
 ```js
 // ...
@@ -104,9 +103,9 @@ Ai.configure({
 })
 ```
 
-### Register a new AI command and call a custom backend action
+### 注册新的 AI 命令并调用自定义后端操作
 
-In this example, we register a new editor command named `aiCustomTextCommand`, use the Tiptap `runAiTextCommand` function to let Tiptap do the rest, and add a custom command resolution to call a custom backend (in completion mode).
+在此示例中，我们注册一个名为 `aiCustomTextCommand` 的新编辑器命令，使用 Tiptap 的 `runAiTextCommand` 函数处理其余逻辑，并添加自定义命令解析逻辑，以便在补全模式下调用自定义后端。
 
 ```js
 // …
@@ -185,13 +184,13 @@ const editor = new Editor({
 // editor.chain().focus().aiCustomTextCommand().run()
 ```
 
-### Use your custom backend in streaming mode
+### 在流式模式下使用自定义后端
 
-We’re entirely relying on a custom backend in this example.
+此示例完全依赖自定义后端。
 
-Make sure that the function `aiStreamResolver` returns a `ReadableStream<Uint8Array>`.
+请确保 `aiStreamResolver` 函数返回 `ReadableStream<Uint8Array>`。
 
-And remember: If you want to use both streaming and the traditional completion mode (non-streaming way), you’ll need to define a `aiCompletionResolver`, too!
+还要记住：如果你想同时使用流式模式和传统的补全模式（非流式），还需要定义 `aiCompletionResolver`！
 
 ```js
 // ...
