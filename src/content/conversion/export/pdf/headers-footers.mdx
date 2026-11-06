@@ -1,13 +1,13 @@
 ---
-title: Extend your PDF export with Headers & Footers
+title: 使用页眉和页脚扩展 PDF 导出
 tags:
   - type: start
   - type: beta
   - type: version
     label: v0.6.2
 meta:
-    title: Extend your PDF export with Headers & Footers | Tiptap Conversion
-    description: Learn how to extend your PDF exports with custom Headers & Footers using the Export PDF extension.
+    title: 使用页眉和页脚扩展 PDF 导出 | Tiptap Conversion
+    description: 了解如何使用 Export PDF 扩展，为 PDF 导出添加自定义页眉和页脚。
     category: Conversion
 ---
 
@@ -17,31 +17,31 @@ import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 <EnterpriseCalloutAuto variant="pdf" renderMode="sidebar" disableWaitlist />
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 激活试用或订阅">
+        在你的账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 计划](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Install from private registry">
-        To install this frontend extension, authenticate to Tiptap's private npm registry by following the [setup guide](/guides/pro-extensions).
+    <RequirementItem label="2. 从私有注册表安装">
+        若要安装此前端扩展，请按照[设置指南](/guides/pro-extensions)进行操作，以通过身份验证访问 Tiptap 的私有 npm 注册表。
     </RequirementItem>
 </Requirements>
 
-The `@tiptap-pro/extension-export-pdf` extension includes built-in support for customizing the headers and footers of the exported document. You can configure different headers and footers for the first page, odd pages, and even pages.
+`@tiptap-pro/extension-export-pdf` 扩展内置了自定义导出文档页眉和页脚的支持。你可以为首页、奇数页和偶数页分别配置不同的页眉和页脚。
 
-## Header and footer slot values
+## 页眉和页脚插槽值
 
-Each header and footer slot (`default`, `first`, `even`) accepts one of the shapes below. Mix and match freely across slots; pick whichever matches your data.
+每个页眉和页脚插槽（`default`、`first`、`even`）都接受以下任一种格式。你可以在不同插槽中自由组合，选择最适合你数据的格式。
 
-| Shape                            | Example                                          | Notes                                                                                                     |
+| 格式                             | 示例                                             | 说明                                                                                                     |
 | -------------------------------- | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
-| Plain text                       | `'Company name, 2026'`                           | Rendered as an unstyled header/footer.                                                                    |
-| Stringified Tiptap JSONContent   | `JSON.stringify(myHeaderDoc)`                    | Pre-serialized Tiptap node. Rich formatting (bold, italic, links, etc.) is preserved on render.           |
-| Tiptap JSONContent object        | `{ type: 'doc', content: [/* … */] }`            | A Tiptap node passed directly. Same fidelity as stringified JSONContent, but no `JSON.stringify` step.    |
-| `docx` `Header` / `Footer`       | `new Docx.Header({ children: [/* … */] })`       | Full DOCX-level control over paragraphs and runs. Requires `@tiptap-pro/extension-export-docx`.           |
-| Async factory returning `Header` / `Footer` | `() => convertHeader({ node })`       | Built on demand when the export runs. Typical use: `convertHeader` / `convertFooter` from the DOCX extension. |
+| 纯文本                           | `'Company name, 2026'`                           | 以无样式的页眉或页脚形式呈现。                                                                            |
+| 字符串化的 Tiptap JSONContent    | `JSON.stringify(myHeaderDoc)`                    | 预先序列化的 Tiptap 节点。呈现时会保留粗体、斜体、链接等富文本格式。                                       |
+| Tiptap JSONContent 对象          | `{ type: 'doc', content: [/* … */] }`            | 直接传入的 Tiptap 节点。效果与字符串化的 JSONContent 相同，但无需调用 `JSON.stringify`。                  |
+| `docx` `Header` / `Footer`       | `new Docx.Header({ children: [/* … */] })`       | 对 DOCX 级别的段落和文本运行进行完全控制。需要安装 `@tiptap-pro/extension-export-docx`。                  |
+| 返回 `Header` / `Footer` 的异步工厂 | `() => convertHeader({ node })`       | 在执行导出时按需创建。常见用法是使用 DOCX 扩展中的 `convertHeader` / `convertFooter`。                    |
 
-Tiptap JSONContent objects **must** include a `type` field. The extension uses it at runtime to distinguish a Tiptap node from a `docx` instance. Objects without `type` that aren't `Header` / `Footer` instances are dropped with a `console.warn` naming the offending value; they're never forwarded to the DOCX serializer.
+Tiptap JSONContent 对象**必须**包含 `type` 字段。扩展会在运行时使用该字段，区分 Tiptap 节点和 `docx` 实例。没有 `type` 字段且不是 `Header` / `Footer` 实例的对象会被丢弃，并通过 `console.warn` 指明有问题的值；这些对象不会传递给 DOCX 序列化器。
 
-In TypeScript these collapse to two aliases (the `type` requirement is encoded in `TiptapNodeContent`):
+在 TypeScript 中，这些格式可归为两个类型别名（`type` 要求已编码在 `TiptapNodeContent` 中）：
 
 ```ts
 import type { JSONContent } from '@tiptap/core'
@@ -53,33 +53,33 @@ type HeaderSlotValue = string | TiptapNodeContent | Header | (() => Promise<Head
 type FooterSlotValue = string | TiptapNodeContent | Footer | (() => Promise<Footer>)
 ```
 
-The first three shapes work on their own with `@tiptap-pro/extension-export-pdf`. The `Header` / `Footer` instance and async-factory shapes require `@tiptap-pro/extension-export-docx` to be installed; they take the DOCX-first export path, which is loaded on demand so PDF-only consumers aren't affected.
+前三种格式可单独与 `@tiptap-pro/extension-export-pdf` 配合使用。`Header` / `Footer` 实例和异步工厂格式需要安装 `@tiptap-pro/extension-export-docx`；它们会采用 DOCX 优先的导出路径，该路径按需加载，因此不会影响仅使用 PDF 的用户。
 
-## Headers Configuration
+## 页眉配置
 
-The `headers` object configures the running header. Each slot accepts a [header slot value](#header-and-footer-slot-values).
+`headers` 对象用于配置页眉。每个插槽都接受一个[页眉插槽值](#页眉和页脚插槽值)。
 
-| Property             | Type              | Description                                                                                          |
+| 属性                 | 类型              | 说明                                                                                                    |
 | -------------------- | ----------------- | ---------------------------------------------------------------------------------------------------- |
-| `evenAndOddHeaders`  | `boolean`         | Whether to use different headers for odd and even pages.                                             |
-| `differentFirstPage` | `boolean`         | Whether to use a different header on the first page. When `true`, the `first` value is used on page one instead of `default`. |
-| `default`            | `HeaderSlotValue` | The standard default header on every page, or the header on odd pages when `evenAndOddHeaders` is active. |
-| `first`              | `HeaderSlotValue` | The header on the first page. Only used when `differentFirstPage` is `true`.                         |
-| `even`               | `HeaderSlotValue` | The header on even pages. Only used when `evenAndOddHeaders` is `true`.                              |
+| `evenAndOddHeaders`  | `boolean`         | 是否为奇数页和偶数页使用不同的页眉。                                                                     |
+| `differentFirstPage` | `boolean`         | 是否为首页使用不同的页眉。设为 `true` 时，第一页使用 `first` 值，而不是 `default`。                     |
+| `default`            | `HeaderSlotValue` | 每页使用的默认页眉；或者在启用 `evenAndOddHeaders` 时，用作奇数页页眉。                                  |
+| `first`              | `HeaderSlotValue` | 首页的页眉。仅当 `differentFirstPage` 为 `true` 时使用。                                                 |
+| `even`               | `HeaderSlotValue` | 偶数页的页眉。仅当 `evenAndOddHeaders` 为 `true` 时使用。                                                |
 
-## Footers Configuration
+## 页脚配置
 
-The `footers` object mirrors `headers`. Each slot accepts a [footer slot value](#header-and-footer-slot-values).
+`footers` 对象与 `headers` 类似。每个插槽都接受一个[页脚插槽值](#页眉和页脚插槽值)。
 
-| Property             | Type              | Description                                                                                          |
+| 属性                 | 类型              | 说明                                                                                                    |
 | -------------------- | ----------------- | ---------------------------------------------------------------------------------------------------- |
-| `evenAndOddFooters`  | `boolean`         | Whether to use different footers for odd and even pages.                                             |
-| `differentFirstPage` | `boolean`         | Whether to use a different footer on the first page. When `true`, the `first` value is used on page one instead of `default`. |
-| `default`            | `FooterSlotValue` | The standard default footer on every page, or the footer on odd pages when `evenAndOddFooters` is active. |
-| `first`              | `FooterSlotValue` | The footer on the first page. Only used when `differentFirstPage` is `true`.                         |
-| `even`               | `FooterSlotValue` | The footer on even pages. Only used when `evenAndOddFooters` is `true`.                              |
+| `evenAndOddFooters`  | `boolean`         | 是否为奇数页和偶数页使用不同的页脚。                                                                     |
+| `differentFirstPage` | `boolean`         | 是否为首页使用不同的页脚。设为 `true` 时，第一页使用 `first` 值，而不是 `default`。                     |
+| `default`            | `FooterSlotValue` | 每页使用的默认页脚；或者在启用 `evenAndOddFooters` 时，用作奇数页页脚。                                  |
+| `first`              | `FooterSlotValue` | 首页的页脚。仅当 `differentFirstPage` 为 `true` 时使用。                                                 |
+| `even`               | `FooterSlotValue` | 偶数页的页脚。仅当 `evenAndOddFooters` 为 `true` 时使用。                                                |
 
-## Complete example
+## 完整示例
 
 ```js
 import { ExportPdf } from '@tiptap-pro/extension-export-pdf'
@@ -124,9 +124,9 @@ editor
   .run()
 ```
 
-## Simple headers and footers
+## 简单页眉和页脚
 
-If you don't need different headers for odd/even pages, you can provide just the `default` values:
+如果不需要为奇数页和偶数页设置不同的页眉，可以只提供 `default` 值：
 
 ```js
 ExportPdf.configure({
@@ -140,9 +140,9 @@ ExportPdf.configure({
 })
 ```
 
-## Rich headers via Tiptap JSONContent
+## 通过 Tiptap JSONContent 设置富文本页眉
 
-Pass a Tiptap JSONContent node directly on any slot. This is useful when you already have the node in memory and don't want to build a `Docx.Header` by hand:
+可以在任意插槽中直接传入 Tiptap JSONContent 节点。如果节点已在内存中，且你不想手动创建 `Docx.Header`，这种方式就很实用：
 
 ```js
 ExportPdf.configure({
@@ -164,9 +164,9 @@ ExportPdf.configure({
 })
 ```
 
-## Docx Header / Footer instances
+## Docx Header / Footer 实例
 
-For full control over paragraph properties, alignment, and run styles you can pass a `docx` `Header` / `Footer` instance (or an async factory that returns one). This requires `@tiptap-pro/extension-export-docx` to be installed alongside the PDF extension:
+如需完全控制段落属性、对齐方式和文本运行样式，可以传入 `docx` 的 `Header` / `Footer` 实例（或返回此类实例的异步工厂）。这要求在 PDF 扩展之外安装 `@tiptap-pro/extension-export-docx`：
 
 ```ts
 import { Docx, convertHeader } from '@tiptap-pro/extension-export-docx'
