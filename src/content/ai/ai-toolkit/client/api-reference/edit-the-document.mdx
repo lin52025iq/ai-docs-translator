@@ -1,29 +1,29 @@
 ---
-title: Edit the document
+title: 编辑文档
 meta:
-  title: Edit the document | Tiptap AI Toolkit
-  description: Insert and stream AI-generated content in text, HTML, or JSON formats. Includes review options for user approval workflows.
+  title: 编辑文档 | Tiptap AI Toolkit
+  description: 以文本、HTML 或 JSON 格式插入 AI 生成的内容并进行流式传输。包含审阅选项，支持用户审批工作流。
   category: AI Toolkit
 ---
 
-The AI Toolkit provides methods to edit the document in different formats.
+AI Toolkit 提供了多种方法，可用于以不同格式编辑文档。
 
 ## `insertText`
 
-Insert plain text into the editor.
+向编辑器中插入纯文本。
 
-### Parameters
+### 参数
 
-- `content` (`string`): Text to insert
-- `options?` (`InsertTextOptions`): Options for the `insertText` method
-  - `position?` (`Range | number`): Where to insert. A `Range` (`{ from, to }`) replaces that range; a `number` inserts at that position. Default: entire document range.
-  - `reviewOptions?` ([`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options)): Control preview/review behavior. [See available options](/ai/ai-toolkit/client/api-reference/review-options).
+- `content` (`string`)：要插入的文本
+- `options?` (`InsertTextOptions`)：`insertText` 方法的选项
+  - `position?` (`Range | number`)：插入位置。`Range`（`{ from, to }`）会替换对应范围；`number` 会在指定位置插入。默认值：整个文档范围。
+  - `reviewOptions?` ([`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options))：控制预览和审阅行为。[查看可用选项](/ai/ai-toolkit/client/api-reference/review-options)。
 
-### Returns
+### 返回值
 
 `void`
 
-### Example
+### 示例
 
 ```ts
 // Replace the entire document and show review markers
@@ -32,20 +32,20 @@ toolkit.insertText('AI content', { reviewOptions: { mode: 'review' } })
 
 ## `insertHtml`
 
-Insert HTML into the editor.
+向编辑器中插入 HTML。
 
-### Parameters
+### 参数
 
-- `content` (`string`): HTML to insert
-- `options?` (`InsertHtmlOptions`): Options for the `insertHtml` method
-  - `position?` (`Range | number`): Where to insert. A `Range` (`{ from, to }`) replaces that range; a `number` inserts at that position. Default: entire document range.
-  - `reviewOptions?` ([`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options)): Control preview/review behavior. [See available options](/ai/ai-toolkit/client/api-reference/review-options).
+- `content` (`string`)：要插入的 HTML
+- `options?` (`InsertHtmlOptions`)：`insertHtml` 方法的选项
+  - `position?` (`Range | number`)：插入位置。`Range`（`{ from, to }`）会替换对应范围；`number` 会在指定位置插入。默认值：整个文档范围。
+  - `reviewOptions?` ([`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options))：控制预览和审阅行为。[查看可用选项](/ai/ai-toolkit/client/api-reference/review-options)。
 
-### Returns
+### 返回值
 
 `void`
 
-### Example
+### 示例
 
 ```ts
 // Insert a paragraph at the end of the document
@@ -54,20 +54,20 @@ toolkit.insertHtml('<p>AI paragraph</p>', { position: editor.state.doc.content.s
 
 ## `insertJson`
 
-Insert ProseMirror JSON into the editor.
+向编辑器中插入 ProseMirror JSON。
 
-### Parameters
+### 参数
 
-- `content` (`any`): ProseMirror JSON node or slice
-- `options?` (`InsertJsonOptions`): Options for the `insertJson` method
-  - `position?` (`Range | number`): Where to insert. A `Range` (`{ from, to }`) replaces that range; a `number` inserts at that position. Default: entire document range.
-  - `reviewOptions?` ([`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options)): Control preview/review behavior. [See available options](/ai/ai-toolkit/client/api-reference/review-options).
+- `content` (`any`)：ProseMirror JSON 节点或切片
+- `options?` (`InsertJsonOptions`)：`insertJson` 方法的选项
+  - `position?` (`Range | number`)：插入位置。`Range`（`{ from, to }`）会替换对应范围；`number` 会在指定位置插入。默认值：整个文档范围。
+  - `reviewOptions?` ([`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options))：控制预览和审阅行为。[查看可用选项](/ai/ai-toolkit/client/api-reference/review-options)。
 
-### Returns
+### 返回值
 
 `void`
 
-### Example
+### 示例
 
 ```ts
 // Replace the entire document with a paragraph node
@@ -76,23 +76,23 @@ toolkit.insertJson({ type: 'paragraph', content: [{ type: 'text', text: 'AI' }] 
 
 ## `streamText`
 
-Stream plain text content into the editor in real-time.
+实时向编辑器中流式传输纯文本内容。
 
-### Parameters
+### 参数
 
-- `stream` (`AsyncIterable<string | Uint8Array>`): The stream of text content. It can be any object that implements the [Async Iterable protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#the_async_iterator_and_async_iterable_protocols), such as a [generator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_generators).
-- `options?` (`StreamTextOptions`): Options for the `streamText` method
-  - `position?` (`Range | number`): Where to insert. A `Range` (`{ from, to }`) replaces that range; a `number` inserts at that position. Default: entire document range.
-  - `reviewOptions?` ([`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options)): Control preview/review behavior. [See available options](/ai/ai-toolkit/client/api-reference/review-options).
-  - `checkChunkForError?` (`(status: { chunk: string; content: string; range: Range }) => boolean`): A function to check if the chunk contains an error. Returns `true` if the chunk has an error, `false` otherwise. If `true`, the stream will be stopped and a `StreamingChunkCheckFailedError` will be thrown.
-  - `onError?` (`(event: { error: unknown; chunk: string; content: string; range: Range }) => void`): A function to handle errors that occur during streaming.
-  - `onChunkInserted?` (`(event: { chunk: string; content: string; range: Range }) => void`): A function to handle when a chunk is streamed. Called after the chunk is inserted into the editor.
+- `stream` (`AsyncIterable<string | Uint8Array>`)：文本内容流。它可以是任何实现了 [Async Iterable 协议](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#the_async_iterator_and_async_iterable_protocols) 的对象，例如 [生成器](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_generators)。
+- `options?` (`StreamTextOptions`)：`streamText` 方法的选项
+  - `position?` (`Range | number`)：插入位置。`Range`（`{ from, to }`）会替换对应范围；`number` 会在指定位置插入。默认值：整个文档范围。
+  - `reviewOptions?` ([`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options))：控制预览和审阅行为。[查看可用选项](/ai/ai-toolkit/client/api-reference/review-options)。
+  - `checkChunkForError?` (`(status: { chunk: string; content: string; range: Range }) => boolean`)：检查数据块是否包含错误的函数。若数据块有错误，则返回 `true`；否则返回 `false`。如果返回 `true`，流式传输将停止，并抛出 `StreamingChunkCheckFailedError`。
+  - `onError?` (`(event: { error: unknown; chunk: string; content: string; range: Range }) => void`)：用于处理流式传输期间发生的错误的函数。
+  - `onChunkInserted?` (`(event: { chunk: string; content: string; range: Range }) => void`)：用于处理数据块流入的函数。在数据块插入编辑器后调用。
 
-### Returns
+### 返回值
 
-`Promise<void>`: A promise that resolves when the stream is complete.
+`Promise<void>`：流传输完成时兑现的 Promise。
 
-### Example
+### 示例
 
 ```ts
 const response = await fetch('/api/generate-text')
@@ -104,23 +104,23 @@ toolkit.streamText(stream)
 
 ## `streamHtml`
 
-Stream HTML content into the editor in real-time.
+实时向编辑器中流式传输 HTML 内容。
 
-### Parameters
+### 参数
 
-- `stream` (`AsyncIterable<string | Uint8Array> | ReadableStream<string | Uint8Array>`): The stream of HTML content. It can be any object that implements the [Async Iterable protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#the_async_iterator_and_async_iterable_protocols), such as a [ReadableStream](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream) or a [generator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_generators).
-- `options?` (`StreamHtmlOptions`): Options for the `streamHtml` method
-  - `position?` (`Range | number`): Where to insert. A `Range` (`{ from, to }`) replaces that range; a `number` inserts at that position. Default: entire document range.
-  - `reviewOptions?` ([`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options)): Control preview/review behavior. [See available options](/ai/ai-toolkit/client/api-reference/review-options).
-  - `checkChunkForError?` (`(status: { chunk: string; content: string; range: Range }) => boolean`): A function to check if the chunk contains an error. Returns `true` if the chunk has an error, `false` otherwise. If `true`, the stream will be stopped and a `StreamingChunkCheckFailedError` will be thrown.
-  - `onError?` (`(event: { error: unknown; chunk: string; content: string; range: Range }) => void`): A function to handle errors that occur during streaming.
-  - `onChunkInserted?` (`(event: { chunk: string; content: string; range: Range }) => void`): A function to handle when a chunk is streamed. Called after the chunk is inserted into the editor.
+- `stream` (`AsyncIterable<string | Uint8Array> | ReadableStream<string | Uint8Array>`)：HTML 内容流。它可以是任何实现了 [Async Iterable 协议](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#the_async_iterator_and_async_iterable_protocols) 的对象，例如 [ReadableStream](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream) 或[生成器](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_generators)。
+- `options?` (`StreamHtmlOptions`)：`streamHtml` 方法的选项
+  - `position?` (`Range | number`)：插入位置。`Range`（`{ from, to }`）会替换对应范围；`number` 会在指定位置插入。默认值：整个文档范围。
+  - `reviewOptions?` ([`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options))：控制预览和审阅行为。[查看可用选项](/ai/ai-toolkit/client/api-reference/review-options)。
+  - `checkChunkForError?` (`(status: { chunk: string; content: string; range: Range }) => boolean`)：检查数据块是否包含错误的函数。若数据块有错误，则返回 `true`；否则返回 `false`。如果返回 `true`，流式传输将停止，并抛出 `StreamingChunkCheckFailedError`。
+  - `onError?` (`(event: { error: unknown; chunk: string; content: string; range: Range }) => void`)：用于处理流式传输期间发生的错误的函数。
+  - `onChunkInserted?` (`(event: { chunk: string; content: string; range: Range }) => void`)：用于处理数据块流入的函数。在数据块插入编辑器后调用。
 
-### Returns
+### 返回值
 
-`Promise<void>`: A promise that resolves when the stream is complete.
+`Promise<void>`：流传输完成时兑现的 Promise。
 
-### Example
+### 示例
 
 ```ts
 const response = await fetch('/api/generate-html')
