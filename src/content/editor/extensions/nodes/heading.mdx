@@ -1,45 +1,45 @@
 ---
-title: Heading extension
+title: 标题扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-heading?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-heading
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-heading.svg
     url: https://npmcharts.com/compare/@tiptap/extension-heading?minimal=true
-    label: Downloads
+    label: 下载量
 extension:
-  name: Heading
+  name: 标题
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-heading
-  description: 'Structure the content with headings (comes with up to 6 different levels).'
+  description: '使用标题组织内容（最多支持 6 个不同级别）。'
   type: node
   icon: Heading
 meta:
-  title: Heading extension | Tiptap Editor Docs
-  description: Use the Heading extension in Tiptap to add support for headings of different levels with <h> HTML tags. Learn more in our docs!
-  category: Editor
+  title: 标题扩展 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用标题扩展，通过 <h> HTML 标签支持不同级别的标题。更多信息请参阅我们的文档！
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-The Heading extension adds support for headings of different levels. Headings are rendered with `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>` or `<h6>` HTML tags. By default all six heading levels (or styles) are enabled, but you can pass an array to only allow a few levels. Check the usage example to see how this is done.
+标题扩展支持创建不同级别的标题。标题会使用 `<h1>`、`<h2>`、`<h3>`、`<h4>`、`<h5>` 或 `<h6>` HTML 标签进行渲染。默认情况下，六个标题级别（或样式）均已启用，但你可以传入一个数组，仅启用其中几个级别。请参阅用法示例，了解如何设置。
 
-Type <code># </code> at the beginning of a new line and it will magically transform to a heading, same for <code>## </code>, <code>### </code>, <code>#### </code>, <code>##### </code> and <code>###### </code>.
+在新行开头输入 <code># </code>，它就会自动转换为标题；输入 <code>## </code>、<code>### </code>、<code>#### </code>、<code>##### </code> 或 <code>###### </code> 也一样。
 
 <CodeDemo path="/Nodes/Heading" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-heading
 ```
 
-## Settings
+## 设置
 
 ### HTMLAttributes
 
-Custom HTML attributes that should be added to the rendered HTML tag.
+要添加到渲染后 HTML 标签的自定义 HTML 属性。
 
 ```js
 Heading.configure({
@@ -51,9 +51,9 @@ Heading.configure({
 
 ### levels
 
-Specifies which heading levels are supported.
+指定支持哪些标题级别。
 
-Default: `[1, 2, 3, 4, 5, 6]`
+默认值：`[1, 2, 3, 4, 5, 6]`
 
 ```js
 Heading.configure({
@@ -61,11 +61,11 @@ Heading.configure({
 })
 ```
 
-## Commands
+## 命令
 
 ### setHeading()
 
-Creates a heading node with the specified level.
+创建指定级别的标题节点。
 
 ```js
 editor.commands.setHeading({ level: 1 })
@@ -73,15 +73,15 @@ editor.commands.setHeading({ level: 1 })
 
 ### toggleHeading()
 
-Toggles a heading node with the specified level.
+切换为指定级别的标题节点。
 
 ```js
 editor.commands.toggleHeading({ level: 1 })
 ```
 
-## Keyboard shortcuts
+## 键盘快捷键
 
-| Command                   | Windows/Linux                                      | macOS                                          |
+| 命令                      | Windows/Linux                                      | macOS                                          |
 | ------------------------- | -------------------------------------------------- | ---------------------------------------------- |
 | toggleHeading( level: 1 ) | <kbd>Control</kbd> + <kbd>Alt</kbd> + <kbd>1</kbd> | <kbd>Cmd</kbd> + <kbd>Alt</kbd> + <kbd>1</kbd> |
 | toggleHeading( level: 2 ) | <kbd>Control</kbd> + <kbd>Alt</kbd> + <kbd>2</kbd> | <kbd>Cmd</kbd> + <kbd>Alt</kbd> + <kbd>2</kbd> |
@@ -90,6 +90,6 @@ editor.commands.toggleHeading({ level: 1 })
 | toggleHeading( level: 5 ) | <kbd>Control</kbd> + <kbd>Alt</kbd> + <kbd>5</kbd> | <kbd>Cmd</kbd> + <kbd>Alt</kbd> + <kbd>5</kbd> |
 | toggleHeading( level: 6 ) | <kbd>Control</kbd> + <kbd>Alt</kbd> + <kbd>6</kbd> | <kbd>Cmd</kbd> + <kbd>Alt</kbd> + <kbd>6</kbd> |
 
-## Source code
+## 源代码
 
 [packages/extension-heading/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-heading/)
