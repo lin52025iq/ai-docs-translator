@@ -1,23 +1,23 @@
 ---
-title: Tool definitions
+title: 工具定义
 meta:
-  title: Tool definitions | Tiptap AI Toolkit
-  description: Complete list of tool definitions that allow AI agents to read, edit, and navigate document content.
+  title: 工具定义 | Tiptap AI Toolkit
+  description: AI 代理用于读取、编辑和浏览文档内容的完整工具定义列表。
   category: AI Toolkit
 ---
 
-The Tiptap AI Toolkit provides a comprehensive set of tools for interacting with Tiptap documents. These tools enable reading content, making edits, and navigating through large documents efficiently.
+Tiptap AI Toolkit 提供了一套全面的工具，可用于与 Tiptap 文档交互。这些工具支持读取内容、进行编辑，并高效浏览长文档。
 
-The tool definitions are available in the format of popular AI provider libraries:
+工具定义提供了多种常用 AI 提供商库的格式：
 
-- [AI SDK by Vercel](/ai/ai-toolkit/client/agents/tools/ai-sdk)
+- [Vercel AI SDK](/ai/ai-toolkit/client/agents/tools/ai-sdk)
 - [LangChain.js](/ai/ai-toolkit/client/agents/tools/langchain-js)
 - [OpenAI](/ai/ai-toolkit/client/agents/tools/openai)
 - [Anthropic](/ai/ai-toolkit/client/agents/tools/anthropic)
 - [Mastra](/ai/ai-toolkit/client/agents/tools/mastra)
-- [Other providers](/ai/ai-toolkit/client/agents/tools/other-providers)
+- [其他提供商](/ai/ai-toolkit/client/agents/tools/other-providers)
 
-When you add the tool definitions to your AI provider library, your AI agent will generate tool calls. You can then execute the tool calls using the [`executeTool` method](/ai/ai-toolkit/client/api-reference/execute-tool).
+将工具定义添加到 AI 提供商库后，AI 代理便会生成工具调用。然后，您可以使用 [`executeTool` 方法](/ai/ai-toolkit/client/api-reference/execute-tool)执行这些工具调用。
 
 ```ts
 // Read the document from the beginning
@@ -30,68 +30,68 @@ await agent.executeTool({
 
 ## `tiptapRead`
 
-Read the document from a given position.
+从指定位置读取文档。
 
-### Parameters
+### 参数
 
-- `from` (`number`): The position to read from.
+- `from`（`number`）：读取的起始位置。
 
-### Result
+### 结果
 
-The content of the document from the given position. We provide customers with more comprehensive information about the format of this tool.
+从指定位置开始的文档内容。我们为客户提供有关此工具格式的更详细信息。
 
 ## `tiptapEdit`
 
-Edit the document at a given position.
+在指定位置编辑文档。
 
-### Parameters
+### 参数
 
-- `operations` (`array`): A list of operations to perform on the document. We provide customers with more comprehensive information about the format of this tool.
+- `operations`（`array`）：要对文档执行的操作列表。我们为客户提供有关此工具格式的更详细信息。
 
-### Result
+### 结果
 
-A success or error message with the result of the edit operations.
+包含编辑操作结果的成功或错误消息。
 
 ## `tiptapReadSelection`
 
-Read the selection of the document.
+读取文档中的选区。
 
-### Parameters
+### 参数
 
-No parameters required.
+无需参数。
 
-### Result
+### 结果
 
-The content and location of the selection. We provide customers with more comprehensive information about the format of this tool.
+选区的内容和位置。我们为客户提供有关此工具格式的更详细信息。
 
 ## `getThreads`
 
-Retrieve all threads and comments in the document. This tool provides comprehensive information about existing discussions and feedback in the document.
+获取文档中的所有讨论串和评论。此工具会提供文档中现有讨论和反馈的详细信息。
 
-### Parameters
+### 参数
 
-- `from` (`number`): The starting index of the thread to read from.
+- `from`（`number`）：要读取的讨论串起始索引。
 
-### Result
+### 结果
 
-The data of all the threads and comments in the document, including their content and location.
+文档中所有讨论串和评论的数据，包括其内容和位置。
 
-### Requirements
+### 要求
 
-This tool requires the Comments extension to be configured in the editor with a CommentsProvider. This tool is deactivated by default and needs to be explicitly enabled.
+此工具要求在编辑器中配置 Comments 扩展和 CommentsProvider。此工具默认处于停用状态，需要显式启用。
 
 ## `editThreads`
 
-Perform operations on threads and comments in the document. This tool enables comprehensive thread and comment management including creating, updating, and deleting threads and comments.
+对文档中的讨论串和评论执行操作。此工具支持全面管理讨论串和评论，包括创建、更新和删除。
 
-### Parameters
+### 参数
 
-- `operations` (`array`): Array of operations to perform.
+- `operations`（`array`）：要执行的操作数组。
 
-### Result
+### 结果
 
-A success message if the operations were successful, or an error message if they were not.
+操作成功时返回成功消息，否则返回错误消息。
 
-### Requirements
+### 要求
 
-This tool requires the Comments extension to be configured in the editor with a CommentsProvider. This tool is deactivated by default and needs to be explicitly enabled.
+此工具要求在编辑器中配置 Comments 扩展和 CommentsProvider。此工具默认处于停用状态，需要显式启用。
