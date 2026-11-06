@@ -1,49 +1,49 @@
 ---
-title: Paragraph extension
+title: 段落扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-paragraph?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-paragraph
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-paragraph.svg
     url: https://npmcharts.com/compare/@tiptap/extension-paragraph?minimal=true
-    label: Downloads
+    label: 下载量
 extension:
   name: Paragraph
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-paragraph
-  description: Mom, look! I wrote a paragraph on the Internet.
+  description: 妈妈，看！我在互联网上写了一段文字。
   type: node
   icon: Pilcrow
 meta:
-  title: Paragraph extension | Tiptap Editor Docs
-  description: Use the Paragraph extension in Tiptap to add support for paragraphs with the <p> HTML tag. Learn more in our docs!
-  category: Editor
+  title: 段落扩展 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 Paragraph 扩展，通过 <p> HTML 标签添加对段落的支持。欢迎阅读文档了解更多！
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-Yes, the schema is very strict. Without this extension you won’t even be able to use paragraphs in the editor.
+是的，schema 非常严格。没有此扩展，甚至无法在编辑器中使用段落。
 
-<Callout title="Breaking Change" variant="warning">
-  Tiptap v1 tried to hide that node from you, but it has always been there. You have to explicitly
-  import it from now on (or use [StarterKit](/editor/extensions/functionality/starterkit)).
+<Callout title="重大变更" variant="warning">
+  Tiptap v1 曾试图对你隐藏这个节点，但它一直都存在。从现在起，你必须显式导入它
+  （或者使用 [StarterKit](/editor/extensions/functionality/starterkit)）。
 </Callout>
 
 <CodeDemo path="/Nodes/Paragraph" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-paragraph
 ```
 
-## Settings
+## 设置
 
 ### HTMLAttributes
 
-Custom HTML attributes that should be added to the rendered HTML tag.
+要添加到渲染后 HTML 标签上的自定义 HTML 属性。
 
 ```js
 Paragraph.configure({
@@ -53,22 +53,22 @@ Paragraph.configure({
 })
 ```
 
-## Commands
+## 命令
 
 ### setParagraph()
 
-Transforms all selected nodes to paragraphs.
+将所有选中的节点转换为段落。
 
 ```js
 editor.commands.setParagraph()
 ```
 
-## Keyboard shortcuts
+## 键盘快捷键
 
-| Command        | Windows/Linux                                      | macOS                                          |
+| 命令           | Windows/Linux                                      | macOS                                          |
 | -------------- | -------------------------------------------------- | ---------------------------------------------- |
 | setParagraph() | <kbd>Control</kbd> + <kbd>Alt</kbd> + <kbd>0</kbd> | <kbd>Cmd</kbd> + <kbd>Alt</kbd> + <kbd>0</kbd> |
 
-## Source code
+## 源代码
 
 [packages/extension-paragraph/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-paragraph/)
