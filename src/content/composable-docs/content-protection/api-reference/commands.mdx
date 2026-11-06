@@ -1,41 +1,41 @@
 ---
-title: Commands
+title: 命令
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Commands | Tiptap Content Protection Docs
-  description: Commands for updating an editor's content protection policy.
-  category: Composable Docs
+  title: 命令 | Tiptap 内容保护文档
+  description: 用于更新编辑器内容保护策略的命令。
+  category: 组合式文档
 ---
 
-Add the [Content Protection extension](/composable-docs/content-protection/api-reference/extension) before using this command.
+使用此命令前，请先添加 [Content Protection 扩展](/composable-docs/content-protection/api-reference/extension)。
 
 ## `setContentProtectionPolicy`
 
-Validates and replaces the active policy.
+验证并替换当前策略。
 
 ```ts
 editor.commands.setContentProtectionPolicy({ policy })
 ```
 
-### Parameters
+### 参数
 
-- `policy` (`ContentProtectionPolicy`): The complete replacement [policy](/composable-docs/content-protection/api-reference/policy#contentprotectionpolicy).
+- `policy`（`ContentProtectionPolicy`）：要替换为的完整 [策略](/composable-docs/content-protection/api-reference/policy#contentprotectionpolicy)。
 
-### Returns (`boolean`)
+### 返回值（`boolean`）
 
-- `true`: The policy is valid, including when it is unchanged.
-- `false`: The policy is invalid or the transaction also changes document content.
+- `true`：策略有效，包括策略未发生变化的情况。
+- `false`：策略无效，或该事务还会更改文档内容。
 
-A direct `editor.commands.setContentProtectionPolicy({ policy })` call is synchronous: when it returns, the accepted policy and `policyRevision` are installed. With `editor.chain()`, installation happens when `.run()` dispatches the transaction. The `contentProtectionPolicyUpdate` notification is queued as a microtask after installation; it does not run before the command returns.
+直接调用 `editor.commands.setContentProtectionPolicy({ policy })` 是同步的：调用返回时，已接受的策略和 `policyRevision` 均已安装。使用 `editor.chain()` 时，则会在 `.run()` 分发事务时安装策略。安装后会将 `contentProtectionPolicyUpdate` 通知加入微任务队列；它不会在命令返回前运行。
 
-### Behavior
+### 行为
 
-- A changed policy increments `policyRevision` and emits `contentProtectionPolicyUpdate`.
-- An identical policy has no effect and emits no event.
-- Invalid input keeps the previous policy and emits `contentProtectionPolicyError`.
-- The extension copies the policy. Mutating the supplied object has no effect.
-- Policy changes do not change document content or enter undo history.
-- Selection-only chaining is allowed. Replace the policy separately from content edits.
-- `editor.can().setContentProtectionPolicy({ policy })` validates without changing state or emitting events.
+- 策略发生变化时，`policyRevision` 会递增，并触发 `contentProtectionPolicyUpdate`。
+- 策略未发生变化时，不会产生任何影响，也不会触发事件。
+- 输入无效时，会保留之前的策略，并触发 `contentProtectionPolicyError`。
+- 扩展会复制策略。修改传入的对象不会产生任何影响。
+- 更改策略不会更改文档内容，也不会进入撤销历史记录。
+- 允许仅针对选区进行链式调用。请将策略替换与内容编辑分开进行。
+- `editor.can().setContentProtectionPolicy({ policy })` 会验证策略，但不会更改状态或触发事件。
