@@ -1,12 +1,12 @@
 ---
-title: Track changes in your editor
+title: 在编辑器中追踪更改
 tags:
   - type: addon
-    tooltip: Add Tracked Changes to your subscription
+    tooltip: 将 Tracked Changes 添加到你的订阅中
 meta:
-  title: Tracked Changes | Tiptap Tracked Changes Docs
-  description: Enable track changes and suggestion mode in your Tiptap editor for collaborative editing and document review.
-  category: Tracked Changes
+  title: Tracked Changes | Tiptap Tracked Changes 文档
+  description: 在 Tiptap 编辑器中启用修订跟踪和建议模式，以支持协作编辑和文档审阅。
+  category: 修订跟踪
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
@@ -14,58 +14,55 @@ import { Requirements, RequirementItem } from '@/components/Requirements'
 import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 
 <Requirements>
-  <RequirementItem label="1. Get the add-on">
-    Tracked Changes is a paid add-on that isn't included in any plan. Test it during your [free
-    trial](https://cloud.tiptap.dev/v2?trial=true) or purchase it in [your
-    dashboard](https://cloud.tiptap.dev/v2/billing).
+  <RequirementItem label="1. 获取附加组件">
+    Tracked Changes 是一款付费附加组件，不包含在任何套餐中。你可以在[免费试用期](https://cloud.tiptap.dev/v2?trial=true)内体验，也可以在[控制面板](https://cloud.tiptap.dev/v2/billing)中购买。
   </RequirementItem>
-  <RequirementItem label="2. Access the private registry">
-    The Tracked Changes extension is published in Tiptap's private npm registry. Authenticate to
-    Tiptap's private npm registry by following the [setup guide](/guides/pro-extensions).
+  <RequirementItem label="2. 访问私有仓库">
+    Tracked Changes 扩展发布在 Tiptap 的 npm 私有仓库中。请按照[设置指南](/guides/pro-extensions)完成身份验证，以访问 Tiptap 的 npm 私有仓库。
   </RequirementItem>
-  <RequirementItem label="3. Install the extension">
-    Install the extension from the private registry using npm or your preferred package manager.
+  <RequirementItem label="3. 安装扩展">
+    使用 npm 或你首选的包管理器，从私有仓库安装该扩展。
   </RequirementItem>
 </Requirements>
 
 <EnterpriseCalloutAuto variant="tracked-changes" renderMode="sidebar" />
 
-The Tracked Changes extension enables suggestion mode for collaborative editing workflows. When enabled, all edits appear as proposals that can be accepted or rejected, similar to change tracking in word processors.
+Tracked Changes 扩展为协作编辑工作流启用建议模式。启用后，所有编辑都会显示为提案，可接受或拒绝，类似于文字处理软件中的修订跟踪功能。
 
 <CodeDemo isPro path="/Experiments/TrackedChanges" />
 
-## Features
+## 功能
 
-The extension tracks eight types of changes:
+该扩展可追踪八种类型的更改：
 
-- **Insertions** (`add`) — New content added to the document
-- **Deletions** (`delete`) — Existing content marked for removal
-- **Replacements** (`replace`) — Content that was simultaneously deleted and replaced with new content
-- **Mark changes** (`markChange`) — Formatting or other mark-level changes applied to existing text
-- **Attribute changes** (`attributeChange`) — Updates to existing node attributes, such as an image's `src` or a custom node's configuration
-- **Block splits** (`split`) — End-of-block splits use `splitKind: 'insertion'`. Splits in existing content use `splitKind: 'structural'`.
-- **List indents** (`sink`) — A list item nested one level deeper with Tab
-- **List outdents** (`lift`) — A list item moved one level out with Shift-Tab
+- **插入**（`add`）— 添加到文档中的新内容
+- **删除**（`delete`）— 标记为要删除的现有内容
+- **替换**（`replace`）— 同时删除并替换为新内容
+- **标记更改**（`markChange`）— 应用于现有文本的格式或其他标记级更改
+- **属性更改**（`attributeChange`）— 更新现有节点的属性，例如图像的 `src` 或自定义节点的配置
+- **块拆分**（`split`）— 块末尾拆分使用 `splitKind: 'insertion'`。现有内容中的拆分使用 `splitKind: 'structural'`。
+- **列表缩进**（`sink`）— 按 Tab 键将列表项向内缩进一级
+- **列表减少缩进**（`lift`）— 按 Shift-Tab 将列表项向外移一级
 
-Each suggestion carries metadata including who created it, when it was created, and a unique identifier.
+每条建议都包含元数据，例如创建者、创建时间和唯一标识符。
 
-## Key capabilities
+## 主要功能
 
-- **Suggestion mode** — Toggle tracking on and off per user
-- **Accept and reject** — Review suggestions individually, in bulk, by range, or by user
-- **Suggestion grouping** — Continuous edits are automatically merged into single suggestions
-- **Block split tracking** — Accept and reject insertion splits and structural splits independently
-- **Nested suggestions** — Cross-author edits inside a pending suggestion stack as their own suggestions instead of overwriting it
-- **Collaboration ready** — Works with Yjs-based real-time collaboration
-- **Comments integration** — Link suggestions to comment threads for review workflows
-- **Atom node support** — Tracks changes to images, horizontal rules, and other non-text content
-- **Table support** — Tracks row, cell, and column insertions and deletions, including cell selections
-- **Full query API** — Find, filter, and inspect suggestions programmatically
+- **建议模式** — 按用户启用或关闭追踪
+- **接受和拒绝** — 逐条、批量、按范围或按用户审阅建议
+- **建议分组** — 连续的编辑会自动合并为一条建议
+- **块拆分追踪** — 可分别接受或拒绝插入型拆分和结构型拆分
+- **嵌套建议** — 其他作者在待处理建议中进行的编辑会作为独立建议叠加，而不会覆盖原建议
+- **支持协作** — 可与基于 Yjs 的实时协作功能配合使用
+- **集成评论** — 将建议关联到评论串，支持审阅工作流
+- **支持原子节点** — 追踪图像、水平线等非文本内容的更改
+- **支持表格** — 追踪行、单元格和列的插入与删除，包括单元格选择
+- **完整的查询 API** — 以编程方式查找、筛选和检查建议
 
 <EnterpriseCalloutAuto variant="tracked-changes" renderMode="inline" />
 
-## Next steps
+## 后续步骤
 
-- [Install the extension](/tracked-changes/getting-started/install) to get started
-- Learn about [basic usage](/tracked-changes/usage/basic-usage) patterns
-- Explore the [commands](/tracked-changes/api-reference/commands) and [utilities](/tracked-changes/api-reference/utilities) API
+- [安装扩展](/tracked-changes/getting-started/install)以开始使用
+- 了解[基本用法](/tracked-changes/usage/basic-usage)
+- 探索[命令](/tracked-changes/api-reference/commands)和[工具函数](/tracked-changes/api-reference/utilities) API
