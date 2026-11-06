@@ -1,66 +1,57 @@
 ---
-title: 'Collaboration'
-intro: 'Charts and diagrams are nodes like any other, so Tiptap Collaboration shares them without extra setup. One rule applies: <strong>every client that opens the shared document registers <code>Diagrams</code>.</strong>'
+title: '协作'
+intro: '图表和示意图与其他节点一样，因此 Tiptap Collaboration 无需额外设置即可共享它们。只有一条规则：<strong>每个打开共享文档的客户端都必须注册 <code>Diagrams</code>。</strong>'
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Collaboration | Tiptap Diagrams Docs'
-  description: 'Charts and diagrams are nodes like any other, so Tiptap Collaboration shares them without extra setup.'
-  category: Diagrams
+  title: '协作 | Tiptap Diagrams 文档'
+  description: '图表和示意图与其他节点一样，因此 Tiptap Collaboration 无需额外设置即可共享它们。'
+  category: 图表
 ---
 
-## Where to register Diagrams
+## 在哪里注册 Diagrams
 
-Register `Diagrams` everywhere the shared document is opened:
+在每个打开共享文档的地方注册 `Diagrams`：
 
-- in every editor
-- in a read-only viewer
-- in an agent
-- on the collaboration server
+- 在每个编辑器中
+- 在只读查看器中
+- 在代理中
+- 在协作服务器上
 
-A client you missed deletes every chart and diagram from the shared document, unless it sets
-`enableContentCheck: true`. See [A client without Diagrams](#a-client-without-diagrams).
+如果遗漏某个客户端，它会从共享文档中删除所有图表和示意图，除非它设置了
+`enableContentCheck: true`。请参阅[不含 Diagrams 的客户端](#不含-diagrams-的客户端)。
 
-## Two people changing one chart
+## 两个人同时修改一张图表
 
-A chart stores its data, its Chart Spec and its Renderer as separate attributes. The shared
-document merges each attribute on its own:
+图表将其数据、Chart Spec 和 Renderer 分别存储为独立属性。共享文档会分别合并每个属性：
 
-- **Changes to different attributes at the same time** are both kept. For example, one person
-  changes the title and another person changes a cell.
-- **Changes to the data at the same time** keep only one of the two. For example, two people
-  change different cells of one chart. The data is one attribute, so the change that arrives last
-  replaces the other.
-- **Undo** takes back only your own change, also after somebody else changed the chart.
+- **同时修改不同属性**时，两项修改都会保留。例如，一个人修改标题，另一个人修改单元格。
+- **同时修改数据**时，只会保留其中一项。例如，两个人修改同一张图表中的不同单元格。数据是一个属性，因此后到的修改会覆盖另一项。
+- **撤销**只会撤销你自己的修改，即使其他人已经修改了图表也是如此。
 
-The same applies to a diagram. Its source is one attribute.
+示意图也遵循相同规则。其源数据是一个属性。
 
-## A client without Diagrams
+## 不含 Diagrams 的客户端
 
-A client whose schema has no `chart` or `flowDiagram` node, or that sets `chart: false` or
-`flowDiagram: false`, cannot build those nodes. What happens then depends on the editor option
-[`enableContentCheck`](/guides/invalid-schema#for-collaborative-editing):
+如果客户端的 schema 中没有 `chart` 或 `flowDiagram` 节点，或者将 `chart: false` 或
+`flowDiagram: false` 设为禁用状态，就无法构建这些节点。之后会发生什么，取决于编辑器选项
+[`enableContentCheck`](/guides/invalid-schema#for-collaborative-editing)：
 
-| `enableContentCheck` | The shared document                                                                            | That client                                                                               |
-| -------------------- | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `false` (default)    | Loses the charts or diagrams that client cannot build. The deletion reaches every other client | Deletes them while it loads the document                                                  |
-| `true`               | Stays as it is. Everybody else keeps their charts and diagrams                                 | Shows the rest of the document, cannot be edited, sends nothing, and emits `contentError` |
+| `enableContentCheck` | 共享文档                                                                                     | 该客户端                                                                                  |
+| -------------------- | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `false`（默认值）    | 删除该客户端无法构建的图表或示意图。删除操作会同步到所有其他客户端                           | 加载文档时删除这些内容                                                                    |
+| `true`               | 保持不变。其他所有人仍可保留自己的图表和示意图                                               | 显示文档的其余部分，但无法编辑、不发送任何内容，并触发 `contentError`                      |
 
-`enableContentCheck: true` needs `@tiptap/extension-collaboration` 3.33.0 and `@tiptap/y-tiptap`
-3.2.0 or later. With older versions, the client deletes those charts or diagrams in both cases.
-Only `@tiptap/y-tiptap` 3.0.10 and 3.0.11 behave differently: they make the editor read-only and may
-show an empty or outdated document.
+`enableContentCheck: true` 需要 `@tiptap/extension-collaboration` 3.33.0 和 `@tiptap/y-tiptap`
+3.2.0 或更高版本。在较旧版本中，无论哪种情况，客户端都会删除这些图表或示意图。只有
+`@tiptap/y-tiptap` 3.0.10 和 3.0.11 的行为不同：它们会将编辑器设为只读，并可能显示空白或过时的文档。
 
-Set `enableContentCheck: true` on every client that might not register `Diagrams`, for example an
-older version of your app. That client stays paused while the document contains charts or
-diagrams it cannot build. Also set `onContentError`, because the default handler throws the error.
-See [Invalid schema handling](/guides/invalid-schema#for-collaborative-editing).
+对于任何可能未注册 `Diagrams` 的客户端（例如应用的旧版本），都应设置 `enableContentCheck: true`。当文档包含该客户端无法构建的图表或示意图时，该客户端会暂停运行。还应设置 `onContentError`，因为默认处理程序会抛出错误。请参阅[无效 schema 的处理](/guides/invalid-schema#for-collaborative-editing)。
 
-## A client that shows nothing
+## 不显示任何内容的客户端
 
-A client that does not draw anything registers `Diagrams` without any Renderer or Diagram
-Renderer. It needs no DOM and no chart library, and it keeps every chart and diagram as it is.
+不绘制任何内容的客户端可以注册 `Diagrams`，但不配置 Renderer 或 Diagram Renderer。它不需要 DOM 或图表库，并会原样保留所有图表和示意图。
 
 ```ts
 import { getSchema } from '@tiptap/core'
@@ -71,14 +62,12 @@ const extensions = [StarterKit, Diagrams.configure({ renderers: [] })]
 const schema = getSchema(extensions)
 ```
 
-An editor without a Renderer shows each chart or diagram as not drawable here, or as what
-[`unavailable`](/diagrams/api-reference/options#unavailable) returns. Its data stays untouched.
+没有 Renderer 的编辑器会将每个图表或示意图显示为此处无法绘制，或显示为
+[`unavailable`](/diagrams/api-reference/options#unavailable) 返回的内容。其数据不会被更改。
 
-## Turning away a client without Diagrams
+## 拒绝不含 Diagrams 的客户端
 
-If clients you do not control can connect, let the server refuse those that do not declare
-`Diagrams`. With Hocuspocus, for example, the client adds a parameter to its connection. The
-server checks it before the document is loaded:
+如果你无法控制的客户端也能连接，可以让服务器拒绝未声明 `Diagrams` 的客户端。例如，使用 Hocuspocus 时，客户端会在连接中添加一个参数。服务器会在加载文档前检查该参数：
 
 ```ts
 // client
@@ -97,9 +86,6 @@ const server = new Hocuspocus({
 })
 ```
 
-## Mixed versions
+## 版本混用
 
-A newer version of `@tiptap-pro/extension-diagrams` may store a chart attribute that an older
-client does not know. The older client keeps that attribute only until it changes the chart. Then
-the attribute is lost. Update every client to the same version before you use a feature that a
-newer version added.
+较新版本的 `@tiptap-pro/extension-diagrams` 可能会存储旧版客户端不认识的图表属性。旧版客户端会保留该属性，直到它修改图表，此时该属性就会丢失。在使用较新版本新增的功能之前，请先将所有客户端更新到相同版本。
