@@ -1,41 +1,41 @@
 ---
-title: Selection extension
+title: Selection 扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extensions?label=version
     url: https://www.npmjs.com/package/@tiptap/extensions
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extensions.svg
     url: https://npmcharts.com/compare/@tiptap/extensions?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  title: Selection extension | Tiptap Editor Docs
-  description: Use the Selection extension in Tiptap to preserve the selection when the editor is blurred. Learn more in our docs!
-  category: Editor
+  title: Selection 扩展 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 Selection 扩展，可在编辑器失去焦点时保留选区。欢迎查阅文档了解更多信息！
+  category: 编辑器
 extension:
   name: Selection
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extensions/src/selection
-  description: Preserve the selection when the editor is blurred.
+  description: 在编辑器失去焦点时保留选区。
   type: extension
   icon: TextCursor
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-The Selection extension adds a CSS class to the current selection when the editor is blurred. By default it adds `.selection`, but you can change that.
+当编辑器失去焦点时，Selection 扩展会为当前选区添加一个 CSS 类。默认添加 `.selection`，但你可以更改它。
 
-Note that it’s only a class, the styling is totally up to you. The usage example below has some CSS for that class.
+请注意，它只是一个类，具体样式完全由你决定。下面的用法示例包含了该类的一些 CSS 样式。
 
 <CodeDemo path="/Extensions/Selection" />
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extensions
 ```
 
-And import it in your editor:
+然后在编辑器中导入：
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -46,13 +46,13 @@ new Editor({
 })
 ```
 
-## Settings
+## 设置
 
 ### className
 
-The class that is applied to the current selection.
+应用于当前选区的类名。
 
-Default: `'selection'`
+默认值：`'selection'`
 
 ```js
 Selection.configure({
@@ -60,11 +60,11 @@ Selection.configure({
 })
 ```
 
-## Source code
+## 源代码
 
 [packages/extensions/selection/](https://github.com/ueberdosis/tiptap/blob/main/packages/extensions/src/selection/)
 
-## Minimal Install
+## 最精简安装
 
 ```js
 import { Editor } from '@tiptap/core'
