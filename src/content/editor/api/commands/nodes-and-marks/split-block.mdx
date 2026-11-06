@@ -1,20 +1,20 @@
 ---
-title: splitBlock command
+title: splitBlock 命令
 meta:
-  title: splitBlock Command | Tiptap Editor Docs
-  description: Use the splitBlock command in Tiptap to split the current block at the cursor position or text selection. Learn more in our docs!
-  category: Editor
+  title: splitBlock 命令 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 splitBlock 命令，在光标位置或文本选区处拆分当前块。了解更多信息，请参阅我们的文档！
+  category: 编辑器
 ---
 
-`splitBlock` splits the current block at the cursor position. If text is selected, it deletes the selected content before splitting. If the current selection is not splittable, the command will be ignored.
+`splitBlock` 会在光标位置拆分当前块。如果选中了文本，则会先删除选中的内容，再进行拆分。如果当前选区无法拆分，则会忽略该命令。
 
-## Parameters
+## 参数
 
 `options: Record<string, any>`
 
-- `keepMarks: boolean` - Defines if the marks should be kept or removed. Defaults to `true`.
+- `keepMarks: boolean` - 定义是否保留标记。默认为 `true`。
 
-## Use the splitBlock command
+## 使用 splitBlock 命令
 
 ```js
 // split the current node and keep marks
