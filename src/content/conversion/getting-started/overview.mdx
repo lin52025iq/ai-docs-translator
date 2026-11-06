@@ -1,12 +1,12 @@
 ---
-title: Document import and export
+title: 文档导入和导出
 tags:
   - type: start
   - type: beta
 meta:
-  title: Document Import and Export | Tiptap Conversion (DOCX, PDF, Markdown)
-  description: Import DOCX and Markdown into your Tiptap editor, export to DOCX, PDF, ODT, EPUB, and more. Learn how the conversion pipeline works and what extensions you need.
-  category: Conversion
+  title: 文档导入和导出 | Tiptap Conversion（DOCX、PDF、Markdown）
+  description: 将 DOCX 和 Markdown 导入 Tiptap 编辑器，并导出为 DOCX、PDF、ODT、EPUB 等格式。了解转换流程的工作方式以及所需的扩展。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
@@ -14,77 +14,77 @@ import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 
 <EnterpriseCalloutAuto variant="docx" renderMode="sidebar" />
 
-<Callout title="Pro package" variant="hint">
-  Conversion is a Pro package included with all [Tiptap subscriptions](https://tiptap.dev/pricing).
-  Before installation, you'll need to set up [access to Tiptap's private NPM
-  registry](/guides/pro-extensions).
+<Callout title="Pro 套餐" variant="hint">
+  Conversion 是 Pro 套餐，包含在所有 [Tiptap 订阅](https://tiptap.dev/pricing)中。
+  安装前，你需要先设置[访问 Tiptap 私有 NPM
+  注册表](/guides/pro-extensions)。
 </Callout>
 
-Tiptap Conversion translates between document formats and your editor's document model. It supports importing DOCX and Markdown, and exporting to DOCX, PDF, ODT, EPUB, and Markdown. It is **not** a document renderer, **not** a real-time collaborative editor (that's a separate Tiptap product), **not** an OCR or scanned-PDF processor, and **not** an asynchronous job queue. Every endpoint is processed synchronously and returns the result in the response. It is a bridge. What renders in your editor depends on which extensions you have installed.
+Tiptap Conversion 可在文档格式与编辑器的文档模型之间进行转换。它支持导入 DOCX 和 Markdown，并导出为 DOCX、PDF、ODT、EPUB 和 Markdown。它**不是**文档渲染器，**不是**实时协作编辑器（这是 Tiptap 的另一款产品），**不是** OCR 或扫描版 PDF 处理工具，也**不是**异步任务队列。每个端点都会同步处理，并在响应中返回结果。它是一个桥梁。编辑器中实际渲染的内容取决于你安装了哪些扩展。
 
-## The conversion pipeline
+## 转换流程
 
-Conversion is a multi-step pipeline, not a single operation. The conversion service handles the translation between file formats and Tiptap's JSON document model. Your editor handles the rendering.
+转换是一个多步骤流程，而非单一操作。转换服务负责在文件格式与 Tiptap 的 JSON 文档模型之间进行转换，编辑器则负责渲染。
 
-1. **Import:** The conversion service parses your source document and produces Tiptap JSON, a structured representation of the document's content, formatting, and layout.
-2. **Editor rendering:** Your Tiptap editor receives the JSON. For each node type in the JSON (heading, table, image, etc.), the editor needs a matching extension installed to render it. Content without a matching extension needs to be managed. See the [invalid schema guide](/guides/invalid-schema) for strategies.
-3. **Export:** The export extension converts your editor's content back into a document format. It exports what the editor currently contains, not what the original source document had.
+1. **导入：**转换服务解析源文档并生成 Tiptap JSON。这是一种结构化表示，包含文档的内容、格式和布局。
+2. **编辑器渲染：**Tiptap 编辑器接收 JSON。JSON 中的每种节点类型（标题、表格、图像等）都需要在编辑器中安装对应的扩展才能渲染。对于没有匹配扩展的内容，需要妥善处理。有关处理策略，请参阅[无效架构指南](/guides/invalid-schema)。
+3. **导出：**导出扩展会将编辑器中的内容转换回文档格式。它导出的是编辑器当前包含的内容，而不是原始源文档中的内容。
 
-See the [Supported features](/conversion/getting-started/feature-support-matrix) page for a full breakdown of what works at each stage, or explore the [Content types](/conversion/content-types/text-and-formatting/paragraphs) pages for detailed per-feature documentation.
+请参阅[支持的功能](/conversion/getting-started/feature-support-matrix)页面，全面了解各个阶段支持的功能；也可以浏览[内容类型](/conversion/content-types/text-and-formatting/paragraphs)页面，查看各项功能的详细文档。
 
-Try it yourself in the [live demo](/conversion/getting-started/demo).
+在[在线演示](/conversion/getting-started/demo)中亲自试用。
 
-## What you need to render converted content
+## 渲染转换后内容所需的组件
 
-How much of the document experience you recreate in the editor depends on what you are building.
+你需要在编辑器中还原多少文档体验，取决于你要构建什么。
 
 ### ConvertKit
 
-For any Conversion workflow, register the [ConvertKit](/conversion/import/docx/convertkit) extension from `@tiptap-pro/extension-convert-kit`. ConvertKit is the canonical editor kit for Conversion: it bundles a DOCX-aware schema (paragraphs, headings, lists, images, marks) and the formatting attributes the conversion service produces. Use it instead of `StarterKit`; even if you don't import DOCX today, ConvertKit gets you ready for the moment you do.
+无论采用哪种 Conversion 工作流，都应注册来自 `@tiptap-pro/extension-convert-kit` 的 [ConvertKit](/conversion/import/docx/convertkit) 扩展。ConvertKit 是 Conversion 的标准编辑器套件：它包含兼容 DOCX 的架构（段落、标题、列表、图像和标记），以及转换服务生成的格式属性。请使用它替代 `StarterKit`；即使你目前不导入 DOCX，ConvertKit 也能让你为将来做好准备。
 
-This is enough if you are building a **content editor** or **CMS** that accepts document uploads. The text content renders correctly in a continuous-scroll editor. For Markdown imports, ConvertKit is also the right choice, since it covers the same set of features.
+如果你要构建一个可接收文档上传的**内容编辑器**或 **CMS**，使用 ConvertKit 就足够了。文本内容可以在连续滚动的编辑器中正确渲染。对于 Markdown 导入，ConvertKit 也是合适的选择，因为它支持相同的一组功能。
 
-The [Supported features](/conversion/getting-started/feature-support-matrix) page shows what ConvertKit handles per feature and where you may need additional extensions.
+[支持的功能](/conversion/getting-started/feature-support-matrix)页面介绍了 ConvertKit 对各项功能的处理方式，以及可能需要额外扩展的情况。
 
-### Pages extension for document layout
+### 用于文档布局的 Pages 扩展
 
-For page-aware documents with headers, footers, page breaks, page numbering, page size and margins, you also need the [Pages extension](/pages/getting-started/overview) and [PagesTableKit](/pages/guides/pages-tablekit). Pages provides a paginated editing experience where content flows across visual pages and headers and footers have dedicated editing areas; PagesTableKit provides pagination-safe tables (ConvertKit's built-in tables don't paginate).
+对于需要支持页眉、页脚、分页符、页码、页面大小和页边距的分页文档，你还需要 [Pages 扩展](/pages/getting-started/overview)和 [PagesTableKit](/pages/guides/pages-tablekit)。Pages 提供分页编辑体验，内容会流经各个可视页面，页眉和页脚也有专门的编辑区域；PagesTableKit 则提供支持分页的表格（ConvertKit 内置的表格不支持分页）。
 
-Page-aware imports (headers, footers, page breaks) only render in the editor when Pages is installed. Without Pages, imported headers and footers have nowhere to render, page breaks are ignored, and there is no concept of page boundaries.
+只有安装 Pages 后，带有分页信息的导入内容（页眉、页脚和分页符）才能在编辑器中渲染。没有 Pages 时，导入的页眉和页脚无处渲染，分页符会被忽略，编辑器也不会识别页面边界。
 
-| What you are building                      | What you need                                                                                                                |
+| 你要构建的内容 | 所需组件 |
 | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
-| Content editor or CMS with document upload | `ConvertKit`                                                                                                                 |
-| Document editor with page layout           | `ConvertKit` + `TableKit` (`@tiptap-pro/extension-pages-tablekit`) + `Pages` (with `ConvertKit.configure({ table: false })`) |
-| Headless pipeline (no editor)              | REST API only, no extensions needed                                                                                          |
+| 支持文档上传的内容编辑器或 CMS | `ConvertKit` |
+| 支持页面布局的文档编辑器 | `ConvertKit` + `TableKit`（`@tiptap-pro/extension-pages-tablekit`）+ `Pages`（使用 `ConvertKit.configure({ table: false })`） |
+| 无头处理流程（无编辑器） | 仅需 REST API，无需扩展 |
 
-## Supported formats
+## 支持的格式
 
-You can integrate conversion using editor extensions (commands within your Tiptap editor) or the REST API (HTTP endpoints for server-side or non-editor use).
+你可以通过编辑器扩展（Tiptap 编辑器中的命令）或 REST API（用于服务端或非编辑器场景的 HTTP 端点）集成转换功能。
 
-| Format           | Import                                                                                              | Export                                                                                                      | Notes |
+| 格式 | 导入 | 导出 | 备注 |
 | ---------------- | --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ----- |
-| **DOCX** (Word)  | [Extension](/conversion/import/docx/editor-extension), [REST API](/conversion/import/docx/rest-api) | [Extension](/conversion/export/docx/editor-extension), [REST API](/conversion/export/docx/rest-api)         |       |
-| **Markdown**     | [REST API](/conversion/import/markdown/rest-api)                                                    | [Extension](/conversion/export/markdown/editor-extension), [REST API](/conversion/export/markdown/rest-api) |       |
-| **PDF**          |                                                                                                     | [Extension](/conversion/export/pdf/editor-extension), [REST API](/conversion/export/pdf/rest-api)           |       |
-| **ODT**          |                                                                                                     | [Extension](/conversion/export/odt/editor-extension), [REST API](/conversion/export/odt/rest-api)           |       |
-| **EPUB**         |                                                                                                     | [Extension](/conversion/export/epub/editor-extension), [REST API](/conversion/export/epub/rest-api)         |       |
-| **DOC** (legacy) |                                                                                                     | [Extension](/conversion/export/doc/editor-extension), [REST API](/conversion/export/doc/rest-api)           |       |
+| **DOCX**（Word） | [扩展](/conversion/import/docx/editor-extension)、[REST API](/conversion/import/docx/rest-api) | [扩展](/conversion/export/docx/editor-extension)、[REST API](/conversion/export/docx/rest-api) | |
+| **Markdown** | [REST API](/conversion/import/markdown/rest-api) | [扩展](/conversion/export/markdown/editor-extension)、[REST API](/conversion/export/markdown/rest-api) | |
+| **PDF** | | [扩展](/conversion/export/pdf/editor-extension)、[REST API](/conversion/export/pdf/rest-api) | |
+| **ODT** | | [扩展](/conversion/export/odt/editor-extension)、[REST API](/conversion/export/odt/rest-api) | |
+| **EPUB** | | [扩展](/conversion/export/epub/editor-extension)、[REST API](/conversion/export/epub/rest-api) | |
+| **DOC**（旧版） | | [扩展](/conversion/export/doc/editor-extension)、[REST API](/conversion/export/doc/rest-api) | |
 
-Markdown is also available as a [core editor feature](/editor/markdown) with built-in parsing and serialization, independent of the conversion service.
+Markdown 也可作为[编辑器核心功能](/editor/markdown)使用，内置解析和序列化能力，独立于转换服务。
 
-## Next steps
+## 后续步骤
 
-- [Supported features](/conversion/getting-started/feature-support-matrix) to see what works across import, editor, and export
-- [Install](/conversion/getting-started/install) to set up credentials and install extensions
-- [Live demo](/conversion/getting-started/demo) to try DOCX import and export in the browser
+- 查看[支持的功能](/conversion/getting-started/feature-support-matrix)，了解导入、编辑器和导出各环节支持的功能
+- 前往[安装](/conversion/getting-started/install)，设置凭据并安装扩展
+- 通过[在线演示](/conversion/getting-started/demo)，在浏览器中试用 DOCX 导入和导出
 
-## Legacy Import/Export extensions
+## 旧版 Import/Export 扩展
 
-The legacy `@tiptap-pro/extension-import` and `@tiptap-pro/extension-export` packages are being deprecated and will be sunset in 2026. These extensions receive no new features and are maintained for existing users only.
+旧版 `@tiptap-pro/extension-import` 和 `@tiptap-pro/extension-export` 软件包正在弃用，并将于 2026 年停止支持。这些扩展不会再添加新功能，仅为现有用户维护。
 
-- [Legacy DOCX Import/Export](/conversion/legacy/overview)
-- [Legacy ODT Import/Export](/conversion/legacy/odt/editor-extensions)
-- [Legacy Markdown Import/Export](/conversion/legacy/markdown/editor-extensions)
+- [旧版 DOCX 导入/导出](/conversion/legacy/overview)
+- [旧版 ODT 导入/导出](/conversion/legacy/odt/editor-extensions)
+- [旧版 Markdown 导入/导出](/conversion/legacy/markdown/editor-extensions)
 
-**Migrating to the new extensions:** The current [Import DOCX](/conversion/import/docx/editor-extension) and [Export DOCX](/conversion/export/docx/editor-extension) extensions provide improved conversion quality, more format options, and active development. We recommend migrating as soon as possible.
+**迁移到新扩展：**当前的 [DOCX 导入](/conversion/import/docx/editor-extension)和 [DOCX 导出](/conversion/export/docx/editor-extension)扩展可提供更高的转换质量、更多格式选项，并会持续开发。我们建议尽早迁移。
