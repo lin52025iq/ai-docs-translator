@@ -1,27 +1,27 @@
 ---
-title: insertDefaultBlock command
+title: insertDefaultBlock 命令
 meta:
-  title: insertDefaultBlock command | Tiptap Editor Docs
-  description: Use the insertDefaultBlock command in Tiptap to insert the schema's default block at a position. More in the docs!
-  category: Editor
+  title: insertDefaultBlock 命令 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 insertDefaultBlock 命令，在指定位置插入 schema 的默认块。更多内容请参阅文档！
+  category: 编辑器
 ---
 
-The `insertDefaultBlock` command inserts the schema's default content block type at a given position. The block type is determined automatically using `defaultBlockAt()`, so the schema decides what fits at the insertion point.
+`insertDefaultBlock` 命令会在指定位置插入 schema 的默认内容块类型。块类型通过 `defaultBlockAt()` 自动确定，因此由 schema 决定在插入点适合哪种块。
 
-This is useful for inserting context-aware empty blocks, for example, inserting a paragraph inside a document or a blockquote — without hardcoding the node type.
+此命令适用于插入可根据上下文确定类型的空块，例如在文档或引用块中插入段落，而无需将节点类型硬编码。
 
-The command returns `false` when no valid default block can be inserted at the position (e.g., when the position is inside a textblock). It does not silently reposition.
+如果无法在指定位置插入有效的默认块（例如，位置处于文本块内部），命令会返回 `false`。它不会静默地重新定位。
 
-## Parameters
+## 参数
 
 `options: InsertDefaultBlockOptions`
 
-- `pos: number | ResolvedPos` – Position to insert the block at. Accepts a numeric offset or a resolved ProseMirror position. Defaults to the current caret position.
-- `attrs: Record<string, any>` – Attributes to apply to the inserted node. Only keys defined in the node type's `spec.attrs` are kept; unknown attributes are filtered out.
-- `content: Content | ProseMirrorNode | Fragment` – Content to insert into the block. Accepts plain text, an HTML string, or a ProseMirror node/fragment.
-- `updateSelection: boolean` – Whether to move the selection to the newly inserted block. Defaults to `true`.
+- `pos: number | ResolvedPos` – 插入块的位置。接受数字偏移量或已解析的 ProseMirror 位置。默认为当前光标位置。
+- `attrs: Record<string, any>` – 要应用于插入节点的属性。仅保留节点类型 `spec.attrs` 中定义的键；未知属性会被过滤掉。
+- `content: Content | ProseMirrorNode | Fragment` – 要插入块中的内容。接受纯文本、HTML 字符串或 ProseMirror 节点/片段。
+- `updateSelection: boolean` – 是否将选区移至新插入的块。默认为 `true`。
 
-## Use the insertDefaultBlock command
+## 使用 insertDefaultBlock 命令
 
 ```js
 // Insert at the current selection position
