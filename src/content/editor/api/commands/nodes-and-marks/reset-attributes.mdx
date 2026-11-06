@@ -1,26 +1,26 @@
 ---
-title: resetAttributes command
+title: resetAttributes 命令
 meta:
-  title: resetAttributes command | Tiptap Editor Docs
-  description: Use the resetAttributes command in Tiptap to reset a node's attributes to their default values. Learn more in our docs!
-  category: Editor
+  title: resetAttributes 命令 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 resetAttributes 命令，将节点的属性重置为默认值。了解更多信息，请参阅我们的文档！
+  category: 编辑器
 ---
 
-`resetAttributes` resets the specified attributes of a node or mark to their default values.
+`resetAttributes` 会将节点或标记的指定属性重置为默认值。
 
-## Parameters
+## 参数
 
 `typeOrName: string | NodeType | MarkType`
 
-The name or type of the node or mark whose attributes should be reset.
+要重置其属性的节点或标记的名称或类型。
 
 `attributes: string | string[]`
 
-A string or an array of strings that defines which attributes should be reset.
+用于指定要重置哪些属性的字符串或字符串数组。
 
-## Use the resetAttributes command
+## 使用 resetAttributes 命令
 
 ```js
-// reset the style and class attributes on the currently selected paragraph nodes
+// 重置当前选中段落节点的 style 和 class 属性
 editor.commands.resetAttributes('paragraph', ['style', 'class'])
 ```
