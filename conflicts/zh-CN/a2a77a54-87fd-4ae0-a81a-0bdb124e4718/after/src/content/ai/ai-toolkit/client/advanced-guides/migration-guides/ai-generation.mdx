@@ -1,0 +1,145 @@
+---
+title: 从 Basic AI Generation 迁移到 AI Toolkit
+meta:
+  title: 从 Basic AI Generation 迁移到 AI Toolkit | Tiptap AI Toolkit
+  description: 从 Basic AI Generation 迁移到 AI Toolkit，全面掌控 AI 提供商、自定义后端和高级审核工作流。
+  category: AI Toolkit
+---
+
+Basic AI Generation 扩展允许你选择内容，并根据你的指令让 AI 模型重写这些内容。
+
+要使用 AI Toolkit 实现相同功能，请参阅[插入内容工作流](/ai/ai-toolkit/client/workflows/insert-content)。
+
+## 第 1 步：服务器端设置
+
+Basic AI Generation 扩展开箱即用，支持 [Tiptap Cloud](https://cloud.tiptap.dev/v2/cloud/ai)。
+
+AI Toolkit 不包含 Tiptap Cloud 服务，而是与你自己的 AI 后端配合使用。这样，你可以灵活地使用任何 AI 模型提供商和框架。
+
+首先，构建一个以 HTML 格式返回 AI 生成内容的 API 端点。使用 [AI SDK](https://ai-sdk.dev/) 之类的库调用后端。
+
+```ts
+import { openai } from '@ai-sdk/openai'
+import { createTextStreamResponse, streamText, toTextStream } from 'ai'
+
+export async function POST(req: Request) {
+  const { userRequest, selection } = await req.json()
+
+  const result = streamText({
+    model: openai('gpt-5.6-luna'),
+    instructions: `You are an expert writer that can edit rich text documents.
+The user has selected part of the document. You will receive the current
+content of the selection (in HTML format) and the user's request. Re-write
+the content of the selection to meet the user's request. Generate the HTML
+code for the new content of the selection. If the user's request is not 
+clear or does not relate to editing the document, generate HTML code where
+you ask the user to clarify the request. Your response should only contain
+the HTML code, no other text or explanation, no Markdown, and your HTML 
+response should not be wrapped in backticks, Markdown code blocks, or other
+extra formatting.`,
+    prompt: `User request:
+"""
+${userRequest}
+"""
+Selection:
+"""
+${selection}
+"""`,
+  })
+
+  // Return the text stream directly
+  return createTextStreamResponse({ stream: toTextStream({ stream: result.stream }) })
+}
+```
+
+要访问 OpenAI API，请在 [OpenAI 控制台](https://platform.openai.com/account/api-keys)中创建 API 密钥，并将其添加为环境变量。Vercel AI SDK 会自动检测该环境变量。
+
+```sh
+# .env
+OPENAI_API_KEY=your-api-key
+```
+
+## 第 2 步：客户端设置
+
+在客户端代码中，首先调用刚才定义的 API 端点，让 AI 生成内容。该端点会返回 HTML 内容流。使用 AI Toolkit 的 `streamHtml` 方法将内容流式传输到编辑器中。
+
+```ts
+const toolkit = getAiToolkit(editor)
+
+// Use the AI Toolkit to get the selection in HTML format
+const selection = toolkit.getHtmlRange(editor.state.selection)
+
+// Call the API endpoint to get the edited HTML content
+const response = await fetch('/api', {
+  body: JSON.stringify({
+    userRequest: 'Add emojis to this text',
+    selection,
+  }),
+})
+
+// The response is a stream of HTML content
+const readableStream = response.body
+
+// Use the AI Toolkit to stream HTML into the selection
+await toolkit.streamHtml(readableStream, { position: 'selection' })
+```
+
+## 审核 AI 生成的更改
+
+若要显示 AI 生成内容的预览，让用户审核并接受或拒绝更改，请将 `reviewOptions` 参数与 `streamHtml` 方法搭配使用。
+
+```ts
+await toolkit.streamHtml(readableStream, {
+  position: 'selection',
+  // Show a preview of the content where the user can review and accept or reject the changes
+  reviewOptions: { mode: 'preview' },
+})
+```
+
+如需了解有关审核选项的更多信息，请参阅[审核更改指南](/ai/ai-toolkit/client/agents/review-changes)和 `streamHtml` 方法的 [API 参考](/ai/ai-toolkit/client/api-reference/edit-the-document#streamhtml)。
+
+## 实现自动补全
+
+要实现自动补全，请在用户按下 `Tab` 键时调用 API 端点生成内容，然后使用 `streamHtml` 方法插入内容。`position` 参数也可以设为 `'selection'`，因为它与光标位置一致。
+
+下面是一个简化的代码片段，演示如何在用户按下 `Tab` 键时触发自动补全建议。
+
+```ts
+const toolkit = getAiToolkit(editor)
+const cursorPosition = editor.state.selection.to
+
+const contentBefore = toolkit.getHtmlRange({ from: 0, to: cursorPosition })
+const response = await fetch('/api', {
+  body: JSON.stringify({
+    userRequest: 'Autocomplete the previous text',
+    selection: contentBefore,
+  }),
+})
+
+const readableStream = response.body
+
+await toolkit.streamHtml(readableStream, {
+  position: 'selection',
+})
+```
+
+你也可以先预览 AI 生成的内容，再将其插入编辑器，而不是立即插入。
+
+```ts
+await toolkit.streamHtml(readableStream, {
+  position: 'selection',
+  reviewOptions: { mode: 'preview' },
+})
+```
+
+生成建议后，可以调用 `acceptSuggestion` 方法接受该建议。
+
+```ts
+const suggestions = toolkit.getSuggestions()
+await toolkit.acceptSuggestion(suggestions[0].id)
+```
+
+## 后续步骤
+
+- 在[插入内容工作流](/ai/ai-toolkit/client/workflows/insert-content)中查看如何使用 AI Toolkit 实现内联编辑的演示。
+- 参阅 [AI 代理聊天机器人指南](/ai/ai-toolkit/client/agents/ai-agent-chatbot)，构建能够编辑 Tiptap 文档的 AI 助手。
