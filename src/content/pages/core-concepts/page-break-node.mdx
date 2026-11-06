@@ -1,8 +1,8 @@
 ---
-title: PageBreak node
+title: PageBreak 节点
 meta:
-  title: PageBreak node | Tiptap Pages Docs
-  description: Learn how to use the PageBreak extension to insert explicit page breaks in your Tiptap editor, with or without the Pages extension.
+  title: PageBreak 节点 | Tiptap Pages 文档
+  description: 了解如何使用 PageBreak 扩展在 Tiptap 编辑器中插入显式分页符，无论是否使用 Pages 扩展。
   category: Pages
 sidebars:
   hideSecondary: true
@@ -11,34 +11,33 @@ sidebars:
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-The PageBreak extension (`@tiptap-pro/extension-pagebreak`) adds a block-level atom node for inserting explicit page breaks into your document. It works in two modes depending on whether the [Pages extension](/pages/getting-started/overview) is present.
+PageBreak 扩展（`@tiptap-pro/extension-pagebreak`）会添加一个块级原子节点，用于在文档中插入显式分页符。根据是否使用 [Pages 扩展](/pages/getting-started/overview)，它有两种工作模式。
 
 <CodeDemo isPro path="/Extensions/Pages" />
 
-## Two modes of operation
+## 两种工作模式
 
-### Standard mode (without Pages)
+### 标准模式（不使用 Pages）
 
-When used without the Pages extension, PageBreak renders as a visual dashed horizontal rule with a centered label. This provides a clear visual indicator of where a page break occurs, useful for content that will eventually be printed or exported.
+不使用 Pages 扩展时，PageBreak 会呈现为一条带居中标签的虚线横线，清晰标示分页符的位置，适用于最终需要打印或导出的内容。
 
-### Pages mode (with Pages)
+### Pages 模式（使用 Pages）
 
-When the Pages extension is detected, PageBreak automatically switches behavior. Instead of a visual divider, it renders an invisible filler element that expands to fill the remaining height of the current page, pushing all subsequent content to the next page. This mimics Microsoft Word's page break behavior.
+检测到 Pages 扩展后，PageBreak 会自动切换行为。它不再呈现为可见分隔线，而是显示为不可见的填充元素，扩展以填满当前页面的剩余高度，并将后续所有内容推至下一页。这种行为与 Microsoft Word 的分页符类似。
 
-<Callout title="Automatic detection">
-  PageBreak detects the Pages extension automatically; no extra configuration is needed. Just
-  register both extensions and the correct mode is applied.
+<Callout title="自动检测">
+  PageBreak 会自动检测 Pages 扩展，无需额外配置。只需注册这两个扩展，即可自动应用正确的模式。
 </Callout>
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap-pro/extension-pagebreak
 ```
 
-## Basic usage
+## 基本用法
 
-Use PageBreak as a standalone extension for a visual page break indicator. Pair it with [ConvertKit](/conversion/import/docx/convertkit) for the editor schema:
+将 PageBreak 用作独立扩展，可显示分页符标记。搭配 [ConvertKit](/conversion/import/docx/convertkit) 使用，以配置编辑器的 schema：
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -50,9 +49,9 @@ const editor = new Editor({
 })
 ```
 
-## Usage with Pages
+## 与 Pages 搭配使用
 
-When both PageBreak and Pages are registered, PageBreak automatically operates in Pages mode. Use the standard [Pages stack](/pages/getting-started/install) (ConvertKit + TableKit + Pages) and add PageBreak alongside:
+同时注册 PageBreak 和 Pages 后，PageBreak 会自动以 Pages 模式运行。使用标准的 [Pages 组合](/pages/getting-started/install)（ConvertKit + TableKit + Pages），并同时添加 PageBreak：
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -71,9 +70,9 @@ const editor = new Editor({
 })
 ```
 
-## Usage via PageKit
+## 通过 PageKit 使用
 
-PageBreak is included by default when using [PageKit](/pages/guides/pagekit-usage). To disable it, pass `pagebreak: false`:
+使用 [PageKit](/pages/guides/pagekit-usage) 时，默认会包含 PageBreak。若要禁用它，请传入 `pagebreak: false`：
 
 ```js
 import { PageKit } from '@tiptap-pro/extension-pages-pagekit'
@@ -84,15 +83,15 @@ PageKit.configure({
 })
 ```
 
-## Options
+## 选项
 
-| Option           | Type                      | Default        | Description                                                                  |
-| ---------------- | ------------------------- | -------------- | ---------------------------------------------------------------------------- |
-| `label`          | `string`                  | `'Page break'` | Label text rendered inside the page break visual hint (standard mode only)   |
-| `nextNodeType`   | `string`                  | `'paragraph'`  | Node type inserted after a page break when placed at the end of the document |
-| `HTMLAttributes` | `Record<string, unknown>` | `{}`           | Custom HTML attributes applied to the page break node                        |
+| 选项             | 类型                      | 默认值           | 描述                                            |
+| ---------------- | ------------------------- | -------------- | ----------------------------------------------- |
+| `label`          | `string`                  | `'Page break'` | 分页符可视标记中显示的标签文本（仅限标准模式）  |
+| `nextNodeType`   | `string`                  | `'paragraph'`  | 在文档末尾插入分页符时，分页符后插入的节点类型  |
+| `HTMLAttributes` | `Record<string, unknown>` | `{}`           | 应用于分页符节点的自定义 HTML 属性              |
 
-### Example configuration
+### 配置示例
 
 ```js
 PageBreak.configure({
@@ -101,11 +100,11 @@ PageBreak.configure({
 })
 ```
 
-## Commands
+## 命令
 
 ### insertPageBreak
 
-Inserts a page break at the current selection. After insertion, the cursor is placed in the node that follows the break.
+在当前选区插入分页符。插入后，光标会定位到分页符后面的节点中。
 
 ```js
 editor.commands.insertPageBreak()
@@ -114,21 +113,20 @@ editor.commands.insertPageBreak()
 editor.chain().focus().insertPageBreak().run()
 ```
 
-## Keyboard shortcuts
+## 键盘快捷键
 
-| Shortcut    | Command             |
-| ----------- | ------------------- |
-| `Mod-Enter` | Insert a page break |
+| 快捷键      | 命令         |
+| ----------- | ------------ |
+| `Mod-Enter` | 插入分页符   |
 
-This matches the Microsoft Word convention for inserting page breaks.
+这与 Microsoft Word 中插入分页符的快捷键约定一致。
 
-<Callout title="Shortcut priority">
-  ConvertKit's bundled `HardBreak` extension also binds `Mod-Enter`. Register PageBreak **after**
-  ConvertKit in your extensions array so the PageBreak shortcut takes priority.
+<Callout title="快捷键优先级">
+  ConvertKit 内置的 `HardBreak` 扩展也会绑定 `Mod-Enter`。请在扩展数组中将 PageBreak 注册在 ConvertKit **之后**，这样 PageBreak 的快捷键就会优先生效。
 </Callout>
 
-## DOCX compatibility
+## DOCX 兼容性
 
-The Tiptap [conversion service](/conversion/import/docx/editor-extension) emits `pageBreak` nodes when importing `.docx` files that contain page breaks. These map directly to this extension's node type, so imported documents preserve their page break positions.
+导入包含分页符的 `.docx` 文件时，Tiptap [转换服务](/conversion/import/docx/editor-extension)会生成 `pageBreak` 节点。这些节点与此扩展的节点类型直接对应，因此导入的文档会保留分页符的位置。
 
-When exporting, page breaks are converted to `<w:br w:type="page"/>` in the DOCX output, producing standard Word page breaks. See the [DOCX export page breaks guide](/conversion/export/docx/page-breaks) for setup details.
+导出时，分页符会转换为 DOCX 输出中的 `<w:br w:type="page"/>`，生成标准的 Word 分页符。有关设置详情，请参阅 [DOCX 导出分页符指南](/conversion/export/docx/page-breaks)。
