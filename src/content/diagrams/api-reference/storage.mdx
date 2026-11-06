@@ -1,12 +1,12 @@
 ---
-title: 'Storage'
-intro: '<code>editor.storage.diagrams</code> holds functions that tell you what is in the document and what the editor can draw. You call them directly, not as commands.'
+title: '存储'
+intro: '<code>editor.storage.diagrams</code> 包含用于了解文档内容及编辑器可绘制内容的函数。直接调用这些函数，而不是将它们作为命令调用。'
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Storage | Tiptap Diagrams Docs'
-  description: 'The readers on editor.storage.diagrams: charts, diagrams and tables in the document, export, Data Sources and the view.'
+  title: '存储 | Tiptap Diagrams 文档'
+  description: 'editor.storage.diagrams 中的读取接口：文档中的图表、图示和表格、导出、数据源与视图。'
   category: Diagrams
 ---
 
@@ -15,117 +15,116 @@ const charts = editor.storage.diagrams.listCharts()
 const text = editor.storage.diagrams.read({ pos: charts[0].pos, format: 'chart-syntax' })
 ```
 
-Most of these functions only read. Only `requestSync` changes the document: it runs the
-[`syncChartData`](/diagrams/data/sources#syncchartdata) command on every chart linked to the source.
-`registerSource`, `setZoom`, `setPan` and `setMaximized` change only this editor.
+这些函数大多只读取数据。只有 `requestSync` 会修改文档：它会对所有关联到该数据源的图表运行
+[`syncChartData`](/diagrams/data/sources#syncchartdata) 命令。
+`registerSource`、`setZoom`、`setPan` 和 `setMaximized` 只会修改当前编辑器。
 
-## Charts, diagrams and tables in the document
+## 文档中的图表、图示和表格
 
-| Function         | Returns                                                                                                                                         |
+| 函数             | 返回值                                                                                                                                         |
 | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `listCharts()`   | Every chart, see [Chart fields](/diagrams/api-reference/storage#chart-fields)                                                                   |
-| `listDiagrams()` | Every diagram, see [Diagram fields](/diagrams/api-reference/storage#diagram-fields)                                                             |
-| `listTables()`   | Every table a chart or a diagram can follow, see [Table fields](/diagrams/api-reference/storage#table-fields). Empty without `chart.linkTables` |
-| `getOpenInput()` | The Quick Input or input table the cursor is in, see [The open input](/diagrams/api-reference/storage#the-open-input). `null` outside one       |
+| `listCharts()`   | 所有图表，参见[图表字段](/diagrams/api-reference/storage#chart-fields)                                                                           |
+| `listDiagrams()` | 所有图示，参见[图示字段](/diagrams/api-reference/storage#diagram-fields)                                                                         |
+| `listTables()`   | 图表或图示可以关联的所有表格，参见[表格字段](/diagrams/api-reference/storage#table-fields)。未启用 `chart.linkTables` 时返回空列表                  |
+| `getOpenInput()` | 光标所在的快速输入或输入表格，参见[打开的输入](/diagrams/api-reference/storage#the-open-input)。不在其中时返回 `null`                              |
 
-### Chart fields
+### 图表字段
 
-| Field        | Value                                                                                                                      |
+| 字段         | 值                                                                                                                        |
 | ------------ | -------------------------------------------------------------------------------------------------------------------------- |
-| `pos`        | The chart's position                                                                                                       |
-| `data`       | The Chart Data                                                                                                             |
-| `spec`       | The Chart Spec                                                                                                             |
-| `renderer`   | The Renderer the chart names                                                                                               |
-| `source`     | Its Data Source                                                                                                            |
-| `delimiter`  | Its delimiter                                                                                                              |
-| `previewUrl` | Its preview URL                                                                                                            |
-| `layout`     | Whether it stands alone, follows a table, or is hidden below it ([`setChartLayout`](/diagrams/data/tables#setchartlayout)) |
-| `tableId`    | The table it follows, or `null`                                                                                            |
-| `tableRead`  | How it reads that table, `{ header?, range? }` with only what differs from the default, or `null`                          |
+| `pos`        | 图表的位置                                                                                                                 |
+| `data`       | 图表数据                                                                                                                   |
+| `spec`       | 图表规范                                                                                                                   |
+| `renderer`   | 图表指定的渲染器                                                                                                           |
+| `source`     | 图表的数据源                                                                                                               |
+| `delimiter`  | 图表的分隔符                                                                                                               |
+| `previewUrl` | 图表的预览 URL                                                                                                             |
+| `layout`     | 图表是独立显示、关联到表格，还是隐藏在表格下方（[`setChartLayout`](/diagrams/data/tables#setchartlayout)）                  |
+| `tableId`    | 图表关联的表格；未关联时为 `null`                                                                                          |
+| `tableRead`  | 图表读取该表格的方式：`{ header?, range? }`，仅包含与默认值不同的项；未设置时为 `null`                                      |
 
-### Diagram fields
+### 图示字段
 
-| Field         | Value                                                               |
-| ------------- | ------------------------------------------------------------------- |
-| `pos`         | The diagram's position                                              |
-| `format`      | Its format                                                          |
-| `source`      | Its source                                                          |
-| `title`       | Its title                                                           |
-| `description` | Its description                                                     |
-| `view`        | Its view                                                            |
-| `options`     | Its options                                                         |
-| `kind`        | The kind of Mermaid diagram, or `null`                              |
-| `drawable`    | Whether a Diagram Renderer for its format can draw the source       |
-| `link`        | The table it is drawn from, `{ tableId, columns }`, or `null`       |
-| `lanes`       | The lanes of a diagram drawn from a table, in the order they appear |
+| 字段          | 值                                                              |
+| ------------- | ---------------------------------------------------------------- |
+| `pos`         | 图示的位置                                                       |
+| `format`      | 图示的格式                                                       |
+| `source`      | 图示的源内容                                                     |
+| `title`       | 图示的标题                                                       |
+| `description` | 图示的描述                                                       |
+| `view`        | 图示的视图                                                       |
+| `options`     | 图示的选项                                                       |
+| `kind`        | Mermaid 图示的类型；不是 Mermaid 图示时为 `null`                  |
+| `drawable`    | 对应格式的图示渲染器是否能够绘制源内容                           |
+| `link`        | 图示所依据的表格，格式为 `{ tableId, columns }`；未关联时为 `null` |
+| `lanes`       | 根据表格绘制的图示中的泳道，按出现顺序排列                       |
 
-### Table fields
+### 表格字段
 
-| Field         | Value                                                                                                                                                 |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `pos`         | The table's position                                                                                                                                  |
-| `tableId`     | Its id, once a chart follows it, or `null`                                                                                                            |
-| `header`      | Its first row                                                                                                                                         |
-| `headerCells` | `true` when the first row is made of header cells. A first row of plain cells names the columns only when it holds no number outside the first column |
-| `charts`      | How many charts follow it                                                                                                                             |
-| `diagrams`    | How many diagrams are drawn from it                                                                                                                   |
-| `followers`   | Each chart and diagram that follows it, as `{ pos, kind: 'chart' \| 'diagram' }`, in document order                                                   |
+| 字段          | 值                                                                                                                                                 |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pos`         | 表格的位置                                                                                                                                          |
+| `tableId`     | 图表关联该表格后，表格的 ID；未关联时为 `null`                                                                                                      |
+| `header`      | 表格的第一行                                                                                                                                         |
+| `headerCells` | 如果第一行由表头单元格组成，则为 `true`。如果第一行是普通单元格，则仅当除第一列外不含数字时，才会将其内容用作列名                                      |
+| `charts`      | 关联到该表格的图表数量                                                                                                                               |
+| `diagrams`    | 根据该表格绘制的图示数量                                                                                                                             |
+| `followers`   | 关联到该表格的每个图表和图示，格式为 `{ pos, kind: 'chart' \| 'diagram' }`，按文档顺序排列                                                           |
 
-### The open input
+### 打开的输入
 
-`getOpenInput()` returns `{ pos, view: 'chart-syntax' | 'table', type, delimiter, editing }`.
-`editing` is set when the input holds an existing chart you are changing, not a new one.
+`getOpenInput()` 返回 `{ pos, view: 'chart-syntax' | 'table', type, delimiter, editing }`。
+当输入中是正在修改的现有图表，而不是新图表时，`editing` 会被设置。
 
-## Reading a chart's data
+## 读取图表数据
 
-| Function                              | Returns                                                                                                                               |
+| 函数                                  | 返回值                                                                                                                               |
 | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `read({ pos?, format? })`             | A chart as text in a format, `'chart-json'` by default                                                                                |
-| `readGrid({ pos? })`                  | The data as a grid of strings. Row 0 is the header                                                                                    |
-| `readTable({ pos? })`                 | The data as table JSON, or `null` without a table node in the schema                                                                  |
-| `readText({ pos? })`                  | `{ format, text }` of a chart or a diagram, as an author edits it, or `null` ([Text beside the picture](/diagrams/guides/split-view)) |
-| `parseFormat(format, content, type?)` | `{ data, spec, delimiter }` parsed from content                                                                                       |
-| `getFormat(id)`                       | A registered format, for its `serialize`                                                                                              |
+| `read({ pos?, format? })`             | 以指定格式表示的图表文本；默认格式为 `'chart-json'`                                                                                   |
+| `readGrid({ pos? })`                  | 以字符串网格形式表示的数据。第 0 行是表头                                                                                             |
+| `readTable({ pos? })`                 | 表格 JSON；如果架构中没有表格节点，则为 `null`                                                                                        |
+| `readText({ pos? })`                  | 图表或图示的 `{ format, text }`，即作者编辑时的内容；没有时为 `null`（[图片旁的文本](/diagrams/guides/split-view)）                    |
+| `parseFormat(format, content, type?)` | 从内容解析出的 `{ data, spec, delimiter }`                                                                                            |
+| `getFormat(id)`                       | 已注册格式，可用于其 `serialize`                                                                                                      |
 
-`parseFormat` throws an error with a message when it cannot parse the content.
+如果无法解析内容，`parseFormat` 会抛出带有错误消息的异常。
 
-## What the editor can draw
+## 编辑器可以绘制的内容
 
-| Function                        | Returns                                                                                                                                               |
-| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `describeCapabilities()`        | Chart types (`{ id, label, shape, description? }`), formats, Renderers and their types, the default Renderer, sources, delimiters, trigger and styles |
-| `chartTypes`                    | The built-in chart types and those of the `chartTypes` option. This is a property, not a function                                                     |
-| `canRender(spec)`               | Whether a registered Renderer draws the type                                                                                                          |
-| `rendererFor(spec, preferred?)` | The Renderer a chart would be drawn with                                                                                                              |
-| `diagramRendererFor(format)`    | The Diagram Renderer a diagram of that format would be drawn with, or `null`                                                                          |
-| `rulesFor(renderer)`            | The rules a Renderer's charts and diagrams follow, its own and those of `rendererRules`: `{ attribution?, exports? }`                                 |
-| `refresh()`                     | Nothing. It draws every chart and diagram again. Call it after a theme change made only in CSS                                                        |
+| 函数                             | 返回值                                                                                                                                                   |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `describeCapabilities()`         | 图表类型（`{ id, label, shape, description? }`）、格式、渲染器及其类型、默认渲染器、数据源、分隔符、触发器和样式                                      |
+| `chartTypes`                    | 内置图表类型以及 `chartTypes` 选项中的类型。这是属性，不是函数                                                                                           |
+| `canRender(spec)`               | 已注册的渲染器是否能够绘制该类型                                                                                                                         |
+| `rendererFor(spec, preferred?)` | 绘制图表时会使用的渲染器                                                                                                                                |
+| `diagramRendererFor(format)`    | 绘制指定格式图示时会使用的图示渲染器；没有时为 `null`                                                                                                    |
+| `rulesFor(renderer)`            | 渲染器的图表和图示所遵循的规则，包括渲染器自身的规则和 `rendererRules` 中的规则：`{ attribution?, exports? }`                                           |
+| `refresh()`                     | 无返回值。重新绘制所有图表和图示。仅通过 CSS 更改主题后调用此函数                                                                                         |
 
-## Export
+## 导出
 
-| Function                   | Returns                                                                                                                        |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `export(target, options?)` | A chart or a diagram as a file, see [export](/diagrams/export)                                                                 |
-| `exportAll(options?)`      | Every chart and diagram that can be drawn, as files with their `pos`, in document order                                        |
-| `exportDocx(options?)`     | A promise of a Word document with native charts and diagrams as pictures: `{ blob, notes }`. See [Word](/diagrams/export#word) |
+| 函数                       | 返回值                                                                                                                     |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `export(target, options?)` | 将一个图表或图示导出为文件，参见[导出](/diagrams/export)                                                                    |
+| `exportAll(options?)`      | 按文档顺序将所有可绘制的图表和图示导出为文件，并附带其 `pos`                                                               |
+| `exportDocx(options?)`     | 返回一个 Word 文档的 Promise，其中包含原生图表和以图片形式呈现的图示：`{ blob, notes }`。参见 [Word](/diagrams/export#word) |
 
-## Data Sources
+## 数据源
 
-| Function                         | What it does                                                                                                     |
-| -------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `readSource(source)`             | Returns a promise of the data a source returns now. It writes nothing                                            |
-| `requestSync(source)`            | Reads a source and writes the data into every chart linked to it. Returns a promise of `true` when it wrote data |
-| `registerSource(provider)`       | Adds a provider at run time and returns a function that removes it                                               |
-| `getSource(id)`, `listSources()` | Return the registered providers                                                                                  |
+| 函数                             | 功能                                                                                               |
+| -------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `readSource(source)`             | 返回一个 Promise，其中包含数据源当前返回的数据。不会写入任何内容                                   |
+| `requestSync(source)`            | 读取数据源，并将数据写入所有关联到该数据源的图表。写入数据时返回解析为 `true` 的 Promise            |
+| `registerSource(provider)`       | 在运行时添加一个提供程序，并返回一个用于移除它的函数                                               |
+| `getSource(id)`, `listSources()` | 返回已注册的提供程序                                                                               |
 
-`requestSync` resolves to `false` when the read fails or no chart is linked to the source. A
-failed read keeps the last snapshot and goes to [`onSourceError`](/diagrams/api-reference/options#onsourceerror).
+如果读取失败，或没有图表关联到该数据源，`requestSync` 会解析为 `false`。读取失败时会保留上次快照，并触发
+[`onSourceError`](/diagrams/api-reference/options#onsourceerror)。
 
-## Zoom, pan and maximize on screen
+## 缩放、平移和最大化显示
 
-`setZoom`, `getZoom`, `setPan`, `getPan`, `getShownSize`, `setMaximized` and `getMaximized`
-change or read how this editor shows a chart or a diagram. They never change the document. See
-[View functions](/diagrams/guides/size-and-view#view-functions).
+`setZoom`、`getZoom`、`setPan`、`getPan`、`getShownSize`、`setMaximized` 和 `getMaximized`
+用于修改或读取当前编辑器中图表或图示的显示方式。它们不会修改文档。参见
+[视图函数](/diagrams/guides/size-and-view#view-functions)。
 
-`setMaximized` also dispatches an empty transaction, so a UI that listens to `transaction`
-updates. That transaction is not added to the undo history.
+`setMaximized` 还会分发一个空事务，因此监听 `transaction` 的 UI 会随之更新。该事务不会加入撤销历史。
