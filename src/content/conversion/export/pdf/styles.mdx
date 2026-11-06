@@ -1,14 +1,14 @@
 ---
-title: Export custom styles to PDF
+title: 将自定义样式导出为 PDF
 tags:
   - type: start
   - type: beta
   - type: version
     label: v0.6.2
 meta:
-    title: Export styles to PDF | Tiptap Conversion
-    description: Learn how to export custom styles from Tiptap JSON to PDF using the Export PDF extension.
-    category: Conversion
+    title: 将样式导出为 PDF | Tiptap 转换
+    description: 了解如何使用 Export PDF 扩展将 Tiptap JSON 中的自定义样式导出为 PDF。
+    category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
@@ -19,18 +19,18 @@ import ExportStylesGuide from '../_shared/_export-styles-guide.mdx'
 <EnterpriseCalloutAuto variant="pdf" renderMode="sidebar" disableWaitlist />
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 开始试用或订阅">
+        在帐户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 计划](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Install from private registry">
-        To install this frontend extension, authenticate to Tiptap's private npm registry by following the [setup guide](/guides/pro-extensions).
+    <RequirementItem label="2. 从私有注册表安装">
+        要安装此前端扩展，请按照[设置指南](/guides/pro-extensions)完成身份验证，以访问 Tiptap 的私有 npm 注册表。
     </RequirementItem>
 </Requirements>
 
-When exporting to PDF, you can define custom styles that will be applied to the exported document. This is useful when you want to have a consistent look and feel across your documents.
+导出为 PDF 时，可以定义应用于导出文档的自定义样式。这有助于保持文档外观的一致性。
 
-<Callout title="Requires Export DOCX extension" variant="warning">
-  Style overrides for PDF export require the `@tiptap-pro/extension-export-docx` extension to be installed and configured in your editor. The PDF export uses DOCX generation under the hood before converting to PDF. Without it, the `styleOverrides` and element override options will have no effect.
+<Callout title="需要 Export DOCX 扩展" variant="warning">
+  要覆盖 PDF 导出样式，必须在编辑器中安装并配置 `@tiptap-pro/extension-export-docx` 扩展。PDF 导出会在转换为 PDF 之前，先在底层生成 DOCX 文件。如果未安装该扩展，`styleOverrides` 和元素覆盖选项将不会生效。
 </Callout>
 
 <ExportStylesGuide />
