@@ -1,11 +1,11 @@
 ---
-title: Basic AI Generation
+title: 基础 AI 生成
 tags:
   - type: start
 meta:
-  title: Tiptap Basic AI Generation
-  description: Integrate basic AI features into your editor like smart autocompletion, image generation, and more.
-  category: Basic AI Generation
+  title: Tiptap 基础 AI 生成
+  description: 将智能自动补全、图像生成等基础 AI 功能集成到编辑器中。
+  category: 基础 AI 生成
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
@@ -13,45 +13,42 @@ import { Callout } from '@/components/ui/Callout'
 import { Requirements, RequirementItem } from '@/components/Requirements'
 
 <Requirements>
-  <RequirementItem label="1. Activate trial or subscribe">
-    Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start
-    plan](https://cloud.tiptap.dev/v2/billing) in your account.
+  <RequirementItem label="1. 开通试用或订阅">
+    在账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 计划](https://cloud.tiptap.dev/v2/billing)。
   </RequirementItem>
-  <RequirementItem label="2. Integrate an AI provider">
-    Configure OpenAI in your [AI settings](https://cloud.tiptap.dev/v2/cloud/ai) or review the
-    [Custom LLM guide](/ai/basic/custom-llms).
+  <RequirementItem label="2. 集成 AI 提供商">
+    在[AI 设置](https://cloud.tiptap.dev/v2/cloud/ai)中配置 OpenAI，或查看[自定义 LLM 指南](/ai/basic/custom-llms)。
   </RequirementItem>
-  <RequirementItem label="3. Install from private registry">
-    To install the frontend extensions, authenticate to Tiptap’s private npm registry by following
-    the [setup guide](/guides/pro-extensions).
+  <RequirementItem label="3. 从私有仓库安装">
+    若要安装前端扩展，请按照[设置指南](/guides/pro-extensions)完成身份验证，以访问 Tiptap 的私有 npm 仓库。
   </RequirementItem>
 </Requirements>
 
-Integrate the Basic AI Generation extension into your Tiptap Editor with just a couple of lines of code. It equips you with a set of prebuilt AI features including commands, prompt customization, image generation, and smart autocompletion.
+只需几行代码，即可将基础 AI 生成扩展集成到 Tiptap 编辑器中。该扩展提供一系列预构建的 AI 功能，包括命令、提示词自定义、图像生成和智能自动补全。
 
-Add your own custom commands on top of these, and even integrate your own proprietary LLM to create a unique user experience.
+你可以在此基础上添加自定义命令，甚至集成自己的专有 LLM，打造独特的用户体验。
 
-For agentic workflows and greater flexibility, **check out [AI Toolkit](/ai/ai-toolkit/overview).**
+如需构建智能体工作流并获得更高的灵活性，**请查看 [AI Toolkit](/ai/ai-toolkit/overview)。**
 
 <CodeDemo isPro path="/Extensions/AiCommands" />
 
-## Basic AI Generation features
+## 基础 AI 生成功能
 
-- [Pre-configured default commands](/ai/basic/text-generation)
-- [Autocompletion for efficient editing](/ai/basic/text-generation/autocompletion)
-- Real-time streaming for commands
-- Compatibility with various OpenAI models (e.g. GPT-5, GPT-5 mini, GPT Image 2)
-- [Create your own prompts and commands](/ai/basic/text-generation/custom-commands)
-- [Custom LLM integration](/ai/basic/custom-llms)
-- Works seamlessly with Tiptap Collaboration ([learn more](/ai/basic/collaboration))
+- [预配置的默认命令](/ai/basic/text-generation)
+- [自动补全，高效编辑](/ai/basic/text-generation/autocompletion)
+- 命令支持实时流式响应
+- 兼容多种 OpenAI 模型（例如 GPT-5、GPT-5 mini、GPT Image 2）
+- [创建自己的提示词和命令](/ai/basic/text-generation/custom-commands)
+- [集成自定义 LLM](/ai/basic/custom-llms)
+- 与 Tiptap Collaboration 无缝协作（[了解更多](/ai/basic/collaboration)）
 
-## How it works
+## 工作原理
 
-Integrate [OpenAI](/ai/basic/install) or your own [Custom LLM](/ai/basic/custom-llms) with your Tiptap Editor. The extension covers both, the client and server-side implementations. Here’s the user experience:
+将 [OpenAI](/ai/basic/install) 或你自己的[自定义 LLM](/ai/basic/custom-llms)集成到 Tiptap 编辑器中。该扩展涵盖客户端和服务器端实现。用户的操作流程如下：
 
-1. Highlight text in the editor and apply an AI command.
-2. Your selection, the chosen action, and any options are sent to our cloud service.
-3. We generate a prompt and engage OpenAI on your behalf.
-4. The AI's response is then directly inserted or streamed into your editor.
+1. 在编辑器中选中文本并应用 AI 命令。
+2. 选中的内容、所选操作及任何选项都会发送到我们的云服务。
+3. 我们会生成提示词，并代表你调用 OpenAI。
+4. 然后，AI 的响应会直接插入编辑器，或以流式方式传入编辑器。
 
-By default, this utilizes our backend service, but there are options for advanced scenarios including custom backends and LLMs.
+默认情况下，此功能使用我们的后端服务；对于更高级的场景，也可以选择自定义后端和 LLM。
