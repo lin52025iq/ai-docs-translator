@@ -1,8 +1,8 @@
 ---
-title: Use the AI Agent extension with Content AI Cloud
+title: 在 Content AI Cloud 中使用 AI Agent 扩展
 meta:
-  title: Use the AI Agent extension with Content AI Cloud | Tiptap Content AI
-  description: Learn how to use the AI Agent extension with Tiptap Content AI Cloud.
+  title: 在 Content AI Cloud 中使用 AI Agent 扩展 | Tiptap Content AI
+  description: 了解如何在 Tiptap Content AI Cloud 中使用 AI Agent 扩展。
   category: Content AI
 ---
 
@@ -10,38 +10,34 @@ import { Callout } from '@/components/ui/Callout'
 import { Requirements, RequirementItem } from '@/components/Requirements'
 
 <Requirements>
-  <RequirementItem label="1. Activate trial or subscribe">
-    Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Team
-    plan](https://cloud.tiptap.dev/v2/billing) in your account.
+  <RequirementItem label="1. 激活试用或订阅">
+    在账户中开始[免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Team 计划](https://cloud.tiptap.dev/v2/billing)。
   </RequirementItem>
-  <RequirementItem label="2. Integrate an AI provider">
-    Configure OpenAI in your [AI settings](https://cloud.tiptap.dev/v2/cloud/ai) or follow the
-    [Custom AI agent guide](/ai/deprecated/agent/custom-llms/overview) to integrate it with other
-    AI providers.
+  <RequirementItem label="2. 集成 AI 提供商">
+    在[AI 设置](https://cloud.tiptap.dev/v2/cloud/ai)中配置 OpenAI，或按照[自定义 AI 代理指南](/ai/deprecated/agent/custom-llms/overview)集成其他 AI 提供商。
   </RequirementItem>
-  <RequirementItem label="3. Install from private registry">
-    To install the frontend extensions, authenticate to Tiptap&apos;s private npm registry by
-    following the [setup guide](/guides/pro-extensions).
+  <RequirementItem label="3. 从私有注册表安装">
+    要安装前端扩展，请按照[设置指南](/guides/pro-extensions)进行身份验证，以使用 Tiptap 的私有 npm 注册表。
   </RequirementItem>
 </Requirements>
 
-The fastest way to get started with the AI Agent extension is with Tiptap Cloud. It provides a managed, ready-to-use AI agent that works out of the box.
+使用 Tiptap Cloud 是开始使用 AI Agent 扩展的最快方式。它提供托管式、开箱即用的 AI 代理。
 
-<Callout title="Note" variant="info">
-  This guide relies on using [Tiptap Cloud](https://cloud.tiptap.dev/v2/cloud/ai) as a backend. If
-  you want to use it with your own backend, follow the [custom AI agent
-  guide](/ai/deprecated/agent/custom-llms/overview) instead.
+<Callout title="注意" variant="info">
+  本指南使用 [Tiptap Cloud](https://cloud.tiptap.dev/v2/cloud/ai) 作为后端。如果
+  你想使用自己的后端，请改为参阅[自定义 AI 代理
+  指南](/ai/deprecated/agent/custom-llms/overview)。
 </Callout>
 
-## Start your Content AI app
+## 启动 Content AI 应用
 
-1. **Activate a plan:** Begin a [free trial or choose a subscription](https://cloud.tiptap.dev/v2/billing).
-2. **Configure your AI app:** Add your OpenAI API key to your [Content AI app](https://cloud.tiptap.dev/v2/cloud/ai).
-3. **Set up authentication:** Sign a token with `aud: "AI"` and the `AI:Generation` permission, then pass it to the extension. See [Authentication](/authentication).
+1. **激活套餐：** 开始[免费试用或选择订阅套餐](https://cloud.tiptap.dev/v2/billing)。
+2. **配置 AI 应用：** 将 OpenAI API 密钥添加到你的 [Content AI 应用](https://cloud.tiptap.dev/v2/cloud/ai)中。
+3. **设置身份验证：** 使用 `aud: "AI"` 和 `AI:Generation` 权限对令牌进行签名，然后将其传递给扩展。请参阅[身份验证](/authentication)。
 
-## Add your authentication credentials to the extension
+## 将身份验证凭据添加到扩展
 
-Use the `AiAgentProvider` class to connect with Tiptap Cloud. It handles the communication with Tiptap Cloud and manages the AI agent's state.
+使用 `AiAgentProvider` 类连接到 Tiptap Cloud。它负责与 Tiptap Cloud 通信，并管理 AI 代理的状态。
 
 ```tsx
 import { Editor } from '@tiptap/core'
@@ -55,11 +51,11 @@ const provider = new AiAgentProvider({
 })
 ```
 
-When you use the `AiAgentProvider` to send messages to the AI agent, the Tiptap Cloud API will be called to get the AI agent's response. The AI agent will then generate chat messages and make edits to the document to accomplish the user's task.
+使用 `AiAgentProvider` 向 AI 代理发送消息时，系统会调用 Tiptap Cloud API 获取 AI 代理的响应。随后，AI 代理会生成聊天消息并编辑文档，以完成用户的任务。
 
-## Customize the OpenAI model
+## 自定义 OpenAI 模型
 
-You can customize the OpenAI model that is used in Tiptap Cloud by setting the `modelName` option. The AI Agent extension works best with the `gpt-4.1` model, as it provides the best performance for complex document editing tasks. Note that the model needs to support [function calling](https://platform.openai.com/docs/guides/function-calling).
+你可以通过设置 `modelName` 选项，自定义 Tiptap Cloud 使用的 OpenAI 模型。AI Agent 扩展搭配 `gpt-4.1` 模型的效果最佳，因为它在复杂文档编辑任务中性能最优。请注意，模型必须支持[函数调用](https://platform.openai.com/docs/guides/function-calling)。
 
 ```tsx
 const provider = new AiAgentProvider({
