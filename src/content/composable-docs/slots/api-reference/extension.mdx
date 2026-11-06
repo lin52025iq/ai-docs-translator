@@ -1,110 +1,110 @@
 ---
-title: Extension
+title: 扩展
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Extension | Tiptap Slots Docs
-  description: Slot options, Node extensions and editor storage.
-  category: Composable Docs
+  title: 扩展 | Tiptap Slots 文档
+  description: Slot 选项、Node 扩展和编辑器存储。
+  category: 可组合文档
 ---
 
-Import `Slot`, `BlockSlot`, `InlineSlot`, `BlockValueSlot`, and `InlineValueSlot` from `@tiptap-pro/extension-slot`.
+从 `@tiptap-pro/extension-slot` 导入 `Slot`、`BlockSlot`、`InlineSlot`、`BlockValueSlot` 和 `InlineValueSlot`。
 
 ## `Slot`
 
-Installs the four Slot Nodes, commands, indexing and editing behavior. Its extension and storage name is `slot`.
+安装四种 Slot Node、命令、索引和编辑行为。其扩展名和存储名称均为 `slot`。
 
 ```ts
 Slot.configure({ validators: { registeredPerson } })
 ```
 
-### Options (`SlotOptions`)
+### 选项（`SlotOptions`）
 
-- `blockSlot` (`Node`): Block Node extension. Default: `BlockSlot`.
-- `inlineSlot` (`Node`): Inline Node extension. Default: `InlineSlot`.
-- `blockValueSlot` (`Node`): Block value Node extension. Default: `BlockValueSlot`.
-- `inlineValueSlot` (`Node`): Inline value Node extension. Default: `InlineValueSlot`.
-- `generateId` (`() => string`): Creates document-unique IDs. Default: UUID generator.
-- `validators` (`Record<string, SlotValidator>`): Named field validators. Default: `{}`; referenced validators are unavailable until registered.
-- `crossFieldValidators` (`Record<string, CrossFieldValidator>`): Named cross-field validators. Default: `{}`; referenced validators are unavailable until registered.
-- `getValidationContext` (`() => unknown`): Captures application data once per validation request. Default: returns `undefined`.
-- `shortcuts` (`false | SlotShortcuts`): Typed creation and optional delimiter conversion. Defaults to immediate inline creation with `{{{` and block creation with `[[[`. Set `false` to disable all Slot input rules.
-- `resolveInputRuleSlot` (`SlotInputRuleResolver`): Resolves a matched shortcut before insertion. Default: returns `undefined`, preserving captured content and shortcut configuration. See [resolving input rules](#resolveinputruleslot).
-- `onSlotsUpdate` (`(event: SlotsUpdateEvent) => void`): `slotsUpdate` listener. Default: no-op.
-- `onActiveSlotChange` (`(event: ActiveSlotChangeEvent) => void`): `activeSlotChange` listener. Default: no-op.
-- `onValidationUpdate` (`(event: SlotValidationUpdateEvent) => void`): `slotValidationUpdate` listener. Default: no-op.
-- `onValidationError` (`(event: SlotValidationErrorEvent) => void`): `slotValidationError` listener. Default: no-op.
-- `onCommandRejected` (`(event: SlotCommandRejectedEvent) => void`): `slotCommandRejected` listener. Default: no-op.
+- `blockSlot`（`Node`）：块级 Node 扩展。默认值：`BlockSlot`。
+- `inlineSlot`（`Node`）：行内 Node 扩展。默认值：`InlineSlot`。
+- `blockValueSlot`（`Node`）：块级值 Node 扩展。默认值：`BlockValueSlot`。
+- `inlineValueSlot`（`Node`）：行内值 Node 扩展。默认值：`InlineValueSlot`。
+- `generateId`（`() => string`）：创建文档内唯一的 ID。默认值：UUID 生成器。
+- `validators`（`Record<string, SlotValidator>`）：命名字段验证器。默认值：`{}`；注册前无法使用引用的验证器。
+- `crossFieldValidators`（`Record<string, CrossFieldValidator>`）：命名跨字段验证器。默认值：`{}`；注册前无法使用引用的验证器。
+- `getValidationContext`（`() => unknown`）：每次验证请求时捕获一次应用数据。默认值：返回 `undefined`。
+- `shortcuts`（`false | SlotShortcuts`）：键入创建及可选的分隔符转换。默认会在键入 `{{{` 时立即创建行内 Slot，在键入 `[[[` 时创建块级 Slot。设为 `false` 可禁用所有 Slot 输入规则。
+- `resolveInputRuleSlot`（`SlotInputRuleResolver`）：插入前解析匹配的快捷输入。默认返回 `undefined`，保留捕获的内容和快捷输入配置。参见[解析输入规则](#resolveinputruleslot)。
+- `onSlotsUpdate`（`(event: SlotsUpdateEvent) => void`）：`slotsUpdate` 监听器。默认不执行任何操作。
+- `onActiveSlotChange`（`(event: ActiveSlotChangeEvent) => void`）：`activeSlotChange` 监听器。默认不执行任何操作。
+- `onValidationUpdate`（`(event: SlotValidationUpdateEvent) => void`）：`slotValidationUpdate` 监听器。默认不执行任何操作。
+- `onValidationError`（`(event: SlotValidationErrorEvent) => void`）：`slotValidationError` 监听器。默认不执行任何操作。
+- `onCommandRejected`（`(event: SlotCommandRejectedEvent) => void`）：`slotCommandRejected` 监听器。默认不执行任何操作。
 
-`Node` here is the extension type from `@tiptap/core`. See [validators](/composable-docs/slots/api-reference/validation) and [event payloads](/composable-docs/slots/api-reference/events).
+此处的 `Node` 是来自 `@tiptap/core` 的扩展类型。参见[验证器](/composable-docs/slots/api-reference/validation)和[事件负载](/composable-docs/slots/api-reference/events)。
 
-### Configuration rules
+### 配置规则
 
-- Register `Slot` once. Pass customized Nodes through its options; do not also register them separately.
-- All Node options are required and fixed at editor construction. They do not accept `false`.
-- Custom Nodes must preserve their names, attributes and schema behavior.
-- Invalid Node instances, duplicate registrations and invalid shortcuts fail initialization.
-- ID generation retries collisions up to five times. Failure refuses the command with `idGenerationFailed`.
+- 只注册一次 `Slot`。通过其选项传入自定义 Node；不要另外单独注册这些 Node。
+- 所有 Node 选项均为必填，并在创建编辑器时固定。不能将它们设为 `false`。
+- 自定义 Node 必须保留其名称、属性和 Schema 行为。
+- 无效的 Node 实例、重复注册和无效的快捷输入会导致初始化失败。
+- ID 生成遇到冲突时最多重试五次。若仍失败，命令将以 `idGenerationFailed` 被拒绝。
 
-## `BlockSlot` and `InlineSlot`
+## `BlockSlot` 和 `InlineSlot`
 
-Ordinary Tiptap Node extensions supporting `.configure()` and `.extend()`.
+标准 Tiptap Node 扩展，支持 `.configure()` 和 `.extend()`。
 
-### Options
+### 选项
 
-- `HTMLAttributes` (`Record<string, string>`): Attributes on the outer element. Default: `{}`. Required `data-slot-*` attributes take precedence.
+- `HTMLAttributes`（`Record<string, string>`）：外层元素的属性。默认值：`{}`。必需的 `data-slot-*` 属性优先级更高。
 
-### Node attributes
+### Node 属性
 
-- `id` (`string | null`): Document-wide, case-sensitive identifier. Default: `null`; commands generate missing IDs. Imported missing or duplicate IDs produce validation issues.
-- `config` (`SlotConfig`): Embedded [configuration](/composable-docs/slots/api-reference/concepts). Default: `{}`. Malformed imported JSON is retained for diagnostics.
+- `id`（`string | null`）：文档范围内、区分大小写的标识符。默认值：`null`；命令会为缺少 ID 的 Slot 生成 ID。导入时缺少 ID 或 ID 重复会产生验证问题。
+- `config`（`SlotConfig`）：嵌入的[配置](/composable-docs/slots/api-reference/concepts)。默认值：`{}`。格式错误的导入 JSON 会予以保留，以便诊断。
 
-With the [Variable extension](/composable-docs/variables/guides/bind-slots), slots also support a `variable` attribute for persisted bindings. Explicit variable values and resolvers make their bound slots read-only.
+使用 [Variable 扩展](/composable-docs/variables/guides/bind-slots)时，Slot 还支持用于持久化绑定的 `variable` 属性。显式变量值和解析器会使绑定的 Slot 变为只读。
 
-| Property           | `BlockSlot`         | `InlineSlot` |
+| 属性               | `BlockSlot`         | `InlineSlot` |
 | ------------------ | ------------------- | ------------ |
-| Node name          | `blockSlot`         | `inlineSlot` |
-| Group              | `block`             | `inline`     |
+| Node 名称          | `blockSlot`         | `inlineSlot` |
+| 组                 | `block`             | `inline`     |
 | `inline`           | `false`             | `true`       |
-| Content expression | `block+`            | `inline*`    |
+| 内容表达式         | `block+`            | `inline*`    |
 | `defining`         | `true`              | `true`       |
 | `isolating`        | `true`              | `true`       |
-| Empty content      | One empty paragraph | No children  |
+| 空内容             | 一个空段落           | 无子节点     |
 
-Block Slots require `paragraph` in the schema. See [rendering](/composable-docs/slots/api-reference/rendering) for NodeViews and HTML customization.
+块级 Slot 要求 Schema 中包含 `paragraph`。NodeView 和 HTML 自定义方式请参见[渲染](/composable-docs/slots/api-reference/rendering)。
 
-Inside an inline Slot, Backspace and Delete remove whole graphemes, including emoji and combining characters, while preserving the Slot wrapper.
+在行内 Slot 内，Backspace 和 Delete 会删除完整的字素簇（包括表情符号和组合字符），同时保留 Slot 外层包装。
 
-## `BlockValueSlot` and `InlineValueSlot`
+## `BlockValueSlot` 和 `InlineValueSlot`
 
-Leaf atom nodes named `blockValueSlot` and `inlineValueSlot`. They use the corresponding block or inline group, retain `defining` and `isolating`, and have no content expression. Both support `HTMLAttributes` and the shared `id` and `config` attributes. Their `value` attribute accepts `JsonValue` and defaults to `null`.
+叶子原子节点，名称分别为 `blockValueSlot` 和 `inlineValueSlot`。它们使用相应的块级或行内组，保留 `defining` 和 `isolating`，且没有内容表达式。两者都支持 `HTMLAttributes` 以及共享的 `id` 和 `config` 属性。其 `value` 属性接受 `JsonValue`，默认值为 `null`。
 
-Customize them with `.extend({ addNodeView() { ... } })` and pass the result through `Slot.configure`. See [value slots](/composable-docs/slots/guides/value-slots).
+可通过 `.extend({ addNodeView() { ... } })` 自定义，并将结果传入 `Slot.configure`。参见[值 Slot](/composable-docs/slots/guides/value-slots)。
 
 ## `SlotShortcuts`
 
-Shortcuts create content slots. Use `insertSlot({ mode: 'value', ... })` to create value slots.
+快捷输入用于创建内容 Slot。要创建值 Slot，请使用 `insertSlot({ mode: 'value', ... })`。
 
-### Properties
+### 属性
 
-- `inline?` (`SlotShortcut | false`): Inline rules. Default: `{ create: '{{{' }`. Set `false` to disable this kind.
-- `block?` (`SlotShortcut | false`): Block rules. Default: `{ create: '[[[' }`. Set `false` to disable this kind.
+- `inline?`（`SlotShortcut | false`）：行内规则。默认值：`{ create: '{{{' }`。设为 `false` 可禁用此类规则。
+- `block?`（`SlotShortcut | false`）：块级规则。默认值：`{ create: '[[[' }`。设为 `false` 可禁用此类规则。
 
-Typing the third `{` immediately creates an empty inline Slot at the caret and places the cursor inside it. Typing the third `[` in an otherwise empty textblock replaces it with a block Slot containing an empty paragraph, with the cursor inside that paragraph. Neither rule needs a closing delimiter or Enter. Block creation does not consume surrounding text.
+键入第三个 `{` 时，会立即在光标处创建一个空的行内 Slot，并将光标置于其中。在其他内容为空的文本块中键入第三个 `[` 时，该文本块会被替换为一个包含空段落的块级 Slot，光标位于该段落中。这两种规则都不需要结束分隔符或按 Enter。创建块级 Slot 时不会消耗周围文本。
 
 ### `SlotShortcut`
 
-- `create?` (`string | false`): Immediate creation trigger. Defaults to `{{{` for inline and `[[[` for block. Set `false` to disable creation while retaining a paired rule.
-- `open?` (`string`): Optional nonempty paired opening delimiter. Requires `close`.
-- `close?` (`string`): Optional nonempty paired closing delimiter, distinct from `open`. Requires `open`.
-- `config?` (`SlotConfig`): Configuration for new Slots. Default: `{}`.
+- `create?`（`string | false`）：立即创建的触发符。行内默认值为 `{{{`，块级默认值为 `[[[`。设为 `false` 可禁用创建，同时保留成对规则。
+- `open?`（`string`）：可选的非空成对起始分隔符。必须同时设置 `close`。
+- `close?`（`string`）：可选的非空成对结束分隔符，且必须与 `open` 不同。必须同时设置 `open`。
+- `config?`（`SlotConfig`）：新建 Slot 的配置。默认值：`{}`。
 
-Configuration merges with the defaults. For example, adding an inline `open: '{{', close: '}}'` pair retains both immediate creation rules. `{{name}}` then converts existing wording; `{{{` immediately opens an empty inline field. A declined triple trigger is not subsequently consumed as the shorter paired opener.
+配置会与默认值合并。例如，添加行内 `open: '{{', close: '}}'` 成对分隔符后，两种立即创建规则仍然保留。此时 `{{name}}` 会将已有文字转换为 Slot，而 `{{{` 会立即创建一个空的行内字段。若拒绝三连触发符，不会再将其作为较短的成对起始分隔符处理。
 
-Paired opening delimiters must not overlap each other by prefix. Immediate triggers must not overlap each other by prefix, and a paired opening delimiter cannot equal or start with an enabled creation trigger. Disable the conflicting `create` trigger before configuring such a pair.
+成对起始分隔符之间不能存在前缀重叠。立即触发符之间也不能存在前缀重叠；成对起始分隔符不能与已启用的创建触发符相同，也不能以其开头。配置此类成对分隔符前，请先禁用冲突的 `create` 触发符。
 
-For paired conversion, captured text becomes the Slot's content, preserving text Marks. A block pair must occupy the whole textblock. Refused conversion leaves literal input; paste does not trigger these rules. Pairs spanning inline atoms, such as mentions or Variables, are skipped by Tiptap's input-rule runner; the resolver is not called for those matches.
+进行成对转换时，捕获的文本会成为 Slot 的内容，并保留文本 Mark。块级成对分隔符必须独占整个文本块。若转换被拒绝，输入会保留为字面文本；粘贴不会触发这些规则。跨越行内原子节点（如提及或 Variable）的成对匹配会被 Tiptap 的输入规则运行器跳过；这些匹配不会调用解析器。
 
 ```ts
 // Retain paired conversion, but disable immediate creation for both kinds.
@@ -118,7 +118,7 @@ Slot.configure({
 
 ## `resolveInputRuleSlot`
 
-Use this synchronous callback to choose the Slot's ID, configuration and initial content from the captured input and current application context. It runs before insertion, not as a notification that a Slot was created. It is used only by the configured input rules; ordinary `insertSlot` and `wrapInSlot` calls do not invoke it.
+使用此同步回调，根据捕获的输入和当前应用上下文选择 Slot 的 ID、配置和初始内容。它会在插入前运行，而不是在 Slot 创建后作为通知运行。它仅用于已配置的输入规则；常规的 `insertSlot` 和 `wrapInSlot` 调用不会触发它。
 
 ```ts
 Slot.configure({
@@ -141,47 +141,47 @@ Slot.configure({
 })
 ```
 
-Typing `{{customer-name}}` creates an empty required field with a generated ID. Other matched text uses the normal conversion. The callback can also read application data through its closure, for example to select a preset or decline creation for the current actor.
+键入 `{{customer-name}}` 会创建一个带生成 ID 的空必填字段。其他匹配文本会按常规方式转换。回调也可以通过闭包读取应用数据，例如选择预设，或拒绝为当前用户创建 Slot。
 
-### Parameters (`SlotInputRuleContext`)
+### 参数（`SlotInputRuleContext`）
 
-- `editor` (`Editor`): Inspect the current Document, Schema and extension storage. Do not dispatch Commands from the callback.
-- `kind` (`'inline' | 'block'`): Kind selected by the shortcut. The callback cannot change it.
-- `content` (`JSONContent[]`): Captured inline content without delimiters, preserving text Marks. This is the structured value to use when retaining formatting. Atom-spanning matches remain unsupported.
-- `text` (`string`): Complete captured text without delimiters or automatic trimming. Convenient for matching names such as `customer-name`.
-- `delimiters` (`{ open: string; close: string }`): Matched delimiter pair. For immediate creation, `open` is the trigger and `close` is `''`.
-- `range` (`{ from: number; to: number }`): Range replaced in the current Document. Block conversion replaces the whole textblock. Pending input may not yet be in that Document; `content` and `text` include the complete capture.
-- `defaults` (`{ config: SlotConfig; content: JSONContent[] }`): Shortcut configuration, or `{}`, and ready-to-insert content. For block Slots the captured inline content is wrapped in a paragraph.
+- `editor`（`Editor`）：检查当前 Document、Schema 和扩展存储。不要在回调中分派命令。
+- `kind`（`'inline' | 'block'`）：快捷输入所选的类型。回调不能更改此类型。
+- `content`（`JSONContent[]`）：不含分隔符且保留文本 Mark 的捕获行内内容。需要保留格式时应使用此结构化值。跨越原子节点的匹配仍不受支持。
+- `text`（`string`）：不含分隔符且未经自动修剪的完整捕获文本。适合匹配 `customer-name` 之类的名称。
+- `delimiters`（`{ open: string; close: string }`）：匹配的分隔符对。立即创建时，`open` 为触发符，`close` 为 `''`。
+- `range`（`{ from: number; to: number }`）：在当前 Document 中被替换的范围。块级转换会替换整个文本块。待处理输入可能尚未位于该 Document 中；`content` 和 `text` 包含完整的捕获内容。
+- `defaults`（`{ config: SlotConfig; content: JSONContent[] }`）：快捷输入配置，或 `{}`，以及可直接插入的内容。对于块级 Slot，捕获的行内内容会包装在段落中。
 
-The JSON inputs are immutable snapshots. Return new objects rather than modifying them. The callback must be synchronous and must not write to the editor.
+JSON 输入是不可变快照。请返回新对象，而不要修改这些输入。回调必须同步执行，且不得写入编辑器。
 
-Immediate creation also calls this resolver, with `text: ''` and `content: []`. Its default content is empty for inline Slots and an empty paragraph for block Slots. After insertion, the caret moves to the start of the Slot's content; if that content is a lone selectable atom, the atom is selected instead. Returning `false` leaves the trigger literal.
+立即创建也会调用此解析器，此时 `text: ''` 且 `content: []`。默认内容对于行内 Slot 为空，对于块级 Slot 则是一个空段落。插入后，光标会移至 Slot 内容的起始处；若内容只有一个可选中的原子节点，则会改为选中该原子节点。返回 `false` 会使触发符保留为字面文本。
 
-### Return value (`SlotInputRuleResult | false | undefined`)
+### 返回值（`SlotInputRuleResult | false | undefined`）
 
-- `undefined`: Use the defaults.
-- `false`: Leave the complete literal input, including delimiters. This is an intentional decline and emits no rejection event.
-- An object with any of the following overrides:
-  - `id?` (`string`): Explicit unique, nonempty ID. Omitted: use `generateId`.
-  - `config?` (`SlotConfig`): Replaces the default configuration as a whole. Spread `defaults.config` to merge explicitly.
-  - `content?` (`JSONContent[]`): Replaces the initial content and may include any Nodes and Marks valid for the Slot's Schema. Omitted: keep `defaults.content`, even if the returned configuration has `defaultContent`. `[]` creates an empty inline Slot or a block Slot containing an empty paragraph.
+- `undefined`：使用默认值。
+- `false`：保留完整的字面输入，包括分隔符。这表示主动拒绝，不会触发拒绝事件。
+- 包含以下任意覆盖项的对象：
+  - `id?`（`string`）：显式指定唯一且非空的 ID。省略时使用 `generateId`。
+  - `config?`（`SlotConfig`）：整体替换默认配置。若要合并，请显式展开 `defaults.config`。
+  - `content?`（`JSONContent[]`）：替换初始内容，可包含 Slot 的 Schema 所允许的任意 Node 和 Mark。省略时保留 `defaults.content`，即使返回的配置含有 `defaultContent` 也不例外。`[]` 会创建空的行内 Slot，或包含空段落的块级 Slot。
 
-The result cannot change the kind or insertion position. Slot insertion still goes through `insertSlot`, including ID, Schema and Content Protection checks. Validation constraints remain non-blocking, as with ordinary insertion.
+结果不能更改类型或插入位置。Slot 插入仍会通过 `insertSlot` 执行，包括 ID、Schema 和内容保护检查。与常规插入一样，验证约束不会阻止插入。
 
-Thrown callback errors, promises and malformed results refuse conversion and emit `slotCommandRejected` with `command: 'insertSlot'` and `code: 'invalidInput'`. Insertion refusals use their existing codes, such as `schemaMismatch` or `protected`. No partial Slot is inserted. Input-rule undo remains available.
+若回调抛出错误、返回 Promise 或返回格式错误的结果，转换会被拒绝，并触发 `slotCommandRejected`，其中 `command: 'insertSlot'`、`code: 'invalidInput'`。插入被拒绝时使用已有错误代码，例如 `schemaMismatch` 或 `protected`。不会插入部分 Slot。仍可撤销输入规则操作。
 
-## Storage (`SlotStorage`)
+## 存储（`SlotStorage`）
 
-Read-only getters at `editor.storage.slot`.
+`editor.storage.slot` 上的只读 getter。
 
-- `snapshot` (`SlotSnapshot`): Current document and Slot index.
-- `activeSlot` (`SlotEntry | null`): Innermost Slot at the selection head, or the selected Slot Node. `null` outside Slots.
-- `validation` (`SlotValidationState`): Current validation lifecycle and result.
+- `snapshot`（`SlotSnapshot`）：当前文档和 Slot 索引。
+- `activeSlot`（`SlotEntry | null`）：选区头部所在的最内层 Slot，或当前选中的 Slot Node。不在 Slot 内时为 `null`。
+- `validation`（`SlotValidationState`）：当前验证生命周期和结果。
 
 ### `SlotValidationState`
 
-- `status` (`'unvalidated' | 'pending' | 'current'`): Initially `'unvalidated'`. Validation is requested explicitly.
-- `snapshotId` (`string | null`): Snapshot being validated or holding the current result; otherwise `null`.
-- `result` (`SlotValidationResult | null`): Current result; `null` while unvalidated or pending.
+- `status`（`'unvalidated' | 'pending' | 'current'`）：初始值为 `'unvalidated'`。验证需显式请求。
+- `snapshotId`（`string | null`）：正在验证或持有当前结果的快照；否则为 `null`。
+- `result`（`SlotValidationResult | null`）：当前结果；尚未验证或验证待处理时为 `null`。
 
-Document edits, including edits appended by plugins, refresh the snapshot and clear cached validation. Selection changes do not. See [read types](/composable-docs/slots/api-reference/types).
+文档编辑（包括插件追加的编辑）会刷新快照并清除缓存的验证结果。选区变化不会。参见[读取类型](/composable-docs/slots/api-reference/types)。
