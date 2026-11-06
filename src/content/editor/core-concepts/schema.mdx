@@ -1,24 +1,24 @@
 ---
-title: Tiptap Schemas
+title: Tiptap Schema
 meta:
-  title: Schema | Tiptap Editor Docs
-  description: Learn how content is structured in Tiptap’s schema and control your nodes, marks and more in your documents. More in the docs!
-  category: Editor
+  title: Schema | Tiptap 编辑器文档
+  description: 了解 Tiptap schema 如何组织内容，以及如何控制文档中的节点、标记等。更多内容请参阅文档！
+  category: 编辑器
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Unlike many other editors, Tiptap is based on a [schema](https://prosemirror.net/docs/guide/#schema) that defines how your content is structured. That enables you to define the kind of nodes that may occur in the document, its attributes and the way they can be nested.
+与许多其他编辑器不同，Tiptap 基于[结构规范（schema）](https://prosemirror.net/docs/guide/#schema)构建，用于定义内容的组织方式。借助它，你可以定义文档中允许出现的节点类型、节点属性以及节点的嵌套方式。
 
-This schema is _very_ strict. You can’t use any HTML element or attribute that is not defined in your schema.
+这个 schema 的限制_非常_严格。你不能使用 schema 中未定义的 HTML 元素或属性。
 
-Let me give you one example: If you paste something like `This is <strong>important</strong>` into Tiptap, but don’t have any extension that handles `strong` tags, you’ll only see `This is important` – without the strong tags.
+举个例子：如果你在 Tiptap 中粘贴 `This is <strong>important</strong>` 这样的内容，但没有任何扩展处理 `strong` 标签，你只会看到 `This is important`，而不会看到粗体标签。
 
-If you want to know when this happens, you can listen to the [`contentError`](/editor/api/events#list-of-available-events) event after enabling the `enableContentCheck` option.
+如果你想知道何时发生这种情况，可以启用 `enableContentCheck` 选项，然后监听 [`contentError`](/editor/api/events#list-of-available-events) 事件。
 
-## What a schema looks like
+## Schema 的样子
 
-When you work purely with the provided extensions, you don’t have to care that much about the schema. If you’re building your own extensions, it’s probably helpful to understand how the schema works. Let’s look at the most simple schema for a typical ProseMirror editor:
+如果你只使用提供的扩展，就不必太在意 schema。如果要构建自己的扩展，了解 schema 的工作方式可能会很有帮助。来看一个典型 ProseMirror 编辑器中最简单的 schema：
 
 ```js
 // the underlying ProseMirror schema
@@ -40,9 +40,9 @@ When you work purely with the provided extensions, you don’t have to care that
 }
 ```
 
-We register three nodes here. `doc`, `paragraph` and `text`. `doc` is the root node which allows one or more block nodes as children (`content: 'block+'`). Since `paragraph` is in the group of block nodes (`group: 'block'`) our document can only contain paragraphs. Our paragraphs allow zero or more inline nodes as children (`content: 'inline*'`) so there can only be `text` in it. `parseDOM` defines how a node can be parsed from pasted HTML. `toDOM` defines how it will be rendered in the DOM.
+这里注册了三个节点：`doc`、`paragraph` 和 `text`。`doc` 是根节点，允许一个或多个块节点作为子节点（`content: 'block+'`）。由于 `paragraph` 属于块节点组（`group: 'block'`），我们的文档只能包含段落。段落允许零个或多个内联节点作为子节点（`content: 'inline*'`），因此其中只能包含 `text`。`parseDOM` 定义如何从粘贴的 HTML 中解析节点。`toDOM` 定义节点如何渲染到 DOM 中。
 
-In Tiptap every node, mark and extension is living in its own file. This allows us to split the logic. Under the hood the whole schema will be merged together:
+在 Tiptap 中，每个节点、标记和扩展都各自位于一个文件中。这样可以将逻辑拆分开来。在底层，整个 schema 会合并在一起：
 
 ```js
 // the Tiptap schema API
@@ -72,11 +72,11 @@ const Text = Node.create({
 })
 ```
 
-## Use an external schema spec
+## 使用外部 schema 规范
 
-Pass a complete ProseMirror `SchemaSpec` to the editor's [`schemaSpec`](/editor/api/editor#schemaspec) option to define document structure separately from local extension behavior. You can use this when several editors need to share the same structure but have different rendering or interaction code.
+将完整的 ProseMirror `SchemaSpec` 传给编辑器的 [`schemaSpec`](/editor/api/editor#schemaspec) 选项，即可在本地扩展行为之外单独定义文档结构。当多个编辑器需要共享相同结构，但具有不同的渲染或交互代码时，可以使用这种方式。
 
-The spec controls node and mark structure. Local extensions still provide HTML parsing and rendering, text serialization, commands, keyboard shortcuts, node views, and plugins.
+规范控制节点和标记的结构。本地扩展仍负责提供 HTML 解析和渲染、文本序列化、命令、键盘快捷键、节点视图和插件。
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -126,58 +126,58 @@ editor.getHTML()
 // '<p data-tone="newsletter">Hello <strong>world</strong>.</p>'
 ```
 
-Here, `schemaSpec` allows bold text and sets the default `tone` attribute. `LocalParagraph` inherits paragraph rendering and maps `tone` to the `data-tone` HTML attribute. The `Bold` extension supplies `<strong>` parsing, rendering, and the `toggleBold` command.
+这里，`schemaSpec` 允许粗体文本，并设置了 `tone` 属性的默认值。`LocalParagraph` 继承段落的渲染方式，并将 `tone` 映射为 HTML 属性 `data-tone`。`Bold` 扩展提供 `<strong>` 的解析和渲染，以及 `toggleBold` 命令。
 
-### Matching extensions
+### 匹配扩展
 
-The spec and your resolved extensions must contain exactly the same node and mark names. A node in the spec requires a local node extension, and a mark requires a local mark extension. Duplicate local node or mark names are rejected.
+规范和解析后的扩展必须包含完全相同的节点名称和标记名称。规范中的每个节点都需要对应的本地节点扩展，每个标记都需要对应的本地标记扩展。本地节点或标记名称重复时会被拒绝。
 
-Extensions that do not define a node or mark can be added without an entry in the spec. For example, an extension that only adds keyboard shortcuts does not need one.
+未定义节点或标记的扩展可以在规范中没有对应条目的情况下添加。例如，只添加键盘快捷键的扩展就不需要对应条目。
 
-If you use `StarterKit`, include every node and mark it enables in the spec, or disable the types you leave out. A paragraph-only spec cannot be used with the default `StarterKit` configuration.
+如果使用 `StarterKit`，请在规范中包含它启用的所有节点和标记，或者禁用未包含的类型。仅包含段落的规范不能与默认的 `StarterKit` 配置一起使用。
 
-Local node and mark extensions can define only behavior. Their structural fields and attributes can come entirely from `schemaSpec`.
+本地节点和标记扩展可以只定义行为。它们的结构字段和属性都可以完全由 `schemaSpec` 提供。
 
-### Structure rules
+### 结构规则
 
-The external spec replaces local structural fields rather than filling in missing ones. If a field is omitted, ProseMirror uses its default instead of the local extension's value.
+外部规范会替换本地结构字段，而不是补充缺失字段。如果省略某个字段，ProseMirror 会使用其默认值，而不是本地扩展中的值。
 
-- For nodes, the spec controls `content`, `marks`, `group`, `inline`, `atom`, `selectable`, `draggable`, `code`, `whitespace`, `definingAsContext`, `definingForContent`, `defining`, `isolating`, and `linebreakReplacement`.
-- For marks, the spec controls `inclusive`, `excludes`, `group`, `spanning`, and `code`.
-- The spec determines the top node and node and mark order, regardless of local extension priorities.
+- 对于节点，规范控制 `content`、`marks`、`group`、`inline`、`atom`、`selectable`、`draggable`、`code`、`whitespace`、`definingAsContext`、`definingForContent`、`defining`、`isolating` 和 `linebreakReplacement`。
+- 对于标记，规范控制 `inclusive`、`excludes`、`group`、`spanning` 和 `code`。
+- 无论本地扩展的优先级如何，规范都决定顶层节点以及节点和标记的顺序。
 
-Keep DOM behavior in local extensions. The external spec's `parseDOM` and `toDOM` fields are ignored. Custom schema metadata, such as `tableRole` and `allowGapCursor`, also comes from local extensions.
+DOM 行为应保留在本地扩展中。外部规范中的 `parseDOM` 和 `toDOM` 字段会被忽略。自定义 schema 元数据（例如 `tableRole` 和 `allowGapCursor`）也来自本地扩展。
 
-### Attribute rules
+### 属性规则
 
-The spec controls attribute names, defaults, requiredness, and validation for both nodes and marks.
+对于节点和标记，规范控制属性名称、默认值、是否必需以及验证规则。
 
-- Local attributes absent from the spec are removed, including attributes added through `addGlobalAttributes()`.
-- Matching local attributes keep their `parseHTML`, `renderHTML`, `rendered`, and `keepOnSplit` behavior. Their defaults and validation come from the spec.
-- Attributes present only in the spec use Tiptap's default attribute parsing and rendering. Define local attribute hooks when you need a custom HTML representation.
-- An attribute without a `default` is required. Provide a value when creating content that uses it.
+- 规范中不存在的本地属性会被移除，包括通过 `addGlobalAttributes()` 添加的属性。
+- 匹配的本地属性会保留其 `parseHTML`、`renderHTML`、`rendered` 和 `keepOnSplit` 行为。它们的默认值和验证规则由规范决定。
+- 仅存在于规范中的属性使用 Tiptap 默认的属性解析和渲染方式。如果需要自定义 HTML 表示形式，请定义本地属性钩子。
+- 没有 `default` 的属性是必需属性。创建使用该属性的内容时，请提供相应的值。
 
-### Validation and updates
+### 验证和更新
 
-Tiptap rejects invalid schema structure, invalid structural field types, missing local implementations, extra local node or mark types, and duplicate local type names when creating the editor.
+创建编辑器时，如果 schema 结构无效、结构字段类型无效、缺少本地实现、存在额外的本地节点或标记类型，或本地类型名称重复，Tiptap 都会拒绝创建。
 
-The spec is applied only at editor creation. `editor.setOptions({ schemaSpec })` does not rebuild the schema. To change structure, create a new editor and migrate existing content to match the new spec.
+规范仅在创建编辑器时应用。`editor.setOptions({ schemaSpec })` 不会重建 schema。要更改结构，请创建一个新编辑器，并迁移现有内容，使其符合新规范。
 
-If you omit `schemaSpec`, Tiptap continues to build the schema from the local extensions.
+如果省略 `schemaSpec`，Tiptap 会继续根据本地扩展构建 schema。
 
-## Nodes and marks
+## 节点和标记
 
-### Differences
+### 区别
 
-Nodes are like blocks of content, for example paragraphs, headings, code blocks, blockquotes and many more.
+节点类似内容块，例如段落、标题、代码块、引用块等。
 
-Marks can be applied to specific parts of a node. That’s the case for **bold**, _italic_ or ~~striked~~ text. [Links](#) are marks, too.
+标记可以应用于节点的特定部分。例如**粗体**、_斜体_或~~删除线~~文本。[链接](#)也是标记。
 
-### The node schema
+### 节点 schema
 
-#### Content
+#### 内容
 
-The content attribute defines exactly what kind of content the node can have. ProseMirror is really strict with that. That means, content which doesn’t fit the schema is thrown away. It expects a name or group as a string. Here are a few examples:
+`content` 属性准确地定义了节点可以包含哪些内容。ProseMirror 对此要求非常严格，也就是说，不符合 schema 的内容会被丢弃。它要求值为名称或组名字符串。下面是一些示例：
 
 ```js
 Node.create({
@@ -201,9 +201,9 @@ Node.create({
 })
 ```
 
-#### Marks
+#### 标记
 
-You can define which marks are allowed inside of a node with the `marks` setting of the schema. Add one or more names or groups of marks, allow all or disallow all marks like this:
+你可以通过 schema 的 `marks` 设置，定义节点中允许使用哪些标记。可以添加一个或多个标记名称或组名，也可以像下面这样允许或禁止所有标记：
 
 ```js
 Node.create({
@@ -221,9 +221,9 @@ Node.create({
 })
 ```
 
-#### Group
+#### 组
 
-Add this node to a group of extensions, which can be referred to in the [content](#content) attribute of the schema.
+将此节点添加到扩展组中，然后就可以在 schema 的 [`content`](#content) 属性中引用该组。
 
 ```js
 Node.create({
@@ -238,9 +238,9 @@ Node.create({
 })
 ```
 
-#### Inline
+#### 内联
 
-Nodes can be rendered inline, too. When setting `inline: true` nodes are rendered in line with the text. That’s the case for mentions. The result is more like a mark, but with the functionality of a node. One difference is the resulting JSON document. Multiple marks are applied at once, inline nodes would result in a nested structure.
+节点也可以以内联方式渲染。设置 `inline: true` 后，节点会与文本一起显示。例如，提及就是如此。它的结果更像标记，但具备节点的功能。两者的一个区别在于生成的 JSON 文档：多个标记可以同时应用，而内联节点会形成嵌套结构。
 
 ```js
 Node.create({
@@ -249,7 +249,7 @@ Node.create({
 })
 ```
 
-For some cases where you want features that aren’t available in marks, for example a node view, try if an inline node would work:
+如果你需要标记不具备的功能（例如节点视图），可以尝试使用内联节点：
 
 ```js
 Node.create({
@@ -260,7 +260,7 @@ Node.create({
 })
 ```
 
-Inline nodes can be tricky to select, especially at line edges. A quick fix: add a zero-width space right after the element using CSS:
+内联节点可能不容易选中，尤其是位于行首或行尾时。一个快速解决方法是使用 CSS 在元素后添加零宽空格：
 
 ```css
 .customInlineNode::after {
@@ -268,9 +268,9 @@ Inline nodes can be tricky to select, especially at line edges. A quick fix: add
 }
 ```
 
-#### Atom
+#### 原子节点
 
-Nodes with `atom: true` aren’t directly editable and should be treated as a single unit. It’s not so likely to use that in an editor context, but this is what it would look like:
+`atom: true` 的节点不能直接编辑，应视为一个整体。在编辑器场景中，这种用法并不常见，但配置如下：
 
 ```js
 Node.create({
@@ -278,7 +278,7 @@ Node.create({
 })
 ```
 
-One example is the [`Mention`](/editor/extensions/nodes/mention) extension, which somehow looks like text, but behaves more like a single unit. As this doesn’t have editable text content, it’s empty when you copy such a node. Good news though, you can control that. Here is the example from the [`Mention`](/editor/extensions/nodes/mention) extension:
+[`Mention`](/editor/extensions/nodes/mention) 扩展就是一个例子：它看起来有点像文本，但行为更像一个整体。由于它不包含可编辑文本，复制此类节点时内容为空。不过，你可以控制这一行为。下面是 [`Mention`](/editor/extensions/nodes/mention) 扩展中的示例：
 
 ```js
 // Used to convert an atom node to plain text
@@ -287,9 +287,9 @@ renderText({ node }) {
 },
 ```
 
-#### Selectable
+#### 可选择
 
-Besides the already visible text selection, there is an invisible node selection. If you want to make your nodes selectable, you can configure it like this:
+除了常见的文本选择，还有一种不可见的节点选择。要让节点可以被选中，可以这样配置：
 
 ```js
 Node.create({
@@ -297,9 +297,9 @@ Node.create({
 })
 ```
 
-#### Draggable
+#### 可拖动
 
-All nodes can be configured to be draggable (by default they aren’t) with this setting:
+可以使用此设置让所有节点都可拖动（默认不可拖动）：
 
 ```js
 Node.create({
@@ -307,9 +307,9 @@ Node.create({
 })
 ```
 
-#### Code
+#### 代码
 
-Users expect code to behave very differently. For all kind of nodes containing code, you can set `code: true` to take this into account.
+用户期望代码的行为与普通内容截然不同。对于包含代码的各类节点，可以设置 `code: true` 来体现这一点。
 
 ```js
 Node.create({
@@ -317,9 +317,9 @@ Node.create({
 })
 ```
 
-#### Whitespace
+#### 空白字符
 
-Controls the way whitespace in this node is parsed.
+控制如何解析此节点中的空白字符。
 
 ```js
 Node.create({
@@ -327,11 +327,11 @@ Node.create({
 })
 ```
 
-#### Defining
+#### 定义节点
 
-Nodes get dropped when their entire content is replaced (for example, when pasting new content) by default. If a node should be kept for such replace operations, configure them as `defining`.
+默认情况下，当节点的全部内容被替换时（例如粘贴新内容时），该节点会被移除。如果希望此类替换操作保留节点，请将其配置为 `defining`。
 
-Typically, that applies to [`Blockquote`](/editor/extensions/nodes/blockquote), [`CodeBlock`](/editor/extensions/nodes/code-block), [`Heading`](/editor/extensions/nodes/heading), and [`ListItem`](/editor/extensions/nodes/list-item).
+这通常适用于 [`Blockquote`](/editor/extensions/nodes/blockquote)、[`CodeBlock`](/editor/extensions/nodes/code-block)、[`Heading`](/editor/extensions/nodes/heading) 和 [`ListItem`](/editor/extensions/nodes/list-item)。
 
 ```js
 Node.create({
@@ -339,9 +339,9 @@ Node.create({
 })
 ```
 
-#### Isolating
+#### 隔离
 
-For nodes that should fence the cursor for regular editing operations like backspacing, for example a TableCell, set `isolating: true`.
+对于在退格等常规编辑操作中需要阻止光标越界的节点（例如表格单元格），请设置 `isolating: true`。
 
 ```js
 Node.create({
@@ -349,9 +349,9 @@ Node.create({
 })
 ```
 
-#### Allow gap cursor
+#### 允许间隙光标
 
-The [`Gapcursor`](/editor/extensions/functionality/gapcursor) extension registers a new schema attribute to control if gap cursors are allowed everywhere in that node.
+[`Gapcursor`](/editor/extensions/functionality/gapcursor) 扩展会注册一个新的 schema 属性，用于控制是否允许光标出现在该节点的任意位置。
 
 ```js
 Node.create({
@@ -359,9 +359,9 @@ Node.create({
 })
 ```
 
-#### Table roles
+#### 表格角色
 
-The [`Table`](/editor/extensions/nodes/table) extension registers a new schema attribute to configure which role a Node has. Allowed values are `table`, `row`, `cell`, and `header_cell`.
+[`Table`](/editor/extensions/nodes/table) 扩展会注册一个新的 schema 属性，用于配置节点的角色。允许的值为 `table`、`row`、`cell` 和 `header_cell`。
 
 ```js
 Node.create({
@@ -369,11 +369,11 @@ Node.create({
 })
 ```
 
-### The mark schema
+### 标记 schema
 
-#### Inclusive
+#### 包含性
 
-If you don’t want the mark to be active when the cursor is at its end, set inclusive to `false`. For example, that’s how it’s configured for [`Link`](/editor/extensions/marks/link) marks:
+如果不希望光标位于标记末尾时仍激活该标记，请将 `inclusive` 设为 `false`。例如，[`Link`](/editor/extensions/marks/link) 标记就是这样配置的：
 
 ```js
 Mark.create({
@@ -381,9 +381,9 @@ Mark.create({
 })
 ```
 
-#### Excludes
+#### 排除项
 
-By default all marks can be applied at the same time. With the excludes attribute you can define which marks must not coexist with the mark. For example, the inline code mark excludes any other mark (bold, italic, and all others).
+默认情况下，所有标记都可以同时应用。通过 `excludes` 属性，你可以定义哪些标记不能与此标记共存。例如，行内代码标记会排除其他所有标记（粗体、斜体等）。
 
 ```js
 Mark.create({
@@ -394,10 +394,10 @@ Mark.create({
 })
 ```
 
-#### Exitable
+#### 可退出
 
-By default a mark will "trap" the cursor, meaning the cursor can't get out of the mark except by moving the cursor left to right into text without a mark.
-If this is set to true, the mark will be exitable when the mark is at the end of a node. This is handy for example using code marks.
+默认情况下，标记会“困住”光标：除非将光标从左向右移入没有标记的文本，否则光标无法离开标记。
+如果将此项设为 `true`，当标记位于节点末尾时，光标就可以退出该标记。例如，代码标记就适合使用此设置。
 
 ```js
 Mark.create({
@@ -406,9 +406,9 @@ Mark.create({
 })
 ```
 
-#### Group
+#### 组
 
-Add this mark to a group of extensions, which can be referred to in the content attribute of the schema.
+将此标记添加到扩展组中，然后就可以在 schema 的 `content` 属性中引用该组。
 
 ```js
 Mark.create({
@@ -419,9 +419,9 @@ Mark.create({
 })
 ```
 
-#### Code
+#### 代码
 
-Users expect code to behave very differently. For all kind of marks containing code, you can set `code: true` to take this into account.
+用户期望代码的行为与普通内容截然不同。对于包含代码的各类标记，可以设置 `code: true` 来体现这一点。
 
 ```js
 Mark.create({
@@ -429,9 +429,9 @@ Mark.create({
 })
 ```
 
-#### Spanning
+#### 跨节点
 
-By default marks can span multiple nodes when rendered as HTML. Set `spanning: false` to indicate that a mark must not span multiple nodes.
+默认情况下，标记渲染为 HTML 时可以跨越多个节点。设置 `spanning: false` 表示标记不能跨越多个节点。
 
 ```js
 Mark.create({
@@ -439,13 +439,13 @@ Mark.create({
 })
 ```
 
-## Get the underlying ProseMirror schema
+## 获取底层 ProseMirror schema
 
-There are a few use cases where you need to work with the underlying schema. You’ll need that if you’re using the Tiptap collaborative text editing features or if you want to manually render your content as HTML.
+有些场景需要使用底层 schema。例如，使用 Tiptap 协同文本编辑功能，或想要手动将内容渲染为 HTML 时，就需要用到它。
 
-### Option 1: With an Editor
+### 方式一：使用编辑器
 
-If you need this on the client side and need an editor instance anyway, it’s available through the editor:
+如果你需要在客户端获取 schema，而且本来就需要一个编辑器实例，可以通过编辑器获取：
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -465,9 +465,9 @@ const editor = new Editor({
 const schema = editor.schema
 ```
 
-### Option 2: Without an Editor
+### 方式二：不使用编辑器
 
-If you just want to have the schema _without_ initializing an actual editor, you can use the `getSchema` helper function. It needs an array of available extensions and conveniently generates a ProseMirror schema for you:
+如果只想获取 schema，而不初始化实际的编辑器，可以使用辅助函数 `getSchema`。它需要一个可用扩展数组，并会便捷地为你生成 ProseMirror schema：
 
 ```js
 import { getSchema } from '@tiptap/core'
@@ -483,29 +483,26 @@ const schema = getSchema([
 ])
 ```
 
-## Invalid Schema Handling
+## 无效 Schema 处理
 
-To track and respond to content errors, Tiptap supports checking that the content provided matches the schema derived from the registered extensions.
-To use this, set the `enableContentCheck` option to `true`, which activates checking the content and emitting `contentError` events.
-These events can be listened to with the `onContentError` callback.
-By default, this flag is set to `false` to maintain compatibility with previous versions.
+为了跟踪并响应内容错误，Tiptap 支持检查所提供的内容是否符合根据已注册扩展生成的 schema。
+要启用此功能，请将 `enableContentCheck` 选项设为 `true`，以检查内容并触发 `contentError` 事件。
+可以通过 `onContentError` 回调监听这些事件。
+此标志默认设为 `false`，以保持与旧版本的兼容性。
 
-<Callout title="Note" variant="warning">
-  The content checking that Tiptap runs is 100% accurate on JSON content types. But, if you provide
-  your content as HTML, we have done our best to try to alert on missing nodes but marks can be
-  missed in certain situations, therefore, falling back to the default behavior of stripping that
-  unrecognized content by default.
+<Callout title="注意" variant="warning">
+  Tiptap 对 JSON 类型内容的检查 100% 准确。但如果你提供的是 HTML，我们会尽力提示缺失的节点；在某些情况下可能无法检测到标记，因此仍会按默认行为丢弃无法识别的内容。
 </Callout>
 
-### contentError event
+### contentError 事件
 
-The `contentError` event is emitted when the initial `content` provided during editor setup is incompatible with the schema.
+在编辑器初始化时，如果提供的初始 `content` 与 schema 不兼容，就会触发 `contentError` 事件。
 
-With the [Collaboration extension](/editor/extensions/functionality/collaboration) 3.33.0 and `@tiptap/y-tiptap` 3.2.0 or later, it is also emitted when the shared document contains content that doesn't fit the schema. The editor then keeps that content in the shared document, pauses editing and sends no changes. Read more in [Invalid schema handling](/guides/invalid-schema#for-collaborative-editing).
+使用 3.33.0 版 [Collaboration 扩展](/editor/extensions/functionality/collaboration)以及 3.2.0 版或更高版本的 `@tiptap/y-tiptap` 时，如果共享文档包含不符合 schema 的内容，也会触发该事件。此时，编辑器会保留共享文档中的内容、暂停编辑并且不发送任何更改。详情请参阅[无效 Schema 处理](/guides/invalid-schema#for-collaborative-editing)。
 
-As part of the error context, you are provided with a `disableCollaboration` function. Invoking this function destroys the Y.Doc passed to the Collaboration extension, so the editor stops syncing with other users. Other editors that use the same Y.Doc stop syncing too.
+错误上下文中会提供一个 `disableCollaboration` 函数。调用该函数会销毁传递给 Collaboration 扩展的 Y.Doc，使编辑器停止与其他用户同步。使用同一 Y.Doc 的其他编辑器也会停止同步。
 
-This event can be handled either directly as an option through `onContentError` like:
+可以通过 `onContentError` 选项直接处理此事件，例如：
 
 ```jsx
 new Editor({
@@ -518,7 +515,7 @@ new Editor({
 })
 ```
 
-Or, by attaching a listener to the `contentError` event on the editor instance.
+也可以在编辑器实例上为 `contentError` 事件添加监听器：
 
 ```jsx
 const editor = new Editor({
@@ -532,11 +529,11 @@ editor.on('contentError', ({ editor, error, disableCollaboration }) => {
 })
 ```
 
-For more implementation examples, refer to the [events](/editor/api/events) section.
+有关更多实现示例，请参阅[事件](/editor/api/events)部分。
 
-### Listen to the contentError event without enabling content checking
+### 不启用内容检查也监听 contentError 事件
 
-If you want to listen to the `contentError` event without enabling content checking, set `emitContentError` to `true` when initializing your Tiptap editor:
+如果想在不启用内容检查的情况下监听 `contentError` 事件，请在初始化 Tiptap 编辑器时将 `emitContentError` 设为 `true`：
 
 ```jsx
 new Editor({
@@ -546,19 +543,19 @@ new Editor({
 })
 ```
 
-This setting allows you to have invalid content in your editor, but still be notified when the content is invalid.
+此设置允许编辑器中存在无效内容，同时仍会在内容无效时通知你。
 
-### Recommended Handling
+### 建议的处理方式
 
-How you handle schema errors will be specific to your application and requirements but, here are our suggestions:
+如何处理 schema 错误取决于你的应用和需求，以下是我们的建议：
 
-#### Without collaborative editing
+#### 不使用协同编辑
 
-Depending on your use case, the default behavior of stripping unknown content keeps your content in a known valid state for future editing.
+根据具体使用场景，默认的未知内容剥离行为可以确保内容处于已知的有效状态，以便后续编辑。
 
-#### With collaborative editing
+#### 使用协同编辑
 
-Depending on your use case, you may want to set the `enableContentCheck` flag and listen to `contentError` events. When this event is received, you may want to respond similarly to this example:
+根据具体使用场景，你可能需要设置 `enableContentCheck` 标志并监听 `contentError` 事件。收到此事件后，可以参考以下示例进行处理：
 
 ```tsx
 onContentError({ editor, error, disableCollaboration }) {
