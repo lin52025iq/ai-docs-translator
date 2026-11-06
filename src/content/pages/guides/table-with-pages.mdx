@@ -1,10 +1,10 @@
 ---
-title: 'Using the TableKit extension with Pages'
+title: '在 Pages 中使用 TableKit 扩展'
 tags:
   - type: alpha
 meta:
-  title: TableKit with Pages | Tiptap Pages Docs
-  description: Learn how to add and use the TableKit extension alongside Pages for best compatibility.
+  title: Pages 中的 TableKit | Tiptap Pages 文档
+  description: 了解如何在 Pages 中添加和使用 TableKit 扩展，以获得最佳兼容性。
   category: Pages
 sidebars:
   hideSecondary: true
@@ -13,15 +13,15 @@ sidebars:
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-To add tables to your paginated editor, you should use the TableKit extension from the `@tiptap-pro/extension-pages-tablekit` package. This ensures full compatibility with pagination as in order to properly split tables across the pages we needed to heavily modify the behavior and layout of tables.
+要在分页编辑器中添加表格，应使用 `@tiptap-pro/extension-pages-tablekit` 包中的 TableKit 扩展。为了正确地将表格拆分到多个页面，我们对表格的行为和布局进行了大幅修改，因此使用该扩展可确保与分页功能完全兼容。
 
 <CodeDemo isPro path="/Extensions/PagesTables" />
 
 ---
 
-## 1. Install the Pages stack
+## 1. 安装 Pages 技术栈
 
-Tables, ConvertKit (the editor's schema), and Pages itself ship as separate packages. Install all three:
+表格、ConvertKit（编辑器的 schema）和 Pages 本身分别通过独立的包发布。请安装这三个包：
 
 ```bash
 npm install @tiptap-pro/extension-convert-kit \
@@ -29,7 +29,7 @@ npm install @tiptap-pro/extension-convert-kit \
             @tiptap-pro/extension-pages
 ```
 
-## 2. Add ConvertKit, TableKit, and Pages to your editor
+## 2. 将 ConvertKit、TableKit 和 Pages 添加到编辑器
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -48,30 +48,28 @@ const editor = new Editor({
 })
 ```
 
-<Callout title="Why ConvertKit's tables are disabled" variant="info">
-  ConvertKit ships its own table stack (DOCX-aware, but not pagination-safe). PagesTableKit's
-  `TableKit` is the pagination-safe replacement and accepts the same DOCX cell attributes that
-  ConvertKit's tables would. Disable one, register the other.
+<Callout title="为什么要禁用 ConvertKit 的表格" variant="info">
+  ConvertKit 自带一套表格功能（支持 DOCX，但不适用于分页）。PagesTableKit 的
+  `TableKit` 是适用于分页的替代方案，并支持与 ConvertKit 表格相同的 DOCX 单元格属性。
+  禁用其中一个，再注册另一个即可。
 </Callout>
 
-<Callout title="Best practice" variant="info">
-  Always use the `TableKit` extension from <code>@tiptap-pro/extension-pages-tablekit</code> when
-  working with Pages. Do not use the open-source `@tiptap/extension-table` or ConvertKit's built-in
-  tables, since neither is compatible with the layout the Pages extension produces.
+<Callout title="最佳实践" variant="info">
+  使用 Pages 时，务必使用来自 <code>@tiptap-pro/extension-pages-tablekit</code> 的 `TableKit` 扩展。
+  请勿使用开源的 `@tiptap/extension-table` 或 ConvertKit 内置的表格，因为它们都与 Pages 扩展生成的布局不兼容。
 </Callout>
 
-## 3. Table features
+## 3. 表格功能
 
-- The exposed TableKit extension works and behaves exactly like the open-source one and can also be extended to make it fit your needs.
-- Tables will paginate correctly and export to DOCX with your document
+- 所提供的 TableKit 扩展与开源版本的功能和行为完全一致，也可以扩展以满足你的需求。
+- 表格能够正确分页，并随文档一起导出为 DOCX。
 
-<Callout title="Extending the Page's TableKit extension" variant="default">
-  Be careful when extending the TableKit extension from{' '}
-  <code>@tiptap-pro/extension-pages-tablekit</code> as its layout is heavily modified and you can
-  potentially break the table splitting logic.
+<Callout title="扩展 Pages 的 TableKit 扩展" variant="default">
+  扩展来自{' '}
+  <code>@tiptap-pro/extension-pages-tablekit</code> 的 TableKit 扩展时请务必谨慎，因为其布局经过了大幅修改，扩展操作可能会破坏表格拆分逻辑。
 </Callout>
 
-## 4. Next steps
+## 4. 后续步骤
 
-- Explore [Pages options](/pages/core-concepts/options) for more layout control
-- See the [PageKit guide](/pages/guides/pagekit-usage) for an even easier setup
+- 查看 [Pages 选项](/pages/core-concepts/options)，了解更多布局控制方式。
+- 查看 [PageKit 指南](/pages/guides/pagekit-usage)，了解更简单的设置方法。
