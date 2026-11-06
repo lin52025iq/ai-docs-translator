@@ -1,79 +1,78 @@
 ---
-title: Lists
+title: 列表
 tags:
   - type: beta
 meta:
-  title: Lists | Tiptap Conversion
-  description: How bullet lists, ordered lists, nested lists, and task lists convert between DOCX and Tiptap.
-  category: Conversion
+  title: 列表 | Tiptap 转换
+  description: 无序列表、有序列表、嵌套列表和任务列表如何在 DOCX 与 Tiptap 之间转换。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Bullet lists and ordered lists convert between DOCX and Tiptap with nesting preserved. The import keeps a list together the way Word numbers it, and reads the numbering format and start number of each ordered list.
+无序列表和有序列表可以在 DOCX 与 Tiptap 之间转换，并保留嵌套结构。导入时会按照 Word 的编号规则将列表项归为同一个列表，并读取每个有序列表的编号格式和起始编号。
 
-## What you need
+## 所需内容
 
-- **Extensions:** [`ConvertKit`](/conversion/import/docx/convertkit) bundles `BulletList`, `OrderedList`, `ListItem`, and `ListKeymap`.
-- **Configuration:** None required. Nesting works out of the box at all pipeline stages.
+- **扩展：** [`ConvertKit`](/conversion/import/docx/convertkit) 内置 `BulletList`、`OrderedList`、`ListItem` 和 `ListKeymap`。
+- **配置：** 无需配置。在所有流水线阶段，嵌套功能均可开箱即用。
 
-## Support overview
+## 支持概览
 
-|                              | Import                                                                    | Editor                                                                                                              | Export                                             |
+|                              | 导入                                                                    | 编辑器                                                                                                              | 导出                                             |
 | ---------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
-| Bullet lists                 | Supported                                                                 | Supported (ConvertKit)                                                                                              | Supported                                          |
-| Ordered lists                | Supported                                                                 | Supported (ConvertKit)                                                                                              | Supported                                          |
-| Numbering format (a/A/i/I/1) | Imported as `numberingFormat`, plus `type` for letters and roman numerals | Drawn by `OrderedListNumbering` (off by default). The OrderedList extension's `type` attr also accepts these values | Editor extension only, from the registered formats |
-| Start number                 | Imported as `start` when the list does not start at 1                     | The OrderedList extension's `start` attr is supported                                                               | Editor extension only                              |
-| Nested lists                 | Supported                                                                 | Supported                                                                                                           | Supported                                          |
-| Task lists                   | Supported, opt-in                                                         | Supported (ConvertKit)                                                                                              | Supported                                          |
+| 无序列表                     | 支持                                                                      | 支持（ConvertKit）                                                                                                  | 支持                                               |
+| 有序列表                     | 支持                                                                      | 支持（ConvertKit）                                                                                                  | 支持                                               |
+| 编号格式 (a/A/i/I/1)         | 导入为 `numberingFormat`，字母和罗马数字还会设置 `type`                    | 由 `OrderedListNumbering` 绘制（默认关闭）。`OrderedList` 扩展的 `type` 属性也接受这些值                              | 仅编辑器扩展支持，使用已注册的格式                 |
+| 起始编号                     | 列表起始编号不是 1 时，导入为 `start`                                      | `OrderedList` 扩展支持 `start` 属性                                                                                  | 仅编辑器扩展支持                                   |
+| 嵌套列表                     | 支持                                                                      | 支持                                                                                                                | 支持                                               |
+| 任务列表                     | 支持，需选择启用                                                          | 支持（ConvertKit）                                                                                                  | 支持                                               |
 
-## Import
+## 导入
 
-Import lists using the [editor extension](/conversion/import/docx/editor-extension) or the [REST API](/conversion/import/docx/rest-api). Both produce identical output.
+使用[编辑器扩展](/conversion/import/docx/editor-extension)或 [REST API](/conversion/import/docx/rest-api) 导入列表。两者生成的输出完全相同。
 
-The conversion service builds one list from consecutive list paragraphs that Word numbers as one list:
+转换服务会将 Word 编为同一个列表的连续列表段落合并为一个列表：
 
-- Paragraphs on the same numbering ID (`numId`).
-- Paragraphs on different numbering IDs whose definitions share an `nsid` and the same levels. A numbering ID that restarts the count with `w:startOverride` starts a new list.
-- Empty paragraphs between items of one ordered list. Word keeps counting across them, so they do not end the list. Each one stays inside the item before it, which keeps the blank line.
+- 编号 ID（`numId`）相同的段落。
+- 编号 ID 不同，但定义共享同一 `nsid` 且层级相同的段落。如果某个编号 ID 使用 `w:startOverride` 重新开始计数，则会开始一个新列表。
+- 同一个有序列表项之间的空段落。Word 会跨过这些空段落继续计数，因此它们不会结束列表。每个空段落都保留在前一个列表项中，从而保留空行。
 
-A paragraph with text between list items, such as a heading, ends the list, and so does an empty paragraph in a bullet or task list. The indentation level (`ilvl`) controls nesting.
+如果列表项之间有包含文本的段落（例如标题），列表就会结束；无序列表或任务列表中的空段落也会结束列表。缩进层级（`ilvl`）决定嵌套关系。
 
-Bullet-style numbering produces `bulletList` nodes, and decimal, letter and roman numbering produce `orderedList` nodes. The outermost list of each gets a `numberingFormat` that [`OrderedListNumbering`](/conversion/export/docx/ordered-list-numbering) draws, and the response lists those formats in `numberingFormats`. An ordered list also gets `type` (`a`, `A`, `i` or `I`) for letter and roman numbering, and `start` when its first level does not start at 1.
+项目符号样式的编号会生成 `bulletList` 节点；十进制、字母和罗马数字编号会生成 `orderedList` 节点。每个列表最外层的列表会获得一个由 [`OrderedListNumbering`](/conversion/export/docx/ordered-list-numbering) 绘制的 `numberingFormat`，响应中的 `numberingFormats` 会列出这些格式。字母和罗马数字编号的有序列表还会获得 `type`（`a`、`A`、`i` 或 `I`）；如果其第一个层级的起始编号不是 1，则还会获得 `start`。
 
-The editor keeps `numberingFormat` only when `OrderedListNumbering` is on, for example with `ConvertKit.configure({ orderedListNumbering: true })`. With the default ConvertKit setup, the editor drops the attribute when it loads the content and keeps `type` and `start`. The REST response carries all three either way.
+只有启用 `OrderedListNumbering` 时，编辑器才会保留 `numberingFormat`，例如使用 `ConvertKit.configure({ orderedListNumbering: true })`。在默认的 ConvertKit 配置中，编辑器加载内容时会丢弃该属性，但会保留 `type` 和 `start`。无论哪种情况，REST 响应都会包含这三个属性。
 
-## Editor rendering
+## 编辑器渲染
 
-The [`BulletList`](/editor/extensions/nodes/bullet-list), [`OrderedList`](/editor/extensions/nodes/ordered-list), [`ListItem`](/editor/extensions/nodes/list-item), and `ListKeymap` extensions are registered by [`ConvertKit`](/conversion/import/docx/convertkit). No separate installation is needed.
+[`ConvertKit`](/conversion/import/docx/convertkit) 会注册 [`BulletList`](/editor/extensions/nodes/bullet-list)、[`OrderedList`](/editor/extensions/nodes/ordered-list)、[`ListItem`](/editor/extensions/nodes/list-item) 和 `ListKeymap` 扩展。无需单独安装。
 
-Lists render using standard HTML elements: `<ul>` for bullet lists, `<ol>` for ordered lists, and `<li>` for list items. If `start` and `type` attributes are set on an `orderedList` node, the editor renders them as HTML attributes (e.g., `<ol start="5" type="a">`). With `OrderedListNumbering` on, the list's numbering format draws the markers instead and counts from the format's own start number.
+列表使用标准 HTML 元素渲染：无序列表使用 `<ul>`，有序列表使用 `<ol>`，列表项使用 `<li>`。如果 `orderedList` 节点设置了 `start` 和 `type` 属性，编辑器会将它们渲染为 HTML 属性（例如 `<ol start="5" type="a">`）。启用 `OrderedListNumbering` 后，则由列表的编号格式绘制编号标记，并从该格式自己的起始编号开始计数。
 
-The editor draws a format's markers only after the format is registered. `ImportDocx` registers the imported formats for you when `OrderedListNumbering` is on. After a REST import, pass the response's `numberingFormats` to `editor.commands.registerNumberingFormats()`, as shown in [Adding formats after the editor is running](/conversion/export/docx/ordered-list-numbering#adding-formats-after-the-editor-is-running).
+只有注册编号格式后，编辑器才会绘制相应的编号标记。启用 `OrderedListNumbering` 时，`ImportDocx` 会为你注册导入的格式。使用 REST 导入后，将响应中的 `numberingFormats` 传给 `editor.commands.registerNumberingFormats()`，如[编辑器启动后添加格式](/conversion/export/docx/ordered-list-numbering#adding-formats-after-the-editor-is-running)所示。
 
-Nesting works through the `listItem` content model, which allows block content including other lists inside list items. [`TaskList`](/editor/extensions/nodes/task-list) and [`TaskItem`](/editor/extensions/nodes/task-item) are registered by `ConvertKit` too, so checkbox lists render without extra setup.
+嵌套功能通过 `listItem` 内容模型实现，该模型允许块级内容（包括列表项内的其他列表）。`ConvertKit` 也会注册 [`TaskList`](/editor/extensions/nodes/task-list) 和 [`TaskItem`](/editor/extensions/nodes/task-item)，因此无需额外设置即可渲染复选框列表。
 
-## Export
+## 导出
 
-Export lists using the [editor extension](/conversion/export/docx/editor-extension) or the [REST API](/conversion/export/docx/rest-api). Both export bullet, ordered, nested and task lists. Only the editor extension keeps numbering formats and start numbers.
+使用[编辑器扩展](/conversion/export/docx/editor-extension)或 [REST API](/conversion/export/docx/rest-api) 导出列表。两者都支持导出无序、有序、嵌套和任务列表。只有编辑器扩展会保留编号格式和起始编号。
 
-Bullet lists and ordered lists both export to DOCX with correct structure. Nesting is preserved by incrementing the DOCX indentation level recursively. Each ordered list instance receives a unique numbering ID so multiple lists in the same document number independently. Lists with a `linkedStyle` format are the exception, see below.
+无序列表和有序列表都能以正确的结构导出为 DOCX。嵌套结构通过递归增加 DOCX 缩进层级来保留。每个有序列表实例都会获得唯一的编号 ID，因此同一文档中的多个列表会各自独立编号。使用 `linkedStyle` 格式的列表例外，详见下文。
 
-The editor extension numbers an ordered list the way the editor shows it, with one exception:
+编辑器扩展会按照编辑器中的显示方式为有序列表编号，但有一种例外情况：
 
-- A list with a `numberingFormat` exports with that format. The extension reads the formats registered in the editor, from `@tiptap-pro/extension-export-docx` 0.34.0. See [Ordered list numbering](/conversion/export/docx/ordered-list-numbering).
-- A list without a `numberingFormat` starts at its `start` number, from version 0.34.6. A list with a format counts from the format's own start number, as the editor does.
-- The `type` attribute is not exported. A list with `type: "a"` and no `numberingFormat` exports as 1, 2, 3.
-- The exception: a format with a [`linkedStyle`](/conversion/export/docx/ordered-list-numbering#numberingleveldefinition) level is one list for the whole document in Word. Its lists continue each other in the DOCX, while the editor restarts each one. Check the exported numbers when you use `linkedStyle`.
+- 带有 `numberingFormat` 的列表会按该格式导出。从 `@tiptap-pro/extension-export-docx` 0.34.0 版起，扩展会读取编辑器中注册的格式。请参阅[有序列表编号](/conversion/export/docx/ordered-list-numbering)。
+- 不带 `numberingFormat` 的列表会从其 `start` 编号开始（从 0.34.6 版起支持）。带有格式的列表则会像编辑器中一样，从该格式自己的起始编号开始计数。
+- 不会导出 `type` 属性。没有 `numberingFormat` 的 `type: "a"` 列表会导出为 1、2、3。
+- 例外情况：带有 [`linkedStyle`](/conversion/export/docx/ordered-list-numbering#numberingleveldefinition) 层级的格式，在 Word 中会被视为贯穿整个文档的一个列表。此类列表在 DOCX 中会接续编号，而编辑器会在每个列表处重新开始。使用 `linkedStyle` 时，请检查导出的编号。
 
-<Callout title="The REST API exports ordered lists as 1, 2, 3" variant="warning">
-  The `/v2/convert/export/docx` endpoint does not read `numberingFormat`, `type` or `start`. Every
-  ordered list exports with decimal numbers that start at 1.
+<Callout title="REST API 会将有序列表导出为 1、2、3" variant="warning">
+  `/v2/convert/export/docx` 端点不会读取 `numberingFormat`、`type` 或 `start`。所有有序列表都会以从 1 开始的十进制数字导出。
 </Callout>
 
-## Task lists
+## 任务列表
 
-Word checkbox lists convert to `taskList` and `taskItem` nodes, with the ticked state preserved both ways. Import is opt-in and the editor extension turns it on for you when your schema can render the nodes.
+Word 复选框列表会转换为 `taskList` 和 `taskItem` 节点，勾选状态在双向转换中都会保留。导入需要选择启用；当编辑器扩展检测到你的 schema 可以渲染这些节点时，会自动为你启用此功能。
 
-See [Task lists](/conversion/content-types/text-and-formatting/task-lists) for which checkbox shapes are recognised, how to style them, and what happens to a numbered list that holds checkboxes.
+请参阅[任务列表](/conversion/content-types/text-and-formatting/task-lists)，了解可识别的复选框形状、样式设置方法，以及包含复选框的有序列表会如何处理。
