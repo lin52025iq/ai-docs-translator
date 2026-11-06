@@ -1,39 +1,39 @@
 ---
 tags:
   - type: editor
-title: Using Tiptap with the React Composable API
+title: 在 React 可组合 API 中使用 Tiptap
 meta:
-  title: React Composable API | Tiptap Editor Docs
-  description: Learn how to use Tiptap's composable React API with the declarative Tiptap component for a streamlined integration experience.
+  title: React 可组合 API | Tiptap 编辑器文档
+  description: 了解如何通过声明式的 Tiptap 组件使用 Tiptap 的 React 可组合 API，获得更流畅的集成体验。
   category: Editor
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Tiptap provides a declarative `<Tiptap>` component that simplifies editor setup and automatically provides context to all child components. This composable API is an alternative to the hook-based `useEditor` + `<EditorContent />` approach, offering a more React-idiomatic way to work with Tiptap.
+Tiptap 提供了声明式的 `<Tiptap>` 组件，可简化编辑器的设置，并自动向所有子组件提供上下文。这个可组合 API 是基于 hook 的 `useEditor` + `<EditorContent />` 方案的替代选择，让你能够以更符合 React 惯用方式的形式使用 Tiptap。
 
-## When to use the Composable API
+## 何时使用可组合 API
 
-The composable API is ideal when you:
+在以下情况下，可组合 API 是理想选择：
 
-- Want a more declarative, component-based approach
-- Need to access the editor from multiple child components
-- Prefer automatic context management over manual prop passing
-- Are building complex editor UIs (toolbars, menus, sidebars, blocks)
+- 希望采用更具声明性、以组件为基础的方式
+- 需要从多个子组件访问编辑器
+- 相较于手动传递 props，更倾向于自动管理上下文
+- 正在构建复杂的编辑器 UI（工具栏、菜单、侧边栏、区块）
 
-For simpler use cases or when you need more direct control, the [hook-based useEditor approach](/editor/getting-started/install/react) may be more appropriate.
+对于较简单的用例，或者需要更直接控制的场景，[基于 hook 的 useEditor 方案](/editor/getting-started/install/react)可能更合适。
 
-## Installation
+## 安装
 
-Before using the composable API, make sure you have Tiptap installed in your React project. Follow the [React installation guide](/editor/getting-started/install/react) to set up the required dependencies.
+使用可组合 API 前，请确保已在 React 项目中安装 Tiptap。请按照 [React 安装指南](/editor/getting-started/install/react)配置所需的依赖项。
 
-## Using the Tiptap component
+## 使用 Tiptap 组件
 
-The `<Tiptap>` component is the root provider that makes the editor instance available to all child components via React context.
+`<Tiptap>` 组件是根级 Provider，通过 React context 将编辑器实例提供给所有子组件。
 
-### Basic setup
+### 基本设置
 
-Create a new React component and import the `Tiptap` component along with `useEditor` from `@tiptap/react` (menu components are imported from `@tiptap/react/menus`):
+新建一个 React 组件，并从 `@tiptap/react` 导入 `Tiptap` 组件和 `useEditor`（菜单组件从 `@tiptap/react/menus` 导入）：
 
 ```tsx
 // src/Editor.tsx
@@ -70,21 +70,21 @@ function Editor() {
 export default Editor
 ```
 
-### Available subcomponents
+### 可用的子组件
 
-| Component | Description |
+| 组件 | 说明 |
 | --- | --- |
-| `Tiptap.Content` | Renders the editor content area. Replaces `<EditorContent editor={editor} />`. |
+| `Tiptap.Content` | 渲染编辑器内容区域，替代 `<EditorContent editor={editor} />`。 |
 
-Menu components are imported separately from `@tiptap/react/menus`.
+菜单组件需从 `@tiptap/react/menus` 单独导入。
 
-## Accessing the editor in child components
+## 在子组件中访问编辑器
 
-One of the main benefits of the composable API is that child components can access the editor without prop drilling.
+可组合 API 的一项主要优势是，子组件无需逐层传递 props 即可访问编辑器。
 
-### Using the useTiptap hook
+### 使用 useTiptap hook
 
-The `useTiptap` hook returns the editor instance from context.
+`useTiptap` hook 会从 context 返回编辑器实例。
 
 ```tsx
 import { useTiptap } from '@tiptap/react'
@@ -113,7 +113,7 @@ function MenuBar() {
 }
 ```
 
-Then include the menu bar anywhere inside your `<Tiptap>` component:
+然后，可以在 `<Tiptap>` 组件中的任意位置添加菜单栏：
 
 ```tsx
 <Tiptap editor={editor}>
@@ -122,9 +122,9 @@ Then include the menu bar anywhere inside your `<Tiptap>` component:
 </Tiptap>
 ```
 
-### Using useTiptapState for reactive state
+### 使用 useTiptapState 获取响应式状态
 
-For performance-sensitive components, use `useTiptapState` to subscribe to specific parts of the editor state. This prevents unnecessary re-renders when unrelated state changes.
+对于对性能敏感的组件，可以使用 `useTiptapState` 订阅编辑器状态的特定部分。这样，在无关状态发生变化时，就能避免不必要的重新渲染。
 
 ```tsx
 import { useTiptapState } from '@tiptap/react'
@@ -145,11 +145,11 @@ function WordCount() {
 }
 ```
 
-The selector function receives an `EditorStateSnapshot` and should return only the data your component needs. The component will only re-render when the selected value changes.
+选择器函数接收一个 `EditorStateSnapshot`，并且应只返回组件所需的数据。只有选定值发生变化时，组件才会重新渲染。
 
-## Server-side rendering (SSR)
+## 服务端渲染（SSR）
 
-The composable API works seamlessly with server-side rendering. Since the editor instance is only created on the client, you can guard rendering until it exists:
+可组合 API 与服务端渲染配合使用十分顺畅。由于编辑器实例只会在客户端创建，你可以在实例创建完成前暂缓渲染：
 
 ```tsx
 "use client"
@@ -175,18 +175,18 @@ export function MyEditor() {
 }
 ```
 
-## Performance considerations
+## 性能注意事项
 
-The composable API is designed with performance in mind:
+可组合 API 在设计时充分考虑了性能：
 
-- **Automatic context optimization**: The editor context is memoized to prevent unnecessary re-renders
-- **Selective subscriptions**: Use `useTiptapState` to subscribe only to the state you need
+- **自动优化上下文**：编辑器上下文会进行记忆化处理，以避免不必要的重新渲染
+- **选择性订阅**：使用 `useTiptapState` 仅订阅所需的状态
 
-For more performance tips, see the [React Performance Guide](/guides/performance).
+如需了解更多性能优化建议，请参阅 [React 性能指南](/guides/performance)。
 
-## Backwards compatibility
+## 向后兼容性
 
-The `<Tiptap>` component automatically provides the `EditorContext`, which means you can use the `useCurrentEditor` hook inside it for backwards compatibility with existing code:
+`<Tiptap>` 组件会自动提供 `EditorContext`，因此，为了兼容现有代码，你可以在其中使用 `useCurrentEditor` hook：
 
 ```tsx
 import { useCurrentEditor } from '@tiptap/react'
@@ -200,22 +200,22 @@ function EditorJSONPreview() {
 }
 ```
 
-However, for new code, we recommend using `useTiptap()`.
+不过，对于新代码，我们建议使用 `useTiptap()`。
 
-## API Reference
+## API 参考
 
-### Tiptap component
+### Tiptap 组件
 
-The root provider component that makes the editor instance available via React context.
+根级 Provider 组件，通过 React context 提供编辑器实例。
 
-**Props:**
+**Props：**
 
-| Prop | Type | Description |
+| Prop | 类型 | 说明 |
 | --- | --- | --- |
-| `editor` | `Editor \| null` | The editor instance from `useEditor()` |
-| `children` | `ReactNode` | Child components |
+| `editor` | `Editor \| null` | 来自 `useEditor()` 的编辑器实例 |
+| `children` | `ReactNode` | 子组件 |
 
-**Example:**
+**示例：**
 
 ```tsx
 <Tiptap editor={editor}>
@@ -225,15 +225,15 @@ The root provider component that makes the editor instance available via React c
 
 ### useTiptap hook
 
-Returns the Tiptap context value.
+返回 Tiptap context 的值。
 
-**Returns:**
+**返回值：**
 
-| Property | Type | Description |
+| 属性 | 类型 | 说明 |
 | --- | --- | --- |
-| `editor` | `Editor \| null` | The editor instance |
+| `editor` | `Editor \| null` | 编辑器实例 |
 
-**Example:**
+**示例：**
 
 ```tsx
 const { editor } = useTiptap()
@@ -243,22 +243,22 @@ if (!editor) return null
 
 ### useTiptapState hook
 
-Subscribes to a slice of the editor state using a selector function.
+使用选择器函数订阅编辑器状态的一个切片。
 
-**Signature:**
+**签名：**
 
 ```tsx
 const value = useTiptapState(selector, equalityFn?)
 ```
 
-**Parameters:**
+**参数：**
 
-| Parameter | Type | Description |
+| 参数 | 类型 | 说明 |
 | --- | --- | --- |
-| `selector` | `(state: EditorStateSnapshot) => T` | Function to select state |
-| `equalityFn` | `(a: T, b: T) => boolean` | Optional equality function to control re-renders |
+| `selector` | `(state: EditorStateSnapshot) => T` | 用于选择状态的函数 |
+| `equalityFn` | `(a: T, b: T) => boolean` | 可选的相等性函数，用于控制重新渲染 |
 
-**Example:**
+**示例：**
 
 ```tsx
 const isBold = useTiptapState((state) =>
@@ -266,20 +266,20 @@ const isBold = useTiptapState((state) =>
 )
 ```
 
-## Comparison: Composable API vs Hook-based Approach
+## 比较：可组合 API 与基于 Hook 的方案
 
-| Feature | Composable API | Hook-based Approach |
+| 特性 | 可组合 API | 基于 Hook 的方案 |
 | --- | --- | --- |
-| Setup complexity | Low – declarative components | Medium – manual prop passing |
-| Context management | Automatic | Manual via EditorContext.Provider |
-| Child component access | Easy via `useTiptap()` | Requires prop drilling or context |
-| SSR support | Guarded render (`if (!editor)`) | Manual null checks |
-| Performance | Optimized with `useTiptapState` | Optimized with `useEditorState` |
-| Best for | Complex UIs with many child components | Simple UIs or direct control needed |
+| 设置复杂度 | 低——声明式组件 | 中——手动传递 props |
+| 上下文管理 | 自动 | 通过 EditorContext.Provider 手动管理 |
+| 子组件访问 | 通过 `useTiptap()` 轻松访问 | 需要逐层传递 props 或使用 context |
+| SSR 支持 | 条件渲染（`if (!editor)`） | 手动检查 null 值 |
+| 性能 | 使用 `useTiptapState` 优化 | 使用 `useEditorState` 优化 |
+| 适用场景 | 包含许多子组件的复杂 UI | 简单 UI 或需要直接控制的场景 |
 
-## Next steps
+## 后续步骤
 
-- [Optimize your React integration](/guides/performance)
-- [Configure your editor](/editor/getting-started/configure)
-- [Add styles to your editor](/editor/getting-started/style-editor)
-- [Learn more about Tiptap concepts](/editor/core-concepts/introduction)
+- [优化 React 集成](/guides/performance)
+- [配置编辑器](/editor/getting-started/configure)
+- [为编辑器添加样式](/editor/getting-started/style-editor)
+- [深入了解 Tiptap 概念](/editor/core-concepts/introduction)
