@@ -1,0 +1,241 @@
+---
+title: 从编辑器导出 EPUB
+tags:
+  - type: start
+  - type: beta
+  - type: version
+    label: v0.4.3
+meta:
+  title: 导出 EPUB | Tiptap 转换
+  description: 在文档中了解如何使用 Export EPUB 扩展将 Tiptap 编辑器内容导出为 EPUB 文件。
+  category: 转换
+---
+
+import { CodeDemo } from '@/components/CodeDemo'
+import { Requirements, RequirementItem } from '@/components/Requirements'
+import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
+import RegionalEndpoints from '../../_shared/_regional-endpoints.mdx'
+
+<EnterpriseCalloutAuto variant="epub" renderMode="sidebar" disableWaitlist />
+
+<Requirements>
+  <RequirementItem label="1. 激活试用或订阅">
+    在账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start
+    计划](https://cloud.tiptap.dev/v2/billing)。
+  </RequirementItem>
+  <RequirementItem label="2. 从私有注册表安装">
+    要安装这些前端扩展，请按照[设置指南](/guides/pro-extensions)进行身份验证，以访问 Tiptap 的私有 npm 注册表。
+  </RequirementItem>
+</Requirements>
+
+<CodeDemo isPro path="/Extensions/ExportEpub" />
+
+使用 Tiptap 的 `@tiptap-pro/extension-export-epub` 将编辑器内容导出为 `.epub` 文件。此扩展会将文档发送到 Tiptap 转换服务进行转换，从而将 EPUB 导出功能集成到编辑器中。
+
+如果希望自行处理转换，也可以改用 [REST API](/conversion/export/epub/rest-api)。
+
+## 安装 EPUB 导出扩展
+
+转换扩展发布在 Tiptap 的私有 npm 注册表中。请按照[私有注册表指南](/guides/pro-extensions)集成这些扩展。
+
+完成后，即可安装并导入 **Export EPUB** 扩展包。
+
+```bash
+npm i @tiptap-pro/extension-export-epub
+```
+
+```js
+import { ExportEpub } from '@tiptap-pro/extension-export-epub'
+```
+
+## 配置扩展
+
+`ExportEpub` 扩展可以通过 `configure` 方法配置，传入一个 `ExportEpubOptions`（`object`）作为参数，其中包含以下属性：
+
+```ts
+import { ExportEpub } from '@tiptap-pro/extension-export-epub'
+
+const editor = new Editor({
+  extensions: [
+    // Other extensions ...
+    ExportEpub.configure({
+      region: 'eu', // 'eu' or 'us'
+      token: 'YOUR_TOKEN',
+      styleOverrides: {},
+      headers: {},
+      footers: {},
+      pageSize: { width: '21cm', height: '29.7cm' },
+      pageMargins: { top: '1cm', bottom: '1cm', left: '1cm', right: '1cm' },
+      customNodes: [],
+      onCompleteExport: (result) => {
+        // Handle the exported Blob
+      },
+    }),
+    // Other extensions ...
+  ],
+})
+```
+
+| 参数                 | 类型                     | 说明                                                                                              | 默认值                         |
+| -------------------- | ------------------------ | ------------------------------------------------------------------------------------------------- | ------------------------------ |
+| `endpoint`           | `string`                 | 用于转换的 Tiptap API 端点。设置后会覆盖 `region`                                                 | `undefined`                    |
+| `region`             | `'eu' \| 'us'`           | 未设置 `endpoint` 时使用的 Tiptap Cloud 区域                                                      | `'eu'`                         |
+| `token`              | `string`                 | 用于身份验证的 Tiptap JWT，参见[身份验证](/authentication)                                        | `''`                           |
+| `styleOverrides`     | `Record<string, string>` | 应用于导出的样式覆盖                                                                              | `undefined`                    |
+| `headers`            | `HeaderConfig`           | 导出文档的页眉配置                                                                                | `undefined`                    |
+| `footers`            | `FooterConfig`           | 导出文档的页脚配置                                                                                | `undefined`                    |
+| `pageSize`           | `PageSize`               | 页面尺寸配置                                                                                      | `undefined`                    |
+| `pageMargins`        | `PageMargins`            | 页边距配置                                                                                        | `undefined`                    |
+| `customNodes`        | `CustomNodeDefinition[]` | DOCX 转换的自定义节点定义（需要 `@tiptap-pro/extension-export-docx`）                              | `undefined`                    |
+| `onCompleteExport`   | `(result: Blob) => void` | 接收导出文件 Blob 的回调                                                                          | 未提供时会抛出错误             |
+
+<RegionalEndpoints />
+
+### HeaderConfig
+
+| 属性                 | 类型      | 说明                                                                                                                                             |
+| -------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `evenAndOddHeaders`  | `boolean` | 是否为奇数页和偶数页使用不同的页眉                                                                                                               |
+| `differentFirstPage` | `boolean` | 是否为第一页使用不同的页眉。设为 `true` 时，第一页使用 `first` 值，而不是 `default` 值。                                                        |
+| `default`            | `string`  | 每一页的默认页眉；启用 `evenAndOddHeaders` 时，也可作为奇数页的页眉。接受纯文本字符串或序列化为字符串的 Tiptap JSONContent，以支持丰富格式。      |
+| `first`              | `string`  | 第一页的页眉。仅在 `differentFirstPage` 设为 `true` 时使用。接受纯文本字符串或序列化为字符串的 Tiptap JSONContent，以支持丰富格式。             |
+| `even`               | `string`  | 启用 `evenAndOddHeaders` 选项时偶数页的页眉。接受纯文本字符串或序列化为字符串的 Tiptap JSONContent，以支持丰富格式。                            |
+
+### FooterConfig
+
+| 属性                 | 类型      | 说明                                                                                                                                             |
+| -------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `evenAndOddFooters`  | `boolean` | 是否为奇数页和偶数页使用不同的页脚                                                                                                               |
+| `differentFirstPage` | `boolean` | 是否为第一页使用不同的页脚。设为 `true` 时，第一页使用 `first` 值，而不是 `default` 值。                                                        |
+| `default`            | `string`  | 每一页的默认页脚；启用 `evenAndOddFooters` 时，也可作为奇数页的页脚。接受纯文本字符串或序列化为字符串的 Tiptap JSONContent，以支持丰富格式。      |
+| `first`              | `string`  | 第一页的页脚。仅在 `differentFirstPage` 设为 `true` 时使用。接受纯文本字符串或序列化为字符串的 Tiptap JSONContent，以支持丰富格式。             |
+| `even`               | `string`  | 启用 `evenAndOddFooters` 选项时偶数页的页脚。接受纯文本字符串或序列化为字符串的 Tiptap JSONContent，以支持丰富格式。                            |
+
+### PageSize
+
+| 属性     | 类型     | 说明                                                                              | 默认值    |
+| -------- | -------- | --------------------------------------------------------------------------------- | --------- |
+| `width`  | `string` | 页面宽度。必须是正数，后跟有效单位（cm、in、pt、pc、mm、px）。                     | `"21cm"`   |
+| `height` | `string` | 页面高度。必须是正数，后跟有效单位（cm、in、pt、pc、mm、px）。                     | `"29.7cm"` |
+
+### PageMargins
+
+| 属性     | 类型     | 说明                                                                                      | 默认值  |
+| -------- | -------- | ----------------------------------------------------------------------------------------- | ------- |
+| `top`    | `string` | 页面上边距。可以为负数。必须是数字，后跟有效单位（cm、in、pt、pc、mm、px）。             | `"1cm"` |
+| `bottom` | `string` | 页面下边距。可以为负数。必须是数字，后跟有效单位（cm、in、pt、pc、mm、px）。             | `"1cm"` |
+| `left`   | `string` | 页面左边距。必须是正数，后跟有效单位（cm、in、pt、pc、mm、px）。                         | `"1cm"` |
+| `right`  | `string` | 页面右边距。必须是正数，后跟有效单位（cm、in、pt、pc、mm、px）。                         | `"1cm"` |
+
+## 导出 EPUB 文件
+
+安装扩展后，可以使用 `exportEpub` 命令将编辑器内容导出为 `.epub` 文件。
+
+```ts
+/**
+ * Export the current document as an EPUB file via the Tiptap convert service.
+ *
+ * @param options - All extension-level options can be overridden per-invocation
+ * @example editor.commands.exportEpub({ onCompleteExport: (result) => {} })
+ */
+exportEpub: (options?: ExportEpubCommandOptions) => ReturnType
+```
+
+`ExportEpubCommandOptions` 接口扩展自 `ExportEpubOptions`，因此每次调用命令时都可以覆盖所有配置选项：
+
+| 属性                 | 类型                     | 说明                                     |
+| -------------------- | ------------------------ | ---------------------------------------- |
+| `endpoint`           | `string`                 | 覆盖本次导出的 API 端点                  |
+| `region`             | `'eu' \| 'us'`           | 覆盖本次导出的区域                       |
+| `token`              | `string`                 | 覆盖本次导出的 JWT 令牌                  |
+| `styleOverrides`     | `Record<string, string>` | 覆盖本次导出的样式覆盖                   |
+| `headers`            | `HeaderConfig`           | 覆盖本次导出的页眉配置                   |
+| `footers`            | `FooterConfig`           | 覆盖本次导出的页脚配置                   |
+| `pageSize`           | `PageSize`               | 覆盖本次导出的页面尺寸                   |
+| `pageMargins`        | `PageMargins`            | 覆盖本次导出的页边距                     |
+| `customNodes`        | `CustomNodeDefinition[]` | 覆盖本次导出的自定义节点定义             |
+| `onCompleteExport`   | `(result: Blob) => void` | 覆盖本次导出的回调                       |
+
+```js
+import { ExportEpub } from '@tiptap-pro/extension-export-epub'
+
+const editor = new Editor({
+  extensions: [
+    // Other extensions ...
+    ExportEpub.configure({
+      token: 'YOUR_TOKEN',
+      onCompleteExport(result) {
+        // Download the EPUB file
+        const url = URL.createObjectURL(result)
+        const a = document.createElement('a')
+
+        a.href = url
+        a.download = 'document.epub'
+        a.click()
+
+        URL.revokeObjectURL(url)
+      },
+    }),
+    // Other extensions ...
+  ],
+})
+
+// Use the extension-level callback
+editor.chain().exportEpub().run()
+
+// Or override options for a specific export
+editor
+  .chain()
+  .exportEpub({
+    pageSize: { width: '8.5in', height: '11in' },
+    onCompleteExport(result) {
+      // Custom handling for this specific export
+      const url = URL.createObjectURL(result)
+      window.open(url)
+    },
+  })
+  .run()
+```
+
+### 工作原理
+
+调用 `exportEpub` 时，扩展会将编辑器文档及所有已配置的选项（样式覆盖、页面布局、页眉、页脚）发送到 Convert 服务。服务会返回生成的 `.epub` 文件（二进制 Blob）。`onCompleteExport` 回调会直接接收该 Blob。发生错误时会抛出异常，而不会通过回调传递。
+
+## 预期情况
+
+- **需要身份验证**（`token` JWT）。请在服务器端生成 JWT。请参阅[转换安装指南](/conversion/getting-started/install)。
+- **需要处理的 HTTP 响应：** `401`（缺少或无效的 JWT）、`403`（应用无权执行此操作——通常是指计划不包含的格式）、`5xx`（暂时性服务器错误；请采用退避策略重试）。
+- **每个请求都会在响应前完成整个处理流程。** 对于较长的文档，请预留更长的往返时间。
+
+## 不支持的功能
+
+- **按章节自定义元数据。** 目前无法通过导出选项配置 EPUB 元数据（书名、作者、语言、自定义章节目录结构）。
+- **在各种阅读应用中实现像素级一致的渲染。** EPUB 的渲染效果取决于阅读应用；不同应用和设备上的间距、字体回退和图像缩放各不相同。请在受众使用的阅读器中进行测试。
+
+## 支持情况与限制
+
+| **功能**                       | **支持情况**                                                         |
+| ------------------------------ | -------------------------------------------------------------------- |
+| **文本内容**                   | ✓ 基本文本、间距、标点                                               |
+| **文本格式**                   | ✓ 粗体、斜体、下划线、删除线、对齐、行高                             |
+| **块级元素**                   | ✓ 段落、标题（1–6 级）、引用块、有序和无序列表                       |
+| **表格**                       | ✓ 基本结构、标题行、跨列                                             |
+| **链接**                       | ✓ 超链接                                                             |
+| **媒体（图像）**               | ✓ 嵌入图像，保留尺寸                                                 |
+| **样式**                       | ✓ 字体系列*、字体颜色、字号、背景颜色、行高                          |
+| **页眉和页脚**                 | ✓                                                                    |
+| **数学公式**                   | ✓                                                                    |
+| **分页符**                     | ✓                                                                    |
+| **分节**                       | ✗                                                                    |
+| **脚注和尾注**                 | ✗                                                                    |
+| **批注和修订**                 | ✗                                                                    |
+| **目录**                       | ✗                                                                    |
+| **高级格式**                   | ✗ 分栏、文字方向、表单、宏、嵌入式脚本                               |
+| **元数据**                     | ✗                                                                    |
+| **文本框、形状、SmartArt**     | ✗                                                                    |
+
+<span style={{ fontSize: '1rem' }}>
+  * 只要在打开导出文件时，目标字体已安装在操作系统上，即支持该字体系列。
+</span>
+
+如需查看各项功能的详细支持情况，请参阅[支持的功能](/conversion/getting-started/feature-support-matrix)矩阵。请注意，[DOCX 导出扩展](/conversion/export/docx/editor-extension)支持的元素覆盖选项（`paragraphOverrides`、`textRunOverrides`、`tableOverrides`、`tableCellOverrides`、`imageOverrides`）不会传递到 EPUB 转换中。
