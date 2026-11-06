@@ -1,8 +1,8 @@
 ---
-title: Install
+title: 安装
 meta:
-  title: Install AI Toolkit | Tiptap AI Toolkit
-  description: Installation guide for the AI Toolkit. Learn how to install, configure authentication, and start using the AI Toolkit cloud service.
+  title: 安装 AI Toolkit | Tiptap AI Toolkit
+  description: AI Toolkit 安装指南。了解如何安装、配置身份验证并开始使用 AI Toolkit 云服务。
   category: AI Toolkit
 ---
 
@@ -12,38 +12,35 @@ import { Callout } from '@/components/ui/Callout'
 import Link from '@/components/Link'
 
 <Requirements>
-  <RequirementItem label="1. Request access">
-    Request access to the Server AI Toolkit by{' '}
-    <a href="https://tiptap.dev/contact-sales?form=server-ai-toolkit">contacting our team</a>.
+  <RequirementItem label="1. 申请访问权限">
+    如需访问 Server AI Toolkit，请<a href="https://tiptap.dev/contact-sales?form=server-ai-toolkit">联系我们的团队</a>。
   </RequirementItem>
-  <RequirementItem label="2. Install the package">
-    The Server AI Toolkit package is open source. Install it from the public npm registry using npm
-    or your preferred package manager.
+  <RequirementItem label="2. 安装软件包">
+    Server AI Toolkit 软件包是开源的。请使用 npm 或你偏好的软件包管理器，从公共 npm 注册表安装。
   </RequirementItem>
-  <RequirementItem label="3. Authenticate to the service">
-    Configure a <a href="#set-up-authorization">Tiptap Access Control JWT</a> to access the Server
-    AI Toolkit service.
+  <RequirementItem label="3. 验证服务身份">
+    配置 <a href="#set-up-authorization">Tiptap Access Control JWT</a>，以访问 Server AI Toolkit 服务。
   </RequirementItem>
 </Requirements>
 
 <EnterpriseCalloutAuto variant="server-ai-toolkit" renderMode="sidebar" />
 
-First, <a href="https://tiptap.dev/contact-sales?form=server-ai-toolkit">contact our team</a> to get access to the AI Toolkit.
+首先，请<a href="https://tiptap.dev/contact-sales?form=server-ai-toolkit">联系我们的团队</a>，获取 AI Toolkit 的访问权限。
 
-Then, install the open-source AI Toolkit package:
+然后，安装开源 AI Toolkit 软件包：
 
 ```bash
 npm install @tiptap/ai-toolkit
 ```
 
-## Get editor context
+## 获取编辑器上下文
 
-First, install the `ServerAiToolkit` extension in your editor. This will modify your editor schema so that your documents are compatible with the AI Toolkit.
+首先，在编辑器中安装 `ServerAiToolkit` 扩展。这会修改编辑器的 schema，使文档与 AI Toolkit 兼容。
 
-Start by getting the editor context. This JSON object contains the data that the AI Toolkit needs to know about the Tiptap editor.
+先获取编辑器上下文。这个 JSON 对象包含 AI Toolkit 需要了解的 Tiptap 编辑器数据。
 
 ```tsx
-// Run this on the client app
+// 在客户端应用中运行
 import { Editor } from '@tiptap/core'
 import StarterKit from '@tiptap/starter-kit'
 import { getEditorContext, ServerAiToolkit } from '@tiptap/ai-toolkit'
@@ -52,43 +49,43 @@ const editor = new Editor({
   extensions: [StarterKit, ServerAiToolkit],
 })
 
-// Get the editor context
+// 获取编辑器上下文
 const editorContext = getEditorContext(editor)
 ```
 
-Pass the `editorContext` on every request you make to the AI Toolkit.
+每次向 AI Toolkit 发送请求时，都要传入 `editorContext`。
 
-## Set up authorization
+## 设置授权
 
-The Server AI Toolkit is a cloud or on-premises service. To authenticate:
+Server AI Toolkit 是一项云端或本地部署服务。若要进行身份验证：
 
-1. **Create a secret** in the [Tiptap Cloud dashboard](https://cloud.tiptap.dev) (Authentication → Secrets → Add Secret). Generate an ES256 key pair and copy the **private key**, which is shown only once. Store it as the `TIPTAP_PRIVATE_KEY` environment variable.
-2. **Copy your environment ID** from the dashboard (Authentication → Environment ID). Store it as the `TIPTAP_ENVIRONMENT_ID` environment variable.
-3. **Generate a Tiptap Access Control JWT** (see the [JWT guide](#create-a-jwt-token) below) and pass it in the `Authorization: Bearer JWT` header on every request.
+1. 在 [Tiptap Cloud 控制面板](https://cloud.tiptap.dev)中**创建密钥**（Authentication → Secrets → Add Secret）。生成 ES256 密钥对并复制**私钥**。私钥仅显示一次。将其保存为 `TIPTAP_PRIVATE_KEY` 环境变量。
+2. 从控制面板中**复制环境 ID**（Authentication → Environment ID）。将其保存为 `TIPTAP_ENVIRONMENT_ID` 环境变量。
+3. **生成 Tiptap Access Control JWT**（请参阅下方的 [JWT 指南](#create-a-jwt-token)），并在每次请求的 `Authorization: Bearer JWT` 标头中传入该令牌。
 
-Example `.env` file:
+`.env` 文件示例：
 
 ```sh
-# ES256 private key (PKCS#8 PEM) from the Tiptap dashboard. Used to sign tokens server-side.
+# 来自 Tiptap 控制面板的 ES256 私钥（PKCS#8 PEM）。用于在服务器端对令牌签名。
 TIPTAP_PRIVATE_KEY=your-private-key-pem
-# Environment ID from the Tiptap dashboard. Used as the `iss` claim when signing tokens.
+# 来自 Tiptap 控制面板的环境 ID。签名令牌时用作 `iss` 声明。
 TIPTAP_ENVIRONMENT_ID=your-environment-hash-id
 
-# Base URL for the AI Toolkit API.
+# AI Toolkit API 的基础 URL。
 TIPTAP_CLOUD_AI_API_URL=https://api.tiptap.dev
 ```
 
-### Create a JWT token
+### 创建 JWT 令牌
 
-Sign a JWT token for the AI Toolkit API, with these properties:
+为 AI Toolkit API 签署 JWT 令牌，并设置以下属性：
 
-- Issuer: `TIPTAP_ENVIRONMENT_ID`
-- Permissions
-  - `{ action: 'AI:Toolkit', resource: '*' }` to access the AI Toolkit
-  - `{ action: 'Documents:Write', resource: 'document-id' }` to access a Tiptap Cloud document
-- Audience: `['AI', 'Documents']`
+- 签发者：`TIPTAP_ENVIRONMENT_ID`
+- 权限
+  - `{ action: 'AI:Toolkit', resource: '*' }`：访问 AI Toolkit
+  - `{ action: 'Documents:Write', resource: 'document-id' }`：访问 Tiptap Cloud 文档
+- 受众：`['AI', 'Documents']`
 
-The `createJwtToken` creates a JWT token for accessing the AI Toolkit. Pass the `documentId` when the AI Toolkit should read and edit a Tiptap Cloud document.
+`createJwtToken` 函数会创建用于访问 AI Toolkit 的 JWT 令牌。如果 AI Toolkit 需要读取和编辑 Tiptap Cloud 文档，请传入 `documentId`。
 
 ```ts
 // lib/server-ai-toolkit/create-jwt-token.ts
@@ -113,13 +110,13 @@ export async function createJwtToken(documentId?: string) {
 }
 ```
 
-For the full JWT format and signing examples, see the [Authentication reference](/authentication).
+有关完整的 JWT 格式和签名示例，请参阅[身份验证参考](/authentication)。
 
-### Authentication headers
+### 身份验证标头
 
-Pass the `Authorization: Bearer JWT` header to every API request.
+每次 API 请求都要传入 `Authorization: Bearer JWT` 标头。
 
-The `getAuthHeaders` function creates the headers:
+`getAuthHeaders` 函数会创建这些标头：
 
 ```ts
 // lib/server-ai-toolkit/get-auth-headers.ts
@@ -133,9 +130,9 @@ export async function getAuthHeaders(documentId?: string) {
 }
 ```
 
-## Call API endpoints
+## 调用 API 端点
 
-Call the `/fetch-tools` API endpoint to get the list of tools:
+调用 `/fetch-tools` API 端点以获取工具列表：
 
 ```ts
 import { getAuthHeaders } from './lib/server-ai-toolkit/get-auth-headers'
@@ -155,9 +152,9 @@ const response = await fetch(`${apiBaseUrl}/v4/ai/toolkit/fetch-tools`, {
 })
 ```
 
-## Next steps
+## 后续步骤
 
-Now that you've set up the AI Toolkit, start building your AI integration:
+现在你已设置好 AI Toolkit，可以开始构建 AI 集成：
 
 <div className="grid md:grid-cols-2 gap-6 mt-6 md:items-start">
   <Link
@@ -165,11 +162,11 @@ Now that you've set up the AI Toolkit, start building your AI integration:
     className="flex flex-col p-4 border border-grayAlpha-200 rounded-lg hover:border-grayAlpha-300 transition-colors cursor-pointer no-underline"
   >
     <div className="flex items-center justify-between mb-2">
-      <h4 className="font-semibold text-black">AI agent chatbot</h4>
-      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">More →</span>
+      <h4 className="font-semibold text-black">AI 智能体聊天机器人</h4>
+      <span className="text-sm text-blue-600 font-medium whitespace-nowrap ml-4">更多 →</span>
     </div>
     <div className="text-sm text-grayAlpha-700">
-      Build a conversational AI capable of editing documents and interacting through chat.
+      构建能够编辑文档并通过聊天进行交互的对话式 AI。
     </div>
   </Link>
 </div>
