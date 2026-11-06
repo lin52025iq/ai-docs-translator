@@ -1,0 +1,31 @@
+schemaVersion: 1
+project:
+    id: awesome-test
+source:
+    repository: lin52025q/awesome-test
+    ref: master
+    branch: awesome-test-source
+    language: en
+targets:
+    - locale: zh-CN
+      branch: awesome-test-zh-cn
+      enabled: true
+translation:
+    model: gpt-6-luna
+    scope:
+        include:
+            - "**/*.md"
+            - "**/*.mdx"
+        exclude: []
+    glossary: glossary.yml
+    prompts:
+        frameworkLanguage: zh-CN
+        frameworks: {}
+        common: prompts/common.md
+    review:
+        enabled: true
+        model: gpt-6-luna
+        minimumProbability: 0.95
+        pushDraft: false
+        remote: origin
+    retranslateOnContextChange: false
