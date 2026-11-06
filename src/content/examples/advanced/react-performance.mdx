@@ -1,21 +1,21 @@
 ---
-title: React rendering performance
+title: React 渲染性能
 meta:
-  title: React rendering performance demo | Tiptap Editor Docs
-  description: Learn how to integrate Tiptap with React and improve the rendering performance of your editor. More in the docs!
-  category: Examples
+  title: React 渲染性能演示 | Tiptap 编辑器文档
+  description: 了解如何将 Tiptap 集成到 React 中，并提升编辑器的渲染性能。更多内容请参阅文档！
+  category: 示例
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-## React Tiptap Editor Integration
+## React 与 Tiptap 编辑器集成
 
-When using Tiptap with React, the most common performance issue is that the editor is re-rendered too often. This demo shows the difference between the default editor and the optimized rendering with `shouldRerenderOnTransaction`.
+在 React 中使用 Tiptap 时，最常见的性能问题是编辑器重新渲染过于频繁。本演示展示了默认编辑器与使用 `shouldRerenderOnTransaction` 优化渲染后的差异。
 
 <CodeDemo path="/Examples/Performance" />
 
-## Get editor state information without impacting performance
+## 在不影响性能的情况下获取编辑器状态信息
 
-If you need to access the editor state without causing a re-render, you can use the `useEditorState` hook. This allows you to read the editor state without triggering a re-render of your component.
+如果你需要访问编辑器状态，又不想触发重新渲染，可以使用 `useEditorState` hook。这样，你就能读取编辑器状态，而不会触发组件重新渲染。
 
-Read more about it [here](/editor/getting-started/install/react#reacting-to-editor-state-changes).
+[点击此处](/editor/getting-started/install/react#reacting-to-editor-state-changes)了解更多。
