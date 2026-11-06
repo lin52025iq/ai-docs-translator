@@ -1,0 +1,177 @@
+---
+title: 将 DOCX 默认样式注入为 CSS
+tags:
+  - type: start
+  - type: beta
+  - type: version
+    label: v0.12.3
+meta:
+    title: CSS 注入（导入 DOCX）| Tiptap 转换
+    description: 从 DOCX 文件中提取默认样式作为 CSS，并在导入时将其注入 Tiptap 编辑器。
+    category: 转换
+---
+
+import { Callout } from '@/components/ui/Callout'
+import { CodeDemo } from '@/components/CodeDemo'
+import { Requirements, RequirementItem } from '@/components/Requirements'
+import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
+
+<EnterpriseCalloutAuto variant="docx" renderMode="sidebar" disableWaitlist />
+
+<Callout variant="hint" title="Beta 功能">
+  本页中的 API、属性名称和行为正在逐步稳定，但在正式发布前仍可能有所调整。如果你依赖此功能，请固定使用确切的软件包版本，并在采用前阅读 **无法实现的功能** 一节。
+</Callout>
+
+<Requirements>
+  <RequirementItem label="1. 开通试用或订阅">
+    在你的账户中开始[免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 计划](https://cloud.tiptap.dev/v2/billing)。
+  </RequirementItem>
+  <RequirementItem label="2. 从私有注册表安装">
+    按照[设置指南](/guides/pro-extensions)完成身份验证，以访问 Tiptap 的私有 npm 注册表。
+  </RequirementItem>
+</Requirements>
+
+<CodeDemo isPro path="/Extensions/ImportDocxCssStyles" />
+
+## 功能说明
+
+DOCX 文件包含一个样式目录，其中定义了命名样式（`Heading1`、`Normal`、`Quote` 等），用于指定 Word 中正文、标题、超链接和列表的外观。DOCX 中的每个段落或文本片段要么继承这些命名样式之一，要么以内联方式覆盖个别属性。
+
+如果没有此功能，Tiptap Convert API 会将这些样式展平为各节点的属性。你会看到每个段落都以内联方式应用了字号、颜色和间距，但 Word 用作样式基准的可复用命名样式则会被丢弃。
+
+此功能会将命名样式目录提取为**CSS 对象**（以 CSS 选择器为键），并可直接返回该对象，也可以将其作为带作用域的 `<style>` 标签注入页面。这样，文档的基础排版便通过可层叠的 CSS 规则呈现，而不是在每个节点上设置内联属性，因此编辑器在视觉上能与原始 DOCX 相匹配，同时不会让文档模型变得臃肿。
+
+## 安装
+
+```bash
+npm i @tiptap-pro/extension-import-docx@^0.10.0
+```
+
+## 工作原理
+
+整个流程分为四步：
+
+1. **在导入请求中启用。** 当 `cssStyles.enabled` 为 `true` 时，扩展会请求 Convert API 返回样式目录。
+2. **由转换服务提取。** 转换器读取 DOCX 样式定义，解析继承链（`basedOn`），将 OOXML 属性转换为对应的 CSS 属性，并在导入响应中返回 `cssStyles` 对象。
+3. **由扩展生成 CSS 规则。** `cssStyles` 对象会被编译为 CSS 字符串，并限定在你配置的选择器范围内（默认为 `.tiptap`）。
+4. **自动注入或交由你处理。** 如果 `autoInject: true`，扩展会将带作用域的 `<style>` 元素追加到 `document.head`。如果 `autoInject: false`，你会在 `onImport` 回调中收到原始 `cssStyles` 对象，并可自行决定如何处理。若没有 DOM（例如服务端渲染或无头编辑器环境），扩展会跳过注入及清理操作，但 `cssStyles` 对象仍会传递给回调。
+
+```ts
+import { ImportDocx } from '@tiptap-pro/extension-import-docx'
+
+ImportDocx.configure({
+  token: 'your-jwt',
+  cssStyles: {
+    enabled: true,      // extract styles on every import
+    autoInject: true,   // automatically inject as a scoped <style> tag
+    selector: '.tiptap', // scope the rules under this selector
+  },
+})
+```
+
+也可以针对每次调用单独控制：
+
+```ts
+editor
+  .chain()
+  .importDocx({
+    file,
+    cssStyles: { enabled: true, autoInject: false },
+    onImport(context) {
+      // `context.cssStyles` is the raw object; apply it however you like
+      console.log(context.cssStyles)
+    },
+  })
+  .run()
+```
+
+## 支持的功能
+
+**选择器（16 个）：** 此功能只会提取映射到以下 CSS 选择器的命名样式。
+
+| 类型 | 选择器 |
+|------|-----------|
+| 块级 | `p`、`h1`–`h6`、`blockquote`、`ul li`、`ol li` |
+| 行内 / 标记 | `strong`、`em`、`u`、`s`、`a`、`code` |
+
+**CSS 属性（11 个）：** 根据 DOCX 样式中的定义，每个选择器都可以包含以下属性中的任意子集。
+
+| 属性 | DOCX 来源 | 说明 |
+|----------|-------------|-------|
+| `fontSize` | `w:sz`（半磅） | 转换为 `Npx`（`halfPoints / 2`） |
+| `color` | `w:color` | 十六进制值；忽略 `"auto"` |
+| `fontFamily` | `w:rFonts` | 优先使用 `@w:ascii`，其次使用 `hAnsi`，然后是 `cs` |
+| `fontWeight` | `w:b` | `"bold"` 或 `"normal"` |
+| `fontStyle` | `w:i` | `"italic"` 或 `"normal"` |
+| `textDecoration` | `w:u` + `w:strike` | 合并处理（例如 `"underline line-through"`） |
+| `backgroundColor` | `w:shd[@fill]` | 十六进制值；忽略 `"auto"` |
+| `textAlign` | `w:jc` | `left` / `center` / `right` / `justify`（DOCX 的 `both` → `justify`） |
+| `marginTop` | `w:spacing[@before]` | Twips → `Npt` |
+| `marginBottom` | `w:spacing[@after]` | Twips → `Npt` |
+| `lineHeight` | `w:spacing[@line]` + `[@lineRule]` | `auto` → 无单位倍数；`exact`/`atLeast` → `Npt` |
+
+**其他行为：**
+- **继承链。** `basedOn` 引用会迭代解析并检测循环，因此子样式会包含从父样式继承的所有内容。
+- **本地化文档。** 使用非英语版 Word 创建的 DOCX 文件（例如西班牙语 `Título1`、德语 `Überschrift1`）会映射回其规范名称（`heading 1`），因此选择器仍能正确分配。
+- **提取失败时不影响导入。** 如果提取因任何原因出错（例如 `styles.xml` 格式错误或属性异常），则会返回 `{}`，导入仍正常继续；此功能不会阻止原本可正常完成的导入。
+
+## 无法实现的功能
+
+<Callout variant="warning" title="以下均为有意设定的限制">
+这些不是 bug，而是此功能明确记录的适用边界。如果你的工作流依赖以下任何功能，此功能就不适合你的需求。
+</Callout>
+
+- **伪类。** `:hover`、`:focus`、`:first-child` 等。DOCX 样式模型中没有对应概念，因此不会提取这些样式。
+- **任意选择器。** 上表中的 16 个选择器就是全部映射范围。用途不在此范围内的 DOCX 样式（`TableGrid`、`TOC1`、`FootnoteText`、用户自定义样式等）都会被忽略。
+- **字间距。** 导出端编译器支持字间距，但导入时**不会**提取。
+- **超出选择器本身的优先级处理。** 注入的规则会限定在你的选择器范围内（例如 `.tiptap h1 { … }`）。这些规则不会考虑与自有样式表之间的层叠顺序；你需要确保自己的 CSS 不会意外覆盖这些规则，反之亦然。
+- **内联覆盖。** 如果 Word 中的特定段落或文本片段以内联方式覆盖其样式（例如某个 `<w:r>` 直接设置了 `w:color`），这些覆盖仍会通过 Tiptap 节点上的节点属性呈现，而不是通过注入的样式表呈现。你无法通过编辑注入的 CSS 来取消内联格式的覆盖。
+- **非文本样式。** 表格样式（`w:tblStyle`）、编号样式（`w:numId`）以及页码等字符样式均不在映射范围内。
+
+## 功能表现
+
+- 每次成功导入后，如果 `autoInject: true`，会向 `document.head` 添加一个带作用域的 `<style>` 元素。后续导入会替换之前的元素，因此同一时间最多只有一个生效。
+- 无论 `autoInject` 设置为何值，`onImport` 回调的上下文中都会包含原始 `cssStyles` 对象。你可以完全忽略自动注入并自行应用样式：写入文件、发送到主题系统，或采用任何适合你应用的方式。
+- 样式会限定在你的编辑器范围内（默认为 `.tiptap`，可通过 `cssStyles.selector` 配置）。只有当你将选择器设为全局选择器（例如 `body`）时，样式才会影响页面的其他部分。
+- 失败时不会显示错误。如果 DOCX 不包含样式目录，或者所有命名样式都不在 16 个选择器的映射范围内，返回的 `cssStyles` 将为空，也不会注入样式标签。
+
+## 不应期待的效果
+
+- **与 Word 像素级一致。** Word 使用内置排版引擎，其段落间距语义与 CSS 不同（例如外边距折叠、段前/段后上下文间距）。提取出的 CSS 忠实转换了 DOCX 的*样式定义*，但并非对 Word 排版结果的复现。
+- **实时编辑时动态更新。** 样式在每次导入时注入一次。之后用户在 Tiptap 中编辑文档时，注入的样式不会重新计算；它们描述的是导入文档的基础样式，而不是编辑器当前的状态。
+- **跨文档合并。** 每次导入都会替换之前的 `<style>` 标签。连续导入两个 DOCX 文件后，只会保留第二个文档的样式。如果需要合并，请从 `onImport` 中读取两个 `cssStyles` 对象并自行合并。
+- **往返转换保证。** 提取后再导出的流程并非无损；反向转换及其注意事项请参阅 [CSS 转 DOCX](/conversion/export/docx/css-to-docx) 导出页面。
+
+## 配置参考
+
+```ts
+ImportDocx.configure({
+  cssStyles: {
+    enabled?: boolean,     // default: false. Turn extraction on.
+    autoInject?: boolean,  // default: false. Append <style> tag to document.head.
+    selector?: string,     // default: '.tiptap'. Scope for injected rules.
+  },
+})
+```
+
+单次调用覆盖配置：
+
+```ts
+editor.chain().importDocx({
+  file,
+  cssStyles: { enabled, autoInject, selector }, // any subset
+  onImport(context) { /* context.cssStyles is available here */ },
+})
+```
+
+REST API 查询参数（直接调用 `/import/docx` 时）：
+
+```
+POST /import/docx?extractCssStyles=true
+```
+
+## 相关内容
+
+- [CSS 转 DOCX（导出）](/conversion/export/docx/css-to-docx)：反向转换方向，可将编辑器的 CSS 编译回 DOCX 样式定义。
+- [ConvertKit](/conversion/import/docx/convertkit)：配套扩展包，可为 Paragraph、Heading、Table 等添加 DOCX 感知属性。
+- [REST API：CSS 样式提取](/conversion/import/docx/rest-api#css-style-extraction-experimental)：了解原始 `extractCssStyles` 参数及完整响应结构。
