@@ -1,9 +1,9 @@
 ---
-title: Page gap & background
+title: 页面间距与背景
 meta:
-  title: Page gap & background | Tiptap Pages Docs
-  description: Learn how to change the background color between pages and the spacing between pages in the Tiptap Pages extension.
-  category: Pages
+  title: 页面间距与背景 | Tiptap Pages 文档
+  description: 了解如何在 Tiptap Pages 扩展中更改页面间的背景颜色和间距。
+  category: 页面
 sidebars:
   hideSecondary: true
 ---
@@ -11,61 +11,59 @@ sidebars:
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-<Callout title="Looking for explicit page breaks?">
-  This page covers visual styling between pages (background color and gap). For inserting explicit page breaks into your document, see the [PageBreak node](/pages/core-concepts/page-break-node) documentation.
+<Callout title="想要插入明确的分页符？">
+  本页介绍页面之间的视觉样式（背景颜色和间距）。如需在文档中插入明确的分页符，请参阅 [PageBreak 节点](/pages/core-concepts/page-break-node)文档。
 </Callout>
 
-<Callout title="Renamed from pageBreakBackground" variant="warning">
-  The `pageBreakBackground` option and `setPageBreakBackground` command have been renamed to `pageGapBackground` and `setPageGapBackground` to avoid confusion with the new [PageBreak node](/pages/core-concepts/page-break-node). Update your code accordingly.
+<Callout title="已从 pageBreakBackground 重命名" variant="warning">
+  为避免与新的 [PageBreak 节点](/pages/core-concepts/page-break-node)混淆，`pageBreakBackground` 选项和 `setPageBreakBackground` 命令已分别重命名为 `pageGapBackground` 和 `setPageGapBackground`。请相应地更新代码。
 </Callout>
 
-The `pageGapBackground` and `pageGap` options lets you change the background color of the area between pages and the spacing between pages. This can help visually separate pages or match your app's background color design.
+`pageGapBackground` 和 `pageGap` 选项可用于更改页面间区域的背景颜色以及页面之间的间距。这有助于在视觉上区分页面，或使其与应用的背景颜色设计保持一致。
 
 <CodeDemo isPro path="/Extensions/PagesCustomPageGap" />
 
-## How to set the page gap background
+## 如何设置页面间距背景
 
-The initial editor configuration for the page gap background can be done at the `.configure()` extension level:
+可以在扩展的 `.configure()` 配置中设置页面间距背景的初始值：
 
 ```js
 Pages.configure({
-  pageGapBackground: '#f8f8f8', // Light gray between pages
+  pageGapBackground: '#f8f8f8', // 页面间显示浅灰色
 })
 ```
 
-Then, at any point, you could make use of the exposed editor command `setPageGapBackground(color: string)` to change the page gap color:
+之后，随时可以使用编辑器提供的 `setPageGapBackground(color: string)` 命令来更改页面间距的颜色：
 
 ```js
 editor.commands.setPageGapBackground(pageGapBackground)
-// You should also do this!
+// 还应执行此操作！
 document.body.style.backgroundColor = pageGapBackground
 ```
 
-<Callout title="Helpful tip">
-  You should change the background color of the body (or your editor container) to match the page
-  gap background as well because the page gap background is only applied to the page gap
-  itself, not the entire document or the Tiptap editor.
+<Callout title="实用提示">
+  你还应将 body（或编辑器容器）的背景颜色改为与页面间距背景相同，因为页面间距背景仅应用于页面间距本身，不会应用于整个文档或 Tiptap 编辑器。
 </Callout>
 
-## Page gap
+## 页面间距
 
-- Sets the space between each page.
-- Default: `50` (pixels)
+- 设置页面之间的间隔。
+- 默认值：`50`（像素）
 
-### Initial configuration
+### 初始配置
 
 ```js
 Pages.configure({
-  pageGap: 20, // in pixels
+  pageGap: 20, // 单位：像素
 })
 ```
 
-### Editor command
+### 编辑器命令
 
 ```js
-editor.commands.setPageGap(20) // in pixels
+editor.commands.setPageGap(20) // 单位：像素
 ```
 
-<Callout title="Hint">
-  The `pageGap` property only affects the space between pages, not the page itself.
+<Callout title="提示">
+  `pageGap` 属性只会影响页面之间的间隔，不会影响页面本身。
 </Callout>
