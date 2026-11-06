@@ -1,32 +1,32 @@
 ---
-title: Legacy authentication
+title: 旧版身份验证
 meta:
-  title: Legacy authentication | Tiptap Docs
-  description: Reference for the previous per-service authentication model based on App IDs and per-service secrets. For maintaining and troubleshooting existing integrations.
-  category: Authentication
+  title: 旧版身份验证 | Tiptap 文档
+  description: 基于应用 ID 和各服务专用密钥的旧版身份验证模型参考。用于维护和排查现有集成问题。
+  category: 身份验证
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Before the unified [Authentication](/authentication) model, each Tiptap service was authenticated on its own. You copied a per-service App ID and secret from the dashboard and signed a service-specific JWT. This page is a reference for those integrations.
+在统一的[身份验证](/authentication)模型推出之前，每个 Tiptap 服务都使用独立的身份验证方式。你需要从控制台复制各服务专用的应用 ID 和密钥，并签署特定于服务的 JWT。本页介绍这些集成方式，供你参考。
 
-<Callout title="Still supported" variant="info">
-  Existing integrations keep working without changes. A request that uses the previous format is routed to the previous path automatically, so you can migrate on your own schedule. When you are ready, see [Migrate to the new authentication](/authentication/migrate).
+<Callout title="仍受支持" variant="info">
+  现有集成无需更改即可继续使用。使用旧格式的请求会自动路由到旧路径，因此你可以按自己的计划进行迁移。准备好后，请参阅[迁移到新的身份验证方式](/authentication/migrate)。
 </Callout>
 
-## How the previous model worked
+## 旧版模型的工作方式
 
-Each service had its own credentials and its own token shape:
+每项服务都有自己的凭据和令牌格式：
 
-| Service | Credentials | Token |
+| 服务 | 凭据 | 令牌 |
 | --- | --- | --- |
-| Collaboration and Documents | Collaboration secret | JWT signed with the secret, carrying document-access claims |
-| Conversion | App ID and secret (Convert settings) | JWT in `Authorization`, App ID in the `X-App-Id` header |
-| AI Toolkit | App ID and secret (AI settings) | JWT signed with the secret, no extra claims |
+| 协作和文档 | 协作密钥 | 使用该密钥签署的 JWT，其中包含文档访问声明 |
+| 转换 | 应用 ID 和密钥（Convert 设置） | `Authorization` 中的 JWT，以及 `X-App-Id` 标头中的应用 ID |
+| AI 工具包 | 应用 ID 和密钥（AI 设置） | 使用该密钥签署的 JWT，不含额外声明 |
 
-## Collaboration and Documents
+## 协作和文档
 
-You signed a JWT with your Collaboration secret. The payload listed which documents a user could reach and at what level, through `allowedDocumentNames`, `readonlyDocumentNames`, and `commentDocumentNames`.
+你需要使用协作密钥签署 JWT。载荷通过 `allowedDocumentNames`、`readonlyDocumentNames` 和 `commentDocumentNames` 列出用户可以访问的文档及其访问级别。
 
 ```typescript
 import jsonwebtoken from 'jsonwebtoken'
@@ -39,35 +39,35 @@ const data = {
 const jwt = jsonwebtoken.sign(data, 'your_secret')
 ```
 
-Access patterns:
+访问方式：
 
-- **Full access.** Omit `allowedDocumentNames` to grant access to every document.
-- **Specific documents.** List names in `allowedDocumentNames`.
-- **Read-only.** List names in `readonlyDocumentNames`.
-- **Comment only.** List names in `commentDocumentNames` alongside read-only access.
-- **Wildcards.** Use patterns like `project-alpha/*` in `allowedDocumentNames` to match a group.
+- **完全访问。** 省略 `allowedDocumentNames`，即可授予对所有文档的访问权限。
+- **指定文档。** 在 `allowedDocumentNames` 中列出文档名称。
+- **只读。** 在 `readonlyDocumentNames` 中列出文档名称。
+- **仅评论。** 除只读访问外，还可在 `commentDocumentNames` 中列出文档名称。
+- **通配符。** 在 `allowedDocumentNames` 中使用 `project-alpha/*` 之类的模式来匹配一组文档。
 
-For the equivalent in the new model, see [Authorize per document](/collaboration/getting-started/authenticate#authorize-per-document) and the [migration mapping](/authentication/migrate#collaboration-and-documents).
+如需了解新模型中的对应方式，请参阅[按文档授权](/collaboration/getting-started/authenticate#authorize-per-document)和[迁移映射](/authentication/migrate#collaboration-and-documents)。
 
-## Conversion
+## 转换
 
-You retrieved an App ID and secret from the Convert settings page, signed a JWT with the secret, and sent both with each REST request:
+你需要从 Convert 设置页面获取应用 ID 和密钥，使用该密钥签署 JWT，并在每个 REST 请求中同时发送两者：
 
 ```bash
 Authorization: Bearer YOUR_JWT
 X-App-Id: YOUR_APP_ID
 ```
 
-For the editor extensions you passed the same `appId` and `token` options. For the new model, see [Migrate to the new authentication](/authentication/migrate#conversion).
+对于编辑器扩展，你需要传入相同的 `appId` 和 `token` 选项。有关新模型，请参阅[迁移到新的身份验证方式](/authentication/migrate#conversion)。
 
-## AI Toolkit
+## AI 工具包
 
-You retrieved an App ID and secret from the AI settings page and signed a JWT with the secret. The App ID and token were passed to the AI extensions. REST requests carried the JWT in `Authorization` with the App ID in `X-App-Id`. See [AI Toolkit install](/ai/basic/install).
+你需要从 AI 设置页面获取应用 ID 和密钥，并使用该密钥签署 JWT。然后将应用 ID 和令牌传递给 AI 扩展。REST 请求则在 `Authorization` 中携带 JWT，并在 `X-App-Id` 中携带应用 ID。请参阅 [AI 工具包安装指南](/ai/basic/install)。
 
-## Troubleshooting
+## 故障排查
 
-- **A token that used to work is now rejected.** Check the `exp` claim. Short-lived tokens are validated continuously, so an expired token is refused on the next check.
-- **`401` on the REST API.** Confirm the secret used to sign the token matches the one shown in the service settings, and that the App ID is sent in `X-App-Id`.
-- **`403` with a permission or feature error.** The environment's subscription may not include the service. Confirm the plan in the dashboard.
+- **以前可用的令牌现在被拒绝。** 检查 `exp` 声明。短期令牌会持续验证，因此令牌过期后，在下一次检查时就会被拒绝。
+- **REST API 返回 `401`。** 确认用于签署令牌的密钥与服务设置中显示的密钥一致，并且已在 `X-App-Id` 中发送应用 ID。
+- **因权限或功能问题返回 `403`。** 环境订阅可能不包含该服务。请在控制台中确认套餐。
 
-When you are ready to consolidate these per-service tokens into one, see [Migrate to the new authentication](/authentication/migrate).
+准备好将这些各服务独立的令牌整合为一个令牌后，请参阅[迁移到新的身份验证方式](/authentication/migrate)。
