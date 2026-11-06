@@ -1,41 +1,40 @@
 ---
-title: Install the Pages extension
+title: 安装 Pages 扩展
 tags:
   - type: team
   - type: beta
 meta:
-  title: Install Pages | Tiptap Pages Docs
-  description: Install the Pages extension in Tiptap to add page-style layout to your editor. Learn more in the docs!
+  title: 安装 Pages | Tiptap Pages 文档
+  description: 在 Tiptap 中安装 Pages 扩展，为编辑器添加分页式布局。更多信息请参阅文档！
   category: Pages
 ---
 
 import { Callout } from '@/components/ui/Callout'
 import { Requirements, RequirementItem } from '@/components/Requirements'
 
-Install and configure the Pages extension by following this guide.
+按照本指南安装并配置 Pages 扩展。
 
 <Requirements>
-  <RequirementItem label="1. Request access">
-    Start a free [trial in your Account](https://cloud.tiptap.dev/v2/billing) or subscribe to a
-    [Tiptap plan](https://cloud.tiptap.dev/v2/billing).
+  <RequirementItem label="1. 申请访问权限">
+    在[账户中免费试用](https://cloud.tiptap.dev/v2/billing)，或订阅
+    [Tiptap 套餐](https://cloud.tiptap.dev/v2/billing)。
   </RequirementItem>
-  <RequirementItem label="2. Access the private registry">
-    The Pages extension is published in Tiptap's private npm registry. Authenticate to Tiptap's
-    private npm registry by following the [setup guide](/guides/pro-extensions).
+  <RequirementItem label="2. 访问私有仓库">
+    Pages 扩展发布在 Tiptap 的私有 npm 仓库中。请按照[设置指南](/guides/pro-extensions)完成 Tiptap 私有 npm 仓库的身份验证。
   </RequirementItem>
-  <RequirementItem label="3. Install the extension">
-    Install the extension from the private registry using npm or your preferred package manager.
+  <RequirementItem label="3. 安装扩展">
+    使用 npm 或你首选的包管理器，从私有仓库安装扩展。
   </RequirementItem>
 </Requirements>
 
-## Install Pages and its companion packages
+## 安装 Pages 及其配套包
 
-The Pages extension does **not** ship with a node and mark schema. To use it you also install:
+Pages 扩展**不包含**节点和标记的 schema。要使用它，还需要安装：
 
-- **`@tiptap-pro/extension-convert-kit`**: the canonical editor kit for any Pages or Conversion workflow. ConvertKit registers a DOCX-aware schema (paragraphs, headings, lists, images, marks) that renders both hand-authored content and content imported through Tiptap Conversion.
-- **`@tiptap-pro/extension-pages-tablekit`**: pagination-safe tables. Required because ConvertKit's bundled tables are not designed to paginate; using them inside Pages will cause layout to break.
+- **`@tiptap-pro/extension-convert-kit`**：适用于任何 Pages 或 Conversion 工作流的标准编辑器套件。ConvertKit 会注册兼容 DOCX 的 schema（段落、标题、列表、图片、标记），既能渲染手动编写的内容，也能渲染通过 Tiptap Conversion 导入的内容。
+- **`@tiptap-pro/extension-pages-tablekit`**：支持分页的表格。由于 ConvertKit 内置的表格并非为分页而设计，因此必须安装此包；在 Pages 中使用 ConvertKit 的表格会导致布局错乱。
 
-Install all three Pro packages from the private registry:
+从私有仓库安装全部三个 Pro 包：
 
 ```bash
 npm install @tiptap-pro/extension-convert-kit \
@@ -43,15 +42,15 @@ npm install @tiptap-pro/extension-convert-kit \
             @tiptap-pro/extension-pages
 ```
 
-<Callout title="Why ConvertKit and TableKit are separate installs" variant="info">
-  Neither `@tiptap-pro/extension-pages` nor `@tiptap-pro/extension-pages-pagekit` re-exports
-  ConvertKit. They are independent packages that compose together. If you adopt
-  [PageKit](/pages/guides/pagekit-usage) later, ConvertKit is still a separate install alongside it.
+<Callout title="为什么 ConvertKit 和 TableKit 需要分别安装" variant="info">
+  `@tiptap-pro/extension-pages` 和 `@tiptap-pro/extension-pages-pagekit` 都不会重新导出
+  ConvertKit。它们是彼此独立、可组合使用的包。如果之后采用
+  [PageKit](/pages/guides/pagekit-usage)，仍需单独安装 ConvertKit。
 </Callout>
 
-## Integrating the Pages extension
+## 集成 Pages 扩展
 
-Register the three extensions in your editor and disable ConvertKit's table stack so PagesTableKit's `TableKit` takes over:
+在编辑器中注册这三个扩展，并禁用 ConvertKit 的表格组件，以便由 PagesTableKit 的 `TableKit` 接管：
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -72,16 +71,18 @@ const editor = new Editor({
 })
 ```
 
-The `pageFormat`, `header`, and `footer` options are the three you'll touch first. See the [API reference](/pages/core-concepts/options) for the full list, or [Page header and footer](/pages/core-concepts/page-header-footer) for first-page, odd/even, and rich-content header/footer setups.
+你最先会用到的三个选项是 `pageFormat`、`header` 和 `footer`。完整选项列表请参阅 [API 参考](/pages/core-concepts/options)；有关首页、奇偶页以及富内容页眉和页脚的设置，请参阅[页面页眉和页脚](/pages/core-concepts/page-header-footer)。
 
-## Authentication
+## 身份验证
 
-Pages on its own makes no network calls and needs no credentials. The moment you add Tiptap Conversion (DOCX import, PDF export, etc.) on top of Pages, you'll need a signed token. See the [Conversion install guide](/conversion/getting-started/install) for setup. The configuration there carries over without modification.
+Pages 本身不会发起网络请求，也不需要凭据。在 Pages 上添加 Tiptap Conversion（导入 DOCX、导出 PDF 等）后，就需要签名令牌。设置方法请参阅 [Conversion 安装指南](/conversion/getting-started/install)。其中的配置可以直接沿用，无需修改。
 
-## Next steps
+## 后续步骤
 
-- [Pages options](/pages/core-concepts/options): full configuration reference
-- [Page header and footer](/pages/core-concepts/page-header-footer): different first page, odd/even pages, and live editing
-- [PagesTableKit](/pages/guides/pages-tablekit): pagination-safe tables in detail
-- [From zero to print-ready](/pages/guides/zero-to-print-ready): paginated editor with DOCX import and export
-- [Limitations](/pages/core-concepts/limitations): what Pages cannot do, including the most important pitfall to avoid
+- [Pages 选项](/pages/core-concepts/options)：完整配置参考
+- [页面页眉和页脚](/pages/core-concepts/page-header-footer)：不同的首页、奇偶页以及实时编辑
+- [PagesTableKit](/pages/guides/pages-tablekit)：深入了解支持分页的表格
+- [从零开始打造可打印文档](/pages/guides/zero-to-print-ready)：支持分页以及 DOCX 导入和导出的编辑器
+- [限制](/pages/core-concepts/limitations)：了解 Pages 无法实现的功能，以及最应避免的陷阱
+
+</content>
