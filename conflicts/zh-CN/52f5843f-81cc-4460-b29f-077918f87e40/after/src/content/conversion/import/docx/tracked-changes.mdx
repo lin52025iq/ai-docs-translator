@@ -1,0 +1,147 @@
+---
+title: 从 DOCX 导入修订
+ tags:
+  - type: addon
+    tooltip: 将修订功能添加到您的订阅中
+  - type: beta
+meta:
+  title: 导入修订 | Tiptap Conversion
+  description: 将 Word 中的插入和删除作为可审阅的建议导入，也可以在导入时接受或拒绝这些更改。
+  category: 转换
+---
+
+import { Callout } from '@/components/ui/Callout'
+import { Requirements, RequirementItem } from '@/components/Requirements'
+import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
+
+<EnterpriseCalloutAuto variant="docx" renderMode="sidebar" disableWaitlist />
+
+<Callout title="修订附加功能" variant="hint">
+  修订是一项付费附加功能，不包含在任何套餐中。您可以在免费试用期间进行测试，或在[控制面板](https://cloud.tiptap.dev/v2/billing)中购买。将其[集成到编辑器中](/tracked-changes/getting-started/install)后，即可通过 Conversion 在 Word 和 Tiptap 之间往返传递修订内容。
+</Callout>
+
+<Requirements>
+  <RequirementItem label="1. 开始试用或订阅">
+    在您的账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 套餐](https://cloud.tiptap.dev/v2/billing)。
+  </RequirementItem>
+  <RequirementItem label="2. 获取修订附加功能">
+    修订是一项付费附加功能，不包含在任何套餐中。您可以在免费试用期间进行测试，或在[控制面板](https://cloud.tiptap.dev/v2/billing)中单独购买。
+  </RequirementItem>
+  <RequirementItem label="3. 设置集成方式">
+    对于编辑器扩展，请按照[设置指南](/guides/pro-extensions)向 Tiptap 私有 npm 注册表进行身份验证。对于 REST API，请使用包含 `aud: "Convert"` 的签名令牌对请求进行身份验证。请参阅[身份验证](/authentication)。
+  </RequirementItem>
+</Requirements>
+
+经过审阅的 Word 文档会记录谁插入或删除了哪些内容。导入时，您可以决定如何处理这些记录：将其保留为可在编辑器中审阅的建议、接受更改，或拒绝更改。
+
+## 选择模式
+
+| 模式       | 效果                                                                      |
+| ---------- | ------------------------------------------------------------------------- |
+| `preserve` | 将插入和删除转换为建议，并保留原作者和日期                                |
+| `accept`   | 将插入转换为普通文本，并移除删除的内容                                      |
+| `reject`   | 将删除的内容恢复为普通文本，并移除插入的内容                                |
+| `auto`     | 仅适用于编辑器扩展。根据编辑器的 schema 选择 `preserve` 或 `accept`         |
+
+## 使用编辑器扩展
+
+`ImportDocx` 接受 `trackedChanges` 选项，默认值为 `auto`：
+
+```ts
+import { ImportDocx } from '@tiptap-pro/extension-import-docx'
+
+const editor = new Editor({
+  extensions: [
+    ImportDocx.configure({
+      token: 'your-jwt',
+      trackedChanges: 'auto',
+    }),
+  ],
+})
+```
+
+您也可以针对每次导入单独指定模式，该设置会覆盖已配置的值：
+
+```ts
+editor.commands.importDocx({ file, trackedChanges: 'preserve' })
+```
+
+### `auto` 的作用
+
+`auto` 会检查编辑器 schema 中是否包含修订用的 `suggestion` 标记。如果包含，模式就设为 `preserve`；如果不包含，则设为 `accept`。如果您通过 `prosemirrorMarks` 重命名了该标记，`auto` 会查找您指定的名称。
+
+这是因为编辑器会丢弃 schema 不认识的标记，但保留这些标记所在的文本。因此，如果在无法呈现建议的编辑器中选择 `preserve`，所有删除内容都会变回普通内容，从而悄然撤销审阅者所做的修改。`auto` 可以避免这种情况，因此除非您确定要使用哪种模式，否则请保持默认设置。
+
+<Callout variant="info" title="保留建议需要修订扩展">
+  注册 [`@tiptap-pro/extension-tracked-changes`](/tracked-changes/getting-started/overview) 以保留导入的修订痕迹。如果没有此扩展，请使用 `accept` 或 `reject`，这样文档导入后将是普通文本。
+</Callout>
+
+## 使用 REST API
+
+将 `trackedChanges` 作为表单字段发送。它接受 `preserve`、`accept` 和 `reject`，默认值为 `accept`。
+
+```bash
+curl -X POST https://api.tiptap.dev/v2/convert/import/docx \
+  -H "Authorization: Bearer <your-jwt>" \
+  -F "file=@reviewed.docx" \
+  -F "trackedChanges=preserve"
+```
+
+默认值为 `accept` 而不是 `preserve`，因此未发送该字段的调用方仍会收到普通内容，不会收到其编辑器无法呈现的建议标记。
+
+## 保留的建议是什么样的
+
+带有更改的文本会获得一个 `suggestion` 标记：
+
+```json
+{
+  "type": "text",
+  "text": "brave ",
+  "marks": [
+    {
+      "type": "suggestion",
+      "attrs": {
+        "id": "docx-suggestion-1",
+        "type": "add",
+        "userId": "ada lovelace",
+        "createdAt": "2026-07-27T10:00:00Z",
+        "updatedAt": "2026-07-27T10:00:00Z",
+        "userMetadata": { "name": "Ada Lovelace" }
+      }
+    }
+  ]
+}
+```
+
+插入对应的 `type` 值为 `add`，删除对应的值为 `delete`。替换内容（即审阅者用一段文本替换另一段文本）会作为先删除、后插入导入。
+
+Word 仅通过显示名称识别审阅者，因此 `userMetadata.name` 保存该名称，`userId` 则由此生成：去除首尾空格、合并连续空白并转换为小写。因此，显示名称相同的审阅者会共用同一个 `userId`。没有作者信息的更改，其 `userId` 为 `anonymous`，`userMetadata` 为 `null`。
+
+Word 会为每段连续文本写入一条记录，因此一项编辑通常会拆分成多条记录。相邻且作者、类型相同的记录会合并为一条建议，这样跨越不同格式的更改就能作为一个可审阅的整体保留，而不会被拆成多个部分。
+
+插入或删除的图像及其他独立内容不会使用标记，而是将相同信息作为节点属性保存：`suggestionId`、`suggestionType`、`suggestionUserId`、`suggestionCreatedAt`、`suggestionUpdatedAt` 和 `suggestionUserMetadata`。
+
+## 建议的保留位置
+
+建议会保留在文档正文中，包括表格单元格内的内容。
+
+页眉、页脚、批注和脚注与主文档分开处理，`preserve` 不会作用于这些部分。导入时会直接应用这些部分中的更改，因此页眉中的删除会作为已移除的文本导入，而不是作为建议。其内容不会丢失。
+
+这是有意为之。这些部分通常使用不含 `suggestion` 标记的 schema；若在其中保留建议，标记会被移除而文本仍然保留，导致删除内容变成实际内容。目前，即使为页眉和页脚编辑器配置修订扩展，也不会改变导入行为。
+
+## 尚未导入的内容（正在开发中）
+
+以下两类情况中，文本会完整导入，只是缺少更改记录：
+
+- **段落拆分和合并。** Word 会将这些更改记录在段落标记上，而不是文本上；它们在经过审阅的文档中很常见。段落本身会正确导入，但不会保留段落拆分本身是修订的这一信息。
+- **格式更改**，例如在开启修订时将某个词设为粗体。格式会导入，但不会保留该格式变更的记录。
+
+移动是个例外，建议您在自己的文档中检查：
+
+- **移动内容**，即审阅者移动了一段文本。Word 会将移动记录为两个部分：源位置和目标位置。目前这两部分都无法识别。请先检查移动过的内容，再依赖此功能。
+
+## 往返转换
+
+导出来自 Word 的建议时，会将其写回为 Word 插入和删除，并保留作者和日期。请参阅[导出修订](/conversion/export/docx/tracked-changes)。
+
+在 Tiptap 中接受所有更改，结果与在 Word 中全部接受相同；拒绝所有更改也是如此。例外情况是导出无法写入的内容，包括图像和其他独立内容上的建议：这些建议以节点属性导入，导出时会变为普通内容。请参阅[尚未导出的内容](/conversion/export/docx/tracked-changes#what-is-not-exported-work-in-progress)。
