@@ -1,12 +1,12 @@
 ---
-title: Paragraph Node
+title: 段落节点
 meta:
-  title: Paragraph node | Tiptap UI Components
-  description: Add a paragraph node UI component to your Tiptap editor. More in the documentation!
-  category: UI Components
+  title: 段落节点 | Tiptap UI 组件
+  description: 为 Tiptap 编辑器添加段落节点 UI 组件。更多内容请参阅文档！
+  category: UI 组件
 component:
-  name: Paragraph node
-  description: Add a paragraph UI node component
+  name: 段落节点
+  description: 添加段落 UI 节点组件
   type: node-component
   isFree: true
   isCloud: false
@@ -19,21 +19,21 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-Comprehensive styling for the core paragraph node and various other text elements in the Tiptap editor.
+为 Tiptap 编辑器中的核心段落节点和各种其他文本元素提供全面的样式。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-node/paragraph-node" />
 
-## Installation
+## 安装
 
-You can add the node component via Tiptap CLI
+你可以通过 Tiptap CLI 添加此节点组件
 
 ```bash
 npx @tiptap/cli@latest add paragraph-node
 ```
 
-## Usage
+## 用法
 
-The ParagraphNode provides styling for paragraphs and other text-related elements within the editor. To use it, include it in your project alongside the Tiptap editor.
+ParagraphNode 为编辑器中的段落和其他文本相关元素提供样式。要使用它，请将其与 Tiptap 编辑器一起添加到项目中。
 
 ```tsx
 import { useEditor, EditorContent } from '@tiptap/react'
@@ -58,30 +58,30 @@ export default function BasicEditor() {
 }
 ```
 
-## Features
+## 功能
 
-- Core styling for paragraphs with proper spacing
-- Heading styles (h1-h4) with appropriate sizing
-- Blockquote styling with left border
-- Link styling with appropriate colors
-- Horizontal rule (hr) styling
-- Text decoration inheritance for nested spans
-- Selection highlighting
-- Proper cursor styles
-- Empty paragraph placeholders
-- Thread markup styles integration
-- Highlight color variables
-- Mathematics component integration
-- Dark mode support
-- Gap cursor styling
+- 为段落提供基础样式和适当的间距
+- 标题样式（h1-h4），尺寸恰当
+- 带左边框的引用块样式
+- 配色恰当的链接样式
+- 水平分隔线（hr）样式
+- 嵌套 span 的文本装饰继承
+- 选区高亮
+- 合适的光标样式
+- 空段落占位符
+- 集成线程标记样式
+- 高亮颜色变量
+- 数学组件集成
+- 支持深色模式
+- 间隙光标样式
 
-## Requirements
+## 要求
 
-The `paragraph-node.scss` provides styling for many core Tiptap features. While it has no direct dependencies, it works best with:
+`paragraph-node.scss` 为许多 Tiptap 核心功能提供样式。虽然它没有直接依赖项，但与以下功能搭配使用效果最佳：
 
-Open source feature(s)
+开源功能
 
 - [`@tiptap/starter-kit`](/editor/extensions/functionality/starterkit)
 - [`@tiptap/extension-link`](/editor/extensions/marks/link)
 - [`@tiptap/extension-highlight`](/editor/extensions/marks/highlight)
-- [`@tiptap/extension-mathematics`](/editor/extensions/functionality/mathematics) (optional)
+- [`@tiptap/extension-mathematics`](/editor/extensions/functionality/mathematics)（可选）
