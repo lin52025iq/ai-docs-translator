@@ -1,69 +1,69 @@
 ---
-title: Advanced usage
+title: 高级用法
 tags:
   - type: addon
 meta:
-  title: Advanced usage | Tiptap Tracked Changes Docs
-  description: Learn about suggestion grouping, deletion merging, collaboration compatibility, and comments integration in Tiptap Tracked Changes.
-  category: Tracked Changes
+  title: 高级用法 | Tiptap 修订跟踪文档
+  description: 了解 Tiptap 修订跟踪中的建议分组、删除合并、协作兼容性和评论集成。
+  category: 修订跟踪
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Advanced behaviors and integration patterns for the Tracked Changes extension.
+修订跟踪扩展的高级行为和集成模式。
 
-## Suggestion grouping
+## 建议分组
 
-When a user types continuously or deletes multiple characters in sequence, these edits are grouped into a single suggestion rather than creating one suggestion per character. Grouping occurs when:
+用户连续输入，或连续删除多个字符时，这些编辑会合并为一条建议，而不是每个字符都创建一条建议。符合以下条件时会进行分组：
 
-1. The new edit is **adjacent** to an existing suggestion (immediately before or after)
-2. The existing suggestion was created by the **same user**
-3. The existing suggestion is the **same type** (both insertions or both deletions)
+1. 新编辑与现有建议**相邻**（紧挨其前或其后）
+2. 现有建议由**同一用户**创建
+3. 现有建议的**类型相同**（都是插入或都是删除）
 
-Continuous edits that meet all three conditions are merged into a single suggestion.
+符合以上全部条件的连续编辑会合并为一条建议。
 
-## Deletion merging
+## 删除合并
 
-When a user deletes content that overlaps with or is adjacent to existing delete suggestions, the marks are automatically merged to prevent nested or overlapping deletions. The merged suggestion uses the metadata (ID, user, timestamp) from the **oldest** existing delete mark in the range.
+用户删除的内容与现有删除建议重叠或相邻时，标记会自动合并，以避免出现嵌套或重叠的删除。合并后的建议使用范围内**最早**的现有删除标记的元数据（ID、用户、时间戳）。
 
-This ensures that:
+这样可以确保：
 
-- The document never contains nested delete marks
-- Related deletions are visually grouped together
-- The original author of the first deletion is preserved
+- 文档中不会出现嵌套的删除标记
+- 相关删除内容会在视觉上归为一组
+- 保留最初删除内容的作者
 
-## Mixed content handling
+## 混合内容处理
 
-When deleting or replacing content that contains a mix of original text and previously suggested insertions:
+删除或替换的内容同时包含原始文本和先前建议插入的内容时：
 
-- **Suggested insertions** (text with `add` marks) are immediately removed from the document
-- **Original content** (text without `add` marks) is marked with a `delete` suggestion
+- **建议插入内容**（带有 `add` 标记的文本）会立即从文档中移除
+- **原始内容**（不带 `add` 标记的文本）会标记为一条 `delete` 建议
 
-This behavior matches user expectations: if you delete text that was only suggested (not yet accepted), it simply disappears. Original document content requires explicit acceptance to be removed.
+这种行为符合用户预期：如果删除的文本只是建议内容（尚未接受），它会直接消失。要移除文档中的原始内容，则必须明确接受该更改。
 
-## Block splits
+## 块拆分
 
-The extension uses `splitKind` to distinguish two kinds of block split:
+扩展使用 `splitKind` 区分两种块拆分：
 
-| Split kind   | When it happens                         | Accept              | Reject                  |
+| 拆分类型 | 发生时机 | 接受 | 拒绝 |
 | ------------ | --------------------------------------- | ------------------- | ----------------------- |
-| `insertion`  | Enter at the end of a block             | Keeps the new block | Removes the new block   |
-| `structural` | Enter in the middle of existing content | Keeps both blocks   | Merges the blocks again |
+| `insertion` | 在块末尾按 Enter | 保留新块 | 移除新块 |
+| `structural` | 在现有内容中间按 Enter | 保留两个块 | 再次合并两个块 |
 
-Both kinds use `suggestion.type: 'split'`. The suggestion panel uses the affected `nodeType` in its label, such as `new paragraph` for an insertion split or `split heading` for a structural split.
+两种类型的 `suggestion.type` 均为 `'split'`。建议面板会在标签中使用受影响的 `nodeType`，例如插入拆分显示为 `new paragraph`，结构拆分显示为 `split heading`。
 
-Try these cases in the [Tracked Changes playground](/tracked-changes/examples/simple).
+可在[修订跟踪 Playground](/tracked-changes/examples/simple)中试用这些情况。
 
-### End splits are insertion splits
+### 在末尾拆分属于插入拆分
 
-When you press Enter at the end of a paragraph, the extension creates a new paragraph with one `split` suggestion:
+在段落末尾按 Enter 时，扩展会创建一个新段落，并附带一条 `split` 建议：
 
 ```html
 <p>First paragraph.</p>
 <p data-suggestion data-suggestion-type="blockSplit">Second paragraph.</p>
 ```
 
-The suggestion returned by `findSuggestions()` looks like this:
+`findSuggestions()` 返回的建议如下：
 
 ```ts
 {
@@ -75,77 +75,76 @@ The suggestion returned by `findSuggestions()` looks like this:
 }
 ```
 
-Text you type after the split stays in the same insertion split. The suggestion text changes with the new block. If you press Enter again at the end of that block, the second split gets its own suggestion and its own ID.
+拆分后输入的文本会保留在同一条插入拆分建议中。建议文本会随新块内容变化。如果你在该块末尾再次按 Enter，第二次拆分会有自己的建议和 ID。
 
-The same rule applies when you split a heading or a list item at the end. For a list item, the new `<li>` is the inserted block. A split marker appears at the end of the paragraph before it, inside the preceding list item.
+在标题或列表项末尾拆分时也遵循相同规则。对于列表项，新建的 `<li>` 是插入的块。拆分标记会出现在前一个段落末尾，也就是前一个列表项内部。
 
-### Middle splits are structural splits
+### 在中间拆分属于结构拆分
 
-When you press Enter in existing content, the extension tracks the new boundary without treating the second block as newly inserted. For example, splitting `<p>HelloWorld</p>` between `Hello` and `World` creates one structural split:
+在现有内容中按 Enter 时，扩展会跟踪新边界，但不会将第二个块视为新插入的内容。例如，在 `Hello` 和 `World` 之间拆分 `<p>HelloWorld</p>` 会创建一条结构拆分建议：
 
 ```html
 <p>Hello</p>
 <p data-suggestion data-suggestion-type="blockSplit">World</p>
 ```
 
-The suggestion has `splitKind: 'structural'` and `nodeType: 'paragraph'`. Its `text` and `fullText` contain the text in the second block, which is `"World"` in this example.
+该建议的 `splitKind` 为 `'structural'`，`nodeType` 为 `'paragraph'`。它的 `text` 和 `fullText` 包含第二个块中的文本；在此示例中即为 `"World"`。
 
-For a heading, a middle split uses `nodeType: 'heading'` and gets a label such as `split heading`. A middle split inside a list item keeps the list item's replacement behavior instead of creating a structural `split` suggestion.
+拆分标题时，`nodeType` 为 `'heading'`，标签类似 `split heading`。在列表项中间拆分时，会保留列表项的替换行为，而不会创建结构拆分 `split` 建议。
 
-### Accept and reject splits independently
+### 分别接受或拒绝拆分
 
-Accepting either split kind keeps the two blocks and clears the suggestion. Rejecting an insertion split removes the new block. Rejecting a structural split merges the two blocks back together.
+接受任一种拆分都会保留两个块并清除建议。拒绝插入拆分会移除新块；拒绝结构拆分会将两个块重新合并。
 
-Consecutive end splits stay independent. Accepting or rejecting one split does not accept or reject the others. The extension does not group all consecutive end splits into one suggestion.
+连续发生的末尾拆分彼此独立。接受或拒绝其中一项不会影响其他拆分。扩展不会将所有连续的末尾拆分合并成一条建议。
 
-A split marker is rendered at the end of the block before the split. See [`blockSplitMarker`](/tracked-changes/getting-started/install#blocksplitmarker) to configure or remove it.
+拆分标记会呈现在拆分前的块末尾。请参阅 [`blockSplitMarker`](/tracked-changes/getting-started/install#blocksplitmarker)，了解如何配置或移除它。
 
-### `split` vs `blockSplit`
+### `split` 与 `blockSplit`
 
-The query API returns `suggestion.type: 'split'`. The node attribute and the `data-suggestion-type` DOM attribute use `'blockSplit'`. Filter and switch on `'split'` when you use `findSuggestions()`. Use `'blockSplit'` only when you target the rendered node with CSS. See [SuggestionNodeType](/tracked-changes/api-reference/types#suggestionnodetype) for the mapping.
+查询 API 返回 `suggestion.type: 'split'`。节点属性和 `data-suggestion-type` DOM 属性使用 `'blockSplit'`。使用 `findSuggestions()` 时，请按 `'split'` 筛选和判断。只有在通过 CSS 定位渲染后的节点时才使用 `'blockSplit'`。映射关系请参阅 [SuggestionNodeType](/tracked-changes/api-reference/types#suggestionnodetype)。
 
-## Nested and stacked suggestions
+## 嵌套和堆叠的建议
 
-When one user edits **inside** another user's pending suggestion, the edit becomes its own suggestion layered on top of the original and attributed to the editing user — instead of mutating or dropping the original. This lets multiple reviewers propose changes over the same span without overwriting each other.
+当一位用户在另一位用户尚未处理的建议**内部**编辑时，该编辑会成为一条独立建议，叠加在原建议之上，并归属于正在编辑的用户，而不会修改或丢弃原建议。这样，多位审阅者就能针对同一段内容提出更改，而不会互相覆盖。
 
-Nesting applies to inline additions, deletions, and replacements. Same-author edits are unchanged: if the **same** user keeps typing inside their own suggestion, it still merges into a single suggestion (see [Suggestion grouping](#suggestion-grouping)). Nesting only happens across **different** authors.
+嵌套适用于行内添加、删除和替换。同一作者的编辑方式不变：如果**同一位**用户继续在自己的建议中输入，内容仍会合并为一条建议（参见[建议分组](#suggestion-grouping)）。只有**不同**作者之间才会发生嵌套。
 
-When suggestions are stacked, the outer suggestion's `text` and `fullText` fields diverge: `text` is the text its author contributed alone, while `fullText` includes text inserted by the nested suggestions on top of it. See [`text` vs `fullText`](/tracked-changes/api-reference/types#text-vs-fulltext) for details and a worked example.
+建议堆叠时，外层建议的 `text` 和 `fullText` 字段会有所不同：`text` 是该作者单独贡献的文本，而 `fullText` 则包含嵌套建议在其上插入的文本。详情和示例请参阅 [`text` 与 `fullText`](/tracked-changes/api-reference/types#text-vs-fulltext)。
 
-### Accept and reject rules
+### 接受和拒绝规则
 
-| Action                         | Result                                                                                            |
+| 操作 | 结果 |
 | ------------------------------ | ------------------------------------------------------------------------------------------------- |
-| Accept an **inner** suggestion | Inner is applied; the **outer** suggestion stays intact.                                          |
-| Reject an **inner** suggestion | Inner is discarded; the **outer** suggestion stays intact.                                        |
-| Accept an **outer** suggestion | Outer is applied; **nested suggestions inside it survive** as their own pending suggestions.      |
-| Reject an **outer** suggestion | Outer is discarded **along with its nested edits**, because the content they lived on is removed. |
+| 接受**内层**建议 | 应用内层建议；**外层**建议保持不变。 |
+| 拒绝**内层**建议 | 丢弃内层建议；**外层**建议保持不变。 |
+| 接受**外层**建议 | 应用外层建议；其中的**嵌套建议仍然保留**，并作为独立的待处理建议。 |
+| 拒绝**外层**建议 | 丢弃外层建议**及其嵌套编辑**，因为这些编辑所依附的内容也会被移除。 |
 
-<Callout title="Inline only" variant="info">
-  Nesting is supported for inline suggestions only. Block-level nested suggestions (for example, a
-  nested suggestion spanning whole blocks) are out of scope.
+<Callout title="仅限行内" variant="info">
+  仅支持行内建议的嵌套。块级嵌套建议（例如跨越整个块的嵌套建议）不在支持范围内。
 </Callout>
 
-## Mark tracking
+## 标记跟踪
 
-Tracked Changes can also track mark-level edits on existing text as `markChange` suggestions. This includes simple formatting marks like `bold` and `italic`, as well as marks with attrs such as `link` or `highlight`.
+修订跟踪还可以将现有文本上的标记级编辑作为 `markChange` 建议进行跟踪。这包括 `bold` 和 `italic` 等简单格式标记，也包括带有属性的标记，例如 `link` 或 `highlight`。
 
-Mark tracking behaves as follows:
+标记跟踪的行为如下：
 
-- Adding or removing a mark on existing text creates a `markChange` suggestion
-- Formatting applied to newly inserted content stays part of the insertion suggestion instead of creating a second mark suggestion
-- Mark-change suggestions store the changed mark name and attrs, so attributed marks can be restored or removed correctly during accept and reject
+- 在现有文本上添加或移除标记会创建一条 `markChange` 建议
+- 应用于新插入内容的格式会保留在插入建议中，不会另行创建标记建议
+- 标记更改建议会保存发生更改的标记名称和属性，因此接受或拒绝时可以正确还原或移除带属性的标记
 
-### How mark tracking works
+### 标记跟踪的工作方式
 
-On existing text, tracked mark changes record the actual mark mutation that was proposed:
+对于现有文本，跟踪的标记更改会记录提议的实际标记变更：
 
-- Adding a mark creates a `markChange` suggestion with an `added` operation
-- Removing a mark creates a `markChange` suggestion with a `removed` operation
+- 添加标记会创建一条操作为 `added` 的 `markChange` 建议
+- 移除标记会创建一条操作为 `removed` 的 `markChange` 建议
 
-For example, if a user applies `bold` to a word, the suggestion stores that `bold` was added. If a user removes `bold` from already formatted text, the suggestion stores that `bold` was removed.
+例如，用户将 `bold` 应用于某个词时，建议会记录添加了 `bold`。用户从已设置格式的文本中移除 `bold` 时，建议会记录移除了 `bold`。
 
-Marks with attrs work the same way, but the attrs are part of the tracked change. This matters for marks such as `link`, where the exact attrs identify the mark variant being changed:
+带属性的标记处理方式相同，但属性也属于跟踪更改的一部分。这对 `link` 等标记很重要，因为具体属性决定了更改的是哪一种标记：
 
 ```js
 // Suggest adding a specific link
@@ -160,11 +159,11 @@ editor.commands.addTrackedMark({
 })
 ```
 
-In this case, the suggestion stores both the mark name (`link`) and the mark attrs. Accepting or rejecting the suggestion can then keep, restore, or remove the exact link mark instead of treating all links as equivalent.
+在此示例中，建议会同时保存标记名称（`link`）和标记属性。接受或拒绝该建议时，就可以保留、还原或移除准确的链接标记，而不会将所有链接视为相同。
 
-If a user applies a mark and then undoes that same mark change on the same text, the tracked mark change can cancel out instead of leaving behind redundant suggestions. This helps keep nested and overlapping mark suggestions stable during review.
+如果用户对同一段文本应用某个标记后又撤销了同一标记更改，跟踪到的标记更改可以相互抵消，而不会留下多余的建议。这有助于在审阅过程中保持嵌套和重叠标记建议的稳定性。
 
-By default, Tracked Changes ignores the `suggestion` mark itself and inline comments/thread marks so those internal marks do not create recursive tracked suggestions. You can also opt out of tracking additional marks:
+默认情况下，修订跟踪会忽略 `suggestion` 标记本身以及行内评论/线程标记，以免这些内部标记递归地产生修订建议。你也可以选择不跟踪其他标记：
 
 ```js
 TrackedChanges.configure({
@@ -172,13 +171,13 @@ TrackedChanges.configure({
 })
 ```
 
-Use this option when your application has decorative or integration-specific marks that should never appear in tracked changes.
+如果应用中存在不应出现在修订跟踪中的装饰性标记或集成专用标记，请使用此选项。
 
-## Node attribute tracking
+## 节点属性跟踪
 
-Updating an existing node's attributes creates an `attributeChange` suggestion instead of replacing the node. This applies to atom nodes, such as images, and non-atom nodes with custom attributes.
+更新现有节点的属性时，会创建一条 `attributeChange` 建议，而不是替换该节点。这适用于图片等原子节点，以及带有自定义属性的非原子节点。
 
-While the suggestion is pending, the document contains the proposed attribute values. The suggestion exposes the previous and proposed values through `attributeChanges`, so a review UI can explain the change:
+建议处于待处理状态时，文档中会包含提议的属性值。建议通过 `attributeChanges` 暴露原值和提议值，便于审阅界面说明更改：
 
 ```ts
 {
@@ -194,15 +193,15 @@ While the suggestion is pending, the document contains the proposed attribute va
 }
 ```
 
-Accepting the suggestion keeps the proposed values. Rejecting it restores every `oldValue`. If the same author changes an attribute again before review, the suggestion retains its original `oldValue` and updates its `newValue`. Changing an attribute back to its original value removes that attribute from the pending suggestion. When that is the final changed attribute, the extension cancels the `attributeChange` suggestion.
+接受建议会保留提议的值；拒绝建议会还原每个 `oldValue`。如果同一作者在审阅前再次更改属性，建议会保留最初的 `oldValue` 并更新 `newValue`。将属性改回原值后，该属性会从待处理建议中移除。如果这是最后一个发生更改的属性，扩展会取消这条 `attributeChange` 建议。
 
-Style the affected node with `[data-suggestion-type="attributeChange"]`. See [Styling](/tracked-changes/api-reference/styling) and [SuggestionAttributeChange](/tracked-changes/api-reference/types#suggestionattributechange) for the DOM and API details.
+使用 `[data-suggestion-type="attributeChange"]` 为受影响的节点设置样式。DOM 和 API 详情请参阅[样式设置](/tracked-changes/api-reference/styling)和 [SuggestionAttributeChange](/tracked-changes/api-reference/types#suggestionattributechange)。
 
-## Node type changes
+## 节点类型更改
 
-Opt in with [`nodeTypeChangeTypes: ['paragraph', 'heading']`](/tracked-changes/getting-started/install#nodetypechangetypes) to propose a paragraph-to-heading conversion as one `attributeChange` suggestion. Both source and target must be configured. Supported conversions change one textblock into another without changing its content or node marks; lists, atoms, wrapping, and unwrapping are excluded.
+通过 [`nodeTypeChangeTypes: ['paragraph', 'heading']`](/tracked-changes/getting-started/install#nodetypechangetypes) 启用此功能后，可将段落转换为标题，并以一条 `attributeChange` 建议表示。源类型和目标类型都必须配置。支持的转换会将一种文本块转换为另一种，同时不更改其内容或节点标记；列表、原子节点、包裹和解除包裹均不支持。
 
-The document keeps one visible block in its proposed type. Query it through the existing suggestion API:
+文档会保留一个可见块，并将其显示为提议的类型。可通过现有建议 API 查询：
 
 ```ts
 import { findSuggestions } from '@tiptap-pro/extension-tracked-changes'
@@ -214,29 +213,29 @@ const typeChanges = findSuggestions(editor).filter((suggestion) => suggestion.no
 // nodeTypeChange: { oldValue: 'paragraph', newValue: 'heading' }
 ```
 
-Accepting keeps the proposed type and attributes. Rejecting restores the original type and attributes while preserving current content and independently reviewable text and mark suggestions. Use the existing accept, reject, range, user, and bulk review commands. Refresh queries through suggestion events or document-changing editor transactions.
+接受建议会保留提议的类型和属性。拒绝建议会还原原始类型和属性，同时保留当前内容以及可独立审阅的文本和标记建议。使用现有的接受、拒绝、范围、用户和批量审阅命令。通过建议事件或会更改文档的编辑器事务刷新查询。
 
-The author can revise a pending proposal under the same ID. Returning to the full original type and attributes cancels it. Another author must review the proposal before changing the block's type or attributes, but can still edit its text and inline marks.
+作者可以使用相同 ID 修改待处理的提议。恢复为完整的原始类型和属性后，提议会被取消。其他作者必须先审阅该提议，才能更改块的类型或属性，但仍可编辑其中的文本和行内标记。
 
-Submit type conversions separately from content edits: a transaction combining both is blocked as a whole. Markdown input rules keep replacement behavior because they also remove trigger text. Edits that make the original type impossible to restore, including ambiguous joins, are blocked. If imported content prevents restoration, rejection returns `false` without changing the document; resolve the conflicting content or accept the proposed type. A blocked bulk rejection also leaves the document unchanged. Ordinary editor commands can report success even when a transaction is blocked, so check the resulting document before showing success.
+请将类型转换与内容编辑分开提交：同时包含两者的事务会被整体阻止。Markdown 输入规则仍采用替换行为，因为它们也会移除触发文本。会导致原始类型无法还原的编辑（包括无法明确判定的合并）会被阻止。如果导入的内容导致无法还原，拒绝操作会返回 `false`，且不会更改文档；请解决内容冲突或接受提议的类型。批量拒绝被阻止时，文档同样不会更改。即使事务被阻止，普通编辑器命令也可能报告成功，因此显示成功提示前请检查最终文档。
 
-Splitting a proposed block preserves the type proposal on both fragments and creates an independent split suggestion. Later type or attribute edits that make one fragment differ create a separate formatting suggestion. Review divergent formatting before rejecting the split.
+拆分已提出类型更改的块时，两个片段都会保留类型提议，并创建独立的拆分建议。之后，如果类型或属性编辑导致其中一个片段发生差异，就会创建单独的格式建议。拒绝拆分前，请先审阅存在差异的格式。
 
-JSON preserves the original type and attributes in `attrs.suggestionNodeTypeChange`. HTML preserves them in `data-suggestion-node-type-change`; retain this attribute in custom renderers and use [`getSuggestionHTMLAttributes(node)`](/tracked-changes/api-reference/utilities#getsuggestionhtmlattributes) in node views. Undo, redo, and reload retain the proposal. Pasting a copy keeps the visible type without copying the proposal identity. Clients opening saved proposals must support node type changes.
+JSON 会在 `attrs.suggestionNodeTypeChange` 中保留原始类型和属性。HTML 会在 `data-suggestion-node-type-change` 中保留这些信息；请在自定义渲染器中保留此属性，并在节点视图中使用 [`getSuggestionHTMLAttributes(node)`](/tracked-changes/api-reference/utilities#getsuggestionhtmlattributes)。撤销、重做和重新加载都会保留该提议。粘贴副本时会保留可见类型，但不会复制提议的身份信息。打开已保存提议的客户端必须支持节点类型更改。
 
-[Split View](/compare/guides/split-view) shows the original type in its before pane and the proposed type in its after pane. [DOCX tracked export](/conversion/export/docx/tracked-changes) requires accepting or rejecting pending node type proposals first.
+[拆分视图](/compare/guides/split-view)会在前置面板中显示原始类型，在后置面板中显示提议类型。[DOCX 修订导出](/conversion/export/docx/tracked-changes)要求先接受或拒绝待处理的节点类型提议。
 
-## Table support
+## 表格支持
 
-The extension tracks structural changes inside tables, including row, cell, and column operations.
+扩展会跟踪表格中的结构性更改，包括行、单元格和列操作。
 
-**Cell selection deletions** — When a user deletes cells via a `CellSelection` (i.e. by selecting multiple cells and pressing delete), each selected cell is promoted to a node-level delete suggestion instead of being removed immediately. All cells in the selection share the same `suggestionId`, so they appear as a single grouped change in the suggestions list.
+**单元格选区删除** — 用户通过 `CellSelection` 删除单元格（即选中多个单元格并按 Delete）时，每个选中的单元格都会提升为节点级删除建议，而不是立即移除。选区中的所有单元格共用同一个 `suggestionId`，因此在建议列表中会显示为一项分组更改。
 
-**Column deletions** — Deleting a column produces a single grouped suggestion spanning all cells in that column, rather than one suggestion per cell.
+**删除列** — 删除一列会生成一条跨越该列所有单元格的分组建议，而不是每个单元格各生成一条建议。
 
-**Accept and reject** — Accepting or rejecting a table suggestion correctly handles the underlying table node structure, preventing errors when the operation involves column nodes.
+**接受和拒绝** — 接受或拒绝表格建议时，会正确处理底层表格节点结构，避免在操作涉及列节点时出错。
 
-To enable table tracking, include a table extension alongside Tracked Changes:
+若要启用表格跟踪，请在修订跟踪扩展旁加入表格扩展：
 
 ```js
 import { Table } from '@tiptap/extension-table'
@@ -256,42 +255,42 @@ const editor = new Editor({
 })
 ```
 
-No additional configuration is required — table changes are tracked automatically once both extensions are active.
+无需额外配置 — 两个扩展启用后，表格更改会自动跟踪。
 
-## Atom node tracking
+## 原子节点跟踪
 
-The extension automatically tracks changes to atom nodes like images, horizontal rules, and other non-text content. These nodes cannot have marks, so the extension uses node attributes (`suggestionId`, `suggestionType`, `suggestionUserId`, `suggestionCreatedAt`, `suggestionUserMetadata`) instead. Attribute updates on these nodes are tracked as `attributeChange` suggestions; other changes appear in the same suggestion queries and can be accepted or rejected like any other suggestion.
+扩展会自动跟踪图片、水平线和其他非文本内容等原子节点的更改。这些节点不能带有标记，因此扩展会改用节点属性（`suggestionId`、`suggestionType`、`suggestionUserId`、`suggestionCreatedAt`、`suggestionUserMetadata`）。这些节点的属性更新会作为 `attributeChange` 建议跟踪；其他更改会出现在相同的建议查询中，并且可以像其他建议一样接受或拒绝。
 
-## Collaboration compatibility
+## 协作兼容性
 
-The extension is designed to work with Yjs-based collaboration. It automatically ignores:
+此扩展专为基于 Yjs 的协作场景设计，并会自动忽略：
 
-- **Remote sync transactions** from Yjs (`y-sync$` meta)
-- **History transactions** (undo/redo are handled natively by ProseMirror)
-- **Transactions with `addToHistory: false`** (typically remote changes)
+- 来自 Yjs 的**远程同步事务**（`y-sync$` 元数据）
+- **历史记录事务**（撤销/重做由 ProseMirror 原生处理）
+- **带有 `addToHistory: false` 的事务**（通常为远程更改）
 
-This means only local user edits are tracked as suggestions.
+这意味着只有本地用户编辑会被跟踪为建议。
 
-When using Tiptap Collaboration (Y.js document), leave `nodeTypeChangeTypes` at its default `[]`: type conversions continue to use replacement suggestions. The opt-in behavior that records these conversions as a single `attributeChange` suggestion is available for local editors; configuring a nonempty list when using Tiptap Collaboration (Y.js document) throws during initialization. If a collaborative document already contains proposals created with this setting, local document edits and review are blocked until a compatible client removes them. Remote synchronization continues.
+使用 Tiptap Collaboration（Y.js 文档）时，请将 `nodeTypeChangeTypes` 保持为默认值 `[]`：类型转换仍会使用替换建议。将这类转换记录为单条 `attributeChange` 建议的可选功能仅适用于本地编辑器；在使用 Tiptap Collaboration（Y.js 文档）时配置非空列表会导致初始化失败。如果协作文档中已包含通过此设置创建的提议，那么在兼容的客户端移除这些提议之前，本地文档编辑和审阅都会被阻止。远程同步仍会继续。
 
-## Comments integration
+## 评论集成
 
-The Tracked Changes extension integrates with the [Comments](/editor/extensions/functionality/comments) extension to enable review workflows where suggestions and comment threads are handled together. The integration is built on top of the event systems exposed by both extensions.
+修订跟踪扩展可与[评论](/editor/extensions/functionality/comments)扩展集成，从而支持同时处理建议和评论线程的审阅工作流。该集成基于两个扩展公开的事件系统构建。
 
-When both extensions are active, comment threads are automatically linked to suggestions through thread metadata. This enables bidirectional synchronization:
+两个扩展都启用时，评论线程会通过线程元数据自动关联到建议，从而实现双向同步：
 
-- **Resolving** a comment thread linked to a suggestion automatically **accepts** the suggestion
-- **Deleting** a comment thread linked to a suggestion automatically **rejects** the suggestion
-- **Accepting** a suggestion automatically **resolves** its linked comment thread
-- **Rejecting** a suggestion automatically **deletes** its linked comment thread
+- **解决**关联到建议的评论线程会自动**接受**该建议
+- **删除**关联到建议的评论线程会自动**拒绝**该建议
+- **接受**建议会自动**解决**关联的评论线程
+- **拒绝**建议会自动**删除**关联的评论线程
 
-When a suggestion's content changes (e.g., the user continues typing within a tracked insertion), the linked thread's metadata is updated to stay in sync.
+建议内容发生变化时（例如，用户在受跟踪的插入内容中继续输入），关联线程的元数据也会更新，以保持同步。
 
-This means users can review changes through either the suggestion UI or the comments panel — both stay consistent.
+这意味着用户既可以通过建议界面，也可以通过评论面板审阅更改 — 两者始终保持一致。
 
-## Code block compatibility
+## 代码块兼容性
 
-By default, Tiptap code blocks do not allow marks, which prevents suggestion marks from being applied inside code content. The extension exports a helper to work around this:
+默认情况下，Tiptap 代码块不允许使用标记，因此无法在代码内容中应用建议标记。扩展提供了一个辅助函数来解决此问题：
 
 ```js
 import { CodeBlock } from '@tiptap/extension-code-block'
@@ -314,4 +313,4 @@ const editor = new Editor({
 })
 ```
 
-This also works with `CodeBlockLowlight` or any other code block extension.
+此方法同样适用于 `CodeBlockLowlight` 或任何其他代码块扩展。
