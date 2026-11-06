@@ -1,42 +1,42 @@
 ---
-title: Logger
+title: 日志记录器
 meta:
-  title: Logger | Hocuspocus Docs
+  title: 日志记录器 | Hocuspocus 文档
   category: Hocuspocus
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@hocuspocus/extension-logger.svg?label=version
     url: https://www.npmjs.com/package/@hocuspocus/extension-logger
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@hocuspocus/extension-logger.svg
     url: https://npmcharts.com/compare/@hocuspocus/extension-logger?minimal=true
-    label: Downloads
+    label: 下载量
   - type: image
     src: https://img.shields.io/npm/l/@hocuspocus/extension-logger.svg
     url: https://www.npmjs.com/package/@hocuspocus/extension-logger
-    label: License
+    label: 许可证
   - type: image
     src: https://img.shields.io/badge/chat-on%20discord-7289da.svg?sanitize=true
     url: https://discord.gg/WtJ49jGshW
-    label: Chat
+    label: 聊天
 ---
 
-Hocuspocus doesn’t log anything. Thanks to this simple extension it will.
+Hocuspocus 本身不会记录任何日志。借助这个简单的扩展，它就可以记录日志了。
 
-## Installation
+## 安装
 
-Install the Logger package with:
+使用以下命令安装 Logger 包：
 
 ```bash
 npm install @hocuspocus/extension-logger
 ```
 
-## Configuration
+## 配置
 
-**Instance name**
+**实例名称**
 
-You can prepend all logging messages with a configured string.
+你可以为所有日志消息添加一个配置好的字符串前缀。
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -50,9 +50,9 @@ const server = new Server({
 server.listen();
 ```
 
-**Disable messages**
+**禁用消息**
 
-You can disable logging for specific messages.
+你可以禁用特定消息的日志记录。
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -77,9 +77,9 @@ const server = new Server({
 server.listen();
 ```
 
-**Custom logger**
+**自定义日志记录器**
 
-You can even pass a custom function to log messages.
+你甚至可以传入自定义函数来记录日志消息。
 
 ```js
 import { Server } from "@hocuspocus/server";
