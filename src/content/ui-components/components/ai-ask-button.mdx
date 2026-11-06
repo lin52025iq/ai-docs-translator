@@ -1,12 +1,12 @@
 ---
-title: AI Ask Button
+title: AI 提问按钮
 meta:
-  title: AI Ask Button | Tiptap UI Components
-  description: AI-powered button to trigger intelligent content generation and editing on selected text. More in the docs.
-  category: UI Components
+  title: AI 提问按钮 | Tiptap UI 组件
+  description: 由 AI 驱动的按钮，可对选中的文本触发智能内容生成和编辑。更多信息请参阅文档。
+  category: UI 组件
 component:
-  name: AI Ask Button
-  description: Add a button that triggers AI-powered content generation and editing for selected text.
+  name: AI 提问按钮
+  description: 添加一个按钮，对选中的文本触发由 AI 驱动的内容生成和编辑。
   type: component
   isFree: false
   isCloud: true
@@ -19,28 +19,27 @@ tags:
 
 import { Callout } from '@/components/ui/Callout'
 
-A fully accessible AI-powered button for Tiptap editors. Trigger intelligent content generation and editing on selected text with keyboard shortcut support and flexible customization options.
+这是一款完全无障碍、由 AI 驱动的 Tiptap 编辑器按钮。它支持键盘快捷键和灵活的自定义选项，可对选中的文本触发智能内容生成和编辑。
 
-<Callout title="Integration" variant="info">
-  The AI Ask Button require `ai-menu` and `ui-state-extension` to be installed in your Tiptap
-  editor. To see demo, Navigate to [Ai menu](/ui-components/components/ai-menu).
+<Callout title="集成" variant="info">
+  AI 提问按钮需要在 Tiptap 编辑器中安装 `ai-menu` 和 `ui-state-extension`。查看演示，请前往 [AI 菜单](/ui-components/components/ai-menu)。
 </Callout>
 
-## Installation
+## 安装
 
-Add the component via the Tiptap CLI:
+通过 Tiptap CLI 添加此组件：
 
 ```bash
 npx @tiptap/cli@latest add ai-ask-button
 ```
 
-## Components
+## 组件
 
 ### `<AiAskButton />`
 
-A prebuilt React component that triggers AI assistance for selected content.
+一个预构建的 React 组件，可为选中的内容触发 AI 辅助。
 
-#### Usage
+#### 用法
 
 ```tsx
 import { EditorContent, EditorContext, useEditor } from '@tiptap/react'
@@ -93,23 +92,23 @@ export default function MyEditor() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type             | Default     | Description                                         |
-| --------------------- | ---------------- | ----------- | --------------------------------------------------- |
-| `editor`              | `Editor \| null` | `undefined` | The Tiptap editor instance                          |
-| `text`                | `string`         | `undefined` | Optional text label for the button                  |
-| `hideWhenUnavailable` | `boolean`        | `false`     | Hides the button when AI features are not available |
-| `onAiAsked`           | `() => void`     | `undefined` | Callback fired after AI assistance is triggered     |
-| `showShortcut`        | `boolean`        | `false`     | Shows a keyboard shortcut badge (Cmd/Ctrl + J)      |
+| 名称                  | 类型             | 默认值      | 说明                                         |
+| --------------------- | ---------------- | ----------- | -------------------------------------------- |
+| `editor`              | `Editor \| null` | `undefined` | Tiptap 编辑器实例                            |
+| `text`                | `string`         | `undefined` | 按钮的可选文本标签                           |
+| `hideWhenUnavailable` | `boolean`        | `false`     | AI 功能不可用时隐藏按钮                      |
+| `onAiAsked`           | `() => void`     | `undefined` | 触发 AI 辅助后调用的回调                     |
+| `showShortcut`        | `boolean`        | `false`     | 显示键盘快捷键徽标（Cmd/Ctrl + J）            |
 
 ## Hooks
 
 ### `useAiAsk()`
 
-A custom hook to build your own AI ask button with full control over rendering and behavior.
+一个自定义 Hook，可完全掌控渲染方式和行为，自行构建 AI 提问按钮。
 
-#### Usage
+#### 用法
 
 ```tsx
 import { useAiAsk } from '@/components/tiptap-ui/ai-ask-button'
@@ -137,30 +136,30 @@ function MyAiAskButton() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Name                  | Type             | Default     | Description                                     |
-| --------------------- | ---------------- | ----------- | ----------------------------------------------- |
-| `editor`              | `Editor \| null` | `undefined` | The Tiptap editor instance                      |
-| `hideWhenUnavailable` | `boolean`        | `false`     | Hides the button if AI features are unavailable |
-| `onAiAsked`           | `() => void`     | `undefined` | Callback fired after triggering AI assistance   |
+| 名称                  | 类型             | 默认值      | 说明                                          |
+| --------------------- | ---------------- | ----------- | --------------------------------------------- |
+| `editor`              | `Editor \| null` | `undefined` | Tiptap 编辑器实例                             |
+| `hideWhenUnavailable` | `boolean`        | `false`     | AI 功能不可用时隐藏按钮                       |
+| `onAiAsked`           | `() => void`     | `undefined` | 触发 AI 辅助后调用的回调                      |
 
-#### Return Values
+#### 返回值
 
-| Name           | Type            | Description                                 |
-| -------------- | --------------- | ------------------------------------------- |
-| `isVisible`    | `boolean`       | Whether the button should be rendered       |
-| `canAiAsk`     | `boolean`       | If AI assistance can be triggered currently |
-| `handleAiAsk`  | `() => boolean` | Function to trigger AI assistance           |
-| `label`        | `string`        | Accessible label text for the button        |
-| `shortcutKeys` | `string`        | Keyboard shortcut (Cmd/Ctrl + J)            |
-| `Icon`         | `React.FC`      | Icon component for the AI ask button        |
+| 名称           | 类型            | 说明                                  |
+| -------------- | --------------- | ------------------------------------- |
+| `isVisible`    | `boolean`       | 是否应渲染此按钮                      |
+| `canAiAsk`     | `boolean`       | 当前是否可以触发 AI 辅助              |
+| `handleAiAsk`  | `() => boolean` | 触发 AI 辅助的函数                    |
+| `label`        | `string`        | 按钮的无障碍标签文本                  |
+| `shortcutKeys` | `string`        | 键盘快捷键（Cmd/Ctrl + J）            |
+| `Icon`         | `React.FC`      | AI 提问按钮的图标组件                 |
 
-## Utilities
+## 工具函数
 
 ### `canPerformAiAsk(editor)`
 
-Checks if AI assistance can be triggered in the current editor state.
+检查当前编辑器状态下是否可以触发 AI 辅助。
 
 ```tsx
 import { canPerformAiAsk } from '@/components/tiptap-ui/ai-ask-button'
@@ -171,19 +170,19 @@ if (canTriggerAi) {
 }
 ```
 
-#### Parameters
+#### 参数
 
-| Name     | Type             | Description                |
-| -------- | ---------------- | -------------------------- |
-| `editor` | `Editor \| null` | The Tiptap editor instance |
+| 名称     | 类型             | 说明             |
+| -------- | ---------------- | ---------------- |
+| `editor` | `Editor \| null` | Tiptap 编辑器实例 |
 
-#### Returns
+#### 返回值
 
-`boolean` - Whether AI assistance can be performed on the current selection.
+`boolean` - 是否可以对当前选区执行 AI 辅助。
 
 ### `shouldShowButton(props)`
 
-Determines if the AI ask button should be visible based on editor state and configuration.
+根据编辑器状态和配置，判断是否应显示 AI 提问按钮。
 
 ```tsx
 import { shouldShowButton } from '@/components/tiptap-ui/ai-ask-button'
@@ -194,60 +193,60 @@ const isVisible = shouldShowButton({
 })
 ```
 
-#### Parameters
+#### 参数
 
-| Name                        | Type             | Description                                      |
-| --------------------------- | ---------------- | ------------------------------------------------ |
-| `props.editor`              | `Editor \| null` | The Tiptap editor instance                       |
-| `props.hideWhenUnavailable` | `boolean`        | Whether to hide when AI features are unavailable |
+| 名称                        | 类型             | 说明                       |
+| --------------------------- | ---------------- | -------------------------- |
+| `props.editor`              | `Editor \| null` | Tiptap 编辑器实例          |
+| `props.hideWhenUnavailable` | `boolean`        | AI 功能不可用时是否隐藏按钮 |
 
-#### Returns
+#### 返回值
 
-`boolean` - Whether the button should be shown.
+`boolean` - 是否应显示此按钮。
 
-## Behavior and Constraints
+## 行为和限制
 
-### Selection Requirements
+### 选区要求
 
-The AI Ask Button works with text selections and has specific requirements:
+AI 提问按钮适用于文本选区，并有以下要求：
 
-- **Text Selection Required**: The button is only active when text is selected
-- **Supported Content**: Works with paragraphs, headings, lists, and most text content
-- **Excluded Content Types**:
-  - Images and image uploads
-  - Code blocks
-  - Horizontal rules
-  - Empty selections
+- **必须选择文本**：仅当选中了文本时，按钮才会启用
+- **支持的内容**：适用于段落、标题、列表以及大多数文本内容
+- **不支持的内容类型**：
+  - 图片和图片上传内容
+  - 代码块
+  - 水平分隔线
+  - 空选区
 
-## Keyboard Shortcuts
+## 键盘快捷键
 
-The AI ask button supports the following keyboard shortcut:
+AI 提问按钮支持以下键盘快捷键：
 
-- **Cmd/Ctrl + J**: Trigger AI assistance for selected content
+- **Cmd/Ctrl + J**：为选中的内容触发 AI 辅助
 
-The shortcut is automatically registered when using either the `<AiAskButton />` component or the `useAiAsk()` hook, and is only active when:
+使用 `<AiAskButton />` 组件或 `useAiAsk()` Hook 时，都会自动注册此快捷键。仅在以下条件全部满足时，快捷键才会生效：
 
-- The button is visible
-- AI assistance can be performed on the current selection
-- The editor is focused and editable
+- 按钮可见
+- 可以对当前选区执行 AI 辅助
+- 编辑器处于聚焦且可编辑状态
 
-## Requirements
+## 要求
 
-### Dependencies
+### 依赖项
 
-- `@tiptap/react` - Core Tiptap React integration
-- `@tiptap-pro/extension-ai` - AI extension for content generation
-- `react-hotkeys-hook` - Keyboard shortcut management
+- `@tiptap/react` - Tiptap React 核心集成
+- `@tiptap-pro/extension-ai` - 用于生成内容的 AI 扩展
+- `react-hotkeys-hook` - 键盘快捷键管理
 
-### Extensions
+### 扩展
 
-- `ui-state-extension` - Manages UI state for AI operations (recommended)
-- One of: `@tiptap-pro/extension-ai` or custom `aiGeneration` extension
+- `ui-state-extension` - 管理 AI 操作的 UI 状态（推荐）
+- 以下二者之一：`@tiptap-pro/extension-ai` 或自定义 `aiGeneration` 扩展
 
-### Referenced Components
+### 引用的组件
 
-- `use-tiptap-editor` (hook)
-- `button` (primitive)
-- `badge` (primitive)
-- `tiptap-utils` (lib)
-- `ai-sparkles-icon` (icon)
+- `use-tiptap-editor`（Hook）
+- `button`（基础组件）
+- `badge`（基础组件）
+- `tiptap-utils`（库）
+- `ai-sparkles-icon`（图标）
