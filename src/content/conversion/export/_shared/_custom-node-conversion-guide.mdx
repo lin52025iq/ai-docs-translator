@@ -1,21 +1,21 @@
 import { Callout } from '@/components/ui/Callout'
 
-<Callout title="Custom node conventions" variant="warning">
-  Custom node converters must adhere to the underlying DOCX generation library's requirements. In practice, a custom converter function for DOCX should return one of the allowed DOCX elements for that node: a `Paragraph` class (or an array of `Paragraph` classes), a `Table` class, a `TextRun` class, an `ExternalHyperlink` class, or `null` if the node should be skipped in the output.
+<Callout title="自定义节点约定" variant="warning">
+  自定义节点转换器必须遵循底层 DOCX 生成库的要求。实际上，DOCX 自定义转换函数应返回该节点允许的 DOCX 元素之一：`Paragraph` 类（或 `Paragraph` 类数组）、`Table` 类、`TextRun` 类、`ExternalHyperlink` 类；如果应在输出中跳过该节点，则返回 `null`。
 </Callout>
 
-### Define the custom node extension
+### 定义自定义节点扩展
 
-For the sake of the example, suppose your editor has a custom node type `hintbox` (a callout-styled box). You can define how it should appear in the exported document.
+举例来说，假设你的编辑器有一个自定义节点类型 `hintbox`（一种采用提示框样式的框）。你可以定义它在导出文档中的显示方式。
 
-Here's how the `Hintbox` extension's custom node might look like:
+`Hintbox` 扩展的自定义节点可以这样编写：
 
 ```ts
 import { mergeAttributes, Node } from '@tiptap/core'
 
 export interface ParagraphOptions {
   /**
-   * The HTML attributes for a paragraph node.
+   * 段落节点的 HTML 属性。
    * @default {}
    * @example { class: 'foo' }
    */
@@ -26,12 +26,12 @@ declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     hintbox: {
       /**
-       * Set a hintbox
+       * 设置提示框
        * @example editor.commands.setHintbox()
        */
       setHintbox: () => ReturnType
       /**
-       * Toggle a hintbox
+       * 切换提示框
        * @example editor.commands.toggleHintbox()
        */
       toggleHintbox: () => ReturnType
@@ -40,7 +40,7 @@ declare module '@tiptap/core' {
 }
 
 /**
- * This extension allows you to create hintboxes.
+ * 此扩展用于创建提示框。
  * @see https://www.tiptap.dev/api/nodes/paragraph
  */
 export const Hintbox = Node.create<ParagraphOptions>({
