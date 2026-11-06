@@ -1,0 +1,290 @@
+---
+title: DOCX 中的自定义页面布局
+tags:
+  - type: start
+  - type: beta
+  - type: version
+    label: v0.26.1
+meta:
+  title: DOCX 中的自定义页面布局 | Tiptap Conversion
+  description: 了解如何使用 Export 扩展自定义 DOCX（Word）页面和页边距尺寸。
+  category: Conversion
+---
+
+import { Callout } from '@/components/ui/Callout'
+import { CodeDemo } from '@/components/CodeDemo'
+import { Requirements, RequirementItem } from '@/components/Requirements'
+import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
+
+<EnterpriseCalloutAuto variant="docx" renderMode="sidebar" disableWaitlist />
+
+<Requirements>
+  <RequirementItem label="1. 开通试用或订阅">
+    在账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start
+    套餐](https://cloud.tiptap.dev/v2/billing)。
+  </RequirementItem>
+  <RequirementItem label="2. 从私有注册表安装">
+    若要安装此前端扩展，请按照[设置指南](/guides/pro-extensions)中的说明，通过身份验证访问 Tiptap 的私有 npm 注册表。
+  </RequirementItem>
+</Requirements>
+
+DOCX Export 扩展现已支持自定义页面尺寸和页边距，可帮助你创建布局精确、符合需求的文档。无论你需要 A5 页面、自定义纸张尺寸，还是特定的页边距设置，都可以直接在扩展中进行配置。
+
+<CodeDemo isPro path="/Extensions/ExportDocxCustomPageSize" />
+
+## 页面尺寸配置
+
+使用 `pageSize` 选项为导出的 DOCX 文件定义自定义页面尺寸。页面尺寸配置接受宽度和高度值，并支持多种计量单位。
+
+### 支持的单位
+
+所有页面尺寸和页边距测量值均支持以下通用单位：
+
+| 单位 | 说明           |
+| ---- | --------------------- |
+| `cm` | 厘米（默认） |
+| `in` | 英寸                |
+| `pt` | 磅                |
+| `pc` | 派卡                 |
+| `mm` | 毫米           |
+| `px` | 像素                |
+
+### 配置选项
+
+| 属性 | 类型                       | 说明                              | 默认值                |
+| -------- | -------------------------- | ---------------------------------------- | ---------------------- |
+| `width`  | `PositiveUniversalMeasure` | 页面宽度。必须为正数  | `"21.0cm"`（A4 宽度）  |
+| `height` | `PositiveUniversalMeasure` | 页面高度。必须为正数 | `"29.7cm"`（A4 高度） |
+
+<Callout title="PositiveUniversalMeasure">
+  `PositiveUniversalMeasure` 是一个表示带单位正长度的字符串，例如
+  `"21cm"`、`"8.5in"`、`"148mm"`、`"595pt"`、`"50pc"` 或 `"800px"`。支持的单位包括
+  厘米（`cm`）、毫米（`mm`）、英寸（`in`）、磅（`pt`）、派卡（`pc`）和像素
+  （`px`）。值必须大于零。如果提供的值没有单位，则默认使用厘米（`cm`）。
+</Callout>
+
+```js
+ExportDocx.configure({
+  onCompleteExport: (result) => {
+    // Handle the exported file
+  },
+  pageSize: {
+    width: '14.8cm', // A5 width
+    height: '21cm', // A5 height
+  },
+})
+```
+
+## 页边距配置
+
+`pageMargins` 选项允许你为文档页面的各个边设置自定义页边距。与页面尺寸不同，页边距在需要时可以使用负值。
+
+### 配置选项
+
+| 属性 | 类型                       | 说明                                                                                                                                | 默认值                 |
+| -------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------- |
+| `top`    | `UniversalMeasure`         | 页面上边距。<br />可以为负数。                                                                                              | `"1.0cm"`               |
+| `bottom` | `UniversalMeasure`         | 页面下边距。<br />可以为负数。                                                                                           | `"1.0cm"`               |
+| `left`   | `PositiveUniversalMeasure` | 页面左边距。必须为正数。                                                                                                 | `"1.0cm"`               |
+| `right`  | `PositiveUniversalMeasure` | 页面右边距。必须为正数。                                                                                                | `"1.0cm"`               |
+| `header` | `PositiveUniversalMeasure` | 从页面顶边到页眉顶边的距离。应小于 `top`，使页眉位于正文上方。          | Word 默认值 `"1.25cm"` |
+| `footer` | `PositiveUniversalMeasure` | 从页面底边到页脚底边的距离。应小于 `bottom`，使页脚位于正文下方。 | Word 默认值 `"1.25cm"` |
+
+<Callout title="UniversalMeasure">
+  `UniversalMeasure` 是一个表示带单位长度的字符串，例如 `"21cm"`、`"8.5in"`、
+  `"148mm"`、`"595pt"`、`"50pc"` 或 `"800px"`。支持的单位包括厘米（`cm`）、
+  毫米（`mm`）、英寸（`in`）、磅（`pt`）、派卡（`pc`）和像素（`px`）。**值可以为正数或负数**。如果提供的值没有单位，则默认使用厘米（`cm`）。
+</Callout>
+
+<Callout title="PositiveUniversalMeasure">
+  `PositiveUniversalMeasure` 是一个表示带单位正长度的字符串，例如
+  `"21cm"`、`"8.5in"`、`"148mm"`、`"595pt"`、`"50pc"` 或 `"800px"`。支持的单位包括
+  厘米（`cm`）、毫米（`mm`）、英寸（`in`）、磅（`pt`）、派卡（`pc`）和像素
+  （`px`）。值必须大于零。如果提供的值没有单位，则默认使用厘米（`cm`）。
+</Callout>
+
+```js
+ExportDocx.configure({
+  onCompleteExport: (result) => {
+    // Handle the exported file
+  },
+  pageMargins: {
+    top: '2cm',
+    bottom: '2cm',
+    left: '1.5cm',
+    right: '1.5cm',
+    // Distance from the page edge to the header/footer
+    header: '1cm',
+    footer: '1cm',
+  },
+})
+```
+
+### 页眉和页脚偏移量
+
+`pageMargins` 中的 `header` 和 `footer` 属性用于控制页眉和页脚分别与页面顶边和底边之间的距离。它们直接对应 Word“页面设置 → 布局”下的“页眉距顶端”和“页脚距底端”设置。
+
+若要让页眉显示在正文上方，`header` 应小于 `top`。`footer` 和 `bottom` 也应遵循同样的关系。如果未指定，Word 将使用默认值 `1.25cm`（约 `0.5in`）。
+
+```js
+ExportDocx.configure({
+  onCompleteExport: (result) => {
+    // Handle the exported file
+  },
+  pageMargins: {
+    top: '2.5cm',
+    bottom: '2.5cm',
+    left: '2cm',
+    right: '2cm',
+    // Header sits 1cm from the top of the page (above the 2.5cm top margin)
+    header: '1cm',
+    // Footer sits 1cm from the bottom of the page (below the 2.5cm bottom margin)
+    footer: '1cm',
+  },
+})
+```
+
+<Callout title="从 Pages 扩展自动推导" variant="hint">
+  当 [Pages 扩展](/editor/extensions/functionality/pages)与
+  `ExportDocx` 一起配置时，`header` 和 `footer` 偏移量会自动根据 Pages 存储值
+  `headerTopMargin` 和 `footerBottomMargin` 推导。你传入 `pageMargins` 的值始终优先；显式设置 `header` 或 `footer` 可覆盖自动推导的值。
+</Callout>
+
+## 页面背景颜色
+
+使用 `pageColor` 选项为导出文档的每一页设置背景颜色。
+
+### 支持的格式
+
+| 格式        | 示例                                                |
+| ------------- | ------------------------------------------------------ |
+| 十六进制（6 位） | `"#ff0000"`、`"FF0000"`                                |
+| 十六进制（3 位） | `"#f00"`                                               |
+| `rgb()`       | `"rgb(255, 0, 0)"`                                     |
+| `rgba()`      | `"rgba(255, 0, 0, 0.5)"`                               |
+| 颜色名称   | 常见的 CSS 颜色名称（`"red"`、`"blue"`、`"green"` 等） |
+
+传入 `"transparent"`，或不设置 `pageColor`，即可不设置页面颜色。
+
+```js
+ExportDocx.configure({
+  onCompleteExport: (result) => {
+    // Handle the exported file
+  },
+  pageColor: '#fff8dc', // cornsilk-style cream page
+})
+```
+
+<Callout title="Word 默认不会打印页面背景" variant="hint">
+  在 Word 中，页面背景会显示在屏幕上，但**打印时或导出为 PDF 时不会包含背景**。若要在打印输出或 PDF 导出中显示背景，读者必须在 Word 中启用**文件 → 选项 → 显示 → 打印背景色和图像**。
+</Callout>
+
+## 完整示例
+
+下面是一个完整示例，展示如何使用 DOCX Export 扩展配置自定义页面布局：
+
+```js
+import { ExportDocx } from '@tiptap-pro/extension-export-docx'
+
+const editor = new Editor({
+  extensions: [
+    // Other extensions...
+    ExportDocx.configure({
+      onCompleteExport: (result) => {
+        // Create and download the DOCX file
+        const blob = new Blob([result], {
+          type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+
+        a.href = url
+        a.download = 'custom-layout.docx'
+        a.click()
+        URL.revokeObjectURL(url)
+      },
+      // A5 page size
+      pageSize: {
+        width: '14.8cm',
+        height: '21cm',
+      },
+      // Custom margins
+      pageMargins: {
+        top: '2cm',
+        bottom: '2cm',
+        left: '2cm',
+        right: '2cm',
+      },
+      // Page background color
+      pageColor: '#fff8dc',
+    }),
+    // Other extensions...
+  ],
+})
+```
+
+## 常见页面尺寸
+
+以下是一些常见页面尺寸，可供参考：
+
+| 格式      | 宽度    | 高度   |
+| ----------- | -------- | -------- |
+| **A4**      | `21.0cm` | `29.7cm` |
+| **A5**      | `14.8cm` | `21.0cm` |
+| **Letter（信纸）**  | `8.5in`  | `11in`   |
+| **Legal（法律专用纸）**  | `8.5in`  | `14in`   |
+| **Tabloid（小报纸）** | `11in`   | `17in`   |
+
+## 使用不同计量单位
+
+你可以根据偏好混合使用不同单位：
+
+```js
+ExportDocx.configure({
+  onCompleteExport: (result) => {
+    // Handle the exported file
+  },
+  // US Letter size in inches
+  pageSize: {
+    width: '8.5in',
+    height: '11in',
+  },
+  // Margins in different units
+  pageMargins: {
+    top: '0.75in', // Inches
+    bottom: '72pt', // Points (1 inch = 72 points)
+    left: '2cm', // Centimeters
+    right: '20mm', // Millimeters
+  },
+})
+```
+
+<Callout title="单位一致性" variant="hint">
+  虽然可以混用不同单位，但通常建议在整个配置中使用一致的单位，以便于维护和理解。
+</Callout>
+
+## 运行时配置
+
+直接调用导出命令时，也可以覆盖页面布局设置：
+
+```js
+// Export with different page layout settings
+editor.commands.exportDocx({
+  onCompleteExport: (result) => {
+    // Handle the exported file
+  },
+  pageSize: {
+    width: '11in', // Tabloid width
+    height: '17in', // Tabloid height
+  },
+  pageMargins: {
+    top: '0.5in',
+    bottom: '0.5in',
+    left: '0.75in',
+    right: '0.75in',
+  },
+  pageColor: 'gray', // overrides the configured page color for this export
+})
+```
+
+这样一来，无需重新配置整个扩展，就能针对不同使用场景创建不同的导出配置。
