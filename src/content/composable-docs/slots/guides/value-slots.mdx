@@ -1,18 +1,18 @@
 ---
-title: Value slots
+title: 值插槽
 meta:
-  description: Use built-in form controls and custom NodeViews to edit JSON values stored in slot attributes.
+  description: 使用内置表单控件和自定义 NodeView，编辑存储在插槽属性中的 JSON 值。
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-Value slots let you store any JSON value inside a slot, beyond Tiptap content. Display these values as form fields such as text inputs and checkboxes, or build your own custom input.
+值插槽可让你在插槽中存储任意 JSON 值，而不仅限于 Tiptap 内容。你可以将这些值显示为文本输入框、复选框等表单字段，也可以构建自己的自定义输入控件。
 
 <CodeDemo isPro path="/Examples/SlotValues" />
 
-## Insert a value slot
+## 插入值插槽
 
-When creating a slot, pass `mode: 'value'` to create a value slot:
+创建插槽时，传入 `mode: 'value'` 即可创建值插槽：
 
 ```ts
 editor.commands.insertSlot({
@@ -34,29 +34,29 @@ editor.commands.insertSlot({
 })
 ```
 
-Use `kind: 'block'` to put the control in its own block. Without `mode: 'value'`, insertion creates an ordinary content slot.
+使用 `kind: 'block'` 可将控件放在独立的块中。如果不传入 `mode: 'value'`，插入的将是普通内容插槽。
 
-Values accept any finite JSON: `null`, strings, booleans, numbers, arrays, or objects. Use [validation](/composable-docs/slots/guides/validate-submission) to enforce your application's requirements.
+值可以是任意有限的 JSON：`null`、字符串、布尔值、数字、数组或对象。使用[验证](/composable-docs/slots/guides/validate-submission)来强制满足应用的要求。
 
-## Built-in inputs
+## 内置输入控件
 
-The Slot extension comes with a set of built-in input types. You can also create your own custom inputs.
+Slot 扩展内置了一组输入类型。你也可以创建自己的自定义输入控件。
 
-Set `config.input.type` to select a control. Omit `input` for a text input.
+设置 `config.input.type` 来选择控件。不传入 `input` 时，默认使用文本输入框。
 
-| Type       | Control               | Stored value                     | Options type (`config.input.options`) |
-| ---------- | --------------------- | -------------------------------- | ------------------------------------- |
-| `text`     | Native text input     | `string`                         | Not used                              |
-| `textarea` | Multiline text input  | `string`                         | Not used                              |
-| `number`   | Native number input   | `string`, including `''`         | Not used                              |
-| `date`     | Native date input     | `string`, such as `'2026-10-14'` | Not used                              |
-| `checkbox` | Native checkbox       | `boolean`                        | Not used                              |
-| `select`   | Single select         | `string` option value            | `{ value: string; label: string }[]`  |
-| `radio`    | List of radio buttons | `string` option value            | `{ value: string; label: string }[]`  |
+| 类型       | 控件               | 存储的值                         | 选项类型（`config.input.options`）         |
+| ---------- | ------------------ | -------------------------------- | ----------------------------------------- |
+| `text`     | 原生文本输入框     | `string`                         | 不使用                                    |
+| `textarea` | 多行文本输入框     | `string`                         | 不使用                                    |
+| `number`   | 原生数字输入框     | `string`，包括 `''`              | 不使用                                    |
+| `date`     | 原生日期输入框     | `string`，例如 `'2026-10-14'`    | 不使用                                    |
+| `checkbox` | 原生复选框         | `boolean`                        | 不使用                                    |
+| `select`   | 单选下拉框         | `string` 选项值                  | `{ value: string; label: string }[]`      |
+| `radio`    | 单选按钮列表       | `string` 选项值                  | `{ value: string; label: string }[]`      |
 
-`SlotInput.options` is optional. Only select and radio controls use it; they store the selected option's `value`, not its label.
+`SlotInput.options` 是可选项。只有 select 和 radio 控件会使用它；它们存储的是所选选项的 `value`，而不是 `label`。
 
-For a radio group, set `config.input` to:
+对于单选按钮组，将 `config.input` 设置为：
 
 ```ts
 {
@@ -68,20 +68,20 @@ For a radio group, set `config.input` to:
 }
 ```
 
-Each slot is an independent radio group. For multi-select, use a custom NodeView like the demo's chip picker.
+每个插槽都是独立的单选按钮组。如需多选，请使用自定义 NodeView，例如演示中的标签选择器。
 
-Number inputs store values as strings because browsers may return `''` for an incomplete number.
+数字输入控件将值存储为字符串，因为浏览器可能会在数字输入不完整时返回 `''`。
 
-## Read and update values
+## 读取和更新值
 
 ```ts
 import { getSlot } from '@tiptap-pro/extension-slot'
 
 editor.commands.setSlotValue({ id: 'priority', value: 'urgent' })
-// Clearing a slot sets its value to null.
+// 清空插槽会将其值设为 null。
 editor.commands.clearSlot({ id: 'priority' })
 
-// Update multiple slot values in an atomic batch.
+// 以原子批次更新多个插槽值。
 editor.commands.setSlotValues({
   values: [
     { id: 'priority', value: 'urgent' },
@@ -93,16 +93,16 @@ const slot = getSlot({ snapshot: editor.storage.slot.snapshot, id: 'priority' })
 if (slot?.mode === 'value') console.log(slot.value)
 ```
 
-Slots are compatible with collaboration. When collaboration is enabled, updates to slots sync in real time with other users of the collaborative document.
+插槽支持协作。启用协作后，插槽的更新会实时同步给协作文档的其他用户。
 
-## Mix custom and default NodeViews
+## 混用自定义和默认 NodeView
 
-Follow a complete tutorial to build a custom toggle button, including its UI:
+按照完整教程构建自定义切换按钮及其界面：
 
-- [Create a custom input with vanilla JavaScript](#create-a-custom-input-with-vanilla-javascript)
-- [Create a custom input with React](#create-a-custom-input-with-react)
+- [使用原生 JavaScript 创建自定义输入控件](#create-a-custom-input-with-vanilla-javascript)
+- [使用 React 创建自定义输入控件](#create-a-custom-input-with-react)
 
-Choose a renderer inside `addNodeView()` and keep built-in controls as the fallback:
+在 `addNodeView()` 中选择渲染器，并将内置控件作为回退选项：
 
 ```ts
 import { Slot, InlineValueSlot, createDefaultSlotValueView } from '@tiptap-pro/extension-slot'
@@ -121,32 +121,32 @@ const CustomValueSlot = InlineValueSlot.extend({
 Slot.configure({ inlineValueSlot: CustomValueSlot })
 ```
 
-`createRatingView` is application code. The demo implements it with native buttons. Use `BlockValueSlot` and the `blockValueSlot` option for block views. Preserve the original node name and leaf schema. Do not provide a `contentDOM` or `NodeViewContent`.
+`createRatingView` 是应用代码。演示中使用原生按钮实现。对于块级视图，请使用 `BlockValueSlot` 和 `blockValueSlot` 选项。保留原始节点名称和叶节点 schema。不要提供 `contentDOM` 或 `NodeViewContent`。
 
-Inside a custom view, `createSlotValueController({ editor, getPos })` provides:
+在自定义视图中，`createSlotValueController({ editor, getPos })` 提供：
 
-- `getValue()` and `setValue(value)` to read and write the answer.
-- `getState()` for a stable snapshot of `value`, `config`, `editable`, and `available`.
-- `subscribe(listener)` to update the UI after document and permission changes.
-- `focus()` to select the slot when its input receives focus.
-- `destroy()` to release subscriptions when a vanilla view is removed.
+- `getValue()` 和 `setValue(value)`，用于读取和写入答案。
+- `getState()`，用于获取 `value`、`config`、`editable` 和 `available` 的稳定快照。
+- `subscribe(listener)`，用于在文档和权限发生变化后更新界面。
+- `focus()`，在输入控件获得焦点时选中插槽。
+- `destroy()`，在移除原生视图时释放订阅。
 
-Custom views should:
+自定义视图应当：
 
-- Disable controls when `editable` is false.
-- Render the current state after `setValue` returns `false` (a refused write).
-- Keep input events inside the control and handle IME composition for text inputs.
-- Release subscriptions when the view is removed.
+- 在 `editable` 为 `false` 时禁用控件。
+- 当 `setValue` 返回 `false`（写入被拒绝）时，渲染当前状态。
+- 将输入事件限制在控件内，并处理文本输入的 IME 组合输入。
+- 在移除视图时释放订阅。
 
-If changing configuration selects a different renderer, return `false` from your NodeView's `update` method so Tiptap runs `addNodeView`'s factory again. The default view does this when the input type changes.
+如果更改配置会选择不同的渲染器，请在 NodeView 的 `update` 方法中返回 `false`，以便 Tiptap 再次运行 `addNodeView` 工厂函数。输入类型发生变化时，默认视图会这样处理。
 
-## Create a custom input with vanilla JavaScript
+## 使用原生 JavaScript 创建自定义输入控件
 
-Build a button that switches between **On** and **Off** and stores a boolean. Native buttons provide keyboard support with Enter and Space.
+构建一个在 **On** 和 **Off** 之间切换并存储布尔值的按钮。原生按钮支持使用 Enter 和空格键操作。
 
-### 1. Create the UI
+### 1. 创建界面
 
-Create `toggle-slot.js`. Use the value controller for reads, guarded writes, and permission changes:
+创建 `toggle-slot.js`。使用值控制器读取值、执行受保护的写入，并响应权限变化：
 
 ```js
 import {
@@ -174,7 +174,7 @@ function createToggleView({ editor, getPos, node }) {
   button.addEventListener('focus', () => slot.focus())
   button.addEventListener('click', () => {
     slot.setValue(slot.getValue() !== true)
-    render() // Also restore the current state if the write was refused.
+    render() // 写入被拒绝时，也会恢复当前状态。
   })
   const unsubscribe = slot.subscribe(render)
   render()
@@ -194,11 +194,11 @@ function createToggleView({ editor, getPos, node }) {
 }
 ```
 
-`subscribe` refreshes the button when values or permissions change. It does not call `render` immediately, so call it once yourself. `focus()` selects the slot; the browser keeps focus on the button.
+`subscribe` 会在值或权限发生变化时更新按钮。它不会立即调用 `render`，因此需要自行调用一次。`focus()` 会选中插槽；浏览器会让按钮保持焦点。
 
-### 2. Register the custom renderer
+### 2. 注册自定义渲染器
 
-Add this to the same file. Handle `toggle` inputs and keep the default renderer for built-in inputs:
+将以下内容添加到同一文件中。为 `toggle` 输入使用自定义渲染器，内置输入则继续使用默认渲染器：
 
 ```js
 export const ToggleSlot = BlockValueSlot.extend({
@@ -211,9 +211,9 @@ export const ToggleSlot = BlockValueSlot.extend({
 })
 ```
 
-The view's `update` returns `false` when the input type changes so Tiptap can choose another renderer. Keep the leaf schema: do not add `contentDOM`.
+输入类型改变时，视图的 `update` 会返回 `false`，以便 Tiptap 选择其他渲染器。保留叶节点 schema：不要添加 `contentDOM`。
 
-### 3. Configure the editor and insert a slot
+### 3. 配置编辑器并插入插槽
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -236,19 +236,19 @@ editor.commands.insertSlot({
 })
 ```
 
-Mount the editor in `<div id="editor"></div>`. Click the button or focus it and press Space: `attrs.value` switches between `true` and `false`. Undo restores the previous answer. With [Content Protection](/composable-docs/slots/guides/fill-only), a locked slot disables the button automatically.
+将编辑器挂载到 `<div id="editor"></div>` 中。点击按钮，或聚焦按钮后按空格键：`attrs.value` 会在 `true` 和 `false` 之间切换。撤销会还原上一个答案。启用[内容保护](/composable-docs/slots/guides/fill-only)后，锁定的插槽会自动禁用按钮。
 
-`toggle` is your application's input type, not a built-in. The stored value remains ordinary JSON, and exported HTML renders a static answer.
+`toggle` 是应用自定义的输入类型，不是内置类型。存储的值仍是普通 JSON，导出的 HTML 会渲染静态答案。
 
-## Create a custom input with React
+## 使用 React 创建自定义输入控件
 
-Build the same boolean toggle as the [JavaScript tutorial](#create-a-custom-input-with-vanilla-javascript), using a React component. The button supports Enter and Space without custom keyboard handlers.
+使用 React 组件构建与 [JavaScript 教程](#create-a-custom-input-with-vanilla-javascript)相同的布尔切换控件。按钮无需自定义键盘处理程序即可支持 Enter 和空格键。
 
-Use `ReactNodeViewRenderer` from `@tiptap/react` to render the component. The slot package itself has no React or Vue dependency.
+使用 `@tiptap/react` 中的 `ReactNodeViewRenderer` 渲染组件。插槽包本身不依赖 React 或 Vue。
 
-### 1. Create the component
+### 1. 创建组件
 
-Create `ToggleSlot.jsx`. Connect the controller with `useSyncExternalStore` so document and permission changes refresh the UI:
+创建 `ToggleSlot.jsx`。使用 `useSyncExternalStore` 连接控制器，以便文档和权限发生变化时更新界面：
 
 ```jsx
 import { useMemo, useSyncExternalStore } from 'react'
@@ -284,15 +284,15 @@ function ToggleView({ editor, getPos }) {
 }
 ```
 
-- `setValue` uses the same guarded commands as built-in controls.
-- The button renders controller state, so refused writes leave its answer unchanged.
-- React unsubscribes on unmount. The controller releases its editor listener when its last subscriber leaves, including during React Strict Mode cleanup.
+- `setValue` 使用与内置控件相同的受保护命令。
+- 按钮根据控制器状态渲染，因此写入被拒绝时，显示的答案不会改变。
+- React 会在组件卸载时取消订阅。当最后一个订阅者离开时，控制器会释放其编辑器监听器，包括 React Strict Mode 清理期间的情况。
 
-Do not add `NodeViewContent`: a value slot has no editable children.
+不要添加 `NodeViewContent`：值插槽没有可编辑的子内容。
 
-### 2. Register the React renderer
+### 2. 注册 React 渲染器
 
-Add this to `ToggleSlot.jsx`. Use React only for your `toggle` input and preserve built-in controls:
+将以下内容添加到 `ToggleSlot.jsx`。仅为 `toggle` 输入使用 React，并保留内置控件：
 
 ```jsx
 export const ToggleSlot = BlockValueSlot.extend({
@@ -313,9 +313,9 @@ export const ToggleSlot = BlockValueSlot.extend({
 })
 ```
 
-Returning `false` when the input type changes lets Tiptap choose another renderer.
+输入类型改变时返回 `false`，Tiptap 就可以选择其他渲染器。
 
-### 3. Mount the editor and insert a slot
+### 3. 挂载编辑器并插入插槽
 
 ```jsx
 import { EditorContent, useEditor } from '@tiptap/react'
@@ -353,15 +353,15 @@ export function NotificationEditor() {
 }
 ```
 
-Click **Add notifications toggle** once, then activate the toggle with the mouse, Enter, or Space. Its `attrs.value` switches between `true` and `false`; Undo restores the previous answer. Use a unique slot ID when inserting additional toggles.
+点击一次 **Add notifications toggle**，然后用鼠标、Enter 或空格键操作切换控件。其 `attrs.value` 会在 `true` 和 `false` 之间切换；撤销会还原上一个答案。插入其他切换控件时，请使用唯一的插槽 ID。
 
-Add [Content Protection](/composable-docs/slots/guides/fill-only) to restrict editing. The component follows the controller's `editable` state automatically.
+添加[内容保护](/composable-docs/slots/guides/fill-only)以限制编辑。该组件会自动遵循控制器的 `editable` 状态。
 
-**Using Vue?** Use `VueNodeViewRenderer` instead. Create the controller in setup, copy `getState()` into a `shallowRef`, update that ref from `subscribe`, and unsubscribe and destroy the controller in `onBeforeUnmount`. Render a `NodeViewWrapper` without `NodeViewContent`.
+**使用 Vue？** 改用 `VueNodeViewRenderer`。在 setup 中创建控制器，将 `getState()` 的结果复制到 `shallowRef`，通过 `subscribe` 更新该 ref，并在 `onBeforeUnmount` 中取消订阅和销毁控制器。渲染不含 `NodeViewContent` 的 `NodeViewWrapper`。
 
-## Validation
+## 验证
 
-Validation checks answers without preventing users from drafting invalid values. For example, require a name and check it before submission:
+验证会检查答案，但不会阻止用户草拟无效值。例如，可以将姓名设为必填项，并在提交前进行检查：
 
 ```ts
 import { isSlotValidationCurrent, validateEditorSlots } from '@tiptap-pro/extension-slot'
@@ -374,36 +374,36 @@ editor.commands.insertSlot({
   config: { label: 'Your name', required: true, input: { type: 'text' } },
 })
 
-// Run in your application's submit handler.
+// 在应用的提交处理程序中运行。
 const result = await validateEditorSlots({ editor })
 if (isSlotValidationCurrent({ editor, result })) {
   if (result.valid) {
-    save(editor.getJSON()) // Your application's persistence function.
+    save(editor.getJSON()) // 应用自己的持久化函数。
   } else {
-    console.log(result.issues) // Display these beside the affected inputs.
+    console.log(result.issues) // 在相关输入控件旁显示这些问题。
   }
 }
 ```
 
-- An empty or whitespace-only name fails validation, but users can still draft it.
-- `required` treats `null`, blank strings, and empty arrays as empty. `false` and `0` count as answers; use a custom validator for a checkbox that must be checked.
-- Select and radio answers must match an option value. Content settings such as `allowedBlocks` and `defaultContent` do not apply to value slots.
+- 空姓名或仅包含空白字符的姓名无法通过验证，但用户仍可以草拟该值。
+- `required` 会将 `null`、空字符串和空数组视为空值。`false` 和 `0` 都算作已填写的答案；如果复选框必须处于勾选状态，请使用自定义验证器。
+- Select 和 radio 的答案必须与某个选项值匹配。`allowedBlocks` 和 `defaultContent` 等内容设置不适用于值插槽。
 
-See [Validate before submission](/composable-docs/slots/guides/validate-submission) for custom validators and cancelled runs.
+有关自定义验证器和已取消的验证，请参阅[提交前验证](/composable-docs/slots/guides/validate-submission)。
 
-## Content protection
+## 内容保护
 
-Use Content Protection to let users fill in answers while protecting the document's structure and slot configuration. After inserting the slots, allow editing only the `name` slot:
+使用内容保护，让用户填写答案，同时保护文档结构和插槽配置。插入插槽后，仅允许编辑 `name` 插槽：
 
 ```ts
 import { createSlotFillingPolicy } from '@tiptap-pro/extension-slot'
 
-// Requires ContentProtection in the editor's extensions.
+// 需要在编辑器的 extensions 中添加 ContentProtection。
 editor.commands.setContentProtectionPolicy({
   policy: createSlotFillingPolicy({ editableSlotIds: ['name'] }),
 })
 ```
 
-Users can change the slot's value, but cannot delete it or change its configuration. Built-in and custom inputs follow the same permissions when using the value controller.
+用户可以更改插槽的值，但不能删除插槽或更改其配置。使用值控制器时，内置和自定义输入控件遵循相同的权限。
 
-See [Fill-only editing](/composable-docs/slots/guides/fill-only) for protection setup.
+有关保护设置，请参阅[仅填充编辑](/composable-docs/slots/guides/fill-only)。
