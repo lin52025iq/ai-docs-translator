@@ -1,24 +1,24 @@
 ---
-title: lift command
+title: lift 命令
 meta:
-  title: lift command | Tiptap Editor Docs
-  description: Lift a node up into its parent node in your Tiptap Editor with the lift command. Learn more in our docs!
-  category: Editor
+  title: lift 命令 | Tiptap 编辑器文档
+  description: 使用 lift 命令，将节点提升到 Tiptap 编辑器中的父节点。了解更多信息，请参阅我们的文档！
+  category: 编辑器
 ---
 
-The `lift` command lifts a given node up into it’s parent node. **Lifting** means, that the block will be moved to the parent of the block it is currently in.
+`lift` 命令会将指定节点提升到其父节点中。**提升**是指将块移动到其当前所在块的父级。
 
-## Parameters
+## 参数
 
 `typeOrName: String | NodeType`
 
-The node that should be lifted. If the node is not found in the current selection, ignore the command.
+要提升的节点。如果当前选区中未找到该节点，则忽略此命令。
 
 `attributes: Record<string, any>`
 
-The attributes the node should have to be lifted. This is **optional**.
+要提升的节点必须具有的属性。此参数为**可选**。
 
-## Use the lift command
+## 使用 lift 命令
 
 ```js
 // lift any headline
