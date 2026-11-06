@@ -1,12 +1,12 @@
 ---
-title: Integrate the TextareaAutosize UI component
+title: 集成 TextareaAutosize UI 组件
 meta:
-  title: TextareaAutosize | Tiptap UI Components
-  description: Integrate an auto-resizing textarea component that grows and shrinks based on content. Built on react-textarea-autosize with SSR support. Learn more in the docs.
-  category: UI Components
+  title: TextareaAutosize | Tiptap UI 组件
+  description: 集成一个可根据内容自动扩展和收缩的文本区域组件。基于 react-textarea-autosize 构建，支持 SSR。了解更多信息，请参阅文档。
+  category: UI 组件
 component:
   name: TextareaAutosize
-  description: A textarea component that automatically adjusts its height based on content, with server-side rendering compatibility and smooth resize behavior.
+  description: 一个可根据内容自动调整高度的文本区域组件，兼容服务端渲染，并支持平滑调整大小。
   type: primitive
   isFree: true
   isCloud: false
@@ -17,22 +17,22 @@ component:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-An auto-resizing textarea component built on `react-textarea-autosize` that automatically adjusts its height based on content, with built-in server-side rendering compatibility and smooth transitions.
+这是一个基于 `react-textarea-autosize` 构建的自动调整大小文本区域组件，可根据内容自动调整高度，并内置服务端渲染兼容性和流畅的过渡效果。
 
 <CodeDemo
   isScrollable
   src="https://template.tiptap.dev/preview/tiptap-ui-primitive/textarea-autosize"
 />
 
-## Install
+## 安装
 
-You can add the primitive via Tiptap CLI
+你可以通过 Tiptap CLI 添加此基础组件：
 
 ```bash
 npx @tiptap/cli@latest add textarea-autosize
 ```
 
-## Usage
+## 用法
 
 ```tsx
 import { TextareaAutosize } from '@/components/tiptap-ui-primitive/textarea-autosize'
@@ -42,42 +42,42 @@ export default function MyComponent() {
 
   return (
     <div>
-      {/* Basic auto-resizing textarea */}
+      {/* 基本的自动调整大小文本区域 */}
       <TextareaAutosize
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="Start typing... I'll grow with your content!"
+        placeholder="开始输入……我会随着内容增长！"
       />
 
-      {/* Textarea with min and max rows */}
-      <TextareaAutosize minRows={3} maxRows={8} placeholder="I have min 3 rows and max 8 rows" />
+      {/* 设置最小行数和最大行数的文本区域 */}
+      <TextareaAutosize minRows={3} maxRows={8} placeholder="最少 3 行，最多 8 行" />
 
-      {/* Textarea with custom resize behavior */}
+      {/* 自定义调整大小行为的文本区域 */}
       <TextareaAutosize
         minRows={2}
         maxRows={10}
         cacheMeasurements={true}
-        placeholder="I cache measurements for better performance"
+        placeholder="缓存测量结果以提升性能"
       />
     </div>
   )
 }
 ```
 
-## Props
+## 属性
 
 ### TextareaAutosize
 
-Built on top of `react-textarea-autosize` with additional SSR compatibility.
+基于 `react-textarea-autosize` 构建，并额外支持 SSR。
 
-| Name     | Type                           | Default  | Description            |
-| -------- | ------------------------------ | -------- | ---------------------- |
-| minRows  | `number`                       | 1        | Minimum number of rows |
-| maxRows  | `number`                       | Infinity | Maximum number of rows |
-| value    | `string`                       | -        | Controlled value       |
-| onChange | `(event: ChangeEvent) => void` | -        | Change event handler   |
+| 名称     | 类型                           | 默认值   | 描述         |
+| -------- | ------------------------------ | -------- | ------------ |
+| minRows  | `number`                       | 1        | 最小行数     |
+| maxRows  | `number`                       | Infinity | 最大行数     |
+| value    | `string`                       | -        | 受控值       |
+| onChange | `(event: ChangeEvent) => void` | -        | 变更事件处理器 |
 
-## Dependencies
+## 依赖项
 
-- **react-textarea-autosize**: The underlying library that provides auto-resize functionality
-- **use-isomorphic-layout-effect**: Custom hook for SSR-compatible layout effects
+- **react-textarea-autosize**：提供自动调整大小功能的底层库
+- **use-isomorphic-layout-effect**：用于实现 SSR 兼容布局副作用的自定义 Hook
