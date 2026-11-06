@@ -1,25 +1,25 @@
 ---
-title: Rows that span a page break
-tags:
+title: 跨页表格行
+ tags:
   - type: experiment
 meta:
-  title: Row fragmentation | Tiptap Pages
-  description: Let a tall table row continue on the next page instead of moving down whole, the way Word splits a row. Experimental feature of PagesTableKit.
+  title: 行拆分 | Tiptap Pages
+  description: 让较高的表格行延续到下一页，而不是整行移到下一页，就像 Word 拆分表格行一样。这是 PagesTableKit 的实验性功能。
   category: Pages
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-A table row that does not fit in the space left on its page moves down whole. That leaves a gap at the bottom of the page. A row taller than a full page cannot be placed at all.
+如果表格行无法放入本页剩余空间，它就会整行移到下一页，导致页面底部留下空白。高于整页的行则完全无法放置。
 
-Word does not do this. It splits the row and continues it on the next page. Row fragmentation gives you the same result. Documents imported from DOCX often contain rows like this, so the gap shows up on real content.
+Word 不会这样处理。它会拆分表格行，并在下一页继续显示。行拆分可以实现同样的效果。从 DOCX 导入的文档通常包含这样的表格行，因此实际内容中也会出现页面空白。
 
-<Callout title="Experimental" variant="warning">
-  Row fragmentation is experimental and off by default. The option name starts with `experimental`
-  because the behaviour and the option may still change.
+<Callout title="实验性功能" variant="warning">
+  行拆分目前是实验性功能，默认关闭。选项名以 `experimental` 开头，
+  是因为其行为和选项本身仍可能发生变化。
 </Callout>
 
-## Turn it on
+## 启用
 
 ```ts
 import { TableKit } from '@tiptap-pro/extension-pages-tablekit'
@@ -27,9 +27,9 @@ import { TableKit } from '@tiptap-pro/extension-pages-tablekit'
 TableKit.configure({ experimentalRowFragmentation: true })
 ```
 
-With the option off, nothing changes. The plugin is not loaded at all.
+关闭此选项时，不会有任何变化，也不会加载该插件。
 
-If you build your own table kit and do not use `TableKit`, configure `TableRow` directly. It carries the whole feature:
+如果你自行构建表格套件而不使用 `TableKit`，请直接配置 `TableRow`。它包含了此功能的全部内容：
 
 ```ts
 import { TableRow } from '@tiptap-pro/extension-pages-tablekit'
@@ -37,7 +37,7 @@ import { TableRow } from '@tiptap-pro/extension-pages-tablekit'
 TableRow.configure({ experimentalRowFragmentation: true })
 ```
 
-You can also pass the option through [PageKit](/pages/guides/pagekit-usage):
+你也可以通过 [PageKit](/pages/guides/pagekit-usage) 传入此选项：
 
 ```ts
 PageKit.configure({
@@ -45,46 +45,44 @@ PageKit.configure({
 })
 ```
 
-## Your document does not change
+## 文档不会改变
 
-The row stays one row. Fragmentation only changes how the row is drawn.
+表格行仍然是一行。拆分只会改变表格行的绘制方式。
 
-- `editor.getJSON()` returns the same single row, before and after a split.
-- No ProseMirror steps are created, so collaboration sees nothing.
-- DOCX export and printing get an ordinary row.
+- 拆分前后，`editor.getJSON()` 返回的都是同一行。
+- 不会创建 ProseMirror 步骤，因此协作功能不会感知到任何变化。
+- DOCX 导出和打印得到的仍是普通表格行。
 
-You can type in a fragmented row, select across a page break, and resize its columns. The row splits and re-joins while you work.
+你可以在拆分后的表格行中输入内容、跨页选择内容，也可以调整列宽。编辑过程中，表格行会随之拆分和合并。
 
-## Which rows can split
+## 哪些表格行可以拆分
 
-A split has to fall between two lines. Whether that is possible is read from how a cell's content renders, not from a list of node types, so your own custom nodes work without being registered anywhere.
+拆分位置必须在两行文字之间。是否可以拆分，取决于单元格内容的实际渲染方式，而不是节点类型列表，因此你自己的自定义节点无需在任何地方注册也能正常使用。
 
-In practice a row splits when its cells hold paragraphs, headings, bullet or ordered lists, nested lists, blockquotes, code blocks, or inline content such as images. Numbering carries on across the break, and an image moves to the next page whole rather than being cut.
+实际使用中，如果单元格包含段落、标题、项目符号列表或有序列表、嵌套列表、引用块、代码块或图片等行内内容，表格行就可以拆分。编号会在分页后继续，图片则会完整移到下一页，而不会被截断。
 
-Rows with merged cells split the same way, including the rows a merged cell covers. The merged cell continues on the next page.
+含有合并单元格的表格行也可以按相同方式拆分，包括被合并单元格覆盖的那些行。合并单元格会延续到下一页。
 
-A nested table splits between its rows. A nested row that fits on one page moves to the next page whole. A nested row taller than a page is split at the same place as the outer row, as long as the nested row can split itself. If it can't, the outer row stays whole, as described below.
+嵌套表格会在其行之间拆分。能放入一页的嵌套行会整行移到下一页。高于一页的嵌套行，只要自身可以拆分，就会在与外层行相同的位置拆分。如果不能拆分，外层行也会保持完整，具体如下文所述。
 
-Pages leaves a row alone when:
+在以下情况下，Pages 不会拆分表格行：
 
-- the row has `heightRule: "exact"`
-- a cell holds text inside a box with its own layout, other than a nested table row
+- 表格行的 `heightRule: "exact"`
+- 单元格中的文本位于具有独立布局的盒子中，但嵌套表格行除外
 
-That covers boxes with `display: flex`, `grid` or `flow-root`, clipped overflow, multiple columns, `contain: layout` or absolute positioning. It also covers a nested row that is taller than a page and can't split, such as one with `heightRule: "exact"`.
+这包括设置了 `display: flex`、`grid` 或 `flow-root` 的盒子、溢出内容被裁剪的盒子、多栏布局、设置了 `contain: layout` 的盒子或绝对定位的盒子。还包括高于一页且无法拆分的嵌套行，例如设置了 `heightRule: "exact"` 的行。
 
-A row that cannot split behaves exactly as it does today. It moves to the next page as a whole.
+无法拆分的表格行会像现在一样处理：整行移到下一页。
 
-<Callout title="Task lists are the surprising case" variant="hint">
-  A task item looks like an ordinary list item in the document, but it renders as a flex container,
-  which a page break cannot pass through. A row holding one is left alone. This is why the rule is
-  read from the rendered box rather than the node type: the node type would get this wrong.
+<Callout title="任务列表是个意外情况" variant="hint">
+  任务列表项在文档中看起来像普通列表项，但实际渲染为 flex 容器，分页符无法穿过它。包含任务列表项的表格行不会被拆分。这就是为什么要根据渲染出的盒子，而不是节点类型来判断：仅看节点类型会得出错误结果。
 </Callout>
 
-## Styling a split row
+## 拆分行的样式
 
-PagesTableKit draws layout only. It paints no borders, so a split row draws no line where it crosses a page break either.
+PagesTableKit 只负责绘制布局，不会绘制边框，因此表格行跨页拆分处也不会出现分隔线。
 
-If your tables have borders and you want them carried across the break, set one custom property on the table:
+如果表格带有边框，并且希望边框在分页处延续，可以在表格上设置一个自定义属性：
 
 ```css
 .my-document table {
@@ -92,36 +90,36 @@ If your tables have borders and you want them carried across the break, set one 
 }
 ```
 
-Cell padding comes from ConvertKit, which publishes each cell's real padding as `--cell-margin-left` and `--cell-margin-right`. If something else pads your cells, set `--pages-tablekit-cell-padding-x` to override both sides.
+单元格内边距来自 ConvertKit，它会通过 `--cell-margin-left` 和 `--cell-margin-right` 提供每个单元格的实际内边距。如果单元格内边距由其他方式设置，可以设置 `--pages-tablekit-cell-padding-x` 来覆盖两侧的值。
 
-## The row element belongs to the extension
+## 行元素由扩展负责管理
 
-While a row is split, its NodeView owns these attributes on the `<tr>` element:
+表格行拆分时，其 NodeView 会管理 `<tr>` 元素上的以下属性：
 
 - `style`
 - `data-height-rule`
 - `data-pages-row-fragmentation`
 
-Do not write them from your own code. The NodeView writes them again on the next layout pass, and the two writes fight each other. Under the pointer this shows up as flicker.
+不要在自己的代码中设置这些属性。NodeView 会在下一轮布局时再次写入它们，双方的写入会相互冲突。在指针下，这会表现为闪烁。
 
-You can read them. A split row carries `data-pages-row-fragmentation="fragmented"`, and each of its cells carries `data-row-fragmentation-cell="fragmented"`, so you can target them in CSS.
+你可以读取这些属性。拆分后的表格行会带有 `data-pages-row-fragmentation="fragmented"`，其中的每个单元格会带有 `data-row-fragmentation-cell="fragmented"`，因此你可以在 CSS 中选取它们。
 
-## Limits
+## 限制
 
-- A row splits only between lines or between nested table rows. A task item or a similar box in a cell keeps the row whole.
-- A nested row that fits on one page is never split. It moves to the next page whole.
-- A table whose column widths were saved in a collapsed state, for example a width of one pixel, can render past the right edge of its row, and that row then does not split. This comes from column resizing, not from fragmentation. It happens with the option off as well.
-- The feature needs the Pages [layout participant](/pages/core-concepts/layout-participants) cycle, so it needs a Pages version that provides it.
+- 表格行只能在文字行之间或嵌套表格行之间拆分。单元格中的任务列表项或类似盒子会使整行保持完整。
+- 能放入一页的嵌套行不会拆分，而是整行移到下一页。
+- 如果表格列宽保存为收缩状态，例如宽度为一个像素，表格可能会渲染到行的右边缘之外，此时该行不会拆分。这是列宽调整导致的，与行拆分无关。关闭此选项时也会发生这种情况。
+- 此功能依赖 Pages 的[布局参与者](/pages/core-concepts/layout-participants)周期，因此需要使用提供该功能的 Pages 版本。
 
-## How it works
+## 工作原理
 
-The row registers as a [layout participant](/pages/core-concepts/layout-participants). After each pagination update it measures where the page edges are, then places empty blocks inside its own cells at those positions. The browser's own line breaking moves the text around them, which is what produces the split.
+表格行会注册为[布局参与者](/pages/core-concepts/layout-participants)。每次分页更新后，它会测量页面边缘的位置，然后在自己的单元格中相应位置插入空白块。浏览器自身的换行机制会将文本排布到这些空白块周围，从而实现拆分。
 
-Everything it writes lives in the editor view, not in the document. That is why collaboration and export are unaffected.
+所有写入内容都存在于编辑器视图中，而非文档中。因此协作和导出不会受到影响。
 
-## Related
+## 相关内容
 
-- [PagesTableKit](/pages/guides/pages-tablekit): install and set up tables for Pages.
-- [Pages with tables](/pages/guides/table-with-pages): general guide for tables inside Pages.
-- [Layout participants](/pages/core-concepts/layout-participants): the API this feature is built on.
-- [Limitations](/pages/core-concepts/limitations): what Pages can and cannot lay out.
+- [PagesTableKit](/pages/guides/pages-tablekit)：为 Pages 安装并设置表格。
+- [Pages 中的表格](/pages/guides/table-with-pages)：Pages 中表格的通用指南。
+- [布局参与者](/pages/core-concepts/layout-participants)：此功能所基于的 API。
+- [限制](/pages/core-concepts/limitations)：Pages 可以和不可以进行的布局操作。
