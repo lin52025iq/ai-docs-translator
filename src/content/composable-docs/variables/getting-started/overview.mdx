@@ -1,44 +1,43 @@
 ---
-title: Variables
+title: 变量
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Variables | Tiptap Docs
-  description: Display reactive values in your editor and synchronize editable slots.
-  category: Composable Docs
+  title: 变量 | Tiptap 文档
+  description: 在编辑器中显示响应式值，并同步可编辑插槽。
+  category: 组合式文档
 ---
 
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-**Variables** let you display values, such as a customer name or a calculated total, in your editor. When a value changes, every reference to it updates automatically.
+**变量**可让你在编辑器中显示客户姓名或计算得出的总额等值。值发生变化时，所有对该变量的引用都会自动更新。
 
-The document stores a reference to the variable, while your application manages its value. You can also [bind variables to slots](/composable-docs/variables/guides/bind-slots) to keep editable content in sync.
+文档会保存对变量的引用，而变量的值由你的应用管理。你也可以[将变量绑定到插槽](/composable-docs/variables/guides/bind-slots)，以保持可编辑内容同步。
 
 <CodeDemo isPro path="/Extensions/Variable" />
 
-<Callout title="Client-side only" variant="info">
-  Variables run inside each editor instance. They do not provide a server API or synchronize runtime
-  values between clients. Server-side support is on our roadmap. If you're interested, email us at{' '}
-  <a href="mailto:humans@tiptap.dev">humans@tiptap.dev</a>.
+<Callout title="仅限客户端" variant="info">
+  变量在每个编辑器实例中运行。它们不提供服务器 API，也不会在客户端之间同步运行时值。我们已将服务器端支持列入开发计划。如果你对此感兴趣，请发送邮件至{' '}
+  <a href="mailto:humans@tiptap.dev">humans@tiptap.dev</a>。
 </Callout>
 
-## Install
+## 安装
 
-First, [contact our team](https://tiptap.dev/contact-sales?form=pilot-program) to join the Tiptap Composable Docs pilot program.
+首先，[联系我们的团队](https://tiptap.dev/contact-sales?form=pilot-program)，加入 Tiptap Composable Docs 试点计划。
 
-Then, configure your package manager by following the [private registry guide](/guides/pro-extensions).
+然后，按照[私有注册表指南](/guides/pro-extensions)配置包管理器。
 
-Then, install the package:
+接着，安装软件包：
 
 ```bash
 npm install @tiptap/core @tiptap/starter-kit @tiptap-pro/extension-variable
 ```
 
-## Define and display a variable
+## 定义并显示变量
 
-First, import the editor and extensions:
+首先，导入编辑器和扩展：
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -46,7 +45,7 @@ import StarterKit from '@tiptap/starter-kit'
 import { Variable } from '@tiptap-pro/extension-variable'
 ```
 
-Define a variable called `customer` and add the extension to your editor:
+定义名为 `customer` 的变量，并将扩展添加到编辑器中：
 
 ```ts
 const editor = new Editor({
@@ -60,21 +59,21 @@ const editor = new Editor({
 })
 ```
 
-Insert a reference at the current selection. It displays **Ada**:
+在当前选区插入引用。它会显示 **Ada**：
 
 ```ts
 editor.commands.insertVariable({ name: 'customer' })
 ```
 
-Update the value. Every reference to `customer` now displays **Grace**:
+更新变量值。现在，所有对 `customer` 的引用都会显示 **Grace**：
 
 ```ts
 editor.commands.setVariable({ name: 'customer', value: 'Grace' })
 ```
 
-## Add and manage variables at runtime
+## 在运行时添加和管理变量
 
-You don't need to know every variable when you create the editor. Add a value or resolver later with `addVariable()`, then insert a reference:
+创建编辑器时，你不必预先知道所有变量。之后可以使用 `addVariable()` 添加值或解析器，再插入引用：
 
 ```ts
 editor.commands.addVariable({ name: 'company', value: 'Acme' })
@@ -87,7 +86,7 @@ editor.commands.addVariable({
 editor.commands.insertVariable({ name: 'customerLabel' })
 ```
 
-`addVariable()` returns `false` if the name is empty or already registered. Use `setVariable()` to update an existing value, or `setVariables()` to replace a value or resolver:
+如果名称为空或已注册，`addVariable()` 会返回 `false`。使用 `setVariable()` 更新现有值，或使用 `setVariables()` 替换值或解析器：
 
 ```ts
 editor.commands.setVariable({ name: 'company', value: 'Tiptap' })
@@ -96,20 +95,20 @@ editor.commands.setVariables({
 })
 ```
 
-Remove a variable with `removeVariable()`. Remove its dependent resolvers first, or remove them together with `removeVariables()`:
+使用 `removeVariable()` 移除变量。请先移除依赖它的解析器，或使用 `removeVariables()` 将它们一并移除：
 
 ```ts
 editor.commands.removeVariable({ name: 'customerLabel' })
 editor.commands.removeVariable({ name: 'company' })
 ```
 
-Existing references stay in the document and display an empty value after removal. Adding the same name again restores their display. Runtime definitions belong to this editor instance and are not saved in the document or reverted by document undo. For bound slots, removal [returns the variable to slot content](/composable-docs/variables/api-reference/extension#removevariable).
+移除变量后，现有引用仍会保留在文档中，并显示为空值。再次添加同名变量即可恢复显示。运行时定义属于此编辑器实例，不会保存到文档中，也不会因撤销文档操作而还原。对于绑定的插槽，移除变量会[将其恢复为插槽内容](/composable-docs/variables/api-reference/extension#removevariable)。
 
-See the [command reference](/composable-docs/variables/api-reference/extension#commands) for bulk registration, removal, and failure behavior.
+有关批量注册、移除及失败行为，请参阅[命令参考](/composable-docs/variables/api-reference/extension#commands)。
 
-## Values and resolvers
+## 值和解析器
 
-Define values directly or calculate them with a function, called a **resolver**. Use `get()` to read another variable's raw value, or `getText()` to read it as a string. Replace `Variable.configure(...)` in your editor with:
+你可以直接定义值，也可以使用函数计算值，这种函数称为**解析器**。使用 `get()` 读取另一个变量的原始值，或使用 `getText()` 将其作为字符串读取。在编辑器中，将 `Variable.configure(...)` 替换为：
 
 ```ts
 Variable.configure({
@@ -121,14 +120,14 @@ Variable.configure({
 })
 ```
 
-With this configuration, changing `customer` also updates `greeting`:
+使用此配置时，更改 `customer` 也会更新 `greeting`：
 
 ```ts
 editor.commands.setVariable({ name: 'customer', value: 'Grace' })
 // greeting becomes "Hello, Grace!"
 ```
 
-Values can also be objects or arrays. Objects that are not Tiptap content display as JSON:
+值也可以是对象或数组。不是 Tiptap 内容的对象会以 JSON 格式显示：
 
 ```ts
 editor.commands.setVariable({
@@ -137,9 +136,9 @@ editor.commands.setVariable({
 })
 ```
 
-To display the name and company separately, define a resolver for each property using `get('customer')`, then insert references to those variables. Names such as `customer.name` do not look up object properties automatically.
+若要分别显示姓名和公司，请使用 `get('customer')` 为每个属性定义解析器，然后插入对这些变量的引用。`customer.name` 这类名称不会自动查找对象属性。
 
-Use Tiptap JSON to display formatted content:
+使用 Tiptap JSON 显示带格式的内容：
 
 ```ts
 editor.commands.setVariable({
@@ -148,9 +147,9 @@ editor.commands.setVariable({
 })
 ```
 
-## Connect variable values to external sources
+## 将变量值连接到外部数据源
 
-A resolver can read data from your application. Create a customer object, a resolver that reads its name, and an editor that displays it:
+解析器可以读取应用中的数据。创建一个客户对象、一个读取其姓名的解析器，以及一个用于显示姓名的编辑器：
 
 ```ts
 let customer = { name: 'Ada' }
@@ -167,7 +166,7 @@ const refreshEditor = new Editor({
 refreshEditor.commands.insertVariable({ name: 'customer' })
 ```
 
-Listen for an application event and refresh the resolver:
+监听应用事件并刷新解析器：
 
 ```ts
 const events = new EventTarget()
@@ -175,21 +174,23 @@ const refresh = () => refreshEditor.commands.refreshVariables({ names: ['custome
 events.addEventListener('customer-change', refresh)
 ```
 
-After changing the data, send the event. The editor now displays **Grace**:
+更改数据后，发送事件。编辑器现在会显示 **Grace**：
 
 ```ts
 customer = { name: 'Grace' }
 events.dispatchEvent(new Event('customer-change'))
 ```
 
-Remove the listener when the editor is destroyed:
+销毁编辑器时移除事件监听器：
 
 ```ts
 refreshEditor.on('destroy', () => events.removeEventListener('customer-change', refresh))
 ```
 
-## What is saved
+## 保存的内容
 
-The document saves the variable's name, not its value. Each editor supplies its own values.
+文档保存的是变量名称，而不是变量值。每个编辑器都提供自己的变量值。
 
-Text inside a [bound slot](/composable-docs/variables/guides/bind-slots) is saved as normal document content.
+[绑定插槽](/composable-docs/variables/guides/bind-slots)中的文本会作为普通文档内容保存。
+
+</content>
