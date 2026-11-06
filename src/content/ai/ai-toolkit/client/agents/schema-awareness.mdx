@@ -1,30 +1,28 @@
 ---
-title: Schema awareness
+title: Schema 感知
 meta:
-  title: Schema awareness | Tiptap AI Toolkit
-  description: Give schema awareness to your AI model so it understands nodes, marks, and attributes.
-  category: AI Toolkit
+  title: Schema 感知 | Tiptap AI 工具包
+  description: 让 AI 模型具备 Schema 感知能力，从而理解节点、标记和属性。
+  category: AI 工具包
 ---
 
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-A Tiptap [schema](/editor/core-concepts/schema) describes the elements the document can (and cannot) contain. Tiptap's **schema awareness** capabilities allow AI models to understand the document better.
+Tiptap [Schema](/editor/core-concepts/schema) 描述了文档可以（以及不可以）包含哪些元素。Tiptap 的 **Schema 感知**功能可帮助 AI 模型更好地理解文档。
 
-<Callout title="Why schema awareness?" variant="default">
-  Without schema awareness, the AI model might generate content that the Tiptap editor does not
-  support. For example, it might generate a table in a document that does not support tables. With
-  schema awareness enabled, the AI model will know that table nodes are not supported and will
-  refuse to generate them.
+<Callout title="为什么需要 Schema 感知？" variant="default">
+  如果没有 Schema 感知，AI 模型可能会生成 Tiptap 编辑器不支持的内容。例如，它可能会在不支持表格的文档中生成表格。启用
+  Schema 感知后，AI 模型会知道不支持表格节点，因此不会生成表格。
 </Callout>
 
-## Guide: give schema awareness to your AI model
+## 指南：让 AI 模型具备 Schema 感知能力
 
-Integrate the schema awareness feature to an AI agent like the one built in the [AI agent chatbot guide](/ai/ai-toolkit/client/agents/ai-agent-chatbot).
+将 Schema 感知功能集成到 AI 代理中，例如 [AI 代理聊天机器人指南](/ai/ai-toolkit/client/agents/ai-agent-chatbot)中构建的代理。
 
-### Step 1: get the schema awareness string
+### 第 1 步：获取 Schema 感知字符串
 
-Get the schema awareness string from the AI Toolkit. This string contains a message describing the document's schema, that is optimized for the AI model.
+从 AI Toolkit 获取 Schema 感知字符串。该字符串包含一条描述文档 Schema 的消息，并针对 AI 模型进行了优化。
 
 ```ts
 const toolkit = getAiToolkit(editor)
@@ -32,9 +30,9 @@ const toolkit = getAiToolkit(editor)
 const schemaAwareness = toolkit.getHtmlSchemaAwareness()
 ```
 
-### Step 2 (optional): configure custom nodes
+### 第 2 步（可选）：配置自定义节点
 
-If your document contains [custom Nodes and Marks](/editor/extensions/custom-extensions), add the `addHtmlSchemaAwareness` option to the extension configuration. This way, the AI model will be able to generate this custom Node or Mark accurately. For example, if you have a custom node called `'alert'`, you can allow the AI model to generate it by configuring it like this:
+如果文档中包含[自定义节点和标记](/editor/extensions/custom-extensions)，请在扩展配置中添加 `addHtmlSchemaAwareness` 选项。这样，AI 模型就能准确地生成这些自定义节点或标记。例如，如果有一个名为 `'alert'` 的自定义节点，可以按如下方式配置，让 AI 模型能够生成它：
 
 ```ts
 import { Node } from '@tiptap/core'
@@ -67,20 +65,18 @@ It can have inline content inside like text and formatting tags.`,
 })
 ```
 
-Alternatively, you can configure the `customNodes` option of the `getHtmlSchemaAwareness` method. Learn more about the configuration options in the [API Reference](/ai/ai-toolkit/client/api-reference/schema-awareness#gethtmlschemaawareness).
+或者，也可以配置 `getHtmlSchemaAwareness` 方法的 `customNodes` 选项。有关配置选项的详细信息，请参阅 [API 参考](/ai/ai-toolkit/client/api-reference/schema-awareness#gethtmlschemaawareness)。
 
-<Callout title="What about official Tiptap extensions?" variant="info">
-  Schema awareness for official Tiptap extensions is automatically supported by the AI Toolkit. They
-  do not need to be configured. You can still override the default schema awareness information for
-  official Tiptap extensions by extending the extension and adding the `addHtmlSchemaAwareness`
-  option.
+<Callout title="官方 Tiptap 扩展呢？" variant="info">
+  AI Toolkit 会自动支持官方 Tiptap 扩展的 Schema 感知功能，无需进行配置。你也可以扩展官方 Tiptap 扩展并添加
+  `addHtmlSchemaAwareness` 选项，以覆盖其默认的 Schema 感知信息。
 </Callout>
 
-### Step 3: add the schema awareness string to the system prompt
+### 第 3 步：将 Schema 感知字符串添加到系统提示词
 
-When you call the AI model, send the schema awareness string as a parameter to the API endpoint that returns the AI model response.
+调用 AI 模型时，将 Schema 感知字符串作为参数发送给返回 AI 模型响应的 API 端点。
 
-The code below shows an API endpoint built with Next.js and the Vercel AI SDK, like the one in the [AI agent chatbot guide](/ai/ai-toolkit/client/agents/ai-agent-chatbot).
+下面的代码展示了一个使用 Next.js 和 Vercel AI SDK 构建的 API 端点，与 [AI 代理聊天机器人指南](/ai/ai-toolkit/client/agents/ai-agent-chatbot)中的端点类似。
 
 ```ts
 // app/page.tsx
@@ -107,7 +103,7 @@ const { messages } = useChat({
 })
 ```
 
-Then, inside the API endpoint handler, add the schema awareness string to the end of the system prompt.
+然后，在 API 端点处理程序中，将 Schema 感知字符串添加到系统提示词末尾。
 
 ```ts
 // app/api/chat/route.ts
@@ -135,16 +131,16 @@ ${schemaAwareness}`,
 }
 ```
 
-You've now set up schema awareness for your AI model.
+现在，你已经为 AI 模型配置好了 Schema 感知功能。
 
-### End result
+### 最终效果
 
-The app below is a variant of the [AI agent chatbot demo](/ai/ai-toolkit/client/agents/ai-agent-chatbot) with schema awareness configured. Try asking the AI to create an alert box: the AI will recognize the custom element and insert it into the document.
+下方应用是配置了 Schema 感知功能的 [AI 代理聊天机器人演示](/ai/ai-toolkit/client/agents/ai-agent-chatbot)变体。试着让 AI 创建一个提示框：AI 会识别这个自定义元素，并将其插入文档。
 
 <CodeDemo isLarge isScrollable path="" src="https://ai-toolkit-demos.vercel.app/schema-awareness" />
 
-See the [source code on GitHub](https://github.com/ueberdosis/ai-toolkit-demos).
+请查看 GitHub 上的[源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
 
-## Next steps
+## 后续步骤
 
-- [Schema awareness API reference](/ai/ai-toolkit/client/api-reference/schema-awareness)
+- [Schema 感知 API 参考](/ai/ai-toolkit/client/api-reference/schema-awareness)
