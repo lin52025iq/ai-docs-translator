@@ -1,23 +1,23 @@
 ---
 title: Alpine
 meta:
-  title: Alpine | Tiptap Editor Docs
-  description: Discover how to use Tiptap with Alpine.js to create a powerful text editor. Follow our detailed guide in our docs!
-  category: Editor
+  title: Alpine | Tiptap 编辑器文档
+  description: 了解如何将 Tiptap 与 Alpine.js 结合使用，打造功能强大的文本编辑器。请参阅文档中的详细指南！
+  category: 编辑器
 ---
 
-The following guide describes how to integrate Tiptap with version 3 of Alpine.js. For the sake of this guide, we'll use Vite to quickly set up a project, but you can use whatever you're used to. Vite is just really fast and we love it!
+以下指南介绍如何将 Tiptap 与 Alpine.js 3 版集成。为了快速搭建项目，我们会使用 Vite；当然，你也可以使用自己熟悉的工具。Vite 的速度非常快，我们也很喜欢它！
 
-### Requirements
+### 要求
 
-- [Node](https://nodejs.org/en/download/) installed on your machine
-- Experience with [Alpine.js](https://github.com/alpinejs/alpine)
+- 在你的计算机上安装 [Node](https://nodejs.org/en/download/)
+- 具备 [Alpine.js](https://github.com/alpinejs/alpine) 使用经验
 
-## Create a project (optional)
+## 创建项目（可选）
 
-If you already have an Alpine.js project, that's fine too. Just skip this step.
+如果你已经有 Alpine.js 项目，也没问题，直接跳过这一步即可。
 
-For the purpose of this guide, start with a fresh [Vite](https://vitejs.dev/) project called `my-tiptap-project`. Vite sets up everything we need, just select the Vanilla JavaScript template.
+本指南将从一个名为 `my-tiptap-project` 的全新 [Vite](https://vitejs.dev/) 项目开始。Vite 会为我们准备好所需的一切，只需选择 Vanilla JavaScript 模板即可。
 
 ```bash
 npm init vite@latest my-tiptap-project -- --template vanilla
@@ -26,21 +26,21 @@ npm install
 npm run dev
 ```
 
-### Install the dependencies
+### 安装依赖
 
-Okay, enough of the boring boilerplate work. Let's finally install Tiptap! For the following example, you'll need `alpinejs`, the `@tiptap/core` package, the `@tiptap/pm` package, and the `@tiptap/starter-kit`, which includes the most common extensions to get started quickly.
+好了，枯燥的基础配置就到此为止。现在终于可以安装 Tiptap 了！在下面的示例中，你需要安装 `alpinejs`、`@tiptap/core` 包、`@tiptap/pm` 包以及 `@tiptap/starter-kit`。其中包含了最常用的扩展，能帮助你快速上手。
 
 ```bash
 npm install alpinejs @tiptap/core @tiptap/pm @tiptap/starter-kit
 ```
 
-If you followed step 1, you can now start your project with `npm run dev`, and open [http://localhost:5173](http://localhost:5173) in your favorite browser. This might be different if you're working with an existing project.
+如果你按照第 1 步操作，现在就可以运行 `npm run dev` 启动项目，并在常用浏览器中打开 [http://localhost:5173](http://localhost:5173)。如果你使用的是现有项目，情况可能会有所不同。
 
-## Integrate Tiptap
+## 集成 Tiptap
 
-To actually start using Tiptap, you'll need to write a little bit of JavaScript. Let's put the following example code in a file called `main.js`.
+要开始使用 Tiptap，你需要编写少量 JavaScript。将下面的示例代码放入名为 `main.js` 的文件中。
 
-This is the fastest way to get Tiptap up and running with Alpine.js. It will give you a very basic version of Tiptap. No worries, you will be able to add more functionality soon.
+这是使用 Alpine.js 快速运行 Tiptap 的最简单方法。这样就能得到一个非常基础的 Tiptap 版本。别担心，很快你就可以添加更多功能。
 
 ```js
 import Alpine from 'alpinejs'
@@ -94,9 +94,9 @@ window.Alpine = Alpine
 Alpine.start()
 ```
 
-### Add it to your app
+### 将其添加到应用中
 
-Now, let's replace the contents of `index.html` with the following example code to use the editor in our app.
+接下来，用下面的示例代码替换 `index.html` 的内容，即可在应用中使用编辑器。
 
 ```html
 <!doctype html>
@@ -147,12 +147,12 @@ Now, let's replace the contents of `index.html` with the following example code 
 </html>
 ```
 
-Tiptap should now be visible in your browser. Time to give yourself a pat on the back! :)
+现在，你应该能在浏览器中看到 Tiptap 了。给自己一点掌声吧！:)
 
-## Next steps
+## 后续步骤
 
-- [Configure your editor](/editor/getting-started/configure)
-- [Add styles to your editor](/editor/getting-started/style-editor)
-- [Learn more about Tiptaps concepts](/editor/core-concepts/introduction)
-- [Learn how to persist the editor state](/editor/core-concepts/persistence)
-- [Start building your own extensions](/editor/extensions/custom-extensions)
+- [配置编辑器](/editor/getting-started/configure)
+- [为编辑器添加样式](/editor/getting-started/style-editor)
+- [进一步了解 Tiptap 的概念](/editor/core-concepts/introduction)
+- [了解如何持久化编辑器状态](/editor/core-concepts/persistence)
+- [开始构建自己的扩展](/editor/extensions/custom-extensions)
