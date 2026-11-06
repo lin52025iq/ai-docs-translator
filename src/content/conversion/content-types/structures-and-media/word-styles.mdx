@@ -1,82 +1,82 @@
 ---
-title: Word styles
+title: Word 样式
 tags:
   - type: beta
 meta:
-  title: Word Styles | Tiptap Conversion
-  description: How Word paragraph styles and character styles are resolved during import and applied during export.
-  category: Conversion
+  title: Word 样式 | Tiptap 转换
+  description: 了解导入时如何解析 Word 段落样式和字符样式，以及导出时如何应用这些样式。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Word documents use a style system where every paragraph and text run references a named style. The conversion pipeline resolves known paragraph style names to their Tiptap equivalents and falls back to plain paragraphs for everything else. The `basedOn` inheritance chain is used only for resolving run-level formatting.
+Word 文档使用样式系统，每个段落和文本片段都会引用一个命名样式。转换流程会将已知的段落样式名称解析为对应的 Tiptap 样式，其他样式则会回退为普通段落。`basedOn` 继承链仅用于解析文本片段级别的格式。
 
-Style resolution on import works identically via both the [editor extension](/conversion/import/docx/editor-extension) and [REST API](/conversion/import/docx/rest-api). For export, both paths support [`styleOverrides`](/conversion/export/docx/styles) for customizing document-level style definitions. The extension additionally supports [element overrides](/conversion/export/docx/styles#element-overrides) for per-element control that the REST API does not accept.
+无论通过[编辑器扩展](/conversion/import/docx/editor-extension)还是 [REST API](/conversion/import/docx/rest-api) 导入，样式解析的工作方式都相同。导出时，两种方式都支持通过 [`styleOverrides`](/conversion/export/docx/styles) 自定义文档级样式定义。此外，扩展还支持[元素覆盖](/conversion/export/docx/styles#element-overrides)，以便逐个控制元素；REST API 不支持此功能。
 
-## Recognized paragraph styles
+## 可识别的段落样式
 
-The import service recognizes these paragraph style names (matched case-insensitively). When a paragraph's canonical style name matches one of them, it is converted to the corresponding Tiptap node:
+导入服务可以识别以下段落样式名称（匹配时不区分大小写）。当段落的规范样式名称与其中一项匹配时，会将其转换为对应的 Tiptap 节点：
 
-| Word style name | Tiptap node | Notes |
+| Word 样式名称 | Tiptap 节点 | 说明 |
 | --- | --- | --- |
-| `heading 1` through `heading 9` (regex `/^heading\s*\d+$/i`) | `heading` (level 1 through 9) | See [Headings](/conversion/content-types/text-and-formatting/headings) |
-| `quote` (case-insensitive exact match) | `blockquote` | See [Block elements](/conversion/content-types/structures-and-media/block-elements) |
-| Everything else | `paragraph` | See [Paragraphs](/conversion/content-types/text-and-formatting/paragraphs) |
+| `heading 1` 至 `heading 9`（正则表达式 `/^heading\s*\d+$/i`） | `heading`（级别 1 至 9） | 参见[标题](/conversion/content-types/text-and-formatting/headings) |
+| `quote`（精确匹配，不区分大小写） | `blockquote` | 参见[块级元素](/conversion/content-types/structures-and-media/block-elements) |
+| 其他所有样式 | `paragraph` | 参见[段落](/conversion/content-types/text-and-formatting/paragraphs) |
 
-## Style inheritance
+## 样式继承
 
-Word styles can inherit from other styles, similar to class inheritance. A custom style "Company Heading" might be based on "Heading 2", which is based on "Normal". This creates a chain of parent styles.
+Word 样式可以继承其他样式，类似于类继承。自定义样式“Company Heading”可能基于“Heading 2”，而“Heading 2”又基于“Normal”，由此形成一条父样式链。
 
-When importing, the converter walks this chain to collect text formatting (font, size, bold, italic, color) from each ancestor. However, the chain is not used to determine what type of node a paragraph becomes. Node type is based only on the paragraph's own style name matching a known pattern (the heading regex or "Quote").
+导入时，转换器会沿着这条继承链，收集各级祖先样式中的文本格式（字体、字号、粗体、斜体、颜色）。但这条继承链不会用于决定段落转换成哪种节点。节点类型只取决于段落自身的样式名称是否符合已知模式（标题正则表达式或“Quote”）。
 
-This means a paragraph styled "Company Heading" becomes a plain paragraph node, even though it inherits heading formatting from "Heading 2". For the converter to produce a heading, the style name itself must match the heading pattern (e.g., "Heading 2").
+这意味着，即使“Company Heading”继承了“Heading 2”的标题格式，使用该样式的段落仍会转换为普通段落节点。要让转换器生成标题，样式名称本身必须符合标题模式（例如“Heading 2”）。
 
-## Character styles
+## 字符样式
 
-Word also supports character styles applied to individual text runs. The import does not preserve character style names. Instead, the resolved formatting (bold, italic, color, font size, etc.) is already reflected in the run's CSS properties at parse time and gets mapped to Tiptap marks.
+Word 还支持应用于单个文本片段的字符样式。导入时不会保留字符样式名称。相反，解析时已将解析出的格式（粗体、斜体、颜色、字号等）反映在文本片段的 CSS 属性中，并映射到 Tiptap 标记。
 
-This means a run styled "Strong" that resolves to bold produces a `bold` mark because the formatting includes `font-weight: bold`. The style name "Strong" itself is discarded.
+这意味着，如果应用了“Strong”样式的文本片段解析后为粗体，就会生成 `bold` 标记，因为其格式包含 `font-weight: bold`。“Strong”样式名称本身会被舍弃。
 
-Custom character styles with non-standard formatting (small caps, letter spacing, text effects) will lose that formatting if the renderer does not handle it.
+如果渲染器不支持自定义字符样式中的非标准格式（小型大写字母、字间距、文本效果），这些格式就会丢失。
 
-## Editor
+## 编辑器
 
-There is no style extension in Tiptap. The editor does not have a concept of Word paragraph or character styles. Each content type has its own extension (Heading, Blockquote, CodeBlock, Paragraph), and formatting is handled through marks.
+Tiptap 没有样式扩展。编辑器也没有 Word 段落样式或字符样式的概念。每种内容类型都有自己的扩展（Heading、Blockquote、CodeBlock、Paragraph），格式则通过标记处理。
 
-To bring the document's named-style typography (the visual definitions of `Heading 1`, `Normal`, `Quote`, etc.) into the editor as cascading CSS rather than per-node attributes, use the experimental [CSS injection](/conversion/import/docx/css-injection) feature. It extracts the style catalog and either injects it as a scoped `<style>` tag or hands it to you as a `cssStyles` object. The 16 selectors and 11 properties it covers (typography only; no per-side borders, no letter spacing) are documented on that page.
+如需将文档中命名样式的排版效果（即 `Heading 1`、`Normal`、`Quote` 等样式的视觉定义）作为级联 CSS 引入编辑器，而非作为逐节点属性，请使用实验性的 [CSS 注入](/conversion/import/docx/css-injection)功能。该功能会提取样式目录，并将其注入为带作用域的 `<style>` 标签，或以 `cssStyles` 对象的形式提供给你。此功能涵盖的 16 个选择器和 11 项属性（仅限排版；不包括单侧边框和字间距）在该页面中有详细说明。
 
-## Export
+## 导出
 
-Each Tiptap node type maps to a fixed Word style:
+每种 Tiptap 节点类型都映射到固定的 Word 样式：
 
-| Tiptap node | Exported Word style |
+| Tiptap 节点 | 导出的 Word 样式 |
 | --- | --- |
 | `paragraph` | Normal |
-| `heading` (level 1 through 6) | Heading 1 through Heading 6 |
-| `blockquote` children | Quote |
-| List items | List Paragraph |
+| `heading`（级别 1 至 6） | Heading 1 至 Heading 6 |
+| `blockquote` 子节点 | Quote |
+| 列表项 | List Paragraph |
 
-Custom styles from the original document are not round-tripped. A paragraph imported from a "Legal Disclaimer" style will export as "Normal".
+原始文档中的自定义样式不会在往返转换中保留。以“Legal Disclaimer”样式导入的段落，导出时会变为“Normal”。
 
-### Default export style definitions
+### 默认导出样式定义
 
-| Style | Font | Size | Other |
+| 样式 | 字体 | 字号 | 其他 |
 | --- | --- | --- | --- |
-| Normal | Aptos | 11pt | 10pt after-spacing, 1.15 line height |
-| Heading 1 | Aptos Light | 16pt | Bold, color #2E74B5 |
-| Heading 2 | Aptos Light | 14pt | Bold, color #2E74B5 |
-| Heading 3 | Aptos | 13pt | Bold, color #2E74B5 |
-| Heading 4 | Aptos | 12pt | Bold, color #2E74B5 |
-| Heading 5 | Aptos | 11pt | Bold, color #2E74B5 |
-| Title | Aptos Light | 22pt | Bold, black, centered |
-| Subtitle | Aptos Light | 16pt | Italic, gray, centered |
-| Quote | Aptos | (inherits) | Italic, centered |
-| Hyperlink | (inherits) | (inherits) | Color #0563C1, underline |
+| Normal | Aptos | 11pt | 段后间距 10pt，行高 1.15 |
+| Heading 1 | Aptos Light | 16pt | 粗体，颜色 #2E74B5 |
+| Heading 2 | Aptos Light | 14pt | 粗体，颜色 #2E74B5 |
+| Heading 3 | Aptos | 13pt | 粗体，颜色 #2E74B5 |
+| Heading 4 | Aptos | 12pt | 粗体，颜色 #2E74B5 |
+| Heading 5 | Aptos | 11pt | 粗体，颜色 #2E74B5 |
+| Title | Aptos Light | 22pt | 粗体，黑色，居中 |
+| Subtitle | Aptos Light | 16pt | 斜体，灰色，居中 |
+| Quote | Aptos | （继承） | 斜体，居中 |
+| Hyperlink | （继承） | （继承） | 颜色 #0563C1，下划线 |
 
-### Customizing export styles
+### 自定义导出样式
 
-Override any default style or add new ones using `styleOverrides`. Your overrides are deep-merged with the defaults: matching `id` values merge recursively, new `id` values are appended.
+使用 `styleOverrides` 覆盖任意默认样式或添加新样式。覆盖项会与默认值进行深度合并：`id` 相同的项会递归合并，新的 `id` 则会追加。
 
 ```ts
 ExportDocx.configure({
@@ -101,6 +101,6 @@ ExportDocx.configure({
 })
 ```
 
-<Callout title="Units in style definitions" variant="info">
-  Font sizes are in half-points (24 = 12pt). Spacing values are in twips (20 twips = 1pt). Line spacing uses 240ths of a line (240 = single, 276 = 1.15). These units come from the `docx` library and match the OOXML specification.
+<Callout title="样式定义中的单位" variant="info">
+  字号以半磅为单位（24 = 12pt）。间距值以 twip 为单位（20 twip = 1pt）。行距以行的 240 分之一为单位（240 = 单倍行距，276 = 1.15）。这些单位来自 `docx` 库，与 OOXML 规范一致。
 </Callout>
