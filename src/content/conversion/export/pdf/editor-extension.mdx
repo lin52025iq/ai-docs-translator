@@ -1,14 +1,14 @@
 ---
-title: Export PDF from your editor
+title: 从编辑器导出 PDF
 tags:
   - type: start
   - type: beta
   - type: version
     label: v0.6.2
 meta:
-  title: Export PDF | Tiptap Conversion
-  description: Learn how to export Tiptap editor content to PDF files using the Export PDF extension in our docs.
-  category: Conversion
+  title: 导出 PDF | Tiptap 转换
+  description: 在文档中了解如何使用 Export PDF 扩展将 Tiptap 编辑器内容导出为 PDF 文件。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
@@ -20,27 +20,26 @@ import RegionalEndpoints from '../../_shared/_regional-endpoints.mdx'
 <EnterpriseCalloutAuto variant="pdf" renderMode="sidebar" disableWaitlist />
 
 <Requirements>
-  <RequirementItem label="1. Activate trial or subscribe">
-    Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start
-    plan](https://cloud.tiptap.dev/v2/billing) in your account.
+  <RequirementItem label="1. 开通试用或订阅">
+    在账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start
+    计划](https://cloud.tiptap.dev/v2/billing)。
   </RequirementItem>
-  <RequirementItem label="2. Install from private registry">
-    To install this frontend extensions, authenticate to Tiptap's private npm registry by following
-    the [setup guide](/guides/pro-extensions).
+  <RequirementItem label="2. 从私有注册表安装">
+    要安装这些前端扩展，请按照[设置指南](/guides/pro-extensions)进行操作，向 Tiptap 的私有 npm 注册表进行身份验证。
   </RequirementItem>
 </Requirements>
 
 <CodeDemo isPro path="/Extensions/ExportPdf" />
 
-Use Tiptap's `@tiptap-pro/extension-export-pdf` to export your editor's content as a `.pdf` file. This extension integrates PDF export functionality into your editor by sending the document to the Tiptap convert service for conversion.
+使用 Tiptap 的 `@tiptap-pro/extension-export-pdf` 将编辑器内容导出为 `.pdf` 文件。此扩展会将文档发送到 Tiptap 转换服务进行转换，从而在编辑器中集成 PDF 导出功能。
 
-You can also use the [REST API](/conversion/export/pdf/rest-api) instead if you'd prefer to handle the conversion on your end.
+如果希望自行处理转换，也可以改用 [REST API](/conversion/export/pdf/rest-api)。
 
-## Install the PDF Export extension
+## 安装 PDF 导出扩展
 
-The Conversion extensions are published in Tiptap's private npm registry. Integrate the extensions by following the [private registry guide](/guides/pro-extensions).
+Conversion 扩展发布在 Tiptap 的私有 npm 注册表中。请按照[私有注册表指南](/guides/pro-extensions)集成这些扩展。
 
-Once done you can install and import the **Export PDF** extension package.
+完成后即可安装并导入 **Export PDF** 扩展包。
 
 ```bash
 npm i @tiptap-pro/extension-export-pdf
@@ -50,9 +49,9 @@ npm i @tiptap-pro/extension-export-pdf
 import { ExportPdf } from '@tiptap-pro/extension-export-pdf'
 ```
 
-## Configuring the extension
+## 配置扩展
 
-The `ExportPdf` extension can be configured with an `ExportPdfOptions` (`object`) as an argument to the `configure` method with the following properties:
+`ExportPdf` 扩展可通过 `configure` 方法接收 `ExportPdfOptions`（`object`）参数进行配置，其中包含以下属性：
 
 ```ts
 import { ExportPdf } from '@tiptap-pro/extension-export-pdf'
@@ -78,38 +77,38 @@ const editor = new Editor({
 })
 ```
 
-| Parameter          | Type                     | Description                                                                                                                                                                                      | Default                               |
-| ------------------ | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------- |
-| `endpoint`         | `string`                 | The Tiptap API endpoint for conversion. When set, it overrides `region`                                                                                                                          | `undefined`                           |
-| `region`           | `'eu' \| 'us'`           | The Tiptap Cloud region used when `endpoint` is not set                                                                                                                                          | `'eu'`                                |
-| `token`            | `string`                 | The Tiptap JWT for authentication, see [Authentication](/authentication)                                                                                                                                                                | `''`                                  |
-| `styleOverrides`   | `Record<string, string>` | Style overrides to apply to the export                                                                                                                                                           | `undefined`                           |
-| `headers`          | `HeaderConfig`           | Header configuration for the exported document                                                                                                                                                   | `undefined`                           |
-| `footers`          | `FooterConfig`           | Footer configuration for the exported document                                                                                                                                                   | `undefined`                           |
-| `pageSize`         | `PageSize`               | Page size configuration                                                                                                                                                                          | `undefined`                           |
-| `pageMargins`      | `PageMargins`            | Page margins configuration                                                                                                                                                                       | `undefined`                           |
-| `customNodes`      | `CustomNodeDefinition[]` | Custom node definitions for DOCX-based conversion (requires `@tiptap-pro/extension-export-docx`)                                                                                                 | `undefined`                           |
-| `customFonts`      | `CustomFont[]`           | Custom font files to provision for PDF export (on-premises only)                                                                                                                                 | `undefined`                           |
-| `onCompleteExport` | `(result: Blob) => void` | Callback that receives the exported file as a Blob                                                                                                                                               | Throws error if not provided          |
-| `onExportError`    | `(error: Error) => void` | Optional callback invoked when the export pipeline rejects (failed dynamic import, failed DOCX conversion, network error, non-OK response). When omitted, errors are logged via `console.error`. | `undefined`                           |
+| 参数                 | 类型                     | 说明                                                                                                                                                                         | 默认值                         |
+| -------------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ |
+| `endpoint`           | `string`                 | 用于转换的 Tiptap API 端点。设置后将覆盖 `region`                                                                                                                              | `undefined`                    |
+| `region`             | `'eu' \| 'us'`           | 未设置 `endpoint` 时使用的 Tiptap Cloud 区域                                                                                                                                  | `'eu'`                         |
+| `token`              | `string`                 | 用于身份验证的 Tiptap JWT，参见[身份验证](/authentication)                                                                                                                     | `''`                           |
+| `styleOverrides`     | `Record<string, string>` | 应用于导出的样式覆盖项                                                                                                                                                       | `undefined`                    |
+| `headers`            | `HeaderConfig`           | 导出文档的页眉配置                                                                                                                                                            | `undefined`                    |
+| `footers`            | `FooterConfig`           | 导出文档的页脚配置                                                                                                                                                            | `undefined`                    |
+| `pageSize`           | `PageSize`               | 页面尺寸配置                                                                                                                                                                 | `undefined`                    |
+| `pageMargins`        | `PageMargins`            | 页边距配置                                                                                                                                                                   | `undefined`                    |
+| `customNodes`        | `CustomNodeDefinition[]` | 基于 DOCX 转换的自定义节点定义（需要安装 `@tiptap-pro/extension-export-docx`）                                                                                                 | `undefined`                    |
+| `customFonts`        | `CustomFont[]`           | 为 PDF 导出提供的自定义字体文件（仅限本地部署）                                                                                                                               | `undefined`                    |
+| `onCompleteExport`   | `(result: Blob) => void` | 接收导出文件 Blob 的回调                                                                                                                                                     | 未提供时抛出错误               |
+| `onExportError`      | `(error: Error) => void` | 可选回调，在导出流程失败时调用（动态导入失败、DOCX 转换失败、网络错误、响应状态非 OK）。省略时，错误会通过 `console.error` 记录。                                               | `undefined`                    |
 
 <RegionalEndpoints />
 
-### Header and footer slot values
+### 页眉和页脚插槽值
 
-Every header and footer slot (`default`, `first`, `even`) accepts any of five shapes; pick whichever matches your data. The first three work with `@tiptap-pro/extension-export-pdf` alone; the last two require `@tiptap-pro/extension-export-docx` to also be installed (they take the DOCX-first export path, which is lazy-loaded so PDF-only consumers aren't affected).
+每个页眉和页脚插槽（`default`、`first`、`even`）都接受五种形式中的任意一种；请根据数据选择合适的形式。前面三种仅需使用 `@tiptap-pro/extension-export-pdf`；后面两种还需要安装 `@tiptap-pro/extension-export-docx`（它们采用 DOCX 优先的导出路径，并按需延迟加载，因此不会影响仅使用 PDF 的用户）。
 
-| Shape                                       | Example                                    | Notes                                                                                                        |
-| ------------------------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
-| Plain text                                  | `'Company name, 2026'`                     | Unstyled header/footer.                                                                                      |
-| Stringified Tiptap JSONContent              | `JSON.stringify(myHeaderDoc)`              | Pre-serialized Tiptap node. Rich formatting preserved.                                                       |
-| Tiptap JSONContent object                   | `{ type: 'doc', content: [/* … */] }`      | Rich Tiptap node passed directly. No stringification needed.                                                 |
-| `docx` `Header` / `Footer` instance         | `new Docx.Header({ children: [/* … */] })` | Full DOCX-level control. Requires the DOCX extension.                                                        |
-| Async factory returning `Header` / `Footer` | `() => convertHeader({ node })`            | Built on demand at export time. Typical use: `convertHeader` / `convertFooter`. Requires the DOCX extension. |
+| 形式                                         | 示例                                       | 说明                                                                                     |
+| -------------------------------------------- | ------------------------------------------ | ---------------------------------------------------------------------------------------- |
+| 纯文本                                       | `'Company name, 2026'`                     | 不带样式的页眉/页脚。                                                                     |
+| 序列化为字符串的 Tiptap JSONContent          | `JSON.stringify(myHeaderDoc)`              | 预先序列化的 Tiptap 节点。保留富文本格式。                                                 |
+| Tiptap JSONContent 对象                      | `{ type: 'doc', content: [/* … */] }`      | 直接传入的富文本 Tiptap 节点。无需序列化为字符串。                                        |
+| `docx` 的 `Header` / `Footer` 实例           | `new Docx.Header({ children: [/* … */] })` | 可完全控制 DOCX 级别的内容。需要 DOCX 扩展。                                              |
+| 返回 `Header` / `Footer` 的异步工厂函数      | `() => convertHeader({ node })`            | 导出时按需创建。典型用法：`convertHeader` / `convertFooter`。需要 DOCX 扩展。              |
 
-Tiptap JSONContent objects **must** include a `type` field. That's the runtime discriminator the extension uses to tell a Tiptap node apart from a `docx` instance. Objects without `type` that aren't `Header` / `Footer` instances are dropped with a `console.warn` pointing at the offending value, not forwarded to the DOCX serializer.
+Tiptap JSONContent 对象**必须**包含 `type` 字段。扩展会在运行时通过此字段判断对象是 Tiptap 节点还是 `docx` 实例。没有 `type` 字段、且不是 `Header` / `Footer` 实例的对象会被丢弃，并通过 `console.warn` 指出有问题的值，而不会转发给 DOCX 序列化器。
 
-In TypeScript these shapes collapse to two aliases (the `type` requirement is encoded in `TiptapNodeContent`):
+在 TypeScript 中，这些形式归并为两个类型别名（`type` 要求已在 `TiptapNodeContent` 中声明）：
 
 ```ts
 import type { JSONContent } from '@tiptap/core'
@@ -123,56 +122,55 @@ type FooterSlotValue = string | TiptapNodeContent | Footer | (() => Promise<Foot
 
 ### HeaderConfig
 
-| Property             | Type              | Description                                                                                                                   |
-| -------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `evenAndOddHeaders`  | `boolean`         | Whether to use different headers for odd and even pages.                                                                      |
-| `differentFirstPage` | `boolean`         | Whether to use a different header on the first page. When `true`, the `first` value is used on page one instead of `default`. |
-| `default`            | `HeaderSlotValue` | The standard default header on every page, or the header on odd pages when `evenAndOddHeaders` is active.                     |
-| `first`              | `HeaderSlotValue` | The header on the first page. Only used when `differentFirstPage` is `true`.                                                  |
-| `even`               | `HeaderSlotValue` | The header on even pages. Only used when `evenAndOddHeaders` is `true`.                                                       |
+| 属性                  | 类型              | 说明                                                                                  |
+| --------------------- | ----------------- | ------------------------------------------------------------------------------------- |
+| `evenAndOddHeaders`   | `boolean`         | 是否为奇数页和偶数页使用不同的页眉。                                                  |
+| `differentFirstPage`  | `boolean`         | 是否为首页使用不同的页眉。设为 `true` 时，首页使用 `first` 值，而不是 `default`。       |
+| `default`             | `HeaderSlotValue` | 每页使用的默认页眉；启用 `evenAndOddHeaders` 时，则作为奇数页的页眉。                   |
+| `first`               | `HeaderSlotValue` | 首页页眉。仅当 `differentFirstPage` 为 `true` 时使用。                                 |
+| `even`                | `HeaderSlotValue` | 偶数页页眉。仅当 `evenAndOddHeaders` 为 `true` 时使用。                                |
 
 ### FooterConfig
 
-| Property             | Type              | Description                                                                                                                   |
-| -------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `evenAndOddFooters`  | `boolean`         | Whether to use different footers for odd and even pages.                                                                      |
-| `differentFirstPage` | `boolean`         | Whether to use a different footer on the first page. When `true`, the `first` value is used on page one instead of `default`. |
-| `default`            | `FooterSlotValue` | The standard default footer on every page, or the footer on odd pages when `evenAndOddFooters` is active.                     |
-| `first`              | `FooterSlotValue` | The footer on the first page. Only used when `differentFirstPage` is `true`.                                                  |
-| `even`               | `FooterSlotValue` | The footer on even pages. Only used when `evenAndOddFooters` is `true`.                                                       |
+| 属性                  | 类型              | 说明                                                                                  |
+| --------------------- | ----------------- | ------------------------------------------------------------------------------------- |
+| `evenAndOddFooters`   | `boolean`         | 是否为奇数页和偶数页使用不同的页脚。                                                  |
+| `differentFirstPage`  | `boolean`         | 是否为首页使用不同的页脚。设为 `true` 时，首页使用 `first` 值，而不是 `default`。       |
+| `default`             | `FooterSlotValue` | 每页使用的默认页脚；启用 `evenAndOddFooters` 时，则作为奇数页的页脚。                   |
+| `first`               | `FooterSlotValue` | 首页页脚。仅当 `differentFirstPage` 为 `true` 时使用。                                 |
+| `even`                | `FooterSlotValue` | 偶数页页脚。仅当 `evenAndOddFooters` 为 `true` 时使用。                                |
 
 ### PageSize
 
-| Property | Type     | Description                                                                                          | Default    |
-| -------- | -------- | ---------------------------------------------------------------------------------------------------- | ---------- |
-| `width`  | `string` | The width of the page. Must be a positive number followed by a valid unit (cm, in, pt, pc, mm, px).  | `"21cm"`   |
-| `height` | `string` | The height of the page. Must be a positive number followed by a valid unit (cm, in, pt, pc, mm, px). | `"29.7cm"` |
+| 属性     | 类型     | 说明                                                                                      | 默认值     |
+| -------- | -------- | ----------------------------------------------------------------------------------------- | ---------- |
+| `width`  | `string` | 页面宽度。必须是正数，后接有效单位（cm、in、pt、pc、mm、px）。                              | `"21cm"`  |
+| `height` | `string` | 页面高度。必须是正数，后接有效单位（cm、in、pt、pc、mm、px）。                              | `"29.7cm"` |
 
 ### PageMargins
 
-| Property | Type     | Description                                                                                                         | Default |
-| -------- | -------- | ------------------------------------------------------------------------------------------------------------------- | ------- |
-| `top`    | `string` | The top margin of the page. Can be negative. Must be a number followed by a valid unit (cm, in, pt, pc, mm, px).    | `"1cm"` |
-| `bottom` | `string` | The bottom margin of the page. Can be negative. Must be a number followed by a valid unit (cm, in, pt, pc, mm, px). | `"1cm"` |
-| `left`   | `string` | The left margin of the page. Must be a positive number followed by a valid unit (cm, in, pt, pc, mm, px).           | `"1cm"` |
-| `right`  | `string` | The right margin of the page. Must be a positive number followed by a valid unit (cm, in, pt, pc, mm, px).          | `"1cm"` |
+| 属性     | 类型     | 说明                                                                                                      | 默认值  |
+| -------- | -------- | --------------------------------------------------------------------------------------------------------- | ------- |
+| `top`    | `string` | 页面上边距。可以为负数。必须是数字，后接有效单位（cm、in、pt、pc、mm、px）。                               | `"1cm"` |
+| `bottom` | `string` | 页面下边距。可以为负数。必须是数字，后接有效单位（cm、in、pt、pc、mm、px）。                               | `"1cm"` |
+| `left`   | `string` | 页面左边距。必须是正数，后接有效单位（cm、in、pt、pc、mm、px）。                                            | `"1cm"` |
+| `right`  | `string` | 页面右边距。必须是正数，后接有效单位（cm、in、pt、pc、mm、px）。                                            | `"1cm"` |
 
 ### CustomFont
 
-<Callout title="On-premises only" variant="warning">
-  Custom fonts are only available in on-premises deployments. If you're interested in using custom
-  fonts with Tiptap's cloud service, please [contact us about our Enterprise
-  plan](https://tiptap.dev/pricing).
+<Callout title="仅限本地部署" variant="warning">
+  自定义字体仅适用于本地部署。如果您希望在 Tiptap 云服务中使用自定义字体，请[联系我们了解 Enterprise
+  计划](https://tiptap.dev/pricing)。
 </Callout>
 
-| Property     | Type     | Description                                                   |
-| ------------ | -------- | ------------------------------------------------------------- |
-| `url`        | `string` | HTTPS URL pointing directly to a `.ttf` or `.woff2` font file |
-| `fontFamily` | `string` | Font family name as used in the document                      |
+| 属性         | 类型     | 说明                                        |
+| ------------ | -------- | ------------------------------------------- |
+| `url`        | `string` | 直接指向 `.ttf` 或 `.woff2` 字体文件的 HTTPS URL |
+| `fontFamily` | `string` | 文档中使用的字体系列名称                    |
 
-## Export a PDF file
+## 导出 PDF 文件
 
-With the extension installed, you can export your editor's content to `.pdf` using the `exportPdf` command.
+安装扩展后，可以使用 `exportPdf` 命令将编辑器内容导出为 `.pdf`。
 
 ```ts
 /**
@@ -184,22 +182,22 @@ With the extension installed, you can export your editor's content to `.pdf` usi
 exportPdf: (options?: ExportPdfCommandOptions) => ReturnType
 ```
 
-The `ExportPdfCommandOptions` interface extends `ExportPdfOptions`, so every configuration option can be overridden per-command invocation:
+`ExportPdfCommandOptions` 接口扩展了 `ExportPdfOptions`，因此可以在每次调用命令时覆盖所有配置选项：
 
-| Property           | Type                     | Description                                                       |
-| ------------------ | ------------------------ | ----------------------------------------------------------------- |
-| `endpoint`         | `string`                 | Override the API endpoint for this specific export                |
-| `region`           | `'eu' \| 'us'`           | Override the region for this specific export                      |
-| `token`            | `string`                 | Override the JWT token for this specific export                   |
-| `styleOverrides`   | `Record<string, string>` | Override style overrides for this specific export                 |
-| `headers`          | `HeaderConfig`           | Override header configuration for this specific export            |
-| `footers`          | `FooterConfig`           | Override footer configuration for this specific export            |
-| `pageSize`         | `PageSize`               | Override page size for this specific export                       |
-| `pageMargins`      | `PageMargins`            | Override page margins for this specific export                    |
-| `customNodes`      | `CustomNodeDefinition[]` | Override custom node definitions for this specific export         |
-| `customFonts`      | `CustomFont[]`           | Override custom fonts for this specific export (on-premises only) |
-| `onCompleteExport` | `(result: Blob) => void` | Override the callback for this specific export                    |
-| `onExportError`    | `(error: Error) => void` | Override the error handler for this specific export               |
+| 属性                 | 类型                     | 说明                                    |
+| -------------------- | ------------------------ | --------------------------------------- |
+| `endpoint`           | `string`                 | 为本次导出覆盖 API 端点                 |
+| `region`             | `'eu' \| 'us'`           | 为本次导出覆盖区域                      |
+| `token`              | `string`                 | 为本次导出覆盖 JWT 令牌                 |
+| `styleOverrides`     | `Record<string, string>` | 为本次导出覆盖样式                      |
+| `headers`            | `HeaderConfig`           | 为本次导出覆盖页眉配置                  |
+| `footers`            | `FooterConfig`           | 为本次导出覆盖页脚配置                  |
+| `pageSize`           | `PageSize`               | 为本次导出覆盖页面尺寸                  |
+| `pageMargins`        | `PageMargins`            | 为本次导出覆盖页边距                    |
+| `customNodes`        | `CustomNodeDefinition[]` | 为本次导出覆盖自定义节点定义            |
+| `customFonts`        | `CustomFont[]`           | 为本次导出覆盖自定义字体（仅限本地部署） |
+| `onCompleteExport`   | `(result: Blob) => void` | 为本次导出覆盖回调                      |
+| `onExportError`      | `(error: Error) => void` | 为本次导出覆盖错误处理程序              |
 
 ```js
 import { ExportPdf } from '@tiptap-pro/extension-export-pdf'
@@ -242,21 +240,20 @@ editor
   .run()
 ```
 
-### How it works
+### 工作原理
 
-When you call `exportPdf`, the extension serializes the editor's document to JSON and sends it to the Tiptap convert service along with any configured options (style overrides, page layout, headers, footers, custom fonts). The service converts the document to PDF and returns it as a binary blob. The `onCompleteExport` callback receives this blob directly, which you can then download or process as needed. Errors are thrown as exceptions rather than passed through the callback.
+调用 `exportPdf` 时，扩展会将编辑器文档序列化为 JSON，并连同已配置的选项（样式覆盖、页面布局、页眉、页脚、自定义字体）一起发送到 Tiptap 转换服务。该服务会将文档转换为 PDF，并以二进制 Blob 的形式返回。`onCompleteExport` 回调会直接接收此 Blob，您可以按需下载或处理。发生错误时会抛出异常，而不会通过回调传递。
 
-## Custom fonts
+## 自定义字体
 
-<Callout title="On-premises only" variant="warning">
-  Custom fonts are only available in on-premises deployments. If you're interested in using custom
-  fonts with Tiptap's cloud service, please [contact us about our Enterprise
-  plan](https://tiptap.dev/pricing).
+<Callout title="仅限本地部署" variant="warning">
+  自定义字体仅适用于本地部署。如果您希望在 Tiptap 云服务中使用自定义字体，请[联系我们了解 Enterprise
+  计划](https://tiptap.dev/pricing)。
 </Callout>
 
-The PDF export supports custom fonts for on-premises deployments. You can provision custom fonts by providing an array of font URLs that the conversion service will download and use when generating the PDF.
+PDF 导出支持在本地部署中使用自定义字体。您可以提供字体 URL 数组来配置自定义字体；转换服务会下载这些字体，并在生成 PDF 时使用。
 
-Font files must be `.ttf` or `.woff2` format and accessible via HTTPS. The `fontFamily` must match the font family name used in your document's text styles.
+字体文件必须为 `.ttf` 或 `.woff2` 格式，并可通过 HTTPS 访问。`fontFamily` 必须与文档文本样式中使用的字体系列名称一致。
 
 ```ts
 ExportPdf.configure({
@@ -277,7 +274,7 @@ ExportPdf.configure({
 })
 ```
 
-You can also override custom fonts per-command invocation:
+您也可以在每次调用命令时覆盖自定义字体：
 
 ```ts
 editor
@@ -293,45 +290,44 @@ editor
   .run()
 ```
 
-## What to expect
+## 预期行为
 
-- **Authentication required.** The export sends the document to the Convert service, which requires a signed token (`token`) carrying `aud: "Convert"`. Sign tokens on your server and never expose your signing key in the browser. See [Authentication](/authentication).
-- **HTTP responses you may need to handle:** `401` (missing or invalid JWT), `403` (the operation isn't permitted for your app — most often a format your plan doesn't include, or `customFonts` against the cloud plan), `5xx` (transient server-side error; retry with backoff).
-- **Custom fonts are an Enterprise / on-prem feature.** In the cloud plan, requests carrying `customFonts` return `403`. To enable them, contact us about an [Enterprise plan](https://tiptap.dev/pricing) or run an on-prem deployment.
-- **Each request is processed end-to-end before responding.** Very large documents may take longer to return; size the request timeouts on your side accordingly.
+- **需要身份验证。** 导出会将文档发送到 Convert 服务，该服务要求提供带有 `aud: "Convert"` 的签名令牌（`token`）。请在服务器上签署令牌，切勿在浏览器中暴露签名密钥。请参阅[身份验证](/authentication)。
+- **可能需要处理的 HTTP 响应：** `401`（缺少或无效的 JWT）、`403`（此操作不允许用于您的应用，通常是因为计划不包含所需格式，或在云计划中使用了 `customFonts`）、`5xx`（暂时性服务器错误；请采用退避策略重试）。
+- **自定义字体是 Enterprise / 本地部署功能。** 在云计划中，包含 `customFonts` 的请求会返回 `403`。如需启用，请联系我们了解 [Enterprise 计划](https://tiptap.dev/pricing)，或运行本地部署。
+- **每个请求都会在响应前完成整个处理流程。** 处理非常大的文档可能需要更长时间；请据此设置请求超时时间。
 
-## What not to expect
+## 不支持的预期
 
-- **Round-trip identity from DOCX → PDF.** PDF is a fixed-layout format; Word and the Convert service use different layout engines, so visual output may differ in subtle ways from Word's PDF print.
-- **Pixel-perfect Word match for complex layouts**, especially multi-column sections, RTL text, or content that relied on Word-specific layout quirks.
-- **Editing in the resulting PDF.** PDF export is one-way. To preserve editability, export to DOCX as well.
+- **无法确保 DOCX → PDF 往返转换后完全一致。** PDF 是固定版式格式；Word 和 Convert 服务使用不同的排版引擎，因此视觉效果可能与 Word 打印出的 PDF 存在细微差异。
+- **复杂布局无法保证与 Word 像素级一致**，尤其是多栏分节、RTL 文本，或依赖 Word 特有排版行为的内容。
+- **无法编辑生成的 PDF。** PDF 导出是单向的。如需保留可编辑性，也请导出为 DOCX。
 
-## Support & Limitations
+## 支持范围与限制
 
-| **Feature**                      | **Support**                                                                 |
-| -------------------------------- | --------------------------------------------------------------------------- |
-| **Text content**                 | ✓ Basic text, spacing, punctuation                                          |
-| **Text formatting**              | ✓ Bold, italic, underline, strikethrough, alignment, line height            |
-| **Block elements**               | ✓ Paragraphs, headings (1–6), blockquotes, ordered and unordered lists      |
-| **Tables**                       | ✓ Basic structure, header rows, colspan                                     |
-| **Links**                        | ✓ Hyperlinks                                                                |
-| **Media (Images)**               | ✓ Embedded images, size preserved                                           |
-| **Styles**                       | ✓ Font families\*, Font colors, font sizes, background colors, line heights |
-| **Custom Fonts**                 | ✓ On-premises only (`.ttf` and `.woff2`)                                    |
-| **Headers & Footers**            | ✓                                                                           |
-| **Math**                         | ✓                                                                           |
-| **Page Breaks**                  | ✓                                                                           |
-| **Sections**                     | ✗                                                                           |
-| **Footnotes & Endnotes**         | ✗                                                                           |
-| **Comments & Revisions**         | ✗                                                                           |
-| **Table of Contents**            | ✗                                                                           |
-| **Advanced Formatting**          | ✗ Columns, text direction, forms, macros, embedded scripts                  |
-| **Metadata**                     | ✗                                                                           |
-| **Text Boxes, Shapes, SmartArt** | ✗                                                                           |
+| **功能**                       | **支持情况**                                                                 |
+| ------------------------------ | --------------------------------------------------------------------------- |
+| **文本内容**                   | ✓ 基本文本、间距、标点                                                        |
+| **文本格式**                   | ✓ 粗体、斜体、下划线、删除线、对齐、行高                                      |
+| **块级元素**                   | ✓ 段落、标题（1–6 级）、引用块、有序和无序列表                                 |
+| **表格**                       | ✓ 基本结构、标题行、跨列                                                      |
+| **链接**                       | ✓ 超链接                                                                    |
+| **媒体（图片）**               | ✓ 嵌入图片，保留尺寸                                                         |
+| **样式**                       | ✓ 字体系列*、字体颜色、字号、背景颜色、行高                                   |
+| **自定义字体**                 | ✓ 仅限本地部署（`.ttf` 和 `.woff2`）                                          |
+| **页眉和页脚**                 | ✓                                                                           |
+| **数学公式**                   | ✓                                                                           |
+| **分页符**                     | ✓                                                                           |
+| **分节**                       | ✗                                                                           |
+| **脚注和尾注**                 | ✗                                                                           |
+| **批注和修订**                 | ✗                                                                           |
+| **目录**                       | ✗                                                                           |
+| **高级格式**                   | ✗ 分栏、文本方向、表单、宏、嵌入式脚本                                        |
+| **元数据**                     | ✗                                                                           |
+| **文本框、形状、SmartArt**     | ✗                                                                           |
 
 <span style={{ fontSize: '1rem' }}>
-  * Font families are supported when using Google Fonts (automatically available) or custom fonts
-  provisioned via the `customFonts` option (on-premises only).
+  * 使用 Google Fonts（自动可用）或通过 `customFonts` 选项配置自定义字体（仅限本地部署）时，支持字体系列。
 </span>
 
-For a detailed per-feature breakdown, see the [Supported features](/conversion/getting-started/feature-support-matrix) matrix. Note that element overrides (`paragraphOverrides`, `textRunOverrides`, `tableOverrides`, `tableCellOverrides`, `imageOverrides`) available in the [DOCX export extension](/conversion/export/docx/editor-extension) are not passed through to the PDF conversion.
+如需查看各项功能的详细支持情况，请参阅[支持的功能](/conversion/getting-started/feature-support-matrix)矩阵。请注意，[DOCX 导出扩展](/conversion/export/docx/editor-extension)支持的元素覆盖选项（`paragraphOverrides`、`textRunOverrides`、`tableOverrides`、`tableCellOverrides`、`imageOverrides`）不会传递给 PDF 转换。
