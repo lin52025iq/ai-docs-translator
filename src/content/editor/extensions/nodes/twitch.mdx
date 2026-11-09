@@ -1,58 +1,58 @@
 ---
-title: Twitch extension
+title: Twitch 扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-twitch?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-twitch
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-twitch.svg
     url: https://npmcharts.com/compare/@tiptap/extension-twitch?minimal=true
-    label: Downloads
+    label: 下载量
 extension:
   name: Twitch
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-twitch
-  description: Easily embed Twitch videos into your documents.
+  description: 轻松将 Twitch 视频嵌入文档。
   type: node
   icon: Twitch
 meta:
-  title: Twitch extension | Tiptap Editor Docs
-  description: Use the Twitch extension in Tiptap to easily embed Twitch videos in your documents. Learn more in our docs!
-  category: Editor
+  title: Twitch 扩展 | Tiptap 编辑器文档
+  description: 在 Tiptap 中使用 Twitch 扩展，轻松将 Twitch 视频嵌入文档。了解详情，请参阅我们的文档！
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Twitch } from 'lucide-react'
 
-This extension adds support for embedding Twitch videos, clips, and live channels into your editor.
+此扩展支持在编辑器中嵌入 Twitch 视频、剪辑和直播频道。
 
 <CodeDemo
   path="/Nodes/Twitch"
   external
   externalIcon={<Twitch className="size-6 text-[#9146FF]" />}
-  externalTitle="Interactive Demo"
-  externalDescription="Due to Twitch’s security policies for embedded players, this interactive demo must be opened in its own window."
+  externalTitle="交互式演示"
+  externalDescription="由于 Twitch 对嵌入式播放器的安全策略，此交互式演示必须在独立窗口中打开。"
 />
 
-## Supported Content Types
+## 支持的内容类型
 
-- **Videos**: Direct links to Twitch VODs
-- **Clips**: Links to Twitch clips
-- **Channels**: Links to live Twitch channels
+- **视频**：Twitch 点播视频（VOD）的直接链接
+- **剪辑**：Twitch 剪辑链接
+- **频道**：Twitch 直播频道链接
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-twitch
 ```
 
-## Settings
+## 设置
 
 ### inline
 
-Controls if the node should be handled inline or as a block.
+控制节点是以内联方式还是块级方式处理。
 
-Default: `false`
+默认值：`false`
 
 ```js
 Twitch.configure({
@@ -62,9 +62,9 @@ Twitch.configure({
 
 ### width
 
-Controls the default width of added videos.
+控制所添加视频的默认宽度。
 
-Default: `640`
+默认值：`640`
 
 ```js
 Twitch.configure({
@@ -74,9 +74,9 @@ Twitch.configure({
 
 ### height
 
-Controls the default height of added videos.
+控制所添加视频的默认高度。
 
-Default: `480`
+默认值：`480`
 
 ```js
 Twitch.configure({
@@ -86,9 +86,9 @@ Twitch.configure({
 
 ### allowFullscreen
 
-Allows the iframe to be played in fullscreen.
+允许 iframe 进入全屏播放。
 
-Default: `true`
+默认值：`true`
 
 ```js
 Twitch.configure({
@@ -98,9 +98,9 @@ Twitch.configure({
 
 ### autoplay
 
-Allows the iframe to start playing after the player is loaded.
+允许 iframe 在播放器加载后自动开始播放。
 
-Default: `false`
+默认值：`false`
 
 ```js
 Twitch.configure({
@@ -110,9 +110,9 @@ Twitch.configure({
 
 ### muted
 
-Specifies whether the initial state of the video is muted. This is useful when autoplay is enabled, as most browsers require videos to be muted for autoplay to work.
+指定视频的初始状态是否静音。启用自动播放时，此设置很有用，因为大多数浏览器要求视频静音才能自动播放。
 
-Default: `false`
+默认值：`false`
 
 ```js
 Twitch.configure({
@@ -122,10 +122,10 @@ Twitch.configure({
 
 ### time
 
-The time in the video where playback starts. Only applicable for video embeds, not for clips or channels.
-Format: `1h2m3s` (hours, minutes, seconds).
+视频开始播放的时间点。仅适用于视频嵌入，不适用于剪辑或频道。
+格式：`1h2m3s`（小时、分钟、秒）。
 
-Default: `undefined`
+默认值：`undefined`
 
 ```js
 Twitch.configure({
@@ -135,9 +135,9 @@ Twitch.configure({
 
 ### parent
 
-Specifies the domain that is embedding the Twitch player. This is required for the Twitch embed to function properly. You should set this to your domain.
+指定嵌入 Twitch 播放器的域名。这是 Twitch 嵌入功能正常运行的必要设置，应将其设为你的域名。
 
-Default: `'localhost'`
+默认值：`'localhost'`
 
 ```js
 Twitch.configure({
@@ -147,9 +147,9 @@ Twitch.configure({
 
 ### addPasteHandler
 
-Controls if the paste handler for Twitch video URLs should be added. When enabled, pasting a Twitch video URL will automatically create an embed.
+控制是否添加用于处理 Twitch 视频 URL 的粘贴处理器。启用后，粘贴 Twitch 视频 URL 会自动创建嵌入内容。
 
-Default: `true`
+默认值：`true`
 
 ```js
 Twitch.configure({
@@ -159,9 +159,9 @@ Twitch.configure({
 
 ### HTMLAttributes
 
-Pass custom HTML attributes to the iframe element.
+向 iframe 元素传递自定义 HTML 属性。
 
-Default: `{}`
+默认值：`{}`
 
 ```js
 Twitch.configure({
@@ -171,11 +171,11 @@ Twitch.configure({
 })
 ```
 
-## Commands
+## 命令
 
 ### setTwitchVideo(options)
 
-Inserts a Twitch video iframe embed at the current position.
+在当前位置插入一个 Twitch 视频 iframe 嵌入内容。
 
 ```js
 editor.commands.setTwitchVideo({
@@ -185,15 +185,15 @@ editor.commands.setTwitchVideo({
 })
 ```
 
-#### Options
+#### 选项
 
-- `src` - The URL of the Twitch video (optional)
-- `width` - The embed width (overrides the default option) (optional)
-- `height` - The embed height (overrides the default option) (optional)
+- `src` - Twitch 视频的 URL（可选）
+- `width` - 嵌入内容的宽度（覆盖默认选项）（可选）
+- `height` - 嵌入内容的高度（覆盖默认选项）（可选）
 
-## Usage Examples
+## 使用示例
 
-### Basic Usage
+### 基本用法
 
 ```js
 import { useEditor, EditorContent } from '@tiptap/react'
@@ -211,7 +211,7 @@ const editor = useEditor({
 })
 ```
 
-### With Custom Configuration
+### 自定义配置
 
 ```js
 const editor = useEditor({
@@ -229,97 +229,97 @@ const editor = useEditor({
 })
 ```
 
-### Programmatic Insertion
+### 以编程方式插入
 
 ```js
-// Insert a Twitch video with the default dimensions
+// 使用默认尺寸插入 Twitch 视频
 editor.commands.setTwitchVideo({
   src: 'https://www.twitch.tv/videos/1234567890',
 })
 
-// Insert with custom dimensions
+// 使用自定义尺寸插入
 editor.commands.setTwitchVideo({
   src: 'https://www.twitch.tv/videos/1234567890',
   width: 960,
   height: 540,
 })
 
-// Insert with custom autoplay and muted settings
+// 使用自定义的自动播放和静音设置插入
 editor.commands.setTwitchVideo({
   src: 'https://www.twitch.tv/videos/1234567890',
   autoplay: true,
   muted: true,
 })
 
-// Insert with start time
+// 指定开始时间
 editor.commands.setTwitchVideo({
   src: 'https://www.twitch.tv/videos/1234567890',
   time: '1h2m3s',
 })
 ```
 
-## Attribute Overrides
+## 属性覆盖
 
-You can override the extension options for individual embeds by specifying attributes when inserting the video. This allows you to have different settings for different embeds, while using the extension options as defaults:
+插入视频时指定属性，即可覆盖单个嵌入内容的扩展选项。这样，你可以为不同的嵌入内容设置不同选项，同时将扩展选项用作默认值：
 
 ```js
-// Extension configured with autoplay=false by default
+// 扩展的默认配置为 autoplay=false
 Twitch.configure({
   parent: 'example.com',
   autoplay: false,
 })
 
-// But insert this specific video with autoplay enabled
+// 但为这个特定视频启用自动播放
 editor.commands.setTwitchVideo({
   src: 'https://www.twitch.tv/videos/1234567890',
-  autoplay: true, // Overrides the extension's autoplay option
-  muted: true, // Ensures audio is muted
+  autoplay: true, // 覆盖扩展的 autoplay 选项
+  muted: true, // 确保音频静音
 })
 ```
 
-## Supported URL Formats
+## 支持的 URL 格式
 
-The extension supports the following Twitch URL formats:
+此扩展支持以下 Twitch URL 格式：
 
-### Videos
+### 视频
 
 - `https://www.twitch.tv/videos/1234567890`
 - `https://twitch.tv/videos/1234567890`
 
-### Clips
+### 剪辑
 
 - `https://www.twitch.tv/examplechannel/clip/ExampleClipName-ABC123`
 - `https://twitch.tv/examplechannel/clip/ExampleClipName-ABC123`
 - `https://clips.twitch.tv/ExampleClipName-ABC123`
 - `https://www.clips.twitch.tv/ExampleClipName-ABC123`
 
-### Channels
+### 频道
 
 - `https://www.twitch.tv/examplechannel`
 - `https://twitch.tv/examplechannel`
 
-## Paste Support
+## 粘贴支持
 
-When `addPasteHandler` is enabled (default), you can simply paste a Twitch video URL into the editor, and it will automatically be converted to an embed.
+启用 `addPasteHandler`（默认值）后，只需将 Twitch 视频 URL 粘贴到编辑器中，它就会自动转换为嵌入内容。
 
 ```
-Paste this URL: https://www.twitch.tv/videos/1234567890
+粘贴此 URL：https://www.twitch.tv/videos/1234567890
 ↓
-Automatically creates a Twitch embed node
+自动创建 Twitch 嵌入节点
 ```
 
-## Important Notes
+## 重要说明
 
-- The `parent` domain configuration is required for the Twitch embed to display properly. Make sure to set it to your actual domain.
-- Twitch embeds require the parent domain to be whitelisted on the Twitch side for security reasons.
-- The extension validates URLs before creating embeds to prevent invalid content.
-- Embeds are draggable and can be repositioned within the document.
+- Twitch 嵌入内容要正常显示，必须配置 `parent` 域名。请务必将其设为你的实际域名。
+- 出于安全原因，必须在 Twitch 端将父域名加入白名单，才能嵌入 Twitch 内容。
+- 此扩展会在创建嵌入内容前验证 URL，以防止无效内容。
+- 嵌入内容可以拖动，也可以在文档中重新定位。
 
-## Keyboard Shortcuts
+## 键盘快捷键
 
-- `Backspace` or `Delete` on a selected Twitch embed will remove it
-- You can select a Twitch embed with keyboard navigation and arrow keys
+- 选中 Twitch 嵌入内容后按 `Backspace` 或 `Delete` 可将其移除
+- 可以使用键盘导航和方向键选中 Twitch 嵌入内容
 
-## Source code
+## 源代码
 
 [packages/extension-twitch/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-twitch/)
