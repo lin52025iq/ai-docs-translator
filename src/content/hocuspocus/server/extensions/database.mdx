@@ -1,58 +1,57 @@
 ---
-title: Database
+title: 数据库
 meta:
-  title: Database | Hocuspocus Docs
+  title: 数据库 | Hocuspocus 文档
   category: Hocuspocus
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@hocuspocus/extension-database.svg?label=version
     url: https://www.npmjs.com/package/@hocuspocus/extension-database
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@hocuspocus/extension-database.svg
     url: https://npmcharts.com/compare/@hocuspocus/extension-database?minimal=true
-    label: Downloads
+    label: 下载量
   - type: image
     src: https://img.shields.io/npm/l/@hocuspocus/extension-database.svg
     url: https://www.npmjs.com/package/@hocuspocus/extension-database
-    label: License
+    label: 许可证
   - type: image
     src: https://img.shields.io/badge/chat-on%20discord-7289da.svg?sanitize=true
     url: https://discord.gg/WtJ49jGshW
-    label: Chat
+    label: 聊天
 ---
 
-Store your data in whatever data store you already have with the generic database extension.
-It takes a Promise to fetch data and another Promise to store the data, that’s all. Hocuspocus will handle the rest.
+使用通用数据库扩展，将数据存储到你现有的任意数据存储中即可。
+它只需要一个用于获取数据的 Promise，以及另一个用于存储数据的 Promise。其余工作由 Hocuspocus 处理。
 
-## Installation
+## 安装
 
-Install the database extension like this:
+按如下方式安装数据库扩展：
 
 ```bash
 npm install @hocuspocus/extension-database
 ```
 
-## Configuration
+## 配置
 
 **fetch**
 
-Expects an async function (or Promise) which returns a Y.js compatible Uint8Array (or null).
-Make sure to return the same Uint8Array that was saved in store(), and do not create a new Ydoc,
-as doing so would lead to a new history (and duplicated content).
+需要一个异步函数（或 Promise），返回与 Y.js 兼容的 Uint8Array（或 null）。
+请确保返回与 store() 中保存的同一个 Uint8Array，不要创建新的 Ydoc，
+否则会生成新的历史记录（并导致内容重复）。
 
-If you want to initially create a Ydoc based off raw text/json, you can do so here using a transformer of your choice
-(e.g. `TiptapTransformer.toYdoc`, or `ProsemirrorTransformer.toYdoc`)
+如果你想基于原始文本/JSON 创建初始 Ydoc，可以在这里使用你选择的转换器来实现
+（例如 `TiptapTransformer.toYdoc` 或 `ProsemirrorTransformer.toYdoc`）。
 
 **store**
 
-Expects an async function (or Promise) which persists the Y.js binary data somewhere.
+需要一个异步函数（或 Promise），用于将 Y.js 二进制数据持久化到某处。
 
-## Usage
+## 用法
 
-The following example uses SQLite to store and retrieve data. You can replace that part with whatever data store you
-have. As long as you return a Promise you can store data with PostgreSQL, MySQL, MongoDB, S3 … If you actually want to
-use SQLite, you can have a look at the [SQLite extension](/hocuspocus/server/extensions/sqlite).
+以下示例使用 SQLite 存储和检索数据。你可以将这部分替换为你使用的任意数据存储。只要返回一个 Promise，
+就可以使用 PostgreSQL、MySQL、MongoDB、S3 等存储数据……如果你确实想使用 SQLite，可以参阅 [SQLite 扩展](/hocuspocus/server/extensions/sqlite)。
 
 ```js
 import { Server } from "@hocuspocus/server";
