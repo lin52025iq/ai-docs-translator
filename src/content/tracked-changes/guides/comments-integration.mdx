@@ -1,31 +1,30 @@
 ---
-title: Tracked Changes with Comments
+title: 结合评论的修订跟踪
 tags:
   - type: addon
 meta:
-  title: Tracked Changes with Comments | Tiptap Tracked Changes Docs
-  description: Build a full editor combining Tracked Changes and Comments for a complete document review workflow.
-  category: Tracked Changes
+  title: 结合评论的修订跟踪 | Tiptap 修订跟踪文档
+  description: 将修订跟踪与评论扩展结合，构建完整的文档审阅工作流。
+  category: 修订跟踪
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Learn how to build a full document review experience by combining Tracked Changes with the Comments extension. Users can discuss suggestions through comment threads, and accepting or rejecting suggestions automatically syncs with the thread state.
+了解如何结合修订跟踪与评论扩展，构建完整的文档审阅体验。用户可以通过评论线程讨论建议；接受或拒绝建议时，线程状态也会自动同步。
 
-<Callout title="Framework note" variant="hint">
-  This guide uses React, but the same concepts apply to Vue and any other framework supported by
-  Tiptap.
+<Callout title="框架说明" variant="hint">
+  本指南使用 React，但相同的概念也适用于 Vue 以及 Tiptap 支持的其他框架。
 </Callout>
 
-## Prerequisites
+## 前置条件
 
-- A working editor with [Tracked Changes](/tracked-changes/guides/editor-setup)
-- The [Comments extension](/comments/getting-started/install) installed and configured
-- A [collaboration provider](/collaboration/getting-started/overview) set up (required for comments persistence)
+- 已配置可正常运行且启用了[修订跟踪](/tracked-changes/guides/editor-setup)的编辑器
+- 已安装并配置[评论扩展](/comments/getting-started/install)
+- 已设置[协作提供程序](/collaboration/getting-started/overview)（评论持久化所必需）
 
-## Set up the editor
+## 设置编辑器
 
-Both extensions need to be registered together. Since comments require a collaboration provider for persistence, you'll also need to set up Yjs and the `TiptapCollabProvider`.
+两个扩展都需要一起注册。由于评论需要协作提供程序来实现持久化，你还需要设置 Yjs 和 `TiptapCollabProvider`。
 
 ```jsx
 import { useEditor, EditorContent } from '@tiptap/react'
@@ -80,14 +79,13 @@ function ReviewEditor({ user }) {
 }
 ```
 
-<Callout title="Undo/Redo" variant="hint">
-  When using collaboration, disable the built-in `undoRedo` from StarterKit. Undo/redo is handled
-  natively by Yjs in collaborative environments.
+<Callout title="撤销/重做" variant="hint">
+  使用协作功能时，请禁用 StarterKit 内置的 `undoRedo`。在协作环境中，撤销/重做由 Yjs 原生处理。
 </Callout>
 
-## Subscribe to comment threads
+## 订阅评论线程
 
-Use the `subscribeToThreads` hook from the Comments extension to keep your UI in sync with thread state changes.
+使用评论扩展中的 `subscribeToThreads` 钩子，使界面与线程状态变更保持同步。
 
 ```jsx
 import { subscribeToThreads } from '@tiptap-pro/extension-comments'
@@ -113,9 +111,9 @@ function useThreads(provider) {
 }
 ```
 
-## Create comment threads
+## 创建评论线程
 
-Allow users to create comment threads on selected text. This works the same as the standard Comments extension:
+允许用户针对选中的文本创建评论线程。其用法与标准评论扩展相同：
 
 ```jsx
 const createThread = () => {
@@ -144,20 +142,20 @@ const createThread = () => {
 </button>
 ```
 
-## Bidirectional sync between suggestions and threads
+## 建议与线程之间的双向同步
 
-When both extensions are active, the Tracked Changes extension automatically synchronizes suggestion and thread states. This means:
+同时启用两个扩展时，修订跟踪扩展会自动同步建议和线程的状态。这意味着：
 
-- **Resolving** a comment thread linked to a suggestion → **accepts** the suggestion
-- **Deleting** a comment thread linked to a suggestion → **rejects** the suggestion
-- **Accepting** a suggestion → **resolves** its linked comment thread
-- **Rejecting** a suggestion → **deletes** its linked comment thread
+- **解决**与建议关联的评论线程 → **接受**该建议
+- **删除**与建议关联的评论线程 → **拒绝**该建议
+- **接受**建议 → **解决**与之关联的评论线程
+- **拒绝**建议 → **删除**与之关联的评论线程
 
-This happens automatically — no additional wiring is needed. Users can review changes from either the suggestion list or the comments panel and both stay consistent.
+此过程会自动完成，无需额外配置。用户可以在建议列表或评论面板中审阅更改，两者的状态始终保持一致。
 
-## Build a threads sidebar
+## 构建线程侧边栏
 
-Create a sidebar that displays comment threads. Threads linked to suggestions include metadata you can use to render a suggestion preview.
+创建一个用于显示评论线程的侧边栏。与建议关联的线程包含元数据，可用于呈现建议预览。
 
 ```jsx
 function ThreadsSidebar({ threads, provider, editor }) {
@@ -195,9 +193,9 @@ function ThreadsSidebar({ threads, provider, editor }) {
 }
 ```
 
-## Render suggestion-linked threads
+## 呈现与建议关联的线程
 
-Threads linked to suggestions store metadata in `thread.data`. Use this to show a suggestion preview with accept/reject actions directly in the thread card.
+与建议关联的线程会在 `thread.data` 中存储元数据。你可以利用这些数据，在评论卡片中直接显示建议预览以及接受/拒绝操作。
 
 ```jsx
 function ThreadItem({ thread, provider, editor }) {
@@ -276,9 +274,9 @@ function ThreadItem({ thread, provider, editor }) {
 }
 ```
 
-## Put it all together
+## 整合所有内容
 
-Combine the editor, toolbar, and threads sidebar into a complete review layout.
+将编辑器、工具栏和线程侧边栏组合起来，构建完整的审阅布局。
 
 ```jsx
 function ReviewApp() {
@@ -349,8 +347,8 @@ function ReviewApp() {
 }
 ```
 
-## Next steps
+## 后续步骤
 
-- Learn about the [bidirectional sync behavior](/tracked-changes/usage/advanced-usage#comments-integration) in detail
-- Explore the [Comments documentation](/comments/getting-started/overview) for more thread management options
-- See the [Events API](/tracked-changes/api-reference/events) to listen for suggestion and thread state changes
+- 详细了解[双向同步行为](/tracked-changes/usage/advanced-usage#comments-integration)
+- 查看[评论文档](/comments/getting-started/overview)，了解更多线程管理选项
+- 查看[事件 API](/tracked-changes/api-reference/events)，监听建议和线程状态变更
