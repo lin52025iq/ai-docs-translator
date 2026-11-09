@@ -1,20 +1,20 @@
 ---
-title: Validate Slot values
+title: 验证 Slot 值
 meta:
-  description: Check Slot values with built-in and custom rules when your application needs them.
+  description: 在应用需要时，使用内置规则和自定义规则检查 Slot 值。
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-Slots can include rules to describe what content is valid.
+Slot 可以包含用于描述哪些内容有效的规则。
 
 <CodeDemo isPro path="/Examples/SlotValidation" />
 
-Call `validateEditorSlots` when your application needs to check the content, for example before saving or submitting a form. Submission is an application action, not a built-in Slot event.
+当应用需要检查内容时（例如保存或提交表单之前），调用 `validateEditorSlots`。提交是应用层的操作，并非 Slot 内置事件。
 
-Validation reads a snapshot and returns findings; it does not resolve or rewrite Slot values. Built-in checks and registered async validators run only when you call the validation API. Editing invalidates previous results and cancels a pending editor validation run, but does not automatically start another run.
+验证会读取快照并返回检查结果；它不会解析或改写 Slot 值。只有在调用验证 API 时，才会运行内置检查和已注册的异步验证器。编辑会使之前的结果失效，并取消正在进行的编辑器验证，但不会自动启动新一轮验证。
 
-For validation while typing, register an editor `update` listener and debounce calls to `validateEditorSlots`. Handle cancelled runs, display only current results, and remove the listener and pending timer when your UI unmounts. Automatic scheduling belongs to the host; there is no built-in auto-validation option.
+若要在输入时进行验证，请注册编辑器的 `update` 监听器，并对 `validateEditorSlots` 调用进行防抖处理。处理已取消的验证，仅显示当前结果，并在 UI 卸载时移除监听器和待处理的计时器。自动调度由宿主负责；系统没有内置的自动验证选项。
 
 ```ts
 import { isSlotValidationCurrent, validateEditorSlots } from '@tiptap-pro/extension-slot'
@@ -37,9 +37,9 @@ try {
 }
 ```
 
-`isSlotValidationCurrent` checks that the result still matches the editor's current document and validation settings.
+`isSlotValidationCurrent` 会检查结果是否仍与编辑器当前的文档和验证设置相符。
 
-Define requiredness, length, content types and patterns in `attrs.config`:
+在 `attrs.config` 中定义必填要求、长度、内容类型和模式：
 
 ```ts
 const config = {
@@ -52,7 +52,7 @@ const config = {
 editor.commands.insertSlot({ config })
 ```
 
-For application-specific checks, persist a validator name and register its implementation:
+对于特定于应用的检查，请持久化验证器名称并注册其实现：
 
 ```ts
 Slot.configure({
@@ -79,10 +79,10 @@ editor.commands.insertSlot({
 })
 ```
 
-Validation can be async, so an AbortSignal (the `signal` field) is passed to cancel the validation process if the document is edited during validation.
+验证可能是异步的，因此会传入 AbortSignal（`signal` 字段），以便在验证期间文档被编辑时取消验证过程。
 
-For checks that involve multiple fields, add a `crossFieldRules` entry to an owning Slot and register a `crossFieldValidators` function. [Learn more in the API Reference](/composable-docs/slots/api-reference/validation#crossfieldvalidator).
+对于涉及多个字段的检查，请在所属 Slot 中添加 `crossFieldRules` 条目，并注册 `crossFieldValidators` 函数。[了解详情，请参阅 API 参考](/composable-docs/slots/api-reference/validation#crossfieldvalidator)。
 
-If some validators are missing or failed, `validateEditorSlots` returns `status: 'unavailable'`.
+如果部分验证器缺失或执行失败，`validateEditorSlots` 会返回 `status: 'unavailable'`。
 
-See [the API Reference](/composable-docs/slots/api-reference/validation#slotvalidator) for more info on validation.
+有关验证的更多信息，请参阅 [API 参考](/composable-docs/slots/api-reference/validation#slotvalidator)。
