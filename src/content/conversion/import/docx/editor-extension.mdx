@@ -1,13 +1,13 @@
 ---
-title: Import .docx in your editor
+title: 在编辑器中导入 .docx
 tags:
   - type: start
   - type: beta
   - type: version
     label: v0.12.3
 meta:
-  title: Import DOCX | Tiptap Conversion
-  description: Learn how to import DOCX (Word) documents into a Tiptap editor using the Import extension in our docs.
+  title: 导入 DOCX | Tiptap Conversion
+  description: 在文档中了解如何使用 Import 扩展将 DOCX（Word）文档导入 Tiptap 编辑器。
   category: Conversion
 ---
 
@@ -20,46 +20,45 @@ import RegionalEndpoints from '../../_shared/_regional-endpoints.mdx'
 <EnterpriseCalloutAuto variant="docx" renderMode="sidebar" disableWaitlist />
 
 <Requirements>
-  <RequirementItem label="1. Activate trial or subscribe">
-    Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start
-    plan](https://cloud.tiptap.dev/v2/billing) in your account.
+  <RequirementItem label="1. 开始试用或订阅">
+    在帐户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start
+    计划](https://cloud.tiptap.dev/v2/billing)。
   </RequirementItem>
-  <RequirementItem label="2. Install from private registry">
-    To install this frontend extensions, authenticate to Tiptap’s private npm registry by following
-    the [setup guide](/guides/pro-extensions).
+  <RequirementItem label="2. 从私有注册表安装">
+    要安装这些前端扩展，请按照[设置指南](/guides/pro-extensions)进行身份验证，以访问 Tiptap 的私有 npm 注册表。
   </RequirementItem>
 </Requirements>
 
 <CodeDemo isPro path="/Extensions/ImportDocx" />
 
-Converting `.docx` files to Tiptap JSON is simple with the `@tiptap-pro/extension-import-docx` editor extension, which integrates directly into your Tiptap editor.
+使用 `@tiptap-pro/extension-import-docx` 编辑器扩展，可以轻松将 `.docx` 文件转换为 Tiptap JSON。此扩展可直接集成到 Tiptap 编辑器中。
 
-You can also import via the [REST API](/conversion/import/docx/rest-api). Both paths use the same conversion service and produce identical content output. The main differences:
+你也可以通过 [REST API](/conversion/import/docx/rest-api) 导入。两种方式使用相同的转换服务，生成完全相同的内容。主要区别如下：
 
-|                        | Editor extension                             | REST API                         |
+|                        | 编辑器扩展                                   | REST API                         |
 | ---------------------- | -------------------------------------------- | -------------------------------- |
-| Runs in                | Your editor (client-side)                    | Tiptap cloud (server-side)       |
-| Footnotes and endnotes | Auto-applied via Pages; data on the callback | Returned in response             |
-| Headers and footers    | Auto-applied via Pages extension             | Returned as separate data fields |
-| Unknown content        | Rewritten against your editor schema         | Raw JSON, no schema filtering    |
+| 运行位置               | 你的编辑器（客户端）                          | Tiptap Cloud（服务器端）         |
+| 脚注和尾注             | 通过 Pages 自动应用；数据在回调中提供         | 在响应中返回                     |
+| 页眉和页脚             | 通过 Pages 扩展自动应用                       | 作为单独的数据字段返回           |
+| 未知内容               | 根据你的编辑器 schema 重写                    | 原始 JSON，不进行 schema 过滤    |
 
-Choose the REST API if you need server-side processing or raw unfiltered JSON.
+如果需要服务器端处理或未经筛选的原始 JSON，请选择 REST API。
 
-## Install the DOCX Import extension
+## 安装 DOCX Import 扩展
 
-The Conversion extensions are published in Tiptap’s private npm registry. Integrate the extensions by following the [private registry guide](/guides/pro-extensions).
+Conversion 扩展发布在 Tiptap 的私有 npm 注册表中。请按照[私有注册表指南](/guides/pro-extensions)集成这些扩展。
 
-Install the Tiptap Import extension package:
+安装 Tiptap Import 扩展包：
 
 ```bash
 npm i @tiptap-pro/extension-import-docx
 ```
 
-Ensure your editor includes all necessary Tiptap extensions to handle content from DOCX. For the complete list of extensions, configuration, and what each one handles, see the [ConvertKit](/conversion/import/docx/convertkit) page.
+确保编辑器包含处理 DOCX 内容所需的所有 Tiptap 扩展。扩展的完整列表、配置以及各自的功能说明，请参阅 [ConvertKit](/conversion/import/docx/convertkit) 页面。
 
-## Required extensions
+## 必需的扩展
 
-Install [ConvertKit](/conversion/import/docx/convertkit): it bundles every extension the importer needs: the standard nodes and marks, `TextStyleKit` for color/font/size/line-height/background, `TextAlign` preconfigured for `['paragraph', 'heading']`, `Highlight` with `multicolor: true`, an `Image` with DOCX crop attributes, `ConvertTableKit` for DOCX-aware tables, and `PageBreak`:
+安装 [ConvertKit](/conversion/import/docx/convertkit)：它打包了导入器所需的所有扩展，包括标准节点和标记、用于颜色/字体/字号/行高/背景的 `TextStyleKit`、预先配置为 `['paragraph', 'heading']` 的 `TextAlign`、启用了 `multicolor: true` 的 `Highlight`、带有 DOCX 裁剪属性的 `Image`、适配 DOCX 表格的 `ConvertTableKit`，以及 `PageBreak`：
 
 ```ts
 import { ConvertKit } from '@tiptap-pro/extension-convert-kit'
@@ -67,11 +66,11 @@ import { ConvertKit } from '@tiptap-pro/extension-convert-kit'
 new Editor({ extensions: [ConvertKit] })
 ```
 
-You can disable any individual slot via `ConvertKit.configure({ slot: false })` if you need to swap one of the bundled extensions for your own (e.g. when pairing with the [Pages extension](/pages/getting-started/overview), set `table: false` and register `TableKit` from `@tiptap-pro/extension-pages-tablekit` instead). See the [ConvertKit reference](/conversion/import/docx/convertkit) for the full slot list.
+如果需要用自己的扩展替换其中某个已打包扩展，可以通过 `ConvertKit.configure({ slot: false })` 禁用对应的单独插槽（例如，与 [Pages 扩展](/pages/getting-started/overview)搭配时，将 `table: false` 设为禁用，然后改为注册来自 `@tiptap-pro/extension-pages-tablekit` 的 `TableKit`）。完整插槽列表请参阅 [ConvertKit 参考](/conversion/import/docx/convertkit)。
 
-## Configure
+## 配置
 
-Add the Import extension to your editor setup.
+将 Import 扩展添加到编辑器配置中。
 
 ```ts
 import { ImportDocx } from '@tiptap-pro/extension-import-docx'
@@ -91,23 +90,23 @@ const editor = new Editor({
 })
 ```
 
-| Property            | Description                                                                                                                                                                                                                                                                                                  |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `token`             | A JWT generated by your server for the Convert service. It is the only credential a request needs. See [Authentication](/authentication) for how to issue one. For a new one per import, see [Pass a fresh token](#pass-a-fresh-token-on-each-import).                                                       |
-| `endpoint`          | The Convert API base URL. Set it only to point at another deployment. When set, it overrides `region`.                                                                                                                                                                                                       |
-| `region`            | The Tiptap Cloud region that runs the conversion, `'eu'` or `'us'`. Defaults to `'eu'`. Ignored when `endpoint` is set.                                                                                                                                                                                      |
-| `imageUploadConfig` | Structured configuration for image uploads during import. See [Image upload configuration](#image-upload-configuration) for details.                                                                                                                                                                         |
-| `prosemirrorNodes`  | Renames the node types the import produces, for schemas that use different names. See [custom node mapping](/conversion/import/docx/custom-node-mapping).                                                                                                                                                    |
-| `prosemirrorMarks`  | Renames the mark types the import produces, and maps Word character styles onto marks. See [custom mark mapping](/conversion/import/docx/custom-mark-mapping).                                                                                                                                               |
-| `cssStyles`         | Opts into extracting the document's default styles as CSS so you can apply them to the editor. See [CSS injection](/conversion/import/docx/css-injection).                                                                                                                                                   |
-| `trackedChanges`    | Decides what happens to Word insertions and deletions: keep them as suggestions, apply them, or discard them. Defaults to `auto`, which chooses based on your schema. See [tracked changes](/conversion/import/docx/tracked-changes).                                                                        |
-| `taskLists`         | Whether Word checkbox lists become `taskList` / `taskItem` nodes. `'auto'` (default) imports them when both nodes are in your editor schema, which is the case with `ConvertKit`. `'import'` forces it, `'ignore'` turns it off. See [Task lists](/conversion/content-types/text-and-formatting/task-lists). |
+| 属性                  | 说明                                                                                                                                                                                                                                                                                                    |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `token`               | 由你的服务器为 Convert 服务生成的 JWT。请求只需此凭据。如何签发 JWT，请参阅[身份验证](/authentication)。如需每次导入都使用新令牌，请参阅[每次导入时传入新令牌](#pass-a-fresh-token-on-each-import)。                                                       |
+| `endpoint`            | Convert API 的基础 URL。只有在需要指向其他部署时才设置。设置后会覆盖 `region`。                                                                                                                                                                                                                            |
+| `region`              | 执行转换的 Tiptap Cloud 区域，可设为 `'eu'` 或 `'us'`。默认为 `'eu'`。设置 `endpoint` 后，此项会被忽略。                                                                                                                                                                                               |
+| `imageUploadConfig`   | 导入期间用于图片上传的结构化配置。详情请参阅[图片上传配置](#image-upload-configuration)。                                                                                                                                                                                                                 |
+| `prosemirrorNodes`    | 重命名导入生成的节点类型，以适配使用不同名称的 schema。请参阅[自定义节点映射](/conversion/import/docx/custom-node-mapping)。                                                                                                                                                                             |
+| `prosemirrorMarks`    | 重命名导入生成的标记类型，并将 Word 字符样式映射到标记。请参阅[自定义标记映射](/conversion/import/docx/custom-mark-mapping)。                                                                                                                                                                             |
+| `cssStyles`           | 启用将文档默认样式提取为 CSS 的功能，以便应用到编辑器。请参阅 [CSS 注入](/conversion/import/docx/css-injection)。                                                                                                                                                                                        |
+| `trackedChanges`      | 决定如何处理 Word 中的插入和删除：保留为建议、应用更改或丢弃。默认为 `auto`，会根据你的 schema 进行选择。请参阅[修订](/conversion/import/docx/tracked-changes)。                                                                                                                                          |
+| `taskLists`           | 决定是否将 Word 复选框列表转换为 `taskList` / `taskItem` 节点。`'auto'`（默认值）会在编辑器 schema 同时包含这两个节点时导入；使用 `ConvertKit` 时即为这种情况。`'import'` 强制导入，`'ignore'` 则关闭此功能。请参阅[任务列表](/conversion/content-types/text-and-formatting/task-lists)。 |
 
 <RegionalEndpoints />
 
-## Image upload configuration
+## 图片上传配置
 
-The `imageUploadConfig` option lets you configure how the conversion service uploads images found in the DOCX file to your server. This replaces the deprecated `imageUploadCallbackUrl` string option and gives you full control over headers, HTTP method, and query parameters.
+`imageUploadConfig` 选项用于配置转换服务如何将 DOCX 文件中的图片上传到你的服务器。此选项取代了已弃用的字符串选项 `imageUploadCallbackUrl`，让你可以完全控制请求标头、HTTP 方法和查询参数。
 
 ```ts
 ImportDocx.configure({
@@ -127,15 +126,15 @@ ImportDocx.configure({
 })
 ```
 
-| Property      | Type                     | Required | Description                                                                                                                                                                                                               |
-| ------------- | ------------------------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `url`         | `string`                 | Yes      | The endpoint URL that will receive the uploaded images. Must be a valid HTTP or HTTPS URL. Use HTTPS in production: the headers below are sent with every upload, so an HTTP endpoint exposes any credentials they carry. |
-| `headers`     | `Record<string, string>` | No       | Additional HTTP headers forwarded by the convert service when uploading images. Useful for authentication (e.g., Bearer tokens, API keys). Use a plain object of header names to values.                                  |
-| `method`      | `string`                 | No       | The HTTP method used to upload images. Defaults to `POST`.                                                                                                                                                                |
-| `queryParams` | `Record<string, string>` | No       | Query parameters appended to the upload URL by the convert service.                                                                                                                                                       |
+| 属性          | 类型                     | 必填 | 说明                                                                                                                                                                                                                |
+| ------------- | ------------------------ | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `url`         | `string`                 | 是   | 接收上传图片的端点 URL。必须是有效的 HTTP 或 HTTPS URL。生产环境请使用 HTTPS：下方的标头会随每次上传一并发送，使用 HTTP 端点会暴露其中携带的凭据。                                                                   |
+| `headers`     | `Record<string, string>` | 否   | 上传图片时由转换服务转发的其他 HTTP 标头。可用于身份验证（例如 Bearer 令牌、API 密钥）。请使用以标头名称为键、标头值为值的普通对象。                                                                                   |
+| `method`      | `string`                 | 否   | 上传图片时使用的 HTTP 方法。默认为 `POST`。                                                                                                                                                                         |
+| `queryParams` | `Record<string, string>` | 否   | 由转换服务附加到上传 URL 的查询参数。                                                                                                                                                                               |
 
-<Callout title="Migrating from imageUploadCallbackUrl" variant="warning">
-  The `imageUploadCallbackUrl` option is deprecated. Replace it with `imageUploadConfig`:
+<Callout title="从 imageUploadCallbackUrl 迁移" variant="warning">
+  `imageUploadCallbackUrl` 选项已弃用。请将其替换为 `imageUploadConfig`：
 
 ```ts
 // Before (deprecated)
@@ -151,27 +150,27 @@ ImportDocx.configure({
 })
 ```
 
-If both `imageUploadConfig` and `imageUploadCallbackUrl` are provided, `imageUploadConfig` takes precedence and a console warning is emitted.
+如果同时提供 `imageUploadConfig` 和 `imageUploadCallbackUrl`，将优先使用 `imageUploadConfig`，并在控制台发出警告。
 
 </Callout>
 
-## Import a DOCX file
+## 导入 DOCX 文件
 
-Once the extension is configured, you can import a DOCX file selected by the user.
+配置好扩展后，即可导入用户选择的 DOCX 文件。
 
-### Basic import
+### 基本导入
 
-The simplest approach is to pass the file directly to the `importDocx` command. Here it replaces the current editor content with the converted content and focuses the editor:
+最简单的方式是将文件直接传给 `importDocx` 命令。此示例会将当前编辑器内容替换为转换后的内容，并聚焦编辑器：
 
 ```ts
 editor.chain().focus().importDocx({ file }).run()
 ```
 
-In most cases, this one-liner is all you need to let users import `.docx` files. The extension handles sending the file to the conversion endpoint, retrieving the converted Tiptap JSON, and inserting it into the editor.
+在大多数情况下，只需这一行代码就能让用户导入 `.docx` 文件。扩展会负责将文件发送到转换端点、获取转换后的 Tiptap JSON，并将其插入编辑器。
 
-### Import handling
+### 处理导入
 
-In order to have more control after the import process have finished, you would use the `onImport` callback to handle the conversion result. This callback provides the converted content, any errors that occurred, and a function called `setEditorContent` to insert the content from `context.content` into the editor. If you don't provide an `onImport` callback, the extension will automatically insert the content into the editor but you won't be able to handle anything else like errors or loading states.
+如果想在导入完成后进行更多控制，可以使用 `onImport` 回调处理转换结果。此回调会提供转换后的内容、发生的错误，以及一个名为 `setEditorContent` 的函数，用于将 `context.content` 中的内容插入编辑器。如果不提供 `onImport` 回调，扩展会自动将内容插入编辑器，但你将无法处理错误、加载状态等其他事项。
 
 ```ts
 editor
@@ -206,17 +205,17 @@ editor
   .run()
 ```
 
-Operations that we have controlled in the example above:
+上面的示例展示了以下操作：
 
-| Operation            | Description                                                                                                                                                                                                                                                                         |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Error Handling       | If the conversion fails, you can display a toast or log the error.                                                                                                                                                                                                                  |
-| Content Modification | You can insert extra nodes, remove certain nodes, or otherwise adjust the converted Tiptap JSON as needed.                                                                                                                                                                          |
-| Editor Insertion     | If you want to rely on the extension's default insertion behavior (replacing the editor content), you can call the `setEditorContent()` function provided in the callback. If you modify the content yourself, you must manually set it with `editor.commands.setContent(content)`. |
+| 操作       | 说明                                                                                                                                                                                                                                      |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 错误处理   | 如果转换失败，可以显示 toast 提示或记录错误。                                                                                                                                                                                              |
+| 修改内容   | 你可以按需插入额外节点、删除特定节点，或以其他方式调整转换后的 Tiptap JSON。                                                                                                                                                               |
+| 插入编辑器 | 如果要使用扩展的默认插入行为（替换编辑器内容），可以调用回调中提供的 `setEditorContent()` 函数。如果自行修改了内容，则必须手动使用 `editor.commands.setContent(content)` 设置内容。                                                              |
 
-### Pass a fresh token on each import
+### 每次导入时传入新令牌
 
-Convert tokens should be short-lived (see [Authentication](/authentication)). The `token` from `ImportDocx.configure()` stays the same for the life of the editor, so fetch a new token right before each import and pass it to the `importDocx` command. The command also takes `imageUploadConfig`, for an upload endpoint that checks the same token:
+Convert 令牌应采用较短的有效期（请参阅[身份验证](/authentication)）。`ImportDocx.configure()` 中的 `token` 在编辑器的整个生命周期内保持不变，因此应在每次导入前获取新令牌，并将其传给 `importDocx` 命令。该命令也接受 `imageUploadConfig`，用于配置会检查同一令牌的上传端点：
 
 ```ts
 async function importFile(file: File) {
@@ -238,15 +237,15 @@ async function importFile(file: File) {
 }
 ```
 
-Values passed to the command apply to that import only. When the command gets no `token` or `imageUploadConfig`, the import uses the ones from `ImportDocx.configure()`. A per-call `imageUploadConfig` replaces the configured one as a whole, so repeat any `method`, `queryParams` or other `headers` you set in `ImportDocx.configure()`.
+传给命令的值仅对本次导入生效。如果命令未收到 `token` 或 `imageUploadConfig`，导入时会使用 `ImportDocx.configure()` 中的配置。每次调用时传入的 `imageUploadConfig` 会整体替换已配置的值，因此请重复设置在 `ImportDocx.configure()` 中指定的任何 `method`、`queryParams` 或其他 `headers`。
 
-## Headers & Footers
+## 页眉和页脚
 
-When importing a `.docx` file that contains headers and footers, the import extension automatically detects and applies them if the [Pages extension](/pages/getting-started/overview) is installed. Without Pages, the header/footer data is still returned to your `onImport` callback (see [Manual handling](#manual-handling) below) but has nowhere to render. Install Pages to make them visible in the editor.
+导入包含页眉和页脚的 `.docx` 文件时，如果已安装 [Pages 扩展](/pages/getting-started/overview)，Import 扩展会自动检测并应用页眉和页脚。未安装 Pages 时，页眉/页脚数据仍会在 `onImport` 回调中返回（请参阅下文的[手动处理](#manual-handling)），但没有可供呈现的位置。安装 Pages 后，这些内容才能在编辑器中显示。
 
-### Automatic handling
+### 自动处理
 
-If the Pages extension is registered in your editor, headers and footers are applied automatically when you call `setEditorContent()`:
+如果在编辑器中注册了 Pages 扩展，调用 `setEditorContent()` 时会自动应用页眉和页脚：
 
 ```ts
 editor
@@ -267,13 +266,13 @@ editor
   .run()
 ```
 
-An import defines the whole document. A header, footer, footnote or endnote slot the file does not carry is cleared, so nothing from a previous import stays on the page. First page and odd/even variants are switched off when the file has none.
+导入内容会定义整个文档。如果文件中没有某个页眉、页脚、脚注或尾注插槽，对应插槽就会被清除，不会保留上一次导入的内容。如果文件没有首页或奇偶页变体，这些选项也会关闭。
 
-If the Pages extension is not installed, the header and footer data is still available in the `onImport` callback but is not automatically applied to the editor.
+如果未安装 Pages 扩展，页眉和页脚数据仍可在 `onImport` 回调中获取，但不会自动应用到编辑器。
 
-### Manual handling
+### 手动处理
 
-The `onImport` callback provides all header and footer fields for manual processing:
+`onImport` 回调会提供所有页眉和页脚字段，供你手动处理：
 
 ```ts
 editor
@@ -333,24 +332,24 @@ editor
   .run()
 ```
 
-### Available fields
+### 可用字段
 
-| Field             | Description                                                                        |
-| ----------------- | ---------------------------------------------------------------------------------- |
-| `header`          | Default header content as Tiptap JSON, or `null`                                   |
-| `footer`          | Default footer content as Tiptap JSON, or `null`                                   |
-| `headerFirstPage` | First page header (when "Different First Page" is enabled in Word), or `null`      |
-| `footerFirstPage` | First page footer (when "Different First Page" is enabled in Word), or `null`      |
-| `headerOdd`       | Odd page header (when "Different Odd & Even Pages" is enabled in Word), or `null`  |
-| `footerOdd`       | Odd page footer (when "Different Odd & Even Pages" is enabled in Word), or `null`  |
-| `headerEven`      | Even page header (when "Different Odd & Even Pages" is enabled in Word), or `null` |
-| `footerEven`      | Even page footer (when "Different Odd & Even Pages" is enabled in Word), or `null` |
+| 字段              | 说明                                                                       |
+| ----------------- | -------------------------------------------------------------------------- |
+| `header`          | Tiptap JSON 格式的默认页眉内容，或 `null`                                   |
+| `footer`          | Tiptap JSON 格式的默认页脚内容，或 `null`                                   |
+| `headerFirstPage` | 首页页眉（在 Word 中启用“首页不同”时），或 `null`                           |
+| `footerFirstPage` | 首页页脚（在 Word 中启用“首页不同”时），或 `null`                           |
+| `headerOdd`       | 奇数页页眉（在 Word 中启用“奇偶页不同”时），或 `null`                       |
+| `footerOdd`       | 奇数页页脚（在 Word 中启用“奇偶页不同”时），或 `null`                       |
+| `headerEven`      | 偶数页页眉（在 Word 中启用“奇偶页不同”时），或 `null`                       |
+| `footerEven`      | 偶数页页脚（在 Word 中启用“奇偶页不同”时），或 `null`                       |
 
-### Page-number fields
+### 页码字段
 
-Word headers and footers commonly contain `PAGE` and `NUMPAGES` field codes that render as live page numbers. By default, when the [Pages extension](/pages/getting-started/overview) is installed, `importDocx` translates those fields into text tokens. Without a Pages rename, the convert service emits `{page}` and `{numpages}`. Pages renders `{page}` but not `{numpages}`, because its default name for the total page count is `{total}`. To show the total in the editor and export it back as a live Word field, rename the Pages token with `Pages.configure({ placeholders: { total: 'numpages' } })`.
+Word 页眉和页脚中通常包含 `PAGE` 和 `NUMPAGES` 域代码，用于动态显示页码。默认情况下，安装了 [Pages 扩展](/pages/getting-started/overview)时，`importDocx` 会将这些域转换为文本占位符。如果没有重命名 Pages 占位符，转换服务会输出 `{page}` 和 `{numpages}`。Pages 会渲染 `{page}`，但不会渲染 `{numpages}`，因为它默认使用 `{total}` 表示总页数。若要在编辑器中显示总页数，并在导出时将其恢复为动态 Word 域，请使用 `Pages.configure({ placeholders: { total: 'numpages' } })` 重命名 Pages 占位符。
 
-When you rename the built-ins, the importer forwards your registry to the convert service so it emits the same names:
+重命名内置占位符后，导入器会将你的占位符注册表转发给转换服务，以便服务输出相同的名称：
 
 ```ts
 import { Pages } from '@tiptap-pro/extension-pages'
@@ -364,23 +363,23 @@ Pages.configure({
 // field.
 ```
 
-This wiring is automatic: `importDocx` reads `Pages.options.placeholders` and forwards it to the convert service. You don't need to do anything in the `onImport` callback.
+此连接会自动完成：`importDocx` 会读取 `Pages.options.placeholders` 并将其转发给转换服务。你无需在 `onImport` 回调中进行任何处理。
 
-#### Disabling token translation
+#### 禁用占位符转换
 
-Pass `placeholders: false` on the import command to opt out. Word's cached numeric value flows through as plain text instead. This is the historical behavior, useful when no Pages extension is installed downstream:
+在导入命令中传入 `placeholders: false` 即可选择不进行转换。Word 缓存的数值会作为纯文本传递。这是以往的行为，在后续流程未安装 Pages 扩展时很有用：
 
 ```ts
 editor.chain().importDocx({ file, placeholders: false }).run()
 ```
 
-When `placeholders` is omitted, the command opts in by default whenever the Pages extension is installed, unless you've disabled token substitution with `Pages.configure({ placeholders: false })`, in which case it stays off. Pass `true` to force translation on regardless. `true` keeps the token names from your Pages config when it renames them, and uses the default names otherwise. An explicit `{ page?, total? }` rename map also forces translation on, and takes precedence over the editor's Pages config.
+如果未指定 `placeholders`，只要安装了 Pages 扩展，命令默认就会启用转换；但如果你通过 `Pages.configure({ placeholders: false })` 禁用了占位符替换，转换也会保持关闭。传入 `true` 可强制启用转换。若 Pages 配置中重命名了占位符，`true` 会沿用配置中的名称；否则使用默认名称。显式传入 `{ page?, total? }` 重命名映射也会强制启用转换，并优先于编辑器的 Pages 配置。
 
-## Footnotes & Endnotes
+## 脚注和尾注
 
-The import API extracts footnote and endnote content from DOCX files. Inline references in the document body are represented as `footnoteReference` and `endnoteReference` nodes, each with a `noteId` attribute, and the note content is delivered keyed by those ids.
+导入 API 会从 DOCX 文件中提取脚注和尾注内容。文档正文中的行内引用会表示为 `footnoteReference` 和 `endnoteReference` 节点，每个节点都有一个 `noteId` 属性；注释内容则按这些 ID 作为键提供。
 
-The `onImport` callback's `ImportContext` includes both data sets:
+`onImport` 回调的 `ImportContext` 中包含这两组数据：
 
 ```js
 editor
@@ -399,21 +398,15 @@ editor
   .run()
 ```
 
-<Callout title="Auto-applied with Tiptap Pages" variant="hint">
-  When the [Pages extension](/pages/getting-started/overview) is installed with
-  [footnotes](/pages/core-concepts/footnotes) and/or [endnotes](/pages/core-concepts/endnotes)
-  enabled, imported notes are applied automatically: markers render in the body, footnote content
-  lands in the per-page footnotes areas, endnote content lands in the document-end endnotes list,
-  and numbering matches the source document. No extra wiring required.
+<Callout title="通过 Tiptap Pages 自动应用" variant="hint">
+  如果安装了 [Pages 扩展](/pages/getting-started/overview)，并启用了[脚注](/pages/core-concepts/footnotes)和/或[尾注](/pages/core-concepts/endnotes)，导入的注释会自动应用：标记会显示在正文中，脚注内容会放在每页的脚注区域，尾注内容会放在文档末尾的尾注列表中，编号也会与源文档一致。无需额外配置。
 </Callout>
 
-Without Pages, the `footnoteReference` / `endnoteReference` nodes require a [custom extension](/editor/extensions/custom-extensions/extend-existing) to render in the editor. The data on `ImportContext` gives you everything needed to build your own presentation.
+未安装 Pages 时，需要使用[自定义扩展](/editor/extensions/custom-extensions/extend-existing)来在编辑器中渲染 `footnoteReference` / `endnoteReference` 节点。`ImportContext` 中的数据足以让你构建自己的呈现方式。
 
-## Warnings and errors
+## 警告和错误
 
-Every import returns a `logs` object on the `onImport` context, holding `warn` and `error` arrays. A
-warning means content did not make it into the document, so it is worth showing to whoever uploaded
-the file.
+每次导入都会在 `onImport` 上下文中返回一个 `logs` 对象，其中包含 `warn` 和 `error` 数组。警告表示有内容未能导入文档，因此值得向上传文件的用户显示。
 
 ```ts
 editor
@@ -431,9 +424,8 @@ editor
   .run()
 ```
 
-The commonest warning is an image that could not be imported, which usually means no
-`imageUploadConfig` was set. See [Image handling](/conversion/import/docx/image-handling).
+最常见的警告是图片无法导入，这通常意味着未设置 `imageUploadConfig`。请参阅[图片处理](/conversion/import/docx/image-handling)。
 
-## Support & Limitations
+## 支持情况和限制
 
-For a detailed breakdown of which document features are supported at each stage of the pipeline, see the [Supported features](/conversion/getting-started/feature-support-matrix) matrix.
+有关管线各个阶段支持哪些文档功能的详细说明，请参阅[支持的功能](/conversion/getting-started/feature-support-matrix)矩阵。
