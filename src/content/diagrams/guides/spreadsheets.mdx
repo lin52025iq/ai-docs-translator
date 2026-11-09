@@ -1,40 +1,36 @@
 ---
-title: 'Google Sheets, Excel and Airtable'
-intro: 'A chart can follow a range in Google Sheets, a table in an Excel workbook or the records of an Airtable table. For each service you write a small provider, register it with <code>Diagrams</code>, and link a chart to an address in that service.'
+title: 'Google Sheets、Excel 和 Airtable'
+intro: '图表可以关联 Google Sheets 中的单元格区域、Excel 工作簿中的表格，或 Airtable 表格中的记录。对于每项服务，你都需要编写一个小型提供程序，将其注册到 <code>Diagrams</code>，然后将图表关联到该服务中的地址。'
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Google Sheets, Excel and Airtable | Tiptap Diagrams Docs'
-  description: 'Link a chart to a Google Sheet, an Excel workbook or an Airtable table with a Data Source provider of your own.'
+  title: 'Google Sheets、Excel 和 Airtable | Tiptap Diagrams 文档'
+  description: '使用自定义的数据源提供程序，将图表关联到 Google Sheet、Excel 工作簿或 Airtable 表格。'
   category: Diagrams
 ---
 
-## How it fits together
+## 工作原理
 
-The provider calls the service's API and returns Chart Data. The document stores the address
-and a snapshot, as for every [Data Source](/diagrams/data/sources). A provider gets its token from your
-sign-in or your server when you create it, never from the address.
+提供程序会调用服务的 API 并返回图表数据。与每个[数据源](/diagrams/data/sources)一样，文档会存储地址和快照。创建提供程序时，它会从你的登录流程或服务器获取令牌，而不会从地址中获取。
 
-| Service       | Provider id     | Address                                               | Credentials                         |
-| ------------- | --------------- | ----------------------------------------------------- | ----------------------------------- |
-| Google Sheets | `google-sheets` | `{ spreadsheetId, range }`                            | The user's Google sign-in (OAuth)   |
-| Excel         | `excel`         | `{ itemId, table }` or `{ itemId, worksheet, range }` | The user's Microsoft sign-in (MSAL) |
-| Airtable      | `airtable`      | `{ baseId, table, fields }`                           | A token on your server              |
+| 服务          | 提供程序 ID     | 地址                                                  | 凭据                         |
+| ------------- | --------------- | ----------------------------------------------------- | ---------------------------- |
+| Google Sheets | `google-sheets` | `{ spreadsheetId, range }`                            | 用户的 Google 登录（OAuth）  |
+| Excel         | `excel`         | `{ itemId, table }` 或 `{ itemId, worksheet, range }` | 用户的 Microsoft 登录（MSAL）|
+| Airtable      | `airtable`      | `{ baseId, table, fields }`                           | 服务器上的令牌                |
 
-You choose the provider ids. [Writing a provider](/diagrams/data/sources#writing-a-provider) says what
-a provider must have.
+提供程序 ID 由你自行选择。[编写提供程序](/diagrams/data/sources#writing-a-provider)介绍了提供程序必须具备的内容。
 
 ## Google Sheets
 
-### A published sheet, without credentials
+### 已发布的工作表，无需凭据
 
-A sheet published as CSV needs no provider of your own. The built-in `url-csv` provider reads
-it.
+将工作表发布为 CSV 后，无需编写自己的提供程序。内置的 `url-csv` 提供程序会读取该工作表。
 
-1. In Google Sheets, choose File, Share, Publish to web.
-2. Pick the sheet and Comma-separated values (.csv), then Publish.
-3. Link a chart to the URL it shows.
+1. 在 Google Sheets 中，选择“文件”“共享”“发布到网络”。
+2. 选择工作表和“逗号分隔值 (.csv)”，然后点击“发布”。
+3. 将图表关联到显示的 URL。
 
 ```ts
 editor.commands.linkChartSource({
@@ -46,20 +42,19 @@ editor.commands.linkChartSource({
 })
 ```
 
-- Anyone who has the URL can read the published sheet.
-- Google updates a published sheet a few minutes after a change, not at once.
+- 任何拥有该 URL 的人都可以读取已发布的工作表。
+- 工作表发生更改后，Google 通常要过几分钟才会更新已发布的内容，不会立即更新。
 
-### A private sheet, through the Sheets API
+### 通过 Sheets API 读取私人工作表
 
-What to set up:
+需要准备：
 
-- A Google Cloud project with the Google Sheets API enabled.
-- An OAuth client ID of type Web application, with your site as an authorized JavaScript origin.
-- The scope `https://www.googleapis.com/auth/spreadsheets.readonly`.
-- A sign-in that returns an access token, such as the token client of Google Identity Services.
+- 一个已启用 Google Sheets API 的 Google Cloud 项目。
+- 一个类型为“Web 应用”的 OAuth 客户端 ID，并将你的网站设为授权的 JavaScript 来源。
+- 范围 `https://www.googleapis.com/auth/spreadsheets.readonly`。
+- 一个可返回访问令牌的登录流程，例如 Google Identity Services 的令牌客户端。
 
-The provider reads a range with
-[`spreadsheets.values.get`](https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.values/get):
+提供程序使用 [`spreadsheets.values.get`](https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.values/get) 读取单元格区域：
 
 ```ts
 import {
@@ -110,11 +105,11 @@ export function googleSheetsSource(options: {
 }
 ```
 
-Register it and link a chart:
+注册提供程序并关联图表：
 
-- `getGoogleAccessToken` is your function that returns the signed-in user's access token.
-- `spreadsheetId` is the long id in the sheet's URL.
-- `range` is in A1 notation, with the sheet's name.
+- `getGoogleAccessToken` 是你编写的函数，用于返回已登录用户的访问令牌。
+- `spreadsheetId` 是工作表 URL 中较长的 ID。
+- `range` 使用 A1 表示法，并包含工作表名称。
 
 ```ts
 import { Diagrams } from '@tiptap-pro/extension-diagrams'
@@ -130,30 +125,22 @@ editor.commands.linkChartSource({
 })
 ```
 
-The first row is the header, and the first column holds the labels. Numbers arrive as numbers,
-because `UNFORMATTED_VALUE` returns `1200.5` instead of `$1,200.50`. Dates arrive as the sheet
-shows them, through `FORMATTED_STRING`. The API leaves out empty cells at the end of a row, and
-the chart shows them as no value.
+第一行是表头，第一列是标签。数字会以数字形式返回，因为 `UNFORMATTED_VALUE` 返回的是 `1200.5`，而不是 `$1,200.50`。日期则通过 `FORMATTED_STRING` 按工作表中的显示形式返回。API 会省略每行末尾的空单元格，图表会将其显示为空值。
 
-The Sheets API allows 300 read requests per minute per project and 60 per minute per user. Past
-that, it answers 429.
+Sheets API 每个项目每分钟允许读取 300 次，每个用户每分钟允许读取 60 次。超过限制后，API 会返回 429。
 
 ## Excel
 
-The provider reads an Excel workbook in OneDrive or SharePoint through Microsoft Graph.
+提供程序通过 Microsoft Graph 读取 OneDrive 或 SharePoint 中的 Excel 工作簿。
 
-What to set up:
+需要准备：
 
-- An app registration in Microsoft Entra ID, with a single-page application redirect URI.
-- The delegated permission `Files.ReadWrite`. The provider only reads, but Microsoft Graph lists
-  `Files.ReadWrite` as the permission for reading a range.
-- MSAL (`@azure/msal-browser`) to sign the user in and get a token.
-- The workbook as an `.xlsx` file. Its `itemId` is the drive item id that Microsoft Graph
-  returns for the file.
+- 在 Microsoft Entra ID 中注册应用，并设置单页应用重定向 URI。
+- 委派权限 `Files.ReadWrite`。提供程序只执行读取操作，但 Microsoft Graph 将 `Files.ReadWrite` 列为读取单元格区域所需的权限。
+- 使用 MSAL（`@azure/msal-browser`）让用户登录并获取令牌。
+- 将工作簿保存为 `.xlsx` 文件。其 `itemId` 是 Microsoft Graph 为该文件返回的云盘项目 ID。
 
-The provider reads a
-[table's range](https://learn.microsoft.com/en-us/graph/api/table-range?view=graph-rest-1.0)
-or a [worksheet range](https://learn.microsoft.com/en-us/graph/api/range-get?view=graph-rest-1.0):
+提供程序会读取[表格区域](https://learn.microsoft.com/en-us/graph/api/table-range?view=graph-rest-1.0)或[工作表区域](https://learn.microsoft.com/en-us/graph/api/range-get?view=graph-rest-1.0)：
 
 ```ts
 import {
@@ -207,7 +194,7 @@ export function excelSource(options: {
 }
 ```
 
-A token from MSAL, signed in silently when it can, with a popup when it must:
+使用 MSAL 获取令牌：能静默登录时静默登录，否则弹出窗口：
 
 ```ts
 import { PublicClientApplication } from '@azure/msal-browser'
@@ -225,7 +212,7 @@ async function getAccessToken(): Promise<string> {
 }
 ```
 
-Register it and link a chart to a table named `Sales`:
+注册提供程序，并将图表关联到名为 `Sales` 的表格：
 
 ```ts
 Diagrams.configure({ sources: [excelSource({ getAccessToken })] })
@@ -237,28 +224,23 @@ editor.commands.linkChartSource({
 })
 ```
 
-Prefer a table as the address. A table grows with new rows, and a range like `A1:D13` does not.
-A workbook in SharePoint, or one shared with the user, also needs its `driveId` in the address.
+建议使用表格作为地址。表格会随着新增行自动扩展，而像 `A1:D13` 这样的单元格区域不会。在 SharePoint 中的工作簿，或与用户共享的工作簿，也需要在地址中提供 `driveId`。
 
-Numbers come from `values`, and labels from `text`, as the workbook shows them.
+数字取自 `values`，标签取自 `text`，二者均按工作簿中的显示形式处理。
 
-Microsoft Graph allows 1,500 requests per 10 seconds per app in one tenant. Past that, it
-answers 429.
+Microsoft Graph 在单个租户中，每个应用每 10 秒允许发起 1,500 次请求。超过限制后，API 会返回 429。
 
 ## Airtable
 
-The provider reads the records of an Airtable table through a route on your server, which adds
-the token.
+提供程序通过你服务器上的路由读取 Airtable 表格中的记录，并由该路由添加令牌。
 
-What to set up:
+需要准备：
 
-- A personal access token with the scope `data.records:read` and access to the base. It stays
-  on your server.
-- The base id (`app…`) and the table name or id (`tbl…`), both in the URL of the table.
-- The route below on your server.
+- 一个具有 `data.records:read` 范围且可访问相应 base 的个人访问令牌。令牌应保留在服务器上。
+- Base ID（`app…`）以及表格名称或 ID（`tbl…`），二者都可在表格 URL 中找到。
+- 在服务器上设置下面的路由。
 
-Anyone who opens your app's web page could read a token there, and the token reaches every base
-it has access to. The route sends only `GET` requests, and only to the bases you allow:
+任何打开你应用网页的人都可能读取其中的令牌，而该令牌可以访问它有权限访问的所有 base。此路由只发送 `GET` 请求，且仅允许访问你指定的 base：
 
 ```ts
 /**
@@ -287,12 +269,9 @@ export function airtableProxy(options: {
 }
 ```
 
-Mount it where your server takes requests, for example `app.get('/api/airtable/*', …)`. Check
-there that the signed-in user may read the base.
+将路由挂载到服务器处理请求的位置，例如 `app.get('/api/airtable/*', …)`。请在此处检查已登录用户是否有权读取相应 base。
 
-The provider reads
-[the records of a table](https://airtable.com/developers/web/api/list-records), 100 per page,
-and follows `offset` to the next page:
+提供程序会读取[表格记录](https://airtable.com/developers/web/api/list-records)，每页 100 条，并通过 `offset` 获取下一页：
 
 ```ts
 import {
@@ -351,7 +330,7 @@ export function airtableSource(options: { proxyUrl: string }): ChartSourceProvid
 }
 ```
 
-Register it and link a chart to two fields of a table:
+注册提供程序，并将图表关联到表格中的两个字段：
 
 ```ts
 Diagrams.configure({ sources: [airtableSource({ proxyUrl: '/api/airtable' })] })
@@ -363,17 +342,13 @@ editor.commands.linkChartSource({
 })
 ```
 
-The `fields` in the address are the columns, in their order. Airtable leaves empty fields out of
-a record, so the records alone do not say which columns there are. The first field holds the
-labels. The provider reads text and numbers. Any other field, such as an attachment or a linked
-record, shows as no value.
+地址中的 `fields` 是列名，顺序即列的顺序。Airtable 会省略记录中的空字段，因此仅凭记录无法判断有哪些列。第一个字段用作标签。提供程序会读取文本和数字。其他类型的字段（例如附件或关联记录）会显示为空值。
 
-Airtable allows 5 requests per second per base. Past that, it answers 429 and accepts requests
-again after 30 seconds. A table of 1,000 records takes 10 requests.
+Airtable 每个 base 每秒允许发起 5 次请求。超过限制后，API 会返回 429，并在 30 秒后恢复接受请求。读取包含 1,000 条记录的表格需要 10 次请求。
 
-## Keeping a chart up to date
+## 保持图表更新
 
-A linked chart shows its snapshot until you synchronize it.
+关联的图表会显示其快照，直到你对其进行同步。
 
 ```ts
 // The selected chart
@@ -386,18 +361,10 @@ await editor.storage.diagrams.requestSync({
 })
 ```
 
-A failed read goes to the `onSourceError` option. The providers above throw a `ChartSourceError`
-for a bad address or an error answer from the service. Other failures, such as a lost connection
-or a failed token request, arrive with their own error type. [When a chart synchronizes](/diagrams/data/sources#when-a-chart-synchronizes) has the
-rules for failed reads, schedules with `requestSync` and `setInterval`, and service limits.
+读取失败时会触发 `onSourceError` 选项。上面的提供程序在地址无效或服务返回错误响应时会抛出 `ChartSourceError`。其他失败（例如连接中断或令牌请求失败）则会以各自的错误类型返回。[图表同步时](/diagrams/data/sources#when-a-chart-synchronizes)介绍了读取失败的处理规则、使用 `requestSync` 和 `setInterval` 设置计划，以及服务限制。
 
-## What to watch for
+## 注意事项
 
-- Never put a token in an address, because the document shares it with everyone who opens it.
-- The rules for every Data Source apply: link with `readOnly: true`
-  ([Read-only](/diagrams/data/sources#read-only)), set `encoding` to show only some columns
-  ([Showing only some columns](/diagrams/data/sources#showing-only-some-columns)), and use
-  `detachChartSource` and `relinkChartSource` to edit by hand
-  ([Linked or detached](/diagrams/data/sources#linked-or-detached)).
-- For Google Sheets and Excel, each person signs in with their own account. A person without
-  access still sees the snapshot, but a synchronization fails for them.
+- 不要将令牌放在地址中，因为文档会与所有打开它的人共享。
+- 所有数据源都适用相同规则：使用 `readOnly: true` 进行关联（[只读](/diagrams/data/sources#read-only)），设置 `encoding` 以仅显示部分列（[仅显示部分列](/diagrams/data/sources#showing-only-some-columns)），并使用 `detachChartSource` 和 `relinkChartSource` 手动编辑（[关联或分离](/diagrams/data/sources#linked-or-detached)）。
+- 对于 Google Sheets 和 Excel，每个人都要使用自己的账户登录。没有访问权限的人仍能看到快照，但无法同步。
