@@ -1,6 +1,6 @@
 'use client'
 
-// TODO [Dave]: I did a quick update to split this into Generation and AI Toolkit, but it's not the most elegant work.
+// TODO [Dave]：我快速调整了一下，将其拆分为 Generation 和 AI Toolkit，但实现得不够优雅。
 
 import {
   MessageSquare,
@@ -37,98 +37,98 @@ interface UseCase {
 }
 
 const CLIENT_USE_CASES: UseCase[] = [
-  // AI Toolkit use cases - AI AGENTS
+  // AI Toolkit 用例 - AI AGENTS
   {
-    title: 'AI agent chatbot',
+    title: 'AI 智能体聊天机器人',
     description:
-      'Create conversational AI interfaces where agents read and edit documents based on user requests.',
+      '创建对话式 AI 界面，让智能体根据用户请求读取和编辑文档。',
     href: '/ai/ai-toolkit/client/agents/ai-agent-chatbot',
     tags: ['AI Agents'],
     icon: MessageSquare,
   },
   {
-    title: 'Review changes',
+    title: '审阅更改',
     description:
-      'Show each AI edit as a track-changes style suggestion that users review immediately.',
+      '将 AI 的每项编辑显示为类似修订模式的建议，供用户即时审阅。',
     href: '/ai/ai-toolkit/client/agents/review-changes',
     tags: ['AI Agents'],
     icon: FileCheck,
   },
   {
-    title: 'Review all changes at once',
+    title: '一次性审阅所有更改',
     description:
-      'Let AI make all edits, then show a summary of changes for batch review and approval.',
+      '让 AI 完成所有编辑，然后汇总更改，方便批量审阅和批准。',
     href: '/ai/ai-toolkit/client/agents/review-changes/tracked-changes',
     tags: ['AI Agents'],
     icon: ListChecks,
   },
   {
-    title: 'Edit multiple documents',
+    title: '编辑多个文档',
     description:
-      'Build AI agents that create, switch between, and edit multiple documents in one workflow.',
+      '构建 AI 智能体，在一个工作流中创建、切换和编辑多个文档。',
     href: '/ai/ai-toolkit/client/agents/multi-document',
     tags: ['AI Agents'],
     icon: Files,
   },
   {
-    title: 'Add AI comments',
+    title: '添加 AI 评论',
     description:
-      'Enable AI agents to read, write, and edit comments in documents for collaborative workflows.',
+      '让 AI 智能体能够读取、撰写和编辑文档评论，以支持协作工作流。',
     href: '/ai/ai-toolkit/client/agents/comments',
     tags: ['AI Agents'],
     icon: MessageCircle,
   },
   {
-    title: 'Stream edits',
-    description: 'Display AI tool calls and document changes in real-time as the agent works.',
+    title: '实时流式显示编辑',
+    description: '在智能体工作时，实时显示 AI 工具调用和文档更改。',
     href: '/ai/ai-toolkit/client/agents/streaming',
     tags: ['AI Agents'],
     icon: Workflow,
   },
   {
-    title: 'Generate custom components with AI',
+    title: '使用 AI 生成自定义组件',
     description:
-      'Enable AI to generate content using your custom editor nodes and marks, not just basic text.',
+      '让 AI 使用自定义编辑器节点和标记生成内容，而不仅限于基本文本。',
     href: '/ai/ai-toolkit/client/agents/schema-awareness',
     tags: ['AI Agents'],
     icon: Layers,
   },
 
-  // AI Toolkit use cases - CUSTOM WORKFLOWS
+  // AI Toolkit 用例 - 自定义工作流
   {
-    title: 'Make inline edits',
+    title: '进行行内编辑',
     description:
-      'Select text and rewrite it with AI based on instructions. Best for simple, focused edits.',
+      '选择文本并根据指令使用 AI 改写，最适合简单、聚焦的编辑任务。',
     href: '/ai/ai-toolkit/client/workflows/insert-content',
     tags: ['Workflows'],
     icon: PenLine,
   },
   {
-    title: 'Proofread documents',
+    title: '校对文档',
     description:
-      'Build an AI proofreader that analyzes documents and suggests corrections with explanations.',
+      '构建 AI 校对工具，分析文档并提出更正建议，同时说明原因。',
     href: '/ai/ai-toolkit/client/workflows/proofreader',
     tags: ['Workflows'],
     icon: FileSearch,
   },
   {
     title: 'Tiptap Edit',
-    description: 'A general-purpose workflow for making small and large edits to Tiptap documents.',
+    description: '用于对 Tiptap 文档进行大大小小编辑的通用工作流。',
     href: '/ai/ai-toolkit/client/workflows/tiptap-edit',
     tags: ['Workflows'],
     icon: Edit,
   },
   {
-    title: 'Comments',
-    description: 'Manage comments and threads in your Tiptap documents.',
+    title: '评论',
+    description: '管理 Tiptap 文档中的评论和讨论串。',
     href: '/ai/ai-toolkit/client/workflows/comments',
     tags: ['Workflows'],
     icon: MessageSquare,
   },
   {
-    title: 'Show document differences',
+    title: '显示文档差异',
     description:
-      'Compare two document versions in real-time and display differences with highlights.',
+      '实时比较两个文档版本，并通过高亮显示差异。',
     href: '/ai/ai-toolkit/client/advanced-guides/compare-documents',
     tags: ['Workflows'],
     icon: GitCompare,
@@ -136,63 +136,63 @@ const CLIENT_USE_CASES: UseCase[] = [
 ]
 
 const GENERATION_USE_CASES = [
-  // Basic AI Generation use cases - TEXT MANIPULATION
+  // 基础 AI 生成用例 - 文本处理
   {
-    title: 'Fix grammar and spelling',
-    description: 'Automatically correct grammar and spelling errors in selected text.',
+    title: '修正语法和拼写',
+    description: '自动修正所选文本中的语法和拼写错误。',
     href: '/ai/basic/text-generation/built-in-commands#aifixspellingandgrammar',
     tags: ['Basic AI Generation'],
     icon: CheckCircle2,
   },
   {
-    title: 'Change text tone',
+    title: '调整文本语气',
     description:
-      'Adjust writing tone to academic, casual, formal, friendly, professional, and more.',
+      '将写作语气调整为学术、随意、正式、友好、专业等风格。',
     href: '/ai/basic/text-generation/built-in-commands#aiadjusttone',
     tags: ['Basic AI Generation'],
     icon: Volume2,
   },
   {
-    title: 'Translate text',
-    description: 'Translate selected content into any language with AI-powered translation.',
+    title: '翻译文本',
+    description: '使用 AI 翻译所选内容，支持任意语言。',
     href: '/ai/basic/text-generation/built-in-commands#aitranslate',
     tags: ['Basic AI Generation'],
     icon: Languages,
   },
   {
-    title: 'Summarize content',
-    description: 'Generate concise summaries or extract key points from selected text.',
+    title: '总结内容',
+    description: '生成简明摘要，或从所选文本中提取要点。',
     href: '/ai/basic/text-generation/built-in-commands#aisummarize',
     tags: ['Basic AI Generation'],
     icon: AlignLeft,
   },
 
-  // Basic AI Generation use cases - ADVANCED FEATURES
+  // 基础 AI 生成用例 - 高级功能
   {
-    title: 'Generate rich text format',
-    description: 'Generate AI responses with rich formatting like bold, italic, lists, and links.',
+    title: '生成富文本格式',
+    description: '生成带有粗体、斜体、列表和链接等丰富格式的 AI 回复。',
     href: '/ai/basic/text-generation/format',
     tags: ['Basic AI Generation'],
     icon: Type,
   },
   {
-    title: 'Stream AI content',
-    description: 'Display AI-generated text in real-time with typewriter-style streaming effect.',
+    title: '流式显示 AI 内容',
+    description: '以打字机式的流式效果实时显示 AI 生成的文本。',
     href: '/ai/basic/text-generation/stream',
     tags: ['Basic AI Generation'],
     icon: Activity,
   },
   {
-    title: 'Manage AI responses',
+    title: '管理 AI 回复',
     description:
-      'Preview, accept, reject, or regenerate AI-generated content before inserting into editor.',
+      '在将 AI 生成的内容插入编辑器之前，可先预览、接受、拒绝或重新生成。',
     href: '/ai/basic/text-generation/manage-responses',
     tags: ['Basic AI Generation'],
     icon: RotateCcw,
   },
   {
-    title: 'Generate images',
-    description: 'Create AI-generated images using custom prompts with different visual styles.',
+    title: '生成图像',
+    description: '使用自定义提示词创建不同视觉风格的 AI 生成图像。',
     href: '/ai/basic/image-generation',
     tags: ['Basic AI Generation'],
     icon: ImagePlus,
@@ -224,10 +224,10 @@ export const UseCasesGrid: React.FC<{ variant: 'client' | 'generation' }> = ({ v
   return (
     <div className="grid gap-20 first:mt-0 last:mb-0">
       {toolkitAgentUseCases.length > 0 && (
-        <UseCaseSection title="AI agents" useCases={toolkitAgentUseCases} />
+        <UseCaseSection title="AI 智能体" useCases={toolkitAgentUseCases} />
       )}
       {toolkitWorkflowUseCases.length > 0 && (
-        <UseCaseSection title="Custom workflows" useCases={toolkitWorkflowUseCases} />
+        <UseCaseSection title="自定义工作流" useCases={toolkitWorkflowUseCases} />
       )}
       {generationUseCases.length > 0 && <UseCaseSection title="" useCases={generationUseCases} />}
     </div>
