@@ -1,22 +1,22 @@
 ---
-title: Migrate from Basic AI Generation to the AI Toolkit
+title: 从基础 AI 生成迁移到 AI Toolkit
 meta:
-  title: Migrate from Basic AI Generation to the AI Toolkit | Tiptap AI Toolkit
-  description: Migrate from Basic AI Generation to the AI Toolkit to gain full control over AI providers, custom backends, and advanced review workflows.
+  title: 从基础 AI 生成迁移到 AI Toolkit | Tiptap AI Toolkit
+  description: 从基础 AI 生成迁移到 AI Toolkit，全面掌控 AI 提供商、自定义后端和高级审核工作流。
   category: AI Toolkit
 ---
 
-The Basic AI Generation extension allows you to select content and ask the AI model to rewrite it based on your instructions.
+基础 AI 生成扩展允许你选择内容，并根据你的指令让 AI 模型改写这些内容。
 
-To implement the same functionality with the AI Toolkit, follow the [Insert Content workflow](/ai/ai-toolkit/client/workflows/insert-content).
+如需使用 AI Toolkit 实现相同功能，请参阅[插入内容工作流](/ai/ai-toolkit/client/workflows/insert-content)。
 
-## Step 1: Server-side setup
+## 第 1 步：服务端设置
 
-The Basic AI Generation extension works out of the box with [Tiptap Cloud](https://cloud.tiptap.dev/v2/cloud/ai).
+基础 AI 生成扩展开箱即用，支持 [Tiptap Cloud](https://cloud.tiptap.dev/v2/cloud/ai)。
 
-The AI Toolkit does not include a Tiptap Cloud service. Instead, it works with your custom AI backend. This gives you full flexibility to use it with any AI model provider and framework.
+AI Toolkit 不包含 Tiptap Cloud 服务，而是与自定义 AI 后端配合使用。这样，你可以灵活地将它与任意 AI 模型提供商和框架搭配使用。
 
-First, build an API endpoint that returns the AI-generated content in HTML format. Use a library like the [AI SDK](https://ai-sdk.dev/) to call your backend.
+首先，构建一个 API 端点，以 HTML 格式返回 AI 生成的内容。你可以使用 [AI SDK](https://ai-sdk.dev/) 之类的库来调用后端。
 
 ```ts
 import { openai } from '@ai-sdk/openai'
@@ -52,16 +52,16 @@ ${selection}
 }
 ```
 
-To access the OpenAI API, create an API key in the [OpenAI Dashboard](https://platform.openai.com/account/api-keys) and add it as an environment variable. The environment variable will be detected automatically by the Vercel AI SDK.
+如需访问 OpenAI API，请在 [OpenAI 控制台](https://platform.openai.com/account/api-keys)中创建 API 密钥，并将其添加为环境变量。Vercel AI SDK 会自动检测该环境变量。
 
 ```sh
 # .env
 OPENAI_API_KEY=your-api-key
 ```
 
-## Step 2: Client-side setup
+## 第 2 步：客户端设置
 
-In the client-side code, first call the API endpoint you just defined so that the AI generates the content. That endpoint returns a stream of HTML content. Use the `streamHtml` method of the AI Toolkit to stream the content into the editor.
+在客户端代码中，先调用刚刚定义的 API 端点来生成内容。该端点会返回 HTML 内容流。使用 AI Toolkit 的 `streamHtml` 方法，将内容流式传输到编辑器中。
 
 ```ts
 const toolkit = getAiToolkit(editor)
@@ -84,9 +84,9 @@ const readableStream = response.body
 await toolkit.streamHtml(readableStream, { position: 'selection' })
 ```
 
-## Review AI-generated changes
+## 审核 AI 生成的更改
 
-To show a preview of the AI-generated content where the user can review and accept or reject the changes, use the `streamHtml` method with the `reviewOptions` parameter.
+如需预览 AI 生成的内容，让用户审核并接受或拒绝这些更改，请在 `streamHtml` 方法中使用 `reviewOptions` 参数。
 
 ```ts
 await toolkit.streamHtml(readableStream, {
@@ -96,13 +96,13 @@ await toolkit.streamHtml(readableStream, {
 })
 ```
 
-Learn more about review options in the [review changes guide](/ai/ai-toolkit/client/agents/review-changes) and in the [API reference](/ai/ai-toolkit/client/api-reference/edit-the-document#streamhtml) of the `streamHtml` method.
+如需详细了解审核选项，请参阅[审核更改指南](/ai/ai-toolkit/client/agents/review-changes)以及 `streamHtml` 方法的 [API 参考](/ai/ai-toolkit/client/api-reference/edit-the-document#streamhtml)。
 
-## Implement autocompletion
+## 实现自动补全
 
-To implement autocompletion, call the API endpoint to generate content when the user presses the `Tab` key. Then, insert the content using the `streamHtml` method. The `position` parameter can also be set to `'selection'` because it coincides with the position of the cursor.
+如需实现自动补全，请在用户按下 `Tab` 键时调用 API 端点生成内容，然后使用 `streamHtml` 方法插入内容。由于 `'selection'` 与光标位置重合，`position` 参数也可以设为 `'selection'`。
 
-Below is a simplified snippet of the code that triggers the autocompletion suggestion when the user presses the `Tab` key.
+下面是一个简化的代码示例：当用户按下 `Tab` 键时，该代码会触发自动补全建议。
 
 ```ts
 const toolkit = getAiToolkit(editor)
@@ -123,7 +123,7 @@ await toolkit.streamHtml(readableStream, {
 })
 ```
 
-Optionally, you can preview the AI-generated content before inserting it into the editor, instead of inserting it immediately.
+你也可以先预览 AI 生成的内容，再将其插入编辑器，而不是立即插入。
 
 ```ts
 await toolkit.streamHtml(readableStream, {
@@ -132,14 +132,14 @@ await toolkit.streamHtml(readableStream, {
 })
 ```
 
-Once generated, the suggestion can be accepted by calling the `acceptSuggestion` method.
+生成建议后，可以调用 `acceptSuggestion` 方法接受该建议。
 
 ```ts
 const suggestions = toolkit.getSuggestions()
 await toolkit.acceptSuggestion(suggestions[0].id)
 ```
 
-## Next steps
+## 后续步骤
 
-- See a demo of how to implement inline edits with the AI Toolkit in the [Insert Content workflow](/ai/ai-toolkit/client/workflows/insert-content).
-- Build an AI assistant that can edit Tiptap documents in the [AI agent chatbot guide](/ai/ai-toolkit/client/agents/ai-agent-chatbot).
+- 在[插入内容工作流](/ai/ai-toolkit/client/workflows/insert-content)中查看如何使用 AI Toolkit 实现行内编辑的演示。
+- 阅读 [AI 代理聊天机器人指南](/ai/ai-toolkit/client/agents/ai-agent-chatbot)，构建能够编辑 Tiptap 文档的 AI 助手。
