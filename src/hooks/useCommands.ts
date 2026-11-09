@@ -1,7 +1,7 @@
 import React, { SetStateAction, useCallback, useState } from 'react'
 
 export const useCommands = (items: any[]) => {
-  // The selected index belongs to the list it was picked in, so a new list starts unselected
+  // 选中索引属于其所在的列表，因此新列表初始时没有选中项
   const [selection, setSelection] = useState<{ items: any[]; index: number | null }>({
     items,
     index: null,
