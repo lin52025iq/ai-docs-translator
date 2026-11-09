@@ -11,13 +11,13 @@ export async function GET(req: NextRequest) {
   const fontBoldRawData = fs.readFileSync(
     path.join(process.cwd(), './src/assets/fonts/Inter-Bold.otf'),
   )
-  // convert to ArrayBuffer
+  // 转换为 ArrayBuffer
   const fontBoldData = new Uint8Array(fontBoldRawData).buffer
 
   const fontSemiBoldRawData = fs.readFileSync(
     path.join(process.cwd(), './src/assets/fonts/Inter-SemiBold.otf'),
   )
-  // convert to ArrayBuffer
+  // 转换为 ArrayBuffer
   const fontSemiBoldData = new Uint8Array(fontSemiBoldRawData).buffer
 
   return new ImageResponse(
