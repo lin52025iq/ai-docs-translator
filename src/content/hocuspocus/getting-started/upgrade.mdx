@@ -1,26 +1,26 @@
 ---
-title: Upgrade Guide
+title: 升级指南
 meta:
-  title: Upgrade Guide | Tiptap Collaboration Docs
-  description: Upgrade to 4.0 from 3.x and 3.0 from 2.x
+  title: 升级指南 | Tiptap 协作文档
+  description: 从 3.x 升级到 4.0，以及从 2.x 升级到 3.0
   category: Hocuspocus
 ---
 
-## Upgrading to 4.0 from 3.x
+## 从 3.x 升级到 4.0
 
-Hocuspocus v4 brings cross-runtime support (Bun, Deno, Cloudflare Workers, Node with uWebSockets), improved type safety via a generic `Context` type, and structured transaction origins.
+Hocuspocus v4 支持跨运行时环境（Bun、Deno、Cloudflare Workers，以及使用 uWebSockets 的 Node.js），通过泛型 `Context` 类型改进了类型安全性，并采用结构化的事务来源。
 
-The wire protocol is backward compatible in both directions: v3 providers can connect to v4 servers and vice versa. See the [v4 release notes](https://github.com/ueberdosis/hocuspocus/releases) for full details.
+其网络协议在两个方向上都向后兼容：v3 provider 可以连接 v4 服务器，反之亦然。详情请参阅 [v4 发布说明](https://github.com/ueberdosis/hocuspocus/releases)。
 
-### 1. Update dependencies
+### 1. 更新依赖项
 
 ```bash
 npm install @hocuspocus/server@^4.0.0 @hocuspocus/provider@^4.0.0
 ```
 
-**Node.js requirement:** v4 requires Node.js 22 or later.
+**Node.js 要求：** v4 要求 Node.js 22 或更高版本。
 
-If you use the SQLite extension, replace `sqlite3` with `better-sqlite3`:
+如果使用 SQLite 扩展，请将 `sqlite3` 替换为 `better-sqlite3`：
 
 ```bash
 npm uninstall sqlite3
@@ -28,13 +28,13 @@ npm install @hocuspocus/extension-sqlite@^4.0.0 better-sqlite3
 npm install -D @types/better-sqlite3
 ```
 
-Existing SQLite database files are fully compatible — no data migration needed.
+现有 SQLite 数据库文件完全兼容，无需迁移数据。
 
-### 2. Web-standard Request and Headers (Breaking)
+### 2. Web 标准的 Request 和 Headers（破坏性变更）
 
-All hook payloads now use the web-standard `Request` and `Headers` objects instead of Node.js `IncomingMessage` and `IncomingHttpHeaders`.
+现在，所有钩子负载都使用 Web 标准的 `Request` 和 `Headers` 对象，而不是 Node.js 的 `IncomingMessage` 和 `IncomingHttpHeaders`。
 
-**Before (v3):**
+**之前（v3）：**
 
 ```typescript
 async onAuthenticate({ request, requestHeaders }) {
@@ -44,7 +44,7 @@ async onAuthenticate({ request, requestHeaders }) {
 }
 ```
 
-**After (v4):**
+**之后（v4）：**
 
 ```typescript
 async onAuthenticate({ request, requestHeaders }) {
@@ -54,15 +54,15 @@ async onAuthenticate({ request, requestHeaders }) {
 }
 ```
 
-`request.socket.remoteAddress` is no longer available — use `x-forwarded-for` or `x-real-ip` headers from your reverse proxy instead.
+现在无法再使用 `request.socket.remoteAddress`，请改用反向代理提供的 `x-forwarded-for` 或 `x-real-ip` 请求头。
 
-The `onUpgrade` and `onRequest` hooks still use Node.js `IncomingMessage`/`ServerResponse` because they operate at the HTTP level before the WebSocket upgrade.
+`onUpgrade` 和 `onRequest` 钩子仍使用 Node.js 的 `IncomingMessage`/`ServerResponse`，因为它们在 WebSocket 升级前的 HTTP 层运行。
 
-### 3. `onStoreDocument` payload (Breaking)
+### 3. `onStoreDocument` 负载（破坏性变更）
 
-The `onStoreDocument` and `afterStoreDocument` payloads have been restructured. Fields tied to a specific connection have been removed since store hooks can now be triggered by non-connection sources.
+`onStoreDocument` 和 `afterStoreDocument` 的负载结构已调整。由于存储钩子现在可能由非连接来源触发，因此移除了与特定连接相关的字段。
 
-**Before (v3):**
+**之前（v3）：**
 
 ```typescript
 async onStoreDocument({ context, requestHeaders, requestParameters, socketId, transactionOrigin, document, documentName, clientsCount, instance }) {
@@ -70,7 +70,7 @@ async onStoreDocument({ context, requestHeaders, requestParameters, socketId, tr
 }
 ```
 
-**After (v4):**
+**之后（v4）：**
 
 ```typescript
 async onStoreDocument({ lastContext, lastTransactionOrigin, document, documentName, clientsCount, instance }) {
@@ -80,11 +80,11 @@ async onStoreDocument({ lastContext, lastTransactionOrigin, document, documentNa
 }
 ```
 
-### 4. `onAwarenessUpdate` payload (Breaking)
+### 4. `onAwarenessUpdate` 负载（破坏性变更）
 
-Connection-specific fields are removed and replaced with the source of the update.
+已移除与连接相关的字段，并用更新来源取而代之。
 
-**After (v4):**
+**之后（v4）：**
 
 ```typescript
 async onAwarenessUpdate({
@@ -101,11 +101,11 @@ async onAwarenessUpdate({
 }
 ```
 
-### 5. Transaction origin (Breaking)
+### 5. 事务来源（破坏性变更）
 
-Transaction origins are now structured objects rather than raw values.
+现在，事务来源是结构化对象，而非原始值。
 
-**Before (v3):**
+**之前（v3）：**
 
 ```typescript
 async onChange({ transactionOrigin }) {
@@ -118,7 +118,7 @@ async onChange({ transactionOrigin }) {
 }
 ```
 
-**After (v4):**
+**之后（v4）：**
 
 ```typescript
 import { isTransactionOrigin } from '@hocuspocus/server'
@@ -140,11 +140,11 @@ async onChange({ transactionOrigin }) {
 }
 ```
 
-### 6. WebSocket options (Breaking)
+### 6. WebSocket 选项（破坏性变更）
 
-WebSocket options are now passed inside the configuration object instead of as a separate parameter.
+现在，WebSocket 选项需要放在配置对象中传入，而不是作为单独的参数。
 
-**Before (v3):**
+**之前（v3）：**
 
 ```typescript
 const server = new Server(
@@ -153,7 +153,7 @@ const server = new Server(
 )
 ```
 
-**After (v4):**
+**之后（v4）：**
 
 ```typescript
 const server = new Server({
@@ -163,9 +163,9 @@ const server = new Server({
 })
 ```
 
-### 7. WebSocket type changes (Breaking)
+### 7. WebSocket 类型变更（破坏性变更）
 
-If your code references the `WebSocket` type from the `ws` package, update to `WebSocketLike`:
+如果代码引用了 `ws` 包中的 `WebSocket` 类型，请改用 `WebSocketLike`：
 
 ```typescript
 import type { WebSocketLike } from '@hocuspocus/server'
@@ -173,13 +173,13 @@ import type { WebSocketLike } from '@hocuspocus/server'
 const ws: WebSocketLike = connection.webSocket
 ```
 
-`WebSocketLike` is a minimal interface with `send`, `close`, and `readyState` — compatible with all supported runtimes.
+`WebSocketLike` 是一个最小化接口，包含 `send`、`close` 和 `readyState`，兼容所有受支持的运行时环境。
 
-### 8. Custom `handleConnection` integrations (Breaking)
+### 8. 自定义 `handleConnection` 集成（破坏性变更）
 
-If you call `handleConnection()` directly (e.g. for Express/Koa integration), the signature has changed:
+如果直接调用 `handleConnection()`（例如用于 Express/Koa 集成），其签名已变更：
 
-**After (v4):**
+**之后（v4）：**
 
 ```typescript
 wss.on('connection', (ws, request: Request) => {
@@ -188,14 +188,14 @@ wss.on('connection', (ws, request: Request) => {
 })
 ```
 
-- `request` must be a web-standard `Request` (not `IncomingMessage`)
-- The method now returns a `ClientConnection` instance
-- The WebSocket no longer needs to be from the `ws` package — any `WebSocketLike` works
-- If you are not using the built-in `Server` class, you are responsible for calling `clientConnection.handleMessage(data)` and `clientConnection.handleClose(event)`
+- `request` 必须是 Web 标准的 `Request`（而非 `IncomingMessage`）
+- 该方法现在会返回一个 `ClientConnection` 实例
+- WebSocket 不再必须来自 `ws` 包，任何 `WebSocketLike` 都可以使用
+- 如果未使用内置的 `Server` 类，则需要自行调用 `clientConnection.handleMessage(data)` 和 `clientConnection.handleClose(event)`
 
-### 9. Provider `CloseEvent` shape (Breaking)
+### 9. Provider 的 `CloseEvent` 结构（破坏性变更）
 
-The `CloseEvent` passed to `onClose` callbacks no longer includes `target` and `type`. Only `code` and `reason` remain.
+传递给 `onClose` 回调的 `CloseEvent` 不再包含 `target` 和 `type`，只保留 `code` 和 `reason`。
 
 ```typescript
 onClose({ event }) {
@@ -204,13 +204,13 @@ onClose({ event }) {
 }
 ```
 
-### 10. Provider `ws` package types removed (TypeScript only)
+### 10. 移除 Provider 的 `ws` 包类型（仅限 TypeScript）
 
-The provider no longer re-exports `Event`, `MessageEvent`, or `CloseEvent` from the `ws` package. Import them from `@hocuspocus/common` or use web-standard types instead.
+Provider 不再重新导出 `ws` 包中的 `Event`、`MessageEvent` 或 `CloseEvent`。请从 `@hocuspocus/common` 导入这些类型，或改用 Web 标准类型。
 
-### 11. Timeout change (Non-breaking)
+### 11. 超时变更（非破坏性变更）
 
-The default connection timeout has increased from 30 seconds to 60 seconds. To keep the old behavior:
+默认连接超时时间已从 30 秒延长至 60 秒。若要保留原有行为：
 
 ```typescript
 const server = new Server({
@@ -218,33 +218,33 @@ const server = new Server({
 })
 ```
 
-### Summary checklist
+### 升级检查清单
 
 **Server**
 
-- [ ] Update to Node.js 22+
-- [ ] Update all `@hocuspocus/*` packages to v4
-- [ ] Replace `requestHeaders['key']` with `requestHeaders.get('key')` in all hooks
-- [ ] Replace `request.socket.remoteAddress` with proxy headers (`x-forwarded-for`)
-- [ ] Update `onStoreDocument` handlers: `context` → `lastContext`, remove `requestHeaders`/`requestParameters`/`socketId`
-- [ ] Update `onAwarenessUpdate` handlers if used
-- [ ] Replace `WebSocket` type imports from `ws` with `WebSocketLike` from `@hocuspocus/server`
-- [ ] Move `websocketOptions` into the `Server` configuration object
-- [ ] Update transaction origin checks to use `isTransactionOrigin()` and `.source`
-- [ ] If using SQLite: replace `sqlite3` with `better-sqlite3`
-- [ ] If using custom `handleConnection`: update to new signature and `Request` type
+- [ ] 升级到 Node.js 22+
+- [ ] 将所有 `@hocuspocus/*` 包升级到 v4
+- [ ] 在所有钩子中将 `requestHeaders['key']` 替换为 `requestHeaders.get('key')`
+- [ ] 将 `request.socket.remoteAddress` 替换为代理请求头（`x-forwarded-for`）
+- [ ] 更新 `onStoreDocument` 处理程序：将 `context` 改为 `lastContext`，移除 `requestHeaders`/`requestParameters`/`socketId`
+- [ ] 如有使用，更新 `onAwarenessUpdate` 处理程序
+- [ ] 将从 `ws` 导入的 `WebSocket` 类型替换为从 `@hocuspocus/server` 导入的 `WebSocketLike`
+- [ ] 将 `websocketOptions` 移入 `Server` 配置对象
+- [ ] 更新事务来源检查，改用 `isTransactionOrigin()` 和 `.source`
+- [ ] 如果使用 SQLite：将 `sqlite3` 替换为 `better-sqlite3`
+- [ ] 如果使用自定义 `handleConnection`：更新为新签名和 `Request` 类型
 
 **Provider**
 
-- [ ] Update `@hocuspocus/provider` to v4
-- [ ] Remove references to `event.target` / `event.type` in `onClose` handlers
-- [ ] Update TypeScript imports that relied on `ws` types from the provider
+- [ ] 将 `@hocuspocus/provider` 升级到 v4
+- [ ] 从 `onClose` 处理程序中移除对 `event.target` / `event.type` 的引用
+- [ ] 更新依赖 Provider 导出 `ws` 类型的 TypeScript 导入
 
-## Upgrading to 3.0 from 2.x (Provider)
+## 从 2.x 升级到 3.0（Provider）
 
-The TiptapCollabProvider has been moved to `@tiptap-pro/provider`.
+TiptapCollabProvider 已迁移至 `@tiptap-pro/provider`。
 
-When using multiplexing, the providers now need to explicitly call `attach` to attach to the websocket.
+使用多路复用时，现在需要由 provider 显式调用 `attach`，以连接到 WebSocket。
 
 ```typescript
 import {
@@ -265,19 +265,16 @@ const provider1 = new TiptapCollabProvider({
 provider1.attach() // when passing a socket manually, you need to call attach explicitly
 ```
 
-More information can be found here: https://github.com/ueberdosis/hocuspocus/releases/tag/v3.1.0
+更多信息请参阅：https://github.com/ueberdosis/hocuspocus/releases/tag/v3.1.0
 
-## Upgrading to 3.0 from 2.x (Server)
-With the upgrade to the new version, the initialization of hocuspocus has changed. As described on the [usage](/hocuspocus/server/usage)
-side, there are two ways on how you can use hocuspocus. With the built-in server. Or like a library with other
-frameworks (like [express](/hocuspocus/server/examples#express)). To make things simpler and enable more features in the future,
-we separated classes and put the server into its own class.
+## 从 2.x 升级到 3.0（Server）
+升级到新版本后，Hocuspocus 的初始化方式发生了变化。如[使用方法](/hocuspocus/server/usage)一节所述，使用 Hocuspocus 有两种方式：使用内置服务器，或将其作为库与其他框架（例如 [Express](/hocuspocus/server/examples#express)）配合使用。为简化使用并支持未来的更多功能，我们拆分了相关类，并将服务器放入独立的类中。
 
-### Usage with .configure()
+### 使用 .configure()
 
-It is no longer possible to use hocuspocus with `.configure()`. You always have to create a new instance by yourself.
+现在无法再通过 `.configure()` 使用 Hocuspocus。你必须自行创建新实例。
 
-**Old Way**
+**旧方式**
 ```js
 import { Server } from "@hocuspocus/server";
 
@@ -288,7 +285,7 @@ const server = Server.configure({
 server.listen();
 ```
 
-**New Way**
+**新方式**
 ```js
 import { Server } from "@hocuspocus/server";
 
@@ -299,13 +296,13 @@ const server = new Server({
 server.listen();
 ```
 
-Notice, that the import has not changed. The configuration options stay the same here.
+请注意，导入方式没有变化。此处的配置选项也保持不变。
 
-### Usage of Hocuspocus without built-in server
+### 不使用内置服务器时使用 Hocuspocus
 
-If you have used Hocuspocus without the built-in server before, you have to update your setup as well.
+如果之前在不使用内置服务器的情况下使用 Hocuspocus，也需要相应地更新配置。
 
-**Old Way**
+**旧方式**
 ```js
 import { Server } from "@hocuspocus/server";
 
@@ -314,7 +311,7 @@ const server = Server.configure({
 });
 ```
 
-**New Way**
+**新方式**
 ```js
 import { Hocuspocus } from "@hocuspocus/server";
 
@@ -326,15 +323,14 @@ const hocuspocus = new Hocuspocus({
 hocuspocus.handleConnection(...);
 ```
 
-Notice the change of the import from `Server` to `Hocuspocus` as well as the initialization with `new Hocuspocus()`.
-See [examples](/hocuspocus/server/examples) for more on that.
+请注意，导入项从 `Server` 变为 `Hocuspocus`，并且初始化时使用了 `new Hocuspocus()`。
+更多信息请参阅[示例](/hocuspocus/server/examples)。
 
-### Change of the servers listen signature
+### 服务器 listen 方法的签名变更
 
-The `.listen()` function of the server was quite versatile. We simplified the signature of it while you can still reach
-the same behavior as before.
+服务器的 `.listen()` 函数功能较为灵活。我们简化了它的签名，同时仍可实现与之前相同的行为。
 
-**Old Signature**
+**旧签名**
 ```js
 async listen(
     portOrCallback: number | ((data: onListenPayload) => Promise<any>) | null = null,
@@ -342,16 +338,14 @@ async listen(
 ): Promise<Hocuspocus>
 ```
 
-**New Signature**
+**新签名**
 ```js
 async listen(port?: number, callback: any = null): Promise<Hocuspocus>
 ```
 
-The listen method still returns a Promise which will be resolved to Hocuspocus, if nothing fails.
+如果没有出错，`listen` 方法仍会返回一个解析为 Hocuspocus 的 Promise。
 
-Both the callbacks you could provide in the old version were added to the `onListen` hook. This is still the case with
-the callback on the new version. But you can't provide just a callback on the first parameter anymore. If you just want
-to add a callback you also still can add it within the configuration of the server.
+旧版本中可以提供的两个回调都会添加到 `onListen` 钩子中，新版本中的回调也一样。不过，现在不能再只通过第一个参数传入回调。如果只想添加回调，仍然可以在服务器配置中添加。
 
 ```js
 import { Server } from "@hocuspocus/server";
