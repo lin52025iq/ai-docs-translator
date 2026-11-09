@@ -8,8 +8,8 @@ export type SidebarLink = {
   disabled?: boolean
   children?: Omit<SidebarLink, 'type'>[]
   /**
-   * Whether to show the link as active. If undefined, the link will be active
-   * if its href matches the current pathname.
+   * 是否将链接显示为活动状态。若未定义，则当 href 与当前路径名匹配时，
+   * 链接将处于活动状态。
    */
   isActive?: boolean
 }
@@ -77,23 +77,23 @@ export type PageFrontmatter = {
   component?: Omit<UIComponentMetaWithUrl, 'path' | 'url'>
   incident?: IncidentMeta
   tags?: PageTag[]
-  /** A short introduction shown right below the title, before the tags. HTML, like `description`. */
+  /** 标题正下方、标签之前显示的简短介绍。HTML 格式，与 `description` 相同。 */
   intro?: string
-  /** A demo shown across the full width of the header, above the content and the table of contents. */
+  /** 在内容和目录上方，横跨整个页眉宽度显示的演示。 */
   headerDemo?: FrontmatterHeaderDemo
 }
 
 export type FrontmatterHeaderDemo = {
-  /** The demo's path, such as `/Extensions/DiagramsChartTypes`. */
+  /** 演示的路径，例如 `/Extensions/DiagramsChartTypes`。 */
   path: string
   isPro?: boolean
-  /** A full URL instead of `path`. */
+  /** 完整 URL，而不是 `path`。 */
   src?: string
-  /** `false` for a demo whose code is too much to read beside it, such as a whole app: no Preview / Code / Both. */
+  /** 对于代码过多、不适合并排展示的演示（例如完整应用），设为 `false`：不显示 Preview / Code / Both。 */
   code?: boolean
-  /** A short line at the left of the bar, in HTML like `intro`. Shown only without code, where the view switch is not. */
+  /** 栏左侧的简短文字，采用 HTML 格式，与 `intro` 相同。仅在不显示代码时显示，此时也不显示视图切换按钮。 */
   caption?: string
-  /** A CSS length, such as `min(80vh, 52rem)`, for a taller demo. Defaults to `min(70vh, 31rem)`. */
+  /** 较高演示的 CSS 长度，例如 `min(80vh, 52rem)`。默认值为 `min(70vh, 31rem)`。 */
   height?: string
 }
 
