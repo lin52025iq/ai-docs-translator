@@ -10,13 +10,13 @@ import { FULL_DOMAIN } from '@/utils/constants'
 const ASSET_PREFIXES = ['/assets', '/api', '/_next', '/docsassets']
 
 /**
- * Rewrite internal links so the served markdown is self-contained:
- * doc routes become absolute `.md` URLs (fetchable by agents), assets become
- * absolute URLs, anchors and external links are left untouched.
+ * 重写内部链接，使提供的 Markdown 内容自包含：
+ * 文档路由转换为绝对 `.md` URL（供代理获取），资源转换为
+ * 绝对 URL，锚点和外部链接保持不变。
  */
 function rewriteUrl(url: string): string {
   if (!url || url.startsWith('#')) return url
-  if (!url.startsWith('/')) return url // external or page-relative — leave as-is
+  if (!url.startsWith('/')) return url // 外部链接或相对于页面的链接——保持原样
 
   const isAsset = ASSET_PREFIXES.some((p) => url === p || url.startsWith(`${p}/`))
   if (isAsset) return `${FULL_DOMAIN}${url}`
@@ -27,7 +27,7 @@ function rewriteUrl(url: string): string {
   return `${FULL_DOMAIN}${withMd}${hash ? `#${hash}` : ''}`
 }
 
-// mdast phrasing (inline) node types. Anything else is flow (block) content.
+// mdast 短语（行内）节点类型。其他内容均为流式（块级）内容。
 const PHRASING_TYPES = new Set([
   'text',
   'emphasis',
@@ -48,11 +48,11 @@ const isWhitespaceText = (node: any): boolean =>
   node.type === 'text' && typeof node.value === 'string' && node.value.trim() === ''
 
 /**
- * Make a list of nodes valid in a flow (block) context: wrap each run of
- * phrasing nodes in a paragraph and drop whitespace-only text. Without this,
- * unwrapping a block component (e.g. a `<div>` of `<Link>` cards) leaves bare
- * inline nodes at flow level, which `mdast-util-to-markdown` serializes with no
- * separators — collapsing whole sections onto one line.
+ * 将节点列表调整为适用于流式（块级）上下文的形式：把每段
+ * 短语节点包裹在段落中，并移除仅包含空白字符的文本节点。如果不这样处理，
+ * 展开块级组件（例如包含多个 `<Link>` 卡片的 `<div>`）后，流式上下文中会留下孤立的
+ * 行内节点，而 `mdast-util-to-markdown` 序列化时不会添加分隔符，
+ * 导致整个章节挤在同一行。
  */
 function normalizeFlowChildren(nodes: any[]): any[] {
   const out: any[] = []
@@ -76,12 +76,11 @@ function normalizeFlowChildren(nodes: any[]): any[] {
 }
 
 /**
- * Unified plugin implementing the filter pipeline: drop imports/expressions,
- * convert JSX components via the registry (unknown ones are unwrapped), and
- * rewrite internal links.
+ * 统一插件，实现过滤流程：移除导入语句和表达式，
+ * 通过注册表转换 JSX 组件（未知组件则展开），并重写内部链接。
  */
 function remarkFilter() {
-  // Loose typing: mdast/mdx node shapes are dynamic here.
+  // 此处采用宽松类型：mdast/mdx 节点形状是动态的。
   return (tree: any) => {
     visit(tree, (node: any, index, parent: any) => {
       if (node.type === 'link' && typeof node.url === 'string') {
@@ -91,7 +90,7 @@ function remarkFilter() {
 
       if (!parent || typeof index !== 'number') return
 
-      // Drop imports/exports and bare expressions like {/* comment */}.
+      // 移除导入/导出语句，以及类似 {/* comment */} 的独立表达式。
       if (
         node.type === 'mdxjsEsm' ||
         node.type === 'mdxFlowExpression' ||
@@ -108,24 +107,24 @@ function remarkFilter() {
         let replacement: any[]
         if (result === null) replacement = []
         else if (result === undefined)
-          replacement = node.children ?? [] // default: unwrap
+          replacement = node.children ?? [] // 默认：展开
         else replacement = Array.isArray(result) ? result : [result]
 
-        // A flow element sits in a block context, so its replacement must be
-        // block-level: wrap any inline nodes in paragraphs.
+        // 流式元素位于块级上下文中，因此替换内容也必须是块级内容：
+        // 将其中的行内节点包裹在段落中。
         if (node.type === 'mdxJsxFlowElement') {
           replacement = normalizeFlowChildren(replacement)
         }
 
         parent.children.splice(index, 1, ...replacement)
-        // Re-visit at the same index so nested components are transformed too.
+        // 在相同索引处重新访问，以便同时转换嵌套组件。
         return index
       }
     })
   }
 }
 
-/** Compile an MDX body (frontmatter already stripped) to clean markdown. */
+/** 将 MDX 正文（已移除 frontmatter）编译为整洁的 Markdown。 */
 export async function transformMdxToMarkdown(body: string): Promise<string> {
   const file = await unified()
     .use(remarkParse)
