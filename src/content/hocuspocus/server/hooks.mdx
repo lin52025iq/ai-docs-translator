@@ -1,60 +1,60 @@
 ---
-title: Hooks
+title: 钩子
 meta:
-  title: Hocuspocus | Hocuspocus Docs
+  title: Hocuspocus | Hocuspocus 文档
   category: Hocuspocus
 ---
 
-## Introduction
+## 简介
 
-Hocuspocus offers hooks to extend its functionality and integrate it into existing applications. Hooks are configured as simple methods the same way as [other configuration options](/hocuspocus/server/configuration) are.
+Hocuspocus 提供钩子，用于扩展其功能并将其集成到现有应用中。钩子的配置方式与[其他配置选项](/hocuspocus/server/configuration)相同，只需将其配置为简单的方法即可。
 
-Hooks accept a hook payload as first argument. The payload is an object that contains data you can use and manipulate, allowing you to built complex things on top of this simple mechanic, like [extensions](/hocuspocus/guides/custom-extensions).
+钩子会将钩子负载作为第一个参数。负载是一个对象，其中包含可供你使用和修改的数据。借助这一简单机制，你可以构建复杂的功能，例如[扩展](/hocuspocus/guides/custom-extensions)。
 
-Hooks are required to return a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise); the easiest way to do that is to mark the function as `async` (Node.js 22+ is required since v4). In this way, you can do things like executing API requests, running DB queries, trigger webhooks or whatever you need to do to integrate it into your application.
+钩子必须返回一个 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)；最简单的做法是将函数标记为 `async`（从 v4 开始要求使用 Node.js 22+）。这样，你就可以执行 API 请求、运行数据库查询、触发 Webhook，或执行其他任何集成应用所需的操作。
 
-Since v4, hook payloads use web-standard `Request` and `Headers` objects instead of Node.js `IncomingMessage` and `IncomingHttpHeaders`. Read headers with `requestHeaders.get('authorization')` rather than `requestHeaders['authorization']`. The `onUpgrade` and `onRequest` hooks are the exception — they still use Node.js types because they operate at the HTTP level before the WebSocket upgrade.
+从 v4 开始，钩子负载使用符合 Web 标准的 `Request` 和 `Headers` 对象，取代 Node.js 的 `IncomingMessage` 和 `IncomingHttpHeaders`。请使用 `requestHeaders.get('authorization')` 读取标头，而不是 `requestHeaders['authorization']`。`onUpgrade` 和 `onRequest` 钩子是例外——它们仍使用 Node.js 类型，因为它们在 WebSocket 升级前的 HTTP 层运行。
 
-## Lifecycle
+## 生命周期
 
-Hooks will be called on different stages of the Hocuspocus lifecycle. For example the `onListen` hook will be called when you call the `listen()` method on the server instance.
+钩子会在 Hocuspocus 生命周期的不同阶段调用。例如，当你在服务器实例上调用 `listen()` 方法时，就会调用 `onListen` 钩子。
 
-Some hooks allow you not only to react to those events but also to intercept them. For example the `onConnect` hook will be fired when a new connection is made to underlying websocket server. By rejecting the Promise in your hook (or throwing an empty exception if using async) you can terminate the connection and stop the chain.
+某些钩子不仅允许你响应事件，还允许你拦截事件。例如，底层 WebSocket 服务器建立新连接时会触发 `onConnect` 钩子。你可以在钩子中拒绝 Promise（或在使用 async 时抛出空异常），以终止连接并停止钩子链。
 
-## The hook chain
+## 钩子链
 
-Extensions use hooks to add additional functionality to Hocuspocus. They will be called one after another in the order of their registration with your configuration as the last part of the chain.
+扩展通过钩子为 Hocuspocus 添加功能。它们会按照在配置中的注册顺序依次调用，而你的配置则位于钩子链的最后。
 
-If the Promise in a hook is rejected it will not be called for the following extensions or your configuration. It's like a stack of middlewares a request has to go through. Keep that in mind when working with hooks.
+如果钩子中的 Promise 被拒绝，后续扩展或你的配置就不会再被调用。这类似于请求必须依次经过的一系列中间件。使用钩子时请牢记这一点。
 
-By way of illustration, if a user isn’t allowed to connect: Just throw an error in the `onAuthenticate()` hook. Nice, isn’t it?
+举例来说，如果用户无权连接，只需在 `onAuthenticate()` 钩子中抛出错误即可。是不是很简单？
 
-## Summary Table
+## 汇总表
 
-| Hook                       | Description                               | Link                                                  |
+| 钩子                       | 说明                               | 链接                                                  |
 | -------------------------- |-------------------------------------------|-------------------------------------------------------|
-| `beforeHandleMessage`      | Before handling a message                 | [Read more](/hocuspocus/server/hooks#before-handle-message)      |
-| `afterHandleMessage`       | After an inbound message has been handled | [Read more](/hocuspocus/server/hooks#after-handle-message)       |
-| `beforeHandleAwareness`    | Before applying an inbound awareness update | [Read more](/hocuspocus/server/hooks#before-handle-awareness)  |
-| `onConnect`                | When a connection is established          | [Read more](/hocuspocus/server/hooks#on-connect)                 |
-| `connected`                | After a connection has been establied     | [Read more](/hocuspocus/server/hooks#connected)                  |
-| `onAuthenticate`           | When authentication is required           | [Read more](/hocuspocus/server/hooks#on-authenticate)            |
-| `onAwarenessUpdate`        | When awareness changed                    | [Read more](/hocuspocus/server/hooks#on-awareness-update)        |
-| `onLoadDocument`           | During the creation of a new document     | [Read more](/hocuspocus/server/hooks#on-load-document)           |
-| `afterLoadDocument`        | After a document is created               | [Read more](/hocuspocus/server/hooks#after-load-document)        |
-| `onChange`                 | When a document has changed               | [Read more](/hocuspocus/server/hooks#on-change)                  |
-| `onDisconnect`             | When a connection was closed              | [Read more](/hocuspocus/server/hooks#on-disconnect)              |
-| `onListen`                 | When the server is initialized            | [Read more](/hocuspocus/server/hooks#on-listen)                  |
-| `onDestroy`                | When the server will be destroyed         | [Read more](/hocuspocus/server/hooks#ondestroy)                 |
-| `onConfigure`              | When the server has been configured       | [Read more](/hocuspocus/server/hooks#on-configure)               |
-| `onRequest`                | When a HTTP request comes in              | [Read more](/hocuspocus/server/hooks#on-request)                 |
-| `onStoreDocument`          | When a document has been changed          | [Read more](/hocuspocus/server/hooks#on-store-document)          |
-| `onUpgrade`                | When the WebSocket connection is upgraded | [Read more](/hocuspocus/server/hooks#on-upgrade)                 |
-| `onStateless`              | When the Stateless message is received    | [Read more](/hocuspocus/server/hooks#on-stateless)               |
-| `beforeBroadcastStateless` | Before broadcast a stateless message      | [Read more](/hocuspocus/server/hooks#before-broadcast-stateless) |
-| `afterUnloadDocument`      | When a document is closed                 | [Read more](/hocuspocus/server/hooks#after-unload-document)      |
+| `beforeHandleMessage`      | 处理消息之前                 | [了解详情](/hocuspocus/server/hooks#before-handle-message)      |
+| `afterHandleMessage`       | 处理完入站消息之后 | [了解详情](/hocuspocus/server/hooks#after-handle-message)       |
+| `beforeHandleAwareness`    | 应用入站 awareness 更新之前 | [了解详情](/hocuspocus/server/hooks#before-handle-awareness)  |
+| `onConnect`                | 建立连接时          | [了解详情](/hocuspocus/server/hooks#on-connect)                 |
+| `connected`                | 成功建立连接之后     | [了解详情](/hocuspocus/server/hooks#connected)                  |
+| `onAuthenticate`           | 需要身份验证时           | [了解详情](/hocuspocus/server/hooks#on-authenticate)            |
+| `onAwarenessUpdate`        | awareness 发生变化时                    | [了解详情](/hocuspocus/server/hooks#on-awareness-update)        |
+| `onLoadDocument`           | 创建新文档期间     | [了解详情](/hocuspocus/server/hooks#on-load-document)           |
+| `afterLoadDocument`        | 创建文档之后               | [了解详情](/hocuspocus/server/hooks#after-load-document)        |
+| `onChange`                 | 文档发生变化时               | [了解详情](/hocuspocus/server/hooks#on-change)                  |
+| `onDisconnect`             | 连接关闭时              | [了解详情](/hocuspocus/server/hooks#on-disconnect)              |
+| `onListen`                 | 服务器初始化时            | [了解详情](/hocuspocus/server/hooks#on-listen)                  |
+| `onDestroy`                | 服务器即将销毁时         | [了解详情](/hocuspocus/server/hooks#ondestroy)                 |
+| `onConfigure`              | 服务器完成配置时       | [了解详情](/hocuspocus/server/hooks#on-configure)               |
+| `onRequest`                | 收到 HTTP 请求时              | [了解详情](/hocuspocus/server/hooks#on-request)                 |
+| `onStoreDocument`          | 文档发生变化时          | [了解详情](/hocuspocus/server/hooks#on-store-document)          |
+| `onUpgrade`                | WebSocket 连接升级时 | [了解详情](/hocuspocus/server/hooks#on-upgrade)                 |
+| `onStateless`              | 收到无状态消息时    | [了解详情](/hocuspocus/server/hooks#on-stateless)               |
+| `beforeBroadcastStateless` | 广播无状态消息之前      | [了解详情](/hocuspocus/server/hooks#before-broadcast-stateless) |
+| `afterUnloadDocument`      | 文档关闭时                 | [了解详情](/hocuspocus/server/hooks#after-unload-document)      |
 
-## Usage
+## 用法
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -75,19 +75,15 @@ const server = new Server({
 server.listen();
 ```
 
-## Hooks
+## 钩子
 
 ### beforeHandleMessage
 
-The `beforeHandleMessage` hooks are called when a message was received by the server, directly before
-handling / applying it. The hook can be used to reject a message (e.g. if the authentication token has
-expired), or even to check the update message and reject / accept it based on custom rules. If you
-throw an error in the hook, the connection will be closed. You can return a custom code / reason by
-throwing an error that implements CloseEvent (see example below).
+服务器收到消息后、处理或应用消息之前，会调用 `beforeHandleMessage` 钩子。此钩子可用于拒绝消息（例如，身份验证令牌已过期时），也可以检查更新消息，并根据自定义规则决定是否接受。若在钩子中抛出错误，连接将关闭。你可以抛出一个实现了 CloseEvent 的错误，以返回自定义代码或原因（参见下方示例）。
 
-**Hook payload**
+**钩子负载**
 
-The `data` passed to the `beforeHandleMessage` hook has the following attributes:
+传递给 `beforeHandleMessage` 钩子的 `data` 包含以下属性：
 
 ```js
 import { URLSearchParams } from "url";
@@ -107,9 +103,9 @@ const data = {
 };
 ```
 
-Context contains the data provided in former `onConnect` hooks.
+`context` 包含之前 `onConnect` 钩子提供的数据。
 
-**Example**
+**示例**
 
 ```js
 import { debounce } from "debounce";
@@ -136,13 +132,13 @@ server.listen();
 
 ### afterHandleMessage
 
-The `afterHandleMessage` hooks are called after an inbound message has been handled — that is, after the Yjs update has been applied to the document. It is the counterpart to `beforeHandleMessage`. The hook fires whether the apply resolved or threw, but it does **not** fire when `beforeHandleMessage` rejected the message (in that case the message is never applied).
+处理完入站消息后（也就是将 Yjs 更新应用到文档后），会调用 `afterHandleMessage` 钩子。它与 `beforeHandleMessage` 相对应。无论应用更新成功还是抛出错误，都会触发此钩子；但如果 `beforeHandleMessage` 拒绝了消息，则不会触发此钩子（此时消息根本不会被应用）。
 
-Use it to react to applied updates, e.g. for metrics, logging, or triggering side effects once the document state has changed.
+你可以使用此钩子响应已应用的更新，例如记录指标、写入日志，或在文档状态发生变化后触发副作用。
 
-**Hook payload**
+**钩子负载**
 
-The `data` passed to the `afterHandleMessage` hook has the following attributes:
+传递给 `afterHandleMessage` 钩子的 `data` 包含以下属性：
 
 ```js
 import { URLSearchParams } from "url";
@@ -163,9 +159,9 @@ const data = {
 };
 ```
 
-Context contains the data provided in former `onConnect` hooks.
+`context` 包含之前 `onConnect` 钩子提供的数据。
 
-**Example**
+**示例**
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -181,9 +177,9 @@ server.listen();
 
 ### connected
 
-The `connected` hooks are called after a new connection has been successfully established.
+成功建立新连接后，会调用 `connected` 钩子。
 
-**Example**
+**示例**
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -199,13 +195,11 @@ server.listen();
 
 ### onAuthenticate
 
-The `onAuthenticate` hook will be called when the server receives an authentication request from the client provider.
-It should return a Promise. Throwing an exception or rejecting the Promise will terminate the connection. Note, if you do not
-specify a token, the hook is called with an empty string.
+当服务器收到客户端 provider 发来的身份验证请求时，会调用 `onAuthenticate` 钩子。此钩子应返回一个 Promise。抛出异常或拒绝 Promise 都会终止连接。请注意，如果未指定令牌，调用此钩子时传入的令牌将是空字符串。
 
-**Hook payload**
+**钩子负载**
 
-The `data` passed to the `onAuthenticate` hook has the following attributes:
+传递给 `onAuthenticate` 钩子的 `data` 包含以下属性：
 
 ```js
 import { URLSearchParams } from "url";
@@ -226,7 +220,7 @@ const data = {
 };
 ```
 
-**Example**
+**示例**
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -262,11 +256,11 @@ server.listen();
 
 ### onTokenSync
 
-The `onTokenSync` hook is called when the server receives a token synchronization request from a connected provider. This enables the server to validate user tokens during active sessions without requiring a full reconnection.
+当服务器收到已连接 provider 发来的令牌同步请求时，会调用 `onTokenSync` 钩子。借助此钩子，服务器可以在活动会话期间验证用户令牌，而无需完全重新建立连接。
 
-**Hook payload**
+**钩子负载**
 
-The `data` passed to the `onTokenSync` hook has the following attributes:
+传递给 `onTokenSync` 钩子的 `data` 包含以下属性：
 
 ```js
 const data = {
@@ -285,7 +279,7 @@ const data = {
 };
 ```
 
-**Example**
+**示例**
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -312,14 +306,14 @@ const server = new Server({
 server.listen();
 ```
 
-**Provider Usage**
+**Provider 用法**
 
 ```js
 // Provider sends token to server
 provider.sendToken();
 ```
 
-**Server Usage**
+**服务器用法**
 
 ```js
 // Server requests token from provider
@@ -329,21 +323,21 @@ connection.requestToken();
 
 ### beforeHandleAwareness
 
-The `beforeHandleAwareness` hooks are called after the server has decoded an inbound awareness message and before it is applied to the document's awareness state. Unlike `onAwarenessUpdate`, which observes awareness changes after they have been applied, `beforeHandleAwareness` lets you inspect and rewrite the update before it lands in the document's awareness or is broadcast to peers.
+服务器解码入站 awareness 消息后、将其应用到文档的 awareness 状态之前，会调用 `beforeHandleAwareness` 钩子。与观察已应用的 awareness 变化的 `onAwarenessUpdate` 不同，`beforeHandleAwareness` 可以让你在更新写入文档的 awareness 状态或广播给其他节点之前检查并重写该更新。
 
-The hook receives the decoded per-client `states` as a mutable `Map` keyed by Yjs `clientId`. Mutate the map and the contained state objects in place to:
+此钩子接收解码后的、按客户端区分的 `states`。它是一个可变 `Map`，以 Yjs `clientId` 为键。你可以就地修改这个 Map 及其中的状态对象，以便：
 
-- Change fields on a state object (e.g. stamp a verified `user` over a client-supplied value).
-- `states.delete(clientId)` to drop a peer from the broadcast.
-- `states.set(clientId, ...)` to add or replace a synthetic state.
+- 更改状态对象中的字段（例如，用已验证的 `user` 覆盖客户端提供的值）。
+- 使用 `states.delete(clientId)` 从广播中移除某个对等端。
+- 使用 `states.set(clientId, ...)` 添加或替换一个合成状态。
 
-The encoded update sent to peers reflects whatever the map looks like after every hook in the chain has run. Throw to reject the entire update — nothing is applied and nothing is broadcast.
+钩子链中的所有钩子运行完毕后，发送给对等端的编码更新将反映 Map 的最终内容。抛出错误即可拒绝整个更新——既不会应用，也不会广播。
 
-Multiple extensions chain naturally: each extension sees the map as mutated by the previous ones and can mutate it further. Extensions run before the configuration-level hook.
+多个扩展可以自然地串联运行：每个扩展都会看到前一个扩展修改后的 Map，并可继续修改。扩展会先于配置级钩子运行。
 
-**Hook payload**
+**钩子负载**
 
-The `data` passed to the `beforeHandleAwareness` hook has the following attributes:
+传递给 `beforeHandleAwareness` 钩子的 `data` 包含以下属性：
 
 ```js
 import { Awareness } from 'y-protocols/awareness'
@@ -374,7 +368,7 @@ const data = {
 }
 ```
 
-**Example: stamp a server-verified field over the client value**
+**示例：用服务器验证过的字段覆盖客户端的值**
 
 ```js
 import { Server } from '@hocuspocus/server'
@@ -391,7 +385,7 @@ const server = new Server({
 server.listen()
 ```
 
-**Example: reject the update entirely**
+**示例：完全拒绝更新**
 
 ```js
 import { Server } from '@hocuspocus/server'
@@ -409,11 +403,11 @@ server.listen()
 
 ### onAwarenessUpdate
 
-The `onAwarenessUpdate` hooks are called when awareness changed ([Provider Awareness API](/hocuspocus/provider/events)).
+awareness 发生变化时，会调用 `onAwarenessUpdate` 钩子（参见 [Provider Awareness API](/hocuspocus/provider/events)）。
 
-**Hook payload**
+**钩子负载**
 
-The `data` passed to the `onAwarenessUpdate` hook has the following attributes:
+传递给 `onAwarenessUpdate` 钩子的 `data` 包含以下属性：
 
 ```js
 import { Awareness } from 'y-protocols/awareness'
@@ -436,9 +430,9 @@ const data = {
 }
 ```
 
-Since v4 the payload is simplified. Connection-specific fields (`context`, `requestHeaders`, `requestParameters`, `socketId`) have been removed. Access them through the optional `connection` (e.g. `connection?.context`).
+从 v4 开始，负载已简化。特定于连接的字段（`context`、`requestHeaders`、`requestParameters`、`socketId`）已被移除。如需访问这些字段，请使用可选的 `connection`（例如 `connection?.context`）。
 
-**Example**
+**示例**
 
 ```js
 const provider = new HocuspocusProvider({
@@ -453,16 +447,15 @@ const provider = new HocuspocusProvider({
 
 ### onChange
 
-The `onChange` hooks are called when the document itself has changed. It should return a Promise.
+文档本身发生变化时，会调用 `onChange` 钩子。此钩子应返回一个 Promise。
 
-It's important to understand that this hook is called just once per document. You can use it to react to changes
-by a specific connection, because we're passing `context` and `update` in the payload (see below).
+需要注意的是，每个文档只会调用一次此钩子。由于负载中包含 `context` 和 `update`（见下文），你可以据此响应特定连接产生的更改。
 
-It's highly recommended to debounce extensive operations as this hook can be fired up to multiple times a second.
+强烈建议对开销较大的操作进行防抖，因为此钩子每秒可能触发多次。
 
-**Hook payload**
+**钩子负载**
 
-The `data` passed to the `onChange` hook has the following attributes:
+传递给 `onChange` 钩子的 `data` 包含以下属性：
 
 ```js
 import { URLSearchParams } from "url";
@@ -484,12 +477,12 @@ const data = {
 };
 ```
 
-Context contains the data provided in former `onConnect` hooks.
+`context` 包含之前 `onConnect` 钩子提供的数据。
 
-**Example**
+**示例**
 
-:::warning Use a primary storage
-The following example is not intended to be your primary storage as serializing to and deserializing from JSON will not store collaboration history steps but only the resulting document. This example is only meant to store the resulting document for the views of your application. For a primary storage, check out the [Database extension](/hocuspocus/server/extensions/database).
+:::warning 使用主存储
+以下示例不适合作为主存储，因为将内容序列化为 JSON 再反序列化，不会保存协作历史步骤，只会保存最终文档。此示例仅用于保存应用视图所需的最终文档。有关主存储，请参阅 [Database 扩展](/hocuspocus/server/extensions/database)。
 :::
 
 ```js
@@ -530,19 +523,19 @@ server.listen();
 
 ### onConfigure
 
-The `onConfigure` hooks are called after the server was created. It should return a Promise.
+服务器创建后会调用 `onConfigure` 钩子。此钩子应返回一个 Promise。
 
-**Default configuration**
+**默认配置**
 
-If `configure()` is never called, you can get the default configuration by importing it:
+如果从未调用 `configure()`，可以通过导入来获取默认配置：
 
 ```js
 import { defaultConfiguration } from "@hocuspocus/server";
 ```
 
-**Hook payload**
+**钩子负载**
 
-The `data` passed to the `onConfigure` hook has the following attributes:
+传递给 `onConfigure` 钩子的 `data` 包含以下属性：
 
 ```js
 import { Configuration } from "@hocuspocus/server";
@@ -554,7 +547,7 @@ const data = {
 };
 ```
 
-**Example**
+**示例**
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -571,11 +564,11 @@ server.listen();
 
 ### onConnect
 
-The `onConnect` hook will be called when a new connection is established. It should return a Promise. Throwing an exception or rejecting the Promise will terminate the connection.
+建立新连接时会调用 `onConnect` 钩子。此钩子应返回一个 Promise。抛出异常或拒绝 Promise 都会终止连接。
 
-**Hook payload**
+**钩子负载**
 
-The `data` passed to the `onConnect` hook has the following attributes:
+传递给 `onConnect` 钩子的 `data` 包含以下属性：
 
 ```js
 import { URLSearchParams } from "url";
@@ -595,7 +588,7 @@ const data = {
 };
 ```
 
-**Example**
+**示例**
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -612,11 +605,11 @@ server.listen();
 
 ### onDestroy
 
-The `onDestroy` hooks are called after the server was shut down using the [destroy](/hocuspocus/server/usage#server) method. It should return a Promise.
+使用 [destroy](/hocuspocus/server/usage#server) 方法关闭服务器后，会调用 `onDestroy` 钩子。此钩子应返回一个 Promise。
 
-**Hook payload**
+**钩子负载**
 
-The `data` passed to the `onDestroy` hook has the following attributes:
+传递给 `onDestroy` 钩子的 `data` 包含以下属性：
 
 ```js
 const data = {
@@ -624,7 +617,7 @@ const data = {
 };
 ```
 
-**Example**
+**示例**
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -641,11 +634,11 @@ server.listen();
 
 ### onDisconnect
 
-The `onDisconnect` hooks are called when a connection is terminated. It should return a Promise.
+连接终止时会调用 `onDisconnect` 钩子。此钩子应返回一个 Promise。
 
-**Hook payload**
+**钩子负载**
 
-The `data` passed to the `onDisconnect` hook has the following attributes:
+传递给 `onDisconnect` 钩子的 `data` 包含以下属性：
 
 ```js
 import { URLSearchParams } from "url";
@@ -663,9 +656,9 @@ const data = {
 };
 ```
 
-Context contains the data provided in former `onConnect` hooks.
+`context` 包含之前 `onConnect` 钩子提供的数据。
 
-**Example**
+**示例**
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -682,11 +675,11 @@ server.listen();
 
 ### onListen
 
-The `onListen` hooks are called after the server is started and accepts connections. It should return a Promise.
+服务器启动并开始接受连接后，会调用 `onListen` 钩子。此钩子应返回一个 Promise。
 
-**Hook payload**
+**钩子负载**
 
-The `data` passed to the `onListen` hook has the following attributes:
+传递给 `onListen` 钩子的 `data` 包含以下属性：
 
 ```js
 const data = {
@@ -694,7 +687,7 @@ const data = {
 };
 ```
 
-**Example**
+**示例**
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -711,15 +704,15 @@ server.listen();
 
 ### onLoadDocument
 
-The `onLoadDocument` hooks are called to fetch existing data from your storage. You are probably used to loading some JSON/HTML document in your application, but that’s not the Y.js-way. For Y.js to work properly, we’ll need to store the history of changes. Only then changes from multiple sources can be merged.
+调用 `onLoadDocument` 钩子是为了从存储中获取现有数据。你可能习惯在应用中加载 JSON/HTML 文档，但这并不是 Y.js 的工作方式。要让 Y.js 正常运行，我们需要保存更改历史。只有这样，才能合并来自多个来源的更改。
 
-You still can store a JSON/HTML document, but see it more as a “view” on your data, not as your data source.
+你仍然可以存储 JSON/HTML 文档，但应将其视为数据的“视图”，而不是数据源。
 
-**Create a Y.js document from JSON/HTML (once)**
+**从 JSON/HTML 创建 Y.js 文档（一次性操作）**
 
-You can create a Y.js document from your existing data, for example JSON. You should use this to migrate data only, not as a permanent way to store your data.
+你可以根据现有数据（例如 JSON）创建 Y.js 文档。此方法仅用于迁移数据，不应作为永久的数据存储方式。
 
-To do this, you can use the Transformer package. For Tiptap-compatible JSON it would look like this:
+为此，你可以使用 Transformer 包。对于兼容 Tiptap 的 JSON，代码如下：
 
 ```js
 import { TiptapTransformer } from "@hocuspocus/transformer";
@@ -737,9 +730,9 @@ const ydoc = TiptapTransformer.toYdoc(
 );
 ```
 
-If you want to import HTML, you have to [convert it to Tiptap-compatible JSON first](/editor/api/utilities/html#generating-json-from-html)
+如果要导入 HTML，必须先[将其转换为兼容 Tiptap 的 JSON](/editor/api/utilities/html#generating-json-from-html)。
 
-However, we expect you to return a Y.js document (or a raw `Uint8Array` Yjs update, since v4) from the `onLoadDocument` hook, no matter where it’s from.
+不过，无论数据来自何处，我们都要求你从 `onLoadDocument` 钩子返回一个 Y.js 文档（或从 v4 开始支持的原始 `Uint8Array` Yjs 更新）。
 
 ```js
 import { Server } from '@hocuspocus/server'
@@ -756,7 +749,7 @@ const server = new Server({
 server.listen()
 ```
 
-Since v4 you can also return a raw `Uint8Array` of Yjs updates directly, which is convenient for storage extensions:
+从 v4 开始，你也可以直接返回原始的 Yjs 更新 `Uint8Array`，这对存储扩展很方便：
 
 ```js
 const server = new Server({
@@ -767,15 +760,15 @@ const server = new Server({
 })
 ```
 
-**Fetch your Y.js documents (recommended)**
+**获取 Y.js 文档（推荐）**
 
-There are multiple ways to store your Y.js documents (and their history) wherever you like. Basically, you should use the `onStoreDocument` hook, which is debounced and executed every few seconds for changed documents. It gives you the current Y.js document, and it’s up to you to store that somewhere. No worries, we provide some convenient ways for you.
+你可以通过多种方式将 Y.js 文档及其历史记录存储在任意位置。通常，你应使用 `onStoreDocument` 钩子。对于发生变化的文档，该钩子会经过防抖处理，并每隔几秒执行一次。它会提供当前的 Y.js 文档，由你决定将其存储在哪里。不用担心，我们提供了一些方便的方式。
 
-If you just want to get it working, have a look at the [`SQLite`](/hocuspocus/server/extensions/sqlite) extension for local development, and the generic [`Database`](/hocuspocus/server/extensions/database) extension for a convenient way to fetch and store documents.
+如果你只想快速运行起来，可以查看用于本地开发的 [`SQLite`](/hocuspocus/server/extensions/sqlite) 扩展，以及便于获取和存储文档的通用 [`Database`](/hocuspocus/server/extensions/database) 扩展。
 
-**Hook payload**
+**钩子负载**
 
-The `data` passed to the `onLoadDocument` hook has the following attributes:
+传递给 `onLoadDocument` 钩子的 `data` 包含以下属性：
 
 ```js
 import { Doc } from "yjs";
@@ -791,20 +784,17 @@ const data = {
 };
 ```
 
-Context contains the data provided in former `onConnect` hooks.
+`context` 包含之前 `onConnect` 钩子提供的数据。
 
 ### afterLoadDocument
 
-The `afterLoadDocument` hooks are called after a document is successfully loaded. This is different
-to the `onLoadDocument` hooks which are part of the document creation process and could potentially
-fail if for instance the document cannot be found in the database.
+文档成功加载后，会调用 `afterLoadDocument` 钩子。这与 `onLoadDocument` 钩子不同，后者属于文档创建流程的一部分；例如，数据库中找不到文档时，创建流程可能会失败。
 
-Because `afterLoadDocument` only runs after all `onLoadDocument` hooks are successful at this point
-you know the document is considered open on the server.
+由于 `afterLoadDocument` 只会在所有 `onLoadDocument` 钩子都成功后运行，此时你可以确定服务器已将该文档视为打开状态。
 
-**Hook payload**
+**钩子负载**
 
-The `data` passed to the `afterLoadDocument` hook has the following attributes:
+传递给 `afterLoadDocument` 钩子的 `data` 包含以下属性：
 
 ```js
 import { Doc } from "yjs";
@@ -822,13 +812,13 @@ const data = {
 
 ### onRequest
 
-The `onRequest` hooks are called when the HTTP server inside Hocuspocus receives a new request. It should return a Promise. If you throw an empty exception or reject the returned Promise the following hooks in the chain will not run and thus enable you to respond to the request yourself. It's similar to the concept of request middlewares.
+Hocuspocus 内部的 HTTP 服务器收到新请求时，会调用 `onRequest` 钩子。此钩子应返回一个 Promise。如果你抛出空异常或拒绝返回的 Promise，钩子链中的后续钩子将不会运行，因此你可以自行响应请求。这类似于请求中间件的概念。
 
-This is useful if you want to create custom routes on the same port Hocuspocus runs on.
+如果你想在 Hocuspocus 使用的同一端口上创建自定义路由，这个钩子就很有用。
 
-**Hook payload**
+**钩子负载**
 
-The `data` passed to the `onRequest` hook has the following attributes:
+传递给 `onRequest` 钩子的 `data` 包含以下属性：
 
 ```js
 import { IncomingMessage, ServerResponse } from "http";
@@ -840,7 +830,7 @@ const data = {
 };
 ```
 
-**Example**
+**示例**
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -871,21 +861,17 @@ server.listen();
 
 ### onStoreDocument
 
-The `onStoreDocument` hooks are called after the document has been changed (after the onChange hook) and can
-be used to store the changed document to a persistent storage. Calls to `onStoreDocument` are debounced by default
-(see `debounce` and `maxDebounce` configuration options).
+文档发生变化后（即 `onChange` 钩子执行后），会调用 `onStoreDocument` 钩子，可用于将已更改的文档存储到持久化存储中。默认情况下，对 `onStoreDocument` 的调用会经过防抖处理（参见 `debounce` 和 `maxDebounce` 配置选项）。
 
-The easiest way to implement this functionality is by extending the extension `extension-database` and implementing
-fetch() and store() methods, as we did that in `extension-sqlite`. You can implement the `onStoreDocument` yourself
-with the hook directly, just make sure to apply / encode the states of the yDoc as we did in `extension-database`.
+实现此功能最简单的方式是扩展 `extension-database` 并实现 `fetch()` 和 `store()` 方法，正如我们在 `extension-sqlite` 中所做的那样。你也可以直接通过钩子实现 `onStoreDocument`，只需确保像 `extension-database` 中那样应用或编码 yDoc 的状态即可。
 
-Since v4, `onStoreDocument` is triggered on any document change — not just WebSocket-originated ones. The payload has been restructured because the hook can now be triggered by sources that are not tied to a specific connection (e.g. direct connections, Redis replication). If the hook throws, the document stays in memory and is retried to avoid data loss, and `Server.destroy()` flushes any pending debounced stores on shutdown.
+从 v4 开始，任何文档更改都会触发 `onStoreDocument`，而不仅仅是由 WebSocket 引起的更改。由于此钩子现在也可能由与特定连接无关的来源触发（例如直接连接、Redis 复制），其负载结构也进行了调整。如果钩子抛出错误，文档会保留在内存中并重试，以避免数据丢失；服务器关闭时，`Server.destroy()` 会刷新所有待处理的防抖存储操作。
 
-If you want to opt out of store hooks for a specific local mutation, set `skipStoreHooks` on the `LocalTransactionOrigin` when opening a direct connection. Extensions can also throw `SkipFurtherHooksError` (from `@hocuspocus/common`) to signal that persistence is handled and remaining hooks should be skipped.
+如果想针对某次本地变更跳过存储钩子，可以在打开直接连接时，在 `LocalTransactionOrigin` 上设置 `skipStoreHooks`。扩展也可以抛出 `SkipFurtherHooksError`（来自 `@hocuspocus/common`），表示持久化工作已处理完毕，应跳过剩余钩子。
 
-**Hook payload**
+**钩子负载**
 
-The `data` passed to the `onStoreDocument` hook has the following attributes:
+传递给 `onStoreDocument` 钩子的 `data` 包含以下属性：
 
 ```js
 import { Doc } from "yjs";
@@ -903,17 +889,17 @@ const data = {
 };
 ```
 
-In v3 this payload also contained `context`, `requestHeaders`, `requestParameters`, `socketId`, and `transactionOrigin`. In v4 those were removed or renamed — access connection-specific data through `lastContext` if needed.
+在 v3 中，此负载还包含 `context`、`requestHeaders`、`requestParameters`、`socketId` 和 `transactionOrigin`。在 v4 中，这些字段已被移除或重命名——如需访问特定于连接的数据，请使用 `lastContext`。
 
 ### onUpgrade
 
-The `onUpgrade` hooks are called when the HTTP server inside Hocuspocus receives a new upgrade request. It should return a Promise. If you throw an empty exception or reject the returned Promise the following hooks in the chain will not run and thus enable you to respond and upgrade the request yourself. It's similar to the concept of request middlewares.
+Hocuspocus 内部的 HTTP 服务器收到新的升级请求时，会调用 `onUpgrade` 钩子。此钩子应返回一个 Promise。如果你抛出空异常或拒绝返回的 Promise，钩子链中的后续钩子将不会运行，因此你可以自行响应请求并完成升级。这类似于请求中间件的概念。
 
-This is useful if you want to create custom websocket routes on the same port Hocuspocus runs on.
+如果你想在 Hocuspocus 使用的同一端口上创建自定义 WebSocket 路由，这个钩子就很有用。
 
-**Hook payload**
+**钩子负载**
 
-The `data` passed to the `onUpgrade` hook has the following attributes:
+传递给 `onUpgrade` 钩子的 `data` 包含以下属性：
 
 ```js
 import { IncomingMessage } from "http";
@@ -927,7 +913,7 @@ const data = {
 };
 ```
 
-**Example**
+**示例**
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -970,11 +956,11 @@ server.listen();
 
 ### onStateless
 
-The `onStateless` hooks are called after the server has received a stateless message. It should return a Promise.
+服务器收到无状态消息后，会调用 `onStateless` 钩子。此钩子应返回一个 Promise。
 
-**Hook payload**
+**钩子负载**
 
-The `data` passed to the `onListen` hook has the following attributes:
+传递给 `onListen` 钩子的 `data` 包含以下属性：
 
 ```js
 const data = {
@@ -985,7 +971,7 @@ const data = {
 }
 ```
 
-**Example**
+**示例**
 
 ```js
 import { Server } from '@hocuspocus/server'
@@ -1006,10 +992,10 @@ server.listen()
 
 ### beforeSync
 
-The `beforeSync` hooks are called before a sync message is handled. This is useful if you want to inspect the sync message that will be applied to the document.
-Note that this hook is NOT async.
+处理同步消息之前会调用 `beforeSync` 钩子。如果你想检查即将应用到文档的同步消息，此钩子会很有用。
+请注意，此钩子不是异步的。
 
-**Hook payload**
+**钩子负载**
 
 ```js
 const data = {
@@ -1022,7 +1008,7 @@ const data = {
 }
 ```
 
-**Example**
+**示例**
 
 ```js
 import { Server } from '@hocuspocus/server'
@@ -1038,11 +1024,11 @@ server.listen()
 
 ### beforeBroadcastStateless
 
-The `beforeBroadcastStateless` hooks are called before the server broadcast a stateless message.
+服务器广播无状态消息之前，会调用 `beforeBroadcastStateless` 钩子。
 
-**Hook payload**
+**钩子负载**
 
-The `data` passed to the `beforeBroadcastStateless` hook has the following attributes:
+传递给 `beforeBroadcastStateless` 钩子的 `data` 包含以下属性：
 
 ```js
 import { Doc } from 'yjs'
@@ -1054,7 +1040,7 @@ const data = {
 }
 ```
 
-**Example**
+**示例**
 
 ```js
 import { Server } from '@hocuspocus/server'
@@ -1070,13 +1056,11 @@ server.listen()
 
 ### afterUnloadDocument
 
-The `afterUnloadDocument` hooks are called after a document was closed on the server. You can no
-longer access the document at this point as it has been destroyed, but you may notify anything
-that was subscribed to the document.
+服务器关闭文档后，会调用 `afterUnloadDocument` 钩子。此时文档已被销毁，你无法再访问它，但可以通知任何订阅了该文档的对象。
 
-**Hook payload**
+**钩子负载**
 
-The `data` passed to the `onDestroy` hook has the following attributes:
+传递给 `onDestroy` 钩子的 `data` 包含以下属性：
 
 ```js
 const data = {
@@ -1085,7 +1069,7 @@ const data = {
 };
 ```
 
-**Example**
+**示例**
 
 ```js
 import { Server } from "@hocuspocus/server";
