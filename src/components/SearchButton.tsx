@@ -14,7 +14,7 @@ export const SearchButton = () => {
       onClick={() => setSearchOpen(true)}
     >
       <SearchIcon />
-      <span className="hidden xl:block text-base leading-[110%] text-gray-900">Search</span>
+      <span className="hidden xl:block text-base leading-[110%] text-gray-900">搜索</span>
       <span className="hidden xl:flex font-medium items-center gap-0.5 px-1 py-0.5 rounded border text-xs leading-[110%] shadow-slim border-grayAlpha-100">
         <span>⌘</span>
         <span>K</span>
