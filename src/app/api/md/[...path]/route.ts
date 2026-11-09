@@ -4,7 +4,7 @@ import { fileToMarkdown } from '@/server/markdown/fileToMarkdown'
 import { changelogToMarkdown } from '@/server/markdown/changelogToMarkdown'
 import { createCanonicalUrl } from '@/server/createCanonicalUrl'
 
-// Needs the Node runtime for filesystem access to src/content.
+// 需要使用 Node.js 运行时，以便访问 src/content 中的文件系统。
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
@@ -12,20 +12,18 @@ type Params = { params: Promise<{ path?: string[] }> }
 
 const CHANGELOG_PREFIX = 'resources/changelog/'
 
-/** Append `.md` to internal doc routes (but not to asset paths with an extension). */
+/** 为站内文档路由添加 `.md` 后缀（但不为带扩展名的资源路径添加）。 */
 function toMarkdownDestination(destination: string): string {
   if (/\.[a-z0-9]+$/i.test(destination)) return destination
   return `${destination}.md`
 }
 
 /**
- * Build a 200 markdown response with the shared canonical/cache/robots headers.
+ * 构建状态码为 200 的 Markdown 响应，并附带通用的规范 URL、缓存和 robots 标头。
  *
- * When reached via `Accept: text/markdown` (proxy signal), this response is
- * cached under the bare HTML URL's key. Next strips `Vary: Accept` from the HTML
- * page response (a known framework bug), so a Vary-ignoring shared cache could
- * otherwise hand this markdown to a browser. Keep it out of shared caches; the
- * standalone `.md` URL is its own key and stays cacheable.
+ * 通过 `Accept: text/markdown`（代理信号）访问时，此响应会使用不带扩展名的 HTML URL 的缓存键。
+ * Next 会从 HTML 页面响应中移除 `Vary: Accept`（这是一个已知的框架缺陷），因此，不遵循 Vary 的共享缓存可能会
+ * 将此 Markdown 内容返回给浏览器。为避免这种情况，将其排除在共享缓存之外；独立的 `.md` URL 使用自己的缓存键，仍可缓存。
  */
 function markdownResponse(markdown: string, canonical: string, negotiated: boolean): NextResponse {
   const cacheControl = negotiated
@@ -37,12 +35,12 @@ function markdownResponse(markdown: string, canonical: string, negotiated: boole
     headers: {
       'Content-Type': 'text/markdown; charset=utf-8',
       'X-Content-Type-Options': 'nosniff',
-      // Same URL serves HTML or Markdown depending on the Accept header.
+      // 同一 URL 根据 Accept 标头返回 HTML 或 Markdown。
       Vary: 'Accept',
       'Cache-Control': cacheControl,
-      // Point crawlers at the canonical human page …
+      // 将爬虫指向规范的人类可读页面……
       Link: `<${canonical}>; rel="canonical"`,
-      // … and keep the markdown duplicate out of search indexes.
+      // ……并避免 Markdown 副本出现在搜索索引中。
       'X-Robots-Tag': 'noindex',
     },
   })
@@ -53,10 +51,9 @@ export async function GET(request: NextRequest, { params }: Params) {
   const routePath = normalizeRoutePath((segments ?? []).join('/'))
   const negotiated = request.headers.get('x-markdown-negotiated') === '1'
 
-  // Changelog pages are generated from JSON data and rendered by the
-  // `resources/changelog/[slug]` route, so they have no `.mdx` file for
-  // resolveContentPath to find. Serve their markdown directly. A miss falls
-  // through to resolveContentPath, which yields the shared 404 response.
+  // 更新日志页面由 JSON 数据生成，并通过 `resources/changelog/[slug]` 路由渲染，因此没有
+  // 可供 resolveContentPath 查找的 `.mdx` 文件。直接提供其 Markdown 内容。若未找到，
+  // 则继续调用 resolveContentPath，由它返回通用的 404 响应。
   if (routePath.startsWith(CHANGELOG_PREFIX)) {
     const slug = routePath.slice(CHANGELOG_PREFIX.length)
     if (!slug.includes('/')) {
@@ -76,27 +73,26 @@ export async function GET(request: NextRequest, { params }: Params) {
   }
 
   if (resolved.type === 'not-found') {
-    return new NextResponse(`# Not found`, {
+    return new NextResponse(`# 未找到`, {
       status: 404,
       headers: {
         'Content-Type': 'text/markdown; charset=utf-8',
-        // Body reflects the request path; stop browsers MIME-sniffing it to HTML.
+        // 响应正文会显示请求路径；阻止浏览器将其 MIME 类型嗅探为 HTML。
         'X-Content-Type-Options': 'nosniff',
       },
     })
   }
 
   try {
-    // Canonical points at the human HTML page on the stable production domain
-    // (matches the page's own <link rel="canonical">), not the request origin
-    // which would be the deployment URL.
+    // 规范 URL 指向稳定生产域名上的人类可读 HTML 页面（与页面自身的 <link rel="canonical"> 一致），
+    // 而不是请求来源地址，后者可能是部署 URL。
     const canonical = createCanonicalUrl(resolved.routePath ? resolved.routePath.split('/') : [])
     const markdown = await fileToMarkdown(resolved.filePath, canonical)
 
     return markdownResponse(markdown, canonical, negotiated)
   } catch (error) {
-    console.error(`Failed to render markdown for /${routePath}:`, error)
-    return new NextResponse('# Error\n\nFailed to render this page as markdown.\n', {
+    console.error(`渲染 /${routePath} 的 Markdown 失败：`, error)
+    return new NextResponse('# 错误\n\n无法将此页面渲染为 Markdown。\n', {
       status: 500,
       headers: {
         'Content-Type': 'text/markdown; charset=utf-8',
