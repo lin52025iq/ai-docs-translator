@@ -1,16 +1,16 @@
 ---
-title: Customize how suggestions are displayed
+title: 自定义建议的显示方式
 meta:
-  title: Display Suggestions | Tiptap AI Suggestion
-  description: Customize how AI Suggestions are displayed in the editor with custom styles and popovers.
-  category: Content AI
+  title: 显示建议 | Tiptap AI Suggestion
+  description: 使用自定义样式和弹出层，自定义 AI 建议在编辑器中的显示方式。
+  category: 内容 AI
 ---
 
-The AI Suggestion extension is headless and fully customizable. This means that you have full control over how suggestions are displayed in the editor.
+AI Suggestion 扩展是无头且完全可自定义的。这意味着你可以完全控制建议在编辑器中的显示方式。
 
-## Show Loading/Error States When Loading Suggestions
+## 加载建议时显示加载/错误状态
 
-You can access the extension's current loading state by reading its extension storage object
+读取扩展的存储对象，即可访问扩展当前的加载状态：
 
 ```ts
 const storage = editor.extensionStorage.aiSuggestion
@@ -21,11 +21,11 @@ if (storage.isLoading) {
 }
 ```
 
-The `storage.error` property will contain the error object that was thrown while loading suggestions. You can use this object to display different error messages depending on the error type.
+`storage.error` 属性包含加载建议时抛出的错误对象。你可以根据错误类型，使用此对象显示不同的错误消息。
 
-## Default Suggestion Styles
+## 默认建议样式
 
-By default, the AI Suggestion extension will apply the CSS class `tiptap-ai-suggestion` to each suggestion. It will also add a `style` attribute with these color variables: `--tiptap-ai-suggestion-color` and `--tiptap-ai-suggestion-background-color`. The `tiptap-ai-suggestion` class can be used to apply simple styles to the suggestions in the editor.
+默认情况下，AI Suggestion 扩展会为每条建议添加 CSS 类 `tiptap-ai-suggestion`，并添加一个包含以下颜色变量的 `style` 属性：`--tiptap-ai-suggestion-color` 和 `--tiptap-ai-suggestion-background-color`。你可以使用 `tiptap-ai-suggestion` 类为编辑器中的建议应用简单样式。
 
 ```css
 .tiptap-ai-suggestion {
@@ -34,29 +34,28 @@ By default, the AI Suggestion extension will apply the CSS class `tiptap-ai-sugg
 }
 ```
 
-For more advanced styles, use the `getCustomSuggestionDecoration` [configuration option](/ai/deprecated/suggestion/configure#custom-suggestion-styles).
+如需更高级的样式，请使用 `getCustomSuggestionDecoration`[配置选项](/ai/deprecated/suggestion/configure#custom-suggestion-styles)。
 
-## Selected Suggestions
+## 已选中的建议
 
-A suggestion is considered "selected" when the cursor is over it.
+当光标位于某条建议上时，该建议即被视为“已选中”。
 
-You can read the selected suggestion from the extension's storage object
+你可以从扩展的存储对象中读取已选中的建议：
 
 ```ts
 const storage = editor.extensionStorage.aiSuggestion
 const selectedSuggestion = storage.getSelectedSuggestion()
 ```
 
-To select a suggestion programmatically, use the `selectAiSuggestion` command.
+若要通过编程方式选中一条建议，请使用 `selectAiSuggestion` 命令。
 
 ```ts
 editor.commands.selectAiSuggestion(suggestionId)
 ```
 
-This will move the cursor to the beginning of the suggestion, so that it is considered "selected".
+此命令会将光标移至建议的开头，使其处于“已选中”状态。
 
-By default, the AI Suggestion extension will apply the CSS class `tiptap-ai-suggestion--selected` to the selected suggestion. This class can be used
-to style the selected suggestion in the editor.
+默认情况下，AI Suggestion 扩展会为已选中的建议添加 CSS 类 `tiptap-ai-suggestion--selected`。你可以使用此类设置编辑器中已选中建议的样式。
 
 ```css
 .tiptap-ai-suggestion--selected {
@@ -65,13 +64,13 @@ to style the selected suggestion in the editor.
 }
 ```
 
-## Customize the Suggestion's Appearance
+## 自定义建议的外观
 
-The `getCustomSuggestionDecoration` option allows you to control the appearance of suggestions and provide visual cues to the user. You can add custom CSS classes to the suggestions, and add custom elements before/after them. This is useful for adding popovers, tooltips, icons, or other elements to the suggestions.
+`getCustomSuggestionDecoration` 选项可以控制建议的外观，并为用户提供视觉提示。你可以为建议添加自定义 CSS 类，也可以在建议前后添加自定义元素。这适用于为建议添加弹出层、工具提示、图标或其他元素。
 
-The function Custom suggestion styles are applied using the [Prosemirror Decorations API](https://prosemirror.net/docs/guide/#view.decorations).
+自定义建议样式通过 [Prosemirror Decorations API](https://prosemirror.net/docs/guide/#view.decorations) 应用。
 
-To learn how to show a popover when you select a suggestion, [follow this guide](/ai/deprecated/suggestion/features/display-suggestions#show-a-popover-when-you-select-a-suggestion).
+若要了解如何在选中建议时显示弹出层，请[参阅此指南](/ai/deprecated/suggestion/features/display-suggestions#show-a-popover-when-you-select-a-suggestion)。
 
 ```ts
 AiSuggestion.configure({
@@ -92,13 +91,13 @@ AiSuggestion.configure({
 })
 ```
 
-## Show a Popover When You Select a Suggestion
+## 选中建议时显示弹出层
 
-An essential feature of modern AI Suggestions is the ability to show a popover or a tooltip when you select a suggestion. This popover usually provides extra information about the suggestion, and allows the user to accept or reject it.
+现代 AI 建议的一项重要功能，是在选中建议时显示弹出层或工具提示。弹出层通常会提供有关建议的补充信息，并允许用户接受或拒绝建议。
 
-To show a popover when you select a suggestion, you need to use the `getCustomSuggestionDecoration` option. This function allows you to add custom elements to the suggestions, including popovers.
+若要在选中建议时显示弹出层，需要使用 `getCustomSuggestionDecoration` 选项。此函数允许你向建议添加自定义元素，包括弹出层。
 
-Below is a simplified example on how to do it with the React UI library.
+下面是一个使用 React UI 库实现此功能的简化示例。
 
 ```tsx
 // First, define a hook to store the HTML element where the popover will be rendered
@@ -130,9 +129,9 @@ if (popoverElement && selectedSuggestion) {
 }
 ```
 
-We recommend using the [Floating UI](https://floating-ui.com/) library to display the popover. You can see an example on how to do it [in the demo](/ai/deprecated/suggestion/overview).
+我们建议使用 [Floating UI](https://floating-ui.com/) 库来显示弹出层。你可以在[演示](/ai/deprecated/suggestion/overview)中查看示例。
 
-When you render the suggestion in the popover, you might want to show the previous and next words of the sentence to give the user more context. We've created the `getNextWord` and `getPreviousWord` utility functions so that you don’t have to implement them yourself. You can import them from the `@tiptap-pro/extension-ai-suggestion` library.
+在弹出层中呈现建议时，你可能希望显示句子中前后相邻的词语，为用户提供更多上下文。我们提供了 `getNextWord` 和 `getPreviousWord` 实用函数，你无需自行实现这些功能。你可以从 `@tiptap-pro/extension-ai-suggestion` 库导入这两个函数。
 
 ```ts
 import { getNextWord, getPreviousWord } from '@tiptap-pro/extension-ai-suggestion'
@@ -143,16 +142,16 @@ const { previousWord } = getPreviousWord(editor, suggestion.deleteRange.from)
 const { nextWord, punctuationMark } = getNextWord(editor, suggestion.deleteRange.to)
 ```
 
-## Display Suggestions in a Sidebar Outside the Editor
+## 在编辑器外部的侧边栏中显示建议
 
-You can access the current suggestions from the extension's [storage object](/ai/deprecated/suggestion/api-reference#extension-storage).
+你可以通过扩展的[存储对象](/ai/deprecated/suggestion/api-reference#extension-storage)访问当前建议。
 
 ```ts
 const storage = editor.extensionStorage.aiSuggestion
 const suggestions = storage.getSuggestions()
 ```
 
-Then, you can use this data to render suggestions in the UI, outside the editor. Here is an example of how to do it with the React UI library:
+然后，你可以使用这些数据在编辑器外部的 UI 中呈现建议。下面是一个使用 React UI 库实现的示例：
 
 ```tsx
 // Get the suggestions from the Editor state.
