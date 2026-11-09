@@ -19,7 +19,7 @@ export type CodeDemoProps = {
   externalIcon?: React.ReactNode
   caption?: React.ReactNode
   captionActions?: React.ReactNode
-  /** Shows the demo in the `DemoViewer`: a bar with Preview / Code / Both, theme, width and Expand. */
+  /** 在 `DemoViewer` 中显示演示：提供预览 / 代码 / 两者兼有、主题、宽度和展开选项的工具栏。 */
   viewer?: boolean
 } & Pick<
   DemoViewerProps,
@@ -111,16 +111,16 @@ export const CodeDemo = ({
             )}
             <div className="max-w-xs space-y-1.5">
               <div className="text-base font-semibold text-grayAlpha-900 leading-tight">
-                {externalTitle || 'View Live Demo'}
+                {externalTitle || '查看在线演示'}
               </div>
               <div className="text-sm text-grayAlpha-500 leading-relaxed">
-                {externalDescription || 'This demo needs to be opened in a new window.'}
+                {externalDescription || '此演示需要在新窗口中打开。'}
               </div>
             </div>
             <Button asChild variant="primary" className="shadow-sm">
               <a href={url} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="size-4" />
-                <span>Open Demo</span>
+                <span>打开演示</span>
               </a>
             </Button>
           </div>
