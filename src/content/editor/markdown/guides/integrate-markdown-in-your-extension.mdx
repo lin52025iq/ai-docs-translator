@@ -1,20 +1,20 @@
 ---
-title: Integration Markdown in Custom Extensions
+title: 在自定义扩展中集成 Markdown
 tags:
   - type: beta
 meta:
-  title: Markdown Extension Integration | Tiptap Editor Docs
-  description: Learn how to integrate Markdown support into your custom Tiptap extensions. This guide covers extending parsing and serialization for custom nodes and marks.
-  category: Editor
+  title: Markdown 扩展集成 | Tiptap 编辑器文档
+  description: 了解如何在自定义 Tiptap 扩展中集成 Markdown 支持。本指南将介绍如何扩展自定义节点和标记的解析与序列化功能。
+  category: 编辑器
 ---
 
-This guide shows you how to add Markdown support to your Tiptap extensions.
+本指南介绍如何为 Tiptap 扩展添加 Markdown 支持。
 
-> **Tip**: For standard patterns like Pandoc blocks (`:::name`) or shortcodes (`[name]`), check out the [Utility Functions](../api/utilities) to generate Markdown specs with minimal code.
+> **提示**：对于 Pandoc 块（`:::name`）或短代码（`[name]`）等常见模式，请参阅[实用函数](../api/utilities)，以最少的代码生成 Markdown 规范。
 
-## Basic Extension Integration
+## 扩展集成基础
 
-To add Markdown support to an extension, define a Markdown configuration in your extension configuration:
+要为扩展添加 Markdown 支持，请在扩展配置中定义 Markdown 配置：
 
 ```typescript
 import { Node } from '@tiptap/core'
@@ -34,32 +34,32 @@ const MyNode = Node.create({
 })
 ```
 
-## The Markdown Configuration Explained
+## Markdown 配置说明
 
-The extension spec allows for the following options:
+扩展规范支持以下选项：
 
-- `markdownTokenName` - The token name to handle. Required if the token name differs from the extension name.
-- `parseMarkdown` - The function that converts tokens into Tiptap JSON.
-- `renderMarkdown` - The function that converts Tiptap JSON into Markdown strings.
-- `markdownTokenizer` - A custom tokenizer to recognize new Markdown syntax.
-- `markdownOptions` - A set of options to configure the tokenizer.
-  - `indentsContent` - Controls if this node increases the indent level for nested content (e.g., lists).
+- `markdownTokenName` - 要处理的 token 名称。如果 token 名称与扩展名称不同，则为必填项。
+- `parseMarkdown` - 将 token 转换为 Tiptap JSON 的函数。
+- `renderMarkdown` - 将 Tiptap JSON 转换为 Markdown 字符串的函数。
+- `markdownTokenizer` - 用于识别新 Markdown 语法的自定义分词器。
+- `markdownOptions` - 用于配置分词器的一组选项。
+  - `indentsContent` - 控制此节点是否增加嵌套内容的缩进层级（例如列表）。
 
-### Using `markdownTokenName`
+### 使用 `markdownTokenName`
 
 ```typescript
 markdownTokenName: 'strong' // for a Bold mark extension where the Markdown token is called "strong"
 ```
 
-## Node Extensions
+## 节点扩展
 
-Creating Markdown support for nodes is straightforward. Here are some common patterns.
+为节点添加 Markdown 支持很简单。以下是一些常见模式。
 
-Depending on the type of content you expect, you may need to use different helper functions in your `parseMarkdown` and `renderMarkdown` methods.
+根据预期内容的类型，你可能需要在 `parseMarkdown` 和 `renderMarkdown` 方法中使用不同的辅助函数。
 
-- If your extension is a node with block-level content, use `helpers.parseChildren` and `helpers.renderChildren`.
-- If your extension is a node with block-level content and blank lines must roundtrip as empty paragraphs, use `helpers.parseBlockChildren` so implicit empty paragraphs are preserved.
-- If your extension is a node with inline-level content, use `helpers.parseInline` and `helpers.renderChildren`.
+- 如果扩展是包含块级内容的节点，请使用 `helpers.parseChildren` 和 `helpers.renderChildren`。
+- 如果扩展是包含块级内容的节点，且空行在往返转换后必须保留为空段落，请使用 `helpers.parseBlockChildren`，以保留隐式空段落。
+- 如果扩展是包含行内内容的节点，请使用 `helpers.parseInline` 和 `helpers.renderChildren`。
 
 ```typescript
 import { Node } from '@tiptap/core'
@@ -99,9 +99,9 @@ const Heading = Node.create({
 })
 ```
 
-## Mark Extensions
+## 标记扩展
 
-Marks work differently because they wrap inline content. To add Markdown support to your mark extensions, use the `applyMark` and `renderChildren` helper functions.
+标记的工作方式有所不同，因为它们会包裹行内内容。要为标记扩展添加 Markdown 支持，请使用 `applyMark` 和 `renderChildren` 辅助函数。
 
 ```typescript
 import { Mark } from '@tiptap/core'
@@ -132,7 +132,7 @@ const Bold = Mark.create({
 })
 ```
 
-If you want to apply attributes to your marks, use the `applyMark` helper with an attributes object.
+如果要为标记应用属性，请将属性对象传给 `applyMark` 辅助函数。
 
 ```typescript
 const content = helpers.applyMark('link', helpers.parseInline(token.tokens || []), {
@@ -141,9 +141,9 @@ const content = helpers.applyMark('link', helpers.parseInline(token.tokens || []
 })
 ```
 
-## Testing Your Extension
+## 测试扩展
 
-### Unit Test Parse Handler
+### 单元测试：解析处理程序
 
 ```typescript
 import { describe, it, expect } from 'vitest'
@@ -171,7 +171,7 @@ describe('Heading Markdown', () => {
 })
 ```
 
-### Unit Test Render Handler
+### 单元测试：渲染处理程序
 
 ```typescript
 import { describe, it, expect } from 'vitest'
@@ -195,7 +195,7 @@ describe('Heading Markdown', () => {
 })
 ```
 
-### Integration Test
+### 集成测试
 
 ```typescript
 import { describe, it, expect } from 'vitest'
@@ -224,11 +224,11 @@ describe('MyExtension integration', () => {
 })
 ```
 
-## Common Patterns
+## 常见模式
 
-### Preserve Empty Paragraphs In Block Content
+### 保留块级内容中的空段落
 
-If your node contains other block nodes and you want consecutive empty paragraphs to survive markdown roundtrips, prefer `parseBlockChildren()` over `parseChildren()`.
+如果节点包含其他块级节点，并且希望连续的空段落在 Markdown 往返转换后仍然保留，请优先使用 `parseBlockChildren()`，而不是 `parseChildren()`。
 
 ```typescript
 parseMarkdown: (token, helpers) => {
@@ -236,11 +236,11 @@ parseMarkdown: (token, helpers) => {
 }
 ```
 
-This preserves the first empty paragraph in a run as normal blank markdown spacing, and later empty paragraphs in the same run as `&nbsp;` markers.
+这样，同一组连续空段落中的第一个空段落会保留为普通的 Markdown 空行，后续空段落则会保留为 `&nbsp;` 标记。
 
-### Use Previous Sibling Context During Rendering
+### 渲染时使用前一个同级节点的上下文
 
-`renderMarkdown()` receives a `context` object with `previousNode`, which lets you make sibling-aware rendering decisions without hard-coding parent node names.
+`renderMarkdown()` 会接收一个包含 `previousNode` 的 `context` 对象。借助它，你可以根据同级节点做出渲染决策，而不必将父节点名称硬编码。
 
 ```typescript
 renderMarkdown: (node, helpers, context) => {
@@ -256,9 +256,9 @@ renderMarkdown: (node, helpers, context) => {
 }
 ```
 
-This pattern works equally well at the document level and inside nested containers like blockquotes or list items.
+此模式同样适用于文档层级，以及 blockquote 或列表项等嵌套容器内部。
 
-### Handle Optional Token Properties
+### 处理可选的 token 属性
 
 ```typescript
 parse: (token, helpers) => {
@@ -274,7 +274,7 @@ parse: (token, helpers) => {
 }
 ```
 
-### Conditional Parsing
+### 条件解析
 
 ```typescript
 parse: (token, helpers) => {
@@ -300,7 +300,7 @@ parse: (token, helpers) => {
 }
 ```
 
-### Context-Aware Rendering
+### 根据上下文渲染
 
 ```typescript
 render: (node, helpers, context) => {
