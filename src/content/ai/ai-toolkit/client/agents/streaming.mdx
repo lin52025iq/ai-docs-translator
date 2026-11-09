@@ -1,30 +1,30 @@
 ---
-title: Streaming
+title: 流式传输
 meta:
-  title: Streaming | Tiptap AI Toolkit
-  description: Add real-time streaming to your AI agent chatbot to see changes as they happen.
+  title: 流式传输 | Tiptap AI Toolkit
+  description: 为 AI 智能体聊天机器人添加实时流式传输，在变化发生时即时查看。
   category: AI Toolkit
 ---
 
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-<Callout title="Continuation from the AI agent chatbot guide" variant="info">
-  This guide continues the [AI agent chatbot
-  guide](/ai/ai-toolkit/client/agents/ai-agent-chatbot). Read it first.
+<Callout title="接续 AI 智能体聊天机器人指南" variant="info">
+  本指南是 [AI 智能体聊天机器人指南
+  ](/ai/ai-toolkit/client/agents/ai-agent-chatbot)的后续内容。请先阅读该指南。
 </Callout>
 
-Activate the AI Toolkit's tool streaming capabilities to update the document in real-time while the AI is generating content.
+启用 AI Toolkit 的工具流式传输功能，即可在 AI 生成内容时实时更新文档。
 
 <CodeDemo isLarge path="" isScrollable src="https://ai-toolkit-demos.vercel.app/tool-streaming" />
 
-See the [source code on GitHub](https://github.com/ueberdosis/ai-toolkit-demos).
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
 
-## Key changes
+## 主要改动
 
-To add streaming to the AI agent chatbot we built in [the previous guide](/ai/ai-toolkit/client/agents/ai-agent-chatbot), we need to replace the `executeTool` method with the `streamTool` method.
+要为我们在[上一份指南](/ai/ai-toolkit/client/agents/ai-agent-chatbot)中构建的 AI 智能体聊天机器人添加流式传输，需要将 `executeTool` 方法替换为 `streamTool` 方法。
 
-First, while the tool call is streaming, you can call `streamTool` repeatedly, every time a new streaming part is received. This will update the document incrementally.
+首先，在工具调用进行流式传输时，每收到一个新的流式片段，都可以重复调用 `streamTool`。这样会逐步更新文档。
 
 ```tsx
 const aiToolkit = getAiToolkit(editor)
@@ -32,48 +32,47 @@ const aiToolkit = getAiToolkit(editor)
 const result = aiToolkit.streamTool({
   toolCallId: 'call_123',
   toolName,
-  // Content is still streaming, so we pass a partial JSON object.
+  // 内容仍在流式传输，因此传入部分 JSON 对象。
   input,
-  // This parameter indicates that the tool streaming has not finished yet
+  // 此参数表示工具流式传输尚未完成
   hasFinished: false,
 })
 ```
 
-Then, when the tool call is complete, call the `streamTool` method again with `hasFinished: true` to indicate that the tool call has finished streaming. This will update the document with the final content.
+然后，工具调用完成后，再次调用 `streamTool` 方法并设置 `hasFinished: true`，以表示工具调用的流式传输已经完成。这样会使用最终内容更新文档。
 
 ```tsx
 const result = aiToolkit.streamTool({
   toolCallId: 'call_123',
   toolName,
-  // Streaming is complete, so we can pass the full JSON object
+  // 流式传输已完成，因此可以传入完整的 JSON 对象
   input,
-  // This parameter indicates that the tool streaming has finished
+  // 此参数表示工具流式传输已经完成
   hasFinished: true,
 })
 ```
 
-To implement this process in the AI agent chatbot we built in [the previous guide](/ai/ai-toolkit/client/agents/ai-agent-chatbot), follow these steps:
+要在我们于[上一份指南](/ai/ai-toolkit/client/agents/ai-agent-chatbot)中构建的 AI 智能体聊天机器人里实现此流程，请按以下步骤操作：
 
-### 1. Handle streaming updates
+### 1. 处理流式更新
 
-Add a `useEffect` hook to handle streaming updates while the tool call is in progress. Inside this hook, we call `streamTool` repeatedly, every time a new streaming part is received.
+添加一个 `useEffect` hook，在工具调用进行过程中处理流式更新。在这个 hook 中，每收到一个新的流式片段，我们都会重复调用 `streamTool`。
 
 ```tsx
-// While the tool streaming is in progress, we need to update the document
-// as the tool input changes
+// 工具流式传输进行中时，需要随着工具输入的变化更新文档
 useEffect(() => {
   if (!editor) return
 
-  // Find the last message
+  // 查找最后一条消息
   const lastMessage = messages[messages.length - 1]
   if (!lastMessage) return
 
-  // Find the last tool that the AI has just called
+  // 查找 AI 刚刚调用的最后一个工具
   const toolCallParts = lastMessage.parts.filter((p) => p.type.startsWith('tool-')) ?? []
   const lastToolCall = toolCallParts[toolCallParts.length - 1]
   if (!lastToolCall) return
 
-  // Get the tool call data
+  // 获取工具调用数据
   interface ToolStreamingPart {
     input: unknown
     state: string
@@ -84,23 +83,23 @@ useEffect(() => {
   if (!(part.state === 'input-streaming')) return
   const toolName = part.type.replace('tool-', '')
 
-  // Apply the tool call to the document, while it is streaming
+  // 在工具流式传输期间，将工具调用应用到文档
   const toolkit = getAiToolkit(editor)
   toolkit.streamTool({
     toolCallId: part.toolCallId,
     toolName,
     input: part.input,
-    // This parameter indicates that the tool streaming has not finished yet
+    // 此参数表示工具流式传输尚未完成
     hasFinished: false,
   })
 }, [addtoolOutput, editor, messages])
 ```
 
-### 2. Handle streaming completion
+### 2. 处理流式传输完成
 
-In our demo, we use the `useChat` hook from the [AI SDK by Vercel](https://ai-sdk.vercel.app/) to implement the AI agent chatbot. This hook contains an `onToolCall` event handler that runs when the tool call finishes streaming.
+在我们的演示中，我们使用 [Vercel 的 AI SDK](https://ai-sdk.vercel.app/) 中的 `useChat` hook 来实现 AI 智能体聊天机器人。这个 hook 包含一个 `onToolCall` 事件处理程序，会在工具调用完成流式传输时运行。
 
-Inside this handler, we call `streamTool` with `hasFinished: true` to indicate that the tool call has finished streaming.
+在此处理程序中，我们调用 `streamTool` 并设置 `hasFinished: true`，以表示工具调用的流式传输已经完成。
 
 ```tsx
 const { messages, sendMessage, addtoolOutput } = useChat({
@@ -111,13 +110,13 @@ const { messages, sendMessage, addtoolOutput } = useChat({
 
     const { toolName, input, toolCallId } = toolCall
 
-    // Use the AI Toolkit to stream the tool
+    // 使用 AI Toolkit 对工具进行流式传输
     const toolkit = getAiToolkit(editor)
     const result = toolkit.streamTool({
       toolCallId,
       toolName,
       input,
-      // This parameter indicates that the tool streaming is complete
+      // 此参数表示工具流式传输已经完成
       hasFinished: true,
     })
 
@@ -126,13 +125,13 @@ const { messages, sendMessage, addtoolOutput } = useChat({
 })
 ```
 
-<Callout title="Pass the same attributes in all streamTool calls" variant="warning">
-  You should pass the same attribute values in all `streamTool` calls. For example, in the first call to the `streamTool` method, if you pass `{mode: 'preview'}` to the `reviewOptions` parameter, you should pass the same value (`{mode: 'preview'}`) in all subsequent `streamTool` calls.
+<Callout title="在所有 streamTool 调用中传入相同的属性" variant="warning">
+  所有 `streamTool` 调用都应传入相同的属性值。例如，在第一次调用 `streamTool` 方法时，如果向 `reviewOptions` 参数传入 `{mode: 'preview'}`，那么之后的所有 `streamTool` 调用也都应传入相同的值（`{mode: 'preview'}`）。
 </Callout>
 
-## Complete implementation
+## 完整实现
 
-Here's the complete updated component with tool streaming:
+下面是包含工具流式传输的完整更新组件：
 
 ```tsx
 'use client'
@@ -159,14 +158,14 @@ export default function Page() {
 
       const { toolName, input, toolCallId } = toolCall
 
-      // When the tool streaming is complete, we need to apply the tool call to the document
-      // Use the AI Toolkit to execute the tool
+      // 工具流式传输完成后，需要将工具调用应用到文档
+      // 使用 AI Toolkit 执行工具
       const toolkit = getAiToolkit(editor)
       const result = toolkit.streamTool({
         toolCallId,
         toolName,
         input,
-        // This parameter indicates that the tool streaming is complete
+        // 此参数表示工具流式传输已经完成
         hasFinished: true,
       })
 
@@ -178,21 +177,20 @@ export default function Page() {
     'Insert, at the end of the document, a long story with 10 paragraphs about Tiptap',
   )
 
-  // While the tool streaming is in progress, we need to update the document
-  // as the tool input changes
+  // 工具流式传输进行中时，需要随着工具输入的变化更新文档
   useEffect(() => {
     if (!editor) return
 
-    // Find the last message
+    // 查找最后一条消息
     const lastMessage = messages[messages.length - 1]
     if (!lastMessage) return
 
-    // Find the last tool that the AI has just called
+    // 查找 AI 刚刚调用的最后一个工具
     const toolCallParts = lastMessage.parts.filter((p) => p.type.startsWith('tool-')) ?? []
     const lastToolCall = toolCallParts[toolCallParts.length - 1]
     if (!lastToolCall) return
 
-    // Get the tool call data
+    // 获取工具调用数据
     interface ToolStreamingPart {
       input: unknown
       state: string
@@ -203,13 +201,13 @@ export default function Page() {
     if (!(part.state === 'input-streaming')) return
     const toolName = part.type.replace('tool-', '')
 
-    // Apply the tool call to the document, while it is streaming
+    // 在工具流式传输期间，将工具调用应用到文档
     const toolkit = getAiToolkit(editor)
     toolkit.streamTool({
       toolCallId: part.toolCallId,
       toolName,
       input: part.input,
-      // This parameter indicates that the tool streaming has not finished yet
+      // 此参数表示工具流式传输尚未完成
       hasFinished: false,
     })
   }, [addtoolOutput, editor, messages])
@@ -243,17 +241,17 @@ export default function Page() {
 }
 ```
 
-## End result
+## 最终效果
 
-With tool streaming, users can see changes happening in real-time as the AI generates them. Try it out:
+使用工具流式传输后，用户可以实时看到 AI 生成内容时发生的变化。快来试试：
 
 <CodeDemo isLarge path="" isScrollable src="https://ai-toolkit-demos.vercel.app/tool-streaming" />
 
-See the [source code on GitHub](https://github.com/ueberdosis/ai-toolkit-demos).
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
 
-## Show the AI Caret
+## 显示 AI 光标
 
-You can add the `AiCaret` extension to display a cursor that indicates where the AI is inserting content during streaming. This gives users real-time visual feedback.
+可以添加 `AiCaret` 扩展，以显示一个光标，指示 AI 在流式传输过程中插入内容的位置。这样用户就能获得实时的视觉反馈。
 
 ```tsx
 import { AiCaret, AiToolkit, getAiToolkit } from '@tiptap-pro/client-ai-toolkit'
@@ -263,36 +261,36 @@ const editor = useEditor({
 })
 ```
 
-See the [AI Caret guide](/ai/ai-toolkit/client/advanced-guides/ai-caret) for configuration options and CSS styles.
+有关配置选项和 CSS 样式，请参阅 [AI Caret 指南](/ai/ai-toolkit/client/advanced-guides/ai-caret)。
 
-## Show a review UI
+## 显示审阅界面
 
-Display changes in a review UI, so users can accept or reject them.
+在审阅界面中显示更改，让用户可以接受或拒绝这些更改。
 
-There are two approaches:
+有两种方式：
 
-- Use the [**Tracked Changes**](/tracked-changes/getting-started/overview) extension to render the review UI. Changes persist as part of the document and are visible to other users.
-- **AI Toolkit suggestions**: a decoration-based UI that's ephemeral and only visible to the current user of the document.
+- 使用 [**Tracked Changes**](/tracked-changes/getting-started/overview) 扩展呈现审阅界面。更改会作为文档的一部分持久保存，并对其他用户可见。
+- **AI Toolkit 建议**：基于装饰的临时界面，仅对当前文档用户可见。
 
-Configure the review UI by setting the `reviewOptions` parameter. This parameter should have the same value every time the `streamTool` method is called.
+通过设置 `reviewOptions` 参数来配置审阅界面。每次调用 `streamTool` 方法时，此参数都应使用相同的值。
 
 ```ts
 toolkit.streamTool({
   // ... other options
 
-  // Show the review UI with Tracked Changes
+  // 使用 Tracked Changes 显示审阅界面
   reviewOptions: { mode: 'trackedChanges' },
 
-  // Show the review UI with AI Toolkit suggestions
+  // 使用 AI Toolkit 建议显示审阅界面
   reviewOptions: { mode: 'review' },
 })
 ```
 
-See the [review changes](/ai/ai-toolkit/client/agents/review-changes) guide to learn more about the review UI.
+如需详细了解审阅界面，请参阅[审阅更改指南](/ai/ai-toolkit/client/agents/review-changes)。
 
-See the [AI Toolkit demos](https://github.com/ueberdosis/ai-toolkit-demos) for examples on how to combine AI Toolkit streaming with the review UI.
+有关如何将 AI Toolkit 流式传输与审阅界面结合使用的示例，请参阅 [AI Toolkit 演示](https://github.com/ueberdosis/ai-toolkit-demos)。
 
-## Next steps
+## 后续步骤
 
-- [Review changes guide](/ai/ai-toolkit/client/agents/review-changes): Let users preview and approve changes before they're applied.
-- [AI Caret](/ai/ai-toolkit/client/advanced-guides/ai-caret): Show a cursor where the AI is inserting content.
+- [审阅更改指南](/ai/ai-toolkit/client/agents/review-changes)：让用户在应用更改前预览并批准更改。
+- [AI Caret](/ai/ai-toolkit/client/advanced-guides/ai-caret)：显示光标，指示 AI 正在插入内容的位置。
