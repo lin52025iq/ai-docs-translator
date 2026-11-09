@@ -22,12 +22,12 @@ export async function importSidebarConfigFromMarkdownPath(markdownPath: string[]
       importPath = isIndex ? 'sidebar' : `${path}/sidebar`
     }
 
-    // remove last segment
+    // 移除最后一个片段
     restSegments.pop()
   }
 
-  // if the importPath starts with a slash, remove it
-  // as import statements do not support leading slashes
+  // 如果 importPath 以斜杠开头，则将其移除
+  // 因为 import 语句不支持开头的斜杠
   if (importPath.startsWith('/')) {
     importPath = importPath.slice(1)
   }
