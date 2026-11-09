@@ -1,28 +1,28 @@
 ---
-title: Enable spellcheck in Tiptap
+title: 在 Tiptap 中启用拼写检查
 meta:
-  title: Spellcheck and spell checking | Tiptap Editor Docs
-  description: Enable browser spellcheck in Tiptap and ProseMirror, troubleshoot missing spelling suggestions, or build a custom spell checker with decorations.
-  category: Editor
+  title: 拼写检查 | Tiptap 编辑器文档
+  description: 在 Tiptap 和 ProseMirror 中启用浏览器拼写检查，排查拼写建议未显示的问题，或使用装饰构建自定义拼写检查器。
+  category: 编辑器
 ---
 
-Use browser spellcheck to underline misspelled words and offer corrections in the browser's context menu. Set two editor attributes. No extra extension is needed.
+使用浏览器拼写检查为拼写错误的单词添加下划线，并在浏览器的上下文菜单中提供更正建议。只需设置两个编辑器属性，无需额外扩展。
 
-If you need your own suggestion menu, custom dictionaries, or consistent results across browsers, [integrate a custom spell checker](#integrate-a-custom-spell-checker).
+如果你需要自己的建议菜单、自定义词典，或需要在不同浏览器中获得一致的检查结果，请[集成自定义拼写检查器](#integrate-a-custom-spell-checker)。
 
-The examples assume you have [installed Tiptap](/editor/getting-started/install/vanilla-javascript).
+以下示例假设你已经[安装了 Tiptap](/editor/getting-started/install/vanilla-javascript)。
 
-## Enable browser spellcheck
+## 启用浏览器拼写检查
 
-In an existing editor, add `spellcheck` and `lang` to [`editorProps.attributes`](/editor/api/editor#editorprops). Use the string `'true'`, because these DOM attributes use strings.
+在现有编辑器中，将 `spellcheck` 和 `lang` 添加到 [`editorProps.attributes`](/editor/api/editor#editorprops)。请使用字符串 `'true'`，因为这些 DOM 属性的值是字符串。
 
-For a new JavaScript editor, add a container to your HTML:
+如果要创建新的 JavaScript 编辑器，请先在 HTML 中添加一个容器：
 
 ```html
 <div id="editor"></div>
 ```
 
-Then create the editor:
+然后创建编辑器：
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -44,17 +44,17 @@ const editor = new Editor({
 })
 ```
 
-In React or Vue, pass the same `editorProps` option to `useEditor`. This puts the attributes on the editable element inside `EditorContent`.
+在 React 或 Vue 中，将相同的 `editorProps` 选项传给 `useEditor`。这些属性会添加到 `EditorContent` 内部可编辑的元素上。
 
-Click inside the editor, type `sentense`, and press Space. If spell checking is enabled, the browser can underline the word. Open the word's context menu to see suggestions.
+在编辑器中单击，输入 `sentense`，然后按空格键。如果启用了拼写检查，浏览器可能会为该单词添加下划线。打开该单词的上下文菜单即可查看建议。
 
-The HTML [`spellcheck` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/spellcheck) asks the browser to check spelling. The user can still disable checking. Set [`lang`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/lang) to your text's language, such as `de-DE` for German. The browser also needs a matching dictionary.
+HTML 的 [`spellcheck` 属性](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/spellcheck)会请求浏览器检查拼写。用户仍然可以关闭检查。将 [`lang`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/lang) 设置为文本所用的语言，例如德语使用 `de-DE`。浏览器还需要有相应的词典。
 
-### Change spellcheck at runtime
+### 在运行时更改拼写检查
 
-Use [`setOptions()`](/editor/api/editor#setoptions) to turn browser spellcheck on or off. Copy the existing props and attributes so you keep your event handlers and settings.
+使用 [`setOptions()`](/editor/api/editor#setoptions) 开启或关闭浏览器拼写检查。复制现有的 props 和属性，以保留事件处理程序和设置。
 
-Add this function after the editor setup above:
+在上面的编辑器设置之后添加以下函数：
 
 ```js
 function setSpellcheck(enabled) {
@@ -77,11 +77,11 @@ function setSpellcheck(enabled) {
 setSpellcheck(false)
 ```
 
-If you use an `attributes` function, update that function instead of spreading it as an object.
+如果你使用的是 `attributes` 函数，请修改该函数，而不是将其作为对象展开。
 
-### Enable spellcheck in plain ProseMirror
+### 在纯 ProseMirror 中启用拼写检查
 
-In ProseMirror, pass the attributes directly to [`EditorView`](https://prosemirror.net/docs/ref/#view.EditorProps.attributes):
+在 ProseMirror 中，将属性直接传给 [`EditorView`](https://prosemirror.net/docs/ref/#view.EditorProps.attributes)：
 
 ```js
 import { EditorView } from 'prosemirror-view'
@@ -98,34 +98,34 @@ const view = new EditorView(document.querySelector('#editor'), {
 })
 ```
 
-### Troubleshoot missing spelling suggestions
+### 排查拼写建议未显示的问题
 
-If you don't see spelling underlines, check these settings:
+如果看不到拼写错误下方的下划线，请检查以下设置：
 
-1. Inspect the editable `.tiptap` or `.ProseMirror` element. Confirm that it has `contenteditable="true"` and `spellcheck="true"`.
-2. Enable spell checking in your browser or operating system, and install or select the dictionary for your text's language.
-3. Click inside the editor, type a misspelled word, and press Space. Some browsers don't check existing text until you edit it.
-4. Inspect custom node views and nested elements for `spellcheck="false"` or `contenteditable="false"`. These can exclude text from checking.
-5. If underlines appear but suggestions don't, check whether your app replaces the browser's context menu or prevents the `contextmenu` event.
+1. 检查可编辑的 `.tiptap` 或 `.ProseMirror` 元素，确认它具有 `contenteditable="true"` 和 `spellcheck="true"`。
+2. 在浏览器或操作系统中启用拼写检查，并安装或选择与文本语言相符的词典。
+3. 在编辑器中单击，输入一个拼写错误的单词，然后按空格键。有些浏览器在编辑之前不会检查已有文本。
+4. 检查自定义节点视图和嵌套元素中是否有 `spellcheck="false"` 或 `contenteditable="false"`。这些设置可能会排除相应文本，使其不参与检查。
+5. 如果出现下划线但没有建议，请检查应用是否替换了浏览器的上下文菜单，或阻止了 `contextmenu` 事件。
 
-Test in the browsers and on the devices your app supports. The browser controls its underlines and suggestion menu. To read errors in your app or style their underlines, use a custom checker.
+请在应用支持的浏览器和设备上进行测试。下划线和建议菜单由浏览器控制。若要在应用中读取错误或设置错误下方下划线的样式，请使用自定义检查器。
 
-## Integrate a custom spell checker
+## 集成自定义拼写检查器
 
-The example below uses nspell to check English text. It stores errors in an extension and underlines them with [`addDecorations()`](/editor/api/decorations#adddecorations). Decorations change how text looks without changing the saved document.
+下面的示例使用 nspell 检查英文文本。它会将错误存储在扩展中，并使用 [`addDecorations()`](/editor/api/decorations#adddecorations) 为错误添加下划线。装饰只会改变文本的显示方式，不会修改保存的文档。
 
-For more examples, read the [Decorations guide](/editor/core-concepts/decorations). Use the [Decorations API reference](/editor/api/decorations) to look up methods and update settings.
+更多示例请参阅[装饰指南](/editor/core-concepts/decorations)。如需查阅方法和更新设置，请使用[装饰 API 参考](/editor/api/decorations)。
 
-### Choose a checking engine
+### 选择检查引擎
 
-- [`nspell`](https://github.com/wooorm/nspell) checks words against a dictionary. `correct(word)` checks spelling. `suggest(word)` returns possible corrections. Use it for local spelling checks, as shown below.
-- [LanguageTool](https://dev.languagetool.org/http-server) checks spelling and grammar through an HTTP service. To check as users type, use your own server or an API plan that allows automated requests. Its [free public endpoint](https://dev.languagetool.org/public-http-api.html) forbids automated requests.
+- [`nspell`](https://github.com/wooorm/nspell) 会根据词典检查单词。`correct(word)` 用于检查拼写，`suggest(word)` 会返回可能的更正建议。如下所示，可用于本地拼写检查。
+- [LanguageTool](https://dev.languagetool.org/http-server) 通过 HTTP 服务检查拼写和语法。若要在用户输入时进行检查，请使用自己的服务器，或选择允许自动请求的 API 方案。其[免费公共端点](https://dev.languagetool.org/public-http-api.html)禁止自动请求。
 
-Put the following JavaScript snippets in one browser module, in the order shown. This is a separate editor setup from the browser example. It uses the same `<div id="editor"></div>` container.
+请按所示顺序，将以下 JavaScript 代码片段放在同一个浏览器模块中。这是一套独立于浏览器示例的编辑器设置，使用相同的 `<div id="editor"></div>` 容器。
 
-### 1. Store errors and underline them
+### 1. 存储错误并为其添加下划线
 
-Create a `Spellcheck` extension. Its storage holds the errors and `checkedDoc`, the document version that the checker read. If the document changes, the extension hides the old underlines.
+创建一个 `Spellcheck` 扩展。其存储中包含错误，以及检查器读取的文档版本 `checkedDoc`。如果文档发生更改，扩展会隐藏旧的下划线。
 
 ```js
 import { Decoration, Extension } from '@tiptap/core'
@@ -156,9 +156,9 @@ const Spellcheck = Extension.create({
 })
 ```
 
-### 2. Create the editor
+### 2. 创建编辑器
 
-Register `Spellcheck` alongside `StarterKit`. Disable browser spellcheck so only your own checker draws underlines:
+将 `Spellcheck` 与 `StarterKit` 一起注册。关闭浏览器拼写检查，以便只由自定义检查器绘制下划线：
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -174,7 +174,7 @@ const editor = new Editor({
 })
 ```
 
-Add a function to save results and refresh the underlines. Each error needs `from` and `to`, the start and end positions of the word in the document:
+添加一个函数来保存检查结果并刷新下划线。每个错误都需要 `from` 和 `to`，分别表示该单词在文档中的起始位置和结束位置：
 
 ```js
 function showSpellcheckResults(checkedDoc, errors) {
@@ -189,7 +189,7 @@ function showSpellcheckResults(checkedDoc, errors) {
 }
 ```
 
-Add this rule to your app's stylesheet:
+在应用的样式表中添加以下规则：
 
 ```css
 .spellcheck-error {
@@ -200,17 +200,17 @@ Add this rule to your app's stylesheet:
 }
 ```
 
-Changing storage alone doesn't redraw the underlines. [`updateDecorations()`](/editor/api/decorations#updatedecorations) tells Tiptap to rebuild them from the stored errors.
+仅更改存储不会重绘下划线。[`updateDecorations()`](/editor/api/decorations#updatedecorations) 会通知 Tiptap 根据存储的错误重新构建装饰。
 
-### 3. Load the English dictionary
+### 3. 加载英语词典
 
-Install nspell and the [English Hunspell dictionary](https://github.com/wooorm/dictionaries/tree/main/dictionaries/en):
+安装 nspell 和 [Hunspell 英语词典](https://github.com/wooorm/dictionaries/tree/main/dictionaries/en)：
 
 ```sh
 npm install nspell dictionary-en
 ```
 
-`dictionary-en` uses Node.js to read its files. To use the dictionary in a browser, copy the files into your app's public assets. Run these commands from your app's root directory:
+`dictionary-en` 使用 Node.js 读取文件。若要在浏览器中使用该词典，请将文件复制到应用的公共资源目录中。从应用根目录运行以下命令：
 
 ```sh
 mkdir -p public/dictionaries
@@ -218,9 +218,9 @@ cp node_modules/dictionary-en/index.aff public/dictionaries/en.aff
 cp node_modules/dictionary-en/index.dic public/dictionaries/en.dic
 ```
 
-This assumes your app serves `public/dictionaries/en.aff` at `/dictionaries/en.aff`. Adjust the paths for your framework or base URL.
+这里假设应用会将 `public/dictionaries/en.aff` 提供在 `/dictionaries/en.aff` 路径下。请根据所用框架或基础 URL 调整路径。
 
-Load the files once at startup. Put this code in the same browser module as your editor:
+在应用启动时加载一次这些文件。将以下代码放在与编辑器相同的浏览器模块中：
 
 ```js
 import nspell from 'nspell'
@@ -242,11 +242,11 @@ async function createEnglishSpellchecker() {
 const spell = await createEnglishSpellchecker()
 ```
 
-### 4. Find errors and save them
+### 4. 查找并保存错误
 
-Check each paragraph or heading separately. Join text across formatting marks so `sen<strong>ten</strong>se` becomes one word. Skip code and non-text inline nodes, such as images.
+分别检查每个段落或标题。跨越格式标记连接文本，使 `sen<strong>ten</strong>se` 合并为一个单词。跳过代码和非文本内联节点，例如图片。
 
-Document positions count text and node boundaries. They differ from offsets in `editor.getText()`. The function below keeps positions aligned by replacing skipped content with spaces of the same length:
+文档位置会计算文本和节点边界，与 `editor.getText()` 返回的偏移量不同。以下函数会用相同长度的空格替换跳过的内容，以保持位置对齐：
 
 ```js
 function findSpellingErrors(doc, spell) {
@@ -303,9 +303,9 @@ function checkEnglishDocument() {
 checkEnglishDocument()
 ```
 
-For the sample document, `editor.storage.spellcheck.errors` contains an error for `sentense` at `from: 6`, `to: 14`. The word should have a red, wavy underline. Use the error's `suggestions` array to build your correction menu.
+对于示例文档，`editor.storage.spellcheck.errors` 中会包含 `sentense` 的错误，位置为 `from: 6`、`to: 14`。该单词下方应显示红色波浪线。你可以使用错误对象的 `suggestions` 数组构建更正菜单。
 
-To check again as the user types, wait until typing pauses for 300 milliseconds. Add this after the first check:
+若要在用户输入时重新检查，请等待输入暂停 300 毫秒后再检查。在首次检查后添加以下代码：
 
 ```js
 let spellcheckTimer
@@ -322,11 +322,11 @@ editor.on('destroy', () => {
 })
 ```
 
-This example checks the whole document on the main thread. For large documents, use a Web Worker or check only changed blocks. The word-matching pattern handles letters and contractions. Adjust it for your app's rules about numbers and URLs.
+此示例会在主线程中检查整个文档。对于较大的文档，请使用 Web Worker，或只检查发生更改的块。单词匹配模式会处理字母和缩写形式。请根据应用对数字和 URL 的处理规则调整该模式。
 
-### 5. Apply a correction
+### 5. 应用更正
 
-When the user picks a suggestion, pass the stored error and replacement text to this function:
+用户选择建议后，将存储的错误和替换文本传给此函数：
 
 ```js
 function applySpellingSuggestion(error, replacement) {
@@ -345,22 +345,22 @@ function applySpellingSuggestion(error, replacement) {
 }
 ```
 
-Use [`insertText()`](https://prosemirror.net/docs/ref/#state.Transaction.insertText) for replacements so the configured history and collaboration plugins can track them. Don't replace `innerHTML` or edit DOM text nodes.
+使用 [`insertText()`](https://prosemirror.net/docs/ref/#state.Transaction.insertText) 替换文本，以便配置的历史记录和协作插件能够追踪更改。不要替换 `innerHTML`，也不要编辑 DOM 文本节点。
 
-Make the suggestion menu work with a keyboard. Add controls to accept a correction, ignore a word, or add it to your app's dictionary. If a word spans bold or italic text, decide which formatting the replacement should keep.
+确保建议菜单支持键盘操作。添加用于接受更正、忽略单词或将单词添加到应用词典的控件。如果一个单词跨越了粗体或斜体文本，请决定替换后的文本应保留哪种格式。
 
-### Use another checker
+### 使用其他检查器
 
-To use LanguageTool or another service, replace `findSpellingErrors()` with a call to that checker. Keep the same error fields and pass the results to `showSpellcheckResults()`.
+若要使用 LanguageTool 或其他服务，请将 `findSpellingErrors()` 替换为调用相应检查器。保留相同的错误字段，并将结果传给 `showSpellcheckResults()`。
 
-For an asynchronous check, capture `editor.state.doc` before sending the request. Pass that document version back with the results. `showSpellcheckResults()` discards them if the document changed during the request, including edits from collaborators. Schedule a new check after each document change.
+对于异步检查，请在发送请求前捕获 `editor.state.doc`，并在收到结果时一并传回该文档版本。如果请求期间文档发生更改（包括协作者所做的编辑），`showSpellcheckResults()` 会丢弃这些结果。每次文档更改后都应安排一次新检查。
 
-If the service returns offsets in plain text, convert them to document positions before saving errors. Preserve a position map when you add separators or remove content from the text you send.
+如果服务返回的是纯文本偏移量，请先将其转换为文档位置，再保存错误。如果你在发送文本时添加了分隔符或删除了内容，请保留位置映射。
 
-For more decoration examples, follow the tutorials for [Vanilla JavaScript](/guides/decorations-vanilla), [React](/guides/decorations-react), and [Vue](/guides/decorations-vue).
+如需了解更多装饰示例，请参阅 [Vanilla JavaScript](/guides/decorations-vanilla)、[React](/guides/decorations-react) 和 [Vue](/guides/decorations-vue) 教程。
 
-### Handle document privacy
+### 处理文档隐私
 
-If you use a remote checking service, send only the text you intend to check and keep service credentials on your server. For content that must stay on the device, use a local checking engine.
+如果使用远程检查服务，只发送你打算检查的文本，并将服务凭据保存在自己的服务器上。对于必须留在设备上的内容，请使用本地检查引擎。
 
-Browser spell checking can also send text to a remote service, depending on the user's browser settings. See MDN's [spellcheck privacy notes](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/spellcheck#security_and_privacy_concerns) before enabling it for sensitive content.
+根据用户的浏览器设置，浏览器拼写检查也可能会将文本发送到远程服务。启用浏览器拼写检查来处理敏感内容之前，请参阅 MDN 的[拼写检查隐私说明](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/spellcheck#security_and_privacy_concerns)。
