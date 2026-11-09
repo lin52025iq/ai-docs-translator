@@ -53,12 +53,12 @@ body::-webkit-scrollbar-thumb {
   }
 }
 
-/* The header above already ends with its own space, and the table of contents starts at the top edge */
+/* 上方的页眉已包含自身的间距，目录从顶部边缘开始 */
 .mdx-content > :first-child {
   @apply mt-0;
 }
 
-/* Callouts that follow each other read as one group: 0.5rem apart, since the margins collapse */
+/* 连续出现的提示框会因外边距折叠而组合成一组，间距为 0.5rem */
 .c-callout:has(+ .c-callout) {
   @apply mb-2;
 }
@@ -67,7 +67,7 @@ body::-webkit-scrollbar-thumb {
   @apply mt-2;
 }
 
-/* Code blocks and demos that follow each other, in any order, are 1rem apart */
+/* 无论顺序如何，连续出现的代码块和演示之间间隔 1rem */
 :is(.c-codeblock, .c-demo):has(+ :is(.c-codeblock, .c-demo)) {
   @apply mb-4;
 }
@@ -86,7 +86,7 @@ body::-webkit-scrollbar-thumb {
   }
 }
 
-/* Underline the code text inside its background, using its own text color. */
+/* 使用代码文本自身的颜色，为其背景中的代码文本添加下划线。 */
 .mdx-content a code,
 .mdx-content a:has(code) {
   @apply underline decoration-current;
@@ -193,7 +193,7 @@ body::-webkit-scrollbar-thumb {
       @apply mt-[3.5rem];
     }
 
-    /* Right below an h2 there is nothing to separate it from, so it sits closer */
+    /* 紧跟在 h2 后面时无需与其他内容分隔，因此间距更小 */
     &:not(:first-child):is(h2 + *) {
       @apply mt-8;
     }
@@ -274,7 +274,7 @@ body::-webkit-scrollbar-thumb {
       position: relative;
 
       &:before {
-        /* Placed from the line height, so the dot stays on the first line's middle at any text size */
+        /* 根据行高定位，使圆点在任何字号下都保持在首行的垂直中间 */
         @apply absolute left-[-1rem] top-[calc(0.5lh-0.125rem)] size-1 bg-gray-600 rounded-full;
         content: '';
       }
