@@ -15,7 +15,7 @@ export async function createMetadata({
   ogTitle: string
   category?: string
   canonicalUrl: string
-  /** When set, advertise a `text/markdown` alternate (the page's `.md` URL). */
+  /** 设置后，会声明一个 `text/markdown` 替代资源（页面的 `.md` URL）。 */
   markdownUrl?: string
 }): Promise<Metadata> {
   return {
