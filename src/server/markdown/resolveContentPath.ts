@@ -4,7 +4,7 @@ import { redirects } from '@/server/redirects.mjs'
 
 const CONTENT_DIR = path.join(process.cwd(), 'src/content')
 
-// Most redirect sources are static strings; wildcard redirects are resolved below.
+// 大多数重定向源都是静态字符串；通配符重定向将在下方解析。
 const redirectMap = new Map(redirects.map((r) => [r.source, r]))
 
 export type ResolveResult =
@@ -13,8 +13,8 @@ export type ResolveResult =
   | { type: 'not-found' }
 
 /**
- * Turn an incoming request path into a clean content route path:
- * strips query/hash, a trailing `.md`/`.mdx`, and surrounding slashes.
+ * 将传入的请求路径转换为规范的内容路由路径：
+ * 去除查询参数和片段、末尾的 `.md`/`.mdx` 扩展名，以及首尾斜杠。
  */
 export function normalizeRoutePath(input: string): string {
   let p = input.trim()
@@ -25,9 +25,9 @@ export function normalizeRoutePath(input: string): string {
 }
 
 /**
- * Resolve a route path to a content `.mdx` file, a redirect (shared with
- * next.config.mjs), or not-found. Used by the markdown endpoint so that `.md`
- * requests honor the same 301s as the rendered site.
+ * 将路由路径解析为内容 `.mdx` 文件、重定向（与
+ * next.config.mjs 共用），或未找到。Markdown 端点使用此函数，确保 `.md`
+ * 请求遵循与渲染后的网站相同的 301 重定向。
  */
 export function resolveContentPath(input: string): ResolveResult {
   const routePath = normalizeRoutePath(input)
@@ -36,7 +36,7 @@ export function resolveContentPath(input: string): ResolveResult {
   const direct = path.join(CONTENT_DIR, `${rel}.mdx`)
   const index = path.join(CONTENT_DIR, rel, 'index.mdx')
 
-  // Guard against path traversal escaping the content directory.
+  // 防止路径遍历导致路径越出内容目录。
   if (!direct.startsWith(CONTENT_DIR + path.sep) || !index.startsWith(CONTENT_DIR + path.sep)) {
     return { type: 'not-found' }
   }
