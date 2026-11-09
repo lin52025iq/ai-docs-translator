@@ -1,28 +1,28 @@
 ---
-title: Manage threads in your editor
+title: 在编辑器中管理线程
 meta:
-  title: Manage threads | Tiptap Comments Docs
-  description: Manage discussions in Tiptap Editor using threads and comments with editor commands. More in our docs!
-  category: Comments
+  title: 管理线程 | Tiptap 评论文档
+  description: 使用线程、评论和编辑器命令，在 Tiptap Editor 中管理讨论。更多内容请参阅我们的文档！
+  category: 评论
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Use this guide to integrate comments directly into your editor. For a complete list of all Comments editor commands, see the [Editor Commands](/comments/integrate/editor-commands) page.
+使用本指南将评论直接集成到编辑器中。要查看所有 Comments 编辑器命令的完整列表，请参阅[编辑器命令](/comments/integrate/editor-commands)页面。
 
-You can also interact with comments from outside your editor via our [Comments REST API](/comments/integrate/rest-api).
+你也可以通过[评论 REST API](/comments/integrate/rest-api)在编辑器外与评论交互。
 
-To customize what happens when an anchor disappears or a thread changes state, configure [`onThreadAnchorRemoved`](/comments/core-concepts/configure#onthreadanchorremoved) and [`onThreadStateChanged`](/comments/core-concepts/configure#onthreadstatechanged).
+若要自定义锚点消失或线程状态发生变化时的行为，请配置 [`onThreadAnchorRemoved`](/comments/core-concepts/configure#onthreadanchorremoved) 和 [`onThreadStateChanged`](/comments/core-concepts/configure#onthreadstatechanged)。
 
-## Learn about threads
+## 了解线程
 
-Tiptap's Comments feature organizes discussions into threads, enabling clear and context-relevant collaboration by distinguishing between threads and individual comments.
+Tiptap 的 Comments 功能会将讨论整理成线程，通过区分线程和单条评论，实现清晰且与上下文相关的协作。
 
-Threads serve as containers for discussions related to specific document sections, while comments represent individual contributions within those threads.
+线程用于容纳与文档特定部分相关的讨论，而评论则代表线程中的单条贡献。
 
-## Create a new thread
+## 创建新线程
 
-Let's assume you have a button to create a new thread. You can use the `setThread` command to create a new thread at the current selection.
+假设你有一个用于创建新线程的按钮。你可以使用 `setThread` 命令，在当前选区创建新线程。
 
 ```js
 const createThread = () => {
@@ -35,7 +35,7 @@ const createThread = () => {
 }
 ```
 
-This will create a new thread at the current selection and add a comment with the given content. By default comments and threads don't have a user or any other metadata assigned. Let's say you want to add the author to the thread **and** the comment. You can do this by passing through the `data` and `commentData` property to the `setThread` command.
+这会在当前选区创建一个新线程，并添加一条包含给定内容的评论。默认情况下，评论和线程都不会关联用户或任何其他元数据。假设你想将作者同时添加到线程**和**评论中，可以将 `data` 和 `commentData` 属性传给 `setThread` 命令。
 
 ```js
 const createThread = () => {
@@ -60,13 +60,13 @@ const createThread = () => {
 }
 ```
 
-Now the thread and comment will have a user assigned to it.
+现在，线程和评论都会关联一个用户。
 
-## Receive and watch threads and comments
+## 接收并监听线程和评论
 
-Use `subscribeToThreads` from `@tiptap-pro/extension-comments` to keep your thread list up to date. Pass `editor` to include each thread's current document ranges.
+使用 `@tiptap-pro/extension-comments` 中的 `subscribeToThreads`，使线程列表保持最新。传入 `editor`，即可包含每个线程在文档中的当前范围。
 
-The callback receives the initial list immediately. With an editor, later updates are grouped into a microtask after thread data or ranges change. Ranges update after local edits, collaborative edits, and undo or redo. Selection changes alone do not trigger the callback.
+回调会立即收到初始列表。传入编辑器后，线程数据或范围发生变化时，后续更新会合并到一个微任务中处理。本地编辑、协同编辑以及撤销或重做后，范围都会更新。仅更改选区不会触发回调。
 
 ```js
 import { subscribeToThreads } from '@tiptap-pro/extension-comments'
@@ -83,17 +83,17 @@ const unsubscribe = subscribeToThreads({
 })
 ```
 
-By default, only unarchived threads are returned. Use `getThreadsOptions.types` to include archived threads, which are soft-deleted threads.
+默认情况下，只会返回未归档的线程。使用 `getThreadsOptions.types` 可包含已归档的线程，也就是软删除的线程。
 
-With `editor`, the subscription defaults to the editor's collaboration field. Override it with `getThreadsOptions.field`. Field filtering also includes legacy threads that have no field assigned.
+传入 `editor` 后，订阅默认使用编辑器的协作字段。可以通过 `getThreadsOptions.field` 指定其他字段。字段筛选也会包含未分配字段的旧版线程。
 
-Call `unsubscribe()` when you no longer need updates. The subscription also cleans up when the supplied editor is destroyed.
+不再需要更新时，请调用 `unsubscribe()`。提供的编辑器销毁时，订阅也会自动清理。
 
-Without `editor`, `subscribeToThreads` returns provider thread records without `ranges` and watches only provider changes.
+不传入 `editor` 时，`subscribeToThreads` 会返回不含 `ranges` 的提供方线程记录，并且只监听提供方的变化。
 
-## Read current thread ranges
+## 读取当前线程范围
 
-Use `getThreads` from `@tiptap-pro/extension-comments` to read thread records with their current anchors in the editor. The editor must have `Comments` or `CommentsKit` installed.
+使用 `@tiptap-pro/extension-comments` 中的 `getThreads`，读取带有编辑器中当前锚点的线程记录。编辑器必须安装 `Comments` 或 `CommentsKit`。
 
 ```js
 import { getThreads } from '@tiptap-pro/extension-comments'
@@ -104,23 +104,23 @@ const threads = getThreads({
 })
 ```
 
-Each result keeps the provider's thread data and adds a read-only `ranges` array. The package exports the `ThreadWithPositions<Data, CommentData>` and `ThreadRange` types.
+每个结果都会保留提供方的线程数据，并添加一个只读的 `ranges` 数组。该包导出了 `ThreadWithPositions<Data, CommentData>` 和 `ThreadRange` 类型。
 
-Each range contains these fields:
+每个范围包含以下字段：
 
-| Field  | Description                                                            |
-| ------ | ---------------------------------------------------------------------- |
-| `from` | Start position in the current ProseMirror document.                    |
-| `to`   | Exclusive end position in the current ProseMirror document.            |
-| `type` | `'inline'` for a marked range or `'block'` for a block thread wrapper. |
+| 字段   | 说明                                              |
+| ------ | ------------------------------------------------- |
+| `from` | 当前 ProseMirror 文档中的起始位置。               |
+| `to`   | 当前 ProseMirror 文档中的结束位置（不包含该位置）。 |
+| `type` | 标记范围为 `'inline'`，块级线程包装节点为 `'block'`。 |
 
-Block ranges include the wrapper node. A thread can have several separate anchors, so `ranges` can contain multiple entries ordered by document position. Threads without an anchor in the supplied editor have `ranges: []`.
+块级范围包含包装节点。一个线程可以有多个独立锚点，因此 `ranges` 可能包含多个条目，并按文档位置排序。在所提供的编辑器中没有锚点的线程，其 `ranges` 为 `[]`。
 
-These positions describe the current document, not permanent anchors. Read them again after edits or use `subscribeToThreads` with `editor` to receive updated ranges.
+这些位置描述的是当前文档中的位置，而不是永久锚点。编辑后请重新读取，或者传入 `editor` 使用 `subscribeToThreads` 接收更新后的范围。
 
-`getThreads` accepts the same `getThreadsOptions` filters as the subscription and defaults to the editor's collaboration field. It preserves provider order rather than sorting threads by document position.
+`getThreads` 接受与订阅相同的 `getThreadsOptions` 筛选条件，并默认使用编辑器的协作字段。它会保留提供方中的顺序，而不会按文档位置对线程排序。
 
-To display threads in document order, sort by the first range. This example places threads without anchors last and uses the thread ID to break ties:
+若要按文档顺序显示线程，请根据第一个范围进行排序。以下示例会将没有锚点的线程排在最后，并使用线程 ID 打破并列：
 
 ```js
 const firstPosition = (thread) => thread.ranges[0]?.from ?? Infinity
@@ -130,11 +130,11 @@ const orderedThreads = [...threads].sort(
 )
 ```
 
-## Receive and render threads manually
+## 手动接收并渲染线程
 
-To receive the list of threads on your current document manually, you can simply call `provider.getThreads()`. This will return an array of threads on the document connected to your provider.
+若要手动获取当前文档中的线程列表，只需调用 `provider.getThreads()`。它会返回与提供方连接的文档中的线程数组。
 
-This is a static array which won't update on its own. If you want to keep the list of threads up to date, you can listen to changes via the `provider.watchThreads` and `provider.unwatchThreads` functions.
+这是一个静态数组，不会自行更新。若要让线程列表保持最新，可以通过 `provider.watchThreads` 和 `provider.unwatchThreads` 函数监听变化。
 
 ```js
 // let's save threads in a variable
@@ -152,13 +152,13 @@ getThreads()
 provider.watchThreads(getThreads)
 ```
 
-To unwatch the threads you can call `provider.unwatchThreads(getThreads)`.
+若要停止监听线程，可以调用 `provider.unwatchThreads(getThreads)`。
 
 ```js
 provider.unwatchThreads(getThreads)
 ```
 
-The watcher callback also receives the Yjs events and transaction. Use `transaction.local` to distinguish local and remote changes, and pass the same callback to `unwatchThreads` when you unsubscribe:
+监听器回调还会接收 Yjs 事件和事务。使用 `transaction.local` 区分本地和远程更改；取消订阅时，将同一个回调传给 `unwatchThreads`：
 
 ```js
 const handleThreadChanges = (events, transaction) => {
@@ -171,11 +171,11 @@ provider.watchThreads(handleThreadChanges)
 provider.unwatchThreads(handleThreadChanges)
 ```
 
-## Keep thread ranges in React state
+## 在 React 状态中维护线程范围
 
-Use an editor-aware subscription in your React hook to receive both thread data and range updates:
+在 React Hook 中使用感知编辑器的订阅，以同时接收线程数据和范围更新：
 
-The hook also works without `editor`. In that case, it receives provider thread records without `ranges`.
+不传入 `editor` 时，该 Hook 也能正常工作。在这种情况下，它会接收不含 `ranges` 的提供方线程记录。
 
 ```jsx
 import { subscribeToThreads } from '@tiptap-pro/extension-comments'
@@ -200,11 +200,11 @@ const useThreads = (provider, editor) => {
 }
 ```
 
-Use the returned threads to render your UI. React calls the unsubscribe function when the dependencies change or the component unmounts.
+使用返回的线程来渲染 UI。当依赖项发生变化或组件卸载时，React 会调用取消订阅函数。
 
-## Update a thread
+## 更新线程
 
-To update a thread you can use the `updateThread` command. This command will update the thread with the given id and update the content of the thread.
+若要更新线程，可以使用 `updateThread` 命令。此命令会更新指定 ID 的线程，并更新线程内容。
 
 ```js
 editor.commands.updateThread({
@@ -217,15 +217,15 @@ editor.commands.updateThread({
 })
 ```
 
-This will update the thread with the ID `123` and set the `seen` property to `true`.
+这会更新 ID 为 `123` 的线程，并将 `seen` 属性设为 `true`。
 
-## Delete a thread
+## 删除线程
 
-To delete a thread you can use the `removeThread` command. This command will delete the thread with the given ID.
+若要删除线程，可以使用 `removeThread` 命令。此命令会删除指定 ID 的线程。
 
-<Callout title="How to delete threads" variant="default">
-  By default, threads removed won't be deleted from the yjs document. To do this, you can pass
-  through the `deleteThread` option to the `removeThread` command.
+<Callout title="如何删除线程" variant="default">
+  默认情况下，移除的线程不会从 yjs 文档中删除。若要将其从文档中删除，可以将
+  `deleteThread` 选项传给 `removeThread` 命令。
 </Callout>
 
 ```js
@@ -235,11 +235,11 @@ editor.commands.removeThread({
 })
 ```
 
-## Create, update and delete comments
+## 创建、更新和删除评论
 
-Comments can be added, edited, and removed within threads but cannot be marked as resolved, as they are considered parts of the thread discussions.
+可以在线程中添加、编辑和删除评论，但不能将评论标记为已解决，因为评论被视为线程讨论的一部分。
 
-To create a comment on a thread you can use the `createComment` command. This command will create a new comment on the thread with the given ID.
+若要在线程中创建评论，可以使用 `createComment` 命令。此命令会在指定 ID 的线程中创建一条新评论。
 
 ```js
 editor.commands.createComment({
@@ -251,9 +251,9 @@ editor.commands.createComment({
 })
 ```
 
-This will create a new comment on the thread with the ID `123` and set the content to `This is a new comment`. You can also pass through any metadata you want to the comment.
+这会在 ID 为 `123` 的线程中创建一条新评论，并将内容设为 `This is a new comment`。你也可以为评论传入任何所需的元数据。
 
-To update a comment you can use the `updateComment` command. This command will update the comment with the given ID and update the content of the comment.
+若要更新评论，可以使用 `updateComment` 命令。此命令会更新指定 ID 的评论及其内容。
 
 ```js
 editor.commands.updateComment({
@@ -266,9 +266,9 @@ editor.commands.updateComment({
 })
 ```
 
-This will update the comment with the ID `456` on the thread with the ID `123` and set the content to `Now this is the new content`. You can also pass through any metadata you want to the comment.
+这会更新 ID 为 `123` 的线程中 ID 为 `456` 的评论，并将内容设为 `Now this is the new content`。你也可以为评论传入任何所需的元数据。
 
-Finally you can delete a comment by using the `deleteComment` command. This command will delete the comment with the given ID.
+最后，你可以使用 `deleteComment` 命令删除评论。此命令会删除指定 ID 的评论。
 
 ```js
 editor.commands.deleteComment({
@@ -277,9 +277,9 @@ editor.commands.deleteComment({
 })
 ```
 
-## Resolve and unresolve threads
+## 解决和取消解决线程
 
-To resolve a thread you can use the `resolveThread` command. This command will resolve the thread with the given ID.
+若要解决线程，可以使用 `resolveThread` 命令。此命令会解决指定 ID 的线程。
 
 ```js
 editor.commands.resolveThread({
@@ -287,9 +287,9 @@ editor.commands.resolveThread({
 })
 ```
 
-This will resolve the thread with the ID `123`. To unresolve a thread you can use the `unresolveThread` command. This command will unresolve the thread with the given ID.
+这会解决 ID 为 `123` 的线程。若要取消解决线程，可以使用 `unresolveThread` 命令。此命令会取消解决指定 ID 的线程。
 
-If you want to resolve a thread and add information on which user resolved the thread, you can set the threads data to include the user who resolved the thread. Be sure to clear the data when unresolving the thread.
+若要解决线程并记录解决线程的用户，可以在该线程的数据中加入解决线程的用户信息。取消解决线程时，请务必清除这些数据。
 
 ```js
 editor.commands.unresolveThread({
@@ -297,9 +297,9 @@ editor.commands.unresolveThread({
 })
 ```
 
-## Find all threads in the document
+## 查找文档中的所有线程
 
-To find all threads within the editor document, you can use the `findThreadsInDocument` utility function. This function returns an array of all thread nodes and marks, including their positions in the document.
+若要查找编辑器文档中的所有线程，可以使用 `findThreadsInDocument` 实用函数。此函数会返回所有线程节点和标记的数组，其中包括它们在文档中的位置。
 
 ```js
 const threads = findThreadsInDocument(editor, {
@@ -308,11 +308,11 @@ const threads = findThreadsInDocument(editor, {
 })
 ```
 
-This will return an array of thread objects, each containing the thread identifier, the node, its position and optionally the mark associated with it.
+它会返回一个线程对象数组，每个对象都包含线程标识符、节点、位置，以及可选的关联标记。
 
-## Select a thread
+## 选中线程
 
-To select a thread you can use the `selectThread` command. This command selects the thread with the specified ID.
+若要选中线程，可以使用 `selectThread` 命令。此命令会选中指定 ID 的线程。
 
 ```js
 editor.commands.selectThread({
@@ -320,9 +320,9 @@ editor.commands.selectThread({
 })
 ```
 
-This will move the cursor to the thread with the ID `123`.
+这会将光标移动到 ID 为 `123` 的线程。
 
-To deselect a thread you can use the `unselectThread` command. This command deselects the thread with the specified ID.
+若要取消选中线程，可以使用 `unselectThread` 命令。此命令会取消选中指定 ID 的线程。
 
 ```js
 editor.commands.unselectThread({
@@ -330,4 +330,4 @@ editor.commands.unselectThread({
 })
 ```
 
-You can also select or unselect threads without ID. In that case, the editor will select or unselect the thread at the current selection.
+也可以不指定 ID 来选中或取消选中线程。在这种情况下，编辑器会选中或取消选中当前选区中的线程。
