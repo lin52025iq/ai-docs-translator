@@ -1,31 +1,31 @@
 ---
-title: Client-side tools
+title: 客户端工具
 meta:
-  title: Client-side tools | Tiptap Content AI
-  description: Learn how to call tools in the client-side from the AI Agent extension.
+  title: 客户端工具 | Tiptap Content AI
+  description: 了解如何通过 AI Agent 扩展在客户端调用工具。
   category: Content AI
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Client-side tools are tools that run in the browser. Use them to interact with the editor's content. For example:
+客户端工具是在浏览器中运行的工具，可用于与编辑器内容交互。例如：
 
-- Count the number of words in the document
-- Replace all instances of a word in the document
-- Format the document.
+- 统计文档中的字数
+- 替换文档中所有出现的某个词
+- 设置文档格式。
 
-All [built-in tools](/ai/deprecated/agent/custom-llms/tools#built-in-tools) are client-side tools.
+所有[内置工具](/ai/deprecated/agent/custom-llms/tools#built-in-tools)都是客户端工具。
 
-This guide shows how to implement a tool that replaces all occurrences of a word in the document with another word. It assumes you have already [set up the AI Agent extension with your custom backend](/ai/deprecated/agent/custom-llms/get-started).
+本指南将介绍如何实现一个工具，将文档中某个词的所有出现位置替换为另一个词。阅读本指南前，请先[使用自定义后端设置 AI Agent 扩展](/ai/deprecated/agent/custom-llms/get-started)。
 
-<Callout title="Code demo available" variant="info">
-  This guide includes a code demo to help you get started. See the [GitHub
-  repository](https://github.com/ueberdosis/ai-agent-custom-llm-demos).
+<Callout title="提供代码示例" variant="info">
+  本指南包含代码示例，帮助你快速上手。请参阅 [GitHub
+  仓库](https://github.com/ueberdosis/ai-agent-custom-llm-demos)。
 </Callout>
 
-## Client-side setup
+## 客户端设置
 
-Declare a tool call handler for your tool. Tool handlers are functions that apply the tool call in the editor. They must implement the `AiAgentToolHandler` interface.
+为工具声明一个工具调用处理程序。工具处理程序是在编辑器中执行工具调用的函数，必须实现 `AiAgentToolHandler` 接口。
 
 ```ts
 import { z } from 'zod'
@@ -71,7 +71,7 @@ export const replaceAllToolHandler = (): AiAgentToolHandler => ({
 })
 ```
 
-Then, add the tool to your `AiAgentProvider`:
+然后，将工具添加到 `AiAgentProvider`：
 
 ```ts
 import { AiAgentProvider, toolHandlersStarterKit } from '@tiptap-pro/extension-ai-agent'
@@ -81,11 +81,11 @@ const provider = new AiAgentProvider({
 })
 ```
 
-The `toolHandlersStarterKit` contains the tool handlers for all the [built-in tools](/ai/deprecated/agent/custom-llms/tools#built-in-tools). You can add your custom tool handlers to the array.
+`toolHandlersStarterKit` 包含所有[内置工具](/ai/deprecated/agent/custom-llms/tools#built-in-tools)的工具处理程序。你可以将自定义工具处理程序添加到数组中。
 
-## Server-side setup
+## 服务端设置
 
-On the server-side, define the tool. The tool definition contains the tool's name, description, and [JSON schema](https://json-schema.org/). This data is sent to the LLM to generate the tool calls. It must implement the `AiAgentTool` interface.
+在服务端定义工具。工具定义包含工具名称、描述和 [JSON Schema](https://json-schema.org/)。这些数据会发送给 LLM，以生成工具调用。工具定义必须实现 `AiAgentTool` 接口。
 
 ```ts
 import type { AiAgentTool } from '@tiptap-pro/extension-ai-agent-server'
@@ -109,7 +109,7 @@ export const replaceAllTool = (): AiAgentTool => ({
 })
 ```
 
-Then, add the tool to the `AiAgentToolkit` instance:
+然后，将工具添加到 `AiAgentToolkit` 实例中：
 
 ```ts
 import { AiAgentToolkit, toolsStarterKit } from '@tiptap-pro/extension-ai-agent-server'
@@ -119,4 +119,4 @@ const toolkit = new AiAgentToolkit({
 })
 ```
 
-The `toolsStarterKit` contains the tool definitions for all the [built-in tools](/ai/deprecated/agent/custom-llms/tools#built-in-tools). You can add your custom tool definitions to the array.
+`toolsStarterKit` 包含所有[内置工具](/ai/deprecated/agent/custom-llms/tools#built-in-tools)的工具定义。你可以将自定义工具定义添加到数组中。
