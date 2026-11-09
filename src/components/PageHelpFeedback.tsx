@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { ThumbsUp, ThumbsDown } from 'lucide-react'
 import { Button } from './ui/Button'
-const NO_OPTIONS = ['Inaccurate', 'Missing information', 'Hard to understand', 'Code sample errors']
+const NO_OPTIONS = ['内容不准确', '信息缺失', '难以理解', '代码示例有误']
 
 export type FeedbackState = 'initial' | 'yes' | 'no' | 'submitted'
 
@@ -48,11 +48,11 @@ export default function PageHelpFeedback({ className }: { className?: string }) 
       >
         <div className="flex flex-row items-center gap-x-3 w-full">
           <h3 className="font-medium text-gray-800 m-0 flex items-center">
-            Was this page helpful?
+            此页面对您有帮助吗？
           </h3>
           <div className="flex gap-0">
             <Button
-              aria-label="Yes"
+              aria-label="是"
               variant={state === 'yes' ? 'secondary' : 'tertiary'}
               size="small"
               className={`rounded-lg hover:bg-grayAlpha-200 transition-colors ${state === 'yes' ? 'bg-gray-200 border border-gray-400' : ''} ${state === 'submitted' && lastFeedbackWasYes ? '' : ''}`}
@@ -62,7 +62,7 @@ export default function PageHelpFeedback({ className }: { className?: string }) 
               <ThumbsUp className="w-4 h-4" />
             </Button>
             <Button
-              aria-label="No"
+              aria-label="否"
               variant={state === 'no' ? 'secondary' : 'tertiary'}
               size="small"
               className={`rounded-lg hover:bg-grayAlpha-200 transition-colors ${state === 'no' ? 'bg-gray-200 border border-gray-400' : ''}`}
@@ -76,7 +76,7 @@ export default function PageHelpFeedback({ className }: { className?: string }) 
 
         {state === 'submitted' && !lastFeedbackWasYes && (
           <span className="inline-block text-xs text-gray-800 bg-gray-100 border border-gray-200 rounded px-2 py-1 mt-1">
-            Thank you for your feedback!
+            感谢您的反馈！
           </span>
         )}
         {state === 'yes' && (
@@ -90,10 +90,10 @@ export default function PageHelpFeedback({ className }: { className?: string }) 
             <textarea
               rows={3}
               className="border border-gray-200 rounded-md px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-gray-300 resize-none w-full max-w-2xl"
-              placeholder="What made this content helpful? (optional)"
+              placeholder="哪些内容对您有帮助？（选填）"
               value={yesText}
               onChange={(e) => setYesText(e.target.value)}
-              aria-label="What specifically did you like? (optional)"
+              aria-label="您具体喜欢哪些内容？（选填）"
               onKeyDown={(e) => {
                 if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && !submitting) {
                   e.preventDefault()
@@ -103,7 +103,7 @@ export default function PageHelpFeedback({ className }: { className?: string }) 
             />
             <div className="flex gap-2 mt-1">
               <Button type="submit" variant="secondary" disabled={submitting}>
-                {submitting ? 'Submitting...' : 'Submit'}
+                {submitting ? '正在提交...' : '提交'}
               </Button>
             </div>
           </form>
@@ -136,10 +136,10 @@ export default function PageHelpFeedback({ className }: { className?: string }) 
               <textarea
                 rows={3}
                 className="border border-gray-200 rounded-md px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-gray-300 resize-none w-full max-w-2xl"
-                placeholder="Can you provide more details? (optional)"
+                placeholder="能否提供更多详细信息？（选填）"
                 value={noText}
                 onChange={(e) => setNoText(e.target.value)}
-                aria-label="Can you provide more details?"
+                aria-label="能否提供更多详细信息？"
                 onKeyDown={(e) => {
                   if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && !submitting) {
                     e.preventDefault()
@@ -150,7 +150,7 @@ export default function PageHelpFeedback({ className }: { className?: string }) 
             )}
             <div className="flex gap-2 mt-1">
               <Button type="submit" variant="secondary" disabled={submitting || !noOption}>
-                {submitting ? 'Submitting...' : 'Submit'}
+                {submitting ? '正在提交...' : '提交'}
               </Button>
             </div>
           </form>
