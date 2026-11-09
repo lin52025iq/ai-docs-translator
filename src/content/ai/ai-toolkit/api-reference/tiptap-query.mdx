@@ -2,8 +2,8 @@
 title: Tiptap Query
 meta:
   title: Tiptap Query | Tiptap Server AI Toolkit
-  description: Reference for Tiptap Query, the tiptapQuery tool that reads, searches and edits Tiptap documents with JSON operations.
-  category: AI Toolkit
+  description: Tiptap Query 参考文档：tiptapQuery 工具通过 JSON 操作读取、搜索和编辑 Tiptap 文档。
+  category: AI 工具包
 tags:
   - type: alpha
 ---
@@ -11,10 +11,10 @@ tags:
 import { Callout } from '@/components/ui/Callout'
 
 <Callout title="Alpha" variant="warning">
-  Tiptap Query is in alpha. The operation format may change.
+  Tiptap Query 目前处于 alpha 阶段，操作格式可能会发生变化。
 </Callout>
 
-Tiptap Query reads, searches and edits a Tiptap document with JSON operations. AI agents use it through the `tiptapQuery` tool. Each operation selects content, such as every heading or every occurrence of a word, and applies an action to it. The tool works on its own: an AI agent can find content and edit it without `tiptapRead` or `tiptapEdit`.
+Tiptap Query 使用 JSON 操作读取、搜索和编辑 Tiptap 文档。AI 代理通过 `tiptapQuery` 工具使用它。每个操作都会选取内容（例如所有标题或某个词的每次出现），并对其执行操作。该工具可以独立工作：AI 代理无需使用 `tiptapRead` 或 `tiptapEdit`，即可查找并编辑内容。
 
 ```json
 {
@@ -28,9 +28,9 @@ Tiptap Query reads, searches and edits a Tiptap document with JSON operations. A
 }
 ```
 
-## Enable the tool
+## 启用工具
 
-Enable `tiptapQuery` when you [fetch the tool definitions](/ai/ai-toolkit/api-reference/rest-api#fetch-tool-definitions):
+在[获取工具定义](/ai/ai-toolkit/api-reference/rest-api#fetch-tool-definitions)时启用 `tiptapQuery`：
 
 ```json
 {
@@ -43,9 +43,9 @@ Enable `tiptapQuery` when you [fetch the tool definitions](/ai/ai-toolkit/api-re
 }
 ```
 
-To make the AI explain its changes, pass a `meta` instruction instead of `true`, for example `{ "meta": "Briefly explain the change." }`. Every operation that changes the document must then include `meta`. Reads never need it.
+若要让 AI 说明所做的更改，请传入 `meta` 指令，而不是 `true`，例如 `{ "meta": "Briefly explain the change." }`。之后，每个会更改文档的操作都必须包含 `meta`。读取操作无需包含。
 
-Run the tool call that the AI generates with the [`execute-tool`](/ai/ai-toolkit/api-reference/rest-api#execute-a-tool) endpoint:
+使用 [`execute-tool`](/ai/ai-toolkit/api-reference/rest-api#execute-a-tool) 端点运行 AI 生成的工具调用：
 
 ```json
 {
@@ -64,177 +64,177 @@ Run the tool call that the AI generates with the [`execute-tool`](/ai/ai-toolkit
 }
 ```
 
-`tiptapQuery` supports the `json`, `shorthand` and `shorthandV2` formats and works with [review options](/ai/ai-toolkit/api-reference/review-options). It is not available through the `stream-tool` endpoint.
+`tiptapQuery` 支持 `json`、`shorthand` 和 `shorthandV2` 格式，并支持[审阅选项](/ai/ai-toolkit/api-reference/review-options)。它不能通过 `stream-tool` 端点使用。
 
-Tool config (`tool.config`):
+工具配置（`tool.config`）：
 
-- `chunkSize` (`number`, optional, default: `32000`): Maximum number of characters that all reads of one call return together. The value is clamped between `512` and `32000`.
-- `threadData` (`object`, optional): Metadata added to created threads.
-- `commentData` (`object`, optional): Metadata added to created comments.
+- `chunkSize`（`number`，可选，默认值：`32000`）：一次调用中所有读取操作合计返回的最大字符数。该值会限制在 `512` 到 `32000` 之间。
+- `threadData`（`object`，可选）：添加到所创建线程的元数据。
+- `commentData`（`object`，可选）：添加到所创建评论的元数据。
 
-## Input
+## 输入
 
-Tool input (`tool.input`):
+工具输入（`tool.input`）：
 
-- `operations` (`array`, required): 1 to 50 operations, run in order. Each operation contains:
-  - `selector` (`array`, required): Up to 12 steps that select the content to read or edit. An empty array selects the whole document. See [Selectors](#selectors).
-  - `action` (`object`, required): What to do with the selected content. See [Actions](#actions).
-  - `expect` (`number`, optional): Exact number of matches that the selector must find. If it finds a different number, the operation fails with `unexpected_matches`. Use `expect: 1` to protect edits of a single target.
-  - `meta` (`string`, optional): Reason for the change, up to 4,000 characters. In tracked-changes mode, it becomes a comment on the suggestion when comments are available. See [Tracked changes and comments](#tracked-changes-and-comments). Required for changes when `fetch-tools` received a `meta` instruction for `tiptapQuery`.
+- `operations`（`array`，必需）：按顺序运行 1 到 50 个操作。每个操作包含：
+  - `selector`（`array`，必需）：最多 12 个步骤，用于选取要读取或编辑的内容。空数组表示选取整个文档。请参阅[选择器](#selectors)。
+  - `action`（`object`，必需）：对选取的内容执行的操作。请参阅[操作](#actions)。
+  - `expect`（`number`，可选）：选择器必须找到的确切匹配数。如果找到的数量不同，操作会以 `unexpected_matches` 失败。使用 `expect: 1` 可保护单个目标的编辑。
+  - `meta`（`string`，可选）：更改原因，最多 4,000 个字符。在跟踪更改模式下，如果支持评论，该内容会成为建议上的评论。请参阅[跟踪更改和评论](#tracked-changes-and-comments)。如果 `fetch-tools` 为 `tiptapQuery` 收到 `meta` 指令，则更改操作必须包含此字段。
 
-Unknown fields are rejected.
+不接受未知字段。
 
-## Selectors
+## 选择器
 
-A selector is an array of steps. It starts at the document, and each step searches inside the content that the previous step selected. An empty selector (`[]`) selects the whole document.
+选择器是由多个步骤组成的数组。它从文档开始，每个步骤都会在上一步选取的内容中搜索。空选择器（`[]`）表示选取整个文档。
 
-| Selector                                                    | Selects                                                    |
-| ----------------------------------------------------------- | ---------------------------------------------------------- |
-| `[{ "type": "heading" }]`                                   | Every heading, including nested headings                   |
-| `[{ "hash": "HASH" }]`                                      | The node with this `_hash`                                 |
-| `[{ "type": "paragraph", "contains": "beta" }]`             | Every paragraph that contains the text `beta`              |
-| `[{ "text": "beta", "wholeWord": true }]`                   | Every occurrence of the word `beta`                        |
-| `[{ "type": "bulletList" }, { "text": "late" }]`            | Every occurrence of `late` inside bullet lists             |
-| `[{ "hash": "HASH" }, { "content": true }]`                 | The inside of the node with this `_hash`, without the node |
-| `[{ "range": { "from": "START_HASH", "to": "END_HASH" } }]` | Two sibling nodes and every node between them              |
+| 选择器                                                    | 选取的内容                                               |
+| --------------------------------------------------------- | -------------------------------------------------------- |
+| `[{ "type": "heading" }]`                              | 每个标题，包括嵌套标题                                   |
+| `[{ "hash": "HASH" }]`                                 | `_hash` 值为该值的节点                                   |
+| `[{ "type": "paragraph", "contains": "beta" }]`     | 每个包含文本 `beta` 的段落                               |
+| `[{ "text": "beta", "wholeWord": true }]`             | 单词 `beta` 的每次出现                                   |
+| `[{ "type": "bulletList" }, { "text": "late" }]`    | 项目符号列表中的 `late` 的每次出现                       |
+| `[{ "hash": "HASH" }, { "content": true }]`          | `_hash` 值为该值的节点内部内容，不包含节点本身           |
+| `[{ "range": { "from": "START_HASH", "to": "END_HASH" } }]` | 两个同级节点及其间的所有节点                      |
 
-### Node steps
+### 节点步骤
 
-A node step selects nodes inside the previous selection. All filters of one step must match.
+节点步骤会在上一步选取的内容中选择节点。一个步骤中的所有筛选条件都必须匹配。
 
-- `type` (`string`, optional): Node type, such as `"heading"`. A type that the editor schema doesn't define fails with `invalid_selector`.
-- `hash` (`string`, optional): Value of the node's `_hash` attribute. Reads return the hashes of the nodes they find.
-- `id` (`string`, optional): Value of the node's `id` attribute, such as the one added by the [Unique ID](/editor/extensions/functionality/uniqueid) extension. Several nodes can match the same ID.
-- `attrs` (`object`, optional): Attribute values that the node must have, such as `{ "level": 2 }`.
-- `contains` (`string`, optional): Text that the node must contain. The match is literal and case-sensitive.
-- `scope` (`'descendants' | 'children'`, optional, default: `'descendants'`): Searches all descendants, or only the direct children.
-- `pick` (`'all' | 'first' | 'last'`, optional, default: `'all'`): Keeps every match, or only the first or last match in document order. A step without `type` can't pick the first or last match when its matches are nested inside each other.
+- `type`（`string`，可选）：节点类型，例如 `"heading"`。如果编辑器架构中未定义该类型，则会以 `invalid_selector` 失败。
+- `hash`（`string`，可选）：节点 `_hash` 属性的值。读取操作会返回找到节点的哈希值。
+- `id`（`string`，可选）：节点 `id` 属性的值，例如 [Unique ID](/editor/extensions/functionality/uniqueid) 扩展添加的 ID。多个节点可以匹配同一个 ID。
+- `attrs`（`object`，可选）：节点必须具有的属性值，例如 `{ "level": 2 }`。
+- `contains`（`string`，可选）：节点必须包含的文本。按字面匹配，区分大小写。
+- `scope`（`'descendants' | 'children'`，可选，默认值：`'descendants'`）：搜索所有后代节点，或仅搜索直接子节点。
+- `pick`（`'all' | 'first' | 'last'`，可选，默认值：`'all'`）：保留所有匹配项，或仅保留文档顺序中的第一个或最后一个匹配项。如果没有 `type`，且匹配项互相嵌套，则不能选取第一个或最后一个匹配项。
 
-Chaining two node steps searches inside the nodes that the first step found. It doesn't select the nodes between them: use a range step for that.
+串联两个节点步骤时，会在第一个步骤找到的节点内部搜索。它不会选取这些节点之间的节点；要实现此目的，请使用范围步骤。
 
-### Text steps
+### 文本步骤
 
-A text step selects every non-overlapping occurrence of a text inside the previous selection.
+文本步骤会在上一步选取的内容中选择某个文本的所有非重叠匹配项。
 
-- `text` (`string`, required): Text to find, up to 10,000 characters. The text is matched literally. Regular expressions aren't supported.
-- `caseSensitive` (`boolean`, optional, default: `true`): Set `false` to ignore case.
-- `wholeWord` (`boolean`, optional, default: `false`): Set `true` to match only whole words.
-- `pick` (`'all' | 'first' | 'last'`, optional, default: `'all'`): Keeps every match, or only the first or last match in document order.
+- `text`（`string`，必需）：要查找的文本，最多 10,000 个字符。按字面匹配文本。不支持正则表达式。
+- `caseSensitive`（`boolean`，可选，默认值：`true`）：设为 `false` 可忽略大小写。
+- `wholeWord`（`boolean`，可选，默认值：`false`）：设为 `true` 仅匹配完整单词。
+- `pick`（`'all' | 'first' | 'last'`，可选，默认值：`'all'`）：保留所有匹配项，或仅保留文档顺序中的第一个或最后一个匹配项。
 
-A match can span text with different formatting, but it never crosses a block, a hard break or an inline node. After a text step, only another text step can follow.
+匹配项可以跨越格式不同的文本，但不会跨越块、硬换行或行内节点。文本步骤之后只能跟另一个文本步骤。
 
-### Content steps
+### 内容步骤
 
-`{ "content": true }` selects the inside of each selected node, without the node itself. Use it to read or replace the children of a node while keeping the node and its attributes.
+`{ "content": true }` 会选取每个已选节点内部的内容，不包括节点本身。可用它读取或替换节点的子内容，同时保留该节点及其属性。
 
-### Range steps
+### 范围步骤
 
-`{ "range": { "from": "START_HASH", "to": "END_HASH" } }` selects two sibling nodes and every node between them. Both hashes must belong to exactly one node inside the previous selection, and `from` must come before `to`. Omit `to` to select up to the end of the parent node, or of an enclosing range when that ends first.
+`{ "range": { "from": "START_HASH", "to": "END_HASH" } }` 会选取两个同级节点及它们之间的所有节点。两个哈希都必须对应上一步选取范围内恰好一个节点，并且 `from` 必须位于 `to` 之前。省略 `to` 可选取直到父节点末尾的内容；如果外层范围先结束，则选取至外层范围末尾。
 
-Read the hashes of the endpoints before you edit a range, and edit the whole range in one operation.
+编辑范围之前，请先读取端点的哈希，并在一个操作中编辑整个范围。
 
-## Actions
+## 操作
 
 ### `read`
 
-Returns the selected content without changing the document.
+返回选取的内容，不更改文档。
 
-- `view` (`'content' | 'text' | 'summary'`, optional, default: `'content'`): How each match is returned:
-  - `'content'`: The content in the request `format`: Tiptap JSON nodes, or a Tiptap Shorthand string.
-  - `'text'`: Plain text.
-  - `'summary'`: Hash, type, attributes and plain text of each node.
-- `maxChars` (`number`, optional, default: `32000`): Maximum size of the returned page, between `512` and `32000` characters.
-- `cursor` (`string`, optional): Continuation of an earlier read. Don't create or change it: send the whole `next` operation that the read returned. See [Read long content](#read-long-content).
+- `view`（`'content' | 'text' | 'summary'`，可选，默认值：`'content'`）：每个匹配项的返回形式：
+  - `'content'`：使用请求中的 `format` 返回内容：Tiptap JSON 节点或 Tiptap Shorthand 字符串。
+  - `'text'`：纯文本。
+  - `'summary'`：每个节点的哈希、类型、属性和纯文本。
+- `maxChars`（`number`，可选，默认值：`32000`）：返回页面的最大大小，范围为 512 到 32,000 个字符。
+- `cursor`（`string`，可选）：继续先前的读取操作。不要创建或更改它；请发送读取操作返回的整个 `next` 操作。请参阅[读取较长内容](#read-long-content)。
 
 ### `replace`
 
-Replaces the selected content.
+替换选取的内容。
 
-- `content` (`JSONContent[] | string`, required): The new content.
-  - For text matches, `content` is always a plain string, in every format. Use `""` to delete the text. The new text keeps the formatting at the start of the match, and `\n` becomes a hard break where the parent allows one.
-  - For nodes, content steps, ranges and the whole document, `content` is a Tiptap JSON node array when `format` is `json`, or a [Tiptap Shorthand](/ai/ai-toolkit/advanced-guides/tiptap-shorthand) string when `format` is `shorthand` or `shorthandV2`. Empty content (`[]`, or `""` in Tiptap Shorthand) deletes the selected nodes, if the schema allows it.
+- `content`（`JSONContent[] | string`，必需）：新内容。
+  - 对于文本匹配项，在所有格式中，`content` 始终是纯字符串。使用 `""` 删除文本。新文本会保留匹配项起始位置的格式；如果父节点允许，`\n` 会转换为硬换行。
+  - 对于节点、内容步骤、范围和整个文档，当 `format` 为 `json` 时，`content` 是 Tiptap JSON 节点数组；当 `format` 为 `shorthand` 或 `shorthandV2` 时，则是 [Tiptap Shorthand](/ai/ai-toolkit/advanced-guides/tiptap-shorthand) 字符串。空内容（`[]`，或 Tiptap Shorthand 中的 `""`）会删除选取的节点，前提是架构允许删除。
 
-### `insertBefore` and `insertAfter`
+### `insertBefore` 和 `insertAfter`
 
-Inserts nodes as siblings before or after each selected node or content range.
+在每个选中的节点或内容范围前后插入同级节点。
 
-- `content` (`JSONContent[] | string`, required): The nodes to insert, in the same format as node content for `replace`.
+- `content`（`JSONContent[] | string`，必需）：要插入的节点，格式与 `replace` 的节点内容相同。
 
-Text matches can't be used. To add text inside a paragraph, replace a text match with the longer text instead. To add nodes at the start or end of the document, select `[{ "content": true }]`. The whole document (`[]`) can't be used for insertion.
+不能对文本匹配项使用此操作。若要在段落内添加文本，请用更长的文本替换某个文本匹配项。若要在文档开头或结尾添加节点，请选择 `[{ "content": true }]`。不能对整个文档（`[]`）执行插入操作。
 
 ### `setAttrs`
 
-Merges attributes into each selected node.
+将属性合并到每个选中的节点中。
 
-- `attrs` (`object`, required): The attributes to set. The editor schema must define them. Reserved attributes, such as `_hash` and the tracked-changes attributes, can't be set.
+- `attrs`（`object`，必需）：要设置的属性。编辑器架构必须定义这些属性。不能设置保留属性，例如 `_hash` 和跟踪更改属性。
 
-### `addMark` and `removeMark`
+### `addMark` 和 `removeMark`
 
-Adds or removes a mark on the selected text, or on all text inside the selected nodes.
+为选中的文本或所选节点内的所有文本添加或移除标记。
 
-- `mark` (`string`, required): Mark type from the editor schema, such as `"bold"`. Tracked-changes and comment marks can't be used.
-- `attrs` (`object`, optional): Mark attributes for `addMark`, such as `{ "href": "https://tiptap.dev" }` for a link.
+- `mark`（`string`，必需）：编辑器架构中的标记类型，例如 `"bold"`。不能使用跟踪更改标记和评论标记。
+- `attrs`（`object`，可选）：`addMark` 的标记属性，例如用于链接的 `{ "href": "https://tiptap.dev" }`。
 
-`removeMark` removes every mark of that type, whatever its attributes.
+`removeMark` 会移除该类型的所有标记，不论其属性为何。
 
-### Hashes in new content
+### 新内容中的哈希
 
-The tool adds a `_hash` to each new node. Hashes in the content you send are ignored. When `replace` swaps a node for a single node of the same type, the new node keeps the old hash. Tracked-changes marks and attributes in new content are rejected with `invalid_content`.
+工具会为每个新节点添加 `_hash`。你发送的内容中的哈希会被忽略。使用 `replace` 将节点替换为一个相同类型的节点时，新节点会保留旧哈希。如果新内容中包含跟踪更改标记和属性，则会以 `invalid_content` 拒绝。
 
-## Output
+## 输出
 
-Tool output (`tool.output`):
+工具输出（`tool.output`）：
 
-- `success` (`boolean`): Whether every operation succeeded.
-- `operationResults` (`array`): One result for each operation that ran, in order. See below.
-- `skipped` (`number`): Number of operations that didn't run because an earlier operation failed.
+- `success`（`boolean`）：所有操作是否均已成功。
+- `operationResults`（`array`）：每个已运行操作对应一个结果，按运行顺序排列。见下文。
+- `skipped`（`number`）：因先前操作失败而未运行的操作数量。
 
-Each result in `operationResults` has one of these shapes.
+`operationResults` 中的每个结果都采用以下某种结构。
 
-Read result:
+读取结果：
 
-- `index` (`number`): Position of the operation in `operations`.
-- `success` (`true`)
-- `complete` (`boolean`): Whether the read returned everything it selected. When `false`, call the tool again with `next`.
-- `totalMatches` (`number`): Number of matches of the selector. When the selector is empty, each top-level node counts as one match.
-- `items` (`array`): The returned matches. Each item contains:
-  - `hash` (`string`, optional): Hash of the node. For a text match, the hash of the node that contains the match. For a content step, the hash of the node whose content was selected. Items of a range have no hash.
-  - `type` (`string`): Node type, `"text"` for a text match, or `"content"` for a content step or range.
-  - `attrs` (`object`, optional): Node attributes, in the `summary` view. The `_hash` and tracked-changes attributes are left out. Text matches, content steps and ranges have no `attrs`.
-  - `text` (`string`): Plain text, in the `text` and `summary` views. Hard breaks become `\n`, and other inline nodes become the U+FFFC character.
-  - `content` (`JSONContent[] | string`): The content, in the `content` view.
-  - `excerpt` (`true`, optional): The item is a text excerpt of a node that doesn't fit in the page. It has `text` instead of `content`.
-- `next` (`object | null`): The operation that continues the read, or `null` when the read is complete.
+- `index`（`number`）：该操作在 `operations` 中的位置。
+- `success`（`true`）
+- `complete`（`boolean`）：读取操作是否返回了所有选取内容。如果为 `false`，请使用 `next` 再次调用工具。
+- `totalMatches`（`number`）：选择器的匹配项数量。选择器为空时，每个顶层节点都计为一个匹配项。
+- `items`（`array`）：返回的匹配项。每项包含：
+  - `hash`（`string`，可选）：节点的哈希。对于文本匹配项，这是包含该匹配项的节点哈希；对于内容步骤，这是内容被选取的节点哈希。范围项没有哈希。
+  - `type`（`string`）：节点类型；文本匹配项为 `"text"`，内容步骤或范围为 `"content"`。
+  - `attrs`（`object`，可选）：在 `summary` 视图中返回的节点属性。不包括 `_hash` 和跟踪更改属性。文本匹配项、内容步骤和范围没有 `attrs`。
+  - `text`（`string`）：在 `text` 和 `summary` 视图中的纯文本。硬换行会转换为 `\n`，其他行内节点会转换为 U+FFFC 字符。
+  - `content`（`JSONContent[] | string`）：在 `content` 视图中的内容。
+  - `excerpt`（`true`，可选）：当节点内容无法全部放入页面时，此项为该节点的文本摘录。此时使用 `text`，而非 `content`。
+- `next`（`object | null`）：用于继续读取的操作；读取完成时为 `null`。
 
-Edit result:
+编辑结果：
 
-- `index` (`number`): Position of the operation in `operations`.
-- `success` (`true`)
-- `matched` (`number`): Number of matches that the operation edited.
-- `changed` (`boolean`): Whether the operation changed the document. It is `false` when the edit has no effect, such as making bold text bold.
+- `index`（`number`）：该操作在 `operations` 中的位置。
+- `success`（`true`）
+- `matched`（`number`）：该操作编辑的匹配项数量。
+- `changed`（`boolean`）：文档是否发生更改。如果编辑没有效果（例如将粗体文本再次设为粗体），则为 `false`。
 
-Failed result:
+失败结果：
 
-- `index` (`number`): Position of the operation in `operations`.
-- `success` (`false`)
-- `code` (`string`): Error code. See [Error codes](#error-codes).
-- `error` (`string`): Error message for the AI, up to 2,000 characters. It often suggests how to fix the operation.
+- `index`（`number`）：该操作在 `operations` 中的位置。
+- `success`（`false`）
+- `code`（`string`）：错误代码。请参阅[错误代码](#error-codes)。
+- `error`（`string`）：提供给 AI 的错误消息，最多 2,000 个字符。消息通常会建议如何修复操作。
 
-When the input itself is invalid, the output is `{ "success": false, "code": "invalid_input", "error": "..." }` and no operation runs.
+如果输入本身无效，输出为 `{ "success": false, "code": "invalid_input", "error": "..." }`，且不会运行任何操作。
 
-Failed operations and invalid input are reported in `tool.output`, and the `execute-tool` request still returns HTTP status `200`. Other failures, such as authentication, document access and server errors, return the HTTP errors described in the [REST API reference](/ai/ai-toolkit/api-reference/rest-api#execute-a-tool).
+失败的操作和无效输入会在 `tool.output` 中报告，而 `execute-tool` 请求仍会返回 HTTP 状态码 `200`。其他失败（例如身份验证、文档访问和服务器错误）会返回 [REST API 参考](/ai/ai-toolkit/api-reference/rest-api#execute-a-tool)中所述的 HTTP 错误。
 
-## How operations run
+## 操作的运行方式
 
-- Operations run in order. Each operation sees the changes of the operations before it.
-- An edit finds all its matches first and then changes all of them, or none if the edit fails.
-- An edit without matches fails with `no_matches`. A read without matches succeeds with no items.
-- The first failed operation stops the call. Changes of earlier operations are kept, and later operations are skipped. The call isn't rolled back.
-- Nodes without a `_hash` get one, even when the call only reads. Duplicate hashes are replaced. Existing hashes don't change.
+- 操作按顺序运行。每个操作都会看到之前操作所做的更改。
+- 编辑操作会先查找所有匹配项，然后一次性更改全部匹配项；如果编辑失败，则一个也不会更改。
+- 没有匹配项的编辑操作会以 `no_matches` 失败。没有匹配项的读取操作会成功返回空项。
+- 第一个失败的操作会终止调用。先前操作所做的更改会保留，后续操作会跳过。调用不会回滚。
+- 即使调用只执行读取操作，没有 `_hash` 的节点也会获得哈希。重复的哈希会被替换。已有哈希不会更改。
 
-## Read long content
+## 读取较长内容
 
-A read returns at most `maxChars` characters. When there is more, `complete` is `false` and `next` contains the operation that continues the read. Send `next` as the operation of a new call, and repeat until `next` is `null`:
+读取操作最多返回 `maxChars` 个字符。如果内容更多，`complete` 会为 `false`，并且 `next` 会包含用于继续读取的操作。将 `next` 作为新调用中的操作发送，并重复此过程，直到 `next` 为 `null`：
 
 ```json
 {
@@ -244,78 +244,78 @@ A read returns at most `maxChars` characters. When there is more, `complete` is 
 }
 ```
 
-A node that doesn't fit in a page is returned as text excerpts with `excerpt: true`, and `next` continues inside the same node. A read can therefore need more pages than it has matches, and `totalMatches: 1` doesn't mean that the node was read completely. To see the structure of a large node, read its children or use a larger page.
+如果某个节点无法完整放入页面，则会以文本摘录形式返回，并带有 `excerpt: true`；`next` 会继续读取该节点内部的内容。因此，读取所需的页面数可能多于匹配项数；`totalMatches: 1` 并不表示该节点已完整读取。若要查看大型节点的结构，请读取其子节点或使用更大的页面。
 
-The cursor in `next` stays valid when other parts of the document change, and when a node that was already read keeps its hash. When content that was already read changes in another way, the read fails with `stale_cursor`. Read again without a cursor, or start a range at the last hash you read.
+当文档的其他部分发生更改，且已读取的节点仍保留其哈希时，`next` 中的游标仍然有效。如果已读取的内容以其他方式发生更改，读取操作会以 `stale_cursor` 失败。请在不使用游标的情况下重新读取，或从上次读取的哈希处开始一个范围。
 
-All reads in one call share the `chunkSize` budget. When the budget is spent, the remaining reads return no items, `complete: false` and their `next` operation. Later operations still run.
+同一次调用中的所有读取操作共享 `chunkSize` 预算。预算用尽后，剩余读取操作不会返回任何项，而是返回 `complete: false` 及其 `next` 操作。后续操作仍会运行。
 
-## Tracked changes and comments
+## 跟踪更改和评论
 
-With `reviewOptions: { mode: 'trackedChanges' }`, every edit becomes a suggestion that users can accept or reject, instead of a direct change.
+使用 `reviewOptions: { mode: 'trackedChanges' }` 时，每个编辑都会成为一条建议，供用户接受或拒绝，而不会直接更改文档。
 
-- Reads return the document as if all pending suggestions were accepted.
-- Suggestions of earlier calls are kept when the AI edits other content.
-- `meta` becomes a comment on the suggestions of its operation. Comments require a Tiptap Cloud document and an editor schema that supports comments. Inline documents receive suggestions, but no comments.
-- `setAttrs` rejects attributes that suggestions can't record with `invalid_attributes`. By default, these are `id` and `data-thread-id` (see `ignoreAttributes` in the [review options](/ai/ai-toolkit/api-reference/review-options)).
-- An edit that only changes ignored attributes or marks returns `changed: false` and doesn't change the document.
+- 读取操作会返回仿佛所有待处理建议均已接受的文档。
+- AI 编辑其他内容时，先前调用创建的建议会保留。
+- `meta` 会成为该操作生成的建议上的评论。评论要求文档位于 Tiptap Cloud，且编辑器架构支持评论。内联文档会收到建议，但不会有评论。
+- 如果 `setAttrs` 设置了建议无法记录的属性，则会以 `invalid_attributes` 失败。默认情况下，这些属性为 `id` 和 `data-thread-id`（请参阅[审阅选项](/ai/ai-toolkit/api-reference/review-options)中的 `ignoreAttributes`）。
+- 如果编辑只更改被忽略的属性或标记，则会返回 `changed: false`，且不会更改文档。
 
-## Error codes
+## 错误代码
 
-| Code                  | Cause                                                                                                                                             |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `invalid_input`       | The input doesn't match the schema, for example because of an unknown field or more than 50 operations. No operation runs.                        |
-| `invalid_selector`    | The node type isn't in the schema, a node, range or content step follows a text step, a content step selects a leaf node, or `pick` is ambiguous. |
-| `invalid_range`       | A range endpoint isn't exactly one node in the selected scope, or the endpoints aren't ordered siblings.                                          |
-| `no_matches`          | An edit selected nothing.                                                                                                                         |
-| `unexpected_matches`  | The number of matches differs from `expect`.                                                                                                      |
-| `too_many_matches`    | An edit selected more than 10,000 matches.                                                                                                        |
-| `overlapping_matches` | The matches of an edit overlap.                                                                                                                   |
-| `selection_limit`     | The selectors of the call examined more than 2,000,000 nodes and text matches.                                                                    |
-| `invalid_target`      | The action can't apply to the selection, for example inserting next to a text match or setting attributes on text.                                |
-| `invalid_content`     | The content has the wrong form for the selection or format, or it contains tracked changes.                                                       |
-| `invalid_operation`   | The editor schema rejects the content, or the Tiptap Shorthand can't be parsed. The message lists the issues.                                     |
-| `invalid_attributes`  | An attribute is unknown or reserved, or suggestions can't record it in tracked-changes mode.                                                      |
-| `invalid_mark`        | The mark isn't an ordinary mark of the schema, or the parent node doesn't allow it.                                                               |
-| `invalid_cursor`      | The cursor wasn't returned by the tool or was changed.                                                                                            |
-| `stale_cursor`        | Content that the read already returned has changed.                                                                                               |
-| `output_limit`        | A single item and its continuation don't fit in `maxChars`.                                                                                       |
-| `unsupported_content` | Tiptap Shorthand can't represent the content. Read it with the `text` or `summary` view.                                                          |
+| 代码                  | 原因                                                                                                                                          |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `invalid_input`       | 输入不符合架构，例如包含未知字段或操作数量超过 50 个。不会运行任何操作。                                                                        |
+| `invalid_selector`    | 节点类型不在架构中；文本步骤后跟随节点、范围或内容步骤；内容步骤选取了叶节点；或者 `pick` 存在歧义。                                              |
+| `invalid_range`       | 范围端点在所选范围内没有且仅有一个对应节点，或端点不是顺序正确的同级节点。                                                                         |
+| `no_matches`          | 编辑操作没有选中任何内容。                                                                                                                      |
+| `unexpected_matches`  | 匹配数量与 `expect` 不同。                                                                                                                      |
+| `too_many_matches`    | 编辑操作选中了超过 10,000 个匹配项。                                                                                                            |
+| `overlapping_matches` | 编辑操作的匹配项相互重叠。                                                                                                                      |
+| `selection_limit`     | 调用中的选择器检查了超过 2,000,000 个节点和文本匹配项。                                                                                           |
+| `invalid_target`      | 该操作无法应用于所选内容，例如在文本匹配项旁插入内容，或为文本设置属性。                                                                          |
+| `invalid_content`     | 内容的形式与所选内容或格式不符，或者包含跟踪更改。                                                                                                |
+| `invalid_operation`   | 编辑器架构拒绝该内容，或无法解析 Tiptap Shorthand。消息会列出相关问题。                                                                           |
+| `invalid_attributes`  | 属性未知或为保留属性，或者在跟踪更改模式下建议无法记录该属性。                                                                                    |
+| `invalid_mark`        | 该标记不是架构中的普通标记，或父节点不允许使用该标记。                                                                                            |
+| `invalid_cursor`      | 游标不是由工具返回的，或已被更改。                                                                                                               |
+| `stale_cursor`        | 读取操作已返回的内容发生了更改。                                                                                                                 |
+| `output_limit`        | 单个项及其后续内容无法放入 `maxChars`。                                                                                                           |
+| `unsupported_content` | Tiptap Shorthand 无法表示该内容。请使用 `text` 或 `summary` 视图读取。                                                                            |
 
-## Limits
+## 限制
 
-| Limit                                                      | Value                    |
+| 限制                                                       | 值                       |
 | ---------------------------------------------------------- | ------------------------ |
-| Operations per call                                        | 50                       |
-| Steps per selector                                         | 12                       |
-| Length of `text` and `contains`                            | 10,000 characters        |
-| Length of `meta`                                           | 4,000 characters         |
-| Matches per edit                                           | 10,000                   |
-| Nodes and text matches examined by the selectors of a call | 2,000,000                |
-| Size of a read page (`maxChars`)                           | 512 to 32,000 characters |
-| Characters returned by all reads of a call (`chunkSize`)   | 512 to 32,000 characters |
-| Length of a cursor                                         | 2,048 characters         |
+| 每次调用的操作数                                           | 50                       |
+| 每个选择器的步骤数                                         | 12                       |
+| `text` 和 `contains` 的长度                                | 10,000 个字符            |
+| `meta` 的长度                                              | 4,000 个字符             |
+| 每次编辑的匹配项数                                         | 10,000                   |
+| 调用中的选择器检查的节点和文本匹配项数                     | 2,000,000                |
+| 读取页面大小（`maxChars`）                                 | 512 到 32,000 个字符     |
+| 调用中所有读取操作返回的字符数（`chunkSize`）              | 512 到 32,000 个字符     |
+| 游标长度                                                   | 2,048 个字符             |
 
-## Examples
+## 示例
 
-The examples use a document with these nodes:
+以下示例使用的文档包含这些节点：
 
-| Hash     | Node                                    | Text                                                        |
+| 哈希     | 节点                                    | 文本                                                        |
 | -------- | --------------------------------------- | ----------------------------------------------------------- |
-| `k8Tq2m` | Heading, level 1                        | Launch plan                                                 |
-| `p3Lx7a` | Paragraph                               | This plan covers the beta and the public launch.            |
-| `Q9wE4r` | Heading, level 2                        | Timeline                                                    |
-| `Z2nB6c` | Paragraph                               | The beta starts in March. The public launch follows in May. |
-| `m5Ht8v` | Heading, level 2                        | Risks                                                       |
-| `J7sD1k` | Bullet list                             |                                                             |
-| `x4Pq9w` | List item in `J7sD1k`, with a paragraph | Hiring takes longer than planned.                           |
-| `R1yU5e` | List item in `J7sD1k`, with a paragraph | The scope changes late.                                     |
-| `W3gN7h` | Heading, level 2                        | Contacts                                                    |
-| `t5Mz1q` | Paragraph                               | Product: Ana. Engineering: Ben.                             |
+| `k8Tq2m` | 标题，级别 1                            | Launch plan                                                 |
+| `p3Lx7a` | 段落                                    | This plan covers the beta and the public launch.            |
+| `Q9wE4r` | 标题，级别 2                            | Timeline                                                    |
+| `Z2nB6c` | 段落                                    | The beta starts in March. The public launch follows in May. |
+| `m5Ht8v` | 标题，级别 2                            | Risks                                                       |
+| `J7sD1k` | 项目符号列表                            |                                                             |
+| `x4Pq9w` | `J7sD1k` 中的列表项，包含一个段落       | Hiring takes longer than planned.                           |
+| `R1yU5e` | `J7sD1k` 中的列表项，包含一个段落       | The scope changes late.                                     |
+| `W3gN7h` | 标题，级别 2                            | Contacts                                                    |
+| `t5Mz1q` | 段落                                    | Product: Ana. Engineering: Ben.                             |
 
-### Read the outline
+### 读取大纲
 
-Read every heading with the `summary` view, without loading the body:
+使用 `summary` 视图读取所有标题，而不加载正文：
 
 ```json
 {
@@ -325,7 +325,7 @@ Read every heading with the `summary` view, without loading the body:
 }
 ```
 
-Output:
+输出：
 
 ```json
 {
@@ -349,9 +349,9 @@ Output:
 }
 ```
 
-### Read forward from a heading
+### 从某个标题开始向后读取
 
-Start a range at a heading hash and omit `to` to read until the end of the document. Add `{ "scope": "children" }` to return each node of the range as its own item:
+从标题哈希处开始一个范围，并省略 `to`，即可读取至文档末尾。添加 `{ "scope": "children" }` 可将范围内的每个节点分别作为一项返回：
 
 ```json
 {
@@ -364,11 +364,11 @@ Start a range at a heading hash and omit `to` to read until the end of the docum
 }
 ```
 
-The result contains four items: the `Risks` heading, the bullet list, the `Contacts` heading and its paragraph. A range doesn't stop at the next heading. To read one section only, set `to` to its last node.
+结果包含四项：`Risks` 标题、项目符号列表、`Contacts` 标题及其段落。范围不会在遇到下一个标题时停止。若只读取某个章节，请将 `to` 设为该章节的最后一个节点。
 
-### Find a paragraph and edit it
+### 查找并编辑段落
 
-Search for the paragraphs that contain a text:
+搜索包含某段文本的段落：
 
 ```json
 {
@@ -381,9 +381,9 @@ Search for the paragraphs that contain a text:
 }
 ```
 
-The read returns one item: the paragraph with the hash `Z2nB6c`.
+读取操作会返回一项：哈希为 `Z2nB6c` 的段落。
 
-Then edit the text inside that paragraph with its hash:
+接着使用该段落的哈希编辑其中的文本：
 
 ```json
 {
@@ -397,11 +397,11 @@ Then edit the text inside that paragraph with its hash:
 }
 ```
 
-The edit returns `matched: 1` and `changed: true`. The paragraph now reads "The beta starts in April. The public launch follows in May."
+编辑操作会返回 `matched: 1` 和 `changed: true`。此时段落内容为 "The beta starts in April. The public launch follows in May."。
 
-### Change the type of a node
+### 更改节点类型
 
-To change the type of a node, select the node, not its text, and replace it. This turns the contacts paragraph into a bullet list:
+若要更改节点类型，请选中节点本身，而不是其中的文本，然后替换它。以下操作会将联系人段落转换为项目符号列表：
 
 ```json
 {
@@ -439,9 +439,9 @@ To change the type of a node, select the node, not its text, and replace it. Thi
 }
 ```
 
-### Insert a node
+### 插入节点
 
-Insert a paragraph after another paragraph:
+在一个段落后插入另一个段落：
 
 ```json
 {
@@ -462,11 +462,11 @@ Insert a paragraph after another paragraph:
 }
 ```
 
-The edit returns `matched: 1` and `changed: true`.
+编辑操作会返回 `matched: 1` 和 `changed: true`。
 
-### Handle a failed operation
+### 处理失败的操作
 
-The second operation expects one paragraph with the text "launch", but two paragraphs contain it:
+第二个操作要求找到一个包含文本 "launch" 的段落，但有两个段落包含该文本：
 
 ```json
 {
@@ -482,7 +482,7 @@ The second operation expects one paragraph with the text "launch", but two parag
 }
 ```
 
-Output:
+输出：
 
 ```json
 {
@@ -500,10 +500,10 @@ Output:
 }
 ```
 
-The first operation is kept, so the document now says "April". The third operation doesn't run.
+第一个操作会保留，因此文档现在写着 "April"。第三个操作不会运行。
 
-## Related pages
+## 相关页面
 
 - [REST API](/ai/ai-toolkit/api-reference/rest-api)
-- [Review options](/ai/ai-toolkit/api-reference/review-options)
+- [审阅选项](/ai/ai-toolkit/api-reference/review-options)
 - [Tiptap Shorthand](/ai/ai-toolkit/advanced-guides/tiptap-shorthand)
