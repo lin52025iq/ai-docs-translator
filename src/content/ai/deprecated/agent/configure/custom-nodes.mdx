@@ -1,18 +1,18 @@
 ---
-title: Configure custom nodes and marks
+title: 配置自定义节点和标记
 meta:
-  title: Custom nodes/marks | Tiptap Content AI
-  description: Learn how to configure the AI Agent extension so that it can generate and understand custom nodes and marks.
+  title: 自定义节点/标记 | Tiptap Content AI
+  description: 了解如何配置 AI Agent 扩展，使其能够生成和理解自定义节点和标记。
   category: Content AI
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-The AI Agent extension understands the content of the document and the possible elements (nodes and marks) that can be in it.
+AI Agent 扩展能够理解文档内容，以及文档中可能包含的元素（节点和标记）。
 
-For example, the AI Agent extension detects the [Table](/editor/extensions/nodes/table) extension and knows how to generate tables. If the Table extension is not enabled and the user asks it to generate a table, the AI agent will respond that the document doesn't support this type of element.
+例如，AI Agent 扩展会检测 [Table](/editor/extensions/nodes/table) 扩展，并了解如何生成表格。如果未启用 Table 扩展，而用户要求生成表格，AI Agent 会回应说文档不支持此类元素。
 
-This is automatically done for all built-in Tiptap extensions. However, if you have an editor with [custom nodes and marks](/editor/extensions/custom-extensions), you need to configure the AI Agent extension so that it can generate and understand them.
+所有内置 Tiptap 扩展都会自动完成这项配置。不过，如果你的编辑器包含[自定义节点和标记](/editor/extensions/custom-extensions)，则需要配置 AI Agent 扩展，使其能够生成并理解这些元素。
 
 <CodeDemo
   isPro
@@ -21,18 +21,18 @@ This is automatically done for all built-in Tiptap extensions. However, if you h
   src="https://feature-beta-ai-extensions--tiptap-pro.netlify.app/preview/Extensions/AiAgentCustomElements"
 />
 
-## Configure custom nodes
+## 配置自定义节点
 
-To configure custom nodes for the AI agent, you need to follow these steps:
+要为 AI Agent 配置自定义节点，请按以下步骤操作：
 
-1. Define your custom Tiptap node extension
-2. Configure the AI agent with schema awareness information
+1. 定义自定义 Tiptap 节点扩展
+2. 使用架构感知信息配置 AI Agent
 
-Let's walk through each step with a practical example.
+下面通过一个实际示例逐步介绍。
 
-### Step 1: Define a custom Tiptap node extension
+### 步骤 1：定义自定义 Tiptap 节点扩展
 
-First, create your custom node extension. Here's an example of a custom "Alert" node:
+首先，创建自定义节点扩展。下面是一个自定义“Alert”节点的示例：
 
 ```ts
 import { Node, mergeAttributes } from '@tiptap/core'
@@ -83,7 +83,7 @@ export const AlertNode = Node.create({
 })
 ```
 
-Add the extension to your editor:
+将扩展添加到编辑器中：
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -97,9 +97,9 @@ const editor = new Editor({
 })
 ```
 
-### Step 2: Configure the AI Agent extension
+### 步骤 2：配置 AI Agent 扩展
 
-Now configure the AI Agent extension with schema awareness information about your custom node:
+现在，使用有关自定义节点的架构感知信息来配置 AI Agent 扩展：
 
 ```ts
 const provider = new AiAgentProvider({
@@ -128,9 +128,9 @@ const provider = new AiAgentProvider({
 })
 ```
 
-## Multiple custom elements
+## 多个自定义元素
 
-You can configure multiple custom nodes and marks at once. Here's an example with both an Alert node and a custom highlight marks:
+你可以一次配置多个自定义节点和标记。下面的示例同时配置了 Alert 节点和自定义高亮标记：
 
 ```ts
 const provider = new AiAgentProvider({
@@ -170,38 +170,38 @@ const provider = new AiAgentProvider({
 })
 ```
 
-## Best practices
+## 最佳实践
 
-When configuring custom nodes and marks for the AI Agent extension:
+为 AI Agent 扩展配置自定义节点和标记时：
 
-1. **Use descriptive names**: Choose clear, descriptive names that help the AI model understand what the element represents.
+1. **使用描述性名称**：选择清晰、具体的名称，帮助 AI 模型理解元素所代表的含义。
 
-2. **Provide detailed descriptions**: Include comprehensive descriptions that explain both what the element is and how it's displayed or used.
+2. **提供详细描述**：全面说明元素是什么，以及它如何显示或使用。
 
-3. **Document all attributes**: List all possible HTML attributes with their purposes and expected values.
+3. **记录所有属性**：列出所有可能的 HTML 属性，并说明其用途和预期值。
 
-4. **Use consistent naming**: Match the `extensionName` with your actual Tiptap extension name.
+4. **使用一致的命名**：确保 `extensionName` 与实际的 Tiptap 扩展名称一致。
 
-5. **Specify HTML structure**: Ensure `tag` and `atributes` match exactly how your extension renders HTML.
+5. **指定 HTML 结构**：确保 `tag` 和 `atributes` 与扩展实际渲染的 HTML 完全一致。
 
-## API Reference
+## API 参考
 
-The `schemaAwarenessCustomElements` option accepts an array of `SchemaAwarenessItem` objects with the following properties:
+`schemaAwarenessCustomElements` 选项接受一个 `SchemaAwarenessItem` 对象数组，每个对象包含以下属性：
 
-| Property        | Type                             | Required | Description                                               |
+| 属性 | 类型 | 必填 | 说明 |
 | --------------- | -------------------------------- | -------- | --------------------------------------------------------- |
-| `extensionName` | `string`                         | Yes      | The name of the Tiptap extension (must match exactly)     |
-| `tag`           | `string`                         | Yes      | The HTML tag or selector that represents this element     |
-| `name`          | `string`                         | Yes      | A human-readable name for the element                     |
-| `description`   | `string \| null`                 | No       | Explanation of what the element is and how it's displayed |
-| `attributes`    | `SchemaAwarenessItemAttribute[]` | No       | Array of possible HTML attributes for this element        |
+| `extensionName` | `string` | 是 | Tiptap 扩展的名称（必须完全匹配） |
+| `tag` | `string` | 是 | 表示此元素的 HTML 标签或选择器 |
+| `name` | `string` | 是 | 易于理解的元素名称 |
+| `description` | `string \| null` | 否 | 对元素内容及其显示方式的说明 |
+| `attributes` | `SchemaAwarenessItemAttribute[]` | 否 | 此元素可能包含的 HTML 属性数组 |
 
 ### SchemaAwarenessItemAttribute
 
-Each attribute object in the `attributes` array has the following properties:
+`attributes` 数组中的每个属性对象都包含以下属性：
 
-| Property      | Type             | Required | Description                                                |
+| 属性 | 类型 | 必填 | 说明 |
 | ------------- | ---------------- | -------- | ---------------------------------------------------------- |
-| `name`        | `string`         | Yes      | The name of the attribute in the HTML code                 |
-| `value`       | `string`         | No       | If specified, the attribute always has this exact value    |
-| `description` | `string \| null` | No       | Explanation of the attribute's purpose and expected values |
+| `name` | `string` | 是 | HTML 代码中的属性名称 |
+| `value` | `string` | 否 | 如果指定，该属性始终具有此确切值 |
+| `description` | `string \| null` | 否 | 对属性用途和预期值的说明 |
