@@ -71,7 +71,7 @@ const SearchContent = () => {
   const search = useInstantSearch()
   const query = search.indexRenderState.searchBox?.query || ''
 
-  // Re-rank hits: prefer lvl0 titles that cover all query tokens, then any hierarchy coverage
+  // 重新排列搜索结果：优先显示覆盖所有查询词的 lvl0 标题，其次显示层级中包含全部查询词的结果
   const rankedHits = useMemo(() => {
     if (!query || hits.hits.length === 0) return hits.hits
 
@@ -142,7 +142,7 @@ const SearchContent = () => {
       <SearchBox
         autoFocus
         className="flex-none"
-        placeholder="Search the documentation…"
+        placeholder="搜索文档…"
         onKeyUp={onKeyDown}
         onSubmit={handleSubmit}
         classNames={{
@@ -168,7 +168,7 @@ const SearchContent = () => {
         {query && rankedHits.length === 0 ? (
           <div className="flex items-center justify-center p-2 mt-2">
             <span className="text-grayAlpha-400">
-              No results found for <strong>{query}</strong>
+              未找到与 <strong>{query}</strong> 相关的结果
             </span>
           </div>
         ) : null}
