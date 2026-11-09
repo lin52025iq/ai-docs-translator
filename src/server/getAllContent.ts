@@ -2,8 +2,8 @@ import fg from 'fast-glob'
 import { cache } from 'react'
 
 /**
- * Gets all content MDX files from the content directory via fast-glob.
- * Cached per-request to avoid duplicate file system scans.
+ * 使用 fast-glob 从内容目录获取所有 MDX 文件。
+ * 按请求缓存，以避免重复扫描文件系统。
  */
 export const getAllContent = cache(async () => {
   const files = await fg('src/content/**/*.mdx')
