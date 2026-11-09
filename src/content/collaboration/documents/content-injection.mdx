@@ -1,89 +1,89 @@
 ---
-title: Inject content REST API
+title: 注入内容 REST API
 tags:
   - type: team
 meta:
-  title: Inject content API | Tiptap Collaboration Docs
-  description: Manage your Collaboration documents with JSON updates using the Inject Content API. Learn more in our docs!
-  category: Collaboration
+  title: 注入内容 API | Tiptap 协作文档
+  description: 使用注入内容 API 通过 JSON 更新管理协作文档。欢迎在文档中了解详情！
+  category: 协作
 ---
 
 import { Requirements, RequirementItem } from '@/components/Requirements'
 
-To inject content into documents server-side, use the PATCH endpoint described in this document. This feature supports version history, tracking changes as well as content added through this endpoint.
+若要在服务器端向文档注入内容，请使用本文介绍的 PATCH 端点。此功能支持版本历史记录、变更跟踪，也支持跟踪通过此端点添加的内容。
 
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Team plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 激活试用或订阅">
+        在账户中开始[免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Team 计划](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Start Document server">
-        [Add an Environment](https://cloud.tiptap.dev/v2/configuration/document-server) in your dashboard and configure your [Document server](https://cloud.tiptap.dev/v2/configuration/document-server).
+    <RequirementItem label="2. 启动文档服务器">
+        在控制面板中[添加环境](https://cloud.tiptap.dev/v2/configuration/document-server)，并配置[文档服务器](https://cloud.tiptap.dev/v2/configuration/document-server)。
     </RequirementItem>
-    <RequirementItem label="3. Authenticate">
-        Sign a token carrying `Documents:Api:All` and send it as `Authorization: Bearer <jwt>`. See [Authentication](/authentication). Keep this token server-side.
+    <RequirementItem label="3. 进行身份验证">
+        签发一个包含 `Documents:Api:All` 权限的令牌，并通过 `Authorization: Bearer <jwt>` 发送。请参阅[身份验证](/authentication)。请将此令牌保存在服务器端。
     </RequirementItem>
 </Requirements>
 
-The update document endpoint also allows JSON updates to modify documents on your Collaboration server, both On-Premises and Cloud:
+更新文档端点还允许通过 JSON 更新来修改本地部署和云端的协作服务器上的文档：
 
-- Add `json`, `binary`, or `base64` content to any document server-side.
-- Inject content into specific nodes using the [UniqueID extension](/editor/extensions/functionality/uniqueid).
-- Users can still collaborate in real-time as content is injected.
-- Track user and injected content changes, fully compatible with [Snapshots](/collaboration/documents/snapshot).
+- 在服务器端向任意文档添加 `json`、`binary` 或 `base64` 内容。
+- 使用 [UniqueID 扩展](/editor/extensions/functionality/uniqueid)向特定节点注入内容。
+- 注入内容时，用户仍可实时协作。
+- 跟踪用户变更和注入的内容变更，并与[快照](/collaboration/documents/snapshot)完全兼容。
 
-### Use cases
+### 使用场景
 
-The content injection REST API enables a couple of handy but sophisticated use cases:
+内容注入 REST API 可支持一些实用且复杂的使用场景：
 
-- Live translation of document content.
-- Programmatically tagging or manipulating document content server-side.
-- Integrating server-side components, like executing SQL queries and displaying results.
-- Version history integration and conflict-free merging of concurrent edits.
+- 实时翻译文档内容。
+- 以编程方式在服务器端标记或操作文档内容。
+- 集成服务器端组件，例如执行 SQL 查询并显示结果。
+- 集成版本历史记录，并无冲突地合并并发编辑。
 
-## Create a document
+## 创建文档
 
-To seed a new document on the Tiptap Collab server, use the `POST` method with the following endpoint:
+若要在 Tiptap Collab 服务器上创建新文档，请使用 `POST` 方法和以下端点：
 
 ```bash
 POST /api/documents/:identifier?format=:format
 ```
 
-The server will return HTTP status `204` for successful creation, `409` if the document already exists (you must delete it first to overwrite), and `422` if the action failed.
+成功创建时，服务器将返回 HTTP 状态码 `204`；如果文档已存在，则返回 `409`（若要覆盖，必须先删除该文档）；如果操作失败，则返回 `422`。
 
-The `format` parameter accepts the same values as the update endpoint (`binary`, `base64`, or `json`).
+`format` 参数接受与更新端点相同的值（`binary`、`base64` 或 `json`）。
 
 
-## Update a document
+## 更新文档
 
-To update an existing document on the Collaboration server, you can use the `PATCH` method with the following API endpoint:
+若要更新协作服务器上已有的文档，可以使用 `PATCH` 方法和以下 API 端点：
 
 ```bash
 PATCH /api/documents/:identifier?format=:format
 ```
 
-This endpoint accepts a Yjs update message and applies it to the specified document.
+此端点接受 Yjs 更新消息，并将其应用于指定文档。
 
-### Query parameters
+### 查询参数
 
-| Parameter | Type | Default | Description |
+| 参数 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `format` | `string` | — | The format of the update: `json`, `binary` (Yjs's `Y.encodeStateAsUpdate`), or `base64` (binary state encoded as Base64). |
-| `mode` | `string` | `default` | The update strategy: `default` merges nodes, `append` appends only, `node` replaces matched nodes with the payload, `attrs` replaces attributes of matched nodes, `delete` deletes matched nodes (no payload needed). See [modes](#modes). |
-| `nodeAttributeName` | `string` | — | Limit the update to nodes with an attribute of this name. Used together with `nodeAttributeValue`. |
-| `nodeAttributeValue` | `string` | — | Limit the update to nodes with an attribute of this value. Used together with `nodeAttributeName`. You can pass multiple values: `?nodeAttributeValue=a&nodeAttributeValue=b`. |
-| `checksum` | `string` | — | Only apply the update if the document's current state matches this checksum (returned as `x-FRAGMENTNAME-checksum` in the get document response). Returns `409 Checksum mismatch` otherwise. |
-| `user` | `string` | — | User ID to associate with the change. |
-| `skipVersioning` | `1` | — | If passed, auto versioning won't be triggered by this change. |
-| `upsert` | `0` \| `1` | `0` | When `1`, the document is created if it doesn't exist yet, instead of returning `404`. |
-| `fragment` | `string` | `default` | Yjs fragment to update. You can update multiple fragments with the same content (when `format=json`) by passing multiple values: `?fragment=a&fragment=b`. |
-| `multi` | `0` \| `1` | `0` | Only used with `format=json`. When `1`, the request body is a JSON object keyed by fragment name, updating multiple fragments with different content in a single request. Only compatible with the default mode. See [Update multiple fragments with different content](#update-multiple-fragments-with-different-content). |
-| `mergeAttributes` | `0` \| `1` | `0` | Only used with `mode=attrs`. When `1`, attributes not included in the request payload are preserved. When `0` (default), missing attributes are deleted. |
-| `multiUpdates` | `true` | — | Only used with `mode=attrs` and `format=json`. Enables updating multiple nodes with different attribute values in a single request. The request body must be a JSON array of `{ where, attrs }` objects. See [Multi updates](#multi-updates). |
+| `format` | `string` | — | 更新内容的格式：`json`、`binary`（Yjs 的 `Y.encodeStateAsUpdate`）或 `base64`（以 Base64 编码的二进制状态）。 |
+| `mode` | `string` | `default` | 更新策略：`default` 合并节点，`append` 仅追加，`node` 用负载替换匹配的节点，`attrs` 替换匹配节点的属性，`delete` 删除匹配的节点（无需负载）。请参阅[模式](#modes)。 |
+| `nodeAttributeName` | `string` | — | 仅对具有此名称属性的节点执行更新。与 `nodeAttributeValue` 一起使用。 |
+| `nodeAttributeValue` | `string` | — | 仅对具有此属性值的节点执行更新。与 `nodeAttributeName` 一起使用。可以传入多个值：`?nodeAttributeValue=a&nodeAttributeValue=b`。 |
+| `checksum` | `string` | — | 仅当文档当前状态与此校验和匹配时才应用更新（在获取文档的响应中以 `x-FRAGMENTNAME-checksum` 返回）。否则返回 `409 Checksum mismatch`。 |
+| `user` | `string` | — | 与此次变更关联的用户 ID。 |
+| `skipVersioning` | `1` | — | 如果传入此参数，此次变更不会触发自动版本管理。 |
+| `upsert` | `0` \| `1` | `0` | 设为 `1` 时，如果文档尚不存在，则创建文档，而不是返回 `404`。 |
+| `fragment` | `string` | `default` | 要更新的 Yjs 片段。传入多个值可将相同内容（`format=json` 时）更新到多个片段：`?fragment=a&fragment=b`。 |
+| `multi` | `0` \| `1` | `0` | 仅用于 `format=json`。设为 `1` 时，请求正文是一个以片段名称为键的 JSON 对象，可在单个请求中更新多个片段的不同内容。仅兼容默认模式。请参阅[使用不同内容更新多个片段](#update-multiple-fragments-with-different-content)。 |
+| `mergeAttributes` | `0` \| `1` | `0` | 仅用于 `mode=attrs`。设为 `1` 时，保留请求负载中未包含的属性。设为 `0`（默认值）时，删除缺失的属性。 |
+| `multiUpdates` | `true` | — | 仅用于 `mode=attrs` 和 `format=json`。允许在单个请求中使用不同属性值更新多个节点。请求正文必须是由 `{ where, attrs }` 对象组成的 JSON 数组。请参阅[多项更新](#multi-updates)。 |
 
-Upon successful update, the server will return HTTP status `204`. If the document does not exist, it will return `404` (unless `upsert=1` is passed, in which case the document is created), and if the payload is invalid or the update cannot be applied, it will return `422`.
+更新成功时，服务器将返回 HTTP 状态码 `204`。如果文档不存在，则返回 `404`（除非传入 `upsert=1`，此时将创建文档）；如果负载无效或无法应用更新，则返回 `422`。
 
-**Example:** `curl` command to update a document
+**示例：**使用 `curl` 命令更新文档
 
 ```bash
 curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/DOCUMENT_NAME' \\
@@ -91,29 +91,28 @@ curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/doc
 --data '@yjsUpdate.binary'
 ```
 
-## Update via JSON
+## 通过 JSON 更新
 
-When updating via JSON, the server computes the difference between the current document state and the provided JSON, then internally calculates the required Yjs update to reach the target state.
+通过 JSON 更新时，服务器会计算当前文档状态与提供的 JSON 之间的差异，然后在内部计算出达到目标状态所需的 Yjs 更新。
 
-To ensure precise updates, especially for node-specific changes, it is recommended to use the `nodeAttributeName` and `nodeAttributeValue` parameters. These can be generated by Tiptap's [UniqueID Extension](/editor/extensions/functionality/uniqueid) or a custom implementation.
-Note that this only works for top level nodes when using mode=default.
+为确保更新准确，特别是在进行特定节点的变更时，建议使用 `nodeAttributeName` 和 `nodeAttributeValue` 参数。可通过 Tiptap 的 [UniqueID 扩展](/editor/extensions/functionality/uniqueid)或自定义实现生成这些参数。
+请注意，使用 `mode=default` 时，此功能仅适用于顶层节点。
 
-Omitting these parameters may result in overwriting any updates made between fetching the document and issuing the update call. The `get document` call returns a header `x-${fragmentName}-checksum` which can be used to detect conflicts by passing
-it to the update call as `?checksum=${checksum}`. If the document has been updated since the last fetch, the update will fail with a `409 Checksum mismatch.` status.
-The [`document.saved` and `content.changed` webhooks](/collaboration/core-concepts/webhooks#conflict-safe-updates-from-a-webhook) carry the same checksum for every field in their `checksums` object, so you can update a document right after its webhook without fetching it first.
+省略这些参数可能会覆盖获取文档后、发起更新调用前产生的任何更新。`get document` 调用会返回一个 `x-${fragmentName}-checksum` 标头，可通过在更新调用中传入 `?checksum=${checksum}` 来检测冲突。如果自上次获取文档后文档已更新，更新将失败，并返回 `409 Checksum mismatch.` 状态。
+[`document.saved` 和 `content.changed` Webhook](/collaboration/core-concepts/webhooks#conflict-safe-updates-from-a-webhook) 会在其 `checksums` 对象中为每个字段携带相同的校验和，因此收到 Webhook 后，无需先获取文档即可立即更新。
 
-### Modes
+### 模式
 
-The `mode` parameter controls how content is applied to the document:
+`mode` 参数用于控制内容如何应用到文档：
 
-#### Default mode
+#### 默认模式
 
-Merges nodes from the payload into the document. This is the default behavior when no mode is specified.
+将负载中的节点合并到文档中。未指定模式时，默认采用此行为。
 
 ```bash
-curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json' \
---header 'Authorization: Bearer YOUR_JWT' \
---header 'Content-Type: application/json' \
+curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json' \\
+--header 'Authorization: Bearer YOUR_JWT' \\
+--header 'Content-Type: application/json' \\
 --data '{
   "type": "doc",
   "content": [
@@ -125,14 +124,14 @@ curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/doc
 }'
 ```
 
-#### Append mode
+#### 追加模式
 
-Appends nodes to the document's JSON representation without altering existing nodes.
+将节点追加到文档的 JSON 表示中，不修改现有节点。
 
 ```bash
-curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&mode=append' \
---header 'Authorization: Bearer YOUR_JWT' \
---header 'Content-Type: application/json' \
+curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&mode=append' \\
+--header 'Authorization: Bearer YOUR_JWT' \\
+--header 'Content-Type: application/json' \\
 --data '{
   "type": "doc",
   "content": [
@@ -144,14 +143,14 @@ curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/doc
 }'
 ```
 
-#### Node mode
+#### 节点模式
 
-Replaces the node matching `nodeAttributeName`/`nodeAttributeValue` with the node in the payload.
+将与 `nodeAttributeName`/`nodeAttributeValue` 匹配的节点替换为负载中的节点。
 
 ```bash
-curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&mode=node&nodeAttributeName=id&nodeAttributeValue=abc-123' \
---header 'Authorization: Bearer YOUR_JWT' \
---header 'Content-Type: application/json' \
+curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&mode=node&nodeAttributeName=id&nodeAttributeValue=abc-123' \\
+--header 'Authorization: Bearer YOUR_JWT' \\
+--header 'Content-Type: application/json' \\
 --data '{
   "type": "paragraph",
   "attrs": { "id": "abc-123" },
@@ -159,39 +158,39 @@ curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/doc
 }'
 ```
 
-#### Attrs mode
+#### 属性模式
 
-Replaces attributes of all matched nodes with the request payload (send just the attribute object). See [Update only node attrs](#update-only-node-attrs) for details on `mergeAttributes`.
+使用请求负载替换所有匹配节点的属性（仅发送属性对象）。有关 `mergeAttributes` 的详细信息，请参阅[仅更新节点属性](#update-only-node-attrs)。
 
 ```bash
-curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&mode=attrs&nodeAttributeName=id&nodeAttributeValue=abc-123' \
---header 'Authorization: Bearer YOUR_JWT' \
---header 'Content-Type: application/json' \
+curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&mode=attrs&nodeAttributeName=id&nodeAttributeValue=abc-123' \\
+--header 'Authorization: Bearer YOUR_JWT' \\
+--header 'Content-Type: application/json' \\
 --data '{
   "textAlign": "center",
   "indent": 2
 }'
 ```
 
-#### Delete mode
+#### 删除模式
 
-Deletes nodes matching `nodeAttributeName`/`nodeAttributeValue`. No payload is needed.
+删除与 `nodeAttributeName`/`nodeAttributeValue` 匹配的节点。无需提供负载。
 
 ```bash
-curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&mode=delete&nodeAttributeName=id&nodeAttributeValue=abc-123' \
+curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&mode=delete&nodeAttributeName=id&nodeAttributeValue=abc-123' \\
 --header 'Authorization: Bearer YOUR_JWT'
 ```
 
-### Useful parameter combinations
+### 常用参数组合
 
-#### Track who made a change
+#### 跟踪变更者
 
-Associate a user ID with the injected content, useful for audit trails and version history.
+将用户 ID 与注入的内容关联，便于进行审计和查看版本历史记录。
 
 ```bash
-curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&user=bot-user-1' \
---header 'Authorization: Bearer YOUR_JWT' \
---header 'Content-Type: application/json' \
+curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&user=bot-user-1' \\
+--header 'Authorization: Bearer YOUR_JWT' \\
+--header 'Content-Type: application/json' \\
 --data '{
   "type": "doc",
   "content": [
@@ -203,14 +202,14 @@ curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/doc
 }'
 ```
 
-#### Skip auto versioning
+#### 跳过自动版本管理
 
-Inject content without creating a new version snapshot.
+注入内容，但不创建新的版本快照。
 
 ```bash
-curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&skipVersioning=1' \
---header 'Authorization: Bearer YOUR_JWT' \
---header 'Content-Type: application/json' \
+curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&skipVersioning=1' \\
+--header 'Authorization: Bearer YOUR_JWT' \\
+--header 'Content-Type: application/json' \\
 --data '{
   "type": "doc",
   "content": [
@@ -222,15 +221,15 @@ curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/doc
 }'
 ```
 
-#### Update a specific fragment
+#### 更新特定片段
 
-Target a specific Yjs fragment instead of the default one, or update multiple fragments at once.
+指定要更新的 Yjs 片段，而不是使用默认片段；也可以一次更新多个片段。
 
 ```bash
 # Update a single fragment
-curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&fragment=sidebar' \
---header 'Authorization: Bearer YOUR_JWT' \
---header 'Content-Type: application/json' \
+curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&fragment=sidebar' \\
+--header 'Authorization: Bearer YOUR_JWT' \\
+--header 'Content-Type: application/json' \\
 --data '{
   "type": "doc",
   "content": [
@@ -244,9 +243,9 @@ curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/doc
 
 ```bash
 # Update multiple fragments with the same content
-curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&fragment=header&fragment=footer' \
---header 'Authorization: Bearer YOUR_JWT' \
---header 'Content-Type: application/json' \
+curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&fragment=header&fragment=footer' \\
+--header 'Authorization: Bearer YOUR_JWT' \\
+--header 'Content-Type: application/json' \\
 --data '{
   "type": "doc",
   "content": [
@@ -258,18 +257,18 @@ curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/doc
 }'
 ```
 
-#### Update multiple fragments with different content
+#### 使用不同内容更新多个片段
 
-To update several fragments with **different** content in a single request, pass `multi=1` (with `format=json`) and send a JSON object keyed by fragment name. Each value is the full Tiptap JSON content for that fragment, and is merged into that fragment using the default mode.
+若要在单个请求中使用**不同**内容更新多个片段，请传入 `multi=1`（同时使用 `format=json`），并发送一个以片段名称为键的 JSON 对象。每个值都是该片段完整的 Tiptap JSON 内容，并使用默认模式合并到该片段中。
 
-Unlike `?fragment=a&fragment=b` (which applies the *same* payload to each listed fragment), `multi=1` lets you send distinct content per fragment.
+与 `?fragment=a&fragment=b`（将*相同*负载应用于每个列出的片段）不同，`multi=1` 允许为每个片段发送不同内容。
 
-`multi=1` only works with the default mode. It cannot be combined with `mode`, `nodeAttributeName`/`nodeAttributeValue`, `checksum`, or `multiUpdates` — doing so returns `400`. It can be combined with `user`, `skipVersioning`, and `upsert`.
+`multi=1` 仅适用于默认模式。它不能与 `mode`、`nodeAttributeName`/`nodeAttributeValue`、`checksum` 或 `multiUpdates` 组合使用，否则将返回 `400`。它可以与 `user`、`skipVersioning` 和 `upsert` 组合使用。
 
 ```bash
-curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&multi=1' \
---header 'Authorization: YOUR_SECRET' \
---header 'Content-Type: application/json' \
+curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&multi=1' \\
+--header 'Authorization: YOUR_SECRET' \\
+--header 'Content-Type: application/json' \\
 --data '{
   "default": {
     "type": "doc",
@@ -286,16 +285,16 @@ curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/doc
 }'
 ```
 
-#### Conflict-safe update with checksum
+#### 使用校验和进行冲突安全更新
 
-Only apply the update if the document hasn't changed since you last fetched it.
+仅当文档自上次获取后未发生变更时，才应用更新。
 
 ```bash
 # 1. Fetch the document and note the checksum header (x-default-checksum). The header is present when fetching the document with ?format=json. If you want to get the checksum for a different fragment, send &fragment=customfragmentname
 # 2. Use the checksum in the update call
-curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&checksum=THE_CHECKSUM_VALUE' \
---header 'Authorization: Bearer YOUR_JWT' \
---header 'Content-Type: application/json' \
+curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&checksum=THE_CHECKSUM_VALUE' \\
+--header 'Authorization: Bearer YOUR_JWT' \\
+--header 'Content-Type: application/json' \\
 --data '{
   "type": "doc",
   "content": [
@@ -307,22 +306,22 @@ curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/doc
 }'
 ```
 
-#### Merge attributes without deleting existing ones
+#### 合并属性而不删除现有属性
 
-Update specific attributes on matched nodes while preserving all other existing attributes.
+更新匹配节点的指定属性，同时保留其他所有现有属性。
 
 ```bash
-curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&mode=attrs&nodeAttributeName=id&nodeAttributeValue=abc-123&mergeAttributes=1' \
---header 'Authorization: Bearer YOUR_JWT' \
---header 'Content-Type: application/json' \
+curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&mode=attrs&nodeAttributeName=id&nodeAttributeValue=abc-123&mergeAttributes=1' \\
+--header 'Authorization: Bearer YOUR_JWT' \\
+--header 'Content-Type: application/json' \\
 --data '{
   "textAlign": "center"
 }'
 ```
 
-### Full example
+### 完整示例
 
-**Example:** Updating a document using JSON
+**示例：**使用 JSON 更新文档
 
 ```typescript
 // Define the document name, secret, and application ID
@@ -432,33 +431,33 @@ await axios.patch(`${url}/api/documents/${docName}?format=json`, tiptapJson, {
 })
 ```
 
-### Update only node attrs
+### 仅更新节点属性
 
-If you want to only update attributes of a node, you can use the `?mode=attrs` query parameter. This will only update the attributes of the node and not its content.
-In this mode, the `nodeAttributeName` and `nodeAttributeValue` parameters work for any (not just top level) nodes.
+若只想更新节点的属性，可以使用 `?mode=attrs` 查询参数。此模式只更新节点属性，不会更改节点内容。
+在此模式下，`nodeAttributeName` 和 `nodeAttributeValue` 参数适用于任意节点（不仅限于顶层节点）。
 
-By default, all attributes on matched nodes are replaced — attributes not included in the payload are deleted. To preserve existing attributes and only update those specified in the payload, pass `?mergeAttributes=1`.
+默认情况下，匹配节点的所有属性都会被替换——未包含在负载中的属性将被删除。若要保留现有属性，仅更新负载中指定的属性，请传入 `?mergeAttributes=1`。
 
-Not specifying a node filter (`nodeAttributeName`, `nodeAttributeValue`) will result in all nodes being updated.
+如果不指定节点筛选条件（`nodeAttributeName`、`nodeAttributeValue`），则会更新所有节点。
 
 ```
-curl --location --request PATCH '/api/documents/:identifier?format=json&nodeAttributeName=id&nodeAttributeValue=12&mode=attrs' \
+curl --location --request PATCH '/api/documents/:identifier?format=json&nodeAttributeName=id&nodeAttributeValue=12&mode=attrs' \\
 --data '{
   "indent": 12,
   "textAlign": "right"
 }'
 ```
 
-### Multi updates
+### 多项更新
 
-When using `mode=attrs`, you can update multiple nodes with different attribute values in a single request by passing `multiUpdates=true`. Instead of targeting nodes with `nodeAttributeName`/`nodeAttributeValue` query parameters, you provide an array of update objects in the request body. Each object specifies a `where` clause to match nodes and the `attrs` to apply.
+使用 `mode=attrs` 时，可以通过传入 `multiUpdates=true`，在单个请求中使用不同的属性值更新多个节点。此时，不使用 `nodeAttributeName`/`nodeAttributeValue` 查询参数来指定目标节点，而是在请求正文中提供一个更新对象数组。每个对象都指定用于匹配节点的 `where` 条件，以及要应用的 `attrs`。
 
-All conditions within a `where` clause are connected using AND logic — a node must match every specified attribute to be updated.
+`where` 条件中的所有条件都通过 AND 逻辑连接——节点必须匹配每个指定属性才会被更新。
 
 ```bash
-curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&mode=attrs&multiUpdates=true' \
---header 'Authorization: Bearer YOUR_JWT' \
---header 'Content-Type: application/json' \
+curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&mode=attrs&multiUpdates=true' \\
+--header 'Authorization: Bearer YOUR_JWT' \\
+--header 'Content-Type: application/json' \\
 --data '[
   {
     "where": {
@@ -479,12 +478,12 @@ curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/doc
 ]'
 ```
 
-You can combine `multiUpdates` with other parameters like `user`, `skipVersioning`, `fragment`, and `mergeAttributes`:
+可以将 `multiUpdates` 与 `user`、`skipVersioning`、`fragment` 和 `mergeAttributes` 等其他参数组合使用：
 
 ```bash
-curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&mode=attrs&multiUpdates=true&user=bot-user-1&mergeAttributes=1' \
---header 'Authorization: Bearer YOUR_JWT' \
---header 'Content-Type: application/json' \
+curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc?format=json&mode=attrs&multiUpdates=true&user=bot-user-1&mergeAttributes=1' \\
+--header 'Authorization: Bearer YOUR_JWT' \\
+--header 'Content-Type: application/json' \\
 --data '[
   {
     "where": {
@@ -506,57 +505,57 @@ curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/doc
 ]'
 ```
 
-## Document fields
+## 文档字段
 
-These endpoints allow you to read and update custom Yjs fields on a document. This is useful when you use custom Yjs types (e.g. `Y.getMap('configuration')`) and want to get or update values via the API.
+这些端点允许读取和更新文档上的自定义 Yjs 字段。如果使用自定义 Yjs 类型（例如 `Y.getMap('configuration')`），并希望通过 API 获取或更新值，这些端点会非常有用。
 
-### Get a document field
+### 获取文档字段
 
 ```bash
 GET /api/documents/:identifier/fields?field=:field&type=:type
 ```
 
-Returns the current value of a custom Yjs field.
+返回自定义 Yjs 字段的当前值。
 
-#### Query parameters
+#### 查询参数
 
-| Parameter | Type | Default | Description |
+| 参数 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `field` | `string` | — | The name of the custom field. |
-| `type` | `string` | — | The Yjs type of the custom field. Supported values: `map`, `array`. Passing the wrong type will return incorrect results. Note that calling this endpoint will create the type on the document if it does not exist. Switching the type for the same field name will create unintended side effects. |
+| `field` | `string` | — | 自定义字段的名称。 |
+| `type` | `string` | — | 自定义字段的 Yjs 类型。支持的值：`map`、`array`。传入错误的类型会导致结果不正确。请注意，如果文档上尚不存在此类型，调用此端点会创建该类型。为同一个字段名称切换类型可能会产生意外副作用。 |
 
 ```bash
-curl --location 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc/fields?field=configuration&type=map' \
+curl --location 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc/fields?field=configuration&type=map' \\
 --header 'Authorization: Bearer YOUR_JWT'
 ```
 
-### Update a document field
+### 更新文档字段
 
 ```bash
 PATCH /api/documents/:identifier/fields?field=:field&type=:type
 PUT /api/documents/:identifier/fields?field=:field&type=:type
 ```
 
-Updates a custom Yjs field on the document.
+更新文档上的自定义 Yjs 字段。
 
-- **`PATCH`** merges the request body into the existing field values — only the keys you send are updated, existing keys are preserved.
-- **`PUT`** replaces the field entirely — keys not present in the request body are removed.
+- **`PATCH`** 将请求正文合并到现有字段值中——只更新发送的键，并保留现有键。
+- **`PUT`** 完全替换该字段——删除请求正文中未包含的键。
 
-#### Query parameters
+#### 查询参数
 
-| Parameter | Type | Default | Description |
+| 参数 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `field` | `string` | — | The name of the custom field. |
-| `type` | `string` | — | The Yjs type of the custom field. Only `map` is supported for updates at the moment. |
-| `user` | `string` | — | User ID to associate with the change. |
-| `skipVersioning` | `1` | — | If passed, auto versioning won't be triggered by this change. |
+| `field` | `string` | — | 自定义字段的名称。 |
+| `type` | `string` | — | 自定义字段的 Yjs 类型。目前更新操作仅支持 `map`。 |
+| `user` | `string` | — | 与此次变更关联的用户 ID。 |
+| `skipVersioning` | `1` | — | 如果传入此参数，此次变更不会触发自动版本管理。 |
 
-#### Example: Merge values with PATCH
+#### 示例：使用 PATCH 合并值
 
 ```bash
-curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc/fields?field=configuration&type=map' \
---header 'Authorization: Bearer YOUR_JWT' \
---header 'Content-Type: application/json' \
+curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc/fields?field=configuration&type=map' \\
+--header 'Authorization: Bearer YOUR_JWT' \\
+--header 'Content-Type: application/json' \\
 --data '{
   "key": "newValue",
   "array": [1, 2, 3],
@@ -570,15 +569,15 @@ curl --location --request PATCH 'https://YOUR_APP_ID.collab.tiptap.cloud/api/doc
 }'
 ```
 
-#### Example: Replace all values with PUT
+#### 示例：使用 PUT 替换所有值
 
 ```bash
-curl --location --request PUT 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc/fields?field=configuration&type=map' \
---header 'Authorization: Bearer YOUR_JWT' \
---header 'Content-Type: application/json' \
+curl --location --request PUT 'https://YOUR_APP_ID.collab.tiptap.cloud/api/documents/my-doc/fields?field=configuration&type=map' \\
+--header 'Authorization: Bearer YOUR_JWT' \\
+--header 'Content-Type: application/json' \\
 --data '{
   "key": "newValue"
 }'
 ```
 
-Any existing keys not included in the `PUT` body will be removed from the field.
+`PUT` 正文中未包含的任何现有键都会从字段中删除。
