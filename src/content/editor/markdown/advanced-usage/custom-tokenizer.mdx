@@ -1,56 +1,56 @@
 ---
-title: Custom Markdown Tokenizers
+title: 自定义 Markdown 分词器
 tags:
   - type: beta
 meta:
-  title: Custom Markdown Tokenizers | Tiptap Editor Docs
-  description: Learn how to extend the Markdown parser in Tiptap with custom tokenizers for non-standard syntax. Follow our step-by-step guide in the docs!
+  title: 自定义 Markdown 分词器 | Tiptap 编辑器文档
+  description: 了解如何使用自定义分词器扩展 Tiptap 的 Markdown 解析器，以支持非标准语法。请跟随文档中的分步指南进行操作！
   category: Editor
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-Custom tokenizers extend the Markdown parser to support non-standard or custom syntax. This guide explains how tokenizers work and how to create your own.
+自定义分词器可以扩展 Markdown 解析器，以支持非标准或自定义语法。本指南将介绍分词器的工作原理，以及如何创建自己的分词器。
 
 <CodeDemo src="https://embed.tiptap.dev/preview/Markdown/CustomSyntax" />
 
-> **Tip**: For standard patterns like Pandoc blocks or shortcodes, check the [Utility Functions](../api/utilities) first—they provide ready-made tokenizers.
+> **提示**：对于 Pandoc 块或短代码等常见模式，请先查看[实用函数](../api/utilities)——其中提供了现成的分词器。
 
-## What are Tokenizers?
+## 什么是分词器？
 
-Tokenizers are functions that identify and parse custom Markdown syntax into tokens. They're registered with MarkedJS and run during the lexing phase, before Tiptap's parse handlers process the tokens.
+分词器是用于识别自定义 Markdown 语法并将其解析为词元的函数。它们会注册到 MarkedJS 中，并在词法分析阶段运行，也就是在 Tiptap 的解析处理程序处理词元之前。
 
-> **Note**: Want to learn more about Tokenizers? Check out the [Glossary](../glossary).
+> **注意**：想进一步了解分词器？请查看[术语表](../glossary)。
 
-### The Tokenization Flow
+### 分词流程
 
 ```
-Markdown String
+Markdown 字符串
       ↓
-Custom Tokenizers (identify custom syntax)
+自定义分词器（识别自定义语法）
       ↓
-Standard MarkedJS Lexer
+标准 MarkedJS 词法分析器
       ↓
-Markdown Tokens
+Markdown 词元
       ↓
-Extension Parse Handlers
+扩展解析处理程序
       ↓
 Tiptap JSON
 ```
 
-## When to Use Custom Tokenizers
+## 何时使用自定义分词器
 
-Use custom tokenizers when you want to support:
+如果要支持以下内容，可以使用自定义分词器：
 
-- Custom inline syntax (e.g., `++inserted text++`, `==highlighted==`)
-- Custom block syntax (e.g., `:::note`, `!!!warning`)
-- Shortcodes (e.g., `[[embed:video-id]]`)
-- Custom Markdown extensions
-- Domain-specific notation
+- 自定义行内语法（例如 `++inserted text++`、`==highlighted==`）
+- 自定义块级语法（例如 `:::note`、`!!!warning`）
+- 短代码（例如 `[[embed:video-id]]`）
+- 自定义 Markdown 扩展
+- 特定领域的标记法
 
-## Tokenizer Structure
+## 分词器结构
 
-A tokenizer is an object with these properties:
+分词器是一个包含以下属性的对象：
 
 ```typescript
 type MarkdownTokenizer = {
@@ -61,11 +61,11 @@ type MarkdownTokenizer = {
 }
 ```
 
-### Properties Explained
+### 属性说明
 
-#### `name` (required)
+#### `name`（必需）
 
-A unique identifier for your token type:
+词元类型的唯一标识符：
 
 ```typescript
 {
@@ -74,11 +74,11 @@ A unique identifier for your token type:
 }
 ```
 
-This name will be used when registering parse handlers.
+注册解析处理程序时会用到此名称。
 
-#### `level` (optional)
+#### `level`（可选）
 
-Whether this tokenizer operates at block or inline level:
+指定此分词器是在块级还是行内级运行：
 
 ```typescript
 {
@@ -87,12 +87,12 @@ Whether this tokenizer operates at block or inline level:
 }
 ```
 
-- **`inline`**: For inline elements like bold, italic, custom marks (default)
-- **`block`**: For block elements like custom containers, admonitions
+- **`inline`**：用于粗体、斜体、自定义标记等行内元素（默认值）
+- **`block`**：用于自定义容器、提示框等块级元素
 
-#### `start` (optional)
+#### `start`（可选）
 
-A function that returns the index where your token might start in the source string. This is an optimization to avoid unnecessary parsing attempts:
+返回词元可能在源字符串中开始位置索引的函数。这是一种优化，可避免不必要的解析尝试：
 
 ```typescript
 {
@@ -104,11 +104,11 @@ A function that returns the index where your token might start in the source str
 }
 ```
 
-This optimization helps MarkedJS skip irrelevant parts of the text. If omitted, MarkedJS will try your tokenizer at every position.
+这项优化有助于 MarkedJS 跳过无关文本。如果省略此函数，MarkedJS 会在每个位置尝试运行你的分词器。
 
-#### `tokenize` (required)
+#### `tokenize`（必需）
 
-The main parsing function that identifies and tokenizes your syntax:
+用于识别并将语法转换为词元的主要解析函数：
 
 ```typescript
 {
@@ -131,27 +131,27 @@ The main parsing function that identifies and tokenizes your syntax:
 }
 ```
 
-The function receives:
+函数接收以下参数：
 
-- `src`: Remaining source text to parse
-- `tokens`: Previously parsed tokens (usually not needed)
-- `lexer`: Helper functions for tokenizing child content
+- `src`：剩余的待解析源文本
+- `tokens`：此前已解析的词元（通常不需要）
+- `lexer`：用于分词子内容的辅助函数
 
-So as described above the flow of your Markdown content will be:
+如上所述，Markdown 内容的处理流程如下：
 
 ```
 Markdown => Tokenizer => Lexer => Token => markdown.parse() => Tiptap JSON
 ```
 
-And from Tiptap JSON back to Markdown:
+从 Tiptap JSON 转回 Markdown 的流程如下：
 
 ```
 Tiptap JSON => markdown.render() => Markdown
 ```
 
-## Creating a Simple Inline Tokenizer
+## 创建简单的行内分词器
 
-Let's create a tokenizer for highlight syntax (`==text==`).
+下面创建一个用于高亮语法（`==text==`）的分词器。
 
 ```typescript
 import { Node } from '@tiptap/core'
@@ -206,7 +206,7 @@ const Highlight = Node.create({
 })
 ```
 
-### Using the Extension
+### 使用扩展
 
 ```typescript
 import { Editor } from '@tiptap/core'
@@ -226,9 +226,9 @@ console.log(editor.getMarkdown())
 // This is ==highlighted text==!
 ```
 
-## Creating a Block-Level Tokenizer
+## 创建块级分词器
 
-Let's create a tokenizer for admonition blocks:
+下面创建一个用于提示框的分词器：
 
 ```markdown
 :::note
@@ -316,7 +316,7 @@ const Admonition = Node.create({
 })
 ```
 
-### Using Block-Level Tokenizers
+### 使用块级分词器
 
 ```typescript
 const markdown = `
@@ -334,9 +334,9 @@ This is a warning!
 editor.commands.setContent(markdown, { contentType: 'markdown' })
 ```
 
-## Tokenizer with Nested Content
+## 处理嵌套内容的分词器
 
-Let's create a tokenizer that supports nested inline parsing:
+下面创建一个支持嵌套行内解析的分词器：
 
 ```typescript
 const Emoji = Node.create({
@@ -402,13 +402,13 @@ const Emoji = Node.create({
 })
 ```
 
-## Using the Lexer Helpers
+## 使用词法分析器辅助函数
 
-The `lexer` parameter provides helper functions to parse nested content:
+`lexer` 参数提供了用于解析嵌套内容的辅助函数：
 
 ### `lexer.inlineTokens(src)`
 
-Parse inline content (for inline-level tokenizers):
+解析行内内容（用于行内级分词器）：
 
 ```typescript
 tokenize: (src, tokens, lexer) => {
@@ -426,7 +426,7 @@ tokenize: (src, tokens, lexer) => {
 
 ### `lexer.blockTokens(src)`
 
-Parse block-level content (for block-level tokenizers):
+解析块级内容（用于块级分词器）：
 
 ```typescript
 tokenize: (src, tokens, lexer) => {
@@ -442,11 +442,11 @@ tokenize: (src, tokens, lexer) => {
 }
 ```
 
-## Regular Expression Best Practices
+## 正则表达式最佳实践
 
-### Use `^` to Match from Start
+### 使用 `^` 从字符串开头匹配
 
-Always anchor your regex to the start of the string:
+始终将正则表达式锚定到字符串开头：
 
 ```typescript
 // ✅ Good - matches from start
@@ -456,9 +456,9 @@ Always anchor your regex to the start of the string:
 /==(.+?)==/
 ```
 
-### Use Non-Greedy Matching
+### 使用非贪婪匹配
 
-Use `+?` or `*?` instead of `+` or `*` for better control:
+使用 `+?` 或 `*?` 代替 `+` 或 `*`，以便更好地控制匹配范围：
 
 ```typescript
 // ✅ Good - stops at first closing
@@ -468,14 +468,14 @@ Use `+?` or `*?` instead of `+` or `*` for better control:
 /^==(.+)==/
 ```
 
-### Test Edge Cases
+### 测试边界情况
 
-Test your regex with:
+使用以下内容测试正则表达式：
 
-- Empty content: `====`
-- Nested syntax: `==text **bold** text==`
-- Multiple occurrences: `==one== ==two==`
-- Unclosed syntax: `==text`
+- 空内容：`====`
+- 嵌套语法：`==text **bold** text==`
+- 多次出现：`==one== ==two==`
+- 未闭合语法：`==text`
 
 ```typescript
 // Handle unclosed syntax
@@ -485,9 +485,9 @@ if (!match) {
 }
 ```
 
-## Debugging Tokenizers
+## 调试分词器
 
-### Log the Token Output
+### 记录词元输出
 
 ```typescript
 tokenize: (src, tokens, lexer) => {
@@ -509,9 +509,9 @@ tokenize: (src, tokens, lexer) => {
 }
 ```
 
-### Test in Isolation
+### 单独测试
 
-Test your tokenizer independently:
+独立测试你的分词器：
 
 ```typescript
 const src = '==highlighted text== and more'
@@ -526,20 +526,20 @@ console.log('Better match:', betterMatch)
 // ['==highlighted text==', 'highlighted text']
 ```
 
-### Check Token Registry
+### 检查词元注册表
 
-Verify your tokenizer is registered:
+确认你的分词器已注册：
 
 ```typescript
 console.log(editor.markdown.instance)
 // Check the MarkedJS instance configuration
 ```
 
-## Common Pitfalls
+## 常见问题
 
-### 1. Forgetting to Return `undefined`
+### 1. 忘记返回 `undefined`
 
-Always return `undefined` when your syntax doesn't match:
+语法不匹配时，始终返回 `undefined`：
 
 ```typescript
 // ✅ Good
@@ -564,9 +564,9 @@ tokenize: (src, tokens, lexer) => {
 }
 ```
 
-### 2. Not Including `raw`
+### 2. 未包含 `raw`
 
-Always include the full matched string in `raw`:
+始终在 `raw` 中包含完整的匹配字符串：
 
 ```typescript
 return {
@@ -576,9 +576,9 @@ return {
 }
 ```
 
-### 3. Wrong Level
+### 3. 级别设置错误
 
-Make sure `level` matches your tokenizer's purpose:
+确保 `level` 与分词器的用途相符：
 
 ```typescript
 // Inline element (within text)
@@ -592,9 +592,9 @@ Make sure `level` matches your tokenizer's purpose:
 }
 ```
 
-### 4. Consuming Too Much
+### 4. 消耗过多内容
 
-Be careful not to consume content beyond your syntax:
+注意不要消耗超出语法范围的内容：
 
 ```typescript
 // ✅ Good - stops at closing delimiter
@@ -604,9 +604,9 @@ Be careful not to consume content beyond your syntax:
 /^==([\s\S]+)==/
 ```
 
-## Advanced: Stateful Tokenizers
+## 进阶：有状态的分词器
 
-For complex syntax, maintain state across tokenization:
+对于复杂语法，可以在分词过程中维护状态：
 
 ```typescript
 let nestedLevel = 0
@@ -631,6 +631,6 @@ const tokenizer = {
 }
 ```
 
-## See also
+## 另请参阅
 
-- Try [Utility Functions](../api/utilities) for standard patterns before creating custom tokenizers
+- 创建自定义分词器之前，可先尝试使用[实用函数](../api/utilities)处理常见模式
