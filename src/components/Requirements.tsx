@@ -8,21 +8,21 @@ import { Sidebar } from './ui/Sidebar'
 import { cn } from '@/utils'
 
 export type RequirementItemProps = {
-  /** Primary label, e.g. "Activate your trial" */
+  /** 主标签，例如“激活试用” */
   label: string
-  /** Detail content — can include <a> tags */
+  /** 详细内容——可以包含 <a> 标签 */
   children: ReactNode
 }
 
 /**
- * Single requirement row. Clicking toggles its detail.
+ * 单个要求条目。点击可展开或收起详细内容。
  */
 export function RequirementItem({ label, children }: RequirementItemProps) {
   const [open, setOpen] = useState(false)
 
   return (
     <div>
-      {/* Wrap in Sidebar.Button so it picks up the same sidebar text styles */}
+      {/* 使用 Sidebar.Button 包裹，以应用相同的侧边栏文本样式 */}
       <Sidebar.Button asChild>
         <button
           type="button"
@@ -56,7 +56,7 @@ export type RequirementsProps = {
 }
 
 /**
- * Wraps <RequirementItem/>s and portals them into the sidebar on desktop.
+ * 包装 <RequirementItem/> 条目，并在桌面端通过 portal 将其渲染到侧边栏中。
  */
 const DESKTOP_QUERY = '(min-width: 1280px)'
 
@@ -66,7 +66,7 @@ function subscribeToDesktop(onChange: () => void) {
   return () => mq.removeEventListener('change', onChange)
 }
 
-// The slot is in the layout, which may mount after this component (client navigation)
+// 插槽位于布局中；客户端导航时，布局可能在此组件之后挂载
 function subscribeToSlot(onChange: () => void) {
   const observer = new MutationObserver(onChange)
   observer.observe(document.body, { childList: true, subtree: true })
@@ -76,7 +76,7 @@ function subscribeToSlot(onChange: () => void) {
 const getSlot = () => document.getElementById('requirements-slot')
 
 export function Requirements({ children }: RequirementsProps) {
-  // False on the server and while hydrating, so the portal mounts only in the browser
+  // 在服务器端和 hydration 期间为 false，因此 portal 只会在浏览器中挂载
   const isDesktop = useSyncExternalStore(
     subscribeToDesktop,
     () => window.matchMedia(DESKTOP_QUERY).matches,
@@ -89,10 +89,10 @@ export function Requirements({ children }: RequirementsProps) {
 
   return (
     <>
-      {/* Inline on mobile */}
+      {/* 在移动端内联显示 */}
       <div className="block xl:hidden mt-8">{box}</div>
 
-      {/* Portal into sidebar on desktop */}
+      {/* 在桌面端通过 portal 渲染到侧边栏中 */}
       {portalTarget ? createPortal(<div className="mt-8">{box}</div>, portalTarget) : null}
     </>
   )
@@ -103,7 +103,7 @@ function RequirementsBox({ children }: { children: ReactNode }) {
     <div>
       <Sidebar.Track>
         <Sidebar.Group>
-          <Sidebar.GroupTitle>Requirements</Sidebar.GroupTitle>
+          <Sidebar.GroupTitle>要求</Sidebar.GroupTitle>
           {React.Children.map(children, (child, idx) => (
             <React.Fragment key={idx}>{child}</React.Fragment>
           ))}
