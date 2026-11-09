@@ -25,7 +25,7 @@ export const ProductCard = ({
   tags,
   title,
   secondaryUrl,
-  secondaryButtonText = 'Example',
+  secondaryButtonText = '示例',
   doubleWidth = false,
   ...rest
 }: ProductCardProps) => {
@@ -54,7 +54,7 @@ export const ProductCard = ({
       <div className="flex items-center gap-2 mt-8">
         <Button asChild variant="secondary">
           <Link href={documentationUrl}>
-            Documentation
+            文档
             <ArrowRightIcon className="size-3.5" />
           </Link>
         </Button>
