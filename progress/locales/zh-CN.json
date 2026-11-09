@@ -2,18 +2,18 @@
     "schemaVersion": 1,
     "projectId": "tiptap-docs",
     "locale": "zh-CN",
-    "evaluatedAt": "2026-11-09T03:28:48.183Z",
-    "total": 928,
+    "evaluatedAt": "2026-11-09T07:10:44.999Z",
+    "total": 929,
     "completed": 928,
     "summary": {
-        "pending": 0,
-        "translated": 928,
-        "manually_modified": 0,
+        "pending": 1,
+        "translated": 919,
+        "manually_modified": 9,
         "retryable_failed": 0,
         "failed": 0,
         "blocked": 0,
         "deleted": 0,
-        "out_of_scope": 47,
+        "out_of_scope": 46,
         "not_text": 52,
         "conflict": 0
     },
@@ -188,8 +188,8 @@
         },
         {
             "path": "README.md",
-            "status": "out_of_scope",
-            "shouldTranslate": false,
+            "status": "pending",
+            "shouldTranslate": true,
             "sourceBlobSha": "14decb5aaaf3ee7462c1929fe1a25654a2c05760",
             "targetBlobSha": "14decb5aaaf3ee7462c1929fe1a25654a2c05760"
         },
@@ -1826,10 +1826,10 @@
         },
         {
             "path": "src/content/ai/basic/install.mdx",
-            "status": "translated",
+            "status": "manually_modified",
             "shouldTranslate": false,
             "sourceBlobSha": "3468450eb7ae8e7573f02cf6eab93bff58944baa",
-            "targetBlobSha": "e9401060c6ab02fe221af458ecbbda1a25a6f437"
+            "targetBlobSha": "59b400a60bbe7c397157bfcbf3f0beda1218342d"
         },
         {
             "path": "src/content/ai/basic/overview.mdx",
@@ -2792,10 +2792,10 @@
         },
         {
             "path": "src/content/composable-docs/variables/getting-started/overview.mdx",
-            "status": "translated",
+            "status": "manually_modified",
             "shouldTranslate": false,
             "sourceBlobSha": "dd3a2e0f8fd57a049b024390cd672eb681e08dc5",
-            "targetBlobSha": "7871d84f476a48a5f850c0a964b7368e4e8cd6b6"
+            "targetBlobSha": "9cb21ce97a247b21d5d47db76ccf84216e71508f"
         },
         {
             "path": "src/content/composable-docs/variables/guides/bind-slots.mdx",
@@ -3163,10 +3163,10 @@
         },
         {
             "path": "src/content/conversion/export/epub/rest-api.mdx",
-            "status": "translated",
+            "status": "manually_modified",
             "shouldTranslate": false,
             "sourceBlobSha": "456709b5a40057e058f2048fae58071a785feb99",
-            "targetBlobSha": "f973a1f8f04d5b2619eba755795a123217d2a91f"
+            "targetBlobSha": "b45865b7de645469cfa41621a642392b08ddce06"
         },
         {
             "path": "src/content/conversion/export/epub/styles.mdx",
@@ -3499,10 +3499,10 @@
         },
         {
             "path": "src/content/diagrams/charts/axes.mdx",
-            "status": "translated",
+            "status": "manually_modified",
             "shouldTranslate": false,
             "sourceBlobSha": "854eb1b2245664bfabc9ee6314e02826ed223663",
-            "targetBlobSha": "445c5d4c78ccad547d63fd0e0993c5f8e68c3483"
+            "targetBlobSha": "91eaebe1e33d89bf5331d9e378722d5e8cdddd24"
         },
         {
             "path": "src/content/diagrams/charts/editing.mdx",
@@ -3548,10 +3548,10 @@
         },
         {
             "path": "src/content/diagrams/data/pasting.mdx",
-            "status": "translated",
+            "status": "manually_modified",
             "shouldTranslate": false,
             "sourceBlobSha": "0232bd68782e30e5e653f3f3abf9f3fa1e67edbc",
-            "targetBlobSha": "92d00b9dc36d1ab681fd9cf5fe494b1e2ad5f867"
+            "targetBlobSha": "d27fe9b3e58b7832e2ba9f4f26e74bd918fb181c"
         },
         {
             "path": "src/content/diagrams/data/quick-input.mdx",
@@ -5186,10 +5186,10 @@
         },
         {
             "path": "src/content/editor/markdown/api/utilities.mdx",
-            "status": "translated",
+            "status": "manually_modified",
             "shouldTranslate": false,
             "sourceBlobSha": "2c1b6b22cfa7a428ba7bc0e2c3d70d2247001297",
-            "targetBlobSha": "d2f892edae8472fe54004786333a483ac19d132b"
+            "targetBlobSha": "aa6e6785a1482ca406700b5552578760f9bb5a1b"
         },
         {
             "path": "src/content/editor/markdown/examples.mdx",
@@ -6103,10 +6103,10 @@
         },
         {
             "path": "src/content/pages/getting-started/install.mdx",
-            "status": "translated",
+            "status": "manually_modified",
             "shouldTranslate": false,
             "sourceBlobSha": "a4e6db08d486a07e0744cc5e754d9320e9363cb7",
-            "targetBlobSha": "b86e1fd86ed10690f9f526ef65eccdc91e7ef9f2"
+            "targetBlobSha": "d6482d8970fcd452d03f5c4df118a823f7d844d3"
         },
         {
             "path": "src/content/pages/getting-started/live-demo.mdx",
@@ -6145,10 +6145,10 @@
         },
         {
             "path": "src/content/pages/guides/row-fragmentation.mdx",
-            "status": "translated",
+            "status": "manually_modified",
             "shouldTranslate": false,
             "sourceBlobSha": "b56f15d053cb15b9a954f290b26b299108439240",
-            "targetBlobSha": "bbad0fb34cdac9db66d3bf3931fefa35719dbe05"
+            "targetBlobSha": "7510543fd63fd0a6885b5b697ad83f00be23c178"
         },
         {
             "path": "src/content/pages/guides/table-with-pages.mdx",
@@ -6705,10 +6705,10 @@
         },
         {
             "path": "src/content/ui-components/install/next.mdx",
-            "status": "translated",
+            "status": "manually_modified",
             "shouldTranslate": false,
             "sourceBlobSha": "4339b0e7432a1bd03eecf1691bfd889aa11e99d3",
-            "targetBlobSha": "3b669b0560cda8698f79cc1c85b4f711fc16d35c"
+            "targetBlobSha": "24db7591f0ea622c7ab66de3bd55f1caa4f4d2a3"
         },
         {
             "path": "src/content/ui-components/install/react-router.mdx",
