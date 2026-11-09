@@ -1,6 +1,13 @@
 import { readFile } from 'node:fs/promises'
 
 import { isBinaryFile } from 'isbinaryfile'
+import { z } from 'zod'
+
+/** Git 文件路径在读取边界校验，后续归档和提交沿用该路径。 */
+export const repositoryPathSchema = z
+    .string()
+    .regex(/^(?!\/)(?!.*(?:^|\/)\.{1,2}(?:\/|$))[^\\:]+$/)
+    .refine((path) => [...path].every((character) => character.charCodeAt(0) >= 32), '路径不能包含控制字符')
 
 /** 翻译入口按内容识别文本，当前只解码 UTF-8，防止损坏其他编码的原文。 */
 export async function readTranslationFile(path: string) {

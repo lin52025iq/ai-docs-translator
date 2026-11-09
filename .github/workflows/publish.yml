@@ -1,0 +1,58 @@
+name: 项目文档翻译与部署
+
+on:
+    workflow_dispatch:
+        inputs:
+            project_id:
+                description: 项目 ID（读取对应的配置分支）
+                required: true
+                type: string
+
+jobs:
+    translate:
+        permissions:
+            contents: write
+        uses: ./.github/workflows/translate.yml
+        with:
+            project_id: ${{ inputs.project_id }}
+        secrets: inherit
+
+    deploy:
+        needs: translate
+        if: ${{ needs.translate.outputs.deployment != '' }}
+        permissions: {}
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/setup-node@v7
+              with:
+                  node-version: '24'
+                  package-manager-cache: false
+            - name: 部署已校验的文档
+              env:
+                  DEPLOYMENT: ${{ needs.translate.outputs.deployment }}
+                  VERCEL_TOKEN: ${{ secrets[needs.translate.outputs.deployment_secret] }}
+              run: |
+                  node --input-type=module <<'NODE'
+                  import { appendFile } from 'node:fs/promises'
+                  const token = process.env.VERCEL_TOKEN
+                  if (!token) throw new Error('请配置当前项目的 Vercel Token Secret。')
+                  const { provider, name, branch, sha, teamId, projectId, repositoryId } = JSON.parse(process.env.DEPLOYMENT)
+                  if (provider !== 'vercel' || !/^[a-f0-9]{40}$/.test(sha ?? '')) {
+                      throw new Error('部署参数缺少已通过全局校验的提交。')
+                  }
+                  const response = await fetch('https://api.vercel.com/v13/deployments?teamId=' + teamId, {
+                      method: 'POST',
+                      headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                          name,
+                          project: projectId,
+                          target: 'production',
+                          gitSource: { type: 'github', repoId: repositoryId, ref: branch, sha }
+                      })
+                  })
+                  if (!response.ok) throw new Error('Vercel 部署请求失败：HTTP ' + response.status)
+                  const deployment = await response.json()
+                  const message = '已触发生产部署：' + deployment.id + '（提交 ' + sha + '）'
+                  console.log(message)
+                  await appendFile(process.env.GITHUB_STEP_SUMMARY, message + '\n')
+                  NODE

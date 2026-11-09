@@ -6,11 +6,7 @@ import { isGitEnvKey } from '@simple-git/argv-parser'
 import { type SimpleGit, simpleGit } from 'simple-git'
 import { z } from 'zod'
 
-/** Git 文件路径在读取边界校验，后续归档和提交沿用该路径。 */
-export const repositoryPathSchema = z
-    .string()
-    .regex(/^(?!\/)(?!.*(?:^|\/)\.{1,2}(?:\/|$))[^\\:]+$/)
-    .refine((path) => [...path].every((character) => character.charCodeAt(0) >= 32), '路径不能包含控制字符')
+import { repositoryPathSchema } from '../shared/files.ts'
 
 const entrySchema = z.object({
     path: repositoryPathSchema,

@@ -3,12 +3,13 @@ import { dirname, relative, resolve } from 'node:path'
 
 import { Command } from 'commander'
 
-import { repositoryGit, repositoryPathSchema } from './git/branches.ts'
-import { commitConflictDraft } from './git/conflict-draft.ts'
-import { createScopeMatcher, loadProject, localeSchema, sourceLanguageSchema } from './project/config.ts'
+import { repositoryGit } from './git/branches.ts'
+import { commitConflictDraft, writeConflictDraft } from './git/conflict-draft.ts'
+import { createScopeMatcher, draftSchema, loadProject, localeSchema, sourceLanguageSchema } from './project/config.ts'
 import { createProject } from './project/create.ts'
 import { runProject } from './project/run.ts'
-import { readTranslationFile } from './shared/files.ts'
+import { validateTranslations } from './project/validate.ts'
+import { readTranslationFile, repositoryPathSchema } from './shared/files.ts'
 import { logWarning } from './shared/log.ts'
 import {
     createProgress,
@@ -18,7 +19,9 @@ import {
     planTranslations
 } from './state/translation-state.ts'
 import { buildTranslationContext } from './translation/prompt.ts'
+import { translateValidated } from './translation/retry.ts'
 import { createTranslator, TranslationError } from './translation/translator.ts'
+import { createValidation } from './validation/runner.ts'
 
 /** 仅扫描本地文档快照；本命令不 fetch、push 或执行上游仓库代码。 */
 async function scanFiles(root: string, patterns: string[]) {
@@ -91,6 +94,17 @@ program
     })
 
 program
+    .command('validate-translations')
+    .requiredOption('--project <path>', '项目配置')
+    .requiredOption('--locale <locale>', '项目中启用的目标语言')
+    .option('--repository <path>', '管理仓库', '.')
+    .action(async (options: Parameters<typeof validateTranslations>[0]) => {
+        const result = await validateTranslations(options)
+        console.log(JSON.stringify(result, null, 4))
+        if (result.diagnostics.length) process.exitCode = 1
+    })
+
+program
     .command('plan')
     .requiredOption('--project <path>', '项目 config.yml 路径')
     .requiredOption('--locale <locale>', '项目中启用的目标语言')
@@ -134,7 +148,7 @@ program
 program
     .command('translate-file')
     .alias('translate')
-    .description('翻译指定文本文件，校验和审查通过后保存本地译文')
+    .description('翻译指定文本文件，校验通过后保存本地译文')
     .option('--project <path>', '项目 config.yml 路径，可省略')
     .option('--locale <locale>', '目标语言；无项目或启用多种语言时必填', (value) => localeSchema.parse(value))
     .option('--source-language <locale>', '源语言；auto 表示模型自动识别，默认使用配置或 auto', (value) =>
@@ -166,8 +180,7 @@ program
             const locale = options.locale ?? (targets.length === 1 ? targets[0]?.locale : undefined)
             if (!locale) throw new Error('请通过 --locale 指定目标语言')
             const context = await buildTranslationContext(project, locale, {
-                sourceLanguage: options.sourceLanguage,
-                pushDraft: options.pushDraft
+                sourceLanguage: options.sourceLanguage
             })
             if (project && !createScopeMatcher(project.config)(path)) {
                 throw new Error('文件不在项目配置的翻译范围内')
@@ -176,38 +189,38 @@ program
             if (source.content === null) throw new Error('仅支持 UTF-8 文本文件，当前文件已跳过')
             const previous = options.previous ? await readTranslationFile(resolve(options.previous)) : undefined
             if (previous?.content === null) throw new Error('旧译文必须为 UTF-8 文本文件')
+            const draftOptions = project?.config.translation.draft ?? draftSchema.parse({})
             const draftConfig = {
                 project: project?.config.project ?? { id: 'standalone' },
-                translation: { review: context.review }
-            }
-            const draftBranch = context.review.draftBranch ?? `${draftConfig.project.id}-draft`
-            const git = repositoryGit(options.repository)
-            if (!(await git.checkIsRepo())) {
-                throw new Error('冲突归档需要本地 Git 仓库，请通过 --repository 指定')
-            }
-            await git.raw(['check-ref-format', `refs/heads/${draftBranch}`])
-            if ((await git.branchLocal()).current === draftBranch) {
-                throw new Error(`请先切换离开冲突归档分支 ${draftBranch}`)
+                translation: { draft: { ...draftOptions, pushDraft: options.pushDraft ?? draftOptions.pushDraft } }
             }
             const translate = createTranslator()
-            const result = await translate({
-                path,
-                sourceContent: source.content,
-                previousTranslation: previous?.content,
-                context
-            })
-            if (!result.review.approved) {
-                const draft = await commitConflictDraft({
-                    repository: options.repository,
+            const result = await translateValidated(
+                translate,
+                {
+                    path,
+                    sourceContent: source.content,
+                    previousTranslation: previous?.content,
+                    context
+                },
+                createValidation(project).file,
+                new Map()
+            )
+            if (!result.approved) {
+                const conflict = {
                     config: draftConfig,
                     locale,
                     path,
                     sourceContent: source.content,
                     previousTranslation: previous?.content,
                     result
-                })
+                }
+                const git = repositoryGit(options.repository)
+                const draft = (await git.checkIsRepo())
+                    ? await commitConflictDraft({ ...conflict, repository: options.repository })
+                    : await writeConflictDraft({ ...conflict, directory: '.translation-drafts' })
                 console.log(JSON.stringify({ status: 'conflict', ...draft }, null, 4))
-                logWarning(`译文未应用，异常输出已归档：${draft.branch}，提交 ${draft.commit}`)
+                logWarning(`译文未应用，异常输出已归档：${draft.artifactPath}`)
                 return
             }
             const output = resolve(options.output ?? `.translation-drafts/${locale}/${path}`)
@@ -220,7 +233,7 @@ program
                         model: result.model,
                         contextHash: result.contextHash,
                         responseId: result.responseId,
-                        review: result.review,
+                        diagnostics: result.diagnostics,
                         status: 'draft',
                         message: '仅生成本地译文草稿，未发布，未推进翻译成功状态'
                     },

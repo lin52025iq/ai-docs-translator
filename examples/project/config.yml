@@ -41,12 +41,13 @@ translation:
         frameworks: {}
         common: prompts/common.md
     retranslateOnContextChange: false
-    # 输出审查不通过时归档到 draft 分支。
-    review:
-        enabled: true
-        model: gpt-6-luna
-        minimumProbability: 0.95
+    # 文件校验失败时归档到 draft 分支。
+    draft:
         draftBranch: your-project-draft
         # 单文件命令默认不推送；项目命令使用 --push 统一发布。
         pushDraft: false
         remote: origin
+
+# 项目可配置文件校验规则和可选的全局校验命令。
+validation:
+    files: []

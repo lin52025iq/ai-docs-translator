@@ -3,7 +3,8 @@ import { relative, resolve } from 'node:path'
 
 import { stringify } from 'yaml'
 
-import { branchHead, commitBranchFiles, repositoryGit, repositoryPathSchema } from '../git/branches.ts'
+import { branchHead, commitBranchFiles, repositoryGit } from '../git/branches.ts'
+import { repositoryPathSchema } from '../shared/files.ts'
 import { buildTranslationContext } from '../translation/prompt.ts'
 import { loadProject, projectSchema } from './config.ts'
 
@@ -29,7 +30,7 @@ export async function createProject(options: {
         const directory = resolve(options.from)
         const project = await loadProject(resolve(directory, 'config.yml'))
         if (project.config.project.id !== id) throw new Error('--name 必须与已有配置的 project.id 一致')
-        remote = project.config.translation.review.remote
+        remote = project.config.translation.draft.remote
         for (const target of project.config.targets.filter((entry) => entry.enabled)) {
             await buildTranslationContext(project, target.locale)
         }
@@ -59,7 +60,7 @@ export async function createProject(options: {
             translation: {
                 glossary: 'glossary.yml',
                 prompts: { common: 'prompts/common.md' },
-                review: { remote }
+                draft: { remote }
             }
         })
         files['config.yml'] = stringify(config, { indent: 4 })

@@ -8,6 +8,22 @@ on:
                 required: true
                 type: string
 
+    workflow_call:
+        inputs:
+            project_id:
+                required: true
+                type: string
+        outputs:
+            validated_commits:
+                description: 通过全局校验的各语言提交
+                value: ${{ jobs.translate.outputs.validated_commits }}
+            deployment:
+                description: 可发布的部署参数
+                value: ${{ jobs.translate.outputs.deployment }}
+            deployment_secret:
+                description: 项目部署凭据名称
+                value: ${{ jobs.translate.outputs.deployment_secret }}
+
 permissions:
     contents: write
 
@@ -18,6 +34,10 @@ concurrency:
 jobs:
     translate:
         runs-on: ubuntu-latest
+        outputs:
+            validated_commits: ${{ steps.validated.outputs.commits }}
+            deployment: ${{ steps.validated.outputs.deployment }}
+            deployment_secret: ${{ steps.validated.outputs.deployment_secret }}
         env:
             PROJECT_CONFIG: .translation-config/config.yml
             PROJECT_ID: ${{ inputs.project_id }}
@@ -48,6 +68,12 @@ jobs:
             - name: 安装管理仓库依赖
               run: pnpm install --frozen-lockfile
 
+            - name: 安装项目校验依赖
+              run: |
+                  if [ -f .translation-config/package.json ]; then
+                      pnpm --dir .translation-config --ignore-workspace install --frozen-lockfile --ignore-scripts
+                  fi
+
             - name: 校验项目配置
               run: pnpm translator validate --project "$PROJECT_CONFIG"
 
@@ -62,7 +88,6 @@ jobs:
                   const secretPrefix = config.project.id.toUpperCase().replaceAll('-', '_')
                   const tokenSecret = `${secretPrefix}_SOURCE_REPO_TOKEN`
                   await appendFile(process.env.GITHUB_OUTPUT, `token_secret=${tokenSecret}\n`)
-                  await appendFile(process.env.GITHUB_OUTPUT, `deploy_hook_secret=${secretPrefix}_VERCEL_DEPLOY_HOOK\n`)
                   await appendFile(process.env.GITHUB_OUTPUT, `repository=${config.source.repository}\nref=${config.source.ref}\n`)
                   NODE
 
@@ -100,6 +125,22 @@ jobs:
                       --push \
                       > .translation-drafts/result.json
 
+            - name: 导出通过校验的提交
+              id: validated
+              run: |
+                  node --input-type=module <<'NODE'
+                  import { appendFile, readFile } from 'node:fs/promises'
+                  const result = JSON.parse(await readFile('.translation-drafts/result.json', 'utf8'))
+                  if (result.status === 'success' && result.pushed && Object.keys(result.globallyValidatedCommits).length) {
+                      await appendFile(process.env.GITHUB_OUTPUT, 'commits=' + JSON.stringify(result.globallyValidatedCommits) + '\n')
+                  }
+                  if (result.deployment) {
+                      const prefix = result.projectId.toUpperCase().replaceAll('-', '_')
+                      await appendFile(process.env.GITHUB_OUTPUT, 'deployment=' + JSON.stringify(result.deployment) + '\n')
+                      await appendFile(process.env.GITHUB_OUTPUT, 'deployment_secret=' + prefix + '_VERCEL_TOKEN\n')
+                  }
+                  NODE
+
             - name: 输出翻译结果汇总
               if: ${{ always() }}
               run: |
@@ -115,73 +156,10 @@ jobs:
                       const rows = Object.entries(result.locales).map(([locale, progress]) =>
                           `| ${locale} | ${progress.completed}/${progress.total} | ${progress.summary.conflict} | ${progress.summary.failed + progress.summary.retryable_failed + progress.summary.blocked} |`
                       )
-                      summary = `## 项目文档翻译\n\n${result.status === 'success' ? '翻译完成' : result.status === 'warning' ? '翻译处理完成，异常输出已归档，请人工确认' : '部分完成，仍有失败或未处理文件'}\n\n| 语言 | 已完成/总数 | 冲突 | 失败或阻塞 |\n| --- | --- | --- | --- |\n${rows.join('\n')}\n`
+                      summary = `## 项目文档翻译\n\n${result.globalValidationFailed ? '全局校验未通过，请查看日志及 draft 报告。' : result.status === 'success' ? '翻译完成' : result.status === 'warning' ? '翻译处理完成，异常输出已归档，请人工确认' : '部分完成，仍有失败或未处理文件'}\n\n| 语言 | 已完成/总数 | 冲突 | 失败或阻塞 |\n| --- | --- | --- | --- |\n${rows.join('\n')}\n`
                   }
                   await appendFile(process.env.GITHUB_STEP_SUMMARY, summary)
                   console.log(summary)
-                  NODE
-
-            - name: 翻译完成后部署 Tiptap 中文文档
-              if: ${{ env.PROJECT_ID == 'tiptap-docs' }}
-              env:
-                  VERCEL_TOKEN: ${{ secrets.TIPTAP_DOCS_VERCEL_TOKEN }}
-              run: |
-                  node --input-type=module <<'NODE'
-                  import { execFileSync } from 'node:child_process'
-                  import { appendFile, readFile } from 'node:fs/promises'
-                  const result = JSON.parse(await readFile('.translation-drafts/result.json', 'utf8'))
-                  if (result.status !== 'success') {
-                      console.log('仍有文件未完成翻译，跳过生产部署。')
-                      process.exit(0)
-                  }
-                  const token = process.env.VERCEL_TOKEN
-                  if (!token) throw new Error('请配置 TIPTAP_DOCS_VERCEL_TOKEN 仓库 Secret。')
-                  const ref = 'tiptap-docs-zh-cn'
-                  const sha = execFileSync('git', ['rev-parse', 'refs/heads/' + ref], { encoding: 'utf8' }).trim()
-                  const teamId = 'team_fEBZtKMNvmjodbBzMmTWage5'
-                  const project = 'prj_ce2hFlut8p3i4XVFOpTO3smQ0aka'
-                  const response = await fetch('https://api.vercel.com/v13/deployments?teamId=' + teamId, {
-                      method: 'POST',
-                      headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
-                      body: JSON.stringify({
-                          name: 'tiptap-docs',
-                          project,
-                          target: 'production',
-                          gitSource: { type: 'github', repoId: '1448072497', ref, sha }
-                      })
-                  })
-                  if (!response.ok) throw new Error('Vercel 部署请求失败：HTTP ' + response.status)
-                  const deployment = await response.json()
-                  const message = '已触发 Tiptap 中文文档生产部署：' + deployment.id + '（提交 ' + sha + '）'
-                  console.log(message)
-                  await appendFile(process.env.GITHUB_STEP_SUMMARY, message + '\n')
-                  NODE
-
-            - name: 翻译结束后触发 Vercel 部署
-              if: ${{ env.PROJECT_ID != 'tiptap-docs' }}
-              env:
-                  VERCEL_DEPLOY_HOOK: ${{ secrets[steps.source.outputs.deploy_hook_secret] }}
-              run: |
-                  node --input-type=module <<'NODE'
-                  import { appendFile, readFile } from 'node:fs/promises'
-                  const hook = process.env.VERCEL_DEPLOY_HOOK
-                  if (!hook) {
-                      console.log('未配置当前项目的 Vercel Deploy Hook，跳过部署。')
-                  } else {
-                      const result = JSON.parse(await readFile('.translation-drafts/result.json', 'utf8'))
-                      if (result.processed.successful === 0) {
-                          console.log('本次没有发布译文，跳过部署。')
-                      } else {
-                          const response = await fetch(hook, { method: 'POST' }).catch(() => {
-                              throw new Error('Vercel 部署请求失败，请检查项目的 Deploy Hook 配置。')
-                          })
-                          if (!response.ok) throw new Error(`Vercel 部署请求失败：HTTP ${response.status}`)
-                          const { job } = await response.json()
-                          const message = `翻译处理结束，已触发一次 Vercel 部署，任务：${job.id}`
-                          console.log(message)
-                          await appendFile(process.env.GITHUB_STEP_SUMMARY, `${message}\n`)
-                      }
-                  }
                   NODE
 
             - name: 上传项目报告和进度

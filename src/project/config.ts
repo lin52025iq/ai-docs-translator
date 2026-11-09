@@ -15,6 +15,16 @@ const promptSchema = z.strictObject({
     common: z.string().min(1).optional()
 })
 
+export const draftSchema = z.strictObject({
+    draftBranch: z.string().min(1).optional(),
+    pushDraft: z.boolean().default(false),
+    remote: z
+        .string()
+        .regex(/^[A-Za-z0-9][A-Za-z0-9._-]*$/)
+        .default('origin')
+})
+const validationCommand = z.tuple([z.string().min(1)]).rest(z.string())
+
 /** 翻译目标语言与框架书写语言独立，目标语言直接来自项目配置。 */
 export const projectSchema = z
     .strictObject({
@@ -48,20 +58,48 @@ export const projectSchema = z
                     .prefault({}),
                 glossary: z.string().min(1).optional(),
                 prompts: promptSchema.prefault({}),
-                review: z
-                    .strictObject({
-                        enabled: z.boolean().default(true),
-                        model: z.literal('gpt-6-luna').default('gpt-6-luna'),
-                        minimumProbability: z.number().min(0).max(1).default(0.95),
-                        draftBranch: z.string().min(1).optional(),
-                        pushDraft: z.boolean().default(false),
-                        remote: z
-                            .string()
-                            .regex(/^[A-Za-z0-9][A-Za-z0-9._-]*$/)
-                            .default('origin')
+                draft: draftSchema.optional(),
+                review: draftSchema
+                    .extend({
+                        enabled: z.boolean().optional(),
+                        model: z.string().optional(),
+                        minimumProbability: z.number().optional()
                     })
-                    .prefault({}),
+                    .optional(),
                 retranslateOnContextChange: z.boolean().default(false)
+            })
+            .prefault({})
+            .transform(({ draft, review, ...translation }) => ({
+                ...translation,
+                draft:
+                    draft ??
+                    draftSchema.parse({
+                        draftBranch: review?.draftBranch,
+                        pushDraft: review?.pushDraft,
+                        remote: review?.remote
+                    })
+            })),
+        deployment: z
+            .strictObject({
+                provider: z.literal('vercel'),
+                locale: localeSchema,
+                name: z.string().min(1),
+                teamId: z.string().regex(/^team_[a-zA-Z0-9]+$/),
+                projectId: z.string().regex(/^prj_[a-zA-Z0-9]+$/),
+                repositoryId: z.string().regex(/^\d+$/)
+            })
+            .optional(),
+        validation: z
+            .strictObject({
+                files: z
+                    .array(
+                        z.strictObject({
+                            include: z.array(z.string().min(1)).min(1),
+                            command: validationCommand
+                        })
+                    )
+                    .default([]),
+                global: z.strictObject({ command: validationCommand }).optional()
             })
             .prefault({})
     })
@@ -83,11 +121,20 @@ export const projectSchema = z
             locales.add(target.locale)
             branches.add(target.branch)
         }
-        const draftBranch = config.translation.review.draftBranch ?? `${config.project.id}-draft`
+        if (config.deployment) {
+            const { locale } = config.deployment
+            if (!config.targets.some((target) => target.enabled && target.locale === locale)) {
+                context.addIssue({ code: 'custom', path: ['deployment', 'locale'], message: '部署语言必须已启用' })
+            }
+            if (!config.validation.global) {
+                context.addIssue({ code: 'custom', path: ['validation', 'global'], message: '部署需要配置全局校验' })
+            }
+        }
+        const draftBranch = config.translation.draft.draftBranch ?? `${config.project.id}-draft`
         if (branches.has(draftBranch)) {
             context.addIssue({
                 code: 'custom',
-                path: ['translation', 'review', 'draftBranch'],
+                path: ['translation', 'draft', 'draftBranch'],
                 message: 'Draft 分支不能与配置、Source 或任何目标语言分支相同'
             })
         }

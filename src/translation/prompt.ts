@@ -9,7 +9,7 @@ import { readOptionalText } from '../shared/files.ts'
 export async function buildTranslationContext(
     project: Project | undefined,
     locale: string,
-    options: { sourceLanguage?: string; pushDraft?: boolean } = {}
+    options: { sourceLanguage?: string } = {}
 ) {
     const config = project?.config
     const directory = project?.directory ?? process.cwd()
@@ -42,20 +42,12 @@ export async function buildTranslationContext(
     })
     const instructions = [framework, common?.trim(), language?.trim()].filter(Boolean).join('\n\n')
     const model = translation.model
-    const review = { ...translation.review, pushDraft: options.pushDraft ?? translation.review.pushDraft }
-    const reviewInstructions = await readFile(new URL('./prompts/review.zh-CN.md', import.meta.url), 'utf8')
     const contextHash = createHash('sha256')
         .update(
             JSON.stringify({
                 instructions,
                 terms,
                 model,
-                review: {
-                    enabled: review.enabled,
-                    model: review.model,
-                    minimumProbability: review.minimumProbability
-                },
-                reviewInstructions,
                 // 输入组织方式变化会影响模型结果，应使此前失败任务重新进入规划。
                 inputFormat: 'dynamic-tagged-file-v2',
                 // 输出比较规则变化后，允许此前因末尾换行差异产生的冲突重新处理。
@@ -71,9 +63,7 @@ export async function buildTranslationContext(
         model,
         contextHash,
         sourceLanguage: source,
-        targetLanguage: locale,
-        review,
-        reviewInstructions
+        targetLanguage: locale
     }
 }
 
@@ -86,7 +76,7 @@ export function buildFileInput(input: {
     glossary?: TranslationContext['terms']
     sourceContent: string
     previousTranslation?: string
-    translatedContent?: string
+    repair?: { candidate: string; diagnostics: string }
 }) {
     const metadata = `源语言：${input.context.sourceLanguage}\n目标语言：${input.context.targetLanguage}\n文件路径：${input.path}\n扩展名：${extname(input.path) || '无扩展名'}`
     const regions: [string, string][] = []
@@ -102,8 +92,11 @@ export function buildFileInput(input: {
         regions.push(['previous_translation', input.previousTranslation])
     }
     regions.push(['source_content', input.sourceContent])
-    if (input.translatedContent !== undefined) {
-        regions.push(['translated_content', input.translatedContent])
+    if (input.repair) {
+        regions.push(
+            ['rejected_candidate', input.repair.candidate],
+            ['validation_diagnostics', input.repair.diagnostics]
+        )
     }
     // 后缀不出现在任何输入数据中，则整组开始、结束标签都不会与内容碰撞。
     const contents = [metadata, ...regions.map(([, content]) => content)]
