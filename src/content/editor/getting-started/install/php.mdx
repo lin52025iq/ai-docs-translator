@@ -1,16 +1,16 @@
 ---
 title: PHP
 meta:
-  title: PHP | Tiptap Editor Docs
-  description: Discover how to utilize Tiptap within PHP environments, including Laravel and Livewire. Access the guide in our docs!
+  title: PHP | Tiptap 编辑器文档
+  description: 了解如何在 PHP 环境中使用 Tiptap，包括 Laravel 和 Livewire。欢迎查阅我们的文档指南！
   category: Editor
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-You can use Tiptap with Laravel, Livewire, Inertia.js, Alpine.js, Tailwind CSS, and even—yes, you read that right—inside PHP.
+你可以将 Tiptap 与 Laravel、Livewire、Inertia.js、Alpine.js 和 Tailwind CSS 配合使用，甚至——没错，你没看错——可以直接在 PHP 中使用。
 
-We provide [an official PHP package to work with Tiptap content](/editor/api/utilities/tiptap-for-php). You can transform Tiptap-compatible JSON to HTML and vice versa, sanitize your content, or just modify it.
+我们提供了[官方 PHP 软件包，可用于处理 Tiptap 内容](/editor/api/utilities/tiptap-for-php)。你可以将兼容 Tiptap 的 JSON 转换为 HTML，反之亦然；也可以清理或修改内容。
 
 ## Laravel Livewire
 
@@ -25,9 +25,9 @@ We provide [an official PHP package to work with Tiptap content](/editor/api/uti
 <x-editor wire:model="foo" wire:poll.10000ms="autosave"></x-editor>
 ```
 
-<Callout variant="default" title="Hint">
+<Callout variant="default" title="提示">
 
-    The `.defer` modifier is no longer available in Livewire v3, as updating the state is deferred by default. Use the `.live` modifier if you need to update the state server-side, as it changes.
+    Livewire v3 不再支持 `.defer` 修饰符，因为状态更新默认会延迟执行。如果需要在状态变化时更新服务端状态，请使用 `.live` 修饰符。
 
 </Callout>
 
@@ -88,10 +88,10 @@ window.setupEditor = function (content) {
 }
 ```
 
-## Next steps
+## 后续步骤
 
-- [Configure your editor](/editor/getting-started/configure)
-- [Add styles to your editor](/editor/getting-started/style-editor)
-- [Learn more about Tiptaps concepts](/editor/core-concepts/introduction)
-- [Learn how to persist the editor state](/editor/core-concepts/persistence)
-- [Start building your own extensions](/editor/extensions/custom-extensions)
+- [配置编辑器](/editor/getting-started/configure)
+- [为编辑器添加样式](/editor/getting-started/style-editor)
+- [深入了解 Tiptap 的概念](/editor/core-concepts/introduction)
+- [了解如何持久化编辑器状态](/editor/core-concepts/persistence)
+- [开始构建自己的扩展](/editor/extensions/custom-extensions)
