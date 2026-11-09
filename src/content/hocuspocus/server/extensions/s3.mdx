@@ -1,76 +1,76 @@
 ---
 title: S3
 meta:
-  title: S3 | Hocuspocus Docs
+  title: S3 | Hocuspocus 文档
   category: Hocuspocus
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@hocuspocus/extension-s3.svg?label=version
     url: https://www.npmjs.com/package/@hocuspocus/extension-s3
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@hocuspocus/extension-s3.svg
     url: https://npmcharts.com/compare/@hocuspocus/extension-s3?minimal=true
-    label: Downloads
+    label: 下载量
   - type: image
     src: https://img.shields.io/npm/l/@hocuspocus/extension-s3.svg
     url: https://www.npmjs.com/package/@hocuspocus/extension-s3
-    label: License
+    label: 许可证
   - type: image
     src: https://img.shields.io/badge/chat-on%20discord-7289da.svg?sanitize=true
     url: https://discord.gg/WtJ49jGshW
-    label: Chat
+    label: 聊天
 ---
 
-The S3 extension provides S3-compatible storage persistence for Hocuspocus. It supports Amazon S3 and S3-compatible services like MinIO, DigitalOcean Spaces, Wasabi, and more. Documents are stored as binary files in S3, making your collaborative documents persistent and scalable.
+S3 扩展为 Hocuspocus 提供兼容 S3 的持久化存储。它支持 Amazon S3，以及 MinIO、DigitalOcean Spaces、Wasabi 等兼容 S3 的服务。文档以二进制文件的形式存储在 S3 中，从而实现协作文档的持久化和可扩展性。
 
-## Installation
+## 安装
 
-Install the S3 extension like this:
+按如下方式安装 S3 扩展：
 
 ```bash
 npm install @hocuspocus/extension-s3
 ```
 
-## Configuration
+## 配置
 
-**bucket** (required)
+**bucket**（必填）
 
-The S3 bucket name where documents will be stored. The bucket must exist and be accessible with your credentials.
+用于存储文档的 S3 存储桶名称。存储桶必须已存在，并且凭据必须有权访问它。
 
 **region**
 
-AWS region for the S3 service.
+S3 服务所在的 AWS 区域。
 
-Default: `us-east-1`
+默认值：`us-east-1`
 
 **prefix**
 
-Key prefix for document storage. All documents will be stored under this prefix.
+文档存储使用的键前缀。所有文档都会存储在此前缀下。
 
-Default: `hocuspocus-documents/`
+默认值：`hocuspocus-documents/`
 
 **credentials**
 
-AWS credentials object containing `accessKeyId` and `secretAccessKey`. If not provided, the extension will use the default AWS credential chain (environment variables, IAM roles, etc.).
+包含 `accessKeyId` 和 `secretAccessKey` 的 AWS 凭据对象。如果未提供，扩展将使用默认的 AWS 凭据链（环境变量、IAM 角色等）。
 
 **endpoint**
 
-Custom S3 endpoint URL for S3-compatible services like MinIO or DigitalOcean Spaces.
+用于 MinIO 或 DigitalOcean Spaces 等兼容 S3 服务的自定义 S3 端点 URL。
 
 **forcePathStyle**
 
-Use path-style URLs instead of virtual hosted-style URLs. Required for MinIO and some S3-compatible services.
+使用路径式 URL，而不是虚拟托管式 URL。MinIO 和某些兼容 S3 的服务需要此选项。
 
-Default: `false`
+默认值：`false`
 
 **s3Client**
 
-Custom S3Client instance. If provided, other connection options will be ignored.
+自定义 S3Client 实例。如果提供此选项，其他连接选项将被忽略。
 
-## Usage
+## 用法
 
-### Basic AWS S3 Setup
+### 基本 AWS S3 配置
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -92,7 +92,7 @@ const server = new Server({
 server.listen();
 ```
 
-### Using Environment Variables
+### 使用环境变量
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -115,7 +115,7 @@ const server = new Server({
 server.listen();
 ```
 
-### Using IAM Roles (EC2/Lambda)
+### 使用 IAM 角色（EC2/Lambda）
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -134,9 +134,9 @@ const server = new Server({
 server.listen();
 ```
 
-### MinIO Configuration
+### MinIO 配置
 
-For local development with MinIO, the extension automatically enables path-style URLs when an endpoint is provided:
+在本地使用 MinIO 进行开发时，只要提供端点，扩展就会自动启用路径式 URL：
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -182,7 +182,7 @@ const server = new Server({
 server.listen();
 ```
 
-### Custom S3 Client
+### 自定义 S3 客户端
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -210,19 +210,19 @@ const server = new Server({
 server.listen();
 ```
 
-## Document Storage
+## 文档存储
 
-Documents are stored as binary files in S3 with the following naming convention:
+文档以二进制文件的形式存储在 S3 中，命名规则如下：
 
-- **Key**: `{prefix}{documentName}.bin`
-- **Content-Type**: `application/octet-stream`
+- **键**：`{prefix}{documentName}.bin`
+- **Content-Type**：`application/octet-stream`
 
-For example, a document named "my-document" with the default prefix would be stored at:
+例如，名为 "my-document" 的文档使用默认前缀时，将存储在：
 `hocuspocus-documents/my-document.bin`
 
-## CLI Usage
+## CLI 用法
 
-You can also use the S3 extension with the Hocuspocus CLI:
+也可以通过 Hocuspocus CLI 使用 S3 扩展：
 
 ```bash
 # Basic usage
@@ -241,16 +241,16 @@ export AWS_SECRET_ACCESS_KEY=your-secret
 hocuspocus --s3
 ```
 
-### CLI Environment Variables
+### CLI 环境变量
 
-- `AWS_ACCESS_KEY_ID` - AWS access key ID
-- `AWS_SECRET_ACCESS_KEY` - AWS secret access key
-- `AWS_REGION` - AWS region
-- `S3_BUCKET` - S3 bucket name
+- `AWS_ACCESS_KEY_ID` - AWS 访问密钥 ID
+- `AWS_SECRET_ACCESS_KEY` - AWS 秘密访问密钥
+- `AWS_REGION` - AWS 区域
+- `S3_BUCKET` - S3 存储桶名称
 
-## IAM Permissions
+## IAM 权限
 
-Your AWS credentials or IAM role needs the following permissions for the specified bucket:
+指定存储桶所需的 AWS 凭据或 IAM 角色必须拥有以下权限：
 
 ```json
 {
@@ -276,11 +276,11 @@ Your AWS credentials or IAM role needs the following permissions for the specifi
 }
 ```
 
-## Scaling with Redis
+## 使用 Redis 扩展实现横向扩展
 
-The S3 extension works seamlessly with the Redis extension for horizontal scaling. Redis handles real-time synchronization between server instances, while S3 provides persistent storage.
+S3 扩展可与 Redis 扩展无缝协作，实现横向扩展。Redis 负责服务器实例之间的实时同步，S3 则提供持久化存储。
 
-### Basic S3 + Redis Setup
+### S3 + Redis 基本配置
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -335,7 +335,7 @@ const server2 = new Server({
 server2.listen();
 ```
 
-### MinIO + Redis for Local Development
+### MinIO + Redis 本地开发配置
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -370,7 +370,7 @@ createServer("dev-server-1", 8001).listen();
 createServer("dev-server-2", 8002).listen();
 ```
 
-### Environment-based Configuration
+### 基于环境变量的配置
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -404,11 +404,11 @@ const server = new Server({
 server.listen();
 ```
 
-## Development Environment Setup
+## 开发环境设置
 
-### Quick Start
+### 快速开始
 
-For local development with MinIO (S3-compatible storage), use the built-in development scripts:
+若要在本地使用 MinIO（兼容 S3 的存储）进行开发，请使用内置开发脚本：
 
 ```bash
 # Set up complete development environment
@@ -421,7 +421,7 @@ npm run dev:test-s3
 npm run playground:s3
 ```
 
-### Available Development Scripts
+### 可用的开发脚本
 
 ```bash
 # Environment setup
@@ -441,21 +441,21 @@ npm run playground:s3      # S3 extension examples (ports 8000-8003)
 npm run playground:s3-redis # S3 + Redis scaling examples
 ```
 
-### Local MinIO Setup
+### 本地 MinIO 配置
 
-The development environment includes:
+开发环境包含：
 
-- **MinIO Server**: http://localhost:9000 (S3-compatible API)
-- **MinIO Console**: http://localhost:9001 (Web UI)
-- **Redis**: localhost:6379 (for scaling examples)
+- **MinIO 服务器**：http://localhost:9000（兼容 S3 的 API）
+- **MinIO 控制台**：http://localhost:9001（Web 界面）
+- **Redis**：localhost:6379（用于扩展示例）
 
-Default credentials for local development:
-- Access Key: `minioadmin`
-- Secret Key: `minioadmin`
+本地开发的默认凭据：
+- 访问密钥：`minioadmin`
+- 秘密密钥：`minioadmin`
 
-### Environment Variables
+### 环境变量
 
-Create a `.env` file (automatically done by `npm run dev:setup`):
+创建 `.env` 文件（运行 `npm run dev:setup` 时会自动创建）：
 
 ```env
 # MinIO S3 Configuration (for local development)
@@ -472,49 +472,49 @@ AWS_SECRET_ACCESS_KEY=minioadmin
 # AWS_SECRET_ACCESS_KEY=your-aws-secret-key
 ```
 
-## Best Practices
+## 最佳实践
 
-### Security
+### 安全
 
-- Use IAM roles instead of access keys when running on AWS infrastructure
-- Store credentials in environment variables, not in code
-- Follow the principle of least privilege for IAM permissions
-- Enable S3 bucket encryption for additional security
+- 在 AWS 基础设施上运行时，使用 IAM 角色而不是访问密钥
+- 将凭据存储在环境变量中，不要写入代码
+- 为 IAM 权限遵循最小权限原则
+- 启用 S3 存储桶加密以提升安全性
 
-### Performance
+### 性能
 
-- Use regions closest to your users for better latency
-- Consider S3 Transfer Acceleration for global applications
-- Monitor S3 request metrics and costs
+- 使用距离用户较近的区域以降低延迟
+- 面向全球用户的应用可考虑使用 S3 Transfer Acceleration
+- 监控 S3 请求指标和费用
 
-### Reliability
+### 可靠性
 
-- Enable S3 versioning to protect against accidental deletions
-- Set up appropriate S3 lifecycle policies for cost optimization
-- Consider cross-region replication for critical applications
+- 启用 S3 版本控制，以防意外删除
+- 设置适当的 S3 生命周期策略以优化成本
+- 对关键应用考虑跨区域复制
 
-### Scaling Architecture
+### 扩展架构
 
-- **Redis**: Handles real-time synchronization between server instances
-- **S3**: Provides persistent storage and acts as the source of truth
-- **Load Balancer**: Distributes connections across server instances
-- **Multiple Regions**: Deploy in multiple AWS regions for global performance
+- **Redis**：负责服务器实例之间的实时同步
+- **S3**：提供持久化存储，并作为事实来源
+- **负载均衡器**：将连接分发到各个服务器实例
+- **多个区域**：在多个 AWS 区域部署，以提升全球性能
 
-## Troubleshooting
+## 故障排除
 
-### Common Issues
+### 常见问题
 
-**"Bucket not found" or access denied errors:**
-- Verify the bucket name and region
-- Check IAM permissions
-- Ensure credentials are correctly configured
+**出现“找不到存储桶”或拒绝访问错误：**
+- 验证存储桶名称和区域
+- 检查 IAM 权限
+- 确认凭据配置正确
 
-**Connection timeouts with MinIO:**
-- Make sure `forcePathStyle: true` is set
-- Verify the endpoint URL is accessible
-- Check firewall and network settings
+**连接 MinIO 时超时：**
+- 确保已设置 `forcePathStyle: true`
+- 验证端点 URL 是否可访问
+- 检查防火墙和网络设置
 
-**Large document performance:**
-- Monitor S3 transfer times
-- Consider using S3 multipart uploads for very large documents
-- Optimize document structure to reduce size
+**大型文档的性能问题：**
+- 监控 S3 传输时间
+- 对于超大型文档，可考虑使用 S3 分段上传
+- 优化文档结构以减小体积
