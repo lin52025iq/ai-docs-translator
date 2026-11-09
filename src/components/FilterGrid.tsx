@@ -36,7 +36,7 @@ export const Wrapper = ({ filters, initialFilter, children }: FilterGridWrapperP
             isActive={currentFilter === null}
             onClick={() => setCurrentFilter(null)}
           >
-            All
+            全部
           </Button>
           {filters.map((filter) => (
             <Button
