@@ -13,7 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   })) as MetadataRoute.Sitemap
 
   return [
-    // HOME ROUTE
+    // 首页路由
     {
       url: `${FULL_DOMAIN}`,
       lastModified: new Date(),
