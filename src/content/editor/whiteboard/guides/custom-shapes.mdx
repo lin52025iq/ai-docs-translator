@@ -1,23 +1,23 @@
 ---
-title: Custom whiteboard shapes
+title: 自定义白板形状
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Custom whiteboard shapes | Tiptap Editor Docs
-  description: Add shapes of your own to a whiteboard, like a poll or a chart, with a component of your app inside. The board places, selects, moves and resizes them.
-  category: Editor
+  title: 自定义白板形状 | Tiptap 编辑器文档
+  description: 在白板中添加自己的形状，例如投票或图表，并在其中嵌入应用组件。白板可以放置、选择、移动和调整这些形状的大小。
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A custom shape is a node of your own on the board, with a component of your app inside, like a poll or a chart. The board places, selects, moves and resizes it like its own shapes, and your component draws what is inside.
+自定义形状是白板上的自定义节点，其中包含应用组件，例如投票或图表。白板可以像处理自身的形状一样放置、选择、移动和调整它的大小，而组件负责绘制其中的内容。
 
 <CodeDemo isPro path="/Extensions/WhiteboardCustomShape" />
 
-## Create the node
+## 创建节点
 
-A shape is a node in the `shape` group. `shapeAttributes` gives it the attributes that every shape needs: its id, position, size and z-index. `dataAttribute` adds attributes of your own, like the votes of a poll. `shapeNodeView` turns the node view of your component into a shape. A custom shape holds no text, so make it an atom:
+形状是 `shape` 组中的节点。`shapeAttributes` 会为形状添加所需的属性：ID、位置、大小和 z-index。`dataAttribute` 可添加自定义属性，例如投票的票数。`shapeNodeView` 会将组件的节点视图转换为形状。自定义形状不包含文本，因此应将其设为原子节点：
 
 ```js
 import { mergeAttributes, Node } from '@tiptap/core'
@@ -54,13 +54,13 @@ export const VoteCard = Node.create({
 })
 ```
 
-Add the node to the editor next to `WhiteboardKit`, like `extensions: [WhiteboardKit, VoteCard]`.
+将该节点与 `WhiteboardKit` 一起添加到编辑器中，例如：`extensions: [WhiteboardKit, VoteCard]`。
 
-Copy and paste go through HTML. `dataAttribute` keeps a value there as a data attribute, like `data-votes`, so the value stays. It keeps strings, numbers and booleans, and objects and arrays as JSON. `shapeAttributes` does the same for the position and the size.
+复制和粘贴通过 HTML 实现。`dataAttribute` 会将值保存在 HTML 数据属性中，例如 `data-votes`，从而保留该值。它支持字符串、数字、布尔值，以及以 JSON 格式保存的对象和数组。`shapeAttributes` 也会以相同方式保存位置和大小。
 
-## Draw the component
+## 绘制组件
 
-The component is a [React node view](/editor/extensions/custom-extensions/node-views/react) of Tiptap. Wrap it in `NodeViewWrapper`, which fills the shape, and read the data of the shape from `node.attrs`:
+该组件是 Tiptap 的 [React 节点视图](/editor/extensions/custom-extensions/node-views/react)。用 `NodeViewWrapper` 包裹组件，使其填满形状，并从 `node.attrs` 读取形状的数据：
 
 ```jsx
 import { NodeViewWrapper } from '@tiptap/react'
@@ -86,15 +86,15 @@ export function VoteCardView({ node, editor }) {
 }
 ```
 
-A component that your app has already works the same way. Render it inside `NodeViewWrapper`, and pass it the data of the shape, like `<ProjectCard title={node.attrs.title} />`. It renders in the React tree of `EditorContent`, so it reads the context of your app, like a theme.
+应用中已有的组件也可以用相同方式处理。将它渲染在 `NodeViewWrapper` 中，并向其传入形状数据，例如 `<ProjectCard title={node.attrs.title} />`。组件会在 `EditorContent` 的 React 树中渲染，因此可以读取应用的上下文，例如主题。
 
-The component changes its shape with `updateShape`, which also changes attributes of your own, and undo takes each change back. The component gets the node again after each change to the shape, also after a move, a resize or a change by another user.
+组件通过 `updateShape` 修改形状，这也会更改自定义属性；撤销操作会逐一还原这些更改。形状每次发生变化后，组件都会再次收到节点，包括形状移动、调整大小或被其他用户修改的情况。
 
-### Vue and plain JavaScript
+### Vue 和原生 JavaScript
 
-In Vue, use `VueNodeViewRenderer` and `NodeViewWrapper` from `@tiptap/vue-3` the same way. The demo above has a Vue tab with the same card. See [Vue node views](/editor/extensions/custom-extensions/node-views/vue).
+在 Vue 中，可以使用 `@tiptap/vue-3` 提供的 `VueNodeViewRenderer` 和 `NodeViewWrapper`，方式相同。上方示例中的 Vue 选项卡展示了相同的卡片。请参阅 [Vue 节点视图](/editor/extensions/custom-extensions/node-views/vue)。
 
-Without a framework, pass a [node view](/editor/extensions/custom-extensions/node-views/javascript) of your own. Its `update` draws each change. A node view without `update` is drawn again after each change:
+不使用框架时，可以传入自定义的[节点视图](/editor/extensions/custom-extensions/node-views/javascript)。它的 `update` 方法会绘制每次变化。没有 `update` 方法的节点视图会在每次变化后重新绘制：
 
 ```js
 shapeNodeView({
@@ -114,11 +114,11 @@ shapeNodeView({
 })
 ```
 
-The element of the node view is `[data-shape-component]`, and it has the size of the shape.
+节点视图的元素是 `[data-shape-component]`，其大小与形状相同。
 
-## Presses
+## 按下操作
 
-A press on the component selects the shape, and a drag moves it, like on the shapes of the board. Presses on links, buttons, fields and editable content in the component go to them instead, so they work as usual. Mark other parts that take their own presses, like the legend of a chart, with `data-shape-interactive`:
+按下组件会选中形状，拖动组件会移动形状，与白板自带的形状一样。按下组件中的链接、按钮、字段和可编辑内容时，操作会传递给这些元素，因此它们仍可照常使用。对于图表图例等需要自行处理按下操作的其他部分，请添加 `data-shape-interactive` 标记：
 
 ```jsx
 <div className="legend" data-shape-interactive>
@@ -126,11 +126,11 @@ A press on the component selects the shape, and a drag moves it, like on the sha
 </div>
 ```
 
-An `iframe` keeps all presses on it for itself, so the board never gets them. Give it `pointer-events: none` to let users select and move the shape there.
+`iframe` 会自行处理所有按下操作，白板无法接收到这些操作。为其设置 `pointer-events: none`，这样用户就可以在该区域选择和移动形状。
 
-## Read-only boards
+## 只读白板
 
-On a [read-only board](/editor/whiteboard/guides/shapes-and-tools#read-only-boards), users can select shapes, but not move or resize them. Presses on the buttons and fields of a component still go to them, and commands like `updateShape` change a read-only board too. So turn off what changes the board in your component. [`isBoardEditable`](/editor/whiteboard/api-reference/utilities#isboardeditable) tells whether the board is editable. Don't use `editor.isEditable`, which is `false` whenever the board has the keyboard. `useEditorState` draws the component again when the board becomes read-only or editable:
+在[只读白板](/editor/whiteboard/guides/shapes-and-tools#read-only-boards)上，用户可以选择形状，但不能移动或调整其大小。按下组件中的按钮和字段时，操作仍会传递给它们；`updateShape` 等命令也仍可修改只读白板。因此，应在组件中禁用会修改白板的操作。[`isBoardEditable`](/editor/whiteboard/api-reference/utilities#isboardeditable) 可用于判断白板是否可编辑。不要使用 `editor.isEditable`，因为只要白板获得键盘焦点，它的值就是 `false`。白板切换为只读或可编辑状态时，`useEditorState` 会重新绘制组件：
 
 ```jsx
 import { NodeViewWrapper, useEditorState } from '@tiptap/react'
@@ -149,21 +149,21 @@ export function VoteCardView({ editor }) {
 }
 ```
 
-Without React, check `isBoardEditable(editor)` again on the editor's `update` event, which `editor.setEditable()` sends.
+不使用 React 时，请在编辑器的 `update` 事件中再次检查 `isBoardEditable(editor)`；调用 `editor.setEditable()` 时会触发该事件。
 
-## Add the shape
+## 添加形状
 
-No tool draws custom shapes, so add them with `insertShape`, for example from a button of your app:
+没有工具可以绘制自定义形状，因此可以使用 `insertShape` 添加，例如从应用的按钮触发：
 
 ```js
 editor.commands.insertShape({ type: 'voteCard', x: 100, y: 100 })
 ```
 
-The shape gets a new id and the size from `shapeAttributes`, unless you pass them. Users can then select, move, resize, copy, paste and delete it, and undo each change. Commands like `updateShape`, `moveShapes` and `deleteShapes` work on it too.
+除非另行传入 ID 和大小，否则形状会获得新的 ID，并使用 `shapeAttributes` 中定义的大小。之后，用户可以选择、移动、调整大小、复制、粘贴和删除该形状，也可以撤销每项更改。`updateShape`、`moveShapes` 和 `deleteShapes` 等命令也适用于自定义形状。
 
-## Style the shape
+## 设置形状样式
 
-The element of the shape has `data-shape`, the `data-type` from `shapeNodeView`, and `data-selected` while the shape is selected. Style it like the shapes of the board:
+形状的元素带有 `data-shape`、`shapeNodeView` 中指定的 `data-type`，并会在形状被选中时带有 `data-selected`。可以像设置白板自带形状的样式一样设置它：
 
 ```css
 [data-type='vote-card'] {
@@ -174,13 +174,13 @@ The element of the shape has `data-shape`, the `data-type` from `shapeNodeView`,
 }
 ```
 
-See [Styling](/editor/whiteboard/api-reference/styling#parts-of-shapes) for the parts of a shape.
+有关形状各部分的信息，请参阅[样式设置](/editor/whiteboard/api-reference/styling#parts-of-shapes)。
 
-## Limits
+## 限制
 
-- Custom shapes hold no text that users edit on the board.
+- 自定义形状不能包含用户在白板上编辑的文本。
 
-## Next steps
+## 后续步骤
 
-- See all options of [`shapeNodeView()`](/editor/whiteboard/api-reference/utilities#shapenodeview) and [`dataAttribute()`](/editor/whiteboard/api-reference/utilities#dataattribute)
-- Add and change shapes with [commands](/editor/whiteboard/guides/shapes-and-tools)
+- 查看 [`shapeNodeView()`](/editor/whiteboard/api-reference/utilities#shapenodeview) 和 [`dataAttribute()`](/editor/whiteboard/api-reference/utilities#dataattribute) 的所有选项
+- 使用[命令](/editor/whiteboard/guides/shapes-and-tools)添加和修改形状
