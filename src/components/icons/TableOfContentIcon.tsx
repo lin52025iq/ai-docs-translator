@@ -1,7 +1,7 @@
 import type { SVGProps } from 'react'
 
 /**
- * Table of contents icon used in navigation controls.
+ * 用于导航控件的目录图标。
  */
 export const TableOfContentIcon = (props: SVGProps<SVGSVGElement>) => {
   return (
