@@ -28,11 +28,16 @@ translation:
   retranslateOnContextChange: false
 
 validation:
+  prepare: [pnpm, install, --frozen-lockfile, --ignore-scripts]
   files:
     - include: ['src/**/*.mdx', 'src/**/*.{ts,tsx}']
-      command: [node, '{configDir}/validators/check.ts', file, '{file}', '{path}']
+      cwd: snapshot
+      stdin: true
+      command: [pnpm, exec, eslint, --quiet, --stdin, --stdin-filename, '{path}']
   global:
-    command: [node, '{configDir}/validators/check.ts', global]
+    commands:
+      - [pnpm, run, generate:content-dates]
+      - [pnpm, run, build:next]
 
 deployment:
   provider: vercel
