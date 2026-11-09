@@ -1,32 +1,32 @@
 ---
-title: Read the document
+title: 阅读文档
 meta:
-  title: Read the document | Tiptap AI Toolkit
-  description: Extract document content in JSON, HTML, or text formats with support for selections, ranges, and chunked reads for AI integration.
+  title: 阅读文档 | Tiptap AI Toolkit
+  description: 提取 JSON、HTML 或文本格式的文档内容，并支持选择内容、范围读取和分块读取，便于集成 AI。
   category: AI Toolkit
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Read content in multiple formats. Chunked reads help with large documents.
+以多种格式读取内容。分块读取有助于处理大型文档。
 
 ## `getTextRange`
 
-Return text content from a specific range.
+返回指定范围内的文本内容。
 
-### Parameters
+### 参数
 
-- `range` (`Range`): The range to get content from
-  - `from` (`number`): Start position
-  - `to` (`number`): End position
-- `options?` (`GetTextRangeOptions`): Options for the `getTextRange` method
-  - `doc?` (`Node`): Optional document node to use instead of the current editor document
+- `range` (`Range`)：要获取内容的范围
+  - `from` (`number`)：起始位置
+  - `to` (`number`)：结束位置
+- `options?` (`GetTextRangeOptions`)：`getTextRange` 方法的选项
+  - `doc?` (`Node`)：可选的文档节点，用于替代当前编辑器文档
 
-### Returns
+### 返回值
 
-`string`: The text content as a plain string
+`string`：纯字符串格式的文本内容
 
-### Example
+### 示例
 
 ```ts
 // Read a text slice
@@ -35,21 +35,21 @@ const snippet = toolkit.getTextRange({ from: 0, to: 100 })
 
 ## `getHtmlRange`
 
-Return HTML content from a specific range.
+返回指定范围内的 HTML 内容。
 
-### Parameters
+### 参数
 
-- `range` (`Range`): The range to get content from
-  - `from` (`number`): Start position
-  - `to` (`number`): End position
-- `options?` (`GetHtmlRangeOptions`): Options for the `getHtmlRange` method
-  - `doc?` (`Node`): Optional document node to use instead of the current editor document
+- `range` (`Range`)：要获取内容的范围
+  - `from` (`number`)：起始位置
+  - `to` (`number`)：结束位置
+- `options?` (`GetHtmlRangeOptions`)：`getHtmlRange` 方法的选项
+  - `doc?` (`Node`)：可选的文档节点，用于替代当前编辑器文档
 
-### Returns
+### 返回值
 
-`string`: The HTML content as a string
+`string`：字符串格式的 HTML 内容
 
-### Example
+### 示例
 
 ```ts
 // Read the HTML of the content from position 0 to 100
@@ -58,26 +58,26 @@ const snippet = toolkit.getHtmlRange({ from: 0, to: 100 })
 
 ## `getMarkdownRange`
 
-Return Markdown content from a specific range.
+返回指定范围内的 Markdown 内容。
 
-<Callout title="Markdown extension required" variant="warning">
-  This method requires the [Tiptap Markdown
-  extension](https://tiptap.dev/docs/editor/markdown/api/editor) to be installed and configured.
+<Callout title="需要 Markdown 扩展" variant="warning">
+  使用此方法前，必须安装并配置 [Tiptap Markdown
+  扩展](https://tiptap.dev/docs/editor/markdown/api/editor)。
 </Callout>
 
-### Parameters
+### 参数
 
-- `range` (`Range`): The range to get content from
-  - `from` (`number`): Start position
-  - `to` (`number`): End position
-- `options?` (`GetMarkdownRangeOptions`): Options for the `getMarkdownRange` method
-  - `doc?` (`Node`): Optional document node to use instead of the current editor document
+- `range` (`Range`)：要获取内容的范围
+  - `from` (`number`)：起始位置
+  - `to` (`number`)：结束位置
+- `options?` (`GetMarkdownRangeOptions`)：`getMarkdownRange` 方法的选项
+  - `doc?` (`Node`)：可选的文档节点，用于替代当前编辑器文档
 
-### Returns
+### 返回值
 
-`string`: The Markdown content as a string, or an empty string if the Markdown extension is not available
+`string`：字符串格式的 Markdown 内容；如果 Markdown 扩展不可用，则返回空字符串
 
-### Example
+### 示例
 
 ```ts
 // Read the Markdown of the content from position 0 to 100
@@ -86,21 +86,21 @@ const snippet = toolkit.getMarkdownRange({ from: 0, to: 100 })
 
 ## `getJsonRange`
 
-Return Tiptap JSON content from a specific range.
+返回指定范围内的 Tiptap JSON 内容。
 
-### Parameters
+### 参数
 
-- `range` (`Range`): The range to get content from
-  - `from` (`number`): Start position
-  - `to` (`number`): End position
-- `options?` (`GetJsonRangeOptions`): Options for the `getJsonRange` method
-  - `doc?` (`Node`): Optional document node to use instead of the current editor document
+- `range` (`Range`)：要获取内容的范围
+  - `from` (`number`): 起始位置
+  - `to` (`number`)：结束位置
+- `options?` (`GetJsonRangeOptions`)：`getJsonRange` 方法的选项
+  - `doc?` (`Node`)：可选的文档节点，用于替代当前编辑器文档
 
-### Returns
+### 返回值
 
-`any`: The Tiptap JSON content
+`any`：Tiptap JSON 内容
 
-### Example
+### 示例
 
 ```ts
 // Read a Tiptap JSON slice
@@ -109,26 +109,26 @@ const snippet = toolkit.getJsonRange({ from: 0, to: 100 })
 
 ## `getTextChunks`
 
-Split the document into text chunks for large-content processing.
+将文档拆分为文本块，以便处理大型内容。
 
-### Parameters
+### 参数
 
-- `options?` (`GetTextChunksOptions`): Options for the `getTextChunks` method
-  - `chunkSize?` (`number`): Max characters per chunk. Defaults to 32,000 characters (8000 tokens \* 4 characters per token)
+- `options?` (`GetTextChunksOptions`)：`getTextChunks` 方法的选项
+  - `chunkSize?` (`number`)：每个块的最大字符数。默认为 32,000 个字符（8000 个 token × 每个 token 4 个字符）
 
-### Returns
+### 返回值
 
-`TextChunk[]`: Array of text chunks, where each chunk contains:
+`TextChunk[]`：文本块数组，每个块包含：
 
-- `content` (`string`): The text content of the chunk
-- `range` (`Range`): The range in the document where the chunk starts and ends
-  - `from` (`number`): Start position in the document
-  - `to` (`number`): End position in the document
-- `nodeRange` (`NodeRange`): The node range where the chunk starts and ends
-  - `from` (`number`): Start node position in the document
-  - `to` (`number`): End node position in the document
+- `content` (`string`)：块中的文本内容
+- `range` (`Range`)：块在文档中的起止范围
+  - `from` (`number`)：在文档中的起始位置
+  - `to` (`number`)：在文档中的结束位置
+- `nodeRange` (`NodeRange`)：块在文档中的节点起止范围
+  - `from` (`number`)：在文档中的起始节点位置
+  - `to` (`number`)：在文档中的结束节点位置
 
-### Example
+### 示例
 
 ```ts
 // Split the document into chunks of the default size
@@ -139,26 +139,26 @@ const smallerChunks = toolkit.getTextChunks({ chunkSize: 1000 })
 
 ## `getHtmlChunks`
 
-Split the document into HTML chunks for large-content processing.
+将文档拆分为 HTML 块，以便处理大型内容。
 
-### Parameters
+### 参数
 
-- `options?` (`GetHtmlChunksOptions`): Options for the `getHtmlChunks` method
-  - `chunkSize?` (`number`): Max characters per chunk. Defaults to 32,000 characters (8000 tokens \* 4 characters per token)
+- `options?` (`GetHtmlChunksOptions`)：`getHtmlChunks` 方法的选项
+  - `chunkSize?` (`number`)：每个块的最大字符数。默认为 32,000 个字符（8000 个 token × 每个 token 4 个字符）
 
-### Returns
+### 返回值
 
-`HtmlChunk[]`: Array of HTML chunks, where each chunk contains:
+`HtmlChunk[]`：HTML 块数组，每个块包含：
 
-- `content` (`string`): The HTML content of the chunk
-- `range` (`Range`): The range in the document where the chunk starts and ends
-  - `from` (`number`): Start position in the document
-  - `to` (`number`): End position in the document
-- `nodeRange` (`NodeRange`): The node range where the chunk starts and ends
-  - `from` (`number`): Start node position in the document
-  - `to` (`number`): End node position in the document
+- `content` (`string`)：块中的 HTML 内容
+- `range` (`Range`)：块在文档中的起止范围
+  - `from` (`number`)：在文档中的起始位置
+  - `to` (`number`)：在文档中的结束位置
+- `nodeRange` (`NodeRange`)：块在文档中的节点起止范围
+  - `from` (`number`)：在文档中的起始节点位置
+  - `to` (`number`)：在文档中的结束节点位置
 
-### Example
+### 示例
 
 ```ts
 // Split the document into chunks of the default size
@@ -169,26 +169,26 @@ const smallerChunks = toolkit.getHtmlChunks({ chunkSize: 1000 })
 
 ## `getJsonChunks`
 
-Split the document into Tiptap JSON chunks for large-content processing.
+将文档拆分为 Tiptap JSON 块，以便处理大型内容。
 
-### Parameters
+### 参数
 
-- `options?` (`GetJsonChunksOptions`): Options for the `getJsonChunks` method
-  - `chunkSize?` (`number`): Max characters per chunk. Defaults to 32,000 characters (8000 tokens \* 4 characters per token)
+- `options?` (`GetJsonChunksOptions`)：`getJsonChunks` 方法的选项
+  - `chunkSize?` (`number`)：每个块的最大字符数。默认为 32,000 个字符（8000 个 token × 每个 token 4 个字符）
 
-### Returns
+### 返回值
 
-`JsonChunk[]`: Array of Tiptap JSON chunks, where each chunk contains:
+`JsonChunk[]`：Tiptap JSON 块数组，每个块包含：
 
-- `content` (`any`): The Tiptap JSON content of the chunk. It is the JSON of a Fragment of the document.
-- `range` (`Range`): The range in the document where the chunk starts and ends
-  - `from` (`number`): Start position in the document
-  - `to` (`number`): End position in the document
-- `nodeRange` (`NodeRange`): The node range where the chunk starts and ends
-  - `from` (`number`): Start node position in the document
-  - `to` (`number`): End node position in the document
+- `content` (`any`)：块中的 Tiptap JSON 内容，即文档中一个 Fragment 的 JSON。
+- `range` (`Range`)：块在文档中的起止范围
+  - `from` (`number`)：在文档中的起始位置
+  - `to` (`number`)：在文档中的结束位置
+- `nodeRange` (`NodeRange`)：块在文档中的节点起止范围
+  - `from` (`number`)：在文档中的起始节点位置
+  - `to` (`number`)：在文档中的结束节点位置
 
-### Example
+### 示例
 
 ```ts
 // Split the document into chunks of the default size
@@ -199,47 +199,47 @@ const smallerChunks = toolkit.getJsonChunks({ chunkSize: 1000 })
 
 ## `tiptapRead`
 
-Read the document in a format that allows the AI to make fast, efficient edits.
+以便于 AI 快速、高效地编辑的格式读取文档。
 
-Used in the [Proofreader workflow](/ai/ai-toolkit/client/workflows/proofreader) and other workflows.
+此方法用于[校对工作流](/ai/ai-toolkit/client/workflows/proofreader)及其他工作流。
 
-### Parameters
+### 参数
 
-- `range?` (`Range`): The range to read from. Defaults to the entire document.
-  - `from` (`number`): Start position
-  - `to` (`number`): End position
-- `ignoreSuggestions?` (`boolean`): When `true`, preview suggestions are not applied and the document is read as-is. Defaults to `false`.
-- `reviewOptions?` ([`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options)): Review mode options used to decide which document representation should be read.
-  - When `mode` is `'trackedChanges'`, the method reads the document after tracked changes have been applied.
+- `range?` (`Range`)：要读取的范围。默认为整个文档。
+  - `from` (`number`)：起始位置
+  - `to` (`number`)：结束位置
+- `ignoreSuggestions?` (`boolean`)：为 `true` 时，不应用预览建议，直接读取文档原样内容。默认为 `false`。
+- `reviewOptions?` ([`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options))：审核模式选项，用于决定读取哪种文档表示形式。
+  - 当 `mode` 为 `'trackedChanges'` 时，此方法会读取已应用修订后的文档。
 
-### Returns (`TiptapReadResult`)
+### 返回值（`TiptapReadResult`）
 
-- `content` (`string`): The content of the document in a format that allows the AI to make fast, efficient edits.
+- `content` (`string`)：文档内容，格式便于 AI 快速、高效地编辑。
 
 ## `tiptapReadChunks`
 
-Read the document in the Tiptap Read format, split into chunks for large-content processing.
+以 Tiptap Read 格式读取文档，并将其拆分为块，以便处理大型内容。
 
-### Parameters
+### 参数
 
-- `options?` (`TiptapReadChunksOptions`): Options for the `tiptapReadChunks` method
-  - `chunkSize?` (`number`): Max characters per chunk. Defaults to 32,000 characters (8000 tokens \* 4 characters per token)
-  - `reviewOptions?` ([`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options)): Review mode options used to decide which document representation should be chunked.
-    - When `mode` is `'trackedChanges'`, the method chunks the document after tracked changes have been applied.
+- `options?` (`TiptapReadChunksOptions`)：`tiptapReadChunks` 方法的选项
+  - `chunkSize?` (`number`)：每个块的最大字符数。默认为 32,000 个字符（8000 个 token × 每个 token 4 个字符）
+  - `reviewOptions?` ([`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options))：审核模式选项，用于决定要拆分哪种文档表示形式。
+    - 当 `mode` 为 `'trackedChanges'` 时，此方法会在应用修订后拆分文档。
 
-### Returns
+### 返回值
 
-`TiptapReadChunk[]`: Array of chunks, where each chunk contains:
+`TiptapReadChunk[]`：块数组，每个块包含：
 
-- `content` (`string`): HTML content in the Tiptap Read format
-- `range` (`Range`): The range in the document where the chunk starts and ends
-  - `from` (`number`): Start position in the document
-  - `to` (`number`): End position in the document
-- `nodeRange` (`NodeRange`): The node range where the chunk starts and ends
-  - `from` (`number`): Start node position in the document
-  - `to` (`number`): End node position in the document
+- `content` (`string`)：Tiptap Read 格式的 HTML 内容
+- `range` (`Range`)：块在文档中的起止范围
+  - `from` (`number`)：在文档中的起始位置
+  - `to` (`number`)：在文档中的结束位置
+- `nodeRange` (`NodeRange`)`：块在文档中的节点起止范围
+  - `from` (`number`)：在文档中的起始节点位置
+  - `to` (`number`)：在文档中的结束节点位置
 
-### Example
+### 示例
 
 ```ts
 // Split the document into chunks
