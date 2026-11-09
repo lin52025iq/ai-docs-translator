@@ -1,10 +1,10 @@
 ---
-title: 'From zero to print-ready: Pages & DOCX export'
+title: '从零到可用于印刷：Pages 与 DOCX 导出'
 tags:
   - type: alpha
 meta:
-  title: From zero to print-ready | Tiptap Pages Docs
-  description: Step-by-step guide to building a print-ready editor with Tiptap, Pages, and DOCX export.
+  title: 从零到可用于印刷 | Tiptap Pages 文档
+  description: 按步骤介绍如何使用 Tiptap、Pages 和 DOCX 导出功能，构建可直接用于印刷的编辑器。
   category: Pages
 sidebars:
   hideSecondary: true
@@ -13,15 +13,15 @@ sidebars:
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-This guide walks through setting up a Tiptap editor from scratch with the Pages extension for paginated, print-like layout, plus DOCX export and import for a professional, print-ready workflow.
+本指南将带你从零开始设置 Tiptap 编辑器，使用 Pages 扩展实现分页和印刷版式，并支持 DOCX 导入和导出，打造专业的印刷就绪工作流。
 
 <CodeDemo isPro path="/Extensions/PagesImportExportDocx" />
 
 ---
 
-## 1. Install the Pages stack
+## 1. 安装 Pages 组件包
 
-Install the three Pro packages that always go together when you build with Pages:
+使用 Pages 时，以下三个 Pro 组件包通常需要一起安装：
 
 ```bash
 npm install @tiptap-pro/extension-convert-kit \
@@ -29,16 +29,11 @@ npm install @tiptap-pro/extension-convert-kit \
             @tiptap-pro/extension-pages
 ```
 
-<Callout title="Why these three packages" variant="info">
-  `@tiptap-pro/extension-convert-kit` provides the editor's node and mark schema (paragraphs,
-  headings, lists, images, marks). `@tiptap-pro/extension-pages-tablekit` provides pagination-safe
-  tables, required because ConvertKit's bundled tables are not designed to paginate.
-  `@tiptap-pro/extension-pages` provides the page layout itself. Make sure you've authenticated to
-  the Tiptap private npm registry first; see the [Pro Extensions guide](/guides/pro-extensions) for
-  setup.
+<Callout title="为什么需要这三个组件包" variant="info">
+  `@tiptap-pro/extension-convert-kit` 提供编辑器的节点和标记模式（段落、标题、列表、图像、标记）。`@tiptap-pro/extension-pages-tablekit` 提供适用于分页的表格；这是必需的，因为 ConvertKit 内置的表格并非为分页设计。`@tiptap-pro/extension-pages` 则提供页面布局本身。请先登录 Tiptap 私有 npm 注册表；设置方法请参阅 [Pro 扩展指南](/guides/pro-extensions)。
 </Callout>
 
-## 2. Set up your editor with Pages
+## 2. 使用 Pages 设置编辑器
 
 ```ts
 import { Editor } from '@tiptap/core'
@@ -61,21 +56,19 @@ const editor = new Editor({
 })
 ```
 
-<Callout title="Best practice" variant="info">
-  Add Pages early in your setup so that document structure and layout are consistent from the start.
-  You can change the page format, headers, and footers later via commands; it's harder to retrofit
-  Pages onto a document that was already authored without pagination in mind.
+<Callout title="最佳实践" variant="info">
+  在设置初期就添加 Pages，确保文档结构和布局从一开始就保持一致。之后可以通过命令更改页面格式、页眉和页脚；如果文档在编写时没有考虑分页，之后再为其添加 Pages 就会比较困难。
 </Callout>
 
-## 3. Add DOCX export capability
+## 3. 添加 DOCX 导出功能
 
-Install the DOCX export extension:
+安装 DOCX 导出扩展：
 
 ```bash
 npm install @tiptap-pro/extension-export-docx
 ```
 
-Add it to your editor:
+将其添加到编辑器中：
 
 ```ts
 import { ExportDocx } from '@tiptap-pro/extension-export-docx'
@@ -92,9 +85,9 @@ const editor = new Editor({
 })
 ```
 
-### 3a. Configure DOCX export
+### 3a. 配置 DOCX 导出
 
-The DOCX export extension runs entirely in the browser: no token, no server call. You configure it with an `onCompleteExport` callback that receives the result:
+DOCX 导出扩展完全在浏览器中运行：无需令牌，也不会调用服务器。通过 `onCompleteExport` 回调配置扩展，该回调会接收导出结果：
 
 ```ts
 import { ExportDocx } from '@tiptap-pro/extension-export-docx'
@@ -121,28 +114,25 @@ ExportDocx.configure({
 })
 ```
 
-<Callout title="Required" variant="warning">
-  `onCompleteExport` is required. The export does not return its result; it hands the result to your
-  callback for you to download, upload, or process.
+<Callout title="必需项" variant="warning">
+  必须配置 `onCompleteExport`。导出操作不会直接返回结果，而是将结果传递给此回调，供你下载、上传或进一步处理。
 </Callout>
 
-## 4. Export your document
+## 4. 导出文档
 
-Trigger an export from the editor's command chain:
+通过编辑器的命令链触发导出：
 
 ```ts
 editor.commands.exportDocx()
 ```
 
-<Callout title="Round-trip is not byte-identical" variant="info">
-  DOCX export is faithful but not lossless. A few features (subscript/superscript marks, paragraph
-  line-height, floating tables) round-trip imperfectly. See the [feature support
-  matrix](/conversion/getting-started/feature-support-matrix) for the full list.
+<Callout title="往返转换不会保证字节完全一致" variant="info">
+  DOCX 导出能够忠实保留内容，但并非无损转换。少数功能（下标/上标标记、段落行高、浮动表格）在往返转换时可能不够完美。完整列表请参阅[功能支持矩阵](/conversion/getting-started/feature-support-matrix)。
 </Callout>
 
-## 5. Import DOCX files into your editor
+## 5. 将 DOCX 文件导入编辑器
 
-Add the import extension so users can load Word documents into the paginated editor:
+添加导入扩展，让用户能够将 Word 文档载入分页编辑器：
 
 ```bash
 npm install @tiptap-pro/extension-import-docx
@@ -170,7 +160,7 @@ const editor = new Editor({
 })
 ```
 
-To trigger an import, pass a `File` from an `<input type="file" />`:
+要触发导入，请传入来自 `<input type="file" />` 的 `File`：
 
 ```ts
 editor
@@ -188,9 +178,9 @@ editor
   .run()
 ```
 
-When the imported document carries headers and footers, the Pages extension picks them up automatically; they appear at the top and bottom of each rendered page without further wiring.
+如果导入的文档带有页眉和页脚，Pages 扩展会自动识别；无需额外配置，它们就会显示在每个渲染页面的顶部和底部。
 
-Word page numbers in those headers and footers import as `{page}` and `{numpages}` tokens. Pages renders `{page}` right away. For the total page count, Pages expects `{total}` by default, so rename it to match the import. Replace the `Pages.configure` block from step 2 with this one, which adds the rename and updates the footer to the new token name:
+页眉和页脚中的 Word 页码会导入为 `{page}` 和 `{numpages}` 占位符。Pages 会立即渲染 `{page}`。默认情况下，Pages 使用 `{total}` 表示总页数，因此需要将其重命名以匹配导入内容。将第 2 步中的 `Pages.configure` 配置块替换为以下内容，其中添加了重命名设置，并将页脚更新为新的占位符名称：
 
 ```ts
 Pages.configure({
@@ -203,24 +193,21 @@ Pages.configure({
 })
 ```
 
-After the rename, Pages and the DOCX export both treat `{numpages}` as the total page count, and `{total}` no longer works.
+重命名后，Pages 和 DOCX 导出都会将 `{numpages}` 视为总页数占位符，`{total}` 将不再生效。
 
-<Callout title="Where to get your token" variant="hint">
-  See the [Conversion install guide](/conversion/getting-started/install) for setup, and
-  [Authentication](/authentication) for how to sign a token. Sign tokens server-side and never
-  expose your signing key in the browser.
+<Callout title="如何获取令牌" variant="hint">
+  设置方法请参阅 [Conversion 安装指南](/conversion/getting-started/install)，有关如何签发令牌，请参阅[身份验证](/authentication)。请在服务器端签发令牌，切勿在浏览器中公开签名密钥。
 </Callout>
 
 ---
 
-## Next steps
+## 后续步骤
 
-- [Pages options](/pages/core-concepts/options): every option Pages exposes
-- [Page header and footer](/pages/core-concepts/page-header-footer): different first page, odd/even pages, programmatic editor open/close
-- [PagesTableKit](/pages/guides/pages-tablekit): pagination-safe tables in detail, including the most important known limitation
-- [Limitations](/pages/core-concepts/limitations): non-splittable content, what Pages does not do, and how to work around each case
+- [Pages 选项](/pages/core-concepts/options)：Pages 提供的所有选项
+- [页面页眉和页脚](/pages/core-concepts/page-header-footer)：首页设置、奇偶页设置，以及通过程序打开/关闭编辑器
+- [PagesTableKit](/pages/guides/pages-tablekit)：深入了解适用于分页的表格，包括最重要的已知限制
+- [限制](/pages/core-concepts/limitations)：不可拆分的内容、Pages 不支持的功能，以及各种情况的处理方法
 
-<Callout title="Need help?">
-  Reach out to support if you hit something unexpected, or check the rest of the documentation for
-  advanced workflows.
+<Callout title="需要帮助？">
+  如果遇到意料之外的问题，请联系支持团队；也可以查看文档的其他部分，了解高级工作流。
 </Callout>
