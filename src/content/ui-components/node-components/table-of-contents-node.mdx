@@ -1,12 +1,12 @@
 ---
-title: Table of Contents Node
+title: 目录节点
 meta:
-  title: Table of Contents node | Tiptap UI Components
-  description: Add a table of contents node UI component to your Tiptap editor. More in the documentation!
-  category: UI Components
+  title: 目录节点 | Tiptap UI 组件
+  description: 为 Tiptap 编辑器添加目录节点 UI 组件。更多内容请参阅文档！
+  category: UI 组件
 component:
-  name: TOC node
-  description: Add a table of contents UI node component with sidebar navigation
+  name: TOC 节点
+  description: 添加带侧边栏导航的目录 UI 节点组件
   type: node-component
   isFree: false
   isCloud: false
@@ -19,25 +19,25 @@ tags:
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-A comprehensive table of contents (TOC) component system for Tiptap editors. This package provides both an inline TOC node that can be embedded within the editor content and a floating sidebar component for document navigation with progress indicators.
+这是一套功能全面的 Tiptap 编辑器目录（TOC）组件。此软件包提供可嵌入编辑器内容中的行内 TOC 节点，以及带进度指示器、用于文档导航的浮动侧边栏组件。
 
 <CodeDemo isScrollable src="https://template.tiptap.dev/preview/tiptap-node/toc-node" />
 
-## Installation
+## 安装
 
-Add the component via the Tiptap CLI:
+通过 Tiptap CLI 添加组件：
 
 ```bash
 npx @tiptap/cli@latest add toc-node
 ```
 
-## Usage
+## 使用
 
-### Basic Integration
+### 基本集成
 
-To add table of contents functionality to your Tiptap editor, follow these steps:
+按照以下步骤为 Tiptap 编辑器添加目录功能：
 
-**1. Import the required extensions and components:**
+**1. 导入所需的扩展和组件：**
 
 ```tsx
 import { Heading } from '@tiptap/extension-heading'
@@ -50,7 +50,7 @@ import '@/components/tiptap-node/toc-node/toc-node.scss'
 import '@/components/tiptap-node/toc-node/ui/toc-sidebar/toc-sidebar.scss'
 ```
 
-**2. Add extensions to your editor configuration:**
+**2. 将扩展添加到编辑器配置中：**
 
 ```tsx
 function EditorComponent() {
@@ -79,7 +79,7 @@ function EditorComponent() {
 }
 ```
 
-**3. Add the TOC components to your editor:**
+**3. 将 TOC 组件添加到编辑器中：**
 
 ```tsx
 import { TocProvider } from '@/components/tiptap-node/toc-node/context/toc-context'
@@ -102,24 +102,24 @@ import { TocSidebar } from '@/components/tiptap-node/toc-node'
 </TocProvider>
 ```
 
-**That's it!** Your editor now has:
+**完成！** 现在，编辑器已具备以下功能：
 
-- Inline TOC nodes that can be inserted into documents
-- Floating TOC sidebar with progress indicators
-- Automatic heading detection and navigation
-- URL hash support for deep linking
+- 可插入文档的行内 TOC 节点
+- 带进度指示器的浮动 TOC 侧边栏
+- 自动检测标题并支持导航
+- 支持 URL 哈希，可深层链接
 
-For a complete example with all features, see the [Complete Example](#complete-example) section below.
+如需查看包含所有功能的完整示例，请参阅下方的[完整示例](#complete-example)部分。
 
-## Creating Table of Contents
+## 创建目录
 
-### Inserting TOC Nodes
+### 插入 TOC 节点
 
-The TOC system provides two primary ways to display a table of contents:
+TOC 系统提供两种主要的目录展示方式：
 
-#### 1. Inline TOC Node
+#### 1. 行内 TOC 节点
 
-An inline node that can be placed anywhere in your document content:
+可放置在文档内容任意位置的行内节点：
 
 ```tsx
 // Insert programmatically
@@ -130,29 +130,29 @@ editor.commands.insertTocNode({
 })
 ```
 
-#### 2. Floating TOC Sidebar
+#### 2. 浮动 TOC 侧边栏
 
-A sidebar component that floats alongside your editor:
+与编辑器并排浮动的侧边栏组件：
 
 ```tsx
 <TocSidebar maxShowCount={20} topOffset={80} className="my-toc-sidebar" />
 ```
 
-## Components
+## 组件
 
-### `<TocNode />` Extension
+### `<TocNode />` 扩展
 
-**An inline table of contents node that can be embedded directly in your document.** This extension creates a draggable, selectable block that automatically updates as headings change.
+**可直接嵌入文档的行内目录节点。** 此扩展会创建一个可拖动、可选中的块，并在标题发生变化时自动更新。
 
-#### Key Features
+#### 主要功能
 
-- **Auto-updating**: Automatically reflects heading changes in the document
-- **Customizable Display**: Control max headings, title visibility, and scroll offset
-- **Smart Navigation**: Click to scroll to headings with smooth scrolling
-- **Empty State**: Shows helpful message when no headings exist
-- **Depth Normalization**: Proper hierarchical nesting of headings
+- **自动更新**：自动反映文档中的标题变化
+- **显示可自定义**：可控制显示的标题数量、标题名称是否显示以及滚动偏移量
+- **智能导航**：点击即可平滑滚动到对应标题
+- **空状态**：没有标题时显示提示信息
+- **深度规范化**：正确构建标题层级
 
-#### Usage
+#### 用法
 
 ```tsx
 import { TocNode } from '@/components/tiptap-node/toc-node'
@@ -184,18 +184,18 @@ editor.commands.insertTocNode({
 })
 ```
 
-#### Configuration Options
+#### 配置选项
 
-| Option           | Type                  | Default | Description                                                                 |
-| ---------------- | --------------------- | ------- | --------------------------------------------------------------------------- |
-| `topOffset`      | `number`              | `0`     | Offset from the top of the viewport when scrolling to a heading (in pixels) |
-| `maxShowCount`   | `number`              | `20`    | Maximum number of headings to display in the TOC                            |
-| `showTitle`      | `boolean`             | `true`  | Whether to show the "Table of contents" title                               |
-| `HTMLAttributes` | `Record<string, any>` | `{}`    | HTML attributes to add to the TOC node element                              |
+| 选项             | 类型                  | 默认值  | 描述                                                                  |
+| ---------------- | --------------------- | ------- | --------------------------------------------------------------------- |
+| `topOffset`      | `number`              | `0`     | 滚动到标题时距离视口顶部的偏移量（像素）                              |
+| `maxShowCount`   | `number`              | `20`    | TOC 中最多显示的标题数量                                              |
+| `showTitle`      | `boolean`             | `true`  | 是否显示“目录”标题                                                    |
+| `HTMLAttributes` | `Record<string, any>` | `{}`    | 要添加到 TOC 节点元素的 HTML 属性                                     |
 
-#### Commands
+#### 命令
 
-The extension provides the `insertTocNode` command:
+此扩展提供 `insertTocNode` 命令：
 
 ```tsx
 // Insert with default settings
@@ -211,21 +211,21 @@ editor.commands.insertTocNode({
 
 ### `<TocSidebar />`
 
-**A floating sidebar component that displays the table of contents with visual progress indicators.** This component provides an always-visible navigation panel with advanced state management and smooth scrolling.
+**显示目录并带有可视化进度指示器的浮动侧边栏组件。** 此组件提供始终可见的导航面板，并支持高级状态管理和顺滑滚动。
 
-#### Key Features
+#### 主要功能
 
-- **Progress Rail**: Visual progress indicator showing document position
-- **Multi-level Active State**:
-  1. Manual clicks (highest priority)
-  2. Scroll position tracking
-  3. Cursor/selection position
-  4. First heading (fallback)
-- **Smart Scrolling**: Only scrolls when target heading is not visible
-- **URL Hash Support**: Restores scroll position from URL on page load
-- **Smooth Transitions**: Animated active state changes
+- **进度轨道**：可视化进度指示器，显示文档中的当前位置
+- **多层级活动状态**：
+  1. 手动点击（最高优先级）
+  2. 滚动位置跟踪
+  3. 光标/选区位置
+  4. 第一个标题（回退选项）
+- **智能滚动**：仅当目标标题不可见时才滚动
+- **URL 哈希支持**：页面加载时从 URL 恢复滚动位置
+- **平滑过渡**：活动状态切换时带有动画效果
 
-#### Usage
+#### 用法
 
 ```tsx
 import { TocProvider } from '@/components/tiptap-node/toc-node/context/toc-context'
@@ -243,29 +243,29 @@ function MyEditor() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Prop                        | Type     | Default | Description                                             |
-| --------------------------- | -------- | ------- | ------------------------------------------------------- |
-| `maxShowCount`              | `number` | `20`    | Maximum number of headings to show in the TOC           |
-| `topOffset`                 | `number` | `0`     | Offset from the top of the editor container (in pixels) |
-| `className`                 | `string` | -       | Additional CSS class names                              |
-| All standard HTML div props | -        | -       | Supports all `HTMLAttributes<HTMLDivElement>`           |
+| 属性                        | 类型     | 默认值 | 描述                                           |
+| --------------------------- | -------- | ------ | ---------------------------------------------- |
+| `maxShowCount`              | `number` | `20`   | TOC 中最多显示的标题数量                       |
+| `topOffset`                 | `number` | `0`    | 相对于编辑器容器顶部的偏移量（像素）            |
+| `className`                 | `string` | -      | 附加的 CSS 类名                                |
+| 所有标准 HTML div 属性      | -        | -      | 支持所有 `HTMLAttributes<HTMLDivElement>`       |
 
-#### Active State Logic
+#### 活动状态逻辑
 
-The sidebar intelligently determines which heading to highlight:
+侧边栏会智能判断要突出显示哪个标题：
 
-1. **Manual Click**: When a user clicks a TOC item, that item remains active
-2. **Scroll Detection**: After manual navigation completes, switches to scroll-based detection
-3. **Cursor Position**: Highlights heading where the cursor is currently positioned
-4. **Fallback**: Shows first heading when no other criteria are met
+1. **手动点击**：用户点击 TOC 项目时，该项目保持活动状态
+2. **滚动检测**：手动导航完成后，切换为基于滚动位置的检测
+3. **光标位置**：突出显示光标当前所在位置对应的标题
+4. **回退选项**：其他条件均不满足时，显示第一个标题
 
 ### `<TocShowTitleButton />`
 
-**A toolbar button for toggling the visibility of the TOC node title.** This button only appears when a TOC node is selected in the editor.
+**用于切换 TOC 节点标题显示状态的工具栏按钮。** 仅当编辑器中选中了 TOC 节点时，此按钮才会显示。
 
-#### Usage
+#### 用法
 
 ```tsx
 import { TocShowTitleButton } from '@/components/tiptap-node/toc-node'
@@ -286,19 +286,19 @@ function MyToolbar() {
 }
 ```
 
-#### Props
+#### 属性
 
-| Prop                      | Type                        | Default | Description                                  |
-| ------------------------- | --------------------------- | ------- | -------------------------------------------- |
-| `editor`                  | `Editor \| null`            | -       | The TipTap editor instance                   |
-| `text`                    | `string`                    | -       | Optional text to display alongside the icon  |
-| `hideWhenUnavailable`     | `boolean`                   | `false` | Hide the button when no TOC node is selected |
-| `onToggle`                | `(active: boolean) => void` | -       | Callback fired when the toggle state changes |
-| All standard button props | -                           | -       | Supports all `ButtonProps`                   |
+| 属性                      | 类型                        | 默认值  | 描述                                      |
+| ------------------------- | --------------------------- | ------- | ----------------------------------------- |
+| `editor`                  | `Editor \| null`            | -       | TipTap 编辑器实例                         |
+| `text`                    | `string`                    | -       | 可选文本，与图标一起显示                  |
+| `hideWhenUnavailable`     | `boolean`                   | `false` | 未选中 TOC 节点时是否隐藏按钮             |
+| `onToggle`                | `(active: boolean) => void` | -       | 切换状态时触发的回调                      |
+| 所有标准按钮属性          | -                           | -       | 支持所有 `ButtonProps`                    |
 
-#### Custom Implementation with Hook
+#### 使用 Hook 自定义实现
 
-For custom button implementations, use the `useTocShowTitle` hook:
+如需自定义按钮实现，请使用 `useTocShowTitle` hook：
 
 ```tsx
 import { useTocShowTitle } from '@/components/tiptap-node/toc-node'
@@ -322,22 +322,22 @@ function CustomShowTitleButton() {
 }
 ```
 
-The hook returns:
+此 hook 会返回：
 
-- `isVisible: boolean` - Whether the button should be shown
-- `isActive: boolean` - Whether the title is currently visible
-- `canToggle: boolean` - Whether the toggle action can be performed
-- `handleToggle: () => boolean` - Execute the toggle action
-- `label: string` - UI label for the button
-- `Icon: ComponentType` - Icon component for the button
+- `isVisible: boolean` - 是否应显示按钮
+- `isActive: boolean` - 标题当前是否可见
+- `canToggle: boolean` - 是否可以执行切换操作
+- `handleToggle: () => boolean` - 执行切换操作
+- `label: string` - 按钮的 UI 标签
+- `Icon: ComponentType` - 按钮的图标组件
 
-## Context & Hooks
+## 上下文与 Hooks
 
 ### `<TocProvider />`
 
-A context provider that manages TOC state and provides navigation methods to all child components.
+用于管理 TOC 状态并向所有子组件提供导航方法的上下文提供程序。
 
-#### Usage
+#### 用法
 
 ```tsx
 import { TocProvider } from '@/components/tiptap-node/toc-node/context/toc-context'
@@ -353,7 +353,7 @@ function App() {
 
 ### `useToc()`
 
-Access TOC state and methods from any component within the provider.
+在提供程序内的任意组件中访问 TOC 状态和方法。
 
 #### API
 
@@ -366,11 +366,11 @@ const {
 } = useToc()
 ```
 
-#### Methods
+#### 方法
 
 **navigateToHeading(item, options?)**
 
-Scrolls to a heading and updates the editor selection.
+滚动到指定标题并更新编辑器选区。
 
 ```tsx
 navigateToHeading(item, {
@@ -379,15 +379,15 @@ navigateToHeading(item, {
 })
 ```
 
-Parameters:
+参数：
 
-- `item: TableOfContentDataItem` - The heading item to navigate to
-- `options.topOffset?: number` - Offset from viewport top (default: 0)
-- `options.behavior?: ScrollBehavior` - Scroll behavior (default: 'smooth')
+- `item: TableOfContentDataItem` - 要导航到的标题项目
+- `options.topOffset?: number` - 相对于视口顶部的偏移量（默认值：0）
+- `options.behavior?: ScrollBehavior` - 滚动行为（默认值：'smooth'）
 
 **normalizeHeadingDepths(items)**
 
-Normalizes heading depths for proper hierarchical nesting. This ensures headings can only be nested under previous headings with smaller level numbers, preventing incorrect structures.
+规范化标题深度，以正确构建层级结构。这样可以确保标题仅嵌套在级别编号较小的前置标题下，避免出现不正确的结构。
 
 ```tsx
 const items = [
@@ -401,16 +401,16 @@ const depths = normalizeHeadingDepths(items)
 // The h4 is adjusted to be at the same depth as a properly nested h3
 ```
 
-Algorithm:
+算法：
 
-1. Rebases all levels so the minimum level becomes 1 (root level)
-2. For each heading, finds the most recent previous heading with a smaller level
-3. If found, nests it under that parent (parent depth + 1)
-4. If not found, treats it as a root-level item (depth = 1)
+1. 重新设定所有级别，使最小级别变为 1（根级别）
+2. 对每个标题，查找最近的、级别更小的前置标题
+3. 如果找到，则将其嵌套在该父标题下（父标题深度 + 1）
+4. 如果没有找到，则将其视为根级项目（深度 = 1）
 
-## Complete Example
+## 完整示例
 
-Here's a comprehensive example integrating all components:
+以下是一个集成所有组件的完整示例：
 
 ```tsx
 import { useEditor, EditorContent, EditorContext } from '@tiptap/react'
@@ -497,18 +497,18 @@ export default function App() {
 }
 ```
 
-## Styling
+## 样式
 
-The TOC components include default styles that can be customized using CSS or SCSS.
+TOC 组件包含默认样式，可使用 CSS 或 SCSS 自定义。
 
-### Required Stylesheets
+### 必需的样式表
 
 ```tsx
 import '@/components/tiptap-node/toc-node/toc-node.scss'
 import '@/components/tiptap-node/toc-node/ui/toc-sidebar/toc-sidebar.scss'
 ```
 
-### TocNode CSS Classes
+### TocNode CSS 类
 
 ```scss
 .tiptap-table-of-contents-node {
@@ -563,7 +563,7 @@ import '@/components/tiptap-node/toc-node/ui/toc-sidebar/toc-sidebar.scss'
 }
 ```
 
-### TocSidebar CSS Classes
+### TocSidebar CSS 类
 
 ```scss
 .toc-sidebar {
@@ -626,9 +626,9 @@ import '@/components/tiptap-node/toc-node/ui/toc-sidebar/toc-sidebar.scss'
 }
 ```
 
-### Custom Depth Styling
+### 自定义深度样式
 
-Both components expose a `--toc-depth` CSS variable for custom indentation:
+两个组件都提供 `--toc-depth` CSS 变量，可用于自定义缩进：
 
 ```scss
 .tiptap-table-of-contents-item {
@@ -653,9 +653,9 @@ Both components expose a `--toc-depth` CSS variable for custom indentation:
 }
 ```
 
-### Dark Mode Support
+### 深色模式支持
 
-Add dark mode styles using CSS variables or class-based theming:
+使用 CSS 变量或基于类的主题设置添加深色模式样式：
 
 ```scss
 :root {
@@ -679,41 +679,41 @@ Add dark mode styles using CSS variables or class-based theming:
 }
 ```
 
-## Dependencies
+## 依赖项
 
-### Required Packages
+### 必需的软件包
 
-- `@tiptap/core` - Core TipTap functionality
-- `@tiptap/react` - React integration for TipTap
-- `@tiptap/extension-table-of-contents` - TOC content extraction
-- `@tiptap/extension-heading` - Heading nodes (for TOC sources)
-- `react` and `react-dom` - React framework
+- `@tiptap/core` - TipTap 核心功能
+- `@tiptap/react` - TipTap 的 React 集成
+- `@tiptap/extension-table-of-contents` - 提取目录内容
+- `@tiptap/extension-heading` - 标题节点（作为 TOC 来源）
+- `react` 和 `react-dom` - React 框架
 
-### Optional Packages
+### 可选软件包
 
-- `@tiptap/extension-unique-id` - Automatic heading ID generation
-- `sass` / `sass-embedded` - For SCSS compilation (if using SCSS)
+- `@tiptap/extension-unique-id` - 自动生成标题 ID
+- `sass` / `sass-embedded` - 用于编译 SCSS（如使用 SCSS）
 
-## Features
+## 功能
 
-- ✅ **Inline TOC Node**: Embed table of contents directly in documents
-- ✅ **Floating Sidebar**: Always-visible navigation panel
-- ✅ **Auto-updating**: Real-time updates as headings change
-- ✅ **Smart Navigation**: Intelligent scroll and active state management
-- ✅ **Progress Indicators**: Visual progress rail showing document position
-- ✅ **Multi-level Detection**: Click, scroll, and cursor-based active states
-- ✅ **Depth Normalization**: Proper hierarchical heading structure
-- ✅ **URL Hash Support**: Restore scroll position from URL
-- ✅ **Empty State**: Helpful message when no headings exist
-- ✅ **Smooth Scrolling**: Animated scroll-to-heading transitions
-- ✅ **Configurable Display**: Control max items, title visibility, scroll offset
-- ✅ **Keyboard Accessible**: Full keyboard navigation support
-- ✅ **Dark Mode**: Built-in dark mode theming
-- ✅ **TypeScript**: Comprehensive type definitions
-- ✅ **Customizable Styling**: CSS variables and class-based theming
+- ✅ **行内 TOC 节点**：将目录直接嵌入文档
+- ✅ **浮动侧边栏**：始终可见的导航面板
+- ✅ **自动更新**：标题变化时实时更新
+- ✅ **智能导航**：智能滚动和活动状态管理
+- ✅ **进度指示器**：显示文档位置的可视化进度轨道
+- ✅ **多级检测**：基于点击、滚动和光标的活动状态
+- ✅ **深度规范化**：正确的标题层级结构
+- ✅ **URL 哈希支持**：从 URL 恢复滚动位置
+- ✅ **空状态**：没有标题时显示提示信息
+- ✅ **平滑滚动**：滚动到标题时带有动画效果
+- ✅ **显示可配置**：控制项目数量上限、标题可见性和滚动偏移量
+- ✅ **键盘无障碍**：全面支持键盘导航
+- ✅ **深色模式**：内置深色模式主题
+- ✅ **TypeScript**：完善的类型定义
+- ✅ **样式可自定义**：支持 CSS 变量和基于类的主题设置
 
-## Related Extensions
+## 相关扩展
 
-- **Heading Extension** - Required for creating heading nodes
-- **UniqueID Extension** - Recommended for stable heading IDs
-- **Table of Contents Extension** - Required for content extraction
+- **Heading Extension** - 创建标题节点所必需
+- **UniqueID Extension** - 建议使用，以确保标题 ID 稳定
+- **Table of Contents Extension** - 提取内容所必需
