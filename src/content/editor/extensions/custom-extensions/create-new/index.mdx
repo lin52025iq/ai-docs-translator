@@ -1,18 +1,18 @@
 ---
-title: Create a new extension
+title: 创建新扩展
 meta:
-  title: Create extensions | Tiptap Editor Docs
-  description: Create a new extension for your Tiptap editor and create a unique editor experience from scratch. Learn more in the docs!
-  category: Editor
+  title: 创建扩展 | Tiptap 编辑器文档
+  description: 为你的 Tiptap 编辑器创建新扩展，从头打造独特的编辑体验。了解更多，请参阅文档！
+  category: 编辑器
 ---
 
-You can build your own extensions from scratch and you know what? It’s the same syntax as for extending existing extension described above.
+你可以从头开始构建自己的扩展，而且你知道吗？它使用的语法与上文介绍的扩展现有扩展的语法相同。
 
-### Create an extension
+### 创建扩展
 
-Extensions add new capabilities to Tiptap and you’ll read the word extension here very often, even for nodes and marks. But there are literal extensions. Those can’t add to the schema (like marks and nodes do), but can add functionality or change the behaviour of the editor.
+扩展为 Tiptap 添加新功能。你会经常看到“扩展”这个词，甚至在介绍节点和标记时也会看到。但这里说的是狭义上的扩展。它们不能像标记和节点那样扩展 schema，但可以为编辑器添加功能或改变其行为。
 
-A good example to learn from is probably [`TextAlign`](/editor/extensions/functionality/textalign).
+[`TextAlign`](/editor/extensions/functionality/textalign) 是一个很好的学习示例。
 
 ```js
 import { Extension } from '@tiptap/core'
@@ -24,7 +24,7 @@ const CustomExtension = Extension.create({
 })
 ```
 
-You can also use a callback function to create an extension. This is useful if you want to encapsulate the logic of your extension, for example when you want to define event handlers or other custom logic.
+你也可以使用回调函数来创建扩展。如果你想封装扩展的逻辑，例如定义事件处理程序或其他自定义逻辑，这种方式会很有用。
 
 ```js
 import { Extension } from '@tiptap/core'
@@ -46,11 +46,11 @@ const CustomExtension = Extension.create(() => {
 })
 ```
 
-Read more about the [Extension API](/editor/extensions/custom-extensions/create-new/extension).
+详细了解 [Extension API](/editor/extensions/custom-extensions/create-new/extension)。
 
-### Create a node
+### 创建节点
 
-If you think of the document as a tree, then [nodes](/editor/extensions/nodes) are just a type of content in that tree. Good examples to learn from are [`Paragraph`](/editor/extensions/nodes/paragraph), [`Heading`](/editor/extensions/nodes/heading), or [`CodeBlock`](/editor/extensions/nodes/code-block).
+如果把文档看作一棵树，那么[节点](/editor/extensions/nodes)就是树中的一种内容。值得参考的示例包括 [`Paragraph`](/editor/extensions/nodes/paragraph)、[`Heading`](/editor/extensions/nodes/heading) 和 [`CodeBlock`](/editor/extensions/nodes/code-block)。
 
 ```js
 import { Node } from '@tiptap/core'
@@ -62,7 +62,7 @@ const CustomNode = Node.create({
 })
 ```
 
-You can also use a callback function to create a node. This is useful if you want to encapsulate the logic of your extension, for example when you want to define event handlers or other custom logic.
+你也可以使用回调函数来创建节点。如果你想封装扩展的逻辑，例如定义事件处理程序或其他自定义逻辑，这种方式会很有用。
 
 ```js
 import { Node } from '@tiptap/core'
@@ -84,13 +84,13 @@ const CustomNode = Node.create(() => {
 })
 ```
 
-Nodes don’t have to be blocks. They can also be rendered inline with the text, for example for [@mentions](/editor/extensions/nodes/mention).
+节点不一定是块级内容。它们也可以与文本一起以内联形式呈现，例如 [@mentions](/editor/extensions/nodes/mention)。
 
-Read more about the [Node API](/editor/extensions/custom-extensions/create-new/node).
+详细了解 [Node API](/editor/extensions/custom-extensions/create-new/node)。
 
-### Create a mark
+### 创建标记
 
-One or multiple marks can be applied to [nodes](/editor/extensions/nodes), for example to add inline formatting. Good examples to learn from are [`Bold`](/editor/extensions/marks/bold), [`Italic`](/editor/extensions/marks/italic) and [`Highlight`](/editor/extensions/marks/highlight).
+可以为[节点](/editor/extensions/nodes)应用一个或多个标记，例如添加行内格式。值得参考的示例包括 [`Bold`](/editor/extensions/marks/bold)、[`Italic`](/editor/extensions/marks/italic) 和 [`Highlight`](/editor/extensions/marks/highlight)。
 
 ```js
 import { Mark } from '@tiptap/core'
@@ -102,7 +102,7 @@ const CustomMark = Mark.create({
 })
 ```
 
-You can also use a callback function to create a mark. This is useful if you want to encapsulate the logic of your extension, for example when you want to define event handlers or other custom logic.
+你也可以使用回调函数来创建标记。如果你想封装扩展的逻辑，例如定义事件处理程序或其他自定义逻辑，这种方式会很有用。
 
 ```js
 import { Mark } from '@tiptap/core'
@@ -124,15 +124,15 @@ const CustomMark = Mark.create(() => {
 })
 ```
 
-Read more about the [Mark API](/editor/extensions/custom-extensions/create-new/mark).
+详细了解 [Mark API](/editor/extensions/custom-extensions/create-new/mark)。
 
-## Publish standalone extensions
+## 发布独立扩展
 
-If you want to create and publish your own extensions for Tiptap, you can use our CLI tool to bootstrap your project.
-Simply run `npm init tiptap-extension` and follow the instructions. The CLI will create a new folder with a pre-configured project for you including a build script running on Rollup.
+如果你想为 Tiptap 创建并发布自己的扩展，可以使用我们的 CLI 工具来搭建项目。
+只需运行 `npm init tiptap-extension` 并按照说明操作即可。CLI 会创建一个新文件夹，其中包含预配置的项目，以及使用 Rollup 运行的构建脚本。
 
-If you want to test your extension locally, you can run `npm link` in the project folder and then `npm link YOUR_EXTENSION` in your project (for example a Vite app).
+如果想在本地测试扩展，可以在项目文件夹中运行 `npm link`，然后在你的项目中（例如 Vite 应用）运行 `npm link YOUR_EXTENSION`。
 
-## Share
+## 分享
 
-When everything is working fine, don’t forget to [share it with the community](https://github.com/ueberdosis/tiptap/issues/819) or in our [awesome-tiptap](https://github.com/ueberdosis/awesome-tiptap) repository.
+一切运行正常后，别忘了在[社区](https://github.com/ueberdosis/tiptap/issues/819)或我们的 [awesome-tiptap](https://github.com/ueberdosis/awesome-tiptap) 仓库中分享你的扩展。
