@@ -1,13 +1,13 @@
 ---
-title: Custom page layouts in DOCX
+title: DOCX 自定义页面布局
 tags:
   - type: start
   - type: beta
   - type: version
     label: v0.26.1
 meta:
-  title: Custom page layouts in DOCX | Tiptap Conversion
-  description: Learn how to customize your DOCX (Word) page and margin sizes using the Export extension.
+  title: DOCX 自定义页面布局 | Tiptap Conversion
+  description: 了解如何使用 Export 扩展自定义 DOCX（Word）页面大小和页边距。
   category: Conversion
 ---
 
@@ -19,50 +19,48 @@ import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 <EnterpriseCalloutAuto variant="docx" renderMode="sidebar" disableWaitlist />
 
 <Requirements>
-  <RequirementItem label="1. Activate trial or subscribe">
-    Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start
-    plan](https://cloud.tiptap.dev/v2/billing) in your account.
+  <RequirementItem label="1. 开通试用或订阅">
+    在帐户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start
+    计划](https://cloud.tiptap.dev/v2/billing)。
   </RequirementItem>
-  <RequirementItem label="2. Install from private registry">
-    To install this frontend extension, authenticate to Tiptap's private npm registry by following
-    the [setup guide](/guides/pro-extensions).
+  <RequirementItem label="2. 从私有注册表安装">
+    要安装此前端扩展，请按照[设置指南](/guides/pro-extensions)的说明，对 Tiptap 私有 npm 注册表进行身份验证。
   </RequirementItem>
 </Requirements>
 
-The DOCX Export extension now supports custom page sizes and margins, allowing you to create documents with precise layouts that match your requirements. Whether you need A5 pages, custom paper sizes, or specific margin configurations, you can configure these settings directly in the extension.
+DOCX Export 扩展现已支持自定义页面大小和页边距，因此你可以创建布局精确、符合需求的文档。无论你需要 A5 页面、自定义纸张大小，还是特定的页边距配置，都可以直接在扩展中进行设置。
 
 <CodeDemo isPro path="/Extensions/ExportDocxCustomPageSize" />
 
-## Page size configuration
+## 页面大小配置
 
-Use the `pageSize` option to define custom page dimensions for your exported DOCX files. The page size configuration accepts width and height values with various measurement units.
+使用 `pageSize` 选项定义导出 DOCX 文件的自定义页面尺寸。页面大小配置接受使用各种度量单位的宽度和高度值。
 
-### Supported units
+### 支持的单位
 
-All page size and margin measurements support the following universal units:
+所有页面大小和页边距的度量值均支持以下通用单位：
 
-| Unit | Description           |
+| 单位 | 说明           |
 | ---- | --------------------- |
-| `cm` | Centimeters (default) |
-| `in` | Inches                |
-| `pt` | Points                |
-| `pc` | Picas                 |
-| `mm` | Millimeters           |
-| `px` | Pixels                |
+| `cm` | 厘米（默认） |
+| `in` | 英寸                |
+| `pt` | 磅                |
+| `pc` | 派卡                 |
+| `mm` | 毫米           |
+| `px` | 像素                |
 
-### Configuration options
+### 配置选项
 
-| Property | Type                       | Description                              | Default                |
+| 属性 | 类型                       | 说明                              | 默认值                |
 | -------- | -------------------------- | ---------------------------------------- | ---------------------- |
-| `width`  | `PositiveUniversalMeasure` | The width of the page. Must be positive  | `"21.0cm"` (A4 width)  |
-| `height` | `PositiveUniversalMeasure` | The height of the page. Must be positive | `"29.7cm"` (A4 height) |
+| `width`  | `PositiveUniversalMeasure` | 页面宽度。必须为正数  | `"21.0cm"`（A4 宽度）  |
+| `height` | `PositiveUniversalMeasure` | 页面高度。必须为正数 | `"29.7cm"`（A4 高度） |
 
 <Callout title="PositiveUniversalMeasure">
-  A `PositiveUniversalMeasure` is a string representing a positive length with a unit, such as
-  `"21cm"`, `"8.5in"`, `"148mm"`, `"595pt"`, `"50pc"`, or `"800px"`. Supported units include
-  centimeters (`cm`), millimeters (`mm`), inches (`in`), points (`pt`), picas (`pc`), and pixels
-  (`px`). The value must be greater than zero. If you provide a value without a unit, centimeters
-  (`cm`) will be used by default.
+  `PositiveUniversalMeasure` 是一个表示正长度并带有单位的字符串，例如
+  `"21cm"`、`"8.5in"`、`"148mm"`、`"595pt"`、`"50pc"` 或 `"800px"`。支持的单位包括
+  厘米（`cm`）、毫米（`mm`）、英寸（`in`）、磅（`pt`）、派卡（`pc`）和像素
+  （`px`）。值必须大于零。如果提供的值没有单位，则默认使用厘米（`cm`）。
 </Callout>
 
 ```js
@@ -77,35 +75,33 @@ ExportDocx.configure({
 })
 ```
 
-## Page margins configuration
+## 页面页边距配置
 
-The `pageMargins` option allows you to set custom margins for all sides of your document pages. Unlike page sizes, margins can accept negative values if needed.
+`pageMargins` 选项允许你为文档页面的各边设置自定义页边距。与页面大小不同，页边距可按需使用负值。
 
-### Configuration options
+### 配置选项
 
-| Property | Type                       | Description                                                                                                                                | Default                 |
+| 属性 | 类型                       | 说明                                                                                                                                | 默认值                 |
 | -------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------- |
-| `top`    | `UniversalMeasure`         | Top margin of the page.<br />Can be negative.                                                                                              | `"1.0cm"`               |
-| `bottom` | `UniversalMeasure`         | Bottom margin of the page.<br />Can be negative.                                                                                           | `"1.0cm"`               |
-| `left`   | `PositiveUniversalMeasure` | Left margin of the page. Must be positive.                                                                                                 | `"1.0cm"`               |
-| `right`  | `PositiveUniversalMeasure` | Right margin of the page. Must be positive.                                                                                                | `"1.0cm"`               |
-| `header` | `PositiveUniversalMeasure` | Distance from the top edge of the page to the top of the header. Should be less than `top` so the header sits above body content.          | Word default `"1.25cm"` |
-| `footer` | `PositiveUniversalMeasure` | Distance from the bottom edge of the page to the bottom of the footer. Should be less than `bottom` so the footer sits below body content. | Word default `"1.25cm"` |
+| `top`    | `UniversalMeasure`         | 页面上边距。<br />可以为负数。                                                                                              | `"1.0cm"`               |
+| `bottom` | `UniversalMeasure`         | 页面下边距。<br />可以为负数。                                                                                           | `"1.0cm"`               |
+| `left`   | `PositiveUniversalMeasure` | 页面左边距。必须为正数。                                                                                                 | `"1.0cm"`               |
+| `right`  | `PositiveUniversalMeasure` | 页面右边距。必须为正数。                                                                                                | `"1.0cm"`               |
+| `header` | `PositiveUniversalMeasure` | 页面上边缘到页眉顶部的距离。应小于 `top`，以使页眉位于正文上方。          | Word 默认值 `"1.25cm"` |
+| `footer` | `PositiveUniversalMeasure` | 页面下边缘到页脚底部的距离。应小于 `bottom`，以使页脚位于正文下方。 | Word 默认值 `"1.25cm"` |
 
 <Callout title="UniversalMeasure">
-  A `UniversalMeasure` is a string representing a length with a unit, such as `"21cm"`, `"8.5in"`,
-  `"148mm"`, `"595pt"`, `"50pc"`, or `"800px"`. Supported units include centimeters (`cm`),
-  millimeters (`mm`), inches (`in`), points (`pt`), picas (`pc`), and pixels (`px`). **The value can
-  be positive or negative**. If you provide a value without a unit, centimeters (`cm`) will be used
-  by default.
+  `UniversalMeasure` 是一个表示长度并带有单位的字符串，例如 `"21cm"`、`"8.5in"`、
+  `"148mm"`、`"595pt"`、`"50pc"` 或 `"800px"`。支持的单位包括厘米（`cm`）、
+  毫米（`mm`）、英寸（`in`）、磅（`pt`）、派卡（`pc`）和像素（`px`）。**值可以
+  为正数或负数**。如果提供的值没有单位，则默认使用厘米（`cm`）。
 </Callout>
 
 <Callout title="PositiveUniversalMeasure">
-  A `PositiveUniversalMeasure` is a string representing a positive length with a unit, such as
-  `"21cm"`, `"8.5in"`, `"148mm"`, `"595pt"`, `"50pc"`, or `"800px"`. Supported units include
-  centimeters (`cm`), millimeters (`mm`), inches (`in`), points (`pt`), picas (`pc`), and pixels
-  (`px`). The value must be greater than zero. If you provide a value without a unit, centimeters
-  (`cm`) will be used by default.
+  `PositiveUniversalMeasure` 是一个表示正长度并带有单位的字符串，例如
+  `"21cm"`、`"8.5in"`、`"148mm"`、`"595pt"`、`"50pc"` 或 `"800px"`。支持的单位包括
+  厘米（`cm`）、毫米（`mm`）、英寸（`in`）、磅（`pt`）、派卡（`pc`）和像素
+  （`px`）。值必须大于零。如果提供的值没有单位，则默认使用厘米（`cm`）。
 </Callout>
 
 ```js
@@ -125,11 +121,11 @@ ExportDocx.configure({
 })
 ```
 
-### Header and footer offsets
+### 页眉和页脚偏移量
 
-The `header` and `footer` properties on `pageMargins` control how far the running header and footer sit from the top and bottom edges of the page. They map directly to Word's "Header from top" and "Footer from bottom" settings under Page Setup → Layout.
+`pageMargins` 中的 `header` 和 `footer` 属性用于控制页眉和页脚与页面顶部和底部边缘之间的距离。它们分别对应 Word 中“页面设置 → 版式”下的“页眉顶端距离”和“页脚底端距离”设置。
 
-For the header to render above the body, `header` should be smaller than `top`. The same relationship applies to `footer` and `bottom`. When omitted, Word applies its default of `1.25cm` (≈0.5in).
+要使页眉显示在正文上方，`header` 应小于 `top`。`footer` 和 `bottom` 也应满足相同的关系。省略时，Word 将采用默认值 `1.25cm`（约 `0.5in`）。
 
 ```js
 ExportDocx.configure({
@@ -149,28 +145,25 @@ ExportDocx.configure({
 })
 ```
 
-<Callout title="Auto-derived from the Pages extension" variant="hint">
-  When the [Pages extension](/editor/extensions/functionality/pages) is configured alongside
-  `ExportDocx`, the `header` and `footer` offsets are automatically derived from the Pages storage
-  values `headerTopMargin` and `footerBottomMargin`. Values you pass to `pageMargins` always take
-  precedence; set `header` or `footer` explicitly to override the auto-derived values.
+<Callout title="从 Pages 扩展自动获取" variant="hint">
+  将 [Pages 扩展](/editor/extensions/functionality/pages) 与 `ExportDocx` 一起配置时，`header` 和 `footer` 偏移量会自动根据 Pages 存储中的 `headerTopMargin` 和 `footerBottomMargin` 值计算。你传入 `pageMargins` 的值始终优先；显式设置 `header` 或 `footer` 即可覆盖自动计算的值。
 </Callout>
 
-## Page background color
+## 页面背景色
 
-Use the `pageColor` option to set a background color for every page in the exported document.
+使用 `pageColor` 选项为导出文档中的每一页设置背景色。
 
-### Accepted formats
+### 支持的格式
 
-| Format        | Example                                                |
+| 格式        | 示例                                                |
 | ------------- | ------------------------------------------------------ |
-| Hex (6-digit) | `"#ff0000"`, `"FF0000"`                                |
-| Hex (3-digit) | `"#f00"`                                               |
+| 十六进制（6 位） | `"#ff0000"`、`"FF0000"`                                |
+| 十六进制（3 位） | `"#f00"`                                               |
 | `rgb()`       | `"rgb(255, 0, 0)"`                                     |
 | `rgba()`      | `"rgba(255, 0, 0, 0.5)"`                               |
-| Named color   | Common CSS named colors (`"red"`, `"blue"`, `"green"`, …) |
+| 命名颜色   | 常见的 CSS 命名颜色（`"red"`、`"blue"`、`"green"` 等） |
 
-Pass `"transparent"` or leave `pageColor` undefined to omit the page color.
+传入 `"transparent"` 或将 `pageColor` 留空，即可不设置页面背景色。
 
 ```js
 ExportDocx.configure({
@@ -181,15 +174,13 @@ ExportDocx.configure({
 })
 ```
 
-<Callout title="Word does not print page backgrounds by default" variant="hint">
-  In Word, the page background is shown on screen but is **not** included when printing or exporting
-  to PDF. To make it visible in printed output or PDF exports, the reader must enable **File →
-  Options → Display → Print background colors and images** in Word.
+<Callout title="Word 默认不打印页面背景" variant="hint">
+  在 Word 中，页面背景会显示在屏幕上，但**不会**包含在打印内容或导出的 PDF 中。若要让背景显示在打印输出或 PDF 导出文件中，读者必须在 Word 中启用**文件 → 选项 → 显示 → 打印背景色和图像**。
 </Callout>
 
-## Complete example
+## 完整示例
 
-Here's a complete example showing how to configure custom page layouts with the DOCX Export extension:
+下面是一个完整示例，展示如何使用 DOCX Export 扩展配置自定义页面布局：
 
 ```js
 import { ExportDocx } from '@tiptap-pro/extension-export-docx'
@@ -231,21 +222,21 @@ const editor = new Editor({
 })
 ```
 
-## Common page sizes
+## 常见页面大小
 
-Here are some common page sizes you can use as reference:
+以下是一些常见页面大小，可供参考：
 
-| Format      | Width    | Height   |
+| 格式      | 宽度    | 高度   |
 | ----------- | -------- | -------- |
 | **A4**      | `21.0cm` | `29.7cm` |
 | **A5**      | `14.8cm` | `21.0cm` |
-| **Letter**  | `8.5in`  | `11in`   |
-| **Legal**   | `8.5in`  | `14in`   |
-| **Tabloid** | `11in`   | `17in`   |
+| **Letter（信纸）**  | `8.5in`  | `11in`   |
+| **Legal（法律用纸）**  | `8.5in`  | `14in`   |
+| **Tabloid（小报纸）** | `11in`   | `17in`   |
 
-## Different measurement units
+## 使用不同的度量单位
 
-You can mix and match different units based on your preference:
+你可以根据偏好混合使用不同单位：
 
 ```js
 ExportDocx.configure({
@@ -267,14 +258,13 @@ ExportDocx.configure({
 })
 ```
 
-<Callout title="Unit consistency" variant="hint">
-  While you can mix different units, it's generally recommended to use consistent units throughout
-  your configuration for better maintainability and clarity.
+<Callout title="单位一致性" variant="hint">
+  虽然可以混用不同单位，但通常建议在整个配置中使用一致的单位，以便于维护并提高可读性。
 </Callout>
 
-## Runtime configuration
+## 运行时配置
 
-You can also override page layout settings when calling the export command directly:
+直接调用导出命令时，也可以覆盖页面布局设置：
 
 ```js
 // Export with different page layout settings
@@ -296,4 +286,4 @@ editor.commands.exportDocx({
 })
 ```
 
-This allows you to create different export configurations for different use cases without reconfiguring the entire extension.
+这样，你无需重新配置整个扩展，即可针对不同使用场景创建不同的导出配置。
