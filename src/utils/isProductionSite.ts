@@ -1,6 +1,6 @@
 import { ENVIRONMENT } from './constants'
 /**
- * Checks if the site is in production
+ * 检查网站是否处于生产环境
  * @returns boolean
  */
 export const isProductionSite = () => {
