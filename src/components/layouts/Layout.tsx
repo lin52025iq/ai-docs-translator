@@ -64,18 +64,18 @@ export const LayoutHeader = forwardRef<HTMLDivElement, { config?: SidebarConfig 
             <Link href="/" className="font-deco text-lg flex items-center gap-2.5 pr-2.5">
               <TiptapLogo />
               <span>
-                <span className="font-semibold">Tiptap</span> Docs
+                <span className="font-semibold">Tiptap</span> 文档
               </span>
             </Link>
             <VersionSwitch />
             <span className="hidden select-none lg:block text-black/15">/</span>
             <nav className="hidden lg:flex items-center gap-[0.5px]">
               <ProductDropdown />
-              <NavLink href="/guides">Guides</NavLink>
-              <NavLink href="/examples">Examples</NavLink>
-              <NavLink href="/ui-components/getting-started/overview">UI Components</NavLink>
+              <NavLink href="/guides">指南</NavLink>
+              <NavLink href="/examples">示例</NavLink>
+              <NavLink href="/ui-components/getting-started/overview">UI 组件</NavLink>
               <NavLink href="https://tiptap.dev" target="_blank">
-                Website
+                网站
               </NavLink>
             </nav>
           </div>
@@ -97,7 +97,7 @@ export const LayoutHeader = forwardRef<HTMLDivElement, { config?: SidebarConfig 
                 target="_blank"
                 hideIcon
               >
-                Sign up
+                注册
               </NavLink>
             </div>
           </div>
@@ -192,7 +192,7 @@ LayoutSecondarySidebar.displayName = 'LayoutSecondarySidebar'
 
 export type LayoutContentProps = React.HTMLAttributes<HTMLDivElement> & {
   contentPath?: string
-  /** Leaves out the space above the content, for a page whose header is placed above it. */
+  /** 省略内容上方的空白，适用于标题位于内容上方的页面。 */
   flushTop?: boolean
 }
 
@@ -230,30 +230,30 @@ export const LayoutContent = forwardRef<HTMLDivElement, LayoutContentProps>(
                 target="_blank"
                 href="https://tiptap.dev/legal-notice"
               >
-                Legal notice
+                法律声明
               </Link>
               <Link
                 className="hover:underline"
                 target="_blank"
                 href="https://tiptap.dev/privacy-policy"
               >
-                Privacy Policy
+                隐私政策
               </Link>
               <Link
                 className="hover:underline"
                 target="_blank"
                 href="https://tiptap.dev/terms-of-service"
               >
-                Terms of Service
+                服务条款
               </Link>
               <Link className="hover:underline" href="/resources/contributing">
-                Contributing
+                参与贡献
               </Link>
               <Link className="hover:underline" href="/resources/changelog">
-                Changelog
+                更新日志
               </Link>
             </div>
-            <div className="flex-none">Copyright © {new Date().getFullYear()} Tiptap</div>
+            <div className="flex-none">版权所有 © {new Date().getFullYear()} Tiptap</div>
           </div>
         </footer>
       </main>
