@@ -1,50 +1,50 @@
 ---
-title: Vanilla JavaScript
+title: 原生 JavaScript
 meta:
-  title: Vanilla JavaScript | Tiptap Editor Docs
-  description: Learn how to set up the Tiptap Editor with Vanilla JavaScript, install dependencies and initialize the editor in the docs!
-category: Editor
+  title: 原生 JavaScript | Tiptap 编辑器文档
+  description: 在文档中了解如何使用原生 JavaScript 设置 Tiptap 编辑器、安装依赖项并初始化编辑器！
+category: 编辑器
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Are you building without a frontend framework like React or Vue? No problem, you can use Tiptap directly in plain JavaScript.
+你正在使用 React 或 Vue 等前端框架之外的方式构建应用吗？没问题，你可以直接在原生 JavaScript 中使用 Tiptap。
 
-<Callout title="Hint" variant="hint">
+<Callout title="提示" variant="hint">
 
-"Vanilla JavaScript" here means **no frontend framework**, but you are still using **modern JavaScript with ES module imports** (e.g. through Vite, Rollup, or Webpack).
+这里的“原生 JavaScript”指的是**不使用前端框架**，但仍然使用**带有 ES 模块导入的现代 JavaScript**（例如通过 Vite、Rollup 或 Webpack）。
 
-If you'd rather skip build tools entirely, check the [CDN section below](#without-a-build-tool-cdn) for a setup that runs directly in the browser.
+如果你想完全跳过构建工具，可以查看[下方的 CDN 部分](#without-a-build-tool-cdn)，了解如何直接在浏览器中运行。
 
 </Callout>
 
-## With a build tool (Vite, Webpack, Rollup)
+## 使用构建工具（Vite、Webpack、Rollup）
 
-This approach is recommended if you're already using a bundler or just want the standard npm workflow.
+如果你已经在使用打包工具，或者只想采用标准的 npm 工作流，建议使用此方式。
 
-### Install dependencies
+### 安装依赖项
 
-You'll need the core Tiptap packages to get started:
+开始使用前，需要安装 Tiptap 的核心软件包：
 
-- `@tiptap/core` – the main editor API
-- `@tiptap/pm` – ProseMirror, the engine behind Tiptap
-- `@tiptap/starter-kit` – a convenient bundle of common extensions
+- `@tiptap/core` – 编辑器的主要 API
+- `@tiptap/pm` – Tiptap 背后的引擎 ProseMirror
+- `@tiptap/starter-kit` – 一组常用扩展，方便快速上手
 
 ```bash
 npm install @tiptap/core @tiptap/pm @tiptap/starter-kit
 ```
 
-### Add markup
+### 添加标记
 
-Add a simple container in your HTML where you want the editor to appear:
+在 HTML 中添加一个简单的容器，作为编辑器的显示位置：
 
 ```html
 <div class="element"></div>
 ```
 
-### Initialize the editor
+### 初始化编辑器
 
-Create a JavaScript file (for example `src/main.js`) and add the following code:
+创建一个 JavaScript 文件（例如 `src/main.js`），并添加以下代码：
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -57,21 +57,21 @@ new Editor({
 })
 ```
 
-Now run your dev server (for example with Vite: `npm run dev`) and open the page in your browser. You should see a working Tiptap editor.
+现在运行开发服务器（例如使用 Vite 时运行 `npm run dev`），然后在浏览器中打开页面。你应该会看到一个可用的 Tiptap 编辑器。
 
 ---
 
-## Without a build tool (CDN)
+## 不使用构建工具（CDN）
 
-If you'd rather skip npm and build tools entirely, you can load Tiptap directly from a CDN using ES module imports. This works in all modern browsers.
+如果你想完全跳过 npm 和构建工具，可以通过 ES 模块导入从 CDN 直接加载 Tiptap。这适用于所有现代浏览器。
 
-<Callout title="Note" variant="hint">
+<Callout title="注意" variant="hint">
 
-Your `<script>` tag must include `type="module"` for the import syntax to work in the browser.
+要让导入语法在浏览器中正常工作，`<script>` 标签必须包含 `type="module"`。
 
 </Callout>
 
-### Minimal example
+### 最简示例
 
 ```html
 <script type="module">
@@ -88,9 +88,9 @@ Your `<script>` tag must include `type="module"` for the import syntax to work i
 <div class="element"></div>
 ```
 
-### Complete HTML file with toolbar
+### 带工具栏的完整 HTML 文件
 
-Here's a copy-paste ready example that includes a toolbar with formatting buttons:
+下面是一个可直接复制粘贴的示例，其中包含带格式按钮的工具栏：
 
 ```html
 <!doctype html>
@@ -268,19 +268,19 @@ Here's a copy-paste ready example that includes a toolbar with formatting button
 </html>
 ```
 
-Save this as `index.html` and open it in any modern browser — no server required.
+将此文件保存为 `index.html`，然后用任意现代浏览器打开——无需服务器。
 
-### Live demo
+### 在线演示
 
-You can see a similar working example on CodeSandbox:
+你可以在 CodeSandbox 上查看一个类似的可运行示例：
 
 [https://codesandbox.io/s/throbbing-smoke-now37q](https://codesandbox.io/s/throbbing-smoke-now37q?file=/index.html)
 
 ---
 
-## Wiring a toolbar (plain JS)
+## 连接工具栏（原生 JS）
 
-Tiptap is headless, so it doesn't ship with a built-in toolbar. You need to wire up your own UI buttons. Here is the pattern in plain JavaScript:
+Tiptap 是无头的，因此不会内置工具栏。你需要自行连接 UI 按钮。下面是在原生 JavaScript 中实现的模式：
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -308,39 +308,39 @@ editor.on('selectionUpdate', () => {
 })
 ```
 
-### Common editor commands
+### 常用编辑器命令
 
-| Command | Code |
+| 命令 | 代码 |
 |---|---|
-| Bold | `editor.chain().focus().toggleBold().run()` |
-| Italic | `editor.chain().focus().toggleItalic().run()` |
-| Strike | `editor.chain().focus().toggleStrike().run()` |
-| Code (inline) | `editor.chain().focus().toggleCode().run()` |
-| Heading 1 | `editor.chain().focus().toggleHeading({ level: 1 }).run()` |
-| Heading 2 | `editor.chain().focus().toggleHeading({ level: 2 }).run()` |
-| Bullet List | `editor.chain().focus().toggleBulletList().run()` |
-| Ordered List | `editor.chain().focus().toggleOrderedList().run()` |
-| Blockquote | `editor.chain().focus().toggleBlockquote().run()` |
-| Code Block | `editor.chain().focus().toggleCodeBlock().run()` |
-| Undo | `editor.chain().focus().undo().run()` |
-| Redo | `editor.chain().focus().redo().run()` |
+| 粗体 | `editor.chain().focus().toggleBold().run()` |
+| 斜体 | `editor.chain().focus().toggleItalic().run()` |
+| 删除线 | `editor.chain().focus().toggleStrike().run()` |
+| 行内代码 | `editor.chain().focus().toggleCode().run()` |
+| 标题 1 | `editor.chain().focus().toggleHeading({ level: 1 }).run()` |
+| 标题 2 | `editor.chain().focus().toggleHeading({ level: 2 }).run()` |
+| 项目符号列表 | `editor.chain().focus().toggleBulletList().run()` |
+| 编号列表 | `editor.chain().focus().toggleOrderedList().run()` |
+| 引用块 | `editor.chain().focus().toggleBlockquote().run()` |
+| 代码块 | `editor.chain().focus().toggleCodeBlock().run()` |
+| 撤销 | `editor.chain().focus().undo().run()` |
+| 重做 | `editor.chain().focus().redo().run()` |
 
-Refer to the individual extension docs for available commands.
+有关可用命令，请参阅各个扩展的文档。
 
 ---
 
-## Styling
+## 样式
 
-Tiptap doesn't include visual styles by default — it only outputs semantic HTML. You can style it however you like with your own CSS or a framework such as Tailwind or Bootstrap.
+Tiptap 默认不包含视觉样式——它只输出语义化 HTML。你可以使用自己的 CSS 或 Tailwind、Bootstrap 等框架按需设置样式。
 
-The StarterKit includes minimal default styles that make the text render like a basic document.
+StarterKit 包含少量默认样式，可让文本呈现为基本文档的样子。
 
-Learn more in the [Styling guide](/editor/getting-started/style-editor).
+了解更多信息，请参阅[样式指南](/editor/getting-started/style-editor)。
 
-## Next steps
+## 后续步骤
 
-- [Configure your editor](/editor/getting-started/configure)
-- [Add styles to your editor](/editor/getting-started/style-editor)
-- [Learn more about Tiptaps concepts](/editor/core-concepts/introduction)
-- [Learn how to persist the editor state](/editor/core-concepts/persistence)
-- [Start building your own extensions](/editor/extensions/custom-extensions)
+- [配置编辑器](/editor/getting-started/configure)
+- [为编辑器添加样式](/editor/getting-started/style-editor)
+- [深入了解 Tiptap 的概念](/editor/core-concepts/introduction)
+- [了解如何持久化编辑器状态](/editor/core-concepts/persistence)
+- [开始构建自己的扩展](/editor/extensions/custom-extensions)
