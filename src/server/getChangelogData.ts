@@ -35,13 +35,13 @@ function readJsonFile(filePath: string): unknown | null {
   try {
     return JSON.parse(fs.readFileSync(filePath, 'utf-8'))
   } catch (error) {
-    console.error(`Failed to read changelog data from ${filePath}:`, error)
+    console.error(`读取变更日志数据失败，文件路径：${filePath}：`, error)
     return null
   }
 }
 
 export function getChangelogData(slug: string): ChangelogData | null {
-  // Validate slug to prevent directory traversal attacks
+  // 验证 slug，防止目录遍历攻击
   if (!/^[a-z0-9-]+$/.test(slug)) return null
 
   const filePath = path.join(DATA_DIR, `${slug}.json`)
