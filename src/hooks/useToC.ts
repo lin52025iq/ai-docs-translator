@@ -11,7 +11,7 @@ export const useToC = () => {
     const headlines = mdxContent?.querySelectorAll('h2')
     const headlineArray = Array.from(headlines || []).filter((headline) => !!headline.id)
 
-    // The headings are in the DOM only after the page has rendered
+    // 页面渲染后，标题才会出现在 DOM 中
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setHeadlines(headlineArray)
 
