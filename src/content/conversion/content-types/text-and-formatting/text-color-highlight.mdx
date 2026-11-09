@@ -1,21 +1,21 @@
 ---
-title: Text color and highlight
+title: 文本颜色和高亮
 tags:
   - type: beta
 meta:
-  title: Text Color and Highlight | Tiptap Conversion
-  description: How text color and highlight/background color convert between DOCX and Tiptap.
-  category: Conversion
+  title: 文本颜色和高亮 | Tiptap 转换
+  description: 文本颜色和高亮/背景颜色如何在 DOCX 与 Tiptap 之间转换。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Text color and highlight convert between Word's color model and Tiptap's `textStyle` and `highlight` marks. Both round-trip when the right extensions are installed.
+文本颜色和高亮会在 Word 的颜色模型与 Tiptap 的 `textStyle` 和 `highlight` 标记之间相互转换。安装了正确的扩展后，两者都支持往返转换。
 
-## What you need
+## 所需内容
 
-- **Extensions:** [`ConvertKit`](/conversion/import/docx/convertkit). Its bundled `TextStyleKit` provides `Color` (and `BackgroundColor`), and ConvertKit registers `Highlight` with `multicolor: true` preconfigured.
-- **Configuration:** None required.
+- **扩展：**[`ConvertKit`](/conversion/import/docx/convertkit)。其内置的 `TextStyleKit` 提供 `Color`（和 `BackgroundColor`），而 ConvertKit 注册 `Highlight` 时已预先配置 `multicolor: true`。
+- **配置：**无需配置。
 
 ```ts
 import { ConvertKit } from '@tiptap-pro/extension-convert-kit'
@@ -23,55 +23,53 @@ import { ConvertKit } from '@tiptap-pro/extension-convert-kit'
 new Editor({ extensions: [ConvertKit] })
 ```
 
-<Callout title="multicolor: true matters" variant="warning">
-  Without `multicolor: true` on `Highlight`, only a single generic highlight is supported and every
-  imported highlight collapses to the default yellow. ConvertKit applies it automatically; if you
-  override the `highlight` slot, keep the flag on.
+<Callout title="multicolor: true 很重要" variant="warning">
+  如果 `Highlight` 未设置 `multicolor: true`，则只支持单一的通用高亮，所有导入的高亮都会变为默认的黄色。ConvertKit 会自动应用此配置；如果覆盖 `highlight` 插槽，请保留此标志。
 </Callout>
 
-## Support overview
+## 支持概览
 
-|                     | Import                          | Editor                            | Export                        |
-| ------------------- | ------------------------------- | --------------------------------- | ----------------------------- |
-| Text color          | Supported (`textStyle` mark)    | Supported (TextStyle + Color)     | Supported (normalized to hex) |
-| Highlight           | Supported (`highlight` mark)    | Supported (Highlight, multicolor) | Supported (named or hex)      |
-| Shading (`<w:shd>`) | Supported (maps to `highlight`) | Supported                         | Supported (solid shading)     |
-| Theme colors        | Not supported (not converted)   | Not applicable                    | Not applicable                |
+|                     | 导入                          | 编辑器                            | 导出                        |
+| ------------------- | ----------------------------- | --------------------------------- | ----------------------------- |
+| 文本颜色            | 支持（`textStyle` 标记）       | 支持（TextStyle + Color）         | 支持（规范化为十六进制）      |
+| 高亮                | 支持（`highlight` 标记）       | 支持（Highlight，支持多色）       | 支持（命名颜色或十六进制）    |
+| 底纹（`<w:shd>`）   | 支持（映射为 `highlight`）     | 支持                              | 支持（纯色底纹）              |
+| 主题颜色            | 不支持（不会转换）             | 不适用                            | 不适用                        |
 
-## Import
+## 导入
 
-Import text color and highlight using the [editor extension](/conversion/import/docx/editor-extension) or the [REST API](/conversion/import/docx/rest-api). Both produce identical output.
+使用[编辑器扩展](/conversion/import/docx/editor-extension)或 [REST API](/conversion/import/docx/rest-api) 导入文本颜色和高亮。两者生成的输出完全相同。
 
-The conversion service maps Word color elements to Tiptap marks:
+转换服务会将 Word 颜色元素映射为 Tiptap 标记：
 
-| Word element                        | Tiptap mark | Attribute              |
+| Word 元素                           | Tiptap 标记 | 属性                   |
 | ----------------------------------- | ----------- | ---------------------- |
 | `<w:color val="FF0000">`            | `textStyle` | `{ color: "#FF0000" }` |
 | `<w:highlight val="yellow">`        | `highlight` | `{ color: "yellow" }`  |
 | `<w:shd val="clear" fill="00FFFF">` | `highlight` | `{ color: "#00FFFF" }` |
 
-Both `<w:highlight>` and `<w:shd>` produce the same `highlight` mark. The developer does not need to distinguish between them.
+`<w:highlight>` 和 `<w:shd>` 都会生成相同的 `highlight` 标记。开发者无需区分两者。
 
-<Callout title="Theme colors are not imported" variant="warning">
-  Word theme colors (such as `accent1`, `accent2`, or `themeColor` attributes on `<w:color>`) are not converted during import. If a text run uses only a theme color with `val="auto"`, the color is not included in the output. Only explicit hex color values in `<w:color val="...">` are preserved.
+<Callout title="不会导入主题颜色" variant="warning">
+  Word 主题颜色（例如 `<w:color>` 上的 `accent1`、`accent2` 或 `themeColor` 属性）在导入时不会转换。如果文本片段仅使用主题颜色且 `val="auto"`，输出中将不包含该颜色。只会保留 `<w:color val="...">` 中明确指定的十六进制颜色值。
 </Callout>
 
-## Editor rendering
+## 编辑器渲染
 
-The [`Color`](/editor/extensions/functionality/color) extension adds color support to [`TextStyle`](/editor/extensions/marks/text-style), and the [`Highlight`](/editor/extensions/marks/highlight) extension handles background colors. ConvertKit bundles both: `TextStyleKit` brings `TextStyle` + `Color` + `BackgroundColor`, and `Highlight` is registered with `multicolor: true` preconfigured.
+[`Color`](/editor/extensions/functionality/color) 扩展为 [`TextStyle`](/editor/extensions/marks/text-style) 添加颜色支持，而 [`Highlight`](/editor/extensions/marks/highlight) 扩展则处理背景颜色。ConvertKit 内置了这两个扩展：`TextStyleKit` 包含 `TextStyle` + `Color` + `BackgroundColor`，并且注册 `Highlight` 时已预先配置 `multicolor: true`。
 
-Text color renders as an inline `style="color: ..."` on a `<span>` element. Highlight renders as a `<mark>` element with a `background-color` style.
+文本颜色会在 `<span>` 元素上渲染为内联 `style="color: ..."`。高亮会渲染为带有 `background-color` 样式的 `<mark>` 元素。
 
-If you disable `ConvertKit.configure({ textStyleKit: false })`, text color attributes from import won't be recognised by the schema. Same for `highlight: false`. See the [invalid schema guide](/guides/invalid-schema) for how to manage unrecognised marks and attributes.
+如果禁用 `ConvertKit.configure({ textStyleKit: false })`，模式将无法识别导入的文本颜色属性。`highlight: false` 也会有同样的问题。有关如何处理无法识别的标记和属性，请参阅[无效模式指南](/guides/invalid-schema)。
 
-## Export
+## 导出
 
-Export text color and highlight using the [editor extension](/conversion/export/docx/editor-extension) or the [REST API](/conversion/export/docx/rest-api). Both handle color and highlight identically.
+使用[编辑器扩展](/conversion/export/docx/editor-extension)或 [REST API](/conversion/export/docx/rest-api) 导出文本颜色和高亮。两者对颜色和高亮的处理方式完全相同。
 
-On export, color values are normalized to 6-digit hex. The following input formats are accepted:
+导出时，颜色值会规范化为 6 位十六进制格式。支持以下输入格式：
 
-- Hex with hash: `#FF0000`, `#F00`, `#FF0000AA`
-- RGB/RGBA: `rgb(255, 0, 0)`, `rgba(255, 0, 0, 0.5)`
-- Named CSS colors: `red`, `blue`, `green`, `yellow`, `cyan`, `purple`, and 14 others
+- 带井号的十六进制：`#FF0000`、`#F00`、`#FF0000AA`
+- RGB/RGBA：`rgb(255, 0, 0)`、`rgba(255, 0, 0, 0.5)`
+- CSS 命名颜色：`red`、`blue`、`green`、`yellow`、`cyan`、`purple` 等另外 14 种颜色
 
-Highlights export as either a named Word highlight color (when the color matches a Word enum value like `yellow` or `cyan`) or as solid character shading with a hex fill value. A highlight mark with no color attribute defaults to yellow.
+高亮会导出为 Word 命名高亮颜色（颜色与 `yellow` 或 `cyan` 等 Word 枚举值匹配时），或者导出为填充了十六进制颜色值的纯色字符底纹。没有颜色属性的 `highlight` 标记默认使用黄色。
