@@ -9,8 +9,8 @@ import { VERSIONS, CURRENT_VERSION } from '@/utils/constants'
 import type { VersionData } from '@/types'
 
 const getItemLabel = ({ version }: { version: VersionData }) => {
-  if (version.isLegacy) return 'Legacy'
-  if (version.isBeta) return 'Beta'
+  if (version.isLegacy) return '旧版'
+  if (version.isBeta) return '测试版'
   if (version.isAlpha) return 'Alpha'
   if (version.isRc) return 'RC'
   return false
