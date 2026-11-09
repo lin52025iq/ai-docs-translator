@@ -36,7 +36,7 @@ export const MobileNavigationButton = ({ config }: { config?: SidebarConfig }) =
       size="small"
       onClick={() => setMobileNavigationOpen(true)}
     >
-      {currentItem?.title ?? 'Navigation'}
+      {currentItem?.title ?? '导航'}
       <ChevronDownIcon className="w-2 h-2" />
     </Button>
   )
