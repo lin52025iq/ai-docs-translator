@@ -4,7 +4,7 @@ import glob from 'fast-glob'
 import frontMatter from 'front-matter'
 import { FULL_DOMAIN } from '@/utils/constants'
 
-// Reads the content directory once at build time; the output never varies per request.
+// 在构建时读取一次内容目录；输出不会因请求而异。
 export const runtime = 'nodejs'
 export const dynamic = 'force-static'
 
@@ -14,7 +14,7 @@ type Frontmatter = {
   meta?: { title?: string; description?: string }
 }
 
-/** src/content path → public route, e.g. `editor/index.mdx` → `/editor`. */
+/** src/content 路径 → 公共路由，例如 `editor/index.mdx` → `/editor`。 */
 function fileToRoute(file: string): string {
   const p = file
     .replace(/\.mdx$/, '')
@@ -23,7 +23,7 @@ function fileToRoute(file: string): string {
   return p ? `/${p}` : '/'
 }
 
-/** The `.md` URL an agent can fetch for a given route. */
+/** 智能体可通过此 `.md` URL 获取指定路由的内容。 */
 function markdownUrl(route: string): string {
   return `${FULL_DOMAIN}${route === '/' ? '/index' : route}.md`
 }
@@ -71,14 +71,14 @@ export async function GET() {
   }
 
   const lines: string[] = [
-    '# Tiptap Documentation',
+    '# Tiptap 文档',
     '',
-    '> Tiptap is the headless and extensible rich-text editor framework tailored to modern web and app development needs.',
+    '> Tiptap 是一个无头且可扩展的富文本编辑器框架，专为现代 Web 和应用开发需求打造。',
     '',
-    'Every page is available as Markdown: append `.md` to any documentation URL,' +
-      ' or send an `Accept: text/markdown` header.',
+    '每个页面都提供 Markdown 格式：在任意文档 URL 后添加 `.md`，' +
+      ' 或发送 `Accept: text/markdown` 标头。',
     '',
-    'For a product overview and curated entry points, see https://tiptap.dev/llms.txt',
+    '如需了解产品概况和精选入口，请访问 https://tiptap.dev/llms.txt',
     '',
   ]
 
