@@ -9,7 +9,7 @@ import { cn } from '@/utils'
 
 export type CodeblockProps = {
   disableCopy?: boolean
-  /** Long code shows its first 28rem and a "Show all" bar; `false` shows it all. */
+  /** 长代码默认显示前 28rem，并提供“显示全部”栏；设为 `false` 时显示全部内容。 */
   collapse?: boolean
 } & React.HTMLAttributes<HTMLDivElement>
 
@@ -21,7 +21,7 @@ export const Codeblock = forwardRef<HTMLDivElement, CodeblockProps>(
     )
     const wrapperClassName = cn(
       'c-codeblock bg-black text-white my-5 p-4 rounded-lg text-sm relative items-start gap-2',
-      // A single line centers the copy button on it; longer code keeps it at the top
+      // 单行代码会将复制按钮垂直居中；多行代码则将按钮置于顶部
       '[&:has(.line:only-child)>.c-codeblock-copy]:top-1/2 [&:has(.line:only-child)>.c-codeblock-copy]:-translate-y-1/2',
       className,
     )
@@ -31,7 +31,7 @@ export const Codeblock = forwardRef<HTMLDivElement, CodeblockProps>(
     const onCopy = useCallback(() => {
       if (contentRef.current) {
         clipboard.copy(contentRef.current.textContent)
-        toast('Copied to clipboard', { duration: 1200 })
+        toast('已复制到剪贴板', { duration: 1200 })
       }
     }, [clipboard])
 
@@ -58,7 +58,7 @@ export const Codeblock = forwardRef<HTMLDivElement, CodeblockProps>(
         {disableCopy ? null : (
           <button
             onClick={onCopy}
-            aria-label={clipboard.copied ? 'Copied' : 'Copy code'}
+            aria-label={clipboard.copied ? '已复制' : '复制代码'}
             className="c-codeblock-copy absolute top-2 right-2 flex items-center justify-center bg-black border border-white/20 rounded size-7 hover:bg-white/10 hover:border-white/40 transition-colors duration-200"
           >
             <span className="relative size-3.5">
