@@ -15,16 +15,29 @@ translation:
   scope:
     include:
       - src/**
+      - README.md
     exclude: []
   glossary: glossary.yml
   prompts:
     frameworkLanguage: zh-CN
     frameworks: {}
     common: prompts/common.md
-  review:
-    enabled: false
-    model: gpt-6-luna
-    minimumProbability: 0.95
+  draft:
     pushDraft: false
     remote: origin
   retranslateOnContextChange: false
+
+validation:
+  files:
+    - include: ['src/**/*.mdx', 'src/**/*.{ts,tsx}']
+      command: [node, '{configDir}/validators/check.ts', file, '{file}', '{path}']
+  global:
+    command: [node, '{configDir}/validators/check.ts', global]
+
+deployment:
+  provider: vercel
+  locale: zh-CN
+  name: tiptap-docs
+  teamId: team_fEBZtKMNvmjodbBzMmTWage5
+  projectId: prj_ce2hFlut8p3i4XVFOpTO3smQ0aka
+  repositoryId: '1448072497'
