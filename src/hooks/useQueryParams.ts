@@ -29,7 +29,7 @@ export function useQueryParam<T extends string = string>(
       query.delete(key)
     }
 
-    // This check is necessary if using the hook with Gatsby
+    // 如果在 Gatsby 中使用此 Hook，则需要进行此检查
     if (typeof window !== 'undefined') {
       const { protocol, pathname, host } = window.location
       const newUrl = `${protocol}//${host}${pathname}?${query.toString()}`
