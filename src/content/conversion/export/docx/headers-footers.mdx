@@ -1,14 +1,14 @@
 ---
-title: Extend your DOCX export with Headers & Footers
+title: 为 DOCX 导出添加页眉和页脚
 tags:
   - type: start
   - type: beta
   - type: version
     label: v0.26.1
 meta:
-    title: Extend your DOCX export with Headers & Footers | Tiptap Conversion
-    description: Learn how to extend your DOCX exports with Headers & Footers
-    category: Conversion
+    title: 为 DOCX 导出添加页眉和页脚 | Tiptap Conversion
+    description: 了解如何为 DOCX 导出添加页眉和页脚
+    category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
@@ -19,52 +19,52 @@ import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 <EnterpriseCalloutAuto variant="docx" renderMode="sidebar" disableWaitlist />
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 开启试用或订阅">
+        在账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 计划](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Install from private registry">
-        To install this frontend extensions, authenticate to Tiptap’s private npm registry by following the [setup guide](/guides/pro-extensions).
+    <RequirementItem label="2. 从私有仓库安装">
+        要安装这些前端扩展，请按照[设置指南](/guides/pro-extensions)进行身份验证，以访问 Tiptap 的私有 npm 仓库。
     </RequirementItem>
 </Requirements>
 
-The `@tiptap-pro/extension-export-docx` extension includes built-in support for customizing the headers and footers of the exported document.
+`@tiptap-pro/extension-export-docx` 扩展内置了自定义导出文档页眉和页脚的支持。
 
 <CodeDemo isPro path="/Extensions/ExportDocxCustomHeaderFooter" />
 
-When adding this extension it will allow you to configure your `ExportDocx` with some additional properties:
+添加此扩展后，即可为 `ExportDocx` 配置一些额外属性：
 
-## Headers Configuration
+## 页眉配置
 
-The `headers` object allows you to customize the headers of your exported DOCX document:
+`headers` 对象用于自定义导出 DOCX 文档的页眉：
 
-| Property | Type | Description |
+| 属性 | 类型 | 描述 |
 | --- | --- | --- |
-| `evenAndOddHeaders` | `boolean` | Whether to use different headers for odd and even pages |
-| `differentFirstPage` | `boolean` | Whether to use a different header on the first page. When `true`, the `first` value is used on page one instead of `default`. |
-| `default` | `Header \| (() => Promise<Header>)` | The standard default header on every page, or header on odd pages when the `evenAndOddHeaders` option is activated. Can be a `Header` object or an async function that returns a `Header` |
-| `first` | `Header \| (() => Promise<Header>)` | The header on the first page. Only used when `differentFirstPage` is set to `true`. Can be a `Header` object or an async function that returns a `Header` |
-| `even` | `Header \| (() => Promise<Header>)` | The header on even pages when the `evenAndOddHeaders` option is activated. Can be a `Header` object or an async function that returns a `Header` |
+| `evenAndOddHeaders` | `boolean` | 是否为奇数页和偶数页使用不同的页眉 |
+| `differentFirstPage` | `boolean` | 是否为首页使用不同的页眉。设为 `true` 时，第一页使用 `first` 值，而非 `default`。 |
+| `default` | `Header \| (() => Promise<Header>)` | 每页使用的标准默认页眉；启用 `evenAndOddHeaders` 选项时，则用于奇数页。可以是 `Header` 对象，也可以是返回 `Header` 的异步函数。 |
+| `first` | `Header \| (() => Promise<Header>)` | 首页页眉。仅当 `differentFirstPage` 设为 `true` 时使用。可以是 `Header` 对象，也可以是返回 `Header` 的异步函数。 |
+| `even` | `Header \| (() => Promise<Header>)` | 启用 `evenAndOddHeaders` 选项时，用于偶数页的页眉。可以是 `Header` 对象，也可以是返回 `Header` 的异步函数。 |
 
-## Footers Configuration
+## 页脚配置
 
-The `footers` object allows you to customize the footers of your exported DOCX document:
+`footers` 对象用于自定义导出 DOCX 文档的页脚：
 
-| Property | Type | Description |
+| 属性 | 类型 | 描述 |
 | --- | --- | --- |
-| `evenAndOddFooters` | `boolean` | Whether to use different footers for odd and even pages |
-| `differentFirstPage` | `boolean` | Whether to use a different footer on the first page. When `true`, the `first` value is used on page one instead of `default`. |
-| `default` | `Footer \| (() => Promise<Footer>)` | The standard default footer on every page, or footer on odd pages when the `evenAndOddFooters` option is activated. Can be a `Footer` object or an async function that returns a `Footer` |
-| `first` | `Footer \| (() => Promise<Footer>)` | The footer on the first page. Only used when `differentFirstPage` is set to `true`. Can be a `Footer` object or an async function that returns a `Footer` |
-| `even` | `Footer \| (() => Promise<Footer>)` | The footer on even pages when the `evenAndOddFooters` option is activated. Can be a `Footer` object or an async function that returns a `Footer` |
+| `evenAndOddFooters` | `boolean` | 是否为奇数页和偶数页使用不同的页脚 |
+| `differentFirstPage` | `boolean` | 是否为首页使用不同的页脚。设为 `true` 时，第一页使用 `first` 值，而非 `default`。 |
+| `default` | `Footer \| (() => Promise<Footer>)` | 每页使用的标准默认页脚；启用 `evenAndOddFooters` 选项时，则用于奇数页。可以是 `Footer` 对象，也可以是返回 `Footer` 的异步函数。 |
+| `first` | `Footer \| (() => Promise<Footer>)` | 首页页脚。仅当 `differentFirstPage` 设为 `true` 时使用。可以是 `Footer` 对象，也可以是返回 `Footer` 的异步函数。 |
+| `even` | `Footer \| (() => Promise<Footer>)` | 启用 `evenAndOddFooters` 选项时，用于偶数页的页脚。可以是 `Footer` 对象，也可以是返回 `Footer` 的异步函数。 |
 
-# Usage Examples
+# 用法示例
 
-## Extension Configuration
+## 扩展配置
 
-Headers and footers are configured through the `ExportDocx.configure()` method. You can use direct `Docx` namespace objects like `Docx.Header` and `Docx.Footer` for full control:
+通过 `ExportDocx.configure()` 方法配置页眉和页脚。你可以直接使用 `Docx` 命名空间中的对象（例如 `Docx.Header` 和 `Docx.Footer`），以获得完整的控制能力：
 
-<Callout title="Note about Header and Footer Objects" type="info">
-The `Header`, `Footer`, `Paragraph`, and `TextRun` objects are accessed through the `Docx` namespace exported from `@tiptap-pro/extension-export-docx`. You can customize them with any valid content including paragraphs, text runs, and more if available within the standard elements that can be used within a DOCX header or footer.
+<Callout title="关于页眉和页脚对象的说明" type="info">
+`Header`、`Footer`、`Paragraph` 和 `TextRun` 对象可通过从 `@tiptap-pro/extension-export-docx` 导出的 `Docx` 命名空间访问。你可以使用任何有效内容自定义它们，包括段落、文本运行，以及 DOCX 页眉或页脚中标准元素支持的其他内容。
 </Callout>
 
 ```javascript
@@ -146,9 +146,9 @@ const editor = new Editor({
 editor.commands.exportDocx()
 ```
 
-### Using Helper Functions (Alternative Approach)
+### 使用辅助函数（替代方案）
 
-For easier handling of Tiptap-style content, you can use the `convertHeader` and `convertFooter` helper functions that automatically handle mark conversion, links, and other Tiptap features.
+为了更轻松地处理 Tiptap 风格的内容，你可以使用 `convertHeader` 和 `convertFooter` 辅助函数，它们会自动处理 mark 转换、链接和其他 Tiptap 功能。
 
 ```javascript
 import { ExportDocx } from '@tiptap-pro/extension-export-docx'
@@ -260,26 +260,26 @@ const editor = new Editor({
 editor.commands.exportDocx()
 ```
 
-The `convertHeader` and `convertFooter` helper functions expect a Tiptap node, which in this case it's a paragraph, and they will automatically handle:
-- Mark conversion (bold, italic, colors, etc.)
-- Link conversion
-- Text styling and formatting
-- Complex Tiptap node structures
+`convertHeader` 和 `convertFooter` 辅助函数接收一个 Tiptap 节点（此处为段落），并会自动处理：
+- mark 转换（粗体、斜体、颜色等）
+- 链接转换
+- 文本样式和格式
+- 复杂的 Tiptap 节点结构
 
-This makes it much easier to create rich headers and footers using familiar Tiptap JSON structure.
+因此，你可以使用熟悉的 Tiptap JSON 结构，更轻松地创建丰富的页眉和页脚。
 
-<Callout title="Important note!">
-    Be aware that if you use the `convertHeader` and `convertFooter` helpers you'd need to then use an asynchronous arrow functions as this `convertHeader` and `convertFooter` utility functions internally call `convertParagraph` helper which is an asynchronous function due to our image resolution implementation to handle images.
+<Callout title="重要提示！">
+    请注意，如果使用 `convertHeader` 和 `convertFooter` 辅助函数，就需要使用异步箭头函数，因为这些实用函数内部会调用 `convertParagraph` 辅助函数。由于我们的图像解析实现需要处理图像，`convertParagraph` 是一个异步函数。
 </Callout>
 
-## Advanced Examples
+## 高级示例
 
-### Dynamic Headers and Footers with Async Functions
+### 使用异步函数创建动态页眉和页脚
 
-You can also provide asynchronous functions that return `Header` or `Footer` objects. This is useful for dynamic content generation, such as fetching user data, formatting current dates, or processing images.
+你也可以提供返回 `Header` 或 `Footer` 对象的异步函数。这适用于生成动态内容，例如获取用户数据、设置当前日期格式或处理图像。
 
-<Callout title="Async Function Benefits" type="tip">
-Using async functions for headers and footers enables powerful use cases like: Fetching user information from APIs, including current timestamps or dynamic dates, processing and embedding images, calculating document statistics, retrieving data from databases or external services.
+<Callout title="异步函数的优势" type="tip">
+使用异步函数创建页眉和页脚，可以实现许多强大的用例，例如：从 API 获取用户信息、添加当前时间戳或动态日期、处理并嵌入图像、计算文档统计数据，以及从数据库或外部服务获取数据。
 </Callout>
 
 ```javascript
@@ -357,13 +357,13 @@ const editor = new Editor({
 editor.commands.exportDocx()
 ```
 
-<Callout title="Async function lifecycle">
-    The asynchronous functions provided will be called after the entire document conversion has been processed, right before constructing the document.
+<Callout title="异步函数的执行时机">
+    提供的异步函数会在整个文档转换完成后、构建文档之前调用。
 </Callout>
 
-### Mixed Static and Dynamic Headers/Footers
+### 混合使用静态和动态页眉/页脚
 
-You can combine static headers/footers with dynamic ones for different pages:
+你可以为不同页面组合使用静态和动态页眉/页脚：
 
 ```javascript
 import { ExportDocx, Docx } from '@tiptap-pro/extension-export-docx'
@@ -456,16 +456,16 @@ async function getDocumentStats() {
 }
 ```
 
-## Page Numbering
+## 页码
 
-The export supports two ways to emit live page-number fields:
+导出支持两种方式生成动态页码字段：
 
-1. **`{page}` / `{total}` tokens in plain-text headers and footers**: works automatically with content extracted from the [Pages extension](/pages/getting-started/overview) and with plain-text strings passed to `headers` / `footers`. The export converts each token to a live `PAGE` / `NUMPAGES` field, so Word renders the actual current page and total page count.
-2. **The `Docx.PageNumber` API**: required when you build header/footer content manually with `new Docx.Header()` / `new Docx.Footer()`, or when you need formatting around the field that goes beyond the bare token. The `convertHeader` / `convertFooter` helpers do not currently process `Docx.PageNumber` references, so pass the `Docx` instance directly.
+1. **纯文本页眉和页脚中的 `{page}` / `{total}` 标记**：适用于从 [Pages 扩展](/pages/getting-started/overview)中提取的内容，以及传入 `headers` / `footers` 的纯文本字符串。导出时会将每个标记转换为动态 `PAGE` / `NUMPAGES` 字段，因此 Word 会显示当前页码和总页数。
+2. **`Docx.PageNumber` API**：当你使用 `new Docx.Header()` / `new Docx.Footer()` 手动构建页眉/页脚内容，或需要对字段进行超出标记本身的格式设置时，必须使用此 API。`convertHeader` / `convertFooter` 辅助函数目前不会处理 `Docx.PageNumber` 引用，因此请直接传入 `Docx` 实例。
 
-### Page numbers via `{page}` / `{total}` tokens
+### 通过 `{page}` / `{total}` 标记设置页码
 
-Any plain-text header or footer (including those auto-extracted from the Pages extension via `editor.commands.setHeader('Page {page} of {total}')`) renders as live page-number fields in the exported DOCX:
+任何纯文本页眉或页脚（包括通过 `editor.commands.setHeader('Page {page} of {total}')` 从 Pages 扩展自动提取的内容）都会在导出的 DOCX 中显示为动态页码字段：
 
 ```javascript
 import { ExportDocx } from '@tiptap-pro/extension-export-docx'
@@ -501,13 +501,13 @@ const editor = new Editor({
 editor.commands.exportDocx()
 ```
 
-The same conversion runs automatically when headers/footers are auto-extracted from the Pages extension, so a footer set via `editor.commands.setFooter('Page {page} of {total}')` exports with live page numbers without any extra configuration.
+从 Pages 扩展自动提取页眉/页脚时，也会自动进行相同的转换。因此，通过 `editor.commands.setFooter('Page {page} of {total}')` 设置的页脚无需任何额外配置，导出后就会包含动态页码。
 
-### Custom token names
+### 自定义标记名称
 
-If your editor renames the built-in tokens via `Pages.configure({ placeholders: { total: 'pages' } })` (see [Pages → renaming placeholders](/pages/core-concepts/page-header-footer#renaming-or-disabling-placeholders)), the export honors the same token names: `{pages}` becomes a live `NUMPAGES` field, and the original `{total}` stops being recognized. There is no `placeholders` option on `ExportDocx` itself; configuring on Pages keeps the editor preview and the exported `.docx` consistent.
+如果你通过 `Pages.configure({ placeholders: { total: 'pages' } })` 重命名了内置标记（参见 [Pages → 重命名占位符](/pages/core-concepts/page-header-footer#renaming-or-disabling-placeholders)），导出时也会遵循相同的标记名称：`{pages}` 会转换为动态 `NUMPAGES` 字段，而原来的 `{total}` 将不再被识别。`ExportDocx` 本身没有 `placeholders` 选项；在 Pages 中进行配置，可以确保编辑器预览与导出的 `.docx` 保持一致。
 
-When calling `convertHeader` / `convertFooter` directly (for example, from server-side code without an editor), you can pass `placeholders` explicitly:
+直接调用 `convertHeader` / `convertFooter` 时（例如，在没有编辑器的服务端代码中调用），你可以显式传入 `placeholders`：
 
 ```javascript
 import { convertFooter } from '@tiptap-pro/extension-export-docx'
@@ -518,9 +518,9 @@ const footer = await convertFooter({
 })
 ```
 
-Pass `placeholders: false` to disable substitution and emit the tokens as literal text. Omitting `placeholders` entirely on a direct `convertHeader` / `convertFooter` call also disables substitution; you opt in explicitly.
+传入 `placeholders: false` 可禁用替换，并将标记作为字面文本输出。直接调用 `convertHeader` / `convertFooter` 时，如果完全省略 `placeholders`，也会禁用替换；需要显式启用才会进行替换。
 
-### Basic Page Numbers
+### 基本页码
 
 ```javascript
 import { ExportDocx, Docx } from '@tiptap-pro/extension-export-docx'
@@ -575,7 +575,7 @@ const editor = new Editor({
 editor.commands.exportDocx()
 ```
 
-### Page Numbers with Total Pages
+### 显示总页数的页码
 
 ```javascript
 import { ExportDocx, Docx } from '@tiptap-pro/extension-export-docx'
