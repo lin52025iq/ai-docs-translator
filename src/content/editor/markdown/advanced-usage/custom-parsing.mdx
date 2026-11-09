@@ -1,23 +1,23 @@
 ---
-title: Custom Markdown Parsing
+title: 自定义 Markdown 解析
 tags:
   - type: beta
 meta:
-  title: Custom Markdown Parsing | Tiptap Editor Docs
-  description: Learn how to implement custom Markdown parsing in Tiptap Editor with this comprehensive guide.
-  category: Editor
+  title: 自定义 Markdown 解析 | Tiptap 编辑器文档
+  description: 本指南将全面介绍如何在 Tiptap Editor 中实现自定义 Markdown 解析。
+  category: 编辑器
 ---
 
-This guide will walk you through the process of implementing custom Markdown parsing in Tiptap Editor. By the end of this tutorial, you'll be able to extract [Tiptap JSON](../glossary#tiptap-json) from [Tokens](../glossary#token).
+本指南将带你了解如何在 Tiptap Editor 中实现自定义 Markdown 解析。完成本教程后，你将能够从 [令牌](../glossary#token)中提取 [Tiptap JSON](../glossary#tiptap-json)。
 
-Extensions can provide custom parsing logic to handle specific Markdown tokens. This is done through the `markdown.parse` handler.
+扩展可以提供自定义解析逻辑，以处理特定的 Markdown 令牌。这通过 `markdown.parse` 处理器实现。
 
-## Creating and understanding a parse handler
+## 创建并了解解析处理器
 
-A parse handler receives a Markdown token from MarkedJS and returns Tiptap JSON content that can be consumed by the editor.
-In addition to the token, the parse function also receives a `helpers` object with utility functions to assist in parsing.
+解析处理器接收来自 MarkedJS 的 Markdown 令牌，并返回编辑器可以使用的 Tiptap JSON 内容。
+除了令牌之外，解析函数还会接收一个 `helpers` 对象，其中包含用于辅助解析的实用函数。
 
-These can be helpful for creating nodes, marks or parsing child `MarkedJS` tokens from `token.tokens`.
+这些函数可用于创建节点、标记，或解析 `token.tokens` 中的子级 `MarkedJS` 令牌。
 
 ```typescript
 const MyHeading = Node.create({
@@ -35,24 +35,24 @@ const MyHeading = Node.create({
 })
 ```
 
-In this example the parse handler processes a `heading` token which is passed through by MarkedJS to our Markdown manager.
-This token is picked up in this example and transformed into a Tiptap node with the node type `heading`.
+在这个示例中，解析处理器会处理 MarkedJS 传递给 Markdown 管理器的 `heading` 令牌。
+此示例会捕获该令牌，并将其转换为类型为 `heading` 的 Tiptap 节点。
 
-The appropriate `level` attribute is extracted from the token and it's inline content (as headlines can only contain marks or inline text) are parsed using the `helpers.parseInline()` function.
+处理器会从令牌中提取相应的 `level` 属性，并使用 `helpers.parseInline()` 解析其行内内容（标题只能包含标记或行内文本）。
 
-> **Important**: Attributes on tokens can vary depending on how the [Tokenizer](../glossary#tokenizer) is configured.
+> **重要**：令牌的属性可能会因 [Tokenizer](../glossary#tokenizer) 的配置方式而异。
 
-## Parse Helper Functions
+## 解析辅助函数
 
-As described in the section above, the `helpers` object provides utility functions for parsing child tokens or creating nodes and marks.
-Let us go through each helper and see how they can be used.
+如上一节所述，`helpers` 对象提供实用函数，用于解析子令牌或创建节点和标记。
+下面我们逐一介绍这些辅助函数及其用法。
 
-### Parse inline-level child token with `helpers.parseInline(tokens)`
+### 使用 `helpers.parseInline(tokens)` 解析行内级子令牌
 
-This helper takes a list of tokens and **tries** to parse them as inline content (text nodes with marks).
-It will not verify if the tokens are actually inline tokens so make sure to only pass inline tokens here.
+此辅助函数接收一个令牌列表，并**尝试**将其解析为行内内容（带有标记的文本节点）。
+它不会验证令牌是否确实为行内令牌，因此请确保这里只传入行内令牌。
 
-The function returns `TiptapJSON[]` that can be used as the `content` of a Tiptap Node.
+该函数返回 `TiptapJSON[]`，可用作 Tiptap 节点的 `content`。
 
 ```typescript
 parse: (token, helpers) => {
@@ -65,12 +65,12 @@ parse: (token, helpers) => {
 }
 ```
 
-### Parse block-level child token with `helpers.parseChildren(tokens)`
+### 使用 `helpers.parseChildren(tokens)` 解析块级子令牌
 
-Similar to `parseInline()`, but parses tokens as block-level content (e.g., list items, blockquotes, code blocks and more).
-It will not verify if the tokens are actually block-level tokens so make sure to only pass block-level tokens here.
+它与 `parseInline()` 类似，但会将令牌解析为块级内容（例如列表项、引用块、代码块等）。
+它不会验证令牌是否确实为块级令牌，因此请确保这里只传入块级令牌。
 
-The function returns `TiptapJSON[]` that can be used as the `content` of a Tiptap Node.
+该函数返回 `TiptapJSON[]`，可用作 Tiptap 节点的 `content`。
 
 ```typescript
 parse: (token, helpers) => {
@@ -84,9 +84,9 @@ parse: (token, helpers) => {
 }
 ```
 
-### Parsing Marks with `helpers.parseInline()` and `helpers.applyMark()`
+### 使用 `helpers.parseInline()` 和 `helpers.applyMark()` 解析标记
 
-Use `helpers.applyMark()` to apply a mark to content:
+使用 `helpers.applyMark()` 将标记应用于内容：
 
 ```typescript
 const Bold = Mark.create({
@@ -100,9 +100,9 @@ const Bold = Mark.create({
 })
 ```
 
-## HTML Parsing in Markdown
+## Markdown 中的 HTML 解析
 
-When Markdown contains HTML, it's parsed using your extensions' existing `parseHTML` methods.
+当 Markdown 中包含 HTML 时，会使用扩展现有的 `parseHTML` 方法进行解析。
 
 ```markdown
 # Regular Markdown
@@ -114,9 +114,9 @@ When Markdown contains HTML, it's parsed using your extensions' existing `parseH
 More **Markdown** here.
 ```
 
-## Defining the Markdown token name
+## 定义 Markdown 令牌名称
 
-When parsing tokens to nodes or marks, it can happen that tokens may not map one-to-one to your node or mark names. In that case, you can use `markdownTokenName` to specify which token names to parse and to your nodes or marks type name.
+将令牌解析为节点或标记时，令牌名称可能与节点或标记名称并非一一对应。在这种情况下，可以使用 `markdownTokenName` 指定要解析的令牌名称，以及对应的节点或标记类型名称。
 
 ```typescript
 const CustomBold = Mark.create({
@@ -129,26 +129,26 @@ const CustomBold = Mark.create({
 })
 ```
 
-This is useful when:
+以下情况适合使用此功能：
 
-- Markdown token names differ from your node names
-- Multiple Markdown tokens map to the same node type
-- One node type can be serialized to multiple Markdown formats
+- Markdown 令牌名称与节点名称不同
+- 多种 Markdown 令牌映射到同一种节点类型
+- 一种节点类型可以序列化为多种 Markdown 格式
 
-## Fallback Parsing
+## 回退解析
 
-If no extension handles a specific token type, the MarkdownManager provides fallback parsing for common tokens:
+如果没有扩展处理特定的令牌类型，MarkdownManager 会为常见令牌提供回退解析：
 
 - `paragraph` → `{ type: 'paragraph' }`
 - `heading` → `{ type: 'heading', attrs: { level } }`
 - `text` → `{ type: 'text', text }`
-- `html` → Parsed using extensions' `parseHTML` methods
+- `html` → 使用扩展的 `parseHTML` 方法解析
 
-You can override this by providing your own handler for these token types.
+你可以为这些令牌类型提供自己的处理器，以覆盖此行为。
 
-## Debug Parsing
+## 调试解析
 
-Log tokens to understand what MarkedJS produces:
+记录令牌，以了解 MarkedJS 生成的内容：
 
 ```typescript
 const markdown = '# Hello **World**'
@@ -156,7 +156,7 @@ const tokens = editor.markdown.instance.lexer(markdown)
 console.log(JSON.stringify(tokens, null, 2))
 ```
 
-### Parse tokens in isolation
+### 单独解析令牌
 
 ```typescript
 const token = {
@@ -174,11 +174,11 @@ const result = myExtension.options.markdown.parse(token, helpers)
 console.log(result)
 ```
 
-## Performance Considerations
+## 性能注意事项
 
-### Lazy Parsing
+### 延迟解析
 
-For large documents, consider parsing on demand:
+对于大型文档，可以考虑按需解析：
 
 ```typescript
 let cachedJSON = null
@@ -191,19 +191,19 @@ function getJSON() {
 }
 ```
 
-### Incremental Updates
+### 增量更新
 
-Instead of re-parsing the entire document on each change, update specific sections:
+不要在每次更改时重新解析整个文档，而是更新特定部分：
 
 ```typescript
 editor.commands.insertContentAt(position, newMarkdown, { contentType: 'markdown' })
 ```
 
-## Examples
+## 示例
 
-### Custom Heading Parser
+### 自定义标题解析器
 
-Let's build a custom heading parser for a `customHeading` extension that will extract the heading level and also generate a unique ID for each heading.
+下面为 `customHeading` 扩展构建一个自定义标题解析器，用于提取标题级别，并为每个标题生成唯一 ID。
 
 ```typescript
 import { Node } from '@tiptap/core'
@@ -229,9 +229,9 @@ const CustomHeading = Node.create({
 })
 ```
 
-### Custom YouTube Embed Parser
+### 自定义 YouTube 嵌入解析器
 
-Let's create a custom parser for a `youtube` token that turns the token into a `youtubeEmbed` node with the appropriate embed attributes.
+下面为 `youtube` 令牌创建一个自定义解析器，将其转换为具有相应嵌入属性的 `youtubeEmbed` 节点。
 
 ```typescript
 import { Node } from '@tiptap/core'
