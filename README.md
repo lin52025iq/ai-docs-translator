@@ -1,24 +1,24 @@
-# Tiptap Documentation
+# Tiptap 文档
 
-Welcome to the official documentation for all Tiptap products! Here, you'll find comprehensive guides, detailed examples, and in-depth documentation covering everything you need to know about our offerings.
+欢迎阅读 Tiptap 所有产品的官方文档！在这里，您可以找到全面的指南、详细的示例和深入的文档，了解我们的产品所需的一切。
 
-## Available Documentation
+## 可用文档
 
-Our documentation includes resources for all our major products:
+我们的文档涵盖所有主要产品：
 
-- **Editor**: Learn how to integrate, customize, and extend the Tiptap editor.
-- **Collaboration**: Find out how to enable real-time collaboration features in your projects.
-- **Document AI**: Discover how to leverage AI for document processing and automation.
-- **Comments**: Implement and manage a robust commenting system.
+- **编辑器**：了解如何集成、自定义和扩展 Tiptap 编辑器。
+- **协作**：了解如何在项目中启用实时协作功能。
+- **文档 AI**：探索如何利用 AI 处理文档并实现自动化。
+- **评论**：实现并管理功能完善的评论系统。
 
-Explore the full documentation at [tiptap.dev](https://tiptap.dev/docs).
+请访问 [tiptap.dev](https://tiptap.dev/docs) 查看完整文档。
 
-## Contributing
+## 参与贡献
 
-We greatly appreciate and encourage contributions from the community. If you're interested in contributing to our documentation, please make sure to read and follow our [contributing guidelines](CONTRIBUTING.md). Your efforts help us improve and keep our documentation up to date, ensuring that everyone has access to the best resources possible.
+我们非常感谢并鼓励社区贡献。如果您有意为我们的文档贡献内容，请务必阅读并遵循我们的[贡献指南](CONTRIBUTING.md)。您的努力有助于我们改进文档并保持其内容最新，确保每个人都能获取优质资源。
 
-Thank you for being a part of the Tiptap community!
+感谢您成为 Tiptap 社区的一员！
 
-## License
+## 许可证
 
-This project is licensed under the [Tiptap Documentation Software License](LICENSE) license. This applies to all files except those in the `src/content` directory, which contains the documentation content or the `public/assets/fonts` directory which contains our fonts. The documentation content is licensed under the [MIT](LICENSE-DOCS) license. The fonts licenses can be found in `src/assets/fonts/LICENSE.txt`.
+本项目根据 [Tiptap 文档软件许可证](LICENSE) 授权。该许可证适用于除 `src/content` 目录下的所有文件（该目录包含文档内容）以及 `public/assets/fonts` 目录下的所有文件（该目录包含我们的字体）。文档内容采用 [MIT](LICENSE-DOCS) 许可证。字体许可证见 `src/assets/fonts/LICENSE.txt`。
