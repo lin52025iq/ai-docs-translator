@@ -2,47 +2,46 @@
 title: REST API
 meta:
   title: REST API | Tiptap Server AI Toolkit
-  description: Complete reference for the Server AI Toolkit REST API endpoints.
+  description: Server AI Toolkit REST API 端点的完整参考。
   category: AI Toolkit
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-The Server AI Toolkit REST API contains endpoints for getting the available tools and executing tool calls
+Server AI Toolkit REST API 包含用于获取可用工具和执行工具调用的端点。
 
-<Callout title="Legacy endpoints" variant="info">
-  V4 is the current API version of the Server AI Toolkit endpoints. V3 endpoints are deprecated; use
-  v4 for new work. v4 also renames the tool-definition endpoint to `/v4/ai/toolkit/fetch-tools`;
-  older names such as `/v3/ai/toolkit/tools` belong to the v3 API. See the [v3 REST API
-  reference](/ai/ai-toolkit/api-reference/rest-api-v3) for the legacy endpoints.
+<Callout title="旧版端点" variant="info">
+  V4 是 Server AI Toolkit 端点的当前 API 版本。V3 端点已弃用；新项目请使用
+  v4。v4 还将工具定义端点更名为 `/v4/ai/toolkit/fetch-tools`；`/v3/ai/toolkit/tools` 等旧名称属于 v3 API。有关旧版端点，请参阅 [v3 REST API
+  参考](/ai/ai-toolkit/api-reference/rest-api-v3)。
 </Callout>
 
-## Base URL
+## 基础 URL
 
-The Tiptap Cloud base URL is:
+Tiptap Cloud 的基础 URL 为：
 
 ```sh
 BASE_URL=https://api.tiptap.dev
 ```
 
-In on-premises deployments, the base URL may differ.
+在本地部署中，基础 URL 可能有所不同。
 
-In the examples below, requests are written as `BASE_URL/v4/ai/toolkit/...`.
+下文示例中的请求使用 `BASE_URL/v4/ai/toolkit/...` 格式。
 
-## Authentication
+## 身份验证
 
-All requests must include this authentication header:
+所有请求都必须包含以下身份验证标头：
 
-- `Authorization: Bearer JWT`, where `JWT` is a Tiptap Access Control JWT.
+- `Authorization: Bearer JWT`，其中 `JWT` 是 Tiptap Access Control JWT。
 
-Sign the token server-side with these settings:
+请在服务器端使用以下设置对令牌进行签名：
 
-- Audience: `AI`
-- Permissions: `AI:Toolkit`
+- 受众：`AI`
+- 权限：`AI:Toolkit`
 
-To fetch and save Tiptap Cloud documents automatically, add the `Documents` audience and the `Documents:Write` permission. `Documents:Write` includes read and comment access.
+如需自动获取和保存 Tiptap Cloud 文档，请添加 `Documents` 受众和 `Documents:Write` 权限。`Documents:Write` 包含读取和评论权限。
 
-See [Authentication](/authentication) for how to create a key pair and sign tokens, and the [authorization guide](/ai/ai-toolkit/install#set-up-authorization) for the full setup.
+有关如何创建密钥对并对令牌签名，请参阅[身份验证](/authentication)；完整设置方法请参阅[授权指南](/ai/ai-toolkit/install#set-up-authorization)。
 
 ```ts
 import { SignJWT, importPKCS8 } from 'jose'
@@ -62,61 +61,54 @@ const JWT_TOKEN = await new SignJWT({
   .sign(privateKey)
 ```
 
-The previous App ID + secret authentication flow is documented under [Legacy authentication](/authentication/legacy).
+之前使用 App ID + secret 的身份验证流程请参阅[旧版身份验证](/authentication/legacy)。
 
-## Optional fields
+## 可选字段
 
-Optional fields can be omitted, `null`, or `undefined`.
+可选字段可以省略、设为 `null` 或 `undefined`。
 
-## Endpoints
+## 端点
 
-### Fetch tool definitions
+### 获取工具定义
 
 ```txt
 POST /v4/ai/toolkit/fetch-tools
 ```
 
-Returns the prompt and tool definitions that you pass to your AI provider.
+返回要传递给 AI 提供商的提示词和工具定义。
 
-Request body:
+请求正文：
 
-- `editorContext` (`object`, required): The editor context returned by `getEditorContext`.
-- `tools` (`Record<string, boolean | ToolConfig>`, optional, default: `{}`): Enables, disables, or
-  configures tools. Tools are disabled by default.
-- `format` (`'json' | 'shorthand' | 'shorthandV2'`, optional, default: `'json'`): Document format used by tool
-  definitions and model output. See [Tiptap
-  Shorthand](/ai/ai-toolkit/advanced-guides/tiptap-shorthand).
+- `editorContext`（`object`，必填）：由 `getEditorContext` 返回的编辑器上下文。
+- `tools`（`Record<string, boolean | ToolConfig>`，可选，默认值：`{}`）：启用、禁用或配置工具。默认情况下，工具处于禁用状态。
+- `format`（`'json' | 'shorthand' | 'shorthandV2'`，可选，默认值：`'json'`）：工具定义和模型输出所使用的文档格式。请参阅 [Tiptap
+  Shorthand](/ai/ai-toolkit/advanced-guides/tiptap-shorthand)。
 
-`tools` can contain these keys:
+`tools` 可以包含以下键：
 
-- `tiptapRead` (`boolean`, optional)
-- `tiptapEdit` (`boolean | { meta?: string }`, optional): Set `meta` when you want the AI to
-  include an extra metadata field on every edit operation, such as a short explanation.
-- `tiptapQuery` (`boolean | { meta?: string }`, optional): Set `meta` when you want the AI to
-  include an extra metadata field on every operation that changes the document. See
-  [`tiptapQuery`](/ai/ai-toolkit/api-reference/tiptap-query).
-- `getThreads` (`boolean`, optional)
-- `editThreads` (`boolean`, optional)
-- `readDocument` (`boolean`, optional)
-- `replaceDocument` (`boolean`, optional)
-- `createDocument` (`boolean`, optional): Alias for `replaceDocument`.
-- `readSelection` (`boolean`, optional)
-- `proofread` (`boolean | { meta?: string }`, optional): Set `meta` when you want the AI to
-  include an extra metadata field on every proofreading edit, such as a short explanation.
-- `readBoard`, `createShapes`, `arrangeShapes`, `createDiagram`, `updateShapes`, `deleteShapes`,
-  `connectShapes` and `createDocFrame` (`boolean`, optional): The [board tools](#board-tools), for
-  a whiteboard.
+- `tiptapRead`（`boolean`，可选）
+- `tiptapEdit`（`boolean | { meta?: string }`，可选）：如果希望 AI 在每个编辑操作中都包含额外的元数据字段（例如简短说明），请设置 `meta`。
+- `tiptapQuery`（`boolean | { meta?: string }`，可选）：如果希望 AI 在每个会更改文档的操作中都包含额外的元数据字段，请设置 `meta`。请参阅
+  [`tiptapQuery`](/ai/ai-toolkit/api-reference/tiptap-query)。
+- `getThreads`（`boolean`，可选）
+- `editThreads`（`boolean`，可选）
+- `readDocument`（`boolean`，可选）
+- `replaceDocument`（`boolean`，可选）
+- `createDocument`（`boolean`，可选）：`replaceDocument` 的别名。
+- `readSelection`（`boolean`，可选）
+- `proofread`（`boolean | { meta?: string }`，可选）：如果希望 AI 在每个校对编辑中都包含额外的元数据字段（例如简短说明），请设置 `meta`。
+- `readBoard`、`createShapes`、`arrangeShapes`、`createDiagram`、`updateShapes`、`deleteShapes`、
+  `connectShapes` 和 `createDocFrame`（`boolean`，可选）：用于白板的[画板工具](#board-tools)。
 
-Response:
+响应：
 
-- `systemPrompt` (`string`): Add this to the system prompt for your AI request. It teaches the AI
-  how Tiptap documents work, what elements the editor supports, and which document format to use.
-- `tools` (`array`): Tool definitions the AI or developer can call. Each array element contains:
-  - `name` (`string`): Tool name.
-  - `description` (`string`): Tool description.
-  - `inputSchema` (`object`): JSON schema for the AI-generated tool input.
+- `systemPrompt`（`string`）：将其添加到 AI 请求的系统提示词中。它会向 AI 介绍 Tiptap 文档的工作方式、编辑器支持的元素，以及应使用的文档格式。
+- `tools`（`array`）：AI 或开发者可以调用的工具定义。数组中的每个元素包含：
+  - `name`（`string`）：工具名称。
+  - `description`（`string`）：工具说明。
+  - `inputSchema`（`object`）：AI 生成的工具输入所使用的 JSON Schema。
 
-Example:
+示例：
 
 ```curl
 curl --location 'BASE_URL/v4/ai/toolkit/fetch-tools' \
@@ -134,82 +126,69 @@ curl --location 'BASE_URL/v4/ai/toolkit/fetch-tools' \
   }'
 ```
 
-#### Error responses
+#### 错误响应
 
-HTTP errors return:
+HTTP 错误会返回：
 
-- `error` (`object`): An object with these properties:
-  - `message` (`string`): Human-readable error message.
-  - `status` (`number`): HTTP status code.
-  - `code` (`string`): Stable error code.
-  - `data` (`object`, optional): Sanitized structured context.
+- `error`（`object`）：包含以下属性的对象：
+  - `message`（`string`）：便于人理解的错误消息。
+  - `status`（`number`）：HTTP 状态码。
+  - `code`（`string`）：稳定的错误代码。
+  - `data`（`object`，可选）：经过清理的结构化上下文。
 
-This endpoint can return:
+此端点可能返回：
 
-- `401` with `access_control_auth_required` or `missing_token`: The request did not include a
-  Tiptap Access Control JWT.
-- `401` with an access-control code such as `token_expired` or `signature_invalid`: The JWT was
-  rejected by Access Control.
-- `403` with `feature_not_available`: Server AI Toolkit is not enabled for the environment.
-- `403` with `insufficient_permissions`: The JWT does not grant `AI:Toolkit`.
-- `403` with `origin_not_allowed`: The request `Origin` is not allowed for the environment.
-- `422` with `validation_failed`: The request body does not match the endpoint schema. The response
-  includes `error.issues`, a list of validation issues.
-- `422` with `tool_config_validation_failed`: The tool config provided in the request body is invalid. The response includes `error.data.issues`, a list of validation issues.
-- `429` with `rate_limited`: Access Control rate-limited authentication.
-- `429`: The server-side rate limiter blocked the request. This response uses a different top-level
-  shape:
-  - `error` (`string`): Rate limit error message.
-  - `retryAfter` (`number`, optional): Seconds to wait before retrying.
-  - `limit` (`number`, optional): Request limit for the current window.
-  - `window` (`number`, optional): Rate-limit window in seconds.
-- `500` with `internal_server_error`: An unexpected server error occurred.
-- `500` with `missing_cloud_api_token`: The cloud service is missing internal authentication
-  configuration.
-- `503` with `service_unavailable`: Access Control was temporarily unavailable.
+- `401`，错误代码为 `access_control_auth_required` 或 `missing_token`：请求未包含 Tiptap Access Control JWT。
+- `401`，错误代码为 `token_expired` 或 `signature_invalid` 等 Access Control 错误代码：Access Control 拒绝了 JWT。
+- `403`，错误代码为 `feature_not_available`：当前环境未启用 Server AI Toolkit。
+- `403`，错误代码为 `insufficient_permissions`：JWT 未授予 `AI:Toolkit` 权限。
+- `403`，错误代码为 `origin_not_allowed`：当前环境不允许请求中的 `Origin`。
+- `422`，错误代码为 `validation_failed`：请求正文与端点 Schema 不匹配。响应包含 `error.issues`，其中列出了验证问题。
+- `422`，错误代码为 `tool_config_validation_failed`：请求正文中提供的工具配置无效。响应包含 `error.data.issues`，其中列出了验证问题。
+- `429`，错误代码为 `rate_limited`：Access Control 对身份验证进行了速率限制。
+- `429`：服务器端速率限制器阻止了请求。此响应使用不同的顶层结构：
+  - `error`（`string`）：速率限制错误消息。
+  - `retryAfter`（`number`，可选）：重试前需要等待的秒数。
+  - `limit`（`number`，可选）：当前时间窗口内的请求上限。
+  - `window`（`number`，可选）：速率限制窗口的秒数。
+- `500`，错误代码为 `internal_server_error`：发生意外的服务器错误。
+- `500`，错误代码为 `missing_cloud_api_token`：云服务缺少内部身份验证配置。
+- `503`，错误代码为 `service_unavailable`：Access Control 暂时不可用。
 
-### Execute a tool
+### 执行工具
 
 ```txt
 POST /v4/ai/toolkit/execute-tool
 ```
 
-Executes a tool. Use this endpoint after the AI model has generated the tool call.
+执行工具。AI 模型生成工具调用后，使用此端点。
 
-Request body:
+请求正文：
 
-- `editorContext` (`object`, required): The editor context returned by `getEditorContext`.
-- `document` (`object`, required): Document to execute the tool against. Use
-  `{ "type": "cloud", "id": "your-document-id" }` when the API should read from and write to a
-  Tiptap Cloud document. Use
-  `{ "type": "inline", "content": { /* Tiptap JSON document */ } }` when you want to provide the
-  Tiptap JSON document in the request body.
-- `user` (`string`, optional): Author of the edits in version history. It also sets the user associated with AI-generated comments, threads and Tracked Changes suggestions.
-  use `reviewOptions.trackedChangesOptions.userId`.
-- `field` (`string`, optional, default: `"default"`): Collaborative field to target inside a cloud
-  document. Use this when a document stores multiple editable fields, such as a title and body.
-- `tool` (`object`, required): Tool call to execute.
-  - `name` (`string`, required): Tool name, for example `"tiptapRead"`.
-  - `input` (`object`, required): Tool input generated by the AI. This is an object that matches the
-    schema and the tool definition for that tool. The schemas and tool definitions of each tool are obtained from
-    the `/v4/ai/toolkit/fetch-tools` endpoint.
-  - `config` (`unknown`, optional): Tool-specific configuration provided by the developer.
-- `format` (`'json' | 'shorthand' | 'shorthandV2'`, optional, default: `'json'`): Document format for tool input and
-  output. See [Tiptap Shorthand](/ai/ai-toolkit/advanced-guides/tiptap-shorthand).
-- `reviewOptions` ([`ReviewOptions`](/ai/ai-toolkit/api-reference/review-options), optional, default: `{ mode: 'disabled' }`): Controls whether edits are applied directly or as reviewable changes.
+- `editorContext`（`object`，必填）：由 `getEditorContext` 返回的编辑器上下文。
+- `document`（`object`，必填）：要对其执行工具的文档。如果 API 应从 Tiptap Cloud 文档读取并写入，请使用
+  `{ "type": "cloud", "id": "your-document-id" }`。如果要在请求正文中提供 Tiptap JSON 文档，请使用
+  `{ "type": "inline", "content": { /* Tiptap JSON document */ } }`。
+- `user`（`string`，可选）：版本历史中编辑操作的作者。它也会设置与 AI 生成的评论、讨论串和修订建议关联的用户。
+  对于修订作者，请使用 `reviewOptions.trackedChangesOptions.userId`。
+- `field`（`string`，可选，默认值：`"default"`）：要在云文档中操作的协作字段。当文档包含多个可编辑字段（如标题和正文）时，请使用此字段。
+- `tool`（`object`，必填）：要执行的工具调用。
+  - `name`（`string`，必填）：工具名称，例如 `"tiptapRead"`。
+  - `input`（`object`，必填）：AI 生成的工具输入。该对象符合相应工具的 Schema 和工具定义。各工具的 Schema 和定义可从 `/v4/ai/toolkit/fetch-tools` 端点获取。
+  - `config`（`unknown`，可选）：开发者提供的特定工具配置。
+- `format`（`'json' | 'shorthand' | 'shorthandV2'`，可选，默认值：`'json'`）：工具输入和输出的文档格式。请参阅 [Tiptap Shorthand](/ai/ai-toolkit/advanced-guides/tiptap-shorthand)。
+- `reviewOptions`（[`ReviewOptions`](/ai/ai-toolkit/api-reference/review-options)，可选，默认值：`{ mode: 'disabled' }`）：控制直接应用编辑，还是将其作为可审阅的更改应用。
 
-Response:
+响应：
 
-- `tool` (`object`): Executed tool and its output.
-  - `name` (`string`): Tool name.
-  - `output` (`object`): Tool output for the AI.
-- `docChanged` (`boolean`): Whether the document changed.
-- `before` (`JSONContent`): The Tiptap JSON document before the tool was executed.
-- `document` (`JSONContent | null`): The Tiptap JSON document after the tool was executed, or `null` when the document did not
-  change. Changes may involve modifications in document content and also modifications in the `_hash` attributes of the nodes,
-  which are used as unique identifiers and allow the AI to select the nodes of the document.
+- `tool`（`object`）：已执行的工具及其输出。
+  - `name`（`string`）：工具名称。
+  - `output`（`object`）：供 AI 使用的工具输出。
+- `docChanged`（`boolean`）：文档是否发生更改。
+- `before`（`JSONContent`）：执行工具之前的 Tiptap JSON 文档。
+- `document`（`JSONContent | null`）：执行工具之后的 Tiptap JSON 文档；如果文档未更改，则为 `null`。更改可能涉及文档内容，也可能涉及节点的 `_hash` 属性。`_hash` 属性用作唯一标识符，并允许 AI 选择文档节点。
 
-Example:
+示例：
 
 ```curl
 curl --location 'BASE_URL/v4/ai/toolkit/execute-tool' \
@@ -232,786 +211,692 @@ curl --location 'BASE_URL/v4/ai/toolkit/execute-tool' \
   }'
 ```
 
-#### Error responses
+#### 错误响应
 
-HTTP errors return:
+HTTP 错误会返回：
 
-- `error` (`object`): An object with these properties:
-  - `message` (`string`): Human-readable error message.
-  - `status` (`number`): HTTP status code.
-  - `code` (`string`): Stable error code.
-  - `data` (`object`, optional): Sanitized structured context. Document and thread upstream
-    failures include fields such as `operation`, `upstreamStatus`, `upstreamUrl`, and
-    `upstreamMethod`.
+- `error`（`object`）：包含以下属性的对象：
+  - `message`（`string`）：便于人理解的错误消息。
+  - `status`（`number`）：HTTP 状态码。
+  - `code`（`string`）：稳定的错误代码。
+  - `data`（`object`，可选）：经过清理的结构化上下文。文档和讨论串的上游故障会包含 `operation`、`upstreamStatus`、`upstreamUrl` 和 `upstreamMethod` 等字段。
 
-This endpoint can return:
+此端点可能返回：
 
-- `400` with `missing_document_credentials`: The request uses a cloud document, but the JWT does not
-  include document server credentials.
-- `400` with `missing_document_options`: `getThreads` or `editThreads` was executed against an
-  inline document. These tools require a cloud document.
-- `400` with a thread-store code such as `thread_not_found` or `comment_not_found`: A thread or
-  comment operation referenced data that does not exist.
-- `401` with `access_control_auth_required` or `missing_token`: The request did not include a
-  Tiptap Access Control JWT.
-- `401` with an access-control code such as `token_expired` or `signature_invalid`: The JWT was
-  rejected by Access Control.
-- `403` with `feature_not_available`: Server AI Toolkit is not enabled for the environment.
-- `403` with `insufficient_permissions`: The JWT does not grant `AI:Toolkit`, or it does not grant
-  access to the requested cloud document.
-- `403` with `origin_not_allowed`: The request `Origin` is not allowed for the environment.
-- `403` with `unsupported_tool_format`: The selected tool does not support the requested `format`.
-- `403` with `tracked_changes_unsupported_schema`: `reviewOptions.mode` is `trackedChanges`, but
-  the editor schema does not support tracked changes.
-- `403` with `thread_schema_not_supported`: The editor schema does not support comments or threads.
-- `403` with `board_schema_not_supported`: A [board tool](#board-tools) got a document or an editor
-  schema that isn't a whiteboard it can work on.
-- `409` with `concurrent_edit_conflict`: The cloud document changed while the tool was executing.
-  Retry the request with the latest document state.
-- `422` with `validation_failed`: The request body does not match the endpoint schema. The response
-  includes `error.issues`, a list of validation issues.
-- `429` with `rate_limited`: Access Control rate-limited authentication.
-- `429`: The server-side rate limiter blocked the request. This response uses a different top-level
-  shape:
-  - `error` (`string`): Rate limit error message.
-  - `retryAfter` (`number`, optional): Seconds to wait before retrying.
-  - `limit` (`number`, optional): Request limit for the current window.
-  - `window` (`number`, optional): Rate-limit window in seconds.
-- `500` with `document_save_failed`: The server could not save the cloud document after loading it,
-  or the save flow was called before a document was loaded.
-- `500` with `diff_worker_failed` or `diff_worker_invalid_result`: The internal diff worker failed
-  while preparing reviewable changes.
-- `500` with `internal_server_error` or `unknown_error`: An unexpected server error occurred.
-- `500` with `missing_cloud_api_token`: The cloud service is missing internal authentication
-  configuration.
-- `502` with `document_load_failed` or `document_save_failed`: Loading or saving the cloud document
-  failed upstream. Check `error.data.upstreamStatus` for the upstream HTTP status.
-- `502` with a thread or comment code such as `thread_list_failed`, `thread_create_failed`,
-  `thread_update_failed`, `thread_delete_failed`, `thread_resolve_failed`,
-  `thread_unresolve_failed`, `comment_create_failed`, `comment_update_failed`, or
-  `comment_delete_failed`: A comments API operation failed upstream.
-- `503` with `diff_worker_queue_timeout`: The diff worker queue was saturated or timed out.
-- `503` with `service_unavailable`: Access Control was temporarily unavailable.
+- `400`，错误代码为 `missing_document_credentials`：请求使用了云文档，但 JWT 不包含文档服务器凭据。
+- `400`，错误代码为 `missing_document_options`：对内联文档执行了 `getThreads` 或 `editThreads`。这些工具需要云文档。
+- `400`，错误代码为 `thread_not_found` 或 `comment_not_found` 等讨论串存储错误代码：讨论串或评论操作引用了不存在的数据。
+- `401`，错误代码为 `access_control_auth_required` 或 `missing_token`：请求未包含 Tiptap Access Control JWT。
+- `401`，错误代码为 `token_expired` 或 `signature_invalid` 等 Access Control 错误代码：Access Control 拒绝了 JWT。
+- `403`，错误代码为 `feature_not_available`：当前环境未启用 Server AI Toolkit。
+- `403`，错误代码为 `insufficient_permissions`：JWT 未授予 `AI:Toolkit` 权限，或未授予对所请求云文档的访问权限。
+- `403`，错误代码为 `origin_not_allowed`：当前环境不允许请求中的 `Origin`。
+- `403`，错误代码为 `unsupported_tool_format`：所选工具不支持请求的 `format`。
+- `403`，错误代码为 `tracked_changes_unsupported_schema`：`reviewOptions.mode` 为 `trackedChanges`，但编辑器 Schema 不支持修订。
+- `403`，错误代码为 `thread_schema_not_supported`：编辑器 Schema 不支持评论或讨论串。
+- `403`，错误代码为 `board_schema_not_supported`：某个[画板工具](#board-tools)收到的文档或编辑器 Schema 不是其可操作的白板。
+- `409`，错误代码为 `concurrent_edit_conflict`：工具执行期间云文档发生了更改。请使用最新文档状态重试请求。
+- `422`，错误代码为 `validation_failed`：请求正文与端点 Schema 不匹配。响应包含 `error.issues`，其中列出了验证问题。
+- `429`，错误代码为 `rate_limited`：Access Control 对身份验证进行了速率限制。
+- `429`：服务器端速率限制器阻止了请求。此响应使用不同的顶层结构：
+  - `error`（`string`）：速率限制错误消息。
+  - `retryAfter`（`number`，可选）：重试前需要等待的秒数。
+  - `limit`（`number`，可选）：当前时间窗口内的请求上限。
+  - `window`（`number`，可选）：速率限制窗口的秒数。
+- `500`，错误代码为 `document_save_failed`：服务器加载云文档后无法保存，或者在加载文档前调用了保存流程。
+- `500`，错误代码为 `diff_worker_failed` 或 `diff_worker_invalid_result`：准备可审阅的更改时，内部差异工作器发生故障。
+- `500`，错误代码为 `internal_server_error` 或 `unknown_error`：发生意外的服务器错误。
+- `500`，错误代码为 `missing_cloud_api_token`：云服务缺少内部身份验证配置。
+- `502`，错误代码为 `document_load_failed` 或 `document_save_failed`：从上游加载或保存云文档失败。请检查 `error.data.upstreamStatus` 中的上游 HTTP 状态码。
+- `502`，错误代码为 `thread_list_failed`、`thread_create_failed`、`thread_update_failed`、`thread_delete_failed`、`thread_resolve_failed`、`thread_unresolve_failed`、`comment_create_failed`、`comment_update_failed` 或 `comment_delete_failed` 等讨论串或评论错误代码：上游评论 API 操作失败。
+- `503`，错误代码为 `diff_worker_queue_timeout`：差异工作器队列已满或超时。
+- `503`，错误代码为 `service_unavailable`：Access Control 暂时不可用。
 
-### Stream a tool
+### 流式执行工具
 
 ```txt
 POST /v4/ai/toolkit/stream-tool
 ```
 
-Streams tool execution. `tiptapEdit` can apply edits incrementally for a typing effect. Other tools
-run after the full input is received and return one final event, like `execute-tool`.
+以流式方式执行工具。`tiptapEdit` 可以逐步应用编辑，呈现打字效果。其他工具会在收到完整输入后运行，并返回一个最终事件，与 `execute-tool` 类似。
 
-The request is sent in parts. The first part contains:
+请求分段发送。第一部分包含：
 
-- `editorContext` (`object`, required): The editor context returned by `getEditorContext`.
-- `document` (`object`, required): Cloud document to stream the edit into:
-  `{ "type": "cloud", "id": "your-document-id" }`. Inline documents are not supported for
-  streaming.
-- `user` (`string`, optional): Author of the edits in version history, comments and threads (for example with
-  `editThreads`). It does not set the author of Tracked Changes suggestions, for Tracked Changes authorship
-  use `reviewOptions.trackedChangesOptions.userId`.
-- `field` (`string`, optional, default: `"default"`): Collaborative field to target inside a cloud
-  document. Streaming supports only the `default` field; any other value is rejected.
-- `tool` (`object`, required): Tool call to execute, without `tool.input`.
-  - `name` (`string`, required): Tool name, for example `"tiptapEdit"`.
-  - `config` (`unknown`, optional): Tool-specific configuration provided by the developer.
-- `format` (`'json' | 'shorthand' | 'shorthandV2'`, optional, default: `'json'`): Document format for tool input and
-  output. See [Tiptap Shorthand](/ai/ai-toolkit/advanced-guides/tiptap-shorthand).
-- `reviewOptions` ([`ReviewOptions`](/ai/ai-toolkit/api-reference/review-options), optional, default: `{ mode: 'disabled' }`): Controls whether edits are applied directly or as reviewable changes.
-- `delayMs` (`number`, optional, default: `5`): Per-character delay in milliseconds for incremental
-  `tiptapEdit` output. Must be between `0` and `1000`. Use `0` to apply edits as fast as possible.
+- `editorContext`（`object`，必填）：由 `getEditorContext` 返回的编辑器上下文。
+- `document`（`object`，必填）：要将流式编辑写入的云文档：
+  `{ "type": "cloud", "id": "your-document-id" }`。流式处理不支持内联文档。
+- `user`（`string`，可选）：版本历史、评论和讨论串中的编辑作者（例如使用 `editThreads` 时）。它不会设置修订建议的作者；对于修订作者，请使用 `reviewOptions.trackedChangesOptions.userId`。
+- `field`（`string`，可选，默认值：`"default"`）：要在云文档中操作的协作字段。流式处理仅支持 `default` 字段；其他值都会被拒绝。
+- `tool`（`object`，必填）：要执行的工具调用，不含 `tool.input`。
+  - `name`（`string`，必填）：工具名称，例如 `"tiptapEdit"`。
+  - `config`（`unknown`，可选）：开发者提供的特定工具配置。
+- `format`（`'json' | 'shorthand' | 'shorthandV2'`，可选，默认值：`'json'`）：工具输入和输出的文档格式。请参阅 [Tiptap Shorthand](/ai/ai-toolkit/advanced-guides/tiptap-shorthand)。
+- `reviewOptions`（[`ReviewOptions`](/ai/ai-toolkit/api-reference/review-options)，可选，默认值：`{ mode: 'disabled' }`）：控制直接应用编辑，还是将其作为可审阅的更改应用。
+- `delayMs`（`number`，可选，默认值：`5`）：逐步输出 `tiptapEdit` 时每个字符之间的延迟（毫秒）。必须介于 `0` 和 `1000` 之间。设为 `0` 可尽可能快速地应用编辑。
 
-Then send:
+然后发送：
 
-- Following parts: The value of `tool.input`, streamed as the AI generates it.
+- 后续部分：AI 生成 `tool.input` 时，以流的形式发送其值。
 
-Response:
+响应：
 
-- `tiptapEdit`: Incremental events while edits are applied, followed by a final event with the
-  updated `document`.
-- Other tools: One final event with the same result shape as `execute-tool`.
+- `tiptapEdit`：应用编辑期间返回增量事件，随后返回包含更新后 `document` 的最终事件。
+- 其他工具：返回一个最终事件，其结果结构与 `execute-tool` 相同。
 
-#### Error responses
+#### 错误响应
 
-Before streaming starts, HTTP errors use the same JSON shape as `execute-tool`:
+开始流式处理前，HTTP 错误使用与 `execute-tool` 相同的 JSON 结构：
 
-- `error` (`object`): An object with these properties:
-  - `message` (`string`): Human-readable error message.
-  - `status` (`number`): HTTP status code.
-  - `code` (`string`): Stable error code.
-  - `data` (`object`, optional): Sanitized structured context.
+- `error`（`object`）：包含以下属性的对象：
+  - `message`（`string`）：便于人理解的错误消息。
+  - `status`（`number`）：HTTP 状态码。
+  - `code`（`string`）：稳定的错误代码。
+  - `data`（`object`，可选）：经过清理的结构化上下文。
 
-After streaming starts, errors are sent as NDJSON events:
+开始流式处理后，错误会以 NDJSON 事件的形式发送：
 
-- `version` (`number`): Stream protocol version.
-- `type` (`'error'`): Event type.
-- `code` (`string`): Stable error code.
-- `status` (`number`): HTTP-style status code.
-- `message` (`string`): Human-readable error message.
+- `version`（`number`）：流协议版本。
+- `type`（`'error'`）：事件类型。
+- `code`（`string`）：稳定的错误代码。
+- `status`（`number`）：类似 HTTP 的状态码。
+- `message`（`string`）：便于人理解的错误消息。
 
-This endpoint can return or emit:
+此端点可能返回或发送：
 
-- `400` with `invalid_request`: The request has no body.
-- `400` with `missing_document_credentials`: The JWT does not include document server credentials.
-- `400` with `invalid_stream_message`: A stream message is not valid JSON, fails schema validation,
-  uses an unsupported protocol version, or the stream ends with an unterminated NDJSON line.
-- `400` with `duplicate_start`: More than one `start` message was sent.
-- `400` with `delta_before_start`: A `delta` message arrived before `start`.
-- `400` with `end_before_start`: An `end` message arrived before `start`.
-- `400` with `incomplete_stream`: The request ended before an `end` message arrived.
-- `400` with a thread-store code such as `thread_not_found` or `comment_not_found`: A buffered
-  thread or comment operation referenced data that does not exist.
-- `401` with `access_control_auth_required` or `missing_token`: The request did not include a
-  Tiptap Access Control JWT.
-- `401` with an access-control code such as `token_expired` or `signature_invalid`: The JWT was
-  rejected by Access Control.
-- `403` with `feature_not_available`: Server AI Toolkit is not enabled for the environment.
-- `403` with `insufficient_permissions`: The JWT does not grant `AI:Toolkit`.
-- `403` with `origin_not_allowed`: The request `Origin` is not allowed for the environment.
-- `403` with `tracked_changes_unsupported_schema`: `reviewOptions.mode` is `trackedChanges`, but
-  the editor schema does not support tracked changes.
-- `403` with `thread_schema_not_supported`: The editor schema does not support comments or threads.
-- `413` with `ndjson_line_too_long`: A single NDJSON line exceeded the maximum size.
-- `429` with `stream_rate_limit_exceeded`: Too many concurrent streams are open for the same client.
-- `429` with `rate_limited`: Access Control rate-limited authentication.
-- `429`: The server-side rate limiter blocked the request before streaming started. This response
-  uses a different top-level shape:
-  - `error` (`string`): Rate limit error message.
-  - `retryAfter` (`number`, optional): Seconds to wait before retrying.
-  - `limit` (`number`, optional): Request limit for the current window.
-  - `window` (`number`, optional): Rate-limit window in seconds.
-- `500` with `diff_worker_failed`, `diff_worker_invalid_result`, `stream_internal_error`, or
-  `unknown_error`: An unexpected server error occurred during stream processing.
-- `500` with `missing_cloud_api_token`: The cloud service is missing internal authentication
-  configuration.
-- `502` with document, thread, or comment upstream failure codes such as `document_load_failed`,
-  `document_save_failed`, `thread_list_failed`, or `comment_create_failed`: A cloud document or
-  comments API operation failed upstream.
-- `503` with `diff_worker_queue_timeout`: The diff worker queue was saturated or timed out.
-- `503` with `service_unavailable`: Access Control was temporarily unavailable.
-- `504` with `stream_request_timeout`: The stream exceeded the server request timeout.
+- `400`，错误代码为 `invalid_request`：请求没有正文。
+- `400`，错误代码为 `missing_document_credentials`：JWT 不包含文档服务器凭据。
+- `400`，错误代码为 `invalid_stream_message`：流消息不是有效的 JSON、未通过 Schema 验证、使用了不受支持的协议版本，或流以未终止的 NDJSON 行结束。
+- `400`，错误代码为 `duplicate_start`：发送了多个 `start` 消息。
+- `400`，错误代码为 `delta_before_start`：在 `start` 之前收到了 `delta` 消息。
+- `400`，错误代码为 `end_before_start`：在 `start` 之前收到了 `end` 消息。
+- `400`，错误代码为 `incomplete_stream`：请求结束时尚未收到 `end` 消息。
+- `400`，错误代码为 `thread_not_found` 或 `comment_not_found` 等讨论串存储错误代码：缓冲的讨论串或评论操作引用了不存在的数据。
+- `401`，错误代码为 `access_control_auth_required` 或 `missing_token`：请求未包含 Tiptap Access Control JWT。
+- `401`，错误代码为 `token_expired` 或 `signature_invalid` 等 Access Control 错误代码：Access Control 拒绝了 JWT。
+- `403`，错误代码为 `feature_not_available`：当前环境未启用 Server AI Toolkit。
+- `403`，错误代码为 `insufficient_permissions`：JWT 未授予 `AI:Toolkit` 权限。
+- `403`，错误代码为 `origin_not_allowed`：当前环境不允许请求中的 `Origin`。
+- `403`，错误代码为 `tracked_changes_unsupported_schema`：`reviewOptions.mode` 为 `trackedChanges`，但编辑器 Schema 不支持修订。
+- `403`，错误代码为 `thread_schema_not_supported`：编辑器 Schema 不支持评论或讨论串。
+- `413`，错误代码为 `ndjson_line_too_long`：单个 NDJSON 行超过了最大长度。
+- `429`，错误代码为 `stream_rate_limit_exceeded`：同一客户端打开的并发流过多。
+- `429`，错误代码为 `rate_limited`：Access Control 对身份验证进行了速率限制。
+- `429`：流式处理开始前，服务器端速率限制器阻止了请求。此响应使用不同的顶层结构：
+  - `error`（`string`）：速率限制错误消息。
+  - `retryAfter`（`number`，可选）：重试前需要等待的秒数。
+  - `limit`（`number`，可选）：当前时间窗口内的请求上限。
+  - `window`（`number`，可选）：速率限制窗口的秒数。
+- `500`，错误代码为 `diff_worker_failed`、`diff_worker_invalid_result`、`stream_internal_error` 或 `unknown_error`：流处理期间发生意外的服务器错误。
+- `500`，错误代码为 `missing_cloud_api_token`：云服务缺少内部身份验证配置。
+- `502`，错误代码为 `document_load_failed`、`document_save_failed`、`thread_list_failed` 或 `comment_create_failed` 等文档、讨论串或评论上游故障代码：云文档或评论 API 操作发生上游故障。
+- `503`，错误代码为 `diff_worker_queue_timeout`：差异工作器队列已满或超时。
+- `503`，错误代码为 `service_unavailable`：Access Control 暂时不可用。
+- `504`，错误代码为 `stream_request_timeout`：流处理超出服务器请求超时时间。
 
-## Available tools
+## 可用工具
 
-These tools can be provided to an AI agent. The agent decides which tool to call.
+可以向 AI 代理提供这些工具，由代理决定调用哪个工具。
 
-All tools are disabled by default. We recommend starting with `tiptapRead` and `tiptapEdit`, then
-enabling additional tools as needed.
+默认情况下，所有工具均处于禁用状态。建议先从 `tiptapRead` 和 `tiptapEdit` 开始，再根据需要启用其他工具。
 
-You can also call these tools directly from your application code to build custom workflows.
+也可以直接从应用代码中调用这些工具，以构建自定义工作流。
 
 ### `tiptapRead`
 
-Reads the document in chunks to avoid overflowing the context window.
+分块读取文档，以避免超出上下文窗口。
 
-Tool input (`tool.input`):
+工具输入（`tool.input`）：
 
-- `from` (`number`, required): Zero-based index of the first top-level node to read. Must be a
-  non-negative integer.
+- `from`（`number`，必填）：要读取的第一个顶层节点的从零开始的索引。必须是非负整数。
 
-Tool config (`tool.config`):
+工具配置（`tool.config`）：
 
-- `chunkSize` (`number`, optional): Maximum number of characters to read in each tool call. Default: `32000`
+- `chunkSize`（`number`，可选）：每次工具调用最多读取的字符数。默认值：`32000`
 
-Tool output (`tool.output`):
+工具输出（`tool.output`）：
 
-Success response:
+成功响应：
 
-- `success` (`true`): Indicates that the read request was successful.
-- `totalNodeCount` (`number`): Total number of top-level nodes in the document.
-- `nodeRange` (`[number, number]`): Top-level node range that was read.
-- `content` (`JSONContent[] | string`): Document content for the returned range. When `format` is
-  `json`, this is a Tiptap JSON fragment. When `format` is `shorthand` or `shorthandV2`, this is a Tiptap Shorthand
-  string.
+- `success`（`true`）：表示读取请求成功。
+- `totalNodeCount`（`number`）：文档中的顶层节点总数。
+- `nodeRange`（`[number, number]`）：已读取的顶层节点范围。
+- `content`（`JSONContent[] | string`）：返回范围内的文档内容。`format` 为 `json` 时，这是 Tiptap JSON 片段；`format` 为 `shorthand` 或 `shorthandV2` 时，这是 Tiptap Shorthand 字符串。
 
-Error response:
+错误响应：
 
-- `success` (`false`): Indicates that the read request failed.
-- `error` (`string`): Error message.
-- `totalNodeCount?` (`number`): Total number of top-level nodes.
+- `success`（`false`）：表示读取请求失败。
+- `error`（`string`）：错误消息。
+- `totalNodeCount?`（`number`）：顶层节点总数。
 
 ### `tiptapEdit`
 
-Edits document content.
+编辑文档内容。
 
-Tool input (`tool.input`):
+工具输入（`tool.input`）：
 
-- `operations` (`array`, required): One or more edit operations, applied sequentially.
-  - `type` (`'replace' | 'insertBefore' | 'insertAfter'`, required): Edit to perform.
-  - `target` (`string`, required): Selects a node of the document where the operation will be applied, or the entire document. It is the value of the `_hash` attribute of the selected node, or `"doc"` to target the entire document.
-  - `content` (`JSONContent[] | string`, required): Replacement or inserted content. Use a Tiptap
-    JSON fragment when `format` is `json`, or a Tiptap Shorthand string when `format` is
-    `shorthand` or `shorthandV2`. To delete a node, use an empty fragment.
-  - `meta` (`string`, optional): Metadata for the operation. This field is required when the
-    `tiptapEdit.meta` option passed to `fetch-tools` is set.
+- `operations`（`array`，必填）：一个或多个按顺序应用的编辑操作。
+  - `type`（`'replace' | 'insertBefore' | 'insertAfter'`，必填）：要执行的编辑操作。
+  - `target`（`string`，必填）：选择要应用操作的文档节点，或整个文档。其值为所选节点的 `_hash` 属性值；如果要指定整个文档，则为 `"doc"`。
+  - `content`（`JSONContent[] | string`，必填）：要替换或插入的内容。`format` 为 `json` 时使用 Tiptap JSON 片段；`format` 为 `shorthand` 或 `shorthandV2` 时使用 Tiptap Shorthand 字符串。要删除节点，请使用空片段。
+  - `meta`（`string`，可选）：操作的元数据。如果向 `fetch-tools` 传入了 `tiptapEdit.meta` 选项，则此字段为必填项。
 
-Tool config (`tool.config`):
+工具配置（`tool.config`）：
 
-- `threadData` (`object`, optional): Metadata added to created threads.
-- `commentData` (`object`, optional): Metadata added to created comments.
+- `threadData`（`object`，可选）：添加到已创建讨论串的元数据。
+- `commentData`（`object`，可选）：添加到已创建评论的元数据。
 
-Tool output (`tool.output`):
+工具输出（`tool.output`）：
 
-Success or partial-success response:
+成功或部分成功响应：
 
-- `success` (`boolean`): Whether all operations completed successfully.
-- `operationResults` (`array`): Result for each operation.
-  - `success` (`boolean`): Whether the operation completed successfully.
-  - `target` (`string`): String identifier of the element targeted by the operation.
-  - `error` (`string | null`): Failure reason, or `null` if the operation succeeded.
+- `success`（`boolean`）：所有操作是否均已成功完成。
+- `operationResults`（`array`）：每个操作的结果。
+  - `success`（`boolean`）：操作是否成功完成。
+  - `target`（`string`）：操作目标元素的字符串标识符。
+  - `error`（`string | null`）：失败原因；操作成功时为 `null`。
 
-Error response:
+错误响应：
 
-- `success` (`false`): Indicates that the edit request failed.
-- `reason` (`'validationError' | 'unexpectedError'`): Error category.
-- `error` (`string`): Error message.
+- `success`（`false`）：表示编辑请求失败。
+- `reason`（`'validationError' | 'unexpectedError'`）：错误类别。
+- `error`（`string`）：错误消息。
 
 ### `tiptapQuery`
 
-<Callout title="Alpha feature" variant="hint">
-  `tiptapQuery` is currently in alpha
+<Callout title="Alpha 功能" variant="hint">
+  `tiptapQuery` 目前处于 alpha 阶段
 </Callout>
 
-Reads, searches and edits the document with JSON operations. It works on its own, without
-`tiptapRead` or `tiptapEdit`. It is not available through `stream-tool`.
+使用 JSON 操作读取、搜索和编辑文档。此工具可独立运行，无需 `tiptapRead` 或 `tiptapEdit`。无法通过 `stream-tool` 使用。
 
-Tool input (`tool.input`):
+工具输入（`tool.input`）：
 
-- `operations` (`array`, required): 1 to 50 operations, run in order. Each operation selects
-  content and reads or edits it. See the [`tiptapQuery` reference](/ai/ai-toolkit/api-reference/tiptap-query)
-  for the operation format.
+- `operations`（`array`，必填）：按顺序运行 1 至 50 个操作。每个操作都会选择内容并读取或编辑内容。操作格式请参阅 [`tiptapQuery` 参考](/ai/ai-toolkit/api-reference/tiptap-query)。
 
-Tool config (`tool.config`):
+工具配置（`tool.config`）：
 
-- `chunkSize` (`number`, optional): Maximum number of characters that all reads of one tool call
-  return together. Default: `32000`
-- `threadData` (`object`, optional): Metadata added to created threads.
-- `commentData` (`object`, optional): Metadata added to created comments.
+- `chunkSize`（`number`，可选）：一次工具调用中所有读取操作合计返回的最大字符数。默认值：`32000`
+- `threadData`（`object`，可选）：添加到已创建讨论串的元数据。
+- `commentData`（`object`，可选）：添加到已创建评论的元数据。
 
-Tool output (`tool.output`):
+工具输出（`tool.output`）：
 
-- `success` (`boolean`): Whether all operations completed successfully.
-- `operationResults` (`array`): Result for each operation that ran. See the [`tiptapQuery`
-  reference](/ai/ai-toolkit/api-reference/tiptap-query#output).
-- `skipped` (`number`): Number of operations that didn't run because an earlier operation failed.
+- `success`（`boolean`）：所有操作是否均已成功完成。
+- `operationResults`（`array`）：每个已运行操作的结果。请参阅 [`tiptapQuery` 参考](/ai/ai-toolkit/api-reference/tiptap-query#output)。
+- `skipped`（`number`）：由于先前操作失败而未运行的操作数。
 
 ### `replaceDocument`
 
-Replaces the entire document with new content.
+用新内容替换整个文档。
 
-Tool input (`tool.input`):
+工具输入（`tool.input`）：
 
-- `content` (`JSONContent | string`, required): The replacement document content. Use a Tiptap JSON
-  document when `format` is `json`, or a Tiptap Shorthand string when `format` is `shorthand` or
-  `shorthandV2`.
+- `content`（`JSONContent | string`，必填）：用于替换的文档内容。`format` 为 `json` 时使用 Tiptap JSON 文档；`format` 为 `shorthand` 或 `shorthandV2` 时使用 Tiptap Shorthand 字符串。
 
-Tool config (`tool.config`):
+工具配置（`tool.config`）：
 
 `null`
 
-Tool output (`tool.output`):
+工具输出（`tool.output`）：
 
-Success response:
+成功响应：
 
-- `success` (`true`): Indicates that the document was replaced successfully.
+- `success`（`true`）：表示文档已成功替换。
 
-Error response:
+错误响应：
 
-- `success` (`false`): Indicates that the document could not be replaced.
-- `error` (`string`): Error message.
+- `success`（`false`）：表示无法替换文档。
+- `error`（`string`）：错误消息。
 
 ### `createDocument`
 
-Alias for `replaceDocument`. It accepts the same input and returns the same output.
+`replaceDocument` 的别名。接受相同的输入并返回相同的输出。
 
 ### `readSelection`
 
-Reads the user's current editor selection.
+读取用户当前在编辑器中的选区。
 
-This tool is only compatible with Tiptap Cloud collaborative documents. In [multi-field documents](/editor/extensions/functionality/collaboration#field), only the `default` field is supported.
+此工具仅兼容 Tiptap Cloud 协作文档。在[多字段文档](/editor/extensions/functionality/collaboration#field)中，仅支持 `default` 字段。
 
-Tool input (`tool.input`):
+工具输入（`tool.input`）：
 
-This tool does not take any input. Pass an empty object (`{}`).
+此工具不接受任何输入。请传入空对象（`{}`）。
 
-Tool config (`tool.config`):
+工具配置（`tool.config`）：
 
-- `user` (`string`, required): The ID of the user whose selection to read. Must be the same as the `user.id` defined in the [Collaboration Caret extension](/editor/extensions/functionality/collaboration-caret).
+- `user`（`string`，必填）：要读取其选区的用户 ID。必须与 [Collaboration Caret 扩展](/editor/extensions/functionality/collaboration-caret)中定义的 `user.id` 相同。
 
-Tool output (`tool.output`):
+工具输出（`tool.output`）：
 
-Success response:
+成功响应：
 
-- `success` (`true`): Indicates that the request succeeded.
-- `isEmpty` (`false`): A non-empty selection was resolved.
-- `content` (`JSONContent[] | string`): The nodes of the document that contain the selection, with special markers delimiting the selection.
-- `nodeRange` (`[number, number]`): The node range where the selection is located.
+- `success`（`true`）：表示请求成功。
+- `isEmpty`（`false`）：已解析出非空选区。
+- `content`（`JSONContent[] | string`）：包含选区的文档节点，并用特殊标记标出选区的边界。
+- `nodeRange`（`[number, number]`）：选区所在的节点范围。
 
-Success response (empty selection):
+成功响应（空选区）：
 
-- `success` (`true`): Indicates that the request succeeded.
-- `isEmpty` (`true`): The selection is empty
+- `success`（`true`）：表示请求成功。
+- `isEmpty`（`true`）：选区为空。
 
 ### `getThreads`
 
-Reads comment threads from a cloud document.
+从云文档中读取评论讨论串。
 
-Tool input (`tool.input`):
+工具输入（`tool.input`）：
 
-- `from` (`number`, required): Zero-based index of the first thread to read. Must be a non-negative
-  integer.
+- `from`（`number`，必填）：要读取的第一个讨论串的从零开始的索引。必须是非负整数。
 
-Tool config (`tool.config`):
+工具配置（`tool.config`）：
 
-- `chunkSize` (`number`, optional): Maximum number of characters to read in each tool call. Default: `32000`
+- `chunkSize`（`number`，可选）：每次工具调用最多读取的字符数。默认值：`32000`
 
-Tool output (`tool.output`):
+工具输出（`tool.output`）：
 
-Success response:
+成功响应：
 
-- `success` (`true`): Indicates that the read request was successful.
-- `totalThreadCount` (`number`): Total number of threads in the document.
-- `threadRange` (`[number, number]`): Thread range that was read, as `[from, to)`.
-- `threads` (`array`): Returned thread objects.
-  - `id` (`string`): Unique thread identifier.
-  - `nodeRange` (`[number, number] | null`): Node range where the thread is located, or `null` if
-    the thread is not annotated in the document.
-  - `content` (`JSONContent[] | string | null`): Content marked by the thread. When `format` is
-    `json`, this is a Tiptap JSON fragment. When `format` is `shorthand` or `shorthandV2`, this is a Tiptap Shorthand
-    string. `null` means the thread is not annotated in the document.
-  - `comments` (`array`): Comments in the thread.
-    - `id` (`string`): Unique comment identifier.
-    - `content` (`string`): Comment text.
-    - `userId` (`string`): ID of the user who created the comment.
-    - `createdAt` (`string`): ISO timestamp when the comment was created.
-    - `updatedAt` (`string`): ISO timestamp when the comment was last updated.
-  - `resolvedAt?` (`string | null`): ISO timestamp when the thread was resolved, or `null` if
-    unresolved.
-  - `createdAt` (`string`): ISO timestamp when the thread was created.
-  - `updatedAt` (`string`): ISO timestamp when the thread was last updated.
-  - `data?` (`Record<string, unknown>`): Public thread metadata.
+- `success`（`true`）：表示读取请求成功。
+- `totalThreadCount`（`number`）：文档中的讨论串总数。
+- `threadRange`（`[number, number]`）：已读取的讨论串范围，格式为 `[from, to)`。
+- `threads`（`array`）：返回的讨论串对象。
+  - `id`（`string`）：讨论串的唯一标识符。
+  - `nodeRange`（`[number, number] | null`）：讨论串所在的节点范围；如果讨论串未在文档中添加批注，则为 `null`。
+  - `content`（`JSONContent[] | string | null`）：由讨论串标记的内容。`format` 为 `json` 时，这是 Tiptap JSON 片段；`format` 为 `shorthand` 或 `shorthandV2` 时，这是 Tiptap Shorthand 字符串。`null` 表示讨论串未在文档中添加批注。
+  - `comments`（`array`）：讨论串中的评论。
+    - `id`（`string`）：评论的唯一标识符。
+    - `content`（`string`）：评论文本。
+    - `userId`（`string`）：创建评论的用户 ID。
+    - `createdAt`（`string`）：评论创建时间的 ISO 时间戳。
+    - `updatedAt`（`string`）：评论最近更新时间的 ISO 时间戳。
+  - `resolvedAt?`（`string | null`）：讨论串解决时间的 ISO 时间戳；未解决时为 `null`。
+  - `createdAt`（`string`）：讨论串创建时间的 ISO 时间戳。
+  - `updatedAt`（`string`）：讨论串最近更新时间的 ISO 时间戳。
+  - `data?`（`Record<string, unknown>`）：公开的讨论串元数据。
 
-Error response:
+错误响应：
 
-- `success` (`false`): Indicates that the read request failed.
-- `error` (`string`): Error message.
-- `totalThreadCount?` (`number`): Total number of persisted threads, when known.
+- `success`（`false`）：表示读取请求失败。
+- `error`（`string`）：错误消息。
+- `totalThreadCount?`（`number`）：已持久化的讨论串总数（如已知）。
 
 ### `editThreads`
 
-Creates and updates comment threads.
+创建和更新评论讨论串。
 
-Tool input (`tool.input`):
+工具输入（`tool.input`）：
 
-- `operations` (`array`, required): One or more thread operations, applied sequentially. Each
-  operation has one of these shapes:
-  - `createThread`: `type` (`'createThread'`, required), `nodeHash` (`string`, required), and
-    `content` (`JSONContent[] | string`, required). `content` is the node content with
-    `inlineThread` marks added, as a Tiptap JSON fragment when `format` is `json` or a Tiptap
-    Shorthand string when `format` is `shorthand` or `shorthandV2`.
-  - `createComment`: `type` (`'createComment'`, required), `threadId` (`string`, required), and
-    `content` (`string`, required).
-  - `updateComment`: `type` (`'updateComment'`, required), `threadId` (`string`, required),
-    `commentId` (`string`, required), and `content` (`string`, required).
-  - `removeComment`: `type` (`'removeComment'`, required), `threadId` (`string`, required), and
-    `commentId` (`string`, required).
-  - `removeThread`: `type` (`'removeThread'`, required) and `threadId` (`string`, required).
-  - `resolveThread`: `type` (`'resolveThread'`, required) and `threadId` (`string`, required).
-  - `unresolveThread`: `type` (`'unresolveThread'`, required) and `threadId` (`string`, required).
+- `operations`（`array`，必填）：一个或多个按顺序应用的讨论串操作。每个操作采用以下一种形式：
+  - `createThread`：`type`（`'createThread'`，必填）、`nodeHash`（`string`，必填）和 `content`（`JSONContent[] | string`，必填）。`content` 是添加了 `inlineThread` 标记的节点内容；`format` 为 `json` 时使用 Tiptap JSON 片段，`format` 为 `shorthand` 或 `shorthandV2` 时使用 Tiptap Shorthand 字符串。
+  - `createComment`：`type`（`'createComment'`，必填）、`threadId`（`string`，必填）和 `content`（`string`，必填）。
+  - `updateComment`：`type`（`'updateComment'`，必填）、`threadId`（`string`，必填）、`commentId`（`string`，必填）和 `content`（`string`，必填）。
+  - `removeComment`：`type`（`'removeComment'`，必填）、`threadId`（`string`，必填）和 `commentId`（`string`，必填）。
+  - `removeThread`：`type`（`'removeThread'`，必填）和 `threadId`（`string`，必填）。
+  - `resolveThread`：`type`（`'resolveThread'`，必填）和 `threadId`（`string`，必填）。
+  - `unresolveThread`：`type`（`'unresolveThread'`，必填）和 `threadId`（`string`，必填）。
 
-Tool config (`tool.config`):
+工具配置（`tool.config`）：
 
-- `threadData` (`object`, optional): Metadata added to created threads.
-- `commentData` (`object`, optional): Metadata added to created comments.
+- `threadData`（`object`，可选）：添加到已创建讨论串的元数据。
+- `commentData`（`object`，可选）：添加到已创建评论的元数据。
 
-Tool output (`tool.output`):
+工具输出（`tool.output`）：
 
-Success or partial-success response:
+成功或部分成功响应：
 
-- `success` (`boolean`): Indicates whether all operations completed successfully.
-- `operations` (`array`): Result for each operation.
-  - `type` (`string`): Operation type that was executed.
-  - `success` (`boolean`): Whether the operation completed successfully.
-  - `message` (`string`): Human-readable operation result.
-  - `threadId?` (`string`): Thread ID for operations that create or reference a thread.
+- `success`（`boolean`）：所有操作是否均已成功完成。
+- `operations`（`array`）：每个操作的结果。
+  - `type`（`string`）：已执行的操作类型。
+  - `success`（`boolean`）：操作是否成功完成。
+  - `message`（`string`）：便于人理解的操作结果。
+  - `threadId?`（`string`）：创建或引用讨论串的操作所对应的讨论串 ID。
 
-Error response:
+错误响应：
 
-- `success` (`false`): Indicates that the request failed before operations were processed.
-- `error` (`string`): Error message.
+- `success`（`false`）：表示在处理操作之前请求就已失败。
+- `error`（`string`）：错误消息。
 
 ### `readDocument`
 
-Reads the entire document.
+读取整个文档。
 
-<Callout title="May overflow the context window" variant="warning">
-  `readDocument` returns the full document. For large documents, use `tiptapRead` instead.
+<Callout title="可能超出上下文窗口" variant="warning">
+  `readDocument` 会返回整个文档。对于较大的文档，请改用 `tiptapRead`。
 </Callout>
 
-Tool input (`tool.input`):
+工具输入（`tool.input`）：
 
-This tool does not take any input. Pass an empty object (`{}`).
+此工具不接受任何输入。请传入空对象（`{}`）。
 
-Tool config (`tool.config`):
+工具配置（`tool.config`）：
 
 `null`
 
-Tool output (`tool.output`):
+工具输出（`tool.output`）：
 
-Success response:
+成功响应：
 
-- `success` (`true`): Indicates that the document was read successfully.
-- `content` (`JSONContent[] | string`): Whole effective document content. When `format` is `json`,
-  this is a Tiptap JSON fragment. When `format` is `shorthand` or `shorthandV2`, this is a Tiptap Shorthand string.
+- `success`（`true`）：表示文档已成功读取。
+- `content`（`JSONContent[] | string`）：完整的有效文档内容。`format` 为 `json` 时，这是 Tiptap JSON 片段；`format` 为 `shorthand` 或 `shorthandV2` 时，这是 Tiptap Shorthand 字符串。
 
 ### `proofread`
 
-Applies proofreading edits.
+应用校对编辑。
 
-This tool supports `format: "shorthand"` and `format: "shorthandV2"`.
+此工具支持 `format: "shorthand"` 和 `format: "shorthandV2"`。
 
-Tool input (`tool.input`):
+工具输入（`tool.input`）：
 
-- `operations` (`array`, required): One or more proofreading operations, applied sequentially.
-  - `target` (`string`, required): Selects a node of the document where the operation will be applied, or the entire document. It is the value of the `_hash` attribute of the selected node, or `"doc"` to target the entire document.
-  - `delete` (`string`, required): Exact text to remove. Only its first occurrence in the target
-    node is replaced.
-  - `insert` (`string`, required): Corrected text to insert in place of `delete`.
-  - `meta` (`string`, optional): Metadata for the operation. This field is required when the
-    `proofread.meta` option passed to `fetch-tools` is set.
+- `operations`（`array`，必填）：一个或多个按顺序应用的校对操作。
+  - `target`（`string`，必填）：选择要应用操作的文档节点，或整个文档。其值为所选节点的 `_hash` 属性值；如果要指定整个文档，则为 `"doc"`。
+  - `delete`（`string`，必填）：要删除的确切文本。只会替换目标节点中首次出现的文本。
+  - `insert`（`string`，必填）：要插入以替换 `delete` 内容的更正文本。
+  - `meta`（`string`，可选）：操作的元数据。如果向 `fetch-tools` 传入了 `proofread.meta` 选项，则此字段为必填项。
 
-Tool config (`tool.config`):
+工具配置（`tool.config`）：
 
-- `threadData` (`object`, optional): Metadata added to created threads.
-- `commentData` (`object`, optional): Metadata added to created comments.
+- `threadData`（`object`，可选）：添加到已创建讨论串的元数据。
+- `commentData`（`object`，可选）：添加到已创建评论的元数据。
 
-Tool output (`tool.output`):
+工具输出（`tool.output`）：
 
-Success or partial-success response:
+成功或部分成功响应：
 
-- `success` (`boolean`): Indicates whether all operations completed successfully.
-- `operationResults` (`array`): Result for each operation.
-  - `target` (`string`): String identifier of the element targeted by the operation.
-  - `success` (`boolean`): Whether the operation completed successfully.
-  - `error` (`string | null`): Failure reason, or `null` when the operation succeeded.
+- `success`（`boolean`）：所有操作是否均已成功完成。
+- `operationResults`（`array`）：每个操作的结果。
+  - `target`（`string`）：操作目标元素的字符串标识符。
+  - `success`（`boolean`）：操作是否成功完成。
+  - `error`（`string | null`）：失败原因；操作成功时为 `null`。
 
-## Board tools
+## 画板工具
 
-<Callout title="Alpha feature" variant="hint">
-  The board tools are currently in alpha
+<Callout title="Alpha 功能" variant="hint">
+  画板工具目前处于 alpha 阶段
 </Callout>
 
-These tools read and change a [whiteboard](/editor/whiteboard/getting-started/overview). Execute them with the editor context of the board's editor, on the board's document. See [Use with Whiteboard](/ai/ai-toolkit/agents/whiteboard) for the setup.
+这些工具可以读取和更改[白板](/editor/whiteboard/getting-started/overview)。请在画板编辑器的编辑器上下文中，对画板文档执行这些工具。设置方法请参阅[与白板配合使用](/ai/ai-toolkit/agents/whiteboard)。
 
-The board tools take plain text, not document content, so they work the same in every `format`. They aren't available through `stream-tool`.
+画板工具处理的是纯文本，而不是文档内容，因此在所有 `format` 下的工作方式都相同。这些工具无法通过 `stream-tool` 使用。
 
-A board tool that can't run changes nothing. When the model can fix the call, like an input that doesn't match the schema or ids that aren't on the board, the tool answers with HTTP status `200`, and with `success: false` and an `error` in its tool output.
+无法运行的画板工具不会更改任何内容。如果模型能够修正调用问题（例如输入与 Schema 不匹配，或使用了不在画板上的 ID），工具会返回 HTTP 状态 `200`，并在工具输出中返回 `success: false` 和 `error`。
 
-When the request itself can't work, `execute-tool` fails like it does for the other tools:
+如果请求本身无法执行，`execute-tool` 会像执行其他工具时一样失败：
 
-- `403` with `board_schema_not_supported`: The document or the editor context isn't a whiteboard that the tool can work on, like a board without doc frames for `createDocFrame`.
-- `403` with `tracked_changes_unsupported_schema`: `reviewOptions.mode` is `'trackedChanges'` for a tool that changes the board, but the editor context has no Tracked Changes. `readBoard` doesn't check this.
+- `403`，错误代码为 `board_schema_not_supported`：文档或编辑器上下文不是工具可操作的白板，例如在 `createDocFrame` 中使用了不包含文档框架的画板。
+- `403`，错误代码为 `tracked_changes_unsupported_schema`：对于会更改画板的工具，`reviewOptions.mode` 为 `'trackedChanges'`，但编辑器上下文不支持修订。`readBoard` 不会检查此项。
 
-### Board tool config
+### 画板工具配置
 
-`readBoard`, `createShapes`, `createDiagram` and `createDocFrame` take this tool config (`tool.config`):
+`readBoard`、`createShapes`、`createDiagram` 和 `createDocFrame` 接受以下工具配置（`tool.config`）：
 
-- `selectedIds` (`string[]`, optional): Ids of the shapes that the user selects, in the order of the selection.
-- `viewport` (`{ x: number, y: number, width: number, height: number }`, optional): The part of
-  the board that the user sees, in board units. `width` and `height` must be above `0`.
+- `selectedIds`（`string[]`，可选）：用户选中的形状 ID，按选择顺序排列。
+- `viewport`（`{ x: number, y: number, width: number, height: number }`，可选）：用户当前看到的画板部分，以画板单位表示。`width` 和 `height` 必须大于 `0`。
 
-Each field that is missing, `null` or invalid falls back on its own: to no selection, or to no viewport.
+每个缺失、为 `null` 或无效的字段都会分别回退为默认值：无选择或无视口。
 
-### Board placement
+### 画板元素的放置
 
-`createShapes`, `createDiagram` and `createDocFrame` take these fields in their input (`tool.input`), so the AI can name the place for new content:
+`createShapes`、`createDiagram` 和 `createDocFrame` 的输入（`tool.input`）接受以下字段，AI 可据此指定新内容的位置：
 
-- `near` (`string[]`, optional): Up to 100 ids of the shapes that the new content belongs next to, like the diagram that a summary is about. Defaults to the selected shapes.
-- `side` (`'right' | 'below' | 'left' | 'above'`, optional): The side of those shapes for the new content. Defaults to `'right'`, or `'below'` when the free spot there is closer.
+- `near`（`string[]`，可选）：最多 100 个形状 ID；新内容将放在这些形状旁边，例如摘要所涉及的图表旁边。默认为选中的形状。
+- `side`（`'right' | 'below' | 'left' | 'above'`，可选）：新内容相对于这些形状的位置。默认为 `'right'`；如果下方的空位更近，则默认为 `'below'`。
 
-New shapes go beside the shapes in `near` that are on the board, or else beside the selected shapes. Without such shapes, they go in the middle of the viewport, or else right of all shapes on the board, or at the origin of an empty board. When other shapes are in the way, they move to the closest free spot.
+新形状会放在画板上 `near` 指定的形状旁边；如果这些形状不在画板上，则放在选中形状旁边。如果没有此类形状，则放在视口中央；如果没有视口，则放在画板所有形状的右侧；如果画板为空，则放在原点。若其他形状挡路，新形状会移动到最近的空位。
 
-### Board suggestions
+### 画板建议
 
-With `reviewOptions.mode: 'trackedChanges'`, the board tools write their changes as suggestions of [Tracked Changes](/tracked-changes/getting-started/overview):
+当 `reviewOptions.mode: 'trackedChanges'` 时，画板工具会将更改作为[修订](/tracked-changes/getting-started/overview)建议写入：
 
-- The shapes that one call adds or deletes share one suggestion, so one `acceptSuggestion` or `rejectSuggestion` reviews them all.
-- Each changed shape and each new text get a suggestion of their own. A later change of a shape that waits for a review of the same user goes into that suggestion.
-- The tools leave a shape alone that waits for another user's review, or for a review that deletes it, and don't delete a shape that waits for a review of a change. They say why in `skipped` or `skippedArrows`.
+- 一次调用添加或删除的形状共用一个建议，因此一次 `acceptSuggestion` 或 `rejectSuggestion` 即可审阅全部形状。
+- 每个已更改的形状和每段新文本都会获得各自的建议。同一用户尚待审阅的形状后续更改会并入该建议。
+- 对于等待其他用户审阅的形状，或等待审阅其删除操作的形状，工具不会进行更改；对于等待审阅更改的形状，工具也不会删除。工具会在 `skipped` 或 `skippedArrows` 中说明原因。
 
-`suggestionIds` (`string[]`) lists the suggestions that the call made or went on with. A suggestion that the call went on with also holds the earlier change, and a change to a shape that an earlier suggestion adds is part of that add, so it isn't listed. Other suggestions stay as they are when you review these ids. Without review, `suggestionIds` is empty, and the tools leave every shape alone that waits for a review.
+`suggestionIds`（`string[]`）列出本次调用创建或沿用的建议。沿用的建议还包含之前的更改；对先前建议所添加形状的更改也属于该添加操作，因此不会单独列出。审阅这些 ID 时，其他建议保持不变。如果不进行审阅，`suggestionIds` 为空，工具不会更改任何等待审阅的形状。
 
 ### `readBoard`
 
-Reads the shapes of the board, the arrows between them and the selection. It doesn't change the document.
+读取画板上的形状、形状之间的箭头以及当前选择。此工具不会更改文档。
 
-Tool input (`tool.input`):
+工具输入（`tool.input`）：
 
-This tool does not take any input. Pass an empty object (`{}`).
+此工具不接受任何输入。请传入空对象（`{}`）。
 
-Tool config (`tool.config`):
+工具配置（`tool.config`）：
 
-The [board tool config](#board-tool-config).
+[画板工具配置](#board-tool-config)。
 
-Tool output (`tool.output`):
+工具输出（`tool.output`）：
 
-Success response:
+成功响应：
 
-- `success` (`true`): Indicates that the board was read.
-- `shapeCount` (`number`): Number of shapes on the board, arrows included.
-- `selectedIds` (`string[]`): Ids of the selected shapes that are on the board.
-- `shapes` (`array`): The shapes, selected ones first.
-  - `id` (`string`): Unique shape identifier.
-  - `type` (`string`): Node type, like `stickyNote`, `geo`, `freeText`, `freehand` or `docFrame`.
-  - `kind?` (`string`): Kind of a geometric shape, like `rectangle` or `diamond`.
-  - `x`, `y`, `width`, `height` (`number`): Box of the shape, in whole board units. `y` grows
-    downwards.
-  - `color?` (`string`): Color name, like `yellow`.
-  - `text?` (`string`): Text of the shape, one line per paragraph or list item. List items start
-    with `- `, `1. `, `[ ] ` or `[x] `. The text of shapes that aren't selected is cut after 280
-    characters.
-  - `docId?` (`string`): Id of the document that a doc frame shows. Every doc frame has it. For a
-    frame without a `docId` attribute, it is the shape id, whose document the frame shows.
-  - `selected?` (`true`): The user selects the shape.
-  - `suggestion?` (`'add' | 'delete' | 'change'`): A suggestion that waits for a review, and adds
-    or deletes the shape, or changes its attributes or its text.
-- `arrows` (`array`): The arrows on the board.
-  - `id` (`string`): Unique arrow identifier.
-  - `fromId` (`string | null`): Id of the shape where the arrow starts, or `null` for a free end.
-  - `toId` (`string | null`): Id of the shape that the arrow points to, or `null` for a free end.
-- `omittedShapeCount` (`number`): Number of shapes and arrows that the output leaves out. It
-  lists at most 300.
-- `viewport` (`object | null`): The `viewport` of the tool config.
+- `success`（`true`）：表示画板已读取。
+- `shapeCount`（`number`）：画板上的形状数量，包含箭头。
+- `selectedIds`（`string[]`）：画板上所选形状的 ID。
+- `shapes`（`array`）：形状列表，选中的形状排在前面。
+  - `id`（`string`）：形状的唯一标识符。
+  - `type`（`string`）：节点类型，例如 `stickyNote`、`geo`、`freeText`、`freehand` 或 `docFrame`。
+  - `kind?`（`string`）：几何形状的类型，例如 `rectangle` 或 `diamond`。
+  - `x`、`y`、`width`、`height`（`number`）：形状边框，以整数画板单位表示。`y` 值向下递增。
+  - `color?`（`string`）：颜色名称，例如 `yellow`。
+  - `text?`（`string`）：形状文本，每个段落或列表项占一行。列表项以 `- `、`1. `、`[ ] ` 或 `[x] ` 开头。未选中形状的文本会在 280 个字符后截断。
+  - `docId?`（`string`）：文档框架所显示文档的 ID。每个文档框架都有此属性。对于没有 `docId` 属性的框架，其形状 ID 即为该框架所显示文档的 ID。
+  - `selected?`（`true`）：表示用户选中了该形状。
+  - `suggestion?`（`'add' | 'delete' | 'change'`）：等待审阅的建议，表示添加或删除形状，或更改其属性或文本。
+- `arrows`（`array`）：画板上的箭头。
+  - `id`（`string`）：箭头的唯一标识符。
+  - `fromId`（`string | null`）：箭头起始形状的 ID；如果起点为空，则为 `null`。
+  - `toId`（`string | null`）：箭头所指向形状的 ID；如果终点为空，则为 `null`。
+- `omittedShapeCount`（`number`）：输出中省略的形状和箭头数量。最多列出 300 个。
+- `viewport`（`object | null`）：工具配置中的 `viewport`。
 
 ### `createShapes`
 
-Adds sticky notes as one grid, in front of all shapes.
+将便利贴作为一个网格添加到所有形状前方。
 
-Tool input (`tool.input`):
+工具输入（`tool.input`）：
 
-- `notes` (`array`, required): 1 to 24 notes, in reading order.
-  - `text` (`string`, required): Text of the note, up to 500 characters. A line break starts a
-    new paragraph. Lines that start with `- `, `1. `, `[ ] ` or `[x] ` make a bulleted list, a
-    numbered list or a task list.
-  - `color` (`'black' | 'gray' | 'red' | 'orange' | 'yellow' | 'green' | 'blue' | 'violet'`,
-    optional): Color of the note. Default: `'yellow'`
-- `near` and `side` (optional): Where the notes go. See [board placement](#board-placement).
+- `notes`（`array`，必填）：1 至 24 条便利贴，按阅读顺序排列。
+  - `text`（`string`，必填）：便利贴文本，最多 500 个字符。换行符会开始一个新段落。以 `- `、`1. `、`[ ] ` 或 `[x] ` 开头的行会创建项目符号列表、编号列表或任务列表。
+  - `color`（`'black' | 'gray' | 'red' | 'orange' | 'yellow' | 'green' | 'blue' | 'violet'`，可选）：便利贴颜色。默认值：`'yellow'`
+- `near` 和 `side`（可选）：便利贴的放置位置。请参阅[画板元素的放置](#board-placement)。
 
-Tool config (`tool.config`):
+工具配置（`tool.config`）：
 
-The [board tool config](#board-tool-config).
+[画板工具配置](#board-tool-config)。
 
-Tool output (`tool.output`):
+工具输出（`tool.output`）：
 
-Success response:
+成功响应：
 
-- `success` (`true`): Indicates that the notes were added.
-- `createdIds` (`string[]`): Ids of the new notes, in the order of the input.
-- `suggestionIds` (`string[]`): See [board suggestions](#board-suggestions).
+- `success`（`true`）：表示便利贴已添加。
+- `createdIds`（`string[]`）：新便利贴的 ID，顺序与输入相同。
+- `suggestionIds`（`string[]`）：请参阅[画板建议](#board-suggestions)。
 
-Error response:
+错误响应：
 
-- `success` (`false`): Indicates that no notes were added.
-- `error` (`string`): Error message.
+- `success`（`false`）：表示未添加便利贴。
+- `error`（`string`）：错误消息。
 
 ### `arrangeShapes`
 
-Groups shapes into columns from left to right, each with a free text title on top. The columns start where the shapes are, or at the closest free spot when they would cover other shapes. Shapes only move, so the arrows that connect them follow.
+将形状从左到右分组成若干列，每列顶部都有一个自由文本标题。各列从形状所在位置开始；如果会遮挡其他形状，则从最近的空位开始。形状只会移动，因此与其相连的箭头也会随之移动。
 
-Tool input (`tool.input`):
+工具输入（`tool.input`）：
 
-- `groups` (`array`, required): 1 to 12 groups, from left to right, with at most 300 ids in all.
-  - `title` (`string`, required): Title of the group, up to 60 characters.
-  - `ids` (`string[]`, required): Ids of the shapes in the group, in reading order. A shape joins
-    the first group that names it.
+- `groups`（`array`，必填）：从左到右排列的 1 至 12 个组，ID 总数最多为 300。
+  - `title`（`string`，必填）：组标题，最多 60 个字符。
+  - `ids`（`string[]`，必填）：组中形状的 ID，按阅读顺序排列。一个形状会加入第一个列出它的组。
 
-Tool config (`tool.config`):
+工具配置（`tool.config`）：
 
 `null`
 
-Tool output (`tool.output`):
+工具输出（`tool.output`）：
 
-Success response:
+成功响应：
 
-- `success` (`true`): Indicates that the shapes were arranged.
-- `movedIds` (`string[]`): Ids of the shapes that moved.
-- `titleIds` (`string[]`): Ids of the new titles.
-- `skipped` (`array`): Shapes that stayed where they were, each with `id` and `reason`, like an
-  id that isn't a shape on the board, an arrow, an id that an earlier group names, or a shape that
-  waits for another user's review.
-- `suggestionIds` (`string[]`): See [board suggestions](#board-suggestions).
+- `success`（`true`）：表示形状已整理。
+- `movedIds`（`string[]`）：已移动形状的 ID。
+- `titleIds`（`string[]`）：新标题的 ID。
+- `skipped`（`array`）：保持原位的形状，每项包含 `id` 和 `reason`。原因可能是该 ID 不对应画板上的形状、它是箭头、先前的组已列出该 ID，或该形状正在等待其他用户审阅。
+- `suggestionIds`（`string[]`）：请参阅[画板建议](#board-suggestions)。
 
-Error response:
+错误响应：
 
-- `success` (`false`): Indicates that no shapes were arranged. The error lists the reasons.
-- `error` (`string`): Error message.
+- `success`（`false`）：表示未整理任何形状。错误中会列出原因。
+- `error`（`string`）：错误消息。
 
 ### `createDiagram`
 
-Draws shapes with text, connected by arrows, and lays them out as a diagram. The arrows connect the shapes, so they follow when a user moves a shape.
+绘制带文本的形状，用箭头连接，并将它们排布成图表。箭头会连接各个形状，因此用户移动形状时，箭头也会随之移动。
 
-Tool input (`tool.input`):
+工具输入（`tool.input`）：
 
-- `title` (`string`, optional): Title above the diagram, up to 80 characters.
-- `direction` (`'down' | 'right'`, optional): Where the arrows mostly point. Default: `'down'`
-- `nodes` (`array`, required): 1 to 40 shapes.
-  - `key` (`string`, required): The AI's own name for the shape, up to 40 characters and unique
-    in the diagram. Arrows refer to it.
-  - `text` (`string`, required): Text in the shape, up to 60 characters.
-  - `shape` (`'rectangle' | 'ellipse' | 'diamond'`, optional): Kind of the shape. Another kind
-    becomes a rectangle. Default: `'rectangle'`
-  - `color` (`string`, optional): One of the colors of `createShapes`. Default: `'black'`
-- `arrows` (`array`, optional): Up to 60 arrows.
-  - `from` (`string`, required): Key of the shape where the arrow starts.
-  - `to` (`string`, required): Key of the shape that the arrow points to.
-  - `label` (`string`, optional): Label beside the arrow, up to 24 characters.
-- `near` and `side` (optional): Where the diagram goes. See [board placement](#board-placement).
+- `title`（`string`，可选）：图表上方的标题，最多 80 个字符。
+- `direction`（`'down' | 'right'`，可选）：箭头主要指向的方向。默认值：`'down'`
+- `nodes`（`array`，必填）：1 至 40 个形状。
+  - `key`（`string`，必填）：AI 为形状指定的名称，在图表中最多 40 个字符且必须唯一。箭头会引用此名称。
+  - `text`（`string`，必填）：形状中的文本，最多 60 个字符。
+  - `shape`（`'rectangle' | 'ellipse' | 'diamond'`，可选）：形状类型。其他类型会转换为矩形。默认值：`'rectangle'`
+  - `color`（`string`，可选）：`createShapes` 支持的颜色之一。默认值：`'black'`
+- `arrows`（`array`，可选）：最多 60 个箭头。
+  - `from`（`string`，必填）：箭头起始形状的键。
+  - `to`（`string`，必填）：箭头所指向形状的键。
+  - `label`（`string`，可选）：箭头旁的标签，最多 24 个字符。
+- `near` 和 `side`（可选）：图表的放置位置。请参阅[画板元素的放置](#board-placement)。
 
-Tool config (`tool.config`):
+工具配置（`tool.config`）：
 
-The [board tool config](#board-tool-config).
+[画板工具配置](#board-tool-config)。
 
-Tool output (`tool.output`):
+工具输出（`tool.output`）：
 
-Success response:
+成功响应：
 
-- `success` (`true`): Indicates that the diagram was drawn.
-- `createdIds` (`string[]`): Ids of all new shapes: the title, the shapes, the arrows and their
-  labels.
-- `nodeIds` (`Record<string, string>`): Id of each new shape, by its key.
-- `skippedArrows` (`array`): Arrows that were left out, each with `from`, `to` and `reason`. An
-  arrow with an unknown key, from a shape to itself, or that came earlier is left out.
-- `suggestionIds` (`string[]`): See [board suggestions](#board-suggestions).
+- `success`（`true`）：表示图表已绘制。
+- `createdIds`（`string[]`）：所有新形状的 ID，包括标题、形状、箭头及其标签。
+- `nodeIds`（`Record<string, string>`）：按键映射的每个新形状的 ID。
+- `skippedArrows`（`array`）：未添加的箭头，每项包含 `from`、`to` 和 `reason`。如果箭头使用了未知键、从某个形状指向自身，或与先前的箭头重复，则会被省略。
+- `suggestionIds`（`string[]`）：请参阅[画板建议](#board-suggestions)。
 
-Error response:
+错误响应：
 
-- `success` (`false`): Indicates that the diagram was not drawn.
-- `error` (`string`): Error message.
+- `success`（`false`）：表示未绘制图表。
+- `error`（`string`）：错误消息。
 
 ### `updateShapes`
 
-Changes the text, color or kind of shapes. Shapes keep their place and size.
+更改形状的文本、颜色或类型。形状的位置和大小保持不变。
 
-Tool input (`tool.input`):
+工具输入（`tool.input`）：
 
-- `shapes` (`array`, required): 1 to 40 shapes, each shape once, with only what changes.
-  - `id` (`string`, required): Id of the shape.
-  - `text` (`string`, optional): New text, up to 500 characters, with the same lines as for
-    `createShapes`. It replaces the text of the shape, without its formatting. The text that
-    `readBoard` gives for the shape is no change. Only sticky notes, geometric shapes and free
-    text have text.
-  - `color` (`string`, optional): New color, one of the colors of `createShapes`.
-  - `kind` (`'rectangle' | 'ellipse' | 'diamond' | 'triangle'`, optional): New kind of a geometric
-    shape.
+- `shapes`（`array`，必填）：1 至 40 个形状，每个形状仅出现一次，并且只包含需要更改的内容。
+  - `id`（`string`，必填）：形状的 ID。
+  - `text`（`string`，可选）：新文本，最多 500 个字符，换行规则与 `createShapes` 相同。文本会替换形状文本，但不保留其格式。若 `readBoard` 返回的形状文本与此相同，则不会进行更改。只有便利贴、几何形状和自由文本可以包含文本。
+  - `color`（`string`，可选）：新颜色，必须是 `createShapes` 支持的颜色之一。
+  - `kind`（`'rectangle' | 'ellipse' | 'diamond' | 'triangle'`，可选）：几何形状的新类型。
 
-Tool config (`tool.config`):
+工具配置（`tool.config`）：
 
 `null`
 
-Tool output (`tool.output`):
+工具输出（`tool.output`）：
 
-Success response:
+成功响应：
 
-- `success` (`true`): Indicates that at least one shape changed.
-- `updatedIds` (`string[]`): Ids of the changed shapes.
-- `skipped` (`array`): Shapes that stayed as they were, each with `id` and `reason`, like a shape
-  that waits for another user's review, or a shape without text that gets a `text`.
-- `suggestionIds` (`string[]`): See [board suggestions](#board-suggestions).
+- `success`（`true`）：表示至少一个形状已更改。
+- `updatedIds`（`string[]`）：已更改形状的 ID。
+- `skipped`（`array`）：保持原样的形状，每项包含 `id` 和 `reason`。原因可能是该形状正在等待其他用户审阅，或该形状不包含文本但请求为其设置了文本。
+- `suggestionIds`（`string[]`）：请参阅[画板建议](#board-suggestions)。
 
-Error response:
+错误响应：
 
-- `success` (`false`): Indicates that no shape changed. The error lists the reasons.
-- `error` (`string`): Error message.
+- `success`（`false`）：表示未更改任何形状。错误中会列出原因。
+- `error`（`string`）：错误消息。
 
 ### `deleteShapes`
 
-Deletes shapes, arrows included. Arrows that connected a deleted shape keep a free end.
+删除形状，包括箭头。删除某个形状后，连接到该形状的箭头会保留一个自由端点。
 
-Tool input (`tool.input`):
+工具输入（`tool.input`）：
 
-- `ids` (`string[]`, required): 1 to 100 ids of shapes.
+- `ids`（`string[]`，必填）：1 至 100 个形状 ID。
 
-Tool config (`tool.config`):
+工具配置（`tool.config`）：
 
 `null`
 
-Tool output (`tool.output`):
+工具输出（`tool.output`）：
 
-Success response:
+成功响应：
 
-- `success` (`true`): Indicates that the shapes were deleted. With review, they stay with a
-  `delete` suggestion until a user accepts it.
-- `deletedIds` (`string[]`): Ids of the deleted shapes.
-- `skipped` (`array`): Shapes that stayed on the board, each with `id` and `reason`, like an id
-  that isn't a shape on the board, or a shape that waits for a review.
-- `suggestionIds` (`string[]`): See [board suggestions](#board-suggestions).
+- `success`（`true`）：表示形状已删除。启用审阅时，这些形状会带有 `delete` 建议保留，直到用户接受该建议。
+- `deletedIds`（`string[]`）：已删除形状的 ID。
+- `skipped`（`array`）：保留在画板上的形状，每项包含 `id` 和 `reason`。原因可能是该 ID 不对应画板上的形状，或该形状正在等待审阅。
+- `suggestionIds`（`string[]`）：请参阅[画板建议](#board-suggestions)。
 
-Error response:
+错误响应：
 
-- `success` (`false`): Indicates that no shapes were deleted. The error lists the reasons.
-- `error` (`string`): Error message.
+- `success`（`false`）：表示未删除任何形状。错误中会列出原因。
+- `error`（`string`）：错误消息。
 
 ### `connectShapes`
 
-Draws arrows between shapes that are on the board, each with an optional label beside it.
+在画板上的形状之间绘制箭头，并可选择在箭头旁添加标签。
 
-Tool input (`tool.input`):
+工具输入（`tool.input`）：
 
-- `arrows` (`array`, required): 1 to 40 arrows.
-  - `from` (`string`, required): Id of the shape where the arrow starts.
-  - `to` (`string`, required): Id of the shape that the arrow points to.
-  - `label` (`string`, optional): Label beside the arrow, up to 24 characters.
+- `arrows`（`array`，必填）：1 至 40 个箭头。
+  - `from`（`string`，必填）：箭头起始形状的 ID。
+  - `to`（`string`，必填）：箭头所指向形状的 ID。
+  - `label`（`string`，可选）：箭头旁的标签，最多 24 个字符。
 
-Tool config (`tool.config`):
+工具配置（`tool.config`）：
 
 `null`
 
-Tool output (`tool.output`):
+工具输出（`tool.output`）：
 
-Success response:
+成功响应：
 
-- `success` (`true`): Indicates that at least one arrow was drawn.
-- `createdIds` (`string[]`): Ids of the new arrows and labels.
-- `skippedArrows` (`array`): Arrows that were left out, each with `from`, `to` and `reason`: an
-  unknown shape, an arrow from a shape to itself, a shape that waits to be deleted, or an arrow
-  that the board has already.
-- `suggestionIds` (`string[]`): See [board suggestions](#board-suggestions).
+- `success`（`true`）：表示至少绘制了一个箭头。
+- `createdIds`（`string[]`）：新箭头及标签的 ID。
+- `skippedArrows`（`array`）：未添加的箭头，每项包含 `from`、`to` 和 `reason`。原因可能是形状未知、箭头从某个形状指向自身、形状正等待删除，或画板上已存在该箭头。
+- `suggestionIds`（`string[]`）：请参阅[画板建议](#board-suggestions)。
 
-Error response:
+错误响应：
 
-- `success` (`false`): Indicates that no arrow was drawn. The error lists the reasons.
-- `error` (`string`): Error message.
+- `success`（`false`）：表示未绘制任何箭头。错误中会列出原因。
+- `error`（`string`）：错误消息。
 
 ### `createDocFrame`
 
-Adds a doc frame with a new, empty document, in front of all shapes. Write the document with `tiptapEdit`, on the Tiptap Cloud document of its `docId`. See [Write the documents of doc frames](/ai/ai-toolkit/agents/whiteboard#write-the-documents-of-doc-frames).
+在所有形状前方添加一个文档框架，其中包含一个新的空文档。使用 `tiptapEdit` 在其 `docId` 对应的 Tiptap Cloud 文档中编写内容。请参阅[编写文档框架中的文档](/ai/ai-toolkit/agents/whiteboard#write-the-documents-of-doc-frames)。
 
-Tool input (`tool.input`):
+工具输入（`tool.input`）：
 
-- `lines` (`number`, optional): About how many lines the document will have, as a whole number
-  from 1 to 400. The frame keeps room for them. Default: `12`
-- `near` and `side` (optional): Where the frame goes. See [board placement](#board-placement).
+- `lines`（`number`，可选）：文档的大致行数，为 1 至 400 的整数。框架会预留相应空间。默认值：`12`
+- `near` 和 `side`（可选）：框架的放置位置。请参阅[画板元素的放置](#board-placement)。
 
-Tool config (`tool.config`):
+工具配置（`tool.config`）：
 
-The [board tool config](#board-tool-config).
+[画板工具配置](#board-tool-config)。
 
-Tool output (`tool.output`):
+工具输出（`tool.output`）：
 
-Success response:
+成功响应：
 
-- `success` (`true`): Indicates that the frame was added.
-- `frameId` (`string`): Id of the new frame.
-- `docId` (`string`): Id of the frame's document.
-- `suggestionIds` (`string[]`): See [board suggestions](#board-suggestions).
+- `success`（`true`）：表示框架已添加。
+- `frameId`（`string`）：新框架的 ID。
+- `docId`（`string`）：框架中文档的 ID。
+- `suggestionIds`（`string[]`）：请参阅[画板建议](#board-suggestions)。
 
-Error response:
+错误响应：
 
-- `success` (`false`): Indicates that no frame was added.
-- `error` (`string`): Error message.
+- `success`（`false`）：表示未添加框架。
+- `error`（`string`）：错误消息。
 
-## Related pages
+## 相关页面
 
-- [Review options](/ai/ai-toolkit/api-reference/review-options)
-- [Editor context](/ai/ai-toolkit/api-reference/editor-context)
+- [审阅选项](/ai/ai-toolkit/api-reference/review-options)
+- [编辑器上下文](/ai/ai-toolkit/api-reference/editor-context)
