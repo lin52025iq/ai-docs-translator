@@ -1,45 +1,45 @@
 ---
-title: Layout participants
+title: 布局参与者
 meta:
-  title: Layout participants | Tiptap Pages Docs
-  description: Let your own NodeViews and extensions take part in the Pages layout cycle, measure page boundaries, and react to pagination changes.
+  title: 布局参与者 | Tiptap Pages 文档
+  description: 让你自己的 NodeView 和扩展参与 Pages 布局周期、测量页面边界，并响应分页变化。
   category: Pages
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-A Tiptap document has no real pages. Pages measures your content and draws headers, footers and the gap between pages on top of it. The result looks like paper.
+Tiptap 文档并没有真正的页面。Pages 会测量你的内容，并在其上方绘制页眉、页脚和页面间隙，让最终效果看起来像纸张。
 
-Some content has to know where the pages are before it can render itself. For example:
+有些内容必须先知道页面的位置，才能进行渲染。例如：
 
-- a block that must not be cut in half by a page break
-- an embed whose height is only known after it loads
-- an overlay that has to line up with a page edge
+- 不得被分页符从中间截断的块
+- 只有加载后才能确定高度的嵌入内容
+- 必须与页面边缘对齐的覆盖层
 
-A layout participant is how you build that content. You give Pages one DOM element and one callback. After every pagination update, Pages calls you back. You measure, then you adjust your own element.
+布局参与者可以帮助你构建这类内容。你需要向 Pages 提供一个 DOM 元素和一个回调。每次分页更新后，Pages 都会调用该回调。你先进行测量，再调整自己的元素。
 
-The built-in [PageBreak node](/pages/core-concepts/page-break-node) and the experimental [rows that span a page break](/pages/guides/row-fragmentation) in PagesTableKit both hook into the same cycle. They get no special access. Your code can do the same things.
+内置的 [PageBreak 节点](/pages/core-concepts/page-break-node)和 PagesTableKit 中实验性的[跨分页符行](/pages/guides/row-fragmentation)都使用同一个周期。它们没有特殊权限。你的代码也可以做同样的事。
 
-<Callout title="Check that the API is there" variant="hint">
-  The API lives on `editor.storage.pages`. Always call it with optional chaining, like
-  `editor.storage.pages?.registerLayoutParticipant?.(…)`. Your extension then also works in an
-  editor without Pages, or with an older version of Pages. It simply does nothing there.
+<Callout title="确认 API 是否可用" variant="hint">
+  该 API 位于 `editor.storage.pages` 上。始终使用可选链调用，例如
+  `editor.storage.pages?.registerLayoutParticipant?.(…)`。这样一来，你的扩展在没有 Pages
+  或使用旧版 Pages 的编辑器中也能正常工作，只是什么也不会执行。
 </Callout>
 
-## How the layout cycle works
+## 布局周期的工作方式
 
-After a change in the document, Pages runs a layout cycle:
+文档发生更改后，Pages 会运行一个布局周期：
 
-1. Pages calls every participant, one after another, **in document order**. Participants near the top of the document come first.
-2. If a participant reports a change, Pages runs the whole cycle again. Participants lower in the document can then measure the new positions.
-3. The cycle repeats until no participant reports a change.
-4. Only then does Pages count the pages and redraw the headers and footers.
+1. Pages 按顺序逐一调用每个参与者，顺序为**文档顺序**。文档顶部附近的参与者会先执行。
+2. 如果某个参与者报告有变化，Pages 就会重新运行整个周期。这样，文档中靠后的参与者便能测量更新后的位置。
+3. 周期会重复，直到没有参与者报告变化。
+4. 只有到这时，Pages 才会统计页数并重新绘制页眉和页脚。
 
-Document order matters. When a block near the top becomes taller, everything below it moves down. So a participant lower in the document has to measure after the ones above it.
+文档顺序很重要。顶部附近的块变高时，它下面的所有内容都会下移。因此，文档中靠后的参与者必须在前面的参与者完成后再进行测量。
 
-Your work inside the callback is small and strict. Measure. Change only your own element. Then say honestly whether you changed anything.
+你在回调中的工作应当简单且严格：进行测量，只更改自己的元素，然后如实说明是否有任何更改。
 
-## API reference
+## API 参考
 
 ### registerLayoutParticipant(options)
 
@@ -53,48 +53,48 @@ const registration = editor.storage.pages?.registerLayoutParticipant?.({
 })
 ```
 
-| Option    | What it is                                                                                 |
-| --------- | ------------------------------------------------------------------------------------------ |
-| `element` | Your root element. Pages uses it to identify you and to find your place in document order. |
-| `layout`  | Your callback. Pages calls it on every pass and passes it a `PageLayoutContext`.           |
+| 选项      | 含义                                                                                         |
+| --------- | -------------------------------------------------------------------------------------------- |
+| `element` | 你的根元素。Pages 用它来识别你，并确定你在文档顺序中的位置。                                 |
+| `layout`  | 你的回调。Pages 会在每次遍历时调用它，并传入一个 `PageLayoutContext`。                       |
 
-You get back a registration object with one method, `dispose()`. Call it when your NodeView is destroyed. Calling it twice is safe. It never removes a newer registration for the same element.
+该方法会返回一个包含 `dispose()` 方法的注册对象。在 NodeView 销毁时调用它。重复调用是安全的；它不会移除同一元素更新注册的内容。
 
-### What your callback returns
+### 回调的返回值
 
-| Return value | What it means                                                                                              |
-| ------------ | ---------------------------------------------------------------------------------------------------------- |
-| `true`       | "I changed something." Pages runs another pass, so participants below you can measure again.               |
-| `false`      | "Nothing changed for me."                                                                                  |
-| nothing      | Pages compares the inline styles on your element before and after the call. Returning a boolean is better. |
+| 返回值    | 含义                                                                                                   |
+| --------- | ------------------------------------------------------------------------------------------------------ |
+| `true`    | “我更改了内容。”Pages 会再遍历一次，让你后面的参与者重新测量。                                        |
+| `false`   | “我没有更改任何内容。”                                                                                |
+| 无返回值  | Pages 会比较调用前后元素上的内联样式。最好显式返回布尔值。                                             |
 
-In a scoped pass, see [requestParticipantLayout](#requestparticipantlayoutelement), `true` means something different: "please run a full cycle instead".
+在局部遍历中，参见 [requestParticipantLayout](#requestparticipantlayoutelement)：`true` 的含义有所不同，即“请改为运行完整周期”。
 
 ### PageLayoutContext
 
-| Field       | What it is                                                                                                                                                             |
-| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `passToken` | A new object for every pass. Use it as a cache key, so one expensive measurement is shared by every participant in that pass.                                          |
-| `defer()`   | Say that your update arrives later, through a ProseMirror transaction. Pages then waits before it counts the pages. You do not need this if you write styles directly. |
-| `scope`     | `'document'` in a full cycle, `'participant'` in a scoped pass. Older versions of Pages do not set it.                                                                 |
+| 字段        | 含义                                                                                                                                                             |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `passToken` | 每次遍历都会生成一个新对象。可将它用作缓存键，这样同一次遍历中的所有参与者便能共享一次开销较大的测量结果。                                                     |
+| `defer()`   | 用于说明你的更新会稍后通过 ProseMirror 事务到达。此时 Pages 会延后统计页数。若你直接写入样式，则无需调用此方法。                                                |
+| `scope`     | 完整周期中为 `'document'`，局部遍历中为 `'participant'`。旧版 Pages 不会设置此字段。                                                                            |
 
 ### requestPageLayout()
 
-Call this when your own size changed and pagination has to catch up. For example when an image finished loading, a section was collapsed, or an embed resized itself.
+当你自己的内容尺寸发生变化、分页需要随之更新时调用。例如图片加载完成、某个区域折叠，或嵌入内容自行调整尺寸时。
 
-It schedules one full cycle for the next animation frame. Pages measures the page headers and footers again, runs the registered participants, then counts the pages. Several calls in the same frame become one cycle. Because the cycle measures headers and footers, you can also call it after a CSS change that made a header or footer taller or shorter.
+该方法会安排在下一帧动画中运行一次完整周期。Pages 会重新测量页眉和页脚，运行已注册的参与者，然后统计页数。同一帧内的多次调用会合并为一个周期。由于周期会测量页眉和页脚，因此在 CSS 更改导致页眉或页脚变高或变矮后，也可以调用此方法。
 
-Call it when something really changed, not on every pass. A participant that asks for a new cycle every time it runs would keep the editor busy, so Pages stops the repeat and warns you. To ask for one more pass from inside your callback, return `true` instead.
+只有确实发生变化时才调用，不要在每次遍历时都调用。每次运行时都要求开启新周期的参与者会让编辑器一直忙碌，因此 Pages 会停止重复并发出警告。若要在回调中要求再遍历一次，请改为返回 `true`。
 
 ### requestParticipantLayout(element)
 
-This is the cheaper option for changes that happen many times per second and stay **inside your own element**, so nothing becomes taller or shorter and no page edge can move. A drag interaction is the typical case.
+对于每秒发生多次、且始终局限于**自身元素内部**的变化，这是一种开销更低的选择；这类变化不会使内容变高或变矮，也不会移动页面边缘。拖动交互就是典型例子。
 
-Pages then runs your callback on its own. It does not walk the document, count pages or sync footnotes. The cost depends on how many participants you signal, not on the size of the document.
+此时 Pages 只会单独运行你的回调，不会遍历文档、统计页数或同步脚注。开销取决于你通知的参与者数量，而非文档大小。
 
-If your callback finds out the change was bigger than expected, return `true` or throw. Pages then runs a full cycle. If a full cycle is already scheduled, it replaces any waiting scoped requests.
+如果回调发现变化比预期更大，请返回 `true` 或抛出异常。Pages 随后会运行完整周期。如果已经安排了完整周期，它会取代任何等待中的局部请求。
 
-## Minimal example
+## 最简示例
 
 ```ts
 // In your NodeView constructor:
@@ -113,9 +113,9 @@ editor.storage.pages?.requestPageLayout?.()
 registration?.dispose()
 ```
 
-## Full example: a block that is never cut by a page break
+## 完整示例：不会被分页符截断的块
 
-This callout box moves itself below the next page break when it would otherwise sit across one. It is `break-inside: avoid` for your own node.
+如果这个提示框原本会跨越分页符，它就会将自身移到下一个分页符之后。对于你自己的节点，这相当于设置 `break-inside: avoid`。
 
 ```ts
 import { mergeAttributes, Node } from '@tiptap/core'
@@ -212,18 +212,15 @@ export const KeepTogetherCallout = Node.create({
 })
 ```
 
-<Callout title="Blocks taller than one page" variant="warning">
-  A block taller than a page can never be kept together. Moving it to the next page does not help.
-  Your code has to notice this and push nothing, or you create the [oversized block layout
-  loop](/pages/core-concepts/limitations#oversized-non-splittable-blocks-cause-an-infinite-layout-loop).
-  Pages stops the loop and warns, but your block will not be where you want it.
+<Callout title="高度超过一页的块" variant="warning">
+  高度超过一页的块无法保持完整。将它移到下一页也无济于事。你的代码必须检测这种情况并且不进行下推，否则就会造成[超大块布局循环](/pages/core-concepts/limitations#oversized-non-splittable-blocks-cause-an-infinite-layout-loop)。Pages 会停止循环并发出警告，但该块的位置仍可能不符合预期。
 </Callout>
 
-## Measuring the pages
+## 测量页面
 
-Inside your callback you usually need to know where the pages are. There are three ways.
+在回调中，你通常需要知道页面的位置。有三种方法。
 
-The simplest way is to ask Pages:
+最简单的方法是向 Pages 查询：
 
 ```ts
 const pages = editor.storage.pages
@@ -234,49 +231,44 @@ const pageNumber = pages?.getPageForPosition?.(position)
 const spaceLeftBelow = pages?.getDistanceToNextPagebreak?.(position)
 ```
 
-`getDistanceToNextPagebreak(pos)` and `getDistanceToPrevPagebreak(pos)` return the distance in pixels from a document position to the page edge below or above it, or `null` when there is no edge. They already take the `zoom` option into account.
+`getDistanceToNextPagebreak(pos)` 和 `getDistanceToPrevPagebreak(pos)` 会返回文档位置到下方或上方页面边缘的像素距离；如果不存在页面边缘，则返回 `null`。它们已经考虑了 `zoom` 选项。
 
-The second way is the CSS variable `--page-max-height`. It is the tallest content area one page can have.
+第二种方法是使用 CSS 变量 `--page-max-height`。它表示单页内容区域可能达到的最大高度。
 
-The third way is to measure the rendered parts yourself: the container `[data-tiptap-pagination]`, the block between two pages `.breaker`, and `.tiptap-page-header` and `.tiptap-page-footer` inside it. Use this when you need exact rectangles, as the example above does.
+第三种方法是自行测量渲染后的部分：容器 `[data-tiptap-pagination]`、两页之间的块 `.breaker`，以及其中的 `.tiptap-page-header` 和 `.tiptap-page-footer`。如果你需要精确的矩形边界，可以像上面的示例一样使用这种方法。
 
-<Callout title="Two things to watch" variant="warning">
-  Pages draws headers and footers with a solid background. Content behind them is hidden, not drawn
-  on top. So a participant whose content would cross a page edge has to move it, or leave space for
-  it. If you theme that background through your own `--background` token, set
-  `--pages-page-background-color` instead.
+<Callout title="需要注意的两点" variant="warning">
+  Pages 会使用纯色背景绘制页眉和页脚。它们后面的内容会被遮住，而不是绘制在上层。因此，如果参与者的内容会跨越页面边缘，就必须移动该内容或为其留出空间。如果你通过自己的 `--background` 变量设置该背景主题，请改为设置
+  `--pages-page-background-color`。
 
-Pages also supports a `zoom` option. Rectangles you measure yourself are in zoomed pixels, so
-divide them by your zoom factor. Take that factor from your own configuration. Do not try to work
-it out by comparing a rectangle with `offsetWidth`. `offsetWidth` is a whole number, so the result
-is slightly wrong, and the error grows the further down the document you measure.
+Pages 也支持 `zoom` 选项。你自行测量的矩形使用缩放后的像素值，因此需要除以缩放系数。请从自己的配置中获取该系数。不要尝试通过比较矩形与 `offsetWidth` 来推算。`offsetWidth` 是整数，因此结果会略有偏差；测量位置越靠近文档底部，误差就越大。
 
 </Callout>
 
-## Advanced: updates through transactions
+## 进阶：通过事务更新
 
-Some participants apply their update with a ProseMirror transaction instead of writing styles. Set one or both of these on that transaction:
+有些参与者会通过 ProseMirror 事务而不是写入样式来应用更新。请在该事务上设置以下一个或两个属性：
 
-- `'pages-layout-participant-change'` tells Pages to run one more cycle after your change is rendered, and to wait with counting the pages until then. Use it together with `defer()` in the pass that created the transaction.
-- `'pages-layout-participant-scoped-change'` promises that your change moved nothing up or down. Pages then skips the extra cycle. Set it only when you have checked that the promise is true. A wrong promise leaves the page count out of date until the next real change.
+- `'pages-layout-participant-change'` 告知 Pages 在更改渲染后再运行一个周期，并在此之前暂缓统计页数。请与创建该事务的遍历中的 `defer()` 一起使用。
+- `'pages-layout-participant-scoped-change'` 表示你的更改没有使任何内容上下移动。Pages 因此会跳过额外周期。只有确认该承诺属实时才设置它。错误的承诺会导致页数过时，直到发生下一次实际更改。
 
-[Rows that span a page break](/pages/guides/row-fragmentation) work this way. Most participants write styles directly and never need it.
+[跨分页符的行](/pages/guides/row-fragmentation)就是以这种方式工作的。大多数参与者直接写入样式，因此无需使用它。
 
-## Rules that keep the cycle healthy
+## 确保周期正常运行的规则
 
-1. **Touch only your own element.** Changing other elements makes participants fight each other.
-2. **Write only when the value changed.** Compare with a small tolerance first, because browsers report fractional pixels. Writing on every pass is the most common reason a cycle never ends.
-3. **Return an honest boolean.** `true` costs one more pass for everyone. Return it only when you really changed something.
-4. **Cache with `passToken`.** Measure the pages once per pass, however many participants you have.
-5. **Dispose on destroy.** Pages skips a participant whose element has left the document, but disposing keeps things clean.
+1. **只操作自己的元素。** 更改其他元素会导致参与者彼此冲突。
+2. **仅在值发生变化时写入。** 先使用较小的容差进行比较，因为浏览器会报告小数像素。每次遍历都写入是导致周期无法结束的最常见原因。
+3. **如实返回布尔值。** 返回 `true` 会让所有参与者多遍历一次。只有确实更改了内容时才返回它。
+4. **使用 `passToken` 缓存。** 无论有多少参与者，每次遍历只测量一次页面。
+5. **销毁时释放注册。** Pages 会跳过元素已离开文档的参与者，但释放注册能保持状态整洁。
 
-## When something goes wrong
+## 出现问题时
 
-Pages protects the editor and writes a warning in the browser console. Treat each of these as a bug in your callback.
+Pages 会保护编辑器，并在浏览器控制台中输出警告。请将以下每种情况都视为回调中的缺陷。
 
-| What happens                                                | What Pages does                                                                                                                        |
-| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Your callback throws                                        | Skips you for that pass and carries on. The editor keeps working.                                                                      |
-| Your callback reports a change every time and never settles | Pauses your participant only. Every other participant keeps running. Pages calls you again after the next real change in the document. |
-| You ask for a new cycle, or a scoped pass, on every pass    | Stops the repeat. A real edit such as typing clears it, so normal editing never triggers this.                                         |
-| You call `defer()` but your transaction never arrives       | Counts the pages anyway after a while, so the page count keeps following the document.                                                 |
+| 发生的情况                                            | Pages 的处理方式                                                                                                                         |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| 回调抛出异常                                          | 本次遍历跳过该参与者并继续执行。编辑器仍可正常工作。                                                                                     |
+| 回调每次都报告有变化，始终无法稳定                    | 仅暂停该参与者。其他参与者会继续运行。文档发生下一次实际更改后，Pages 会再次调用它。                                                     |
+| 每次遍历都请求新周期或局部遍历                        | 停止重复请求。输入文字等实际编辑会清除该状态，因此正常编辑不会触发此情况。                                                               |
+| 调用了 `defer()`，但事务始终没有到达                  | 等待一段时间后仍会统计页数，因此页数会继续跟随文档变化。                                                                               |
