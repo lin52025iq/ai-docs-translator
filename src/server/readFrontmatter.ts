@@ -3,7 +3,7 @@ import { StringDecoder } from 'string_decoder'
 import frontmatter from 'front-matter'
 import type { PageFrontmatter } from '../types'
 
-// Stop at the YAML boundary so list pages never retain the MDX body.
+// 在 YAML 边界处停止读取，避免列表页保留 MDX 正文。
 export async function readFrontmatter(filePath: string): Promise<PageFrontmatter> {
   const file = await open(filePath, 'r')
   const buffer = Buffer.alloc(4096)
