@@ -1,13 +1,13 @@
 ---
-title: Export custom nodes to .docx
+title: 将自定义节点导出为 .docx
 tags:
   - type: start
   - type: beta
   - type: version
     label: v0.26.1
 meta:
-  title: Export custom nodes to DOCX | Tiptap Conversion
-  description: Learn how to export custom nodes to DOCX (Word) files using the Export extension.
+  title: 将自定义节点导出为 DOCX | Tiptap Conversion
+  description: 了解如何使用 Export 扩展将自定义节点导出为 DOCX（Word）文件。
   category: Conversion
 ---
 
@@ -20,40 +20,37 @@ import CustomNodeConversionGuide from '../_shared/_custom-node-conversion-guide.
 <EnterpriseCalloutAuto variant="docx" renderMode="sidebar" disableWaitlist />
 
 <Requirements>
-  <RequirementItem label="1. Activate trial or subscribe">
-    Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start
-    plan](https://cloud.tiptap.dev/v2/billing) in your account.
+  <RequirementItem label="1. 激活试用或订阅">
+    在你的账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start
+    套餐](https://cloud.tiptap.dev/v2/billing)。
   </RequirementItem>
-  <RequirementItem label="2. Install from private registry">
-    To install this frontend extensions, authenticate to Tiptap's private npm registry by following
-    the [setup guide](/guides/pro-extensions).
+  <RequirementItem label="2. 从私有注册表安装">
+    要安装这些前端扩展，请按照[设置指南](/guides/pro-extensions)对 Tiptap 的私有 npm 注册表进行身份验证。
   </RequirementItem>
 </Requirements>
 
-One of the biggest advantages of the `@tiptap-pro/extension-export-docx` extension is the ability to define how custom nodes in your Tiptap schema should be rendered in DOCX.
+`@tiptap-pro/extension-export-docx` 扩展的一大优势，是能够定义如何将 Tiptap 架构中的自定义节点渲染为 DOCX。
 
-This allows you to preserve application-specific content in the exported Word file.
+这样，你就可以在导出的 Word 文件中保留应用特有的内容。
 
-<Callout variant="hint" title="Looking for the REST-compatible variant?">
-  Functions can't be serialized over HTTP, so the function API on this page only works inside the
-  editor extension. For a JSON-based equivalent that travels over REST and runs in both surfaces,
-  see the [Custom-nodes DSL](/conversion/export/docx/custom-nodes-dsl).
+<Callout variant="hint" title="在寻找兼容 REST 的变体？">
+  函数无法通过 HTTP 序列化，因此本页的函数 API 仅适用于编辑器扩展。若要使用基于 JSON、可通过 REST 传输并在两个环境中运行的等效方案，请参阅[自定义节点 DSL](/conversion/export/docx/custom-nodes-dsl)。
 </Callout>
 
-## Export custom nodes to .docx
+## 将自定义节点导出为 .docx
 
 <CodeDemo isPro path="/Extensions/ExportDocxCustomNode" />
 
-When calling `editor.exportDocx()`, you can pass an array of custom node definitions in the `ExportDocxOptions` argument. Each definition specifies the node type and a render function.
+调用 `editor.exportDocx()` 时，可以在 `ExportDocxOptions` 参数中传入一个自定义节点定义数组。每个定义都指定节点类型和渲染函数。
 
 <CustomNodeConversionGuide />
 
-### Define the custom node render function
+### 定义自定义节点渲染函数
 
-And we will define how the `Hintbox` custom node should be rendered in the exported document:
+接下来，我们将定义如何在导出的文档中渲染 `Hintbox` 自定义节点：
 
 ```ts
-// Import the ExportDocx extension
+// 导入 ExportDocx 扩展
 import {
   convertTextNode,
   Docx,
@@ -65,7 +62,7 @@ import {
 
 const editor = new Editor({
   extensions: [
-    // Other extensions ...
+    // 其他扩展……
     ExportDocx.configure({
       onCompleteExport: (result) => {
         setIsLoading(false)
@@ -84,19 +81,19 @@ const editor = new Editor({
         {
           type: 'hintbox',
           render: (node) => {
-            // Here we define how our custom Hintbox node should be rendered in the DOCX.
-            // Per the documentation, we should return a Docx node
-            // that's either a Paragraph, an array of Paragraphs, a Table, a TextRun, an ExternalHyperlink, or null.
+            // 在这里定义自定义 Hintbox 节点在 DOCX 中的渲染方式。
+            // 根据文档说明，我们应返回一个 Docx 节点，
+            // 可以是 Paragraph、Paragraph 数组、Table、TextRun、ExternalHyperlink 或 null。
             return new Docx.Paragraph({
               children: node.content.map((content) => convertTextNode(content)),
-              style: 'Hintbox', // Here we apply our custom style to the Paragraph node.
+              style: 'Hintbox', // 在这里为 Paragraph 节点应用自定义样式。
             })
           },
         },
-      ], // Custom nodes
+      ], // 自定义节点
       styleOverrides: {
         paragraphStyles: [
-          // Here we define our custom styles for our custom Hintbox node.
+          // 在这里为自定义 Hintbox 节点定义自定义样式。
           {
             id: 'Hintbox',
             name: 'Hintbox',
@@ -114,7 +111,7 @@ const editor = new Editor({
                 line: lineHeightToDocx(1),
               },
               border: {
-                // DOCX colors are in Hexadecimal without the leading #
+                // DOCX 颜色使用十六进制表示，且不带前导 #
                 top: { style: Docx.BorderStyle.SINGLE, size: 1, color: 'b8d8ff', space: 5 },
                 bottom: { style: Docx.BorderStyle.SINGLE, size: 1, color: 'b8d8ff', space: 5 },
                 right: { style: Docx.BorderStyle.SINGLE, size: 1, color: 'b8d8ff', space: 5 },
@@ -127,31 +124,31 @@ const editor = new Editor({
             },
           },
         ],
-      }, // Style overrides
+      }, // 样式覆盖
     }),
-    // Other extensions ...
+    // 其他扩展……
   ],
-  // Other editor settings ...
+  // 其他编辑器设置……
 })
 ```
 
-Then, at a later point in your application, you can export the editor content to a `DOCX` file:
+之后，你可以在应用程序的其他位置将编辑器内容导出为 `DOCX` 文件：
 
 ```ts
 editor.chain().exportDocx().run()
 ```
 
-You can construct any supported `DOCX` elements in the `render` function using the `Docx` library classes (`Paragraph`, `TextRun`, `Table`, etc.) that are provided via the `Docx` import from the `@tiptap-pro/extension-export-docx` package.
+你可以在 `render` 函数中使用 `Docx` 库的类（`Paragraph`、`TextRun`、`Table` 等）构造任何受支持的 `DOCX` 元素。这些类通过从 `@tiptap-pro/extension-export-docx` 包导入的 `Docx` 提供。
 
-See [Native DOCX options](/conversion/export/docx/styles#native-docx-options) for RTL alignment, percentage widths, and default styles.
+有关 RTL 对齐、百分比宽度和默认样式，请参阅[原生 DOCX 选项](/conversion/export/docx/styles#native-docx-options)。
 
-## Fit images to the page or table cell
+## 让图片适应页面或表格单元格
 
-An image without `width` and `height` exports at its pixel size, so a large photo runs past the right margin in Word. A custom node that renders an image can keep it inside the page.
+如果图片没有设置 `width` 和 `height`，导出时会使用其像素尺寸，因此较大的照片在 Word 中会超出右侧页边距。渲染图片的自定义节点可以将图片限制在页面范围内。
 
-`render` gets a second argument, `context`. Its `maxImageWidth` is the width of the page's text column in pixels, or the content width of the table cell the node is in (the cell width minus its left and right margins). List indents are not subtracted. `context` is `undefined` for a custom node inside a [`customNodeDsl`](/conversion/export/docx/custom-nodes-dsl) rule.
+`render` 会接收第二个参数 `context`。其中的 `maxImageWidth` 是页面文本栏的像素宽度，或者节点所在表格单元格的内容宽度（单元格宽度减去左右边距）。不会扣除列表缩进。在 [`customNodeDsl`](/conversion/export/docx/custom-nodes-dsl) 规则中使用自定义节点时，`context` 为 `undefined`。
 
-Pass it as `maxWidth` to `convertImage` or `convertImageRun`:
+将它作为 `maxWidth` 传给 `convertImage` 或 `convertImageRun`：
 
 ```ts
 import { convertImage, ExportDocx } from '@tiptap-pro/extension-export-docx'
@@ -173,9 +170,9 @@ ExportDocx.configure({
 })
 ```
 
-`maxWidth` only changes an image that has neither `width` nor `height`. A wider image shrinks to `maxWidth` and keeps its aspect ratio. An image with its own size, and `imageOverrides.transformation`, still win.
+只有当图片既未设置 `width` 也未设置 `height` 时，`maxWidth` 才会对其生效。宽度超过 `maxWidth` 的图片会按比例缩小至该宽度。图片自身的尺寸以及 `imageOverrides.transformation` 优先级更高。
 
-When the node lays out content around the image, use `convertImageRunWithSize`. It returns the image run together with the size it gets in the document (`{ imageRun, width, height }`, in pixels), or `null` for an image the export skipped. This example puts a caption under the image in a table as wide as the image:
+当节点需要围绕图片排布内容时，请使用 `convertImageRunWithSize`。它会返回图片运行对象及其在文档中的实际尺寸（`{ imageRun, width, height }`，单位为像素）；如果导出时跳过了该图片，则返回 `null`。下面的示例会在图片下方放置说明文字，并将其放入与图片等宽的表格中：
 
 ```ts
 import {
@@ -198,11 +195,11 @@ ExportDocx.configure({
         })
         if (!image) return null
 
-        // Word measures table widths in twips.
+        // Word 使用 twips 测量表格宽度。
         const tableWidth = Math.round(pointsToTwips(pixelsToPoints(image.width)))
 
         return new Docx.Table({
-          // A fixed layout without cell margins keeps the table exactly as wide as the image.
+          // 固定布局且不设置单元格边距，可使表格宽度与图片完全一致。
           layout: Docx.TableLayoutType.FIXED,
           width: { size: tableWidth, type: Docx.WidthType.DXA },
           columnWidths: [tableWidth],
@@ -226,4 +223,4 @@ ExportDocx.configure({
 })
 ```
 
-Built-in `image` nodes are not affected: they keep exporting at their own size.
+内置的 `image` 节点不受影响：导出时仍使用其自身的尺寸。
