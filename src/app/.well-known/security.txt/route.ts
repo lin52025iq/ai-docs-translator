@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
 
 export async function GET() {
-  // Calculate expiration date: one year from now
+  // 计算过期日期：从现在起一年后
   const expirationDate = new Date()
   expirationDate.setFullYear(expirationDate.getFullYear() + 1)
 
-  // Format as ISO 8601 string
+  // 格式化为 ISO 8601 字符串
   const expires = expirationDate.toISOString()
 
   const securityTxt = `Contact: mailto:security@tiptap.dev
