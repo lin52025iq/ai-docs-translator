@@ -1,19 +1,19 @@
 ---
-title: Selection awareness
+title: 选区感知
 meta:
-  title: Selection awareness | Tiptap AI Toolkit
-  description: Make the AI aware of the selected content in the editor.
-  category: AI Toolkit
+  title: 选区感知 | Tiptap AI Toolkit
+  description: 让 AI 了解编辑器中选中的内容。
+  category: AI 工具包
 ---
 
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-Configure the AI so that it can read and edit the selected content in the editor.
+配置 AI，使其能够读取和编辑编辑器中选中的内容。
 
-<Callout title="Continuation from the AI agent chatbot guide" variant="info">
-  This guide continues the [AI agent chatbot guide](/ai/ai-toolkit/client/agents/ai-agent-chatbot).
-  Read it first.
+<Callout title="接续阅读 AI 代理聊天机器人指南" variant="info">
+  本指南接续 [AI 代理聊天机器人指南](/ai/ai-toolkit/client/agents/ai-agent-chatbot)。
+  请先阅读该指南。
 </Callout>
 
 <CodeDemo
@@ -23,13 +23,13 @@ Configure the AI so that it can read and edit the selected content in the editor
   src="https://ai-toolkit-demos.vercel.app/selection-awareness"
 />
 
-See the [source code on GitHub](https://github.com/ueberdosis/ai-toolkit-demos).
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
 
-## The `tiptapReadSelection` tool
+## `tiptapReadSelection` 工具
 
-The `tiptapReadSelection` tool allows the AI agent to read the selected content in the editor.
+`tiptapReadSelection` 工具允许 AI 代理读取编辑器中选中的内容。
 
-It is included by default in the list of tool definitions that are passed to the AI model.
+默认情况下，该工具包含在传递给 AI 模型的工具定义列表中。
 
 ```ts
 // Server-side code
@@ -42,7 +42,7 @@ const definitions = toolDefinitions({
 })
 ```
 
-The tool can then be executed on the client using the `executeTool` method. It does not require any parameters.
+然后，可以在客户端使用 `executeTool` 方法执行该工具。它不需要任何参数。
 
 ```ts
 // Client-side code
@@ -52,14 +52,14 @@ const result = await toolkit.executeTool({
 })
 ```
 
-The output of the tool contains the following information:
+该工具的输出包含以下信息：
 
-- The content of the selection
-- The position of the selection
+- 选区内容
+- 选区位置
 
-This information lets the AI know what content is selected, and where it is located in the document, so that it can edit it later.
+这些信息能让 AI 知道选中了哪些内容，以及这些内容在文档中的位置，以便之后进行编辑。
 
-If reading and writing the selection is not a requirement of your app, you can disable the tool by passing `false` to the `tiptapReadSelection` option in the tool definitions.
+如果你的应用不需要读取和写入选区，可以在工具定义的 `tiptapReadSelection` 选项中传入 `false` 来禁用该工具。
 
 ```ts
 // Server-side code
@@ -71,13 +71,13 @@ const definitions = toolDefinitions({
 })
 ```
 
-## Preserving the selection
+## 保留选区
 
-Sometimes, while the AI is doing its work, the user changes the selection in the editor. This confuses the AI: when it has finished deciding what to do, it does not know that the selection has changed, so it reads the wrong selection content.
+有时，AI 工作期间，用户会更改编辑器中的选区。这会让 AI 感到困惑：当它决定好要执行什么操作后，并不知道选区已经改变，因此读取到的选区内容有误。
 
-To avoid this, you can store the selection when the user sends a message to the AI, so that it does not change while the AI is thinking (even if the user changes it afterwards).
+为避免这种情况，可以在用户向 AI 发送消息时保存当前选区，这样在 AI 思考期间选区就不会改变（即使用户之后更改了选区）。
 
-First, call the `setActiveSelection` method with the current selection when the user sends a message to the AI.
+首先，在用户向 AI 发送消息时，使用当前选区调用 `setActiveSelection` 方法。
 
 ```ts
 const toolkit = getAiToolkit(editor)
@@ -85,29 +85,29 @@ const toolkit = getAiToolkit(editor)
 toolkit.setActiveSelection(editor.state.selection)
 ```
 
-Then, when the AI finishes its work, call the `setActiveSelection` method with `null` to unset the active selection.
+然后，AI 完成工作后，调用 `setActiveSelection` 方法并传入 `null`，以取消设置活动选区。
 
 ```ts
 toolkit.setActiveSelection(null)
 ```
 
-You can also set the active selection to any position in the document.
+你也可以将活动选区设置为文档中的任意位置。
 
 ```ts
 toolkit.setActiveSelection({ from: 10, to: 20 })
 ```
 
-## Recommended model and reasoning effort configuration
+## 推荐的模型和推理力度配置
 
-The `readSelection` tool informs the AI about the selected content but it does not force it to only edit the selection. Therefore, the AI model might edit the surrounding paragraph instead of just the selected content.
+`readSelection` 工具会告知 AI 当前选中的内容，但不会强制 AI 只编辑选区。因此，AI 模型可能会编辑周围的段落，而不只是选中的内容。
 
-In our testing, we've found that models with reasoning enabled (like, for example, `gpt-5.6-luna` with reasoning effort set to `low`) perform better at keeping their edits scoped to the selection when told to do so.
+在我们的测试中发现，启用推理的模型（例如将推理力度设为 `low` 的 `gpt-5.6-luna`）在收到相关指示后，更善于将编辑范围限定在选区内。
 
-Another option is to implement the [insert content workflow](/ai/ai-toolkit/client/workflows/insert-content) instead. This workflow can be used to restrict the editable area, so the AI can strictly only re-write the selection.
+另一种选择是实现[插入内容工作流](/ai/ai-toolkit/client/workflows/insert-content)。此工作流可以限制可编辑区域，让 AI 严格只重写选区内容。
 
-## End result
+## 最终效果
 
-With additional CSS styles, the result is a simple but polished AI chatbot that can edit the selected content:
+添加一些 CSS 样式后，就能得到一个简洁精致、可以编辑选中内容的 AI 聊天机器人：
 
 <CodeDemo
   isLarge
@@ -116,8 +116,8 @@ With additional CSS styles, the result is a simple but polished AI chatbot that 
   src="https://ai-toolkit-demos.vercel.app/selection-awareness"
 />
 
-See the [source code on GitHub](https://github.com/ueberdosis/ai-toolkit-demos).
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
 
-## Next steps
+## 后续步骤
 
-- Learn more about the `getActiveSelection` and `setActiveSelection` methods in the [API reference](/ai/ai-toolkit/client/api-reference/execute-tool#setactiveselection).
+- 在 [API 参考](/ai/ai-toolkit/client/api-reference/execute-tool#setactiveselection)中进一步了解 `getActiveSelection` 和 `setActiveSelection` 方法。
