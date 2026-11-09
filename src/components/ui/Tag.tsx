@@ -31,8 +31,8 @@ export const Tag = forwardRef<HTMLSpanElement, TagProps>(
       if (showTooltip && tagRef.current) {
         const rect = tagRef.current.getBoundingClientRect()
         setTooltipPosition({
-          top: rect.top + window.scrollY - 10, // Position above the tag with some margin
-          left: rect.left + rect.width / 2 + window.scrollX, // Center horizontally
+          top: rect.top + window.scrollY - 10, // 将提示框定位在标签上方，并留出一定间距
+          left: rect.left + rect.width / 2 + window.scrollX, // 水平居中
         })
       }
     }, [showTooltip])
