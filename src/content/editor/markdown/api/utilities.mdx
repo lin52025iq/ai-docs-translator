@@ -1,22 +1,22 @@
 ---
-title: Markdown Utilities
-tags:
+title: Markdown 工具
+ tags:
   - type: beta
 meta:
-  title: Markdown Utilities | Tiptap Editor Docs
-  description: Use built-in utilities from @tiptap/core for standard markdown patterns. Learn more in our docs!
-  category: Editor
+  title: Markdown 工具 | Tiptap 编辑器文档
+  description: 使用 @tiptap/core 内置的工具处理标准 Markdown 模式。了解更多信息，请参阅我们的文档！
+  category: 编辑器
 ---
 
-## Block Utilities
+## 块级工具
 
 ### `createBlockMarkdownSpec`
 
-Creates a complete Markdown specification for block-level nodes using Pandoc-style syntax (`:::blockName`).
+使用 Pandoc 风格语法（`:::blockName`）为块级节点创建完整的 Markdown 规范。
 
-This utility can be imported from `@tiptap/core`.
+此工具可从 `@tiptap/core` 导入。
 
-#### Syntax
+#### 语法
 
 ```markdown
 :::blockName {attributes}
@@ -27,7 +27,7 @@ Can be **multiple** paragraphs
 :::
 ```
 
-#### Usage
+#### 用法
 
 ```typescript
 import { Node } from '@tiptap/core'
@@ -64,20 +64,20 @@ const Callout = Node.create({
 })
 ```
 
-#### Options
+#### 选项
 
-| Option                | Type                  | Default    | Description                |
-| --------------------- | --------------------- | ---------- | -------------------------- |
-| `nodeName`            | `string`              | _required_ | Tiptap node name           |
-| `name`                | `string`              | `nodeName` | Markdown syntax name       |
-| `content`             | `'block' \| 'inline'` | `'block'`  | Content type               |
-| `defaultAttributes`   | `Object`              | `{}`       | Default attrs when parsing |
-| `allowedAttributes`   | `string[]`            | all        | Whitelist for rendering    |
-| `getContent`          | `(token) => string`   | auto       | Custom content extraction  |
-| `parseAttributes`     | `(str) => Object`     | auto       | Custom attribute parser    |
-| `serializeAttributes` | `(attrs) => string`   | auto       | Custom serializer          |
+| 选项                  | 类型                  | 默认值     | 说明                     |
+| --------------------- | --------------------- | ---------- | ------------------------ |
+| `nodeName`            | `string`              | _必填_     | Tiptap 节点名称          |
+| `name`                | `string`              | `nodeName` | Markdown 语法名称        |
+| `content`             | `'block' \| 'inline'` | `'block'`  | 内容类型                 |
+| `defaultAttributes`   | `Object`              | `{}`       | 解析时使用的默认属性     |
+| `allowedAttributes`   | `string[]`            | 全部       | 渲染时的属性白名单       |
+| `getContent`          | `(token) => string`   | 自动       | 自定义内容提取函数       |
+| `parseAttributes`     | `(str) => Object`     | 自动       | 自定义属性解析器         |
+| `serializeAttributes` | `(attrs) => string`   | 自动       | 自定义序列化函数         |
 
-#### Example Markdown
+#### Markdown 示例
 
 ```markdown
 :::callout {type="warning" title="Important"}
@@ -99,19 +99,19 @@ Simple note without attributes.
 
 ### `createAtomBlockMarkdownSpec`
 
-Creates a Markdown specification for atomic (self-closing) block nodes using Pandoc syntax.
+使用 Pandoc 语法为原子（自闭合）块级节点创建 Markdown 规范。
 
-This utility can be imported from `@tiptap/core`.
+此工具可从 `@tiptap/core` 导入。
 
-#### Syntax
+#### 语法
 
 ```markdown
 :::nodeName {attributes} :::
 ```
 
-No closing tag, no content. Perfect for embeds, images, horizontal rules, etc.
+无需闭合标签，也不包含内容。非常适合嵌入内容、图片、水平线等。
 
-#### Usage
+#### 用法
 
 ```typescript
 import { Node } from '@tiptap/core'
@@ -157,19 +157,19 @@ const Youtube = Node.create({
 })
 ```
 
-#### Options
+#### 选项
 
-| Option                | Type                | Default    | Description                    |
-| --------------------- | ------------------- | ---------- | ------------------------------ |
-| `nodeName`            | `string`            | _required_ | Tiptap node name               |
-| `name`                | `string`            | `nodeName` | Markdown syntax name           |
-| `requiredAttributes`  | `string[]`          | `[]`       | Required attrs for valid parse |
-| `defaultAttributes`   | `Object`            | `{}`       | Default attrs when parsing     |
-| `allowedAttributes`   | `string[]`          | all        | Whitelist for rendering        |
-| `parseAttributes`     | `(str) => Object`   | auto       | Custom attribute parser        |
-| `serializeAttributes` | `(attrs) => string` | auto       | Custom serializer              |
+| 选项                  | 类型                | 默认值     | 说明                   |
+| --------------------- | ------------------- | ---------- | ---------------------- |
+| `nodeName`            | `string`            | _必填_     | Tiptap 节点名称        |
+| `name`                | `string`            | `nodeName` | Markdown 语法名称      |
+| `requiredAttributes`  | `string[]`          | `[]`       | 有效解析所需的属性     |
+| `defaultAttributes`   | `Object`            | `{}`       | 解析时使用的默认属性   |
+| `allowedAttributes`   | `string[]`          | 全部       | 渲染时的属性白名单     |
+| `parseAttributes`     | `(str) => Object`   | 自动       | 自定义属性解析器       |
+| `serializeAttributes` | `(attrs) => string` | 自动       | 自定义序列化函数       |
 
-#### Example Markdown
+#### Markdown 示例
 
 ```markdown
 :::youtube {src="https://youtube.com/watch?v=dQw4w9WgXcQ" start="30"}
@@ -181,15 +181,15 @@ const Youtube = Node.create({
 
 ---
 
-## Inline Utilities
+## 行内工具
 
 ### `createInlineMarkdownSpec`
 
-Creates a Markdown specification for inline nodes using shortcode syntax (`[nodeName]`).
+使用短代码语法（`[nodeName]`）为行内节点创建 Markdown 规范。
 
-This utility can be be imported from `@tiptap/core`.
+此工具可从 `@tiptap/core` 导入。
 
-#### Syntax
+#### 语法
 
 ```markdown
 <!-- Self-closing -->
@@ -201,7 +201,7 @@ This utility can be be imported from `@tiptap/core`.
 [nodeName attribute="value"]content[/nodeName]
 ```
 
-#### Usage - Self-Closing
+#### 用法 - 自闭合
 
 ```typescript
 import { Node } from '@tiptap/core'
@@ -238,7 +238,7 @@ const Mention = Node.create({
 })
 ```
 
-#### Usage - With Content
+#### 用法 - 带内容
 
 ```typescript
 const Highlight = Node.create({
@@ -270,20 +270,20 @@ const Highlight = Node.create({
 })
 ```
 
-#### Options
+#### 选项
 
-| Option                | Type                | Default    | Description                |
-| --------------------- | ------------------- | ---------- | -------------------------- |
-| `nodeName`            | `string`            | _required_ | Tiptap node name           |
-| `name`                | `string`            | `nodeName` | Shortcode name             |
-| `selfClosing`         | `boolean`           | `false`    | Has no content             |
-| `defaultAttributes`   | `Object`            | `{}`       | Default attrs when parsing |
-| `allowedAttributes`   | `string[]`          | all        | Whitelist for rendering    |
-| `getContent`          | `(node) => string`  | auto       | Custom content extraction  |
-| `parseAttributes`     | `(str) => Object`   | auto       | Custom attribute parser    |
-| `serializeAttributes` | `(attrs) => string` | auto       | Custom serializer          |
+| 选项                  | 类型                | 默认值     | 说明                 |
+| --------------------- | ------------------- | ---------- | -------------------- |
+| `nodeName`            | `string`            | _必填_     | Tiptap 节点名称      |
+| `name`                | `string`            | `nodeName` | 短代码名称           |
+| `selfClosing`         | `boolean`           | `false`    | 是否不包含内容       |
+| `defaultAttributes`   | `Object`            | `{}`       | 解析时使用的默认属性 |
+| `allowedAttributes`   | `string[]`          | 全部       | 渲染时的属性白名单   |
+| `getContent`          | `(node) => string`  | 自动       | 自定义内容提取函数   |
+| `parseAttributes`     | `(str) => Object`   | 自动       | 自定义属性解析器     |
+| `serializeAttributes` | `(attrs) => string` | 自动       | 自定义序列化函数     |
 
-#### Example Markdown
+#### Markdown 示例
 
 ```markdown
 <!-- Mentions -->
@@ -301,27 +301,27 @@ This is [highlight color="yellow"]important text[/highlight] to read.
 
 ---
 
-## Parse Helpers
+## 解析辅助函数
 
-Helpers provided to extension parse handlers.
+提供给扩展解析处理器使用的辅助函数。
 
 ### `parseInline(tokens)`
 
-Parse inline tokens (bold, italic, links, etc.).
+解析行内 token（粗体、斜体、链接等）。
 
 ```typescript
 helpers.parseInline(tokens: MarkdownToken[]): JSONContent[]
 ```
 
-**Parameters:**
+**参数：**
 
-- `tokens`: Array of inline Markdown tokens
+- `tokens`：行内 Markdown token 数组
 
-**Returns:**
+**返回值：**
 
-- `JSONContent[]` - Array of Tiptap JSON nodes
+- `JSONContent[]` - Tiptap JSON 节点数组
 
-**Example:**
+**示例：**
 
 ```typescript
 parse: (token, helpers) => {
@@ -336,21 +336,21 @@ parse: (token, helpers) => {
 
 ### `parseChildren(tokens)`
 
-Parse block-level child tokens.
+解析块级子 token。
 
 ```typescript
 helpers.parseChildren(tokens: MarkdownToken[]): JSONContent[]
 ```
 
-**Parameters:**
+**参数：**
 
-- `tokens`: Array of block-level Markdown tokens
+- `tokens`：块级 Markdown token 数组
 
-**Returns:**
+**返回值：**
 
-- `JSONContent[]` - Array of Tiptap JSON nodes
+- `JSONContent[]` - Tiptap JSON 节点数组
 
-**Example:**
+**示例：**
 
 ```typescript
 parse: (token, helpers) => {
@@ -365,7 +365,7 @@ parse: (token, helpers) => {
 
 ### `createTextNode(text, marks)`
 
-Create a text node with optional marks.
+创建带有可选标记的文本节点。
 
 ```typescript
 helpers.createTextNode(
@@ -374,16 +374,16 @@ helpers.createTextNode(
 ): JSONContent
 ```
 
-**Parameters:**
+**参数：**
 
-- `text`: The text content
-- `marks`: Optional array of marks to apply
+- `text`：文本内容
+- `marks`：要应用的标记数组（可选）
 
-**Returns:**
+**返回值：**
 
-- `JSONContent` - Text node
+- `JSONContent` - 文本节点
 
-**Example:**
+**示例：**
 
 ```typescript
 parse: (token, helpers) => {
@@ -395,7 +395,7 @@ parse: (token, helpers) => {
 
 ### `createNode(type, attrs, content)`
 
-Create a node with type, attributes, and content.
+使用类型、属性和内容创建节点。
 
 ```typescript
 helpers.createNode(
@@ -405,17 +405,17 @@ helpers.createNode(
 ): JSONContent
 ```
 
-**Parameters:**
+**参数：**
 
-- `type`: Node type name
-- `attrs`: Optional node attributes
-- `content`: Optional node content
+- `type`：节点类型名称
+- `attrs`：节点属性（可选）
+- `content`：节点内容（可选）
 
-**Returns:**
+**返回值：**
 
-- `JSONContent` - The created node
+- `JSONContent` - 创建的节点
 
-**Example:**
+**示例：**
 
 ```typescript
 parse: (token, helpers) => {
@@ -427,7 +427,7 @@ parse: (token, helpers) => {
 
 ### `applyMark(markType, content, attrs)`
 
-Apply a mark to content (for inline formatting).
+为内容应用标记（用于行内格式）。
 
 ```typescript
 helpers.applyMark(
@@ -437,17 +437,17 @@ helpers.applyMark(
 ): MarkdownParseResult
 ```
 
-**Parameters:**
+**参数：**
 
-- `markType`: Mark type name
-- `content`: Content to apply mark to
-- `attrs`: Optional mark attributes
+- `markType`：标记类型名称
+- `content`：要应用标记的内容
+- `attrs`：标记属性（可选）
 
-**Returns:**
+**返回值：**
 
-- `MarkdownParseResult` - Mark result object
+- `MarkdownParseResult` - 标记结果对象
 
-**Example:**
+**示例：**
 
 ```typescript
 parse: (token, helpers) => {
@@ -458,13 +458,13 @@ parse: (token, helpers) => {
 
 ---
 
-## Render Helpers
+## 渲染辅助函数
 
-Helpers provided to extension render handlers.
+提供给扩展渲染处理器使用的辅助函数。
 
 ### `renderChildren(nodes, separator)`
 
-Render child nodes to Markdown.
+将子节点渲染为 Markdown。
 
 ```typescript
 helpers.renderChildren(
@@ -473,16 +473,16 @@ helpers.renderChildren(
 ): string
 ```
 
-**Parameters:**
+**参数：**
 
-- `nodes`: Node or array of nodes to render
-- `separator`: Optional separator between nodes (default: `''`)
+- `nodes`：要渲染的节点或节点数组
+- `separator`：节点之间的分隔符（可选，默认为 `''`）
 
-**Returns:**
+**返回值：**
 
-- `string` - Rendered Markdown
+- `string` - 渲染后的 Markdown
 
-**Example:**
+**示例：**
 
 ```typescript
 render: (node, helpers) => {
@@ -495,21 +495,21 @@ render: (node, helpers) => {
 
 ### `indent(content)`
 
-Add indentation to content.
+为内容添加缩进。
 
 ```typescript
 helpers.indent(content: string): string
 ```
 
-**Parameters:**
+**参数：**
 
-- `content`: Content to indent
+- `content`：要缩进的内容
 
-**Returns:**
+**返回值：**
 
-- `string` - Indented content
+- `string` - 缩进后的内容
 
-**Example:**
+**示例：**
 
 ```typescript
 render: (node, helpers) => {
@@ -522,7 +522,7 @@ render: (node, helpers) => {
 
 ### `wrapInBlock(prefix, content)`
 
-Wrap content with a prefix on each line.
+为每一行内容添加前缀。
 
 ```typescript
 helpers.wrapInBlock(
@@ -531,16 +531,16 @@ helpers.wrapInBlock(
 ): string
 ```
 
-**Parameters:**
+**参数：**
 
-- `prefix`: Prefix to add to each line
-- `content`: Content to wrap
+- `prefix`：要添加到每一行的前缀
+- `content`：要包装的内容
 
-**Returns:**
+**返回值：**
 
-- `string` - Wrapped content
+- `string` - 包装后的内容
 
-**Example:**
+**示例：**
 
 ```typescript
 render: (node, helpers) => {
@@ -551,16 +551,15 @@ render: (node, helpers) => {
 
 ---
 
-## Miscellaneous Utilities
+## 其他工具
 
 ### `parseAttributes`
 
-The `parseAttributes` utility is mostly used internally for building attribute objects for Pandoc-style strings. You most likely won't use it except
-you want to build a custom syntax that requires similar syntax to the Pandoc attribute style.
+`parseAttributes` 工具主要在内部用于从 Pandoc 风格字符串构建属性对象。除非你要构建需要类似 Pandoc 属性语法的自定义语法，否则通常不会用到它。
 
-This utility can be be imported from `@tiptap/core`.
+此工具可从 `@tiptap/core` 导入。
 
-#### Supported Formats
+#### 支持的格式
 
 ```typescript
 import { parseAttributes } from '@tiptap/core'
@@ -592,7 +591,7 @@ parseAttributes('.card .elevated #main-card title="My Card" data-id="123" visibl
 // }
 ```
 
-#### Usage
+#### 用法
 
 ```typescript
 import { parseAttributes } from '@tiptap/core'
@@ -613,12 +612,11 @@ console.log(attrs)
 
 ### `serializeAttributes`
 
-The `serializeAttributes` utility is mostly used internally for converting attribute objects back to Pandoc-style strings. You most likely won't use it except
-you want to build a custom syntax that requires similar syntax to the Pandoc attribute style.
+`serializeAttributes` 工具主要在内部用于将属性对象转换回 Pandoc 风格字符串。除非你要构建需要类似 Pandoc 属性语法的自定义语法，否则通常不会用到它。
 
-This utility can be be imported from `@tiptap/core`.
+此工具可从 `@tiptap/core` 导入。
 
-#### Usage
+#### 用法
 
 ```typescript
 import { serializeAttributes } from '@tiptap/core'
@@ -636,31 +634,31 @@ console.log(attrString)
 // .btn.primary #submit disabled type="button" data-value="123"
 ```
 
-#### Rules
+#### 规则
 
-- Classes are prefixed with `.` and space-separated
-- IDs are prefixed with `#`
-- Boolean `true` values become standalone attributes
-- String values are quoted with `"`
-- Null/undefined values are omitted
+- 类名前缀为 `.`，多个类名以空格分隔
+- ID 前缀为 `#`
+- 布尔值 `true` 会转换为独立属性
+- 字符串值会用 `"` 引起来
+- `null`/`undefined` 值会被省略
 
 ---
 
 ### `parseIndentedBlocks`
 
-Advanced utility for parsing hierarchical indented blocks (lists, task lists, etc.).
+用于解析层级缩进块（列表、任务列表等）的高级工具。
 
-This utility can be be imported from `@tiptap/core`.
+此工具可从 `@tiptap/core` 导入。
 
-#### When to Use
+#### 适用场景
 
-Use this when you need to parse Markdown with:
+需要解析包含以下内容的 Markdown 时使用：
 
-- Nested items based on indentation
-- Hierarchical structure (not flat)
-- Custom block patterns
+- 根据缩进嵌套的项目
+- 层级结构（而非扁平结构）
+- 自定义块模式
 
-#### Usage Example - Task List
+#### 用法示例 - 任务列表
 
 ```typescript
 import { parseIndentedBlocks } from '@tiptap/core'
@@ -717,7 +715,7 @@ console.log(result)
 // }
 ```
 
-#### Options
+#### 选项
 
 ```typescript
 interface BlockParserConfig {
@@ -737,20 +735,20 @@ interface BlockParserConfig {
 
 ### `renderNestedMarkdownContent`
 
-Utility for rendering nodes with nested content, properly indenting child elements.
+用于渲染带有嵌套内容的节点，并为子元素正确添加缩进。
 
-This utility can be be imported from `@tiptap/core`.
+此工具可从 `@tiptap/core` 导入。
 
-#### When to Use
+#### 适用场景
 
-Use this when rendering:
+渲染以下内容时使用：
 
-- List items with nested content
-- Blockquotes with nested elements
-- Task items with subtasks
-- Any node with a prefix and nested children
+- 带有嵌套内容的列表项
+- 带有嵌套元素的引用块
+- 带有子任务的任务项
+- 任何带前缀和嵌套子项的节点
 
-#### Usage Example - List Item
+#### 用法示例 - 列表项
 
 ```typescript
 import { renderNestedMarkdownContent } from '@tiptap/core'
@@ -765,7 +763,7 @@ const ListItem = Node.create({
 })
 ```
 
-#### Usage Example - Task Item
+#### 用法示例 - 任务项
 
 ```typescript
 const TaskItem = Node.create({
@@ -779,7 +777,7 @@ const TaskItem = Node.create({
 })
 ```
 
-#### Usage Example - Context-Based Prefix
+#### 用法示例 - 基于上下文的前缀
 
 ```typescript
 const ListItem = Node.create({
@@ -802,7 +800,7 @@ const ListItem = Node.create({
 })
 ```
 
-#### Signature
+#### 签名
 
 ```typescript
 function renderNestedMarkdownContent(
@@ -818,9 +816,9 @@ function renderNestedMarkdownContent(
 
 ---
 
-## Complete Examples
+## 完整示例
 
-### Example 1: Callout Block
+### 示例 1：提示块
 
 ```typescript
 import { Node } from '@tiptap/core'
@@ -862,7 +860,7 @@ export const Callout = Node.create({
 })
 ```
 
-**Markdown:**
+**Markdown：**
 
 ```markdown
 :::callout {type="warning" title="Watch out!"}
@@ -872,7 +870,7 @@ This is important information that needs attention.
 
 ---
 
-### Example 2: YouTube Embed
+### 示例 2：YouTube 嵌入
 
 ```typescript
 import { Node } from '@tiptap/core'
@@ -906,7 +904,7 @@ export const Youtube = Node.create({
 })
 ```
 
-**Markdown:**
+**Markdown：**
 
 ```markdown
 :::youtube {src="https://youtube.com/watch?v=dQw4w9WgXcQ" start="30"}
@@ -914,7 +912,7 @@ export const Youtube = Node.create({
 
 ---
 
-### Example 3: Mention (Inline)
+### 示例 3：提及（行内）
 
 ```typescript
 import { Node } from '@tiptap/core'
@@ -949,38 +947,38 @@ export const Mention = Node.create({
 })
 ```
 
-**Markdown:**
+**Markdown：**
 
 ```markdown
 Hey [mention id="user123" label="John"], check this out!
 ```
 
-## When to Use What
+## 如何选择
 
-### Use Utilities When:
+### 适合使用工具的情况：
 
-- ✅ Following standard Markdown conventions (Pandoc, shortcodes)
-- ✅ Standard attribute parsing is sufficient
-- ✅ Block/inline distinction is clear
-- ✅ Quick implementation is desired
-- ✅ Maintaining consistency across extensions
+- ✅ 遵循标准 Markdown 约定（Pandoc、短代码）
+- ✅ 标准属性解析已足够
+- ✅ 块级与行内内容的区分明确
+- ✅ 希望快速实现
+- ✅ 希望在各扩展之间保持一致
 
-### Use Custom Implementation When:
+### 适合自定义实现的情况：
 
-- ✅ Non-standard Markdown syntax required
-- ✅ Complex parsing logic needed
-- ✅ Fine-grained control over tokens
-- ✅ Custom attribute formats
-
----
-
-## Related Documentation
-
-- [Custom Tokenizers](../advanced-usage/custom-tokenizer) - For custom syntax that doesn't follow conventions
-- [Extension Integration](../guides/integrate-markdown-in-your-extension) - General guide to adding Markdown to extensions
-- [Advanced Customization](../advanced-usage) - Custom parse and render handlers
-- [API Reference](../) - Complete API documentation
+- ✅ 需要非标准 Markdown 语法
+- ✅ 需要复杂的解析逻辑
+- ✅ 需要精细控制 token
+- ✅ 需要自定义属性格式
 
 ---
 
-**Pro Tip**: Start with utilities for standard patterns, then move to custom implementations only when you need specific behavior that utilities don't provide.
+## 相关文档
+
+- [自定义分词器](../advanced-usage/custom-tokenizer) - 用于不遵循约定的自定义语法
+- [扩展集成](../guides/integrate-markdown-in-your-extension) - 为扩展添加 Markdown 的通用指南
+- [高级自定义](../advanced-usage) - 自定义解析和渲染处理器
+- [API 参考](../) - 完整的 API 文档
+
+---
+
+**专业提示**：先使用工具处理标准模式；只有在需要工具无法提供的特定行为时，再改用自定义实现。
