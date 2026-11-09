@@ -38,9 +38,9 @@ export const TableOfContent = ({
 
   return (
     <div>
-      <div className="font-bold text-xs uppercase leading-[110%] mb-2.5 px-2.5">On this page</div>
+      <div className="font-bold text-xs uppercase leading-[110%] mb-2.5 px-2.5">本页内容</div>
       <TocItem id="page-title" isActive={activeId === null} onClick={onClick}>
-        Introduction
+        简介
       </TocItem>
       {headlines.map((headline) => (
         <TocItem
