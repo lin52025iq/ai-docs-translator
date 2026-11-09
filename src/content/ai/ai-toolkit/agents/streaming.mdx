@@ -1,21 +1,21 @@
 ---
-title: Streaming
+title: 流式处理
 meta:
-  title: Streaming | Tiptap Server AI Toolkit
-  description: Stream server-side AI edits into the document in real time, so changes appear in the browser as the model generates them.
+  title: 流式处理 | Tiptap Server AI Toolkit
+  description: 将服务器端 AI 编辑实时流式传输到文档中，让更改随着模型生成内容逐步显示在浏览器中。
   category: AI Toolkit
 ---
 
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-Stream AI edits from the server so they appear in the document in real time, as the model generates them. The edit runs on your server and is applied to the Tiptap Cloud document over a live connection, so every collaborator sees it happen.
+从服务器流式传输 AI 编辑内容，让它随着模型生成内容实时显示在文档中。编辑操作在服务器上运行，并通过实时连接应用到 Tiptap Cloud 文档，因此所有协作者都能看到编辑过程。
 
-<Callout title="Requires Collaboration" variant="info">
-  Streaming applies the edit to a live Tiptap Cloud document and syncs it to the editor through
-  [Collaboration](/collaboration/getting-started/overview), so both are required. Unlike the
-  non-streaming tools, there is no inline-document mode. If you are not on Tiptap Cloud
-  Collaboration yet, you will need it to stream edits from the server.
+<Callout title="需要 Collaboration" variant="info">
+  流式处理会将编辑应用到实时的 Tiptap Cloud 文档，并通过
+  [Collaboration](/collaboration/getting-started/overview) 同步到编辑器，因此两者缺一不可。与
+  非流式工具不同，这里没有内联文档模式。如果你尚未使用 Tiptap Cloud
+  Collaboration，则需要先启用它，才能从服务器流式传输编辑内容。
 </Callout>
 
 <CodeDemo
@@ -25,43 +25,42 @@ Stream AI edits from the server so they appear in the document in real time, as 
   src="https://ai-toolkit-demos.vercel.app/server-ai-stream-tool-chatbot"
 />
 
-See the [source code on GitHub](https://github.com/ueberdosis/ai-toolkit-demos).
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
 
-## Tech stack
+## 技术栈
 
-- A client-side [React](https://react.dev/) application
-- A server application
-- An AI agent framework like the [Vercel AI SDK](https://ai-sdk.dev/)
-- [OpenAI](https://openai.com/) models
-- The Server AI Toolkit
+- 一个客户端 [React](https://react.dev/) 应用
+- 一个服务器应用
+- 一个 AI 代理框架，例如 [Vercel AI SDK](https://ai-sdk.dev/)
+- [OpenAI](https://openai.com/) 模型
+- Server AI Toolkit
 
-The Server AI Toolkit works with any AI agent framework and AI model. Use it with any frontend framework and backend programming language. This guide uses a simple Node.js server endpoint that takes a [Request](https://developer.mozilla.org/en-US/docs/Web/API/Request) object and returns a [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response).
+Server AI Toolkit 适用于任何 AI 代理框架和 AI 模型。你可以将它与任何前端框架和后端编程语言搭配使用。本指南使用一个简单的 Node.js 服务器端点，它接收 [Request](https://developer.mozilla.org/en-US/docs/Web/API/Request) 对象并返回 [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response)。
 
-Before you continue, set up the Server AI Toolkit by following the [installation guide](/content-ai/capabilities/server-ai-toolkit/install).
+继续之前，请按照[安装指南](/content-ai/capabilities/server-ai-toolkit/install)设置 Server AI Toolkit。
 
-## How it works
+## 工作原理
 
-1. Your server fetches the `tiptapEdit` tool definition and reads the document, just as it does with a [non-streaming agent](/ai/ai-toolkit/agents/ai-agent-chatbot).
-2. As the model generates the tool call, your server forwards the raw input deltas to `POST /v4/ai/toolkit/stream-tool` as [NDJSON](https://github.com/ndjson/ndjson-spec) `start`, `delta`, and `end` messages.
-3. From there, the Server AI Toolkit applies the edit for you: as the forwarded deltas arrive, it incrementally updates the Tiptap Cloud document over a live connection. You never apply anything yourself; the document updates happen automatically on the server side as the deltas stream in.
-4. The client renders the changes through [Collaboration](/collaboration/getting-started/overview). The editor never calls a streaming method itself, so the edits arrive as document updates.
+1. 你的服务器获取 `tiptapEdit` 工具定义并读取文档，方式与[非流式代理](/ai/ai-toolkit/agents/ai-agent-chatbot)相同。
+2. 模型生成工具调用时，服务器会将原始输入增量作为 [NDJSON](https://github.com/ndjson/ndjson-spec) `start`、`delta` 和 `end` 消息转发到 `POST /v4/ai/toolkit/stream-tool`。
+3. 接下来，Server AI Toolkit 会替你应用编辑：收到转发的增量后，它会通过实时连接逐步更新 Tiptap Cloud 文档。你无需自行应用任何内容；服务器会随着增量流入自动更新文档。
+4. 客户端通过 [Collaboration](/collaboration/getting-started/overview) 显示这些更改。编辑器本身不会调用流式方法，因此编辑内容会作为文档更新到达。
 
-## Stream an edit
+## 流式传输编辑
 
-<Callout title="Works with most AI backends" variant="hint">
-  This example uses the [AI SDK by Vercel](https://ai-sdk.vercel.app/), but you can drive
-  `stream-tool` from most AI back-end setups. You just forward your model's tool-call input as
-  NDJSON deltas.
+<Callout title="兼容大多数 AI 后端" variant="hint">
+  本示例使用 [Vercel AI SDK](https://ai-sdk.vercel.app/)，但你可以通过大多数 AI 后端设置驱动
+  `stream-tool`。只需将模型的工具调用输入作为 NDJSON 增量转发即可。
 </Callout>
 
-On the server, open a [duplex](https://developer.mozilla.org/en-US/docs/Web/API/RequestInit#duplex) NDJSON request to `stream-tool` and drive it with your model's tool-call stream. A duplex request lets you stream the body up incrementally, so you can forward each tool-call delta as the model produces it instead of sending the whole input at once.
+在服务器上，向 `stream-tool` 发起 [duplex](https://developer.mozilla.org/en-US/docs/Web/API/RequestInit#duplex) NDJSON 请求，并使用模型的工具调用流驱动它。双工请求允许逐步流式传输请求体，因此你可以在模型生成每个工具调用增量时立即转发，而不必一次性发送完整输入。
 
-The `stream-tool` request and response are both NDJSON: one JSON object per line. You send three message types: `start` to open the stream, `delta` for each chunk of the AI-generated tool input, and `end` once the input is complete.
+`stream-tool` 的请求和响应均采用 NDJSON 格式：每行一个 JSON 对象。你需要发送三种消息：用于开启流的 `start`、用于传递 AI 生成的工具输入各个分块的 `delta`，以及在输入完成后发送的 `end`。
 
 <details>
-  <summary>Install dependencies</summary>
+  <summary>安装依赖</summary>
 
-Install these dependencies in your server app:
+在服务器应用中安装以下依赖：
 
 ```bash
 npm install ai zod
@@ -187,14 +186,14 @@ export async function handleStreamEditRequest(request: Request): Promise<Respons
 }
 ```
 
-See the [REST API reference](/ai/ai-toolkit/api-reference/rest-api#stream-a-tool) for the full request and response message shapes, and the [demo source](https://github.com/ueberdosis/ai-toolkit-demos) for a production-ready route with error handling.
+有关完整的请求和响应消息结构，请参阅 [REST API 参考](/ai/ai-toolkit/api-reference/rest-api#stream-a-tool)；有关包含错误处理、可用于生产环境的路由实现，请参阅[演示源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
 
-## Client-side setup
+## 客户端设置
 
 <details>
-  <summary>Install dependencies</summary>
+  <summary>安装依赖</summary>
 
-Install these dependencies in your client app:
+在客户端应用中安装以下依赖：
 
 ```bash
 npm install @ai-sdk/react @tiptap/extension-collaboration @tiptap/react @tiptap/starter-kit @tiptap-pro/provider @tiptap/ai-toolkit @tiptap/y-tiptap ai yjs
@@ -202,7 +201,7 @@ npm install @ai-sdk/react @tiptap/extension-collaboration @tiptap/react @tiptap/
 
 </details>
 
-On the client, add the `Collaboration` and `ServerAiToolkit` extensions, connect the document with a `TiptapCollabProvider`, and drive the chat with the AI SDK `useChat` hook (the same as the other server demos). The streamed edits arrive in the editor through Collaboration; `useChat` shows the model's replies.
+在客户端添加 `Collaboration` 和 `ServerAiToolkit` 扩展，使用 `TiptapCollabProvider` 连接文档，并通过 AI SDK 的 `useChat` hook 驱动聊天（与其他服务器端演示相同）。流式编辑内容会通过 Collaboration 到达编辑器；`useChat` 则会显示模型的回复。
 
 ```tsx
 import { useChat } from '@ai-sdk/react'
@@ -237,13 +236,13 @@ const { messages, sendMessage, status } = useChat({
 })
 ```
 
-## Fade in text as it streams
+## 流式传输时淡入文本
 
-Streamed text lands in the document token by token. The optional `AiInsertReveal` extension fades it in as it arrives, so the edit reads as a smooth reveal instead of text popping in. It is a view-only decoration: it adds no marks and never touches the document, so it stays inert to accept/reject and to persistence, and neither your own typing nor another collaborator's is faded.
+流式传输的文本会逐个 token 写入文档。可选的 `AiInsertReveal` 扩展会在文本到达时使其淡入，让编辑内容平滑呈现，而不是突然出现。它是一种仅用于视图的装饰：不会添加标记，也不会触碰文档，因此不会影响接受/拒绝操作或持久化；你自己的输入和其他协作者的输入也不会淡入。
 
-It builds on the client-side setup above: it reveals text that arrives through Collaboration, so it needs that setup. Import it from the `streaming-reveal` subpath and add it after `ServerAiToolkit`. It reads collaboration positions from `@tiptap/y-tiptap`, so install that too if it is not already a dependency.
+它基于上面的客户端设置：该扩展会显示通过 Collaboration 到达的文本，因此需要先完成客户端设置。从 `streaming-reveal` 子路径导入，并将它添加到 `ServerAiToolkit` 之后。它会从 `@tiptap/y-tiptap` 读取协作位置，因此如果该依赖尚未安装，也请一并安装。
 
-Pass your collaboration provider to it. The provider's awareness is how the AI is told apart from other collaborators, and without it nothing is revealed.
+将 Collaboration provider 传给它。provider 的 awareness 用于区分 AI 与其他协作者；如果没有 provider，就不会显示淡入效果。
 
 ```tsx
 import { ServerAiToolkit, getEditorContext } from '@tiptap/ai-toolkit'
@@ -260,9 +259,9 @@ const editor = useEditor({
 })
 ```
 
-### CSS styles
+### CSS 样式
 
-The extension adds the `ai-insert-reveal` class to each freshly-streamed run and seeds its `animation-delay` so the fade resumes at the right point across the per-token re-render. It ships no CSS. Add an animation for that class to define the effect. The class lands on an inline element, so animate properties that apply to one, such as `opacity`, `color` or `filter`.
+扩展会为每段刚刚流式传入的文本添加 `ai-insert-reveal` 类，并设置其 `animation-delay`，这样在每个 token 重新渲染时，淡入效果都能从正确的位置继续。扩展不附带 CSS。为该类添加动画即可定义效果。该类会应用于行内元素，因此请为其设置适用于行内元素的属性动画，例如 `opacity`、`color` 或 `filter`。
 
 ```css
 .tiptap .ai-insert-reveal {
@@ -285,21 +284,21 @@ The extension adds the `ai-insert-reveal` class to each freshly-streamed run and
 }
 ```
 
-### Configuration
+### 配置
 
-| Option       | Default              | Description                                                                                                     |
-| ------------ | -------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `provider`   | `null`               | Your collaboration provider. Required: its awareness identifies the AI, and nothing is revealed without it.     |
-| `className`  | `'ai-insert-reveal'` | Class applied to each streamed run. Change it to run a different effect or to avoid a collision.                |
-| `durationMs` | `550`                | How long each run keeps its decoration. Keep it at or above your CSS animation duration so the fade can finish. |
+| 选项         | 默认值               | 说明                                                                                 |
+| ------------ | -------------------- | ------------------------------------------------------------------------------------ |
+| `provider`   | `null`               | 你的 Collaboration provider。必填：它的 awareness 用于识别 AI；没有它就不会显示淡入效果。 |
+| `className`  | `'ai-insert-reveal'` | 应用于每段流式文本的类名。修改它可以运行不同的效果或避免类名冲突。                     |
+| `durationMs` | `550`                | 每段文本保留装饰的时长。请将其设为不短于 CSS 动画时长，以确保淡入效果能够完成。          |
 
 ```ts
 AiInsertReveal.configure({ provider, durationMs: 700 })
 ```
 
-## Stream as tracked changes
+## 以跟踪更改的形式流式传输
 
-To let users review streamed edits instead of applying them directly, add `reviewOptions` to the `start` message. The edit then appears as a tracked-change suggestion that's typed into the document in real time and that users can accept or reject.
+如果希望用户审阅流式编辑，而不是直接应用更改，请在 `start` 消息中添加 `reviewOptions`。这样，编辑内容会作为跟踪更改建议实时输入文档，用户可以接受或拒绝。
 
 ```ts
 send({
@@ -313,11 +312,11 @@ send({
 })
 ```
 
-Add the [Tracked Changes](/tracked-changes/getting-started/overview) extension on the client to render and accept or reject the suggestions. See the [Use with Tracked Changes guide](/ai/ai-toolkit/agents/tracked-changes) and the [Tracked Changes streaming demo](https://ai-toolkit-demos.vercel.app/server-ai-stream-tool-chatbot-tracked-changes).
+在客户端添加 [Tracked Changes](/tracked-changes/getting-started/overview) 扩展，以显示建议并接受或拒绝它们。请参阅[与 Tracked Changes 搭配使用指南](/ai/ai-toolkit/agents/tracked-changes)和 [Tracked Changes 流式处理演示](https://ai-toolkit-demos.vercel.app/server-ai-stream-tool-chatbot-tracked-changes)。
 
-## End result
+## 最终效果
 
-The result is a simple but polished AI chatbot application:
+最终效果是一个简单而精致的 AI 聊天机器人应用：
 
 <CodeDemo
   isLarge
@@ -326,11 +325,11 @@ The result is a simple but polished AI chatbot application:
   src="https://ai-toolkit-demos.vercel.app/server-ai-stream-tool-chatbot"
 />
 
-See the [source code on GitHub](https://github.com/ueberdosis/ai-toolkit-demos).
+查看 [GitHub 上的源代码](https://github.com/ueberdosis/ai-toolkit-demos)。
 
-## Next steps
+## 后续步骤
 
-- [REST API reference](/ai/ai-toolkit/api-reference/rest-api#stream-a-tool): the full `stream-tool` request and response protocol.
-- [Review options](/ai/ai-toolkit/api-reference/review-options): all `reviewOptions` settings.
-- [Use with Tracked Changes](/ai/ai-toolkit/agents/tracked-changes): review server-side edits before they're accepted.
-- [Streaming with the client-side AI Toolkit](/ai/ai-toolkit/client/agents/streaming): stream into the Tiptap Editor client-side, with the client variant of the AI Toolkit.
+- [REST API 参考](/ai/ai-toolkit/api-reference/rest-api#stream-a-tool)：完整的 `stream-tool` 请求和响应协议。
+- [Review options](/ai/ai-toolkit/api-reference/review-options)：所有 `reviewOptions` 设置。
+- [与 Tracked Changes 搭配使用](/ai/ai-toolkit/agents/tracked-changes)：在接受服务器端编辑之前先进行审阅。
+- [使用客户端 AI Toolkit 进行流式处理](/ai/ai-toolkit/client/agents/streaming)：通过客户端版本的 AI Toolkit，在客户端向 Tiptap Editor 流式传输内容。
