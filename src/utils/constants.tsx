@@ -2,7 +2,7 @@ import type { VersionData } from '@/types'
 
 export const DEMO_URL = process.env.NEXT_PUBLIC_DEMO_URL ?? 'https://embed.tiptap.dev/preview'
 
-/** Every `CodeDemo` shows its demo in the `DemoViewer` (`NEXT_PUBLIC_DEMO_VIEWER=true`); otherwise only those with `viewer`. */
+/** 每个 `CodeDemo` 都会在 `DemoViewer` 中显示演示（`NEXT_PUBLIC_DEMO_VIEWER=true`）；否则，只有设置了 `viewer` 的演示才会显示。 */
 export const DEMO_VIEWER = process.env.NEXT_PUBLIC_DEMO_VIEWER === 'true'
 
 export const PRO_DEMO_URL =
@@ -26,9 +26,9 @@ export type CtaBarData = {
 }
 
 export const CTA_BAR: CtaBarData = {
-  label: '🎁 100 free AI Toolkit licenses – apply by August 15.',
+  label: '🎁 100 个免费的 AI Toolkit 许可证，8 月 15 日前申请。',
   button: {
-    text: 'Learn more',
+    text: '了解详情',
     href: 'https://tiptap.dev/blog/release-notes/ai-toolkit-now-in-beta',
   },
   hideAt: new Date('2026-08-15T23:59:00+01:00'),
