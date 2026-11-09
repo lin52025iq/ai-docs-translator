@@ -1,8 +1,8 @@
 ---
-title: Install the AI Agent extension
+title: 安装 AI Agent 扩展
 meta:
-  title: Install the AI Agent extension | Tiptap Content AI
-  description: Learn how to install and set up the AI Agent extension for Tiptap.
+  title: 安装 AI Agent 扩展 | Tiptap Content AI
+  description: 了解如何安装和设置 Tiptap 的 AI Agent 扩展。
   category: Content AI
 tags:
   - type: beta
@@ -12,21 +12,20 @@ tags:
 import { Callout } from '@/components/ui/Callout'
 import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 
-<Callout title="Deprecated" variant="warning">
-  This extension is being phased out in favor of the AI Toolkit, which offers enhanced capabilities
-  and a modernized API. While you can continue using this extension, we recommend exploring the AI
-  Toolkit for new implementations.
+<Callout title="已弃用" variant="warning">
+  此扩展将逐步淘汰，改用 AI Toolkit。AI Toolkit 提供了更强大的功能和现代化的 API。虽然你可以继续使用此扩展，但我们建议在新实现中使用 AI
+  Toolkit。
 </Callout>
 
 <EnterpriseCalloutAuto variant="deprecated" renderMode="sidebar" />
 
-## Install the package
+## 安装软件包
 
-The AI Agent extension is published in Tiptap's private npm registry. Integrate the extension by following the [private registry guide](/guides/pro-extensions).
+AI Agent 扩展发布在 Tiptap 的私有 npm registry 中。请按照[私有 registry 指南](/guides/pro-extensions)集成此扩展。
 
-## Set up the provider
+## 设置 provider
 
-The provider object manages the state of the AI Agent extension. The easiest way to get started with the AI Agent extension is to use the Tiptap Cloud provider:
+provider 对象负责管理 AI Agent 扩展的状态。开始使用 AI Agent 扩展最简单的方式是使用 Tiptap Cloud provider：
 
 ```tsx
 import { AiAgentProvider } from '@tiptap-pro/extension-ai-agent'
@@ -37,13 +36,13 @@ const provider = new AiAgentProvider({
 })
 ```
 
-The AI Agent extension works out-of-the-box [with Tiptap Cloud](/ai/deprecated/agent/use-with-content-ai-cloud) as a backend.
+AI Agent 扩展可以直接将 [Tiptap Cloud](/ai/deprecated/agent/use-with-content-ai-cloud) 用作后端。
 
-To add text-editing capabilities to your custom AI agent that runs in your backend, read [the integration guide](/ai/deprecated/agent/custom-llms/overview).
+要为运行在你后端的自定义 AI agent 添加文本编辑功能，请阅读[集成指南](/ai/deprecated/agent/custom-llms/overview)。
 
-## Import the extension in your editor
+## 在编辑器中导入扩展
 
-Add `AiAgent` to the list of extensions and configure it with the provider.
+将 `AiAgent` 添加到扩展列表中，并使用 provider 对其进行配置。
 
 ```tsx
 import { Editor } from '@tiptap/core'
@@ -62,9 +61,9 @@ const editor = new Editor({
 })
 ```
 
-## Call the AI Agent extension
+## 调用 AI Agent 扩展
 
-Call the methods of the provider to interact with the AI Agent extension.
+调用 provider 的方法即可与 AI Agent 扩展交互。
 
 ```tsx
 provider.addUserMessage(
@@ -73,15 +72,15 @@ provider.addUserMessage(
 provider.run()
 ```
 
-## Display the chat conversation
+## 显示聊天对话
 
-You can access the AI Agent extension state (including the chat conversations) and display it in the UI:
+你可以访问 AI Agent 扩展的状态（包括聊天对话），并在 UI 中显示：
 
 ```tsx
 provider.state.messages
 ```
 
-You can also subscribe to events and update the UI when they are triggered:
+你还可以订阅事件，并在事件触发时更新 UI：
 
 ```tsx
 // Subscribe to state changes
