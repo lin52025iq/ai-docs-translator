@@ -4,13 +4,13 @@ import { ChevronDown, ChevronUp } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { cn } from '@/utils'
 
-/** How much of a code block shows before "Show all", across the docs. */
+/** 在整个文档中，代码块在显示“显示全部”之前展示的高度。 */
 export const CODE_COLLAPSED_HEIGHT = 448
 
 /**
- * Long code shows its first `collapsedHeight` pixels and a "Show all" bar. The reader may also
- * scroll inside the box instead; the fade above the bar goes once the end is reached. The ref goes on the element that clips the code; the bar only shows when
- * there is more than fits, so short code gets none. Null for `collapsedHeight` shows it all.
+ * 长代码块会显示开头 `collapsedHeight` 像素，并带有“显示全部”栏。读者也可以在代码框内滚动；
+ * 滚动到末尾后，栏上方的渐隐效果会消失。ref 需要绑定到裁剪代码的元素；只有内容超出可显示范围时才会显示该栏，
+ * 因此短代码块不会显示。`collapsedHeight` 为 null 时会显示全部内容。
  */
 export const useCodeCollapse = <T extends HTMLElement>(collapsedHeight: number | null) => {
   const ref = useRef<T | null>(null)
@@ -27,7 +27,7 @@ export const useCodeCollapse = <T extends HTMLElement>(collapsedHeight: number |
       setAtEnd(element.scrollTop + element.clientHeight >= element.scrollHeight - 1)
     }
     element.addEventListener('scroll', measure, { passive: true })
-    // The code may change after the first render (highlighting, another file, text in place)
+    // 首次渲染后代码可能会发生变化（语法高亮、切换文件或原地更新文本）
     const resize = new ResizeObserver(measure)
     resize.observe(element)
     const mutation = new MutationObserver(measure)
@@ -40,7 +40,7 @@ export const useCodeCollapse = <T extends HTMLElement>(collapsedHeight: number |
     }
   }, [isCollapsed])
 
-  // The ref apart from the state, so reading the state isn't reading a ref
+  // ref 与状态分开返回，这样读取状态时读到的就不是 ref
   return [
     ref,
     {
@@ -53,7 +53,7 @@ export const useCodeCollapse = <T extends HTMLElement>(collapsedHeight: number |
   ] as const
 }
 
-/** The bar below collapsed code, with a fade above it that says there is more. */
+/** 折叠代码块下方的栏；栏上方的渐隐效果提示还有更多内容。 */
 export const CodeCollapseBar = ({
   isOpen,
   isFaded = !isOpen,
@@ -61,7 +61,7 @@ export const CodeCollapseBar = ({
   className,
 }: {
   isOpen: boolean
-  /** The fade that says more code follows; off once the reader scrolled to the end. */
+  /** 提示下方还有代码的渐隐效果；读者滚动到末尾后会消失。 */
   isFaded?: boolean
   onToggle: () => void
   className?: string
@@ -79,6 +79,6 @@ export const CodeCollapseBar = ({
     )}
   >
     {isOpen ? <ChevronUp className="size-3.5" /> : <ChevronDown className="size-3.5" />}
-    {isOpen ? 'Show less' : 'Show all'}
+    {isOpen ? '收起' : '显示全部'}
   </button>
 )
