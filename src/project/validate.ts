@@ -1,6 +1,6 @@
 import { branchHead, readTree, repositoryGit } from '../git/branches.ts'
 import { readTextSnapshot } from '../git/snapshot.ts'
-import { withCommitWorktree } from '../git/worktree.ts'
+import { openCommitWorktree } from '../git/worktree.ts'
 import { createValidation, type Diagnostic } from '../validation/runner.ts'
 import { createScopeMatcher, loadProject } from './config.ts'
 
@@ -14,12 +14,14 @@ export async function validateTranslations(options: { project: string; repositor
     if (!commit) throw new Error('目标分支不存在：' + target.branch)
     const snapshot = await readTextSnapshot(git, await readTree(git, commit), createScopeMatcher(project.config))
     const validation = createValidation(project)
+    await using validationSnapshot =
+        validation.needsSnapshot || project.config.validation.global ? await openCommitWorktree(git, commit) : undefined
     const diagnostics: Diagnostic[] = []
     for (const [path, content] of Object.entries(snapshot.contents)) {
-        diagnostics.push(...(await validation.file(path, content)))
+        diagnostics.push(...(await validation.file(path, content, validationSnapshot?.directory)))
     }
-    if (!diagnostics.length && project.config.validation.global) {
-        diagnostics.push(...(await withCommitWorktree(git, commit, validation.global)))
+    if (!diagnostics.length && validationSnapshot) {
+        diagnostics.push(...(await validation.global(validationSnapshot.directory)))
     }
     return { commit, locale: target.locale, diagnostics }
 }

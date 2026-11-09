@@ -50,4 +50,7 @@ translation:
 
 # 项目可配置文件校验规则和可选的全局校验命令。
 validation:
+    # 已有校验入口可用 cwd: snapshot 在仓库快照中调用。
+    # 支持 stdin 的工具可以设置 stdin: true，通过 {path} 传入原相对路径。
+    # 自定义脚本默认在配置目录执行，可通过 {file} 读取候选文件。
     files: []

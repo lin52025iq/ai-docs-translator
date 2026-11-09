@@ -27,9 +27,10 @@ export function createValidation(project?: Project) {
             ...rule,
             matches: picomatch(rule.include, { dot: true })
         })) ?? []
-    const global = project?.config.validation.global
+    const { global, prepare } = project?.config.validation ?? {}
+    const prepared = new Set<string>()
 
-    async function run(command: [string, ...string[]], cwd: string, variables: Record<string, string>) {
+    async function run(command: [string, ...string[]], cwd: string, variables: Record<string, string>, stdin?: string) {
         const [program, ...parameters] = command
         let executable = program
         let args = parameters.map((value) => {
@@ -50,7 +51,12 @@ export function createValidation(project?: Project) {
             /^(PATH|HOME|USERPROFILE|SYSTEMROOT|WINDIR|COMSPEC|PATHEXT|TMPDIR|TEMP|TMP|APPDATA|LOCALAPPDATA|CI)$/i
         const env = Object.fromEntries(Object.entries(process.env).filter(([name]) => systemVariables.test(name)))
         try {
-            await execute(executable, args, { cwd, env, timeout: 600_000, maxBuffer: 1024 * 1024 })
+            const execution = execute(executable, args, { cwd, env, timeout: 600_000, maxBuffer: 1024 * 1024 })
+            execution.child.stdin?.on('error', (error: NodeJS.ErrnoException) => {
+                if (error.code !== 'EPIPE') execution.child.kill()
+            })
+            execution.child.stdin?.end(stdin)
+            await execution
             return []
         } catch (error) {
             if (!(error instanceof Error) || !('code' in error) || error.code !== 1) {
@@ -61,12 +67,21 @@ export function createValidation(project?: Project) {
             if (stdout.startsWith('[')) {
                 return z.array(diagnosticSchema).min(1).parse(JSON.parse(stdout))
             }
-            return [{ message: (stderr || stdout || '校验命令拒绝了译文').slice(0, 8000) }]
+            const output = [stdout, stderr].filter(Boolean).join('\n')
+            return [{ message: (output || '校验命令拒绝了译文').slice(-8000) }]
         }
     }
 
+    async function prepareSnapshot(directory: string) {
+        if (!prepare || prepared.has(directory)) return
+        const issues = await run(prepare, directory, { configDir })
+        if (issues.length) throw new Error('校验环境准备失败：' + issues.map((issue) => issue.message).join('\n'))
+        prepared.add(directory)
+    }
+
     return {
-        async file(path: string, content: string): Promise<Diagnostic[]> {
+        needsSnapshot: rules.some((rule) => rule.cwd === 'snapshot'),
+        async file(path: string, content: string, snapshot?: string): Promise<Diagnostic[]> {
             const selected = rules.filter((rule) => rule.matches(path))
             if (!selected.length) return []
             const directory = await mkdtemp(join(tmpdir(), 'translator-candidate-'))
@@ -75,7 +90,15 @@ export function createValidation(project?: Project) {
                 await writeFile(file, content)
                 const diagnostics: Diagnostic[] = []
                 for (const rule of selected) {
-                    const result = await run(rule.command, configDir, { configDir, file, path })
+                    const cwd = rule.cwd === 'snapshot' ? snapshot : configDir
+                    if (!cwd) throw new Error('该文件校验规则需要项目快照')
+                    if (rule.cwd === 'snapshot') await prepareSnapshot(cwd)
+                    const result = await run(
+                        rule.command,
+                        cwd,
+                        { configDir, file, path },
+                        rule.stdin ? content : undefined
+                    )
                     diagnostics.push(...result.map((entry) => ({ ...entry, path })))
                 }
                 return diagnostics
@@ -84,7 +107,14 @@ export function createValidation(project?: Project) {
             }
         },
         async global(directory: string): Promise<Diagnostic[]> {
-            return global ? await run(global.command, directory, { configDir }) : []
+            if (!global) return []
+            await prepareSnapshot(directory)
+            const commands = 'commands' in global ? global.commands : [global.command]
+            for (const command of commands) {
+                const issues = await run(command, directory, { configDir })
+                if (issues.length) return issues
+            }
+            return []
         }
     }
 }

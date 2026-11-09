@@ -1,7 +1,7 @@
 import { branchHead, commitBranchFiles, readBlob, readTree, repositoryGit } from '../git/branches.ts'
 import { commitConflictDraft, commitGlobalValidationDraft } from '../git/conflict-draft.ts'
 import { readTextSnapshot } from '../git/snapshot.ts'
-import { withCommitWorktree } from '../git/worktree.ts'
+import { openCommitWorktree, withCommitWorktree } from '../git/worktree.ts'
 import { logProgress, logWarning } from '../shared/log.ts'
 import { saveProjectProgress } from '../state/project-progress.ts'
 import {
@@ -61,6 +61,7 @@ export async function runProject(options: {
         config.source.branch,
         options.push ? remote : undefined
     )
+    await using validationSnapshot = validation.needsSnapshot ? await openCommitWorktree(git, sourceCommit) : undefined
     const matches = createScopeMatcher(config)
     const source = await readTextSnapshot(git, sourceTree, matches)
     logProgress(`Source 同步完成：${config.source.branch}，上游提交 ${sourceCommit}`)
@@ -154,7 +155,7 @@ export async function runProject(options: {
                         context,
                         repair
                     },
-                    validation.file,
+                    (path, content) => validation.file(path, content, validationSnapshot?.directory),
                     attempts
                 )
             } catch (error) {

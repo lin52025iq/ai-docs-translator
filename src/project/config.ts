@@ -91,15 +91,23 @@ export const projectSchema = z
             .optional(),
         validation: z
             .strictObject({
+                prepare: validationCommand.optional(),
                 files: z
                     .array(
                         z.strictObject({
                             include: z.array(z.string().min(1)).min(1),
-                            command: validationCommand
+                            command: validationCommand,
+                            cwd: z.enum(['config', 'snapshot']).default('config'),
+                            stdin: z.boolean().default(false)
                         })
                     )
                     .default([]),
-                global: z.strictObject({ command: validationCommand }).optional()
+                global: z
+                    .union([
+                        z.strictObject({ command: validationCommand }),
+                        z.strictObject({ commands: z.array(validationCommand).min(1) })
+                    ])
+                    .optional()
             })
             .prefault({})
     })

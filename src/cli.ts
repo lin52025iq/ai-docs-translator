@@ -5,6 +5,7 @@ import { Command } from 'commander'
 
 import { repositoryGit } from './git/branches.ts'
 import { commitConflictDraft, writeConflictDraft } from './git/conflict-draft.ts'
+import { openCommitWorktree } from './git/worktree.ts'
 import { createScopeMatcher, draftSchema, loadProject, localeSchema, sourceLanguageSchema } from './project/config.ts'
 import { createProject } from './project/create.ts'
 import { runProject } from './project/run.ts'
@@ -194,6 +195,11 @@ program
                 project: project?.config.project ?? { id: 'standalone' },
                 translation: { draft: { ...draftOptions, pushDraft: options.pushDraft ?? draftOptions.pushDraft } }
             }
+            const validation = createValidation(project)
+            const sourceGit = validation.needsSnapshot ? repositoryGit(sourceRoot) : undefined
+            await using validationSnapshot = sourceGit
+                ? await openCommitWorktree(sourceGit, (await sourceGit.revparse(['HEAD'])).trim())
+                : undefined
             const translate = createTranslator()
             const result = await translateValidated(
                 translate,
@@ -203,7 +209,7 @@ program
                     previousTranslation: previous?.content,
                     context
                 },
-                createValidation(project).file,
+                (path, content) => validation.file(path, content, validationSnapshot?.directory),
                 new Map()
             )
             if (!result.approved) {
