@@ -45,12 +45,12 @@ export const CopyMarkdownButton = ({ title, className }: CopyMarkdownButtonClien
       variant="tertiary"
       onClick={handleCopy}
       disabled={isCopied}
-      aria-label={isCopied ? 'Copied markdown' : 'Copy markdown'}
-      // The same hover as the sidebar links
+      aria-label={isCopied ? '已复制 Markdown' : '复制 Markdown'}
+      // 与侧边栏链接相同的悬停效果
       className={cn('hover:bg-grayAlpha-100 group-hover:bg-grayAlpha-100', className)}
     >
       <IconComponent className="size-3" />
-      Copy markdown
+      复制 Markdown
     </Button>
   )
 }
