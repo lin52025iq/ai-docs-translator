@@ -26,7 +26,7 @@ const LANGUAGES: Record<string, string> = {
 
 const languageOf = (name: string) => LANGUAGES[name.split('.').pop() ?? ''] ?? 'text'
 
-/** Shiki, as in the page's own code blocks, loaded when a demo first shows its code. */
+/** 与页面自身代码块使用的 Shiki 相同；演示首次显示代码时加载。 */
 const useHighlighted = (code: string, language: string) => {
   const [result, setResult] = useState<{ code: string; html: string } | null>(null)
 
@@ -44,7 +44,7 @@ const useHighlighted = (code: string, language: string) => {
         if (isCurrent) setResult({ code, html })
       })
       .catch(() => {
-        // The plain code below stays
+        // 下方仍会显示纯文本代码
       })
 
     return () => {
@@ -61,20 +61,20 @@ export type DemoCodeProps = {
   framework: Framework
   frameworks: Framework[]
   onFrameworkChange: (framework: Framework) => void
-  /** The demo's source on GitHub; open-source demos only. */
+  /** 演示在 GitHub 上的源代码；仅限开源演示。 */
   githubUrl?: string
-  /** No demos app bridge: the code can't be shown here. */
+  /** 没有演示应用桥接，无法在此显示代码。 */
   isUnavailable?: boolean
   demoUrl: string
   /**
-   * The most the code shows before "Show all", in pixels; null shows it all. A block that keeps
-   * its own height (the Code view, Expand) passes null.
+   * 点击“显示全部”之前显示的最大代码高度（像素）；为 null 时显示全部。由自身控制高度的
+   * 区块（代码视图、展开视图）传入 null。
    */
   collapsedHeight?: number | null
   className?: string
 }
 
-/** The demo's code: React / Vue, its files and the live document as JSON, with copy and GitHub. */
+/** 演示代码：React / Vue 及其文件，还有以 JSON 格式实时呈现的文档；支持复制和查看 GitHub。 */
 export const DemoCode = ({
   files,
   document,
@@ -102,7 +102,7 @@ export const DemoCode = ({
 
   const onCopy = () => {
     clipboard.copy(code)
-    toast('Copied to clipboard', { duration: 1200 })
+    toast('已复制到剪贴板', { duration: 1200 })
   }
 
   return (
@@ -112,13 +112,13 @@ export const DemoCode = ({
     >
       <div className="flex items-center gap-2 px-3 pt-3">
         {frameworks.length > 1 ? (
-          <Segmented label="Framework" tone="dark">
+          <Segmented label="框架" tone="dark">
             {frameworks.map((item) => (
               <ControlButton
                 key={item}
                 tone="dark"
                 label={item}
-                tooltip={`Show the ${item} demo`}
+                tooltip={`显示 ${item} 演示`}
                 aria-pressed={item === framework}
                 isActive={item === framework}
                 onClick={() => onFrameworkChange(item)}
@@ -135,7 +135,7 @@ export const DemoCode = ({
           {githubUrl ? (
             <ControlLink
               tone="dark"
-              label="Source on GitHub"
+              label="GitHub 上的源代码"
               tipAlign="end"
               href={githubUrl}
               target="_blank"
@@ -150,7 +150,7 @@ export const DemoCode = ({
       <div className="flex items-center gap-1 border-b border-whiteAlpha-100 px-3 pb-2 pt-2">
         <div
           role="tablist"
-          aria-label="Files"
+          aria-label="文件"
           className="flex min-w-0 flex-1 gap-1 overflow-x-auto"
         >
           {tabs.map((tab) => (
@@ -167,7 +167,7 @@ export const DemoCode = ({
                   ? 'bg-whiteAlpha-200 text-white'
                   : 'text-whiteAlpha-600 hover:bg-whiteAlpha-100 hover:text-white',
               )}
-              title={tab === JSON_TAB ? 'The document as JSON, live as you edit' : undefined}
+              title={tab === JSON_TAB ? '实时编辑时显示的 JSON 格式文档' : undefined}
             >
               {tab}
             </button>
@@ -176,7 +176,7 @@ export const DemoCode = ({
         {code ? (
           <ControlButton
             tone="dark"
-            label={clipboard.copied ? 'Copied' : 'Copy code'}
+            label={clipboard.copied ? '已复制' : '复制代码'}
             tipAlign="end"
             onClick={onCopy}
           >
@@ -197,14 +197,14 @@ export const DemoCode = ({
       >
         {isUnavailable ? (
           <p className="m-0 text-whiteAlpha-700">
-            The code of this demo isn’t available here.{' '}
+            此处无法查看该演示的代码。{' '}
             <a className="underline" href={demoUrl} target="_blank" rel="noopener noreferrer">
-              Open the demo
+              打开演示
             </a>
-            .
+            。
           </p>
         ) : !files ? (
-          <p className="m-0 text-whiteAlpha-600">Loading the code…</p>
+          <p className="m-0 text-whiteAlpha-600">正在加载代码…</p>
         ) : html ? (
           <div dangerouslySetInnerHTML={{ __html: html }} />
         ) : (
