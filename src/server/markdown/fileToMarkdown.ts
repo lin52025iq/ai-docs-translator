@@ -17,9 +17,8 @@ const DATES_MANIFEST_PATH = path.join(
 )
 
 /**
- * Build-time git-date manifest (path-relative-to-content → YYYY-MM-DD), loaded
- * once. Absent in dev until `generate:content-dates` runs — `last_updated` is
- * simply omitted in that case.
+ * 构建时生成的 Git 日期清单（相对于内容目录的路径 → YYYY-MM-DD），仅加载一次。
+ * 在开发环境中，直到运行 `generate:content-dates` 前都不存在——这种情况下会省略 `last_updated`。
  */
 let contentDates: Record<string, string> | null = null
 function getContentDates(): Record<string, string> {
@@ -34,7 +33,7 @@ function getContentDates(): Record<string, string> {
   return loaded
 }
 
-/** Frontmatter descriptions may contain inline HTML; flatten to plain text. */
+/** Frontmatter 描述可能包含内联 HTML；将其转换为纯文本。 */
 function stripHtml(value: string): string {
   let previous: string
   let output = value
@@ -45,7 +44,7 @@ function stripHtml(value: string): string {
   return output.replace(/\s+/g, ' ').trim()
 }
 
-/** Build the minimal YAML frontmatter block served atop every `.md` response. */
+/** 构建最精简的 YAML frontmatter 区块，置于每个 `.md` 响应的开头。 */
 export function buildFrontmatter(fields: {
   title?: string
   description?: string
@@ -53,20 +52,18 @@ export function buildFrontmatter(fields: {
   lastUpdated?: string
 }): string {
   const lines: string[] = []
-  // JSON.stringify yields a safely-quoted/escaped scalar (handles colons,
-  // quotes, etc.) that is also valid YAML.
+  // JSON.stringify 会生成带安全引号和转义的标量（可处理冒号、引号等），且符合 YAML 格式。
   if (fields.title) lines.push(`title: ${JSON.stringify(fields.title)}`)
   if (fields.description) lines.push(`description: ${JSON.stringify(fields.description)}`)
   if (fields.canonicalUrl) lines.push(`canonical_url: ${JSON.stringify(fields.canonicalUrl)}`)
-  // Dates are bare YAML scalars (no quotes).
+  // 日期是裸 YAML 标量（不加引号）。
   if (fields.lastUpdated) lines.push(`last_updated: ${fields.lastUpdated}`)
   return `---\n${lines.join('\n')}\n---`
 }
 
 /**
- * Read a content `.mdx` file and produce the markdown served to AI agents: a
- * minimal frontmatter block (title, description, canonical_url, last_updated)
- * followed by an H1 title + description and the filtered body.
+ * 读取内容 `.mdx` 文件，并生成提供给 AI 代理的 Markdown：最精简的 frontmatter 区块（title、description、canonical_url、last_updated），
+ * 后接 H1 标题、描述和经过筛选的正文。
  */
 export async function fileToMarkdown(filePath: string, canonicalUrl?: string): Promise<string> {
   const raw = await fs.readFile(filePath, 'utf8')
