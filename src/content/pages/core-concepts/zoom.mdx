@@ -1,8 +1,8 @@
 ---
-title: Zoom
+title: 缩放
 meta:
-  title: Zoom | Tiptap Pages Docs
-  description: Learn how to zoom in and out of your Tiptap Pages editor to make content larger or smaller, just like in Google Docs or Microsoft Word.
+  title: 缩放 | Tiptap Pages 文档
+  description: 了解如何放大和缩小 Tiptap Pages 编辑器中的内容，就像在 Google 文档或 Microsoft Word 中一样。
   category: Pages
 sidebars:
   hideSecondary: true
@@ -11,17 +11,17 @@ sidebars:
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-Zoom lets your users make the editor content **bigger** or **smaller** without changing the actual document. Think of it like pinching to zoom on your phone, or using the zoom slider in Google Docs.
+缩放功能可以让用户放大或缩小编辑器中的内容，而不会更改实际文档。它就像在手机上用双指缩放，或使用 Google 文档中的缩放滑块。
 
-- **Zoom in** to see details up close (great for precise formatting)
-- **Zoom out** to see more of the document at once (great for getting an overview)
-- The document itself doesn't change; zoom is purely visual
+- **放大**以近距离查看细节（适合精确排版）
+- **缩小**以一次查看更多文档内容（适合纵览全文）
+- 文档本身不会改变；缩放只影响视觉显示
 
 <CodeDemo isPro path="/Extensions/PagesZoom" />
 
-## Quick start
+## 快速开始
 
-Set an initial zoom level when configuring the extension:
+配置扩展时设置初始缩放级别：
 
 ```js
 import { Pages } from '@tiptap-pro/extension-pages'
@@ -31,7 +31,7 @@ Pages.configure({
 })
 ```
 
-Change the zoom level at any time with a command:
+随时使用命令更改缩放级别：
 
 ```js
 // Zoom to 150%
@@ -44,22 +44,22 @@ editor.commands.setZoom(0.5)
 editor.commands.setZoom(1)
 ```
 
-That's it. Two lines of code and you have zoom.
+就是这么简单。只需两行代码即可启用缩放。
 
-## Zoom range
+## 缩放范围
 
-Zoom accepts any value between **0.25** (25%) and **4** (400%). Values outside this range are automatically clamped.
+缩放值可以是 **0.25**（25%）到 **4**（400%）之间的任意值。超出此范围的值会自动限制在范围内。
 
-| Value  | Zoom level | Use case |
+| 值 | 缩放级别 | 使用场景 |
 |--------|-----------|----------|
-| `0.25` | 25%       | Maximum zoom out: see entire document layout |
-| `0.5`  | 50%       | Overview mode, good for long documents |
-| `0.75` | 75%       | Slightly smaller, fits more on screen |
-| `1`    | 100%      | Default, normal size |
-| `1.25` | 125%      | Slightly larger, easier to read |
-| `1.5`  | 150%      | Comfortable reading zoom |
-| `2`    | 200%      | Large, good for accessibility |
-| `4`    | 400%      | Maximum zoom in: pixel-level detail |
+| `0.25` | 25%       | 最大程度缩小：查看整个文档版面 |
+| `0.5`  | 50%       | 概览模式，适合较长的文档 |
+| `0.75` | 75%       | 略微缩小，可在屏幕上容纳更多内容 |
+| `1`    | 100%      | 默认大小 |
+| `1.25` | 125%      | 略微放大，更易阅读 |
+| `1.5`  | 150%      | 舒适的阅读缩放级别 |
+| `2`    | 200%      | 大尺寸，适合无障碍访问 |
+| `4`    | 400%      | 最大程度放大：查看像素级细节 |
 
 ```js
 // These all work
@@ -72,9 +72,9 @@ editor.commands.setZoom(0.1)   // becomes 0.25
 editor.commands.setZoom(10)    // becomes 4
 ```
 
-## Reading the current zoom level
+## 获取当前缩放级别
 
-You can read the current zoom level from storage at any time:
+你可以随时从存储中读取当前缩放级别：
 
 ```js
 // Read the current zoom level directly
@@ -85,9 +85,9 @@ console.log(`Current zoom: ${zoom * 100}%`) // e.g. "Current zoom: 125%"
 const zoom = editor.storage.pages.getZoom?.()
 ```
 
-## Reacting to zoom changes
+## 响应缩放变化
 
-Use the `onZoomChange` callback to keep your UI in sync when the zoom level changes. This is useful for building zoom controls like dropdowns or sliders.
+使用 `onZoomChange` 回调，在缩放级别变化时同步更新 UI。这适用于构建下拉菜单或滑块等缩放控件。
 
 ```js
 Pages.configure({
@@ -99,7 +99,7 @@ Pages.configure({
 })
 ```
 
-### React example with a zoom dropdown
+### React 下拉缩放菜单示例
 
 ```jsx
 import { Pages } from '@tiptap-pro/extension-pages'
@@ -139,30 +139,30 @@ function MyEditor() {
 }
 ```
 
-## Configuration reference
+## 配置参考
 
-### Option
+### 选项
 
-| Option | Type | Default | Description |
+| 选项 | 类型 | 默认值 | 说明 |
 |--------|------|---------|-------------|
-| `zoom` | `number` | `1` | Initial zoom level. Clamped to `[0.25, 4]`. |
-| `onZoomChange` | `(zoom: number) => void` | `undefined` | Callback fired when zoom changes via `setZoom`. |
+| `zoom` | `number` | `1` | 初始缩放级别，限制在 `[0.25, 4]` 范围内。 |
+| `onZoomChange` | `(zoom: number) => void` | `undefined` | 通过 `setZoom` 更改缩放级别时触发的回调。 |
 
-### Command
+### 命令
 
-| Command | Parameters | Description |
+| 命令 | 参数 | 说明 |
 |---------|-----------|-------------|
-| `setZoom` | `zoom: number` | Set the zoom level. Value is clamped to `[0.25, 4]`. |
+| `setZoom` | `zoom: number` | 设置缩放级别。值会限制在 `[0.25, 4]` 范围内。 |
 
-### Storage
+### 存储
 
-| Property | Type | Description |
+| 属性 | 类型 | 说明 |
 |----------|------|-------------|
-| `zoom` | `number` | Current zoom level. |
-| `getZoom` | `() => number` | Returns the current zoom level. |
+| `zoom` | `number` | 当前缩放级别。 |
+| `getZoom` | `() => number` | 返回当前缩放级别。 |
 
-## Good to know
+## 注意事项
 
-- **Zoom is visual only.** It does not change the document structure, content, or formatting. When you export to DOCX or print, the output is always at 100%.
-- **Headers and footers follow zoom.** They scale with the rest of the page. If you open a header or footer editor, the overlay matches the current zoom level, even if you change zoom while editing.
-- **Pagination stays accurate.** Page breaks, page count, and all pagination calculations remain correct at every zoom level. Zooming does not add or remove pages.
+- **缩放只影响视觉显示。** 它不会改变文档结构、内容或格式。导出为 DOCX 或打印时，输出始终为 100%。
+- **页眉和页脚会随缩放调整。** 它们会与页面其他部分一起缩放。打开页眉或页脚编辑器时，叠加层会匹配当前缩放级别，即使在编辑过程中更改缩放也是如此。
+- **分页始终准确。** 在任何缩放级别下，分页符、页数和所有分页计算都保持准确。缩放不会增加或减少页面。
