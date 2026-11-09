@@ -10,33 +10,33 @@ import { cn } from '@/utils'
 
 const options = [
   {
-    label: 'Features',
+    label: '功能',
     items: [
-      { label: 'Editor', href: '/editor/getting-started/overview' },
+      { label: '编辑器', href: '/editor/getting-started/overview' },
       {
-        label: 'Collaboration',
+        label: '协作',
         href: '/collaboration/getting-started/overview',
       },
-      { label: 'Comments', href: '/comments/getting-started/overview' },
-      { label: 'Compare', href: '/compare/getting-started/overview' },
-      { label: 'Composable Docs', href: '/composable-docs/slots/getting-started/overview' },
+      { label: '评论', href: '/comments/getting-started/overview' },
+      { label: '对比', href: '/compare/getting-started/overview' },
+      { label: '可组合文档', href: '/composable-docs/slots/getting-started/overview' },
       {
-        label: 'Tracked Changes',
+        label: '修订',
         href: '/tracked-changes/getting-started/overview',
       },
-      { label: 'AI Toolkit', href: '/ai/ai-toolkit/overview' },
-      { label: 'Snapshots', href: '/collaboration/documents/snapshot' },
-      { label: 'Conversion', href: '/conversion/getting-started/overview' },
-      { label: 'Pages', href: '/pages/getting-started/overview' },
+      { label: 'AI 工具包', href: '/ai/ai-toolkit/overview' },
+      { label: '快照', href: '/collaboration/documents/snapshot' },
+      { label: '转换', href: '/conversion/getting-started/overview' },
+      { label: '页面', href: '/pages/getting-started/overview' },
     ],
   },
   {
-    label: 'Others',
+    label: '其他',
     items: [
-      { label: 'Guides', href: '/guides' },
-      { label: 'Examples', href: '/examples' },
-      { label: 'UI Components', href: '/ui-components/getting-started/overview' },
-      { label: 'Website', href: 'https://tiptap.dev', target: '_blank' },
+      { label: '指南', href: '/guides' },
+      { label: '示例', href: '/examples' },
+      { label: 'UI 组件', href: '/ui-components/getting-started/overview' },
+      { label: '网站', href: 'https://tiptap.dev', target: '_blank' },
     ],
   },
 ]
@@ -67,7 +67,7 @@ export const MobileNavigationDropdown = () => {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <NavLinkButton className={buttonClass}>
-          {activeItem?.label || 'All docs'}
+          {activeItem?.label || '所有文档'}
           <ChevronDownIcon className="w-3 h-3" />
         </NavLinkButton>
       </DropdownMenu.Trigger>
@@ -95,7 +95,7 @@ export const MobileNavigationDropdown = () => {
               className="text-center justify-center items-center"
               hideIcon
             >
-              Sign up
+              注册
             </NavLink>
           </div>
         </DropdownMenu.Content>
