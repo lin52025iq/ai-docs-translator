@@ -25,8 +25,8 @@ type Props = {
 }
 
 /**
- * Helper function to load MDX file for a given path.
- * Cached per-request to avoid duplicate file checks and imports between generateMetadata and page component.
+ * 根据给定路径加载 MDX 文件的辅助函数。
+ * 按请求缓存，避免 generateMetadata 和页面组件重复检查文件和导入模块。
  */
 const loadPageMdx = cache(async (markdownPath: string) => {
   const directPath = `${markdownPath}.mdx`
@@ -120,7 +120,7 @@ export default async function MarkdownPage({ params }: Props) {
       ['high', 'critical'].includes(pageMdx.frontmatter.incident.severity) ? (
         <div className="mt-6">
           <Tag variant="warning">
-            Severity:{' '}
+            严重程度：{' '}
             {pageMdx.frontmatter.incident.severity.charAt(0).toUpperCase() +
               pageMdx.frontmatter.incident.severity.slice(1)}
           </Tag>
@@ -140,7 +140,7 @@ export default async function MarkdownPage({ params }: Props) {
         />
       ) : null}
       {headerDemo ? (
-        // The header shows the editor first; its code is one click away
+        // 页眉中会优先显示编辑器，点击一次即可查看其代码
         <div className="mt-8 [&>div]:my-0">
           <DemoViewer
             path={headerDemo.path}
@@ -179,7 +179,7 @@ export default async function MarkdownPage({ params }: Props) {
       <Layout.Wrapper>
         {sidebar.sidebarConfig ? <Layout.Sidebar config={sidebar.sidebarConfig} /> : null}
         {headerDemo ? (
-          // A demo in the header spans the content and the table of contents, which start below it
+          // 页眉中的演示会横跨内容区和目录，这两者从演示下方开始
           <div className="flex-1 min-w-0 self-start">
             <div className="px-2 sm:px-6 lg:pl-0 lg:pr-12 xl:pr-3 pt-6 sm:pt-8 lg:pt-10">
               {header}
@@ -189,7 +189,7 @@ export default async function MarkdownPage({ params }: Props) {
                 {content}
               </Layout.Content>
               {showSecondarySidebar ? (
-                // Starts level with the content, and keeps the usual gap below the top bar once it sticks
+                // 与内容区顶部对齐；吸附后在顶部栏下方保留常规间距
                 <Layout.SecondarySidebar className="pt-0 top-[5.75rem] h-[calc(100vh-6.25rem)]" />
               ) : null}
             </div>
