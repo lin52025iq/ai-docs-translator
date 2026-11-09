@@ -1,37 +1,37 @@
 ---
-title: Events in Tiptap
+title: Tiptap 中的事件
 meta:
-  title: Events in Tiptap | Tiptap Editor Docs
-  description: Use and handle various events in Tiptap, including creation, updates, focus, blur, and destruction. More in the docs!
-  category: Editor
+  title: Tiptap 中的事件 | Tiptap 编辑器文档
+  description: 使用和处理 Tiptap 中的各种事件，包括创建、更新、焦点、失焦和销毁。更多内容请参阅文档！
+  category: 编辑器
 ---
 
-The editor fires a few different events that you can hook into. Let’s have a look at all the available events first.
+编辑器会触发多种事件，你可以监听这些事件。先来看看所有可用的事件。
 
-## List of available events
+## 可用事件列表
 
-| Event Name        | Description                                                                                                   |
+| 事件名称          | 描述                                                                                                         |
 | ----------------- | ------------------------------------------------------------------------------------------------------------- |
-| `beforeCreate`    | Before the editor view is created.                                                                            |
-| `create`          | When the editor is fully initialized and ready.                                                               |
-| `update`          | When there is a change in the content.                                                                        |
-| `selectionUpdate` | When the selection changes within the editor.                                                                 |
-| `transaction`     | When the editor state changes due to any operation.                                                           |
-| `focus`           | When the editor gains focus.                                                                                  |
-| `blur`            | When the editor loses focus.                                                                                  |
-| `destroy`         | When the editor instance is being destroyed.                                                                  |
-| `paste`           | When content is pasted into the editor.                                                                       |
-| `drop`            | When content is dropped into the editor.                                                                      |
-| `delete`          | When content is deleted from the editor.                                                                      |
-| `contentError`    | The content does not match the schema. [Read more here](/editor/core-concepts/schema#invalid-schema-handling) |
+| `beforeCreate`    | 编辑器视图创建之前。                                                                                          |
+| `create`          | 编辑器完成初始化并准备就绪时。                                                                                |
+| `update`          | 内容发生变化时。                                                                                              |
+| `selectionUpdate` | 编辑器中的选区发生变化时。                                                                                    |
+| `transaction`     | 由于任何操作导致编辑器状态发生变化时。                                                                        |
+| `focus`           | 编辑器获得焦点时。                                                                                            |
+| `blur`            | 编辑器失去焦点时。                                                                                            |
+| `destroy`         | 编辑器实例即将销毁时。                                                                                        |
+| `paste`           | 内容粘贴到编辑器中时。                                                                                        |
+| `drop`            | 内容拖放到编辑器中时。                                                                                        |
+| `delete`          | 从编辑器中删除内容时。                                                                                        |
+| `contentError`    | 内容与模式不匹配时。[点击此处了解更多](/editor/core-concepts/schema#invalid-schema-handling) |
 
-## Register event listeners
+## 注册事件监听器
 
-There are three ways to register event listeners.
+注册事件监听器有三种方式。
 
-### Option 1: Configuration
+### 方式 1：配置
 
-You can define your event listeners on a new editor instance right-away:
+你可以在新建编辑器实例时立即定义事件监听器：
 
 ```js
 const editor = new Editor({
@@ -74,11 +74,11 @@ const editor = new Editor({
 })
 ```
 
-### Option 2: Binding
+### 方式 2：绑定
 
-Or you can register your event listeners on a running editor instance:
+你也可以在正在运行的编辑器实例上注册事件监听器：
 
-#### Bind event listeners
+#### 绑定事件监听器
 
 ```js
 editor.on('beforeCreate', ({ editor }) => {
@@ -130,9 +130,9 @@ editor.on('contentError', ({ editor, error, disableCollaboration }) => {
 })
 ```
 
-#### Unbind event listeners
+#### 解绑事件监听器
 
-If you need to unbind those event listeners at some point, you should register your event listeners with `.on()` and unbind them with `.off()` then.
+如果之后需要解绑这些事件监听器，请使用 `.on()` 注册，再使用 `.off()` 解绑。
 
 ```js
 const onUpdate = () => {
@@ -146,9 +146,9 @@ editor.on('update', onUpdate)
 editor.off('update', onUpdate)
 ```
 
-### Option 3: Extensions
+### 方式 3：扩展
 
-Moving your event listeners to custom extensions (or nodes, or marks) is also possible. Here’s how that would look like:
+你也可以将事件监听器移到自定义扩展（或节点、标记）中。示例如下：
 
 ```js
 import { Extension } from '@tiptap/core'
