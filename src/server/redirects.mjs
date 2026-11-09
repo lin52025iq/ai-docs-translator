@@ -1,10 +1,10 @@
-// Shared redirect map.
-// Consumed by next.config.mjs redirects() AND the markdown resolver
-// (src/server/markdown) so that `.md` requests honor the same 301s.
+// 共享重定向映射。
+// 由 next.config.mjs 中的 redirects() 和 markdown 解析器
+//（src/server/markdown）共同使用，使 `.md` 请求遵循相同的 301 重定向。
 
 /** @type {Array<{source: string, destination: string, permanent: boolean}>} */
 export const redirects = [
-  // The Diagrams live demo moved onto the overview
+  // Diagrams 的在线演示已移至概览页
   {
     source: '/diagrams/getting-started/live-demo',
     destination: '/diagrams/getting-started/overview',
@@ -240,8 +240,8 @@ export const redirects = [
     destination: '/ui-components/components/blockquote-button',
     permanent: true,
   },
-  // Conversion docs restructure: renamed pages (live origin paths → new paths)
-  // Import: renamed files
+  // 转换文档结构调整：重命名页面（线上原路径 → 新路径）
+  // 导入：重命名文件
   {
     source: '/conversion/import/docx/editor-import',
     destination: '/conversion/import/docx/editor-extension',
@@ -267,7 +267,7 @@ export const redirects = [
     destination: '/conversion/import/docx/convertkit',
     permanent: true,
   },
-  // Export: renamed files (editor-export → editor-extension)
+  // 导出：重命名文件（editor-export → editor-extension）
   {
     source: '/conversion/export/docx/editor-export',
     destination: '/conversion/export/docx/editor-extension',
@@ -298,7 +298,7 @@ export const redirects = [
     destination: '/conversion/export/markdown/editor-extension',
     permanent: true,
   },
-  // Export: renamed deep guide files
+  // 导出：重命名深入指南文件
   {
     source: '/conversion/export/docx/custom-node-conversion',
     destination: '/conversion/export/docx/custom-nodes',
@@ -374,8 +374,8 @@ export const redirects = [
     destination: '/conversion/export/doc/page-layout',
     permanent: true,
   },
-  // The redirects below are temporary and should be moved to the reverse proxy
-  // TODO: add these redirects to the reverse proxy
+  // 以下重定向是临时的，应移至反向代理
+  // TODO：将这些重定向添加到反向代理
   {
     source: '/content-ai/capabilities/agent/features/state-management',
     destination: '/ai/deprecated/agent/features/state',
@@ -427,7 +427,7 @@ export const redirects = [
     permanent: true,
   },
   /*
-    TODO DF: Commented this out during the SAIT launch because these destination linkes were already broken on main.
+    TODO DF：SAIT 发布期间将此部分注释掉，因为这些目标链接在 main 分支上已失效。
   {
     source: '/content-ai/capabilities/ai-toolkit/changelog/ai-toolkit',
     destination: '/resources/changelog/pro-ai-toolkit',
@@ -469,7 +469,7 @@ export const redirects = [
     destination: '/ai/ai-toolkit/client/advanced-guides/ai-engineering',
     permanent: true,
   },
-  // Guides section moved to Agents
+  // Guides 部分已移至 Agents
   {
     source: '/content-ai/capabilities/ai-toolkit/guides/ai-agent-chatbot',
     destination: '/ai/ai-toolkit/client/agents/ai-agent-chatbot',
@@ -495,13 +495,13 @@ export const redirects = [
     destination: '/ai/ai-toolkit/client/agents/streaming',
     permanent: true,
   },
-  // Live demo moved to advanced-guides
+  // 在线演示已移至 advanced-guides
   {
     source: '/content-ai/capabilities/ai-toolkit/live-demo',
     destination: '/ai/ai-toolkit/client/advanced-guides/live-demo',
     permanent: true,
   },
-  // Advanced guides moved to agents
+  // Advanced guides 已移至 Agents
   {
     source: '/content-ai/capabilities/ai-toolkit/advanced-guides/comments',
     destination: '/ai/ai-toolkit/client/agents/comments',
@@ -522,7 +522,7 @@ export const redirects = [
     destination: '/ai/ai-toolkit/client/agents/schema-awareness',
     permanent: true,
   },
-  // Tools section moved under agents
+  // Tools 部分已移至 Agents 下
   {
     source: '/content-ai/capabilities/ai-toolkit/tools/available-tools',
     destination: '/ai/ai-toolkit/client/agents/tools',
@@ -558,7 +558,7 @@ export const redirects = [
     destination: '/ai/ai-toolkit/client/agents/tools/other-providers',
     permanent: true,
   },
-  // Primitives renamed to API reference
+  // Primitives 已重命名为 API reference
   {
     source: '/content-ai/capabilities/ai-toolkit/primitives/execute-tool',
     destination: '/ai/ai-toolkit/client/api-reference/execute-tool',
@@ -629,7 +629,7 @@ export const redirects = [
     destination: '/ai/ai-toolkit/client/api-reference/workflows',
     permanent: true,
   },
-  // Migration guides moved under advanced-guides
+  // 迁移指南已移至 advanced-guides 下
   {
     source: '/content-ai/capabilities/ai-toolkit/migration-guides',
     destination: '/ai/ai-toolkit/client/advanced-guides/migration-guides',
@@ -655,8 +655,8 @@ export const redirects = [
     destination: '/ai/ai-toolkit/client/advanced-guides/migration-guides/ai-assistant',
     permanent: true,
   },
-  // END AI Toolkit redirects
-  // Server AI Toolkit redirects
+  // AI Toolkit 重定向结束
+  // Server AI Toolkit 重定向
   {
     source: '/content-ai/capabilities/server-ai-toolkit/advanced-guides',
     destination: '/ai/ai-toolkit/advanced-guides/custom-nodes',
@@ -702,7 +702,7 @@ export const redirects = [
     destination: '/ai/ai-toolkit/overview',
     permanent: true,
   },
-  // END Server AI Toolkit redirects
+  // Server AI Toolkit 重定向结束
   {
     source: '/content-ai/resources/collaboration',
     destination: '/ai/deprecated/resources/collaboration',
@@ -738,7 +738,7 @@ export const redirects = [
     destination: '/pages/core-concepts/page-break-node',
     permanent: true,
   },
-  // More SAIT launch redirects
+  // 更多 SAIT 发布重定向
   {
     source: '/content-ai/getting-started/overview',
     destination: '/ai/ai-toolkit/overview',
@@ -849,5 +849,5 @@ export const redirects = [
     destination: '/ai/ai-toolkit/client/advanced-guides/live-demo',
     permanent: true,
   },
-  // End more SAIT launch redirects
+  // 更多 SAIT 发布重定向结束
 ]
