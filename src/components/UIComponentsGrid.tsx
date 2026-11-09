@@ -19,13 +19,13 @@ function UIComponentCard({ comp }: { comp: UIComponentMetaWithUrl }) {
         <div className="flex items-center justify-between gap-2 mb-5">
           <IconByName name={comp.icon} className="w-3.5 h-3.5" />
           <div className="ml-auto flex items-center gap-1">
-            {comp.isNew ? <Tag variant="info">New</Tag> : null}
+            {comp.isNew ? <Tag variant="info">新</Tag> : null}
           </div>
         </div>
         <div className="font-semibold text-black leading-[140%]">{comp.name}</div>
         <div className="mt-2 leading-[140%] text-grayAlpha-600">{comp.description}</div>
         <div className="mt-5 flex items-center flex-wrap gap-1">
-          {comp.isOpen ? <Tag>Open Source</Tag> : null}
+          {comp.isOpen ? <Tag>开源</Tag> : null}
         </div>
       </Link>
     </Card>
@@ -55,10 +55,10 @@ export function UIComponentsGrid({
 }: UIComponentsGridProps) {
   return (
     <div className="grid gap-20 first:mt-0 last:mb-0">
-      <UIComponentGroup comps={components} title="Components" />
-      <UIComponentGroup comps={utilsComponents} title="Utils Components" />
-      <UIComponentGroup comps={nodeComponents} title="Node Components" />
-      <UIComponentGroup comps={primitives} title="Primitives" />
+      <UIComponentGroup comps={components} title="组件" />
+      <UIComponentGroup comps={utilsComponents} title="工具组件" />
+      <UIComponentGroup comps={nodeComponents} title="节点组件" />
+      <UIComponentGroup comps={primitives} title="基础组件" />
     </div>
   )
 }
