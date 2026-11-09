@@ -15,7 +15,7 @@ export const PageEditStatus = ({ contentPath }: { contentPath?: string }) => {
           target="_blank"
           rel="nofollow noreferrer"
         >
-          Edit this page on GitHub
+          在 GitHub 上编辑此页面
         </Link>
       </Button>
     </>
