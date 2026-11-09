@@ -9,16 +9,16 @@ import { NavLinkButton } from './ui/NavLinkButton'
 import { cn } from '@/utils'
 
 const options = [
-  { label: 'Editor', href: '/editor/getting-started/overview', dividerBelow: true },
-  { label: 'AI Toolkit', href: '/ai/ai-toolkit/overview' },
-  { label: 'Collaboration', href: '/collaboration/getting-started/overview' },
-  { label: 'Comments', href: '/comments/getting-started/overview' },
-  { label: 'Compare', href: '/compare/getting-started/overview' },
-  { label: 'Composable Docs', href: '/composable-docs/slots/getting-started/overview' },
-  { label: 'Conversion', href: '/conversion/getting-started/overview' },
-  { label: 'Pages', href: '/pages/getting-started/overview' },
-  { label: 'Snapshots', href: '/collaboration/documents/snapshot' },
-  { label: 'Tracked Changes', href: '/tracked-changes/getting-started/overview' },
+  { label: '编辑器', href: '/editor/getting-started/overview', dividerBelow: true },
+  { label: 'AI 工具包', href: '/ai/ai-toolkit/overview' },
+  { label: '协作', href: '/collaboration/getting-started/overview' },
+  { label: '评论', href: '/comments/getting-started/overview' },
+  { label: '比较', href: '/compare/getting-started/overview' },
+  { label: '可组合文档', href: '/composable-docs/slots/getting-started/overview' },
+  { label: '转换', href: '/conversion/getting-started/overview' },
+  { label: '页面', href: '/pages/getting-started/overview' },
+  { label: '快照', href: '/collaboration/documents/snapshot' },
+  { label: '修订', href: '/tracked-changes/getting-started/overview' },
 ]
 
 export const ProductDropdown = () => {
@@ -41,7 +41,7 @@ export const ProductDropdown = () => {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <NavLinkButton className={buttonClass}>
-          {activeItem?.label || 'All docs'}
+          {activeItem?.label || '所有文档'}
           <ChevronDownIcon className="w-3 h-3" />
         </NavLinkButton>
       </DropdownMenu.Trigger>
@@ -49,7 +49,7 @@ export const ProductDropdown = () => {
         <DropdownMenu.Content className="flex flex-col gap-6 z-50 py-6 px-2 lg:py-3 text-black bg-white border rounded-lg shadow-md border-grayAlpha-100 w-[14rem] lg:w-[11.5rem]">
           <div>
             <div className="uppercase font-bold leading-[120%] text-xs mb-3 px-2 block lg:hidden">
-              Documentations
+              文档
             </div>
             {options.map((option) => (
               <Fragment key={option.href}>
@@ -64,13 +64,13 @@ export const ProductDropdown = () => {
           </div>
           <div className="block lg:hidden">
             <div className="uppercase font-bold leading-[120%] text-xs px-2 mb-3 block lg:hidden">
-              Others
+              其他
             </div>
-            <NavLink href="/guides">Guides</NavLink>
-            <NavLink href="/examples">Examples</NavLink>
-            <NavLink href="/ui-components/getting-started/overview">UI Components</NavLink>
+            <NavLink href="/guides">指南</NavLink>
+            <NavLink href="/examples">示例</NavLink>
+            <NavLink href="/ui-components/getting-started/overview">UI 组件</NavLink>
             <NavLink href="https://tiptap.dev" target="_blank">
-              Website
+              网站
             </NavLink>
           </div>
           <div className="block lg:hidden">
@@ -81,7 +81,7 @@ export const ProductDropdown = () => {
               className="text-center justify-center items-center"
               hideIcon
             >
-              Sign up
+              注册
             </NavLink>
           </div>
         </DropdownMenu.Content>
