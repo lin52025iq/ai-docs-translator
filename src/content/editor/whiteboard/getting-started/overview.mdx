@@ -1,48 +1,47 @@
 ---
-title: Whiteboard
+title: 白板
 tags:
   - type: alpha
   - type: restricted
 meta:
-  title: Whiteboard | Tiptap Editor Docs
-  description: Add a whiteboard with sticky notes, shapes, arrows, drawings, frames, doc frames and images to your app. The whole board is one Tiptap document.
+  title: 白板 | Tiptap 编辑器文档
+  description: 为应用添加白板，其中包含便利贴、形状、箭头、绘图、画框、文档框和图片。整个白板是一个 Tiptap 文档。
   category: Editor
 ---
 
 import { Callout } from '@/components/ui/Callout'
 import { CodeDemo } from '@/components/CodeDemo'
 
-With the **Whiteboard** extension, a Tiptap editor becomes a whiteboard. Users add sticky notes, shapes, text, arrows, pen lines, frames, doc frames and images to a board, and pan and zoom around it. The extension is headless: it draws the board and its shapes, and your app adds the toolbar and the stage around the board.
+使用 **Whiteboard** 扩展，Tiptap 编辑器即可变成白板。用户可以在白板上添加便利贴、形状、文本、箭头、笔迹、画框、文档框和图片，并在白板上平移和缩放。该扩展采用无头模式：它负责绘制白板及其形状，而你的应用负责添加工具栏和白板周围的舞台。
 
 <CodeDemo isPro path="/Extensions/Whiteboard" />
 
-## Install
+## 安装
 
-First, [contact our team](https://tiptap.dev/contact-sales?form=pilot-program) to join the Tiptap Whiteboard pilot program.
+首先，[联系我们的团队](https://tiptap.dev/contact-sales?form=pilot-program)，加入 Tiptap Whiteboard 试点计划。
 
-Then, configure your package manager by following the [private registry guide](/guides/pro-extensions).
+然后，按照[私有注册表指南](/guides/pro-extensions)配置包管理器。
 
-Then, install the package:
+接着，安装软件包：
 
 ```bash
 npm install @tiptap/core @tiptap/pm @tiptap-pro/extension-whiteboard
 ```
 
-<Callout title="Required Tiptap version" variant="warning" hasCalloutAfter>
-  Make sure all `@tiptap/*` packages are version `3.22.5` or higher and on one version, also the
-  text extensions that the package installs, like `@tiptap/extension-bold`.
+<Callout title="所需的 Tiptap 版本" variant="warning" hasCalloutAfter>
+  确保所有 `@tiptap/*` 软件包的版本均为 `3.22.5` 或更高，且版本一致；该软件包安装的文本扩展（例如 `@tiptap/extension-bold`）也要满足这一要求。
 </Callout>
 
-<Callout title="Leave out Document and StarterKit" variant="warning" hasCalloutBefore>
-  `WhiteboardKit` brings its own document, text extensions and undo, so don't add `Document` or
-  `StarterKit` to a board's editor.
+<Callout title="不要添加 Document 和 StarterKit" variant="warning" hasCalloutBefore>
+  `WhiteboardKit` 自带文档、文本扩展和撤销功能，因此不要在白板编辑器中添加 `Document` 或
+  `StarterKit`。
 </Callout>
 
-Collaboration is optional and lives in `@tiptap-pro/extension-whiteboard/collaboration`, the only entry that needs Yjs. See [Collaboration on the board](/editor/whiteboard/guides/collaboration).
+协作功能是可选的，位于 `@tiptap-pro/extension-whiteboard/collaboration` 中；只有这个入口需要 Yjs。请参阅[白板协作](/editor/whiteboard/guides/collaboration)。
 
-## Basic setup
+## 基本设置
 
-A board needs two elements on your page: the stage, which takes pointer and wheel events, and the viewport inside it, which the camera moves. Create the editor in `viewport`, and connect it to `stage` with `attachStage`:
+页面中需要两个元素来承载白板：接收指针和滚轮事件的舞台，以及舞台内部由摄像机移动的视口。在 `viewport` 中创建编辑器，并使用 `attachStage` 将其连接到 `stage`：
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -63,9 +62,9 @@ const detach = attachStage({
 })
 ```
 
-`attachStage` calls `updateCamera` with a function that turns the old camera into the new one, and returns a function that detaches everything again.
+`attachStage` 会调用 `updateCamera`，并传入一个将旧摄像机状态转换为新状态的函数；它还会返回一个用于解除所有连接的函数。
 
-The stage needs `position: relative`, `overflow: clip` and `touch-action: none`. The viewport sits in its top left corner, with `position: absolute`, `top: 0`, `left: 0` and `transform-origin: 0 0`:
+舞台需要设置 `position: relative`、`overflow: clip` 和 `touch-action: none`。视口位于舞台左上角，并设置 `position: absolute`、`top: 0`、`left: 0` 和 `transform-origin: 0 0`：
 
 ```css
 .stage {
@@ -88,28 +87,28 @@ The stage needs `position: relative`, `overflow: clip` and `touch-action: none`.
 }
 ```
 
-## How it works
+## 工作原理
 
-### The board is one Tiptap document
+### 整个白板是一个 Tiptap 文档
 
-`WhiteboardKit` brings its own top node. The document holds one `board` node, and the board holds the shapes. So a board loads, saves and syncs like any other Tiptap document, for example as JSON or through Yjs.
+`WhiteboardKit` 自带顶层节点。文档包含一个 `board` 节点，而该节点包含各个形状。因此，白板的加载、保存和同步方式与其他 Tiptap 文档相同，例如可以保存为 JSON，或通过 Yjs 同步。
 
-### Shapes are nodes
+### 形状是节点
 
-Each shape is a node on the board. Its position and size are attributes, in board units. Sticky notes, geometric shapes and free text hold paragraphs and lists, and users edit their text like any other content. Arrows hold paragraphs as their label. Pen lines, frames, doc frames and images are atom nodes. A frame groups the shapes that name it in their `frameId`, see [Frames](/editor/whiteboard/guides/frames).
+白板上的每个形状都是一个节点。其位置和尺寸以白板单位作为属性。便利贴、几何形状和自由文本可以包含段落和列表，用户可以像编辑其他内容一样编辑其中的文本。箭头会将段落作为标签。笔迹、画框、文档框和图片都是原子节点。画框会将 `frameId` 指向该画框的形状归为一组，详见[画框](/editor/whiteboard/guides/frames)。
 
-Every shape has an `id`, and the commands find shapes by their ids. The board keeps the selected shapes apart from the text selection, also by id. While no text is edited, keys act on the board: they choose tools, and move, delete or restack the selected shapes.
+每个形状都有一个 `id`，命令通过这些 ID 查找形状。白板通过 ID 单独记录选中的形状，与文本选区分开。当没有正在编辑文本时，按键会作用于白板：选择工具，并移动、删除或调整选中形状的堆叠顺序。
 
-### A camera pans and zooms
+### 摄像机可以平移和缩放
 
-The stage is the element around the board. Inside it, a viewport element holds the editor. The camera, `{ x, y, zoom }`, is part of your app's state. `attachStage` turns pointer and wheel events and shortcuts in the stage into camera changes, and your app moves the viewport with `toCssTransform(camera)`. See [Stage and camera](/editor/whiteboard/guides/stage-and-camera).
+舞台是白板外围的元素，其中的视口元素承载编辑器。`{ x, y, zoom }` 摄像机状态由你的应用管理。`attachStage` 会将舞台中的指针和滚轮事件及快捷键转换为摄像机状态变化，而你的应用则使用 `toCssTransform(camera)` 移动视口。请参阅[舞台和摄像机](/editor/whiteboard/guides/stage-and-camera)。
 
-### Doc frames hold documents of their own
+### 文档框可容纳独立文档
 
-A doc frame is a shape that shows a rich text document in an editor of its own. The board stores the frame and the id of its document. Your app keeps the documents and creates their editors. See [Doc frames](/editor/whiteboard/guides/doc-frames).
+文档框是一种形状，可在自己的编辑器中显示富文本文档。白板会存储该画框及其文档 ID。你的应用负责保存这些文档并创建相应的编辑器。请参阅[文档框](/editor/whiteboard/guides/doc-frames)。
 
-## Next steps
+## 后续步骤
 
-To build the board into your app, [set up a board in React](/editor/whiteboard/guides/react), with buttons for the tools. Then, add and change [shapes, and choose tools](/editor/whiteboard/guides/shapes-and-tools), show documents on the board with [doc frames](/editor/whiteboard/guides/doc-frames), let users paste and drop [images](/editor/whiteboard/guides/images), draw components of your app in [custom shapes](/editor/whiteboard/guides/custom-shapes), and save boards as files or images with [export and import](/editor/whiteboard/guides/export-and-import).
+要在应用中构建白板，请先[在 React 中设置白板](/editor/whiteboard/guides/react)，并添加工具按钮。然后，添加和修改[形状并选择工具](/editor/whiteboard/guides/shapes-and-tools)，使用[文档框](/editor/whiteboard/guides/doc-frames)在白板上显示文档，允许用户粘贴和拖放[图片](/editor/whiteboard/guides/images)，通过[自定义形状](/editor/whiteboard/guides/custom-shapes)绘制应用组件，并使用[导出和导入](/editor/whiteboard/guides/export-and-import)将白板保存为文件或图片。
 
-To edit a board together, add [collaboration](/editor/whiteboard/guides/collaboration). To let an AI add notes, draw diagrams and write documents on the board, use the [Server AI Toolkit](/ai/ai-toolkit/agents/whiteboard).
+要共同编辑白板，请添加[协作功能](/editor/whiteboard/guides/collaboration)。要让 AI 在白板上添加便笺、绘制图表和编写文档，请使用 [Server AI Toolkit](/ai/ai-toolkit/agents/whiteboard)。
