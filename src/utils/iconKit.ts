@@ -11,7 +11,7 @@ export const getIcon = (name?: string | null) => {
   return iconKit[name]
 }
 
-/** Renders the icon called `name`, or the Quote icon when there is none. */
+/** 渲染名为 `name` 的图标；未提供时使用 Quote 图标。 */
 export const IconByName = ({
   name,
   ...props
