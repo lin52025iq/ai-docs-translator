@@ -1,19 +1,19 @@
 ---
-title: Split view
+title: 并排视图
 meta:
-  title: Split view | Tiptap AI Toolkit
-  description: Build a side-by-side diff view to compare documents with visual alignment.
+  title: 并排视图 | Tiptap AI Toolkit
+  description: 构建并排差异视图，通过视觉对齐比较文档。
   category: AI Toolkit
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-<Callout title="Deprecated" variant="warning">
-  Use the [Split View extension](/compare/guides/split-view) instead.
+<Callout title="已弃用" variant="warning">
+  请改用 [Split View 扩展](/compare/guides/split-view)。
 </Callout>
 
-Build a side-by-side comparison that shows the original and AI-modified versions of a document next to each other. Each change block is highlighted and can be individually accepted or rejected. Both panels stay vertically aligned via automatically computed spacers.
+创建并排比较视图，同时展示文档的原始版本和 AI 修改后的版本。每个更改块都会高亮显示，并且可以单独接受或拒绝。系统会自动计算占位间隔，使两个面板保持垂直对齐。
 
 <CodeDemo
   isPro
@@ -21,15 +21,15 @@ Build a side-by-side comparison that shows the original and AI-modified versions
   src="https://ai-toolkit-demos.vercel.app/split-view"
 />
 
-## How it works
+## 工作原理
 
-The split view uses three editors: a **main editor** (holds the document and tracked changes, typically hidden during split view), a **left editor** (shows the original), and a **right editor** (shows the modified version). Two separate panel editors are required because each loads a different document snapshot with different decorations.
+并排视图使用三个编辑器：**主编辑器**（保存文档和跟踪的更改，通常在并排视图中隐藏）、**左侧编辑器**（显示原始版本）和**右侧编辑器**（显示修改后的版本）。需要两个独立的面板编辑器，因为它们分别加载带有不同装饰的文档快照。
 
-`createSplitView()` wires all three together. It derives the before/after snapshots from the main editor's tracked changes, loads them into the panel editors, renders highlights, and keeps both panels vertically aligned with spacers. Scroll sync and hover highlighting are handled automatically when scroll containers are provided.
+`createSplitView()` 会将这三个编辑器关联起来。它会根据主编辑器中跟踪的更改生成更改前后的快照，将快照加载到面板编辑器中，渲染高亮，并通过占位间隔使两个面板保持垂直对齐。提供滚动容器后，滚动同步和悬停高亮会自动处理。
 
-## Set up the editors
+## 设置编辑器
 
-The main editor needs `AiToolkit` and `TrackedChanges`. The panel editors only need `AiToolkit` and are read-only.
+主编辑器需要 `AiToolkit` 和 `TrackedChanges`。面板编辑器只需要 `AiToolkit`，并且是只读的。
 
 ```ts
 import { useEditor } from '@tiptap/react'
@@ -61,7 +61,7 @@ const rightEditor = useEditor({
 })
 ```
 
-## Create the split view
+## 创建并排视图
 
 ```ts
 import { getAiToolkit } from '@tiptap-pro/client-ai-toolkit'
@@ -77,7 +77,7 @@ const splitView = getAiToolkit(mainEditor).createSplitView({
 return () => splitView.destroy()
 ```
 
-## Accept and reject changes
+## 接受和拒绝更改
 
 ```ts
 // Accept or reject a single entry
@@ -89,7 +89,7 @@ splitView.acceptAll()
 splitView.rejectAll()
 ```
 
-To react when the list of entries changes:
+若要在条目列表发生变化时作出响应：
 
 ```ts
 splitView.on('sync', (entries) => {
@@ -132,7 +132,7 @@ splitView.on('sync', (entries) => {
 }
 ```
 
-## Example demo
+## 演示示例
 
 <CodeDemo
   isPro
@@ -140,7 +140,7 @@ splitView.on('sync', (entries) => {
   src="https://ai-toolkit-demos.vercel.app/split-view"
 />
 
-## Next steps
+## 后续步骤
 
-- [Split view API reference](/ai/ai-toolkit/client/api-reference/split-view)
-- [Compare documents](/ai/ai-toolkit/client/advanced-guides/compare-documents): for the inline single-editor approach
+- [并排视图 API 参考](/ai/ai-toolkit/client/api-reference/split-view)
+- [比较文档](/ai/ai-toolkit/client/advanced-guides/compare-documents)：适用于单编辑器内联方式
