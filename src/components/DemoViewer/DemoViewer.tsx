@@ -43,39 +43,39 @@ import { DEMO_URL, PRO_DEMO_URL } from '@/utils/constants'
 import { cn } from '@/utils'
 
 export type DemoViewerProps = {
-  /** The demo in the demos app, such as `/Extensions/Comments`; may carry a query. Not needed with `src`. */
+  /** demos 应用中的演示，例如 `/Extensions/Comments`；可以带查询参数。使用 `src` 时不需要此项。 */
   path?: string
   isPro?: boolean
-  /** A full URL instead of `path`: shown as it is, without code, theme or framework. */
+  /** 用完整 URL 代替 `path`：按原样显示，不提供代码、主题或框架选项。 */
   src?: string
-  /** A fixed height of 15rem, unless `height` is set. */
+  /** 固定高度为 15rem，除非设置了 `height`。 */
   isSmall?: boolean
-  /** A fixed height of 70vh (31rem on wider screens), unless `height` is set. */
+  /** 固定高度为 70vh（宽屏上为 31rem），除非设置了 `height`。 */
   isLarge?: boolean
   /**
-   * `auto` (the default) follows the demo's own height, up to `maxHeight`; a number (pixels)
-   * or a CSS length fixes it. Demos apps without the bridge get 24rem.
+   * `auto`（默认值）会根据演示自身的高度调整，但不超过 `maxHeight`；数字（像素）
+   * 或 CSS 长度则会固定高度。没有 bridge 的 demos 应用高度为 24rem。
    */
   height?: 'auto' | number | string
-  /** The most `auto` grows to, in pixels. */
+  /** 自动高度的最大值，单位为像素。 */
   maxHeight?: number
-  /** The reader can drag the demo's bottom edge to make it taller or shorter; on unless `false`. */
+  /** 读者可以拖动演示底边来调整高度；除非设为 `false`，否则默认开启。 */
   resizable?: boolean
-  /** What shows first. `both` shows the demo and its code below it. */
+  /** 首先显示的内容。`both` 会在演示下方显示代码。 */
   view?: View
-  /** The code block below the demo. Off, the bar has no Preview / Code / Both either. */
+  /** 演示下方的代码块。关闭后，工具栏也不会显示“预览 / 代码 / 两者”。 */
   code?: boolean
-  /** How much of the code shows below the demo before "Show all": pixels, or `full` for all. */
+  /** 演示下方显示多少代码后出现“显示全部”：像素值，或用 `full` 显示全部。 */
   codeHeight?: number | 'full'
-  /** The frameworks the code offers, such as `"React"` or `"React, Vue"`. One hides the switch. */
+  /** 代码支持的框架，例如 `"React"` 或 `"React, Vue"`。只有一个时会隐藏切换选项。 */
   frameworks?: Framework[] | string
-  /** A light / dark switch for the demo, for demos that are made for both. */
+  /** 浅色 / 深色切换，仅适用于同时支持这两种主题的演示。 */
   themes?: boolean
-  /** A desktop / tablet / phone width switch, for demos of responsive UI. */
+  /** 桌面 / 平板 / 手机宽度切换，用于响应式 UI 演示。 */
   sizes?: boolean
-  /** The Expand button, which opens the demo large over the page with its code beside it; on unless `false`. */
+  /** “展开”按钮，可在页面上方以大尺寸打开演示，并在旁边显示代码；除非设为 `false`，否则默认开启。 */
   expand?: boolean
-  /** A short line at the left of the bar, for a demo without code and so without Preview / Code / Both. */
+  /** 工具栏左侧的简短文字，用于没有代码、因而没有“预览 / 代码 / 两者”选项的演示。 */
   caption?: React.ReactNode
   className?: string
 }
@@ -83,31 +83,31 @@ export type DemoViewerProps = {
 const OPEN_SOURCE_REPO = 'https://github.com/ueberdosis/tiptap/tree/main/demos/src'
 
 const VIEW_OPTIONS: { value: View; label: string; tooltip: string; icon: React.ReactNode }[] = [
-  { value: 'preview', label: 'Preview', tooltip: 'Show the demo', icon: <Eye /> },
-  { value: 'code', label: 'Code', tooltip: 'Show the code', icon: <Code2 /> },
-  { value: 'both', label: 'Both', tooltip: 'Show the demo and its code', icon: <Rows2 /> },
+  { value: 'preview', label: '预览', tooltip: '显示演示', icon: <Eye /> },
+  { value: 'code', label: '代码', tooltip: '显示代码', icon: <Code2 /> },
+  { value: 'both', label: '两者', tooltip: '显示演示及其代码', icon: <Rows2 /> },
 ]
 
 const THEME_OPTIONS: { value: Theme; label: string; icon: React.ReactNode }[] = [
-  { value: 'light', label: 'Light', icon: <Sun /> },
-  { value: 'dark', label: 'Dark', icon: <Moon /> },
+  { value: 'light', label: '浅色', icon: <Sun /> },
+  { value: 'dark', label: '深色', icon: <Moon /> },
 ]
 
 const SIZE_OPTIONS: { value: Size; label: string; icon: React.ReactNode }[] = [
-  { value: 'desktop', label: 'Desktop width', icon: <Monitor /> },
-  { value: 'tablet', label: 'Tablet width', icon: <Tablet /> },
-  { value: 'phone', label: 'Phone width', icon: <Smartphone /> },
+  { value: 'desktop', label: '桌面宽度', icon: <Monitor /> },
+  { value: 'tablet', label: '平板宽度', icon: <Tablet /> },
+  { value: 'phone', label: '手机宽度', icon: <Smartphone /> },
 ]
 
 type Bridge = { state: 'pending' | 'ready' | 'none'; tabs: Framework[]; tab: Framework | null }
 
 /**
- * A demo from the demos app with a bar above it: Preview / Code / Both, light or dark,
- * desktop, tablet or phone width, reset, a link to this state, the demo expanded over the page
- * and the demo alone in a new tab. The code comes from the demo itself (see `DemoFrame`).
+ * 显示来自 demos 应用的演示，并在上方提供工具栏：预览 / 代码 / 两者、浅色或深色主题、
+ * 桌面 / 平板 / 手机宽度、重置、复制当前状态链接、在页面上展开演示，以及在新标签页单独打开演示。
+ * 代码来自演示本身（参见 `DemoFrame`）。
  *
- * React or Vue is one choice for the reader, kept for every demo. A demo is a page per
- * framework, so switching reloads the frame; a document the reader edited goes along.
+ * 读者可以为所有演示选择 React 或 Vue。每个框架的演示都是单独的页面，
+ * 因此切换框架会重新加载框架；读者编辑过的文档也会一并保留。
  */
 export const DemoViewer = ({
   path = '',
@@ -133,7 +133,7 @@ export const DemoViewer = ({
   const demoPath = pathname.replace(/\/$/, '')
   const pathFramework = FRAMEWORKS.find((name) => demoPath.endsWith(`/${name}`))
   const allowed = parseFrameworks(frameworksProp)
-  // A path that ends in a framework, or a page that names one, shows that framework only
+  // 如果路径以框架名结尾，或页面指定了框架，则只显示该框架
   const fixedFramework = pathFramework ?? (allowed.length === 1 ? allowed[0] : undefined)
   const name =
     demoPath
@@ -154,7 +154,7 @@ export const DemoViewer = ({
   const [files, setFiles] = useState<Partial<Record<Framework, DemoFile[]>>>({})
   const [doc, setDoc] = useState<{ json: DemoDocument; edited: boolean } | null>(null)
   const [isExpanded, setIsExpanded] = useState(false)
-  // Expanded has its own view, and opens on both
+  // 展开视图有自己的显示模式，默认同时显示演示和代码
   const [expandedView, setExpandedView] = useState<View>('both')
   const [contentHeight, setContentHeight] = useState<number | null>(null)
   const storedHeight = useStoredHeight(id)
@@ -168,7 +168,7 @@ export const DemoViewer = ({
   const framework = fixedFramework ?? (allowed.includes(wanted) ? wanted : allowed[0])
   const theme = hasThemes ? (themeChoice ?? hashState?.theme ?? 'light') : 'light'
   const size = hasSizes ? (sizeChoice ?? hashState?.size ?? 'desktop') : 'desktop'
-  // The framework the demo actually shows: a demo with React only shows React
+  // 演示实际显示的框架：只有 React 的演示只显示 React
   const shownFramework =
     bridge.tab ??
     (bridge.tabs.length && !bridge.tabs.includes(framework) ? bridge.tabs[0] : framework)
@@ -197,7 +197,7 @@ export const DemoViewer = ({
       ? `${OPEN_SOURCE_REPO}${pathFramework ? demoPath : `${demoPath}/${shownFramework}`}`
       : undefined
 
-  // A link with this demo's state scrolls to it
+  // 带有此演示状态的链接会滚动到该演示
   const isLinked = hashState !== null
   useEffect(() => {
     if (isLinked) {
@@ -225,7 +225,7 @@ export const DemoViewer = ({
     }
   }
 
-  // The expanded frame measures at the dialog's width, so its height is not the inline demo's
+  // 展开框架会按对话框宽度测量，因此它的高度与内嵌演示的高度不同
   const onExpandedBridge = (event: DemoBridgeEvent) => {
     if (event.type !== 'height') onBridge(event)
   }
@@ -235,7 +235,7 @@ export const DemoViewer = ({
       previous.state === 'pending' ? { ...previous, state: 'none' } : previous,
     )
 
-  // A new frame starts in the theme shown now; later changes go to it by message
+  // 新框架会以当前显示的主题启动；之后的更改通过消息发送给它
   const freezeTheme = () => setLoadTheme(null)
 
   const changeFramework = (value: Framework) => {
@@ -262,7 +262,7 @@ export const DemoViewer = ({
   const copyLink = () => {
     const hash = formatHash(id, { view, framework: shownFramework, size, theme })
     clipboard.copy(`${window.location.href.split('#')[0]}${hash}`)
-    toast('Link copied', { duration: 1200 })
+    toast('链接已复制', { duration: 1200 })
   }
 
   const openExpanded = () => {
@@ -273,7 +273,7 @@ export const DemoViewer = ({
 
   const onExpandedChange = (isOpen: boolean) => {
     setIsExpanded(isOpen)
-    // What the reader typed there comes back to the page
+    // 读者在展开视图中输入的内容会同步回页面
     if (!isOpen && expandedEdited.current && doc) {
       inlineHandle.current?.setContent(doc.json)
     }
@@ -285,14 +285,14 @@ export const DemoViewer = ({
       ? allowed.filter((item) => bridge.tabs.includes(item))
       : allowed
 
-  // Dragged, fixed, or the demo's own height (24rem until it says, or without the bridge)
+  // 用户拖动的高度、固定高度，或演示自身的高度（收到通知前为 24rem；没有 bridge 时也为 24rem）
   const frameHeight: number | string =
     dragHeight ??
     (height !== 'auto'
       ? height
       : Math.min(maxHeight, Math.max(120, (hasBridge && contentHeight) || storedHeight || 384)))
 
-  // An auto height shows the demo once it has its height, instead of growing in front of the reader
+  // 自动高度模式下，等演示报告高度后再显示，避免在读者面前不断变高
   const isMeasuring =
     height === 'auto' && dragHeight === null && contentHeight === null && bridge.state !== 'none'
 
@@ -337,7 +337,7 @@ export const DemoViewer = ({
   )
 
   const viewSwitch = (current: View, onChange: (value: View) => void) => (
-    <Segmented label="View">
+    <Segmented label="视图">
       {VIEW_OPTIONS.map((option) => (
         <ControlButton
           key={option.value}
@@ -356,10 +356,10 @@ export const DemoViewer = ({
   )
 
   const bar = (inExpanded: boolean) => (
-    // On phones the bar scrolls sideways instead of wrapping to a second row
+    // 手机屏幕上工具栏可横向滚动，不会换行到第二行
     <div className="flex items-center gap-x-2 gap-y-1.5 sm:flex-wrap max-sm:-mx-1 max-sm:overflow-x-auto max-sm:px-1 max-sm:[scrollbar-width:none] max-sm:[&::-webkit-scrollbar]:hidden">
       {hasCode && !inExpanded ? viewSwitch(view, setViewChoice) : null}
-      {/* The left is the view switch's; a caption only takes it when there is none */}
+      {/* 左侧通常放视图切换；没有视图切换时才放说明文字 */}
       {caption && !hasCode && !inExpanded ? (
         <p className="m-0 min-w-0 flex-1 truncate text-sm text-grayAlpha-600 [&_strong]:font-semibold [&_strong]:text-grayAlpha-900">
           {caption}
@@ -369,27 +369,27 @@ export const DemoViewer = ({
       <div className="ml-auto flex shrink-0 items-center gap-x-2 gap-y-1.5 sm:flex-wrap">
         {hasCode && inExpanded ? (
           <>
-            {/* Expanded always shows the demo; the one question is whether the code is beside it */}
+            {/* 展开视图始终显示演示；唯一的选项是是否在旁边显示代码 */}
             <ControlButton
-              label="Code"
-              tooltip={expandedView === 'both' ? 'Hide the code' : 'Show the code beside the demo'}
+              label="代码"
+              tooltip={expandedView === 'both' ? '隐藏代码' : '在演示旁显示代码'}
               aria-pressed={expandedView === 'both'}
               isActive={expandedView === 'both'}
               onClick={() => setExpandedView(expandedView === 'both' ? 'preview' : 'both')}
             >
               <Code2 />
-              <span className="max-sm:hidden">Code</span>
+              <span className="max-sm:hidden">代码</span>
             </ControlButton>
             <Divider />
           </>
         ) : null}
         {hasBridge && hasThemes ? (
-          <Segmented label="Theme">
+          <Segmented label="主题">
             {THEME_OPTIONS.map((option) => (
               <ControlButton
                 key={option.value}
                 label={option.label}
-                tooltip={`${option.label} demo`}
+                tooltip={`${option.label}主题演示`}
                 aria-pressed={theme === option.value}
                 isActive={theme === option.value}
                 onClick={() => changeTheme(option.value)}
@@ -400,7 +400,7 @@ export const DemoViewer = ({
           </Segmented>
         ) : null}
         {hasSizes ? (
-          <Segmented label="Width" className="max-sm:hidden">
+          <Segmented label="宽度" className="max-sm:hidden">
             {SIZE_OPTIONS.map((option) => (
               <ControlButton
                 key={option.value}
@@ -415,46 +415,46 @@ export const DemoViewer = ({
           </Segmented>
         ) : null}
         <div className="flex items-center gap-0.5">
-          <ControlButton label="Reset" tooltip="Reload the demo" onClick={reset}>
+          <ControlButton label="重置" tooltip="重新加载演示" onClick={reset}>
             <RotateCcw />
           </ControlButton>
           {!src ? (
             <ControlButton
-              label={clipboard.copied ? 'Link copied' : 'Copy link'}
-              tooltip="Copy a link to the demo as shown"
+              label={clipboard.copied ? '链接已复制' : '复制链接'}
+              tooltip="复制当前演示状态的链接"
               onClick={copyLink}
             >
               {clipboard.copied ? <Check /> : <Link />}
             </ControlButton>
           ) : null}
-          {/* The icon actions, then the ones that open the demo elsewhere */}
+          {/* 图标操作按钮，之后是可在其他位置打开演示的按钮 */}
           <Divider />
           {inExpanded || !hasExpand ? null : (
             <ControlButton
-              label="Expand"
-              tooltip="Open large, with the code beside it"
+              label="展开"
+              tooltip="放大打开，并在旁边显示代码"
               onClick={openExpanded}
             >
               <Expand />
-              <span className="max-sm:hidden">Expand</span>
+              <span className="max-sm:hidden">展开</span>
             </ControlButton>
           )}
           <ControlLink
-            label="New tab"
-            tooltip="Open the demo alone in a new tab"
+            label="新标签页"
+            tooltip="在新标签页中单独打开演示"
             tipAlign="end"
             href={newTabUrl}
             target="_blank"
             rel="noopener noreferrer"
           >
             <ExternalLink />
-            <span className="max-sm:hidden">New tab</span>
+            <span className="max-sm:hidden">新标签页</span>
           </ControlLink>
           {inExpanded ? (
             <>
               <Divider />
               <Dialog.Close asChild>
-                <ControlButton label="Close" tooltip="Close (Esc)" tipAlign="end">
+                <ControlButton label="关闭" tooltip="关闭（Esc）" tipAlign="end">
                   <X />
                 </ControlButton>
               </Dialog.Close>
@@ -496,7 +496,7 @@ export const DemoViewer = ({
     <div id={id} className={cn('c-demo my-12 scroll-mt-28', className)}>
       <div className="mb-2">{bar(false)}</div>
       <div className="relative">
-        {/* The demo, on its own card; hidden but loaded in the Code view, since the code comes from it */}
+        {/* 演示单独放在卡片中；在“代码”视图下会隐藏但仍保持加载，因为代码来自演示本身 */}
         <div
           aria-hidden={view === 'code' || undefined}
           className={
@@ -518,7 +518,7 @@ export const DemoViewer = ({
                 key={frameKey}
                 ref={inlineHandle}
                 src={frameSrc}
-                title={`${name} demo`}
+                title={`${name} 演示`}
                 theme={theme}
                 initialContent={restore}
                 isEager={view === 'code'}
@@ -532,8 +532,8 @@ export const DemoViewer = ({
             <div
               role="separator"
               aria-orientation="horizontal"
-              aria-label="Resize the demo"
-              title="Drag to resize the demo"
+              aria-label="调整演示大小"
+              title="拖动以调整演示大小"
               tabIndex={0}
               onPointerDown={startResize}
               onKeyDown={resizeByKey}
@@ -545,7 +545,7 @@ export const DemoViewer = ({
           ) : null}
         </div>
 
-        {/* The code, a block of its own below the demo */}
+        {/* 代码块独立显示在演示下方 */}
         {hasCode && view !== 'preview'
           ? code(
               cn(
@@ -562,7 +562,7 @@ export const DemoViewer = ({
           <Dialog.Overlay className="fixed inset-0 z-50 bg-black/40 backdrop-blur-[2px]" />
           <Dialog.Content
             aria-describedby={undefined}
-            // Focus starts on the dialog, not on its first button, whose tooltip would show
+            // 焦点先放在对话框上，而不是第一个会显示工具提示的按钮上
             tabIndex={-1}
             onOpenAutoFocus={(event) => {
               event.preventDefault()
@@ -583,7 +583,7 @@ export const DemoViewer = ({
                   <DemoFrame
                     key={`expanded-${frameKey}`}
                     src={frameSrc}
-                    title={`${name} demo`}
+                    title={`${name} 演示`}
                     theme={theme}
                     initialContent={restore}
                     onBridge={onExpandedBridge}
@@ -601,8 +601,8 @@ export const DemoViewer = ({
   )
 }
 
-/** The demo and its code side by side; the line between them moves with the pointer or the arrow keys. */
-/** A thin line between groups of controls. */
+/** 演示和代码并排显示；两者之间的分隔线可以用指针或方向键移动。 */
+/** 控件组之间的细分隔线。 */
 const Divider = () => <span aria-hidden className="mx-1 h-4 w-px shrink-0 bg-grayAlpha-200" />
 
 const ExpandedBody = ({
@@ -624,7 +624,7 @@ const ExpandedBody = ({
     setCodeShare(Math.min(80, Math.max(20, share)))
   }
 
-  // Code on the left, the demo on the right; on narrow screens the demo comes first
+  // 代码在左侧，演示在右侧；窄屏上演示显示在前
   return (
     <div ref={container} className="flex min-h-0 flex-1 flex-col-reverse md:flex-row">
       {code && view !== 'preview' ? (
@@ -642,7 +642,7 @@ const ExpandedBody = ({
             <div
               role="separator"
               aria-orientation="vertical"
-              aria-label="Resize the code"
+              aria-label="调整代码区域大小"
               aria-valuenow={Math.round(codeShare)}
               aria-valuemin={20}
               aria-valuemax={80}
@@ -660,7 +660,7 @@ const ExpandedBody = ({
           )}
         </>
       ) : null}
-      {/* Hidden, not removed, in the Code view, so the demo keeps what the reader typed */}
+      {/* “代码”视图下隐藏但不卸载，以便演示保留读者输入的内容 */}
       <div
         className={cn(
           'min-h-0 min-w-0 flex-1 [&>div]:h-full',
