@@ -1,35 +1,35 @@
 ---
-title: State and change events
+title: 状态与变更事件
 meta:
-  title: Provider events | Tiptap Collaboration Docs
-  description: Use event listeners with Tiptap Collaboration providers to manage real-time states and changes effectively. Learn more in the docs!
+  title: Provider 事件 | Tiptap Collaboration 文档
+  description: 使用 Tiptap Collaboration Provider 的事件监听器，高效管理实时状态与变更。了解更多信息，请参阅文档！
   category: Collaboration
 ---
 
-Events in Collaboration providers let you respond to various states and changes, such as successful connections or authentication updates. You can attach event listeners during provider initialization or add them later based on your application's needs.
+协作 Provider 中的事件让你能够响应各种状态和变更，例如连接成功或身份验证更新。你可以在初始化 Provider 时附加事件监听器，也可以根据应用需求稍后添加。
 
-## Use provider events
+## 使用 Provider 事件
 
 | Event                | Description                                                   |
 | -------------------- | ------------------------------------------------------------- |
-| `open`               | Triggered when the WebSocket connection opens.                |
-| `connect`            | Triggered when the provider connects to the server.           |
-| `authenticated`      | Indicates successful client authentication.                   |
-| `authenticationFailed` | Triggered when client authentication fails.                |
-| `status`             | Tracks changes in connection status.                          |
-| `close`              | Triggered when the WebSocket connection closes.               |
-| `disconnect`         | Triggered when the provider disconnects.                      |
-| `destroy`            | Signifies the impending destruction of the provider.          |
-| `message`            | Triggered by incoming messages.                               |
-| `outgoingMessage`    | Triggered before a message is sent.                           |
-| `synced`             | Indicates the initial successful sync of the Yjs document.    |
-| `stateless`          | Triggered when the stateless message is received.             |
-| `awarenessUpdate`    | Triggered when user awareness information updates.            |
-| `awarenessChange`    | Triggered when the awareness state changes.                   |
+| `open`               | WebSocket 连接打开时触发。                |
+| `connect`            | Provider 连接到服务器时触发。           |
+| `authenticated`      | 表示客户端身份验证成功。                   |
+| `authenticationFailed` | 客户端身份验证失败时触发。                |
+| `status`             | 跟踪连接状态的变化。                          |
+| `close`              | WebSocket 连接关闭时触发。               |
+| `disconnect`         | Provider 断开连接时触发。                      |
+| `destroy`            | 表示 Provider 即将销毁。          |
+| `message`            | 收到消息时触发。                               |
+| `outgoingMessage`    | 消息发送前触发。                           |
+| `synced`             | 表示 Yjs 文档首次成功同步。    |
+| `stateless`          | 收到无状态消息时触发。             |
+| `awarenessUpdate`    | 用户 awareness 信息更新时触发。            |
+| `awarenessChange`    | awareness 状态变化时触发。                   |
 
-## Configure event listeners
+## 配置事件监听器
 
-To track events immediately, pass event listeners directly to the provider's constructor. This guarantees that listeners are active from the start.
+要立即跟踪事件，请直接将事件监听器传递给 Provider 的构造函数。这样可以确保监听器从一开始就处于启用状态。
 
 ```ts
 const provider = new TiptapCollabProvider({
@@ -47,11 +47,11 @@ const provider = new TiptapCollabProvider({
 })
 ```
 
-### Bind events dynamically
+### 动态绑定事件
 
-To add or remove listeners after initialization, the provider supports dynamic binding and unbinding of event handlers.
+要在初始化后添加或移除监听器，Provider 支持动态绑定和解绑事件处理程序。
 
-**Example:** Binding event listeners during provider initialization
+**示例：** 在初始化 Provider 时绑定事件监听器
 
 ```ts
 const provider = new TiptapCollabProvider({
@@ -63,7 +63,7 @@ provider.on('synced', () => {
 })
 ```
 
-**Example:** Binding/unbinding event listeners after provider initialization
+**示例：** 在初始化 Provider 后绑定/解绑事件监听器
 
 ```typescript
 const onMessage = () => {
@@ -77,11 +77,11 @@ provider.on('message', onMessage)
 provider.off('message', onMessage)
 ```
 
-## Provider event examples
+## Provider 事件示例
 
-### Display connection status
+### 显示连接状态
 
-Use `onConnect` and `onDisconnect` to provide users with real-time connection status feedback, enhancing the user experience.
+使用 `onConnect` 和 `onDisconnect` 向用户实时反馈连接状态，提升用户体验。
 
 ```tsx
 provider.on('connect', () => {
@@ -93,9 +93,9 @@ provider.on('disconnect', () => {
 })
 ```
 
-### Sync document status
+### 同步文档状态
 
-Use `synced` to alert users when the document is fully synced initially, ensuring they start working with the latest version.
+使用 `synced` 在文档首次完成同步时通知用户，确保他们开始使用的是最新版本。
 
 ```tsx
 provider.on('synced', () => {
@@ -103,9 +103,9 @@ provider.on('synced', () => {
 })
 ```
 
-### Handle authentication issues
+### 处理身份验证问题
 
-Use `authenticationFailed` to catch authentication errors and prompt users to reauthenticate, ensuring secure access.
+使用 `authenticationFailed` 捕获身份验证错误并提示用户重新进行身份验证，确保访问安全。
 
 ```tsx
 provider.on('authenticationFailed', ({ reason }) => {
