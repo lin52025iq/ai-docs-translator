@@ -51,7 +51,7 @@ export const LinkItem = ({
 }) => {
   const pathname = usePathname()
   const isExactMatch = link.isActive ?? pathname === link.href
-  // Every path starts with '', so an entry that only folds open would always start open
+  // 所有路径都以 '' 开头，因此仅用于折叠展开的条目总会默认展开
   const isActiveParent = link.href !== '' && pathname.startsWith(link.href)
   const hasActiveChild = hasActiveDescendant(link.children, pathname)
   const isActive = isExactMatch && !hasActiveChild
@@ -65,9 +65,8 @@ export const LinkItem = ({
     setIsOpen((prev) => !prev)
   }, [])
 
-  // Open the entry when navigation makes it (or a page below it) active. Comparing
-  // with the previous render instead of using an effect saves a second render;
-  // a toggle after that keeps until the active state changes again.
+  // 导航使条目（或其下级页面）变为活动状态时展开条目。与其使用 effect，不如与上一次渲染进行比较，
+  // 这样可以省去第二次渲染；之后手动切换的状态会保持不变，直到活动状态再次改变。
   const activeKey = `${isActive}:${isActiveParent}:${hasActiveChild}:${link.href}`
   const [prevActiveKey, setPrevActiveKey] = useState(activeKey)
   if (activeKey !== prevActiveKey) {
@@ -77,7 +76,7 @@ export const LinkItem = ({
     }
   }
 
-  // Scroll active item into view when sidebar is fully rendered
+  // 侧边栏完全渲染后，将活动条目滚动到可视区域
   useEffect(() => {
     if (isActive && linkRef.current) {
       linkRef.current.scrollIntoView({ block: 'nearest' })
