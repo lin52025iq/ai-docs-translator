@@ -1,22 +1,22 @@
 ---
-title: Create a Admonition Block with Markdown Support
+title: 创建支持 Markdown 的提示块
 tags:
   - type: beta
 meta:
-  title: Create a Admonition Block with Markdown | Tiptap Editor Docs
-  description: Learn how to create a custom Admonition block in Tiptap that supports Markdown syntax.
+  title: 创建支持 Markdown 的提示块 | Tiptap 编辑器文档
+  description: 了解如何在 Tiptap 中创建支持 Markdown 语法的自定义提示块。
   category: Editor
 ---
 
-This guide walks you through adding Markdown support for a custom "Admonition" block in Tiptap. We'll break the process down into four clear steps and for each step include a full example that contains the code from previous steps so you always have full context.
+本指南将带你了解如何为 Tiptap 中的自定义“提示块”添加 Markdown 支持。我们会将整个过程分为四个清晰的步骤，每一步都提供完整示例，其中包含前面步骤的代码，让你始终能了解完整上下文。
 
-**Steps**:
-1. Create the basic Tiptap `Node` extension (without Markdown support).
-2. Add a custom Markdown tokenizer to produce tokens from the raw Markdown.
-3. Add a parser that converts those tokens into Tiptap JSON.
-4. Add a renderer (serializer) that converts the Tiptap node back to Markdown.
+**步骤**：
+1. 创建基本的 Tiptap `Node` 扩展（不包含 Markdown 支持）。
+2. 添加自定义 Markdown 分词器，从原始 Markdown 中生成 token。
+3. 添加解析器，将这些 token 转换为 Tiptap JSON。
+4. 添加渲染器（序列化器），将 Tiptap 节点转换回 Markdown。
 
-We'll use the `:::type` style for admonitions, for example:
+我们将使用 `:::type` 这种提示块语法，例如：
 
 ```javascript
 :::warning
@@ -26,9 +26,9 @@ This is a warning with **bold** text.
 
 ---
 
-## Step 1: Create the basic extension
+## 第 1 步：创建基本扩展
 
-Start with a minimal `Node` definition that describes the structure, HTML parsing/rendering and attributes. Keep Markdown integration out for now so you can focus on schema and html input and output first.
+首先，创建一个最精简的 `Node` 定义，用于描述结构、HTML 解析与渲染方式，以及属性。暂时不集成 Markdown，这样你可以先专注于 schema 以及 HTML 的输入和输出。
 
 ```javascript
 import { Node } from '@tiptap/core'
@@ -61,17 +61,17 @@ export const Admonition = Node.create({
 })
 ```
 
-**Notes:**
-- `content: 'block+'` allows nested block content inside the admonition.
-- We store the admonition `type` as a node attribute (`data-type` in HTML).
+**说明：**
+- `content: 'block+'` 允许提示块中包含嵌套的块级内容。
+- 我们将提示块的 `type` 存储为节点属性（在 HTML 中对应 `data-type`）。
 
 ---
 
-## Step 2: Add a custom Markdown tokenizer
+## 第 2 步：添加自定义 Markdown 分词器
 
-Tiptap's Markdown integration can accept a tokenizer that converts Markdown source into tokens the Markdown parser understands. The tokenizer is responsible for recognizing the `:::type` ... `:::` block and returning a token object with any relevant metadata and nested tokens (for the content).
+Tiptap 的 Markdown 集成支持传入分词器，将 Markdown 源文本转换为 Markdown 解析器能够识别的 token。分词器负责识别 `:::type` ... `:::` 块，并返回包含相关元数据和嵌套 token（用于表示内容）的 token 对象。
 
-Below is a full example that includes the base Node plus the `markdownTokenizer` added. This gives you full context for how tokenizer integrates with the Node.
+下面的完整示例包含基本的 Node，并添加了 `markdownTokenizer`。通过这个示例，你可以全面了解分词器如何与 Node 集成。
 
 ```javascript
 import { Node } from '@tiptap/core'
@@ -104,29 +104,29 @@ export const Admonition = Node.create({
 
   markdownTokenizer: {
     name: 'admonition',
-    level: 'block', // block-level element
+    level: 'block', // 块级元素
 
-    // A fast start check: returns -1 if not found.
-    // and is used by the lexer to optimize scanning.
+    // 快速检查起始位置：找不到时返回 -1。
+    // 词法分析器会使用此检查来优化扫描。
     start: (src) => src.indexOf(':::'),
 
-    // the actual tokenize function that builds
-    // the token
+    // 实际的 tokenize 函数，用于构建
+    // token
     tokenize: (src, tokens, lexer) => {
-      // This regex matches:
+      // 此正则表达式匹配：
       // :::type\n
-      // (anything, including newlines)\n
+      // （任意内容，包括换行符）\n
       // :::
       const match = /^:::(\w+)\n([\s\S]*?)\n:::\n?/.exec(src)
       if (!match) return undefined
 
       return {
         type: 'admonition',
-        raw: match[0], // the full matched Markdown
-        admonitionType: match[1], // e.g. 'warning'
-        text: match[2], // inner Markdown text
+        raw: match[0], // 完整匹配到的 Markdown
+        admonitionType: match[1], // 例如 'warning'
+        text: match[2], // 内部 Markdown 文本
 
-        // Let the Markdown lexer parse the inner content into block tokens.
+        // 让 Markdown 词法分析器将内部内容解析为块级 token。
         tokens: lexer.blockTokens(match[2]),
       }
     },
@@ -134,18 +134,18 @@ export const Admonition = Node.create({
 })
 ```
 
-**Implementation details:**
-- `start` is an optimization used by the lexer to find candidate positions.
-- `markdownTokenizer.tokenize` returns `undefined` when it doesn't match; otherwise it must return a token object with a `raw` string and any fields your `parseMarkdown` function will expect.
-- Use `lexer.blockTokens()` (or similar helper from your Markdown toolchain) to parse the inner content into nested tokens so the parser can reuse existing block-parsing logic.
+**实现细节：**
+- `start` 是词法分析器用来查找候选位置的一项优化。
+- `markdownTokenizer.tokenize` 在未匹配时返回 `undefined`；匹配时则必须返回包含 `raw` 字符串以及 `parseMarkdown` 函数所需字段的 token 对象。
+- 使用 `lexer.blockTokens()`（或 Markdown 工具链中的类似辅助函数）将内部内容解析为嵌套 token，以便解析器复用已有的块级解析逻辑。
 
 ---
 
-## Step 3: Add the parser
+## 第 3 步：添加解析器
 
-The `parseMarkdown` function receives the token produced by the tokenizer and must return a Tiptap-compatible JSON representation of a node (or nodes). Use the provided `helpers` to parse nested tokens into child content.
+`parseMarkdown` 函数接收分词器生成的 token，并必须返回与 Tiptap 兼容的节点（或多个节点）的 JSON 表示。使用提供的 `helpers` 将嵌套 token 解析为子内容。
 
-Below is the full example containing the base Node, the tokenizer, and now the `parseMarkdown` function. This shows how the pieces fit together.
+下面的完整示例包含基本的 Node、分词器，以及新增的 `parseMarkdown` 函数。通过它可以了解这些部分如何协同工作。
 
 ```javascript
 import { Node } from '@tiptap/core'
@@ -178,57 +178,57 @@ export const Admonition = Node.create({
 
   markdownTokenizer: {
     name: 'admonition',
-    level: 'block', // block-level element
+    level: 'block', // 块级元素
 
-    // A fast start check: returns -1 if not found.
-    // and is used by the lexer to optimize scanning.
+    // 快速检查起始位置：找不到时返回 -1。
+    // 词法分析器会使用此检查来优化扫描。
     start: (src) => src.indexOf(':::'),
 
-    // the actual tokenize function that builds
-    // the token
+    // 实际的 tokenize 函数，用于构建
+    // token
     tokenize: (src, tokens, lexer) => {
-      // This regex matches:
+      // 此正则表达式匹配：
       // :::type\n
-      // (anything, including newlines)\n
+      // （任意内容，包括换行符）\n
       // :::
       const match = /^:::(\w+)\n([\s\S]*?)\n:::\n?/.exec(src)
       if (!match) return undefined
 
       return {
         type: 'admonition',
-        raw: match[0], // the full matched Markdown
-        admonitionType: match[1], // e.g. 'warning'
-        text: match[2], // inner Markdown text
+        raw: match[0], // 完整匹配到的 Markdown
+        admonitionType: match[1], // 例如 'warning'
+        text: match[2], // 内部 Markdown 文本
 
-        // Let the Markdown lexer parse the inner content into block tokens.
+        // 让 Markdown 词法分析器将内部内容解析为块级 token。
         tokens: lexer.blockTokens(match[2]),
       }
     },
   },
 
-  // Parse Markdown token to Tiptap JSON
+  // 将 Markdown token 解析为 Tiptap JSON
   parseMarkdown: (token, helpers) => {
     return {
       type: 'admonition',
       attrs: { type: token.admonitionType || 'note' },
-      // Parse nested tokens into Tiptap content using the helpers
+      // 使用 helpers 将嵌套 token 解析为 Tiptap 内容
       content: helpers.parseChildren(token.tokens || []),
     }
   },
 })
 ```
 
-**Notes:**
-- `helpers.parseChildren` will transform the inner tokens into the node `content` array expected by Tiptap.
-- Make sure the `type` here matches the `name` of your Node.
+**说明：**
+- `helpers.parseChildren` 会将内部 token 转换为 Tiptap 所需的节点 `content` 数组。
+- 确保此处的 `type` 与 Node 的 `name` 一致。
 
 ---
 
-## Step 4: Add the renderer
+## 第 4 步：添加渲染器
 
-To serialize content back to Markdown, implement the `renderMarkdown` function. This function receives a Tiptap node and should return the Markdown string representation. Use `helpers.renderChildren` to serialize the node's content.
+要将内容序列化回 Markdown，请实现 `renderMarkdown` 函数。此函数接收一个 Tiptap 节点，并应返回对应的 Markdown 字符串表示。使用 `helpers.renderChildren` 序列化节点的内容。
 
-Below is the full example with the tokenizer, parser, and renderer implemented so you have a complete extension that supports Markdown input and output as well as HTML rendering.
+下面的完整示例实现了分词器、解析器和渲染器，构成一个支持 Markdown 输入和输出以及 HTML 渲染的完整扩展。
 
 ```javascript
 import { Node } from '@tiptap/core'
@@ -260,40 +260,40 @@ export const Admonition = Node.create({
 
   markdownTokenizer: {
     name: 'admonition',
-    level: 'block', // block-level element
+    level: 'block', // 块级元素
 
-    // A fast start check: returns -1 if not found.
-    // and is used by the lexer to optimize scanning.
+    // 快速检查起始位置：找不到时返回 -1。
+    // 词法分析器会使用此检查来优化扫描。
     start: (src) => src.indexOf(':::'),
 
-    // the actual tokenize function that builds
-    // the token
+    // 实际的 tokenize 函数，用于构建
+    // token
     tokenize: (src, tokens, lexer) => {
-      // This regex matches:
+      // 此正则表达式匹配：
       // :::type\n
-      // (anything, including newlines)\n
+      // （任意内容，包括换行符）\n
       // :::
       const match = /^:::(\w+)\n([\s\S]*?)\n:::\n?/.exec(src)
       if (!match) return undefined
 
       return {
         type: 'admonition',
-        raw: match[0], // the full matched Markdown
-        admonitionType: match[1], // e.g. 'warning'
-        text: match[2], // inner Markdown text
+        raw: match[0], // 完整匹配到的 Markdown
+        admonitionType: match[1], // 例如 'warning'
+        text: match[2], // 内部 Markdown 文本
 
-        // Let the Markdown lexer parse the inner content into block tokens.
+        // 让 Markdown 词法分析器将内部内容解析为块级 token。
         tokens: lexer.blockTokens(match[2]),
       }
     },
   },
 
-  // Parse Markdown token to Tiptap JSON
+  // 将 Markdown token 解析为 Tiptap JSON
   parseMarkdown: (token, helpers) => {
     return {
       type: 'admonition',
       attrs: { type: token.admonitionType || 'note' },
-      // Parse nested tokens into Tiptap content using the helpers
+      // 使用 helpers 将嵌套 token 解析为 Tiptap 内容
       content: helpers.parseChildren(token.tokens || []),
     }
   },
@@ -301,7 +301,7 @@ export const Admonition = Node.create({
   renderMarkdown: (node, helpers) => {
     const type = node.attrs?.type || 'note'
     const content = helpers.renderChildren(node.content || [])
-    // Reconstruct the :::type ... ::: block. Ensure spacing/newlines match what your Markdown parser expects.
+    // 重建 :::type ... ::: 块。请确保空格和换行符符合 Markdown 解析器的预期。
     return `:::${type}\n${content}:::\n\n`
   },
 })
@@ -309,9 +309,9 @@ export const Admonition = Node.create({
 
 ---
 
-## Usage
+## 用法
 
-To set editor content from Markdown that uses the admonition syntax, pass the Markdown string and ensure `contentType: 'markdown'` (depending on your editor integration):
+要使用提示块语法的 Markdown 设置编辑器内容，请传入 Markdown 字符串，并确保设置 `contentType: 'markdown'`（具体取决于你的编辑器集成方式）：
 
 ```javascript
 const markdown = `
@@ -323,13 +323,13 @@ This is a warning message with **bold** text.
 editor.commands.setContent(markdown, { contentType: 'markdown' })
 ```
 
-This will create an `admonition` node with `type: 'warning'` and the nested content parsed as Markdown.
+这将创建一个 `type` 为 `'warning'` 的 `admonition` 节点，并将嵌套内容解析为 Markdown。
 
 ---
 
-## Testing and edge cases
+## 测试与边缘情况
 
-- Nested blocks: The tokenizer calls `lexer.blockTokens()` for inner content so the inner Markdown (lists, paragraphs, headings) will be parsed as regular block tokens and converted into Tiptap content.
-- Inline formatting: Bold/italic/links inside the admonition content should be handled by your Markdown parser if `helpers.renderChildren` and `helpers.parseChildren` are wired to the same tokenset.
-- Trailing newlines: Pay attention to trailing newlines consumed by your tokenizer regex. Adjust the regex or the `renderMarkdown` output to match the expectations of your Markdown toolchain.
-- Types validation: If you want to enforce only specific types (e.g., `note | warning | tip | danger`) you can validate the `admonitionType` in `markdownTokenizer.tokenize` or in `parseMarkdown` and fall back to a default when required.
+- **嵌套块：** 分词器会对内部内容调用 `lexer.blockTokens()`，因此内部 Markdown（列表、段落、标题）会被解析为常规块级 token，并转换为 Tiptap 内容。
+- **行内格式：** 如果 `helpers.renderChildren` 和 `helpers.parseChildren` 使用相同的 token 集进行配置，那么提示块内容中的粗体、斜体和链接应由 Markdown 解析器处理。
+- **尾随换行符：** 注意分词器正则表达式会消耗哪些尾随换行符。根据 Markdown 工具链的预期调整正则表达式或 `renderMarkdown` 的输出。
+- **类型验证：** 如果要限制类型（例如 `note | warning | tip | danger`），可以在 `markdownTokenizer.tokenize` 或 `parseMarkdown` 中验证 `admonitionType`，并在需要时回退到默认值。
