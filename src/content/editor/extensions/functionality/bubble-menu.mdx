@@ -1,22 +1,22 @@
 ---
-title: BubbleMenu extension
+title: BubbleMenu 扩展
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/extension-bubble-menu?label=version
     url: https://www.npmjs.com/package/@tiptap/extension-bubble-menu
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/extension-bubble-menu.svg
     url: https://npmcharts.com/compare/@tiptap/extension-bubble-menu?minimal=true
-    label: Downloads
+    label: 下载量
 meta:
-  title: BubbleMenu extension | Tiptap Editor Docs
-  description: Add a menu toolbar that pops up above your Tiptap editor’s text content. Learn more in our Documentation!
-  category: Editor
+  title: BubbleMenu 扩展 | Tiptap 编辑器文档
+  description: 添加一个弹出在 Tiptap 编辑器文本内容上方的菜单工具栏。欢迎查阅我们的文档，了解更多信息！
+  category: 编辑器
 extension:
-  name: Bubble Menu
+  name: 气泡菜单
   link: https://github.com/ueberdosis/tiptap/tree/main/packages/extension-bubble-menu
-  description: Add a toolbar that pops up above the text. Great to apply inline formatting.
+  description: 添加一个弹出在文本上方的工具栏，非常适合应用行内格式。
   type: extension
   icon: MessageCircle
 ---
@@ -24,111 +24,111 @@ extension:
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-This extension will make a contextual menu appear near a selection of text. Use it to let users apply [marks](/editor/extensions/marks) to their text selection.
+此扩展会在文本选区附近显示上下文菜单。你可以用它让用户为选中的文本应用[标记](/editor/extensions/marks)。
 
-As always, the markup and styling is totally up to you.
+和往常一样，标记和样式完全由你决定。
 
 <CodeDemo path="/Extensions/BubbleMenu" />
 
 <Callout variant="warning">
-    If you are using a framework like React or Vue, use the frameworks specific `BubbleMenu` component instead of the extension. The component provides a more convenient API and handles the DOM element for you. You can find more information about the component in the [Usage with frameworks](#usage-with-frameworks) section below.
+    如果你使用 React 或 Vue 等框架，请使用该框架专用的 `BubbleMenu` 组件，而不是此扩展。该组件提供了更便捷的 API，并会帮你处理 DOM 元素。有关该组件的更多信息，请参阅下文的[与框架配合使用](#usage-with-frameworks)部分。
 </Callout>
 
-## Install
+## 安装
 
 ```bash
 npm install @tiptap/extension-bubble-menu
 ```
 
-## Settings
+## 设置
 
 ### element
 
-The DOM element that contains your menu.
+包含菜单的 DOM 元素。
 
-Type: `HTMLElement`
+类型：`HTMLElement`
 
-Default: `null`
+默认值：`null`
 
-In the React version of the `Bubble Menu`, access the DOM element with the `ref` prop of the `BubbleMenu` component, by [passing a ref](https://react.dev/learn/manipulating-the-dom-with-refs) into it.
+在 React 版本的 `BubbleMenu` 中，可以通过向 `BubbleMenu` 组件传入 [ref](https://react.dev/learn/manipulating-the-dom-with-refs)，并使用其 `ref` 属性访问 DOM 元素。
 
 ### updateDelay
 
-The `BubbleMenu` debounces the `update` method to allow the bubble menu to not be updated on every selection update. This can be controlled in milliseconds.
-The `BubbleMenuPlugin` will come with a default delay of 250ms. This can be deactivated, by setting the delay to `0` which deactivates the debounce.
+`BubbleMenu` 会对 `update` 方法进行防抖，避免每次选区更新时都更新气泡菜单。可以用毫秒数设置延迟。
+`BubbleMenuPlugin` 的默认延迟为 250 毫秒。将延迟设为 `0` 可停用防抖。
 
-Type: `Number`
+类型：`Number`
 
-Default: `undefined`
+默认值：`undefined`
 
 ### resizeDelay
 
-The `BubbleMenu` debounces the resize calculation for the bubble menu to allow the bubble menu to not be updated on every resize event. This can be controlled in milliseconds.
+`BubbleMenu` 会对气泡菜单的位置计算进行防抖，避免每次调整大小时都更新气泡菜单。可以用毫秒数设置延迟。
 
-Type: `Number`
+类型：`Number`
 
-Default: `100`
+默认值：`100`
 
 ### options
 
-Under the hood, the `BubbleMenu` [Floating UI](https://floating-ui.com). You can control the middleware and positioning of the floating menu with these options.
+`BubbleMenu` 底层使用 [Floating UI](https://floating-ui.com)。你可以通过这些选项控制浮动菜单的中间件和定位方式。
 
-Type: `Object`
+类型：`Object`
 
-Default: `{ strategy: 'absolute', placement: 'right' }`
+默认值：`{ strategy: 'absolute', placement: 'right' }`
 
-| Option          | Type                                   | Description                                                                                                                                                  |
+| 选项            | 类型                                   | 描述                                                                                                                                                      |
 | --------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `strategy`      | `string`                               | The positioning strategy. See [here](https://floating-ui.com/docs/computePosition#strategy)                                                                  |
-| `placement`     | `string`                               | The placement of the menu. See [here](https://floating-ui.com/docs/computePosition#placement)                                                                |
-| `offset`        | `number`, `OffsetOptions` or `boolean` | The [offset middleware options](https://floating-ui.com/docs/offset#options). If `true` use default options, if `false` disable the middleware               |
-| `flip`          | `FlipOptions` or `boolean`             | The [flip middleware options](https://floating-ui.com/docs/flip#options). If `true` use default options, if `false` disable the middleware                   |
-| `shift`         | `ShiftOptions` or `boolean`            | The [shift middleware options](https://floating-ui.com/docs/shift#options). If `true` use default options, if `false` disable the middleware                 |
-| `arrow`         | `ArrowOptions` or `false`              | The [arrow middleware options](https://floating-ui.com/docs/arrow#options). If `false` disable the middleware                                                |
-| `size`          | `SizeOptions` or `boolean`             | The [size middleware options](https://floating-ui.com/docs/size#options). If `true` use default options, if `false` disable the middleware                   |
-| `autoPlacement` | `AutoPlacementOptions` or `boolean`    | The [autoPlacement middleware options](https://floating-ui.com/docs/autoPlacement#options). If `true` use default options, if `false` disable the middleware |
-| `hide`          | `HideOptions` or `boolean`             | The [hide middleware options](https://floating-ui.com/docs/hide#options). If `true` use default options, if `false` disable the middleware                   |
-| `inline`        | `InlineOptions` or `boolean`           | The [inline middleware options](https://floating-ui.com/docs/inline#options). If `true` use default options, if `false` disable the middleware               |
-| `onShow`        | `Function` or `undefined`              | A callback that is called when the menu is shown. This can be used to add custom logic or styles when the menu is displayed.                                 |
-| `onHide`        | `Function` or `undefined`              | A callback that is called when the menu is hidden. This can be used to add custom logic or styles when the menu is hidden.                                   |
-| `onUpdate`      | `Function` or `undefined`              | A callback that is called when the menu is updated. This can be used to add custom logic or styles when the menu is updated.                                 |
-| `onDestroy`     | `Function` or `undefined`              | A callback that is called when the menu is destroyed. This can be used to add custom logic or styles when the menu is removed.                               |
+| `strategy`      | `string`                               | 定位策略。请参阅[此处](https://floating-ui.com/docs/computePosition#strategy)。                                                                              |
+| `placement`     | `string`                               | 菜单的放置位置。请参阅[此处](https://floating-ui.com/docs/computePosition#placement)。                                                                       |
+| `offset`        | `number`、`OffsetOptions` 或 `boolean` | [offset 中间件选项](https://floating-ui.com/docs/offset#options)。设为 `true` 时使用默认选项，设为 `false` 时禁用该中间件。                                   |
+| `flip`          | `FlipOptions` 或 `boolean`             | [flip 中间件选项](https://floating-ui.com/docs/flip#options)。设为 `true` 时使用默认选项，设为 `false` 时禁用该中间件。                                       |
+| `shift`         | `ShiftOptions` 或 `boolean`            | [shift 中间件选项](https://floating-ui.com/docs/shift#options)。设为 `true` 时使用默认选项，设为 `false` 时禁用该中间件。                                     |
+| `arrow`         | `ArrowOptions` 或 `false`              | [arrow 中间件选项](https://floating-ui.com/docs/arrow#options)。设为 `false` 时禁用该中间件。                                                                |
+| `size`          | `SizeOptions` 或 `boolean`             | [size 中间件选项](https://floating-ui.com/docs/size#options)。设为 `true` 时使用默认选项，设为 `false` 时禁用该中间件。                                       |
+| `autoPlacement` | `AutoPlacementOptions` 或 `boolean`    | [autoPlacement 中间件选项](https://floating-ui.com/docs/autoPlacement#options)。设为 `true` 时使用默认选项，设为 `false` 时禁用该中间件。                     |
+| `hide`          | `HideOptions` 或 `boolean`             | [hide 中间件选项](https://floating-ui.com/docs/hide#options)。设为 `true` 时使用默认选项，设为 `false` 时禁用该中间件。                                       |
+| `inline`        | `InlineOptions` 或 `boolean`           | [inline 中间件选项](https://floating-ui.com/docs/inline#options)。设为 `true` 时使用默认选项，设为 `false` 时禁用该中间件。                                   |
+| `onShow`        | `Function` 或 `undefined`              | 菜单显示时调用的回调函数。可用于在菜单显示时添加自定义逻辑或样式。                                                                                           |
+| `onHide`        | `Function` 或 `undefined`              | 菜单隐藏时调用的回调函数。可用于在菜单隐藏时添加自定义逻辑或样式。                                                                                           |
+| `onUpdate`      | `Function` 或 `undefined`              | 菜单更新时调用的回调函数。可用于在菜单更新时添加自定义逻辑或样式。                                                                                           |
+| `onDestroy`     | `Function` 或 `undefined`              | 菜单销毁时调用的回调函数。可用于在菜单移除时添加自定义逻辑或样式。                                                                                           |
 
 ### pluginKey
 
-The key for the underlying ProseMirror plugin. Make sure to use different keys if you add more than one instance.
+底层 ProseMirror 插件的键。如果添加多个实例，请确保使用不同的键。
 
-Type: `string | PluginKey`
+类型：`string | PluginKey`
 
-Default: `'bubbleMenu'`
+默认值：`'bubbleMenu'`
 
 ### shouldShow
 
-A callback to control whether the menu should be shown or not.
+用于控制是否显示菜单的回调函数。
 
-Type: `(props) => boolean`
+类型：`(props) => boolean`
 
 ### appendTo
 
-The element to which the bubble menu should be appended to in the DOM. Can be a `HTMLElement` or a callback function that returns a `HTMLElement`.
+气泡菜单在 DOM 中要追加到的元素。可以是 `HTMLElement`，也可以是返回 `HTMLElement` 的回调函数。
 
-Type: `HTMLElement | (() => HTMLElement) | undefined`
+类型：`HTMLElement | (() => HTMLElement) | undefined`
 
-Default: `undefined`, the menu will be appended to the editor's parent element (`editor.view.dom.parentElement`).
+默认值：`undefined`，菜单将追加到编辑器的父元素（`editor.view.dom.parentElement`）。
 
 ### getReferencedVirtualElement
 
-A callback to provide the anchor coordinates used to position the menu. Should return a [virtual element](https://floating-ui.com/docs/virtual-elements) as expected by [Floating UI](https://floating-ui.com/).
+用于提供菜单定位锚点坐标的回调函数。应返回符合 [Floating UI](https://floating-ui.com/) 预期的[虚拟元素](https://floating-ui.com/docs/virtual-elements)。
 
-Type: `() => VirtualElement | null`
+类型：`() => VirtualElement | null`
 
-Default: `null`, anchor is implied by the editor selection.
+默认值：`null`，锚点由编辑器选区隐式确定。
 
-## Source code
+## 源代码
 
 [packages/extension-bubble-menu/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-bubble-menu/)
 
-## Use the extension
+## 使用此扩展
 
 ### JavaScript
 
@@ -148,7 +148,7 @@ new Editor({
 })
 ```
 
-Add a menu element to your HTML:
+在 HTML 中添加一个菜单元素：
 
 ```html
 <div id="bubble-menu" style="display: none; position: absolute;">
@@ -158,13 +158,13 @@ Add a menu element to your HTML:
 <div id="editor"></div>
 ```
 
-Tiptap will automatically show and position the menu element when text is selected.
+选中文本时，Tiptap 会自动显示菜单元素并设置其位置。
 
-## Usage with frameworks
+## 与框架配合使用
 
 ### React
 
-The `@tiptap/react` package comes with a `BubbleMenu` component you can import from `@tiptap/react/menus`. It provides the same functionality as the extension but with a React-friendly API. When using this component, you don't need to add the `BubbleMenu` extension to your editor.
+`@tiptap/react` 包提供了 `BubbleMenu` 组件，可从 `@tiptap/react/menus` 导入。它提供与此扩展相同的功能，并采用适合 React 的 API。使用此组件时，无需在编辑器中添加 `BubbleMenu` 扩展。
 
 ```jsx
 import { BubbleMenu } from '@tiptap/react/menus'
@@ -185,7 +185,7 @@ function MyBubbleMenu({ editor }) {
 
 ### Vue
 
-The `@tiptap/vue-3` package comes with a `BubbleMenu` component you can import from `@tiptap/vue-3/menus`. It provides the same functionality as the extension but with a Vue-friendly API. When using this component, you don't need to add the `BubbleMenu` extension to your editor.
+`@tiptap/vue-3` 包提供了 `BubbleMenu` 组件，可从 `@tiptap/vue-3/menus` 导入。它提供与此扩展相同的功能，并采用适合 Vue 的 API。使用此组件时，无需在编辑器中添加 `BubbleMenu` 扩展。
 
 ```vue
 <template>
@@ -212,11 +212,11 @@ The `@tiptap/vue-3` package comes with a `BubbleMenu` component you can import f
 </script>
 ```
 
-**Note**: The same menu is also available in the Vue 2 version of Tiptap, you can import it from `@tiptap/vue-2/menus`.
+**注意**：Tiptap 的 Vue 2 版本也提供相同的菜单，可从 `@tiptap/vue-2/menus` 导入。
 
-### Custom logic
+### 自定义逻辑
 
-Customize the logic for showing the menu with the `shouldShow` option. For components, `shouldShow` can be passed as a prop.
+使用 `shouldShow` 选项自定义菜单的显示逻辑。对于组件，可以将 `shouldShow` 作为 prop 传入。
 
 ```js
 BubbleMenu.configure({
@@ -227,9 +227,9 @@ BubbleMenu.configure({
 })
 ```
 
-### Multiple menus
+### 多个菜单
 
-Use multiple menus by setting an unique `pluginKey`.
+设置唯一的 `pluginKey` 即可使用多个菜单。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -249,7 +249,7 @@ new Editor({
 })
 ```
 
-Alternatively you can pass a ProseMirror `PluginKey`.
+也可以传入 ProseMirror 的 `PluginKey`。
 
 ```js
 import { Editor } from '@tiptap/core'
@@ -270,9 +270,9 @@ new Editor({
 })
 ```
 
-### Force update the position of the bubble menu
+### 强制更新气泡菜单的位置
 
-If the bubble menu changes size after the initial render, its position will not be adjusted automatically. To fix this, you can force update the position by setting a `pluginKey` on the extension and emitting an `'updatePosition'` event with that key.
+如果气泡菜单在初次渲染后大小发生变化，其位置不会自动调整。要解决此问题，可以在扩展上设置 `pluginKey`，并使用该键触发 `'updatePosition'` 事件，强制更新位置。
 
 ```ts
 BubbleMenu.configure({
@@ -283,17 +283,17 @@ BubbleMenu.configure({
 editor.commands.setMeta('myBubbleMenu', 'updatePosition')
 ```
 
-To target a specific bubble menu, pass that menu's `pluginKey` instead.
+若要指定某个气泡菜单，请改为传入该菜单的 `pluginKey`。
 
 ```ts
 editor.commands.setMeta('bubbleMenuOne', 'updatePosition')
 ```
 
-If you use the React or Vue `BubbleMenu` component and want to trigger `updatePosition` externally, pass an explicit `pluginKey` prop to the component first. If you omit `pluginKey`, the component creates its own ProseMirror `PluginKey`, which external code cannot reliably reference later.
+如果你使用 React 或 Vue 的 `BubbleMenu` 组件，并希望从外部触发 `updatePosition`，请先向组件传入明确的 `pluginKey` prop。如果省略 `pluginKey`，组件会创建自己的 ProseMirror `PluginKey`，外部代码之后将无法可靠地引用它。
 
-### Programmatically show or hide the bubble menu
+### 以编程方式显示或隐藏气泡菜单
 
-You can programmatically show or hide the bubble menu by setting a `pluginKey` on the extension and dispatching a transaction with the `'show'` or `'hide'` meta value using that key.
+你可以在扩展上设置 `pluginKey`，并使用该键派发带有 `'show'` 或 `'hide'` 元数据值的事务，以编程方式显示或隐藏气泡菜单。
 
 ```ts
 BubbleMenu.configure({
@@ -308,4 +308,4 @@ editor.commands.setMeta('myBubbleMenu', 'show')
 editor.commands.setMeta('myBubbleMenu', 'hide')
 ```
 
-**Note:** dispatching `'show'` or `'hide'` will override the behavior defined in `shouldShow`.
+**注意：**派发 `'show'` 或 `'hide'` 会覆盖 `shouldShow` 中定义的行为。
