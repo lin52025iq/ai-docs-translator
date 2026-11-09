@@ -10,10 +10,10 @@ type Props = {
 
 function normalize(href: string) {
   if (!href) return '/'
-  // keep absolute URLs untouched
+  // 保留绝对 URL 不变
   if (href.startsWith('http://') || href.startsWith('https://')) return href
 
-  // remove trailing slash and ensure leading slash
+  // 移除末尾斜杠，并确保以斜杠开头
   const trimmed = href.replace(/\/$/, '')
   if (trimmed === '') return '/'
   return trimmed.startsWith('/') ? trimmed : `/${trimmed}`
@@ -35,7 +35,7 @@ function flatten(items: SidebarItem[]): SidebarLink[] {
         out.push(...flatten(group.children as SidebarItem[]))
       }
     } else {
-      // children from sidebar sometimes omit the `type` field, ensure shape
+      // 侧边栏中的子项有时会省略 `type` 字段，因此确保其结构完整
       const linkLike = item as SidebarLink | Omit<SidebarLink, 'type'>
       let normalizedLink: SidebarLink
 
@@ -63,7 +63,7 @@ function Card({ href, title, isNext }: { href: string; title: string; isNext?: b
     >
       {!isNext ? <ArrowLeftIcon className="size-5 flex-none" /> : null}
       <span className="flex flex-col gap-2 flex-1">
-        <span className="text-sm text-grayAlpha-500">{isNext ? 'Next up' : 'Previously'}</span>
+        <span className="text-sm text-grayAlpha-500">{isNext ? '下一篇' : '上一篇'}</span>
         <span className="text-lg font-semibold">{title}</span>
       </span>
       {isNext ? <ArrowRightIcon className="size-5 flex-none" /> : null}
