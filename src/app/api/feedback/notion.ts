@@ -18,7 +18,7 @@ export async function addFeedbackToNotion({
   const databaseId = process.env.NOTION_FEEDBACK_DATABASE_ID
   if (!databaseId) throw new Error('NOTION_FEEDBACK_DATABASE_ID is not set')
 
-  // Compose Notion properties
+  // 组合 Notion 属性
   const basePath = process.env.NEXT_PUBLIC_DOMAIN || ''
   const fullSlug = `${basePath}${slug || ''}`
   const properties: any = {
@@ -26,7 +26,7 @@ export async function addFeedbackToNotion({
     Helpful: { checkbox: helpful },
     Timestamp: { date: { start: new Date().toISOString() } },
   }
-  // No need to set rich_text for Slug, only use as title
+  // Slug 无需设置 rich_text，仅使用 title 即可
   if (helpful && yesText) {
     properties['Positive Feedback'] = { rich_text: [{ text: { content: yesText } }] }
   }
