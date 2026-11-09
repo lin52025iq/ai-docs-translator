@@ -1,14 +1,14 @@
 ---
-title: Export Markdown from your editor
+title: 从编辑器导出 Markdown
 tags:
   - type: start
   - type: beta
   - type: version
     label: v0.2.2
 meta:
-  title: Export Markdown | Tiptap Conversion
-  description: Learn how to export Tiptap editor content to Markdown files using the Export Markdown extension in our docs.
-  category: Conversion
+  title: 导出 Markdown | Tiptap 转换
+  description: 在文档中了解如何使用 Export Markdown 扩展，将 Tiptap 编辑器内容导出为 Markdown 文件。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
@@ -19,36 +19,33 @@ import { EnterpriseCalloutAuto } from '@/components/EnterpriseCalloutAuto'
 <EnterpriseCalloutAuto variant="markdown" renderMode="sidebar" disableWaitlist />
 
 <Requirements>
-  <RequirementItem label="1. Activate trial or subscribe">
-    Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start
-    plan](https://cloud.tiptap.dev/v2/billing) in your account.
+  <RequirementItem label="1. 开通试用或订阅">
+    在账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start
+    套餐](https://cloud.tiptap.dev/v2/billing)。
   </RequirementItem>
-  <RequirementItem label="2. Install from private registry">
-    To install this frontend extensions, authenticate to Tiptap's private npm registry by following
-    the [setup guide](/guides/pro-extensions).
+  <RequirementItem label="2. 从私有仓库安装">
+    要安装这些前端扩展，请按照[设置指南](/guides/pro-extensions)进行操作，以通过身份验证访问 Tiptap 的私有 npm 仓库。
   </RequirementItem>
 </Requirements>
 
 <CodeDemo isPro path="/Extensions/ExportMarkdown" />
 
-Use Tiptap's `@tiptap-pro/extension-export-markdown` to export your editor's content as a `.md` file. This extension converts your editor content to Markdown locally using the `@tiptap/markdown` extension; no API calls or credentials are required.
+使用 Tiptap 的 `@tiptap-pro/extension-export-markdown` 将编辑器内容导出为 `.md` 文件。此扩展使用 `@tiptap/markdown` 扩展在本地将编辑器内容转换为 Markdown；无需调用 API 或提供凭据。
 
-You can also use the [REST API](/conversion/export/markdown/rest-api) instead if you'd prefer to handle the conversion on your server.
+如果希望在服务器上处理转换，也可以改用 [REST API](/conversion/export/markdown/rest-api)。
 
-## Install the Markdown Export extension
+## 安装 Markdown 导出扩展
 
-The Conversion extensions are published in Tiptap's private npm registry. Integrate the extensions by following the [private registry guide](/guides/pro-extensions).
+Conversion 扩展发布在 Tiptap 的私有 npm 仓库中。请按照[私有仓库指南](/guides/pro-extensions)集成这些扩展。
 
-Once done you can install and import the **Export Markdown** extension package.
+完成后，即可安装并导入 **Export Markdown** 扩展包。
 
 ```bash
 npm i @tiptap-pro/extension-export-markdown
 ```
 
-<Callout title="Required peer dependency" variant="hint">
-  This extension requires the `@tiptap/markdown` extension to be installed and configured in your
-  editor. The `@tiptap/markdown` extension provides the serialization logic used to convert editor
-  content to Markdown.
+<Callout title="必需的对等依赖" variant="hint">
+  此扩展要求在编辑器中安装并配置 `@tiptap/markdown` 扩展。`@tiptap/markdown` 扩展提供序列化逻辑，用于将编辑器内容转换为 Markdown。
 </Callout>
 
 ```bash
@@ -59,9 +56,9 @@ npm i @tiptap/markdown
 import { ExportMarkdown } from '@tiptap-pro/extension-export-markdown'
 ```
 
-## Configuring the extension
+## 配置扩展
 
-The `ExportMarkdown` extension can be configured with an `ExportMarkdownOptions` (`object`) as an argument to the `configure` method with the following properties:
+`ExportMarkdown` 扩展可通过 `configure` 方法配置，传入 `ExportMarkdownOptions`（`object`）作为参数，支持以下属性：
 
 ```ts
 import { Markdown } from '@tiptap/markdown'
@@ -81,13 +78,13 @@ const editor = new Editor({
 })
 ```
 
-| Parameter          | Type                       | Description                                                      | Default                      |
-| ------------------ | -------------------------- | ---------------------------------------------------------------- | ---------------------------- |
-| `onCompleteExport` | `(result: string) => void` | Callback that receives the exported Markdown content as a string | Throws error if not provided |
+| 参数                 | 类型                       | 说明                                           | 默认值                 |
+| ------------------ | -------------------------- | ---------------------------------------------- | ---------------------------- |
+| `onCompleteExport` | `(result: string) => void` | 接收导出 Markdown 内容字符串的回调函数 | 未提供时抛出错误 |
 
-## Export a Markdown file
+## 导出 Markdown 文件
 
-With the extension installed, you can export your editor's content to `.md` using the `exportMarkdown` command.
+安装扩展后，可以使用 `exportMarkdown` 命令将编辑器内容导出为 `.md` 文件。
 
 ```ts
 /**
@@ -102,11 +99,11 @@ With the extension installed, you can export your editor's content to `.md` usin
 exportMarkdown: (options?: ExportMarkdownCommandOptions) => ReturnType
 ```
 
-The `ExportMarkdownCommandOptions` interface:
+`ExportMarkdownCommandOptions` 接口：
 
-| Property           | Type                       | Description                                                                            |
-| ------------------ | -------------------------- | -------------------------------------------------------------------------------------- |
-| `onCompleteExport` | `(result: string) => void` | Optional per-invocation callback that overrides the extension-level `onCompleteExport` |
+| 属性                 | 类型                       | 说明                                                                                       |
+| ------------------ | -------------------------- | ------------------------------------------------------------------------------------------ |
+| `onCompleteExport` | `(result: string) => void` | 可选的单次调用回调函数，可覆盖扩展级别的 `onCompleteExport` |
 
 ```js
 import { Markdown } from '@tiptap/markdown'
@@ -149,43 +146,43 @@ editor
   .run()
 ```
 
-### How it works
+### 工作原理
 
-When you call `exportMarkdown`, the extension uses the `@tiptap/markdown` extension's `getMarkdown()` method to serialize the editor's content locally. No data is sent to any external service. The `onCompleteExport` callback receives the Markdown string directly, which you can then download as a `.md` file, copy to clipboard, or process as needed.
+调用 `exportMarkdown` 时，扩展会使用 `@tiptap/markdown` 扩展的 `getMarkdown()` 方法，在本地序列化编辑器内容。不会向任何外部服务发送数据。`onCompleteExport` 回调会直接接收 Markdown 字符串，你可以将其下载为 `.md` 文件、复制到剪贴板，或按需进行处理。
 
-## What to expect
+## 预期效果
 
-- **No authentication required.** The export runs entirely in the browser. No token, no API call.
-- **Synchronous result delivery.** The `onCompleteExport` callback receives the Markdown string directly.
-- **CommonMark output by default**, plus a few non-standard syntaxes for underline (`++text++`) and highlight (`==text==`).
+- **无需身份验证。** 导出完全在浏览器中进行，无需令牌，也不会调用 API。
+- **同步返回结果。** `onCompleteExport` 回调会直接接收 Markdown 字符串。
+- **默认输出 CommonMark**，并支持少数非标准语法，例如下划线（`++text++`）和高亮（`==text==`）。
 
-## What not to expect
+## 不支持的效果
 
-- **Lossless conversion.** Markdown has no syntax for font colors, font sizes, page layout, complex table cell formatting, or document metadata. Anything that doesn't map to CommonMark is dropped, as shown in the table below.
-- **Round-trip identity.** Re-importing the exported Markdown will produce a simplified document; styling and layout that didn't survive the export won't reappear.
+- **无法无损转换。** Markdown 没有表示字体颜色、字号、页面布局、复杂表格单元格格式或文档元数据的语法。无法映射为 CommonMark 的内容都会被丢弃，详见下表。
+- **往返后无法保持原样。** 重新导入导出的 Markdown 后，文档会变得更简单；导出时丢失的样式和布局不会恢复。
 
-## Support & Limitations
+## 支持情况与限制
 
-Markdown export converts Tiptap content to CommonMark-compatible Markdown. The supported features are determined by what Markdown syntax can represent. Unlike DOCX, Markdown has no concept of rich styling, page layout, or complex table formatting.
+Markdown 导出会将 Tiptap 内容转换为兼容 CommonMark 的 Markdown。支持哪些功能取决于 Markdown 语法能够表示哪些内容。与 DOCX 不同，Markdown 不支持丰富样式、页面布局或复杂表格格式。
 
-| **Feature**               | **Support**                                                            |
+| **功能**       | **支持情况**                                                   |
 | ------------------------- | ---------------------------------------------------------------------- |
-| **Text content**          | ✓ Paragraphs, headings (1–6), hard breaks                              |
-| **Inline formatting**     | ✓ Bold, italic, strikethrough, inline code                             |
-| **Block elements**        | ✓ Blockquotes, code blocks (fenced with language), horizontal rules    |
-| **Lists**                 | ✓ Bullet lists, ordered lists, task lists, nested lists                |
-| **Tables**                | ✓ Basic pipe-syntax tables (single header row, no merged cells)        |
-| **Links**                 | ✓ Hyperlinks with text and URL                                         |
-| **Images**                | ✓ Image references with alt text (no dimensions)                       |
-| **Underline**             | ✓ Custom syntax (`++text++`, non-standard)                             |
-| **Highlight**             | ✓ Custom syntax (`==text==`, non-standard)                             |
-| **Text color / Font**     | ✗ No Markdown syntax for colors, font family, or font size             |
-| **Text alignment**        | ✗ No Markdown syntax                                                   |
-| **Spacing / Indentation** | ✗ No Markdown syntax                                                   |
-| **Merged cells**          | ✗ Markdown tables don't support colspan or rowspan                     |
-| **Headers & Footers**     | ✗ No concept in Markdown                                               |
-| **Page layout**           | ✗ No page breaks, sections, or page size                               |
-| **Math**                  | ~ Extension-dependent (`$...$` syntax if math extension is configured) |
-| **Footnotes & Endnotes**  | ✗ Not supported in CommonMark                                          |
+| **文本内容**         | ✓ 段落、标题（1–6 级）、硬换行                              |
+| **行内格式**     | ✓ 粗体、斜体、删除线、行内代码                             |
+| **块级元素**        | ✓ 引用块、代码块（带语言标识的围栏代码块）、水平分隔线    |
+| **列表**                 | ✓ 无序列表、有序列表、任务列表、嵌套列表                |
+| **表格**                | ✓ 基本管道符语法表格（单个表头行，不支持合并单元格）        |
+| **链接**                 | ✓ 包含文本和 URL 的超链接                                         |
+| **图片**                | ✓ 带替代文本的图片引用（不含尺寸）                       |
+| **下划线**             | ✓ 自定义语法（`++text++`，非标准）                             |
+| **高亮**             | ✓ 自定义语法（`==text==`，非标准）                             |
+| **文本颜色 / 字体**     | ✗ Markdown 没有表示颜色、字体系列或字号的语法             |
+| **文本对齐**        | ✗ Markdown 没有相应语法                                                   |
+| **间距 / 缩进** | ✗ Markdown 没有相应语法                                                   |
+| **合并单元格**          | ✗ Markdown 表格不支持 colspan 或 rowspan                     |
+| **页眉和页脚**     | ✗ Markdown 中没有这一概念                                               |
+| **页面布局**           | ✗ 不支持分页符、分节或页面尺寸                               |
+| **数学公式**                  | ~ 取决于扩展（配置数学扩展时可使用 `$...$` 语法） |
+| **脚注和尾注**  | ✗ CommonMark 不支持                                          |
 
-For the full feature comparison across all formats, see the [Supported features](/conversion/getting-started/feature-support-matrix) matrix.
+如需查看所有格式的完整功能对比，请参阅[支持的功能](/conversion/getting-started/feature-support-matrix)矩阵。
