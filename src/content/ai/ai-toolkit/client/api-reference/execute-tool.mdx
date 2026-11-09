@@ -1,39 +1,39 @@
 ---
-title: Execute tool (AI agents)
+title: 执行工具（AI 代理）
 meta:
-  title: Execute tool (AI agents) | Tiptap AI Toolkit
-  description: Execute AI agent tool calls against a Tiptap editor using the AI Toolkit.
+  title: 执行工具（AI 代理）| Tiptap AI Toolkit
+  description: 使用 AI Toolkit 对 Tiptap 编辑器执行 AI 代理的工具调用。
   category: AI Toolkit
 ---
 
-Use `executeTool` to apply a tool call from your AI agent to the editor.
+使用 `executeTool` 将 AI 代理发出的工具调用应用到编辑器。
 
-Once you've added [tool definitions](/ai/ai-toolkit/client/agents/tools) to your AI agent, the AI agent will generate tool calls. Use the `executeTool` method to apply the tool calls to the editor.
+将[工具定义](/ai/ai-toolkit/client/agents/tools)添加到 AI 代理后，AI 代理便会生成工具调用。使用 `executeTool` 方法将这些工具调用应用到编辑器。
 
 ## `executeTool`
 
-Executes a supported tool by name and input.
+根据名称和输入执行受支持的工具。
 
-### Parameters (`ExecuteToolOptions`)
+### 参数（`ExecuteToolOptions`）
 
-- `toolName` (`string`): Tool to execute. Can be one of the [available tools](/ai/ai-toolkit/client/agents/tools).
-- `input` (`unknown`): A JSON object that matches the input schema of the tool parameters. If no parameters are required for this tool, pass an empty object (`{}`).
-- `chunkSize?` (`number`): The maximum size of a string that can be passed as input to the AI model. Prevents the AI from reading too much content at once so that the context window of the AI model is not exceeded. Default: `32000`. This parameter is used by reading tools to control how the document is split into chunks.
-- `reviewOptions?` ([`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options)): Control preview/review behavior. [See available options](/ai/ai-toolkit/client/api-reference/review-options).
-- `commentsOptions?` (`CommentsOptions`): Options for comment and thread operations. This allows passing custom data to comment and thread creation/update operations. The `data` property is used for thread data, while `commentData` is used for comment data.
-  - `threadData?` (`Record<string, any>`): Extra metadata for the AI-generated threads that are created with the `editThreads` tool
-  - `commentData?` (`Record<string, any>`): Extra metadata for the AI-generated comments that are created with the `editThreads` tool
-- `tiptapEditHooks?` (`TiptapEditHooks`): Hooks for intercepting and modifying Tiptap Edit operations. See the [Tiptap Edit hooks guide](/ai/ai-toolkit/client/advanced-guides/tiptap-edit-hooks) for details.
-  - `beforeOperation?` (`(context: BeforeOperationContext) => BeforeOperationResult`): Called before each operation is applied. Return `{ action: 'accept' }` to apply the operation (optionally with `fragment` or `operationType` overrides), or `{ action: 'reject', error }` to skip it.
+- `toolName`（`string`）：要执行的工具。可选值包括[可用工具](/ai/ai-toolkit/client/agents/tools)。
+- `input`（`unknown`）：与工具参数输入架构相符的 JSON 对象。如果该工具不需要参数，请传入空对象（`{}`）。
+- `chunkSize?`（`number`）：可作为输入传递给 AI 模型的字符串最大长度。此参数可防止 AI 一次读取过多内容，从而避免超出 AI 模型的上下文窗口。默认值：`32000`。读取类工具会使用此参数控制文档的分块方式。
+- `reviewOptions?`（[`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options)）：控制预览和审阅行为。[查看可用选项](/ai/ai-toolkit/client/api-reference/review-options)。
+- `commentsOptions?`（`CommentsOptions`）：评论和讨论串操作的选项。可用于向评论和讨论串的创建或更新操作传递自定义数据。`data` 属性用于讨论串数据，`commentData` 用于评论数据。
+  - `threadData?`（`Record<string, any>`）：使用 `editThreads` 工具创建的 AI 生成讨论串的额外元数据
+  - `commentData?`（`Record<string, any>`）：使用 `editThreads` 工具创建的 AI 生成评论的额外元数据
+- `tiptapEditHooks?`（`TiptapEditHooks`）：用于拦截和修改 Tiptap Edit 操作的钩子。详情请参阅 [Tiptap Edit 钩子指南](/ai/ai-toolkit/client/advanced-guides/tiptap-edit-hooks)。
+  - `beforeOperation?`（`(context: BeforeOperationContext) => BeforeOperationResult`）：在应用每项操作之前调用。返回 `{ action: 'accept' }` 以应用操作（可选通过 `fragment` 或 `operationType` 覆盖相应值），或返回 `{ action: 'reject', error }` 以跳过操作。
 
-### Returns (`ExecuteToolResult`)
+### 返回值（`ExecuteToolResult`）
 
-- `output` (`object`): Response object from the tool execution, to be read by the AI agent. The object structure varies depending on the tool executed.
-- `hasError` (`boolean`): Whether there was an error during execution
-- `unknownTool` (`boolean`): Whether the `toolName` is not recognized by the AI Toolkit
-- `docChanged` (`boolean`): Whether the tool call modifies the document.
+- `output`（`object`）：工具执行的响应对象，供 AI 代理读取。对象结构因执行的工具而异。
+- `hasError`（`boolean`）：执行过程中是否发生错误
+- `unknownTool`（`boolean`）：AI Toolkit 是否无法识别 `toolName`
+- `docChanged`（`boolean`）：工具调用是否修改了文档。
 
-### Example
+### 示例
 
 ```ts
 // Handle the tiptapRead tool call
@@ -45,38 +45,38 @@ const result = toolkit.executeTool({
 })
 ```
 
-For a complete hands-on tutorial, see the [AI agent chatbot guide](/ai/ai-toolkit/client/agents/ai-agent-chatbot).
+如需完整的实践教程，请参阅 [AI 代理聊天机器人指南](/ai/ai-toolkit/client/agents/ai-agent-chatbot)。
 
 ## `streamTool`
 
-Updates the document in real-time while a tool call is streaming.
+在工具调用流式传输期间实时更新文档。
 
-This method has the same effect as calling the `executeTool` method, but it edits the document incrementally while the tool call is streaming, instead of editing the document all at once when the tool call has finished streaming.
+此方法与调用 `executeTool` 方法的效果相同，但会在工具调用流式传输期间逐步编辑文档，而不是等到流式传输完成后一次性编辑文档。
 
-### Parameters (`StreamToolOptions`)
+### 参数（`StreamToolOptions`）
 
-- `toolCallId` (`unknown`): The id of the tool call
-- `toolName` (`string`): Tool to execute. Can be one of the [available tools](/ai/ai-toolkit/client/agents/tools).
-- `input` (`unknown`): A JSON object that matches the input schema of the tool parameters. If no parameters are required for this tool, pass an empty object (`{}`). If the tool has not finished streaming, this parameter should be a partial object with part of the parameters, but still a valid JSON object.
-- `hasFinished?` (`boolean`): Whether the tool has finished streaming. Default: `false`
-- `chunkSize?` (`number`): The maximum size of a string that can be passed as input to the AI model. Prevents the AI from reading too much content at once so that the context window of the AI model is not exceeded. Default: `32000`. This parameter is used by reading tools to control how the document is split into chunks.
-- `reviewOptions?` ([`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options)): Control preview/review behavior. [See available options](/ai/ai-toolkit/client/api-reference/review-options).
-- `commentsOptions?` (`CommentsOptions`): Options for comment and thread operations. This allows passing custom data to comment and thread creation/update operations. The `data` property is used for thread data, while `commentData` is used for comment data.
-  - `threadData?` (`Record<string, any>`): Extra metadata for the AI-generated threads that are created with the `editThreads` tool
-  - `commentData?` (`Record<string, any>`): Extra metadata for the AI-generated comments that are created with the `editThreads` tool
-- `tiptapEditHooks?` (`TiptapEditHooks`): Hooks for intercepting and modifying Tiptap Edit operations. See the [Tiptap Edit hooks guide](/ai/ai-toolkit/client/advanced-guides/tiptap-edit-hooks) for details.
-  - `beforeOperation?` (`(context: BeforeOperationContext) => BeforeOperationResult`): Called before each operation is applied. Return `{ action: 'accept' }` to apply the operation (optionally with `fragment` or `operationType` overrides), or `{ action: 'reject', error }` to skip it.
+- `toolCallId`（`unknown`）：工具调用的 ID
+- `toolName`（`string`）：要执行的工具。可选值包括[可用工具](/ai/ai-toolkit/client/agents/tools)。
+- `input`（`unknown`）：与工具参数输入架构相符的 JSON 对象。如果该工具不需要参数，请传入空对象（`{}`）。如果工具尚未完成流式传输，此参数应为仅包含部分参数的对象，但仍须是有效的 JSON 对象。
+- `hasFinished?`（`boolean`）：工具是否已完成流式传输。默认值：`false`
+- `chunkSize?`（`number`）：可作为输入传递给 AI 模型的字符串最大长度。此参数可防止 AI 一次读取过多内容，从而避免超出 AI 模型的上下文窗口。默认值：`32000`。读取类工具会使用此参数控制文档的分块方式。
+- `reviewOptions?`（[`ReviewOptions`](/ai/ai-toolkit/client/api-reference/review-options)）：控制预览和审阅行为。[查看可用选项](/ai/ai-toolkit/client/api-reference/review-options)。
+- `commentsOptions?`（`CommentsOptions`）：评论和讨论串操作的选项。可用于向评论和讨论串的创建或更新操作传递自定义数据。`data` 属性用于讨论串数据，`commentData` 用于评论数据。
+  - `threadData?`（`Record<string, any>`）：使用 `editThreads` 工具创建的 AI 生成讨论串的额外元数据
+  - `commentData?`（`Record<string, any>`）：使用 `editThreads` 工具创建的 AI 生成评论的额外元数据
+- `tiptapEditHooks?`（`TiptapEditHooks`）：用于拦截和修改 Tiptap Edit 操作的钩子。详情请参阅 [Tiptap Edit 钩子指南](/ai/ai-toolkit/client/advanced-guides/tiptap-edit-hooks)。
+  - `beforeOperation?`（`(context: BeforeOperationContext) => BeforeOperationResult`）：在应用每项操作之前调用。返回 `{ action: 'accept' }` 以应用操作（可选通过 `fragment` 或 `operationType` 覆盖相应值），或返回 `{ action: 'reject', error }` 以跳过操作。
 
-### Returns (`StreamToolResult`)
+### 返回值（`StreamToolResult`）
 
-- `output` (`object`): Response object from the tool execution, to be read by the AI agent. The object structure varies depending on the tool executed.
-- `hasError` (`boolean`): Whether there was an error during execution
-- `unknownTool` (`boolean`): Whether the `toolName` is not recognized by the AI Toolkit
-- `docChanged` (`boolean`): Whether the tool call modifies the document.
+- `output`（`object`）：工具执行的响应对象，供 AI 代理读取。对象结构因执行的工具而异。
+- `hasError`（`boolean`）：执行过程中是否发生错误
+- `unknownTool`（`boolean`）：AI Toolkit 是否无法识别 `toolName`
+- `docChanged`（`boolean`）：工具调用是否修改了文档。
 
-### Example
+### 示例
 
-The `streamTool` method is called repeatedly while the tool call is streaming. When the tool call has finished streaming, the `streamTool` method is called again with `hasFinished: true` to indicate that the tool call has finished streaming.
+工具调用处于流式传输期间，会反复调用 `streamTool` 方法。工具调用完成流式传输后，再次调用 `streamTool` 并设置 `hasFinished: true`，以表明工具调用已完成流式传输。
 
 ```ts
 // Stream a tool call while it's being generated.
@@ -101,19 +101,19 @@ const finalResult = toolkit.streamTool({
 })
 ```
 
-For a complete hands-on tutorial on streaming, see the [streaming guide](/ai/ai-toolkit/client/agents/streaming).
+如需完整的流式传输实践教程，请参阅[流式传输指南](/ai/ai-toolkit/client/agents/streaming)。
 
 ## `getActiveSelection`
 
-Returns the value of the `activeSelection` variable.
+返回 `activeSelection` 变量的值。
 
-The active selection is the range that has been set by the AI Toolkit. When set, this range is used instead of the current editor selection in operations like `tiptapReadSelection`. The range is automatically mapped through transactions to maintain correct positions as the document changes.
+活动选区是由 AI Toolkit 设置的范围。设置后，在 `tiptapReadSelection` 等操作中会使用此范围，而不是编辑器当前的选区。随着文档发生变化，该范围会自动映射到事务中，以保持位置正确。
 
-### Returns
+### 返回值
 
-- `Range | null`: The active selection range with `from` and `to` properties, or `null` if no active selection is set.
+- `Range | null`：活动选区范围，包含 `from` 和 `to` 属性；如果未设置活动选区，则为 `null`。
 
-### Example
+### 示例
 
 ```ts
 const toolkit = getAiToolkit(editor)
@@ -122,15 +122,15 @@ const activeSelection = toolkit.getActiveSelection()
 
 ## `setActiveSelection`
 
-Sets the `activeSelection` variable. This variable is used when executing tool calls with the `executeTool` or `streamTool` methods, to determine what range the AI will use instead of the current editor selection in operations like `tiptapReadSelection`.
+设置 `activeSelection` 变量。在使用 `executeTool` 或 `streamTool` 方法执行工具调用时，此变量用于确定 AI 在 `tiptapReadSelection` 等操作中应使用的范围，以替代编辑器当前的选区。
 
-The active selection is the range that the AI should use instead of the current editor selection. The range is automatically mapped through transactions to maintain correct positions as the document changes.
+活动选区是 AI 应使用的范围，用于替代编辑器当前的选区。随着文档发生变化，该范围会自动映射到事务中，以保持位置正确。
 
-### Parameters
+### 参数
 
-- `selection` (`Range | null`): The range to set, with `from` and `to` properties indicating the start and end positions, or `null` to clear the active selection.
+- `selection`（`Range | null`）：要设置的范围，其中 `from` 和 `to` 属性分别表示起始和结束位置；传入 `null` 可清除活动选区。
 
-### Example
+### 示例
 
 ```ts
 const toolkit = getAiToolkit(editor)
