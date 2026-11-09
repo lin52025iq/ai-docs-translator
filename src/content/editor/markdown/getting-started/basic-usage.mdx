@@ -1,20 +1,20 @@
 ---
-title: Basic Usage
+title: 基本用法
 tags:
   - type: beta
 meta:
-  title: Markdown Basic Usage | Tiptap Editor Docs
-  description: Learn the fundamental operations for working with Markdown in Tiptap. This guide covers parsing, serialization, and common tasks.
-  category: Editor
+  title: Markdown 基本用法 | Tiptap 编辑器文档
+  description: 了解在 Tiptap 中使用 Markdown 的基本操作。本指南涵盖解析、序列化和常见任务。
+  category: 编辑器
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-This guide covers the core operations for working with Markdown: parsing Markdown into your editor and serializing editor content back to Markdown.
+本指南介绍使用 Markdown 的核心操作：将 Markdown 解析到编辑器中，以及将编辑器内容序列化回 Markdown。
 
-## Getting Markdown from the Editor
+## 从编辑器获取 Markdown
 
-Use `getMarkdown()` to serialize your editor content to Markdown:
+使用 `getMarkdown()` 将编辑器内容序列化为 Markdown：
 
 ```typescript
 const markdown = editor.getMarkdown()
@@ -26,9 +26,9 @@ console.log(markdown)
 
 <CodeDemo src="https://embed.tiptap.dev/preview/Markdown/Serialize" />
 
-## Setting Content from Markdown
+## 从 Markdown 设置内容
 
-All content commands support the `contentType` option:
+所有内容命令都支持 `contentType` 选项：
 
 ```typescript
 // 1. Initial content
@@ -53,9 +53,9 @@ editor.commands.insertContentAt({ from: 10, to: 20 }, '**Replace**', { contentTy
 
 <CodeDemo src="https://embed.tiptap.dev/preview/Markdown/Parse" />
 
-## Using the MarkdownManager Directly
+## 直接使用 MarkdownManager
 
-For more control, access the `MarkdownManager` via `editor.markdown`:
+如需更精细地控制，可以通过 `editor.markdown` 访问 `MarkdownManager`：
 
 ```typescript
 // Parse Markdown to JSON
@@ -69,11 +69,11 @@ console.log(markdown)
 // # Hello World
 ```
 
-This is useful when working with JSON content outside the editor context.
+当你需要在编辑器上下文之外处理 JSON 内容时，这种方式会很有用。
 
-## GitHub Flavored Markdown (GFM)
+## GitHub 风格的 Markdown（GFM）
 
-Enable GFM for features like tables and task lists:
+启用 GFM 即可使用表格和任务列表等功能：
 
 ```typescript
 import { Markdown } from '@tiptap/markdown'
@@ -101,9 +101,9 @@ const editor = new Editor({
 })
 ```
 
-## Inline Formatting
+## 行内格式
 
-Standard Markdown formatting works automatically:
+标准 Markdown 格式会自动生效：
 
 ```typescript
 const markdown = `
@@ -118,11 +118,11 @@ editor.commands.setContent(markdown, { contentType: 'markdown' })
 const result = editor.getMarkdown() // Formatting preserved
 ```
 
-## Working with Block Elements
+## 使用块级元素
 
-Block elements like headings, lists, and code blocks work as expected:
+标题、列表和代码块等块级元素都能按预期工作：
 
-### Headings
+### 标题
 
 ```typescript
 const markdown = `
@@ -135,7 +135,7 @@ const markdown = `
 `
 ```
 
-### Lists
+### 列表
 
 ```typescript
 // Unordered lists
@@ -157,7 +157,7 @@ const markdown = `
 `
 ```
 
-### Code Blocks
+### 代码块
 
 ```typescript
 const markdown = `
@@ -169,7 +169,7 @@ function hello() {
 `
 ```
 
-### Blockquotes
+### 引用块
 
 ```typescript
 const markdown = `
@@ -180,9 +180,9 @@ const markdown = `
 `
 ```
 
-## Handling HTML in Markdown
+## 处理 Markdown 中的 HTML
 
-The Markdown extension can parse HTML embedded in Markdown using Tiptap's existing `parseHTML` methods:
+Markdown 扩展可以使用 Tiptap 现有的 `parseHTML` 方法解析嵌入在 Markdown 中的 HTML：
 
 ```typescript
 const markdown = `
@@ -198,17 +198,17 @@ Regular **Markdown** continues here.
 editor.commands.setContent(markdown, { contentType: 'markdown' })
 ```
 
-The HTML is parsed according to your extensions' `parseHTML` rules, allowing you to support custom HTML nodes.
+HTML 会根据扩展中的 `parseHTML` 规则进行解析，因此你可以支持自定义 HTML 节点。
 
-## Best Practices
+## 最佳实践
 
-**Always use `contentType`** and set it to `markdown` when setting Markdown content (otherwise it's treated as HTML):
+**始终使用 `contentType`**，并在设置 Markdown 内容时将其设为 `markdown`（否则内容会被视为 HTML）：
 
 ```typescript
 editor.commands.setContent(markdown, { contentType: 'markdown' })
 ```
 
-**Include all needed extensions** or content may be lost:
+**包含所有必需的扩展**，否则内容可能会丢失：
 
 ```typescript
 const editor = new Editor({
@@ -216,36 +216,36 @@ const editor = new Editor({
 })
 ```
 
-**Test round-trip conversion** to ensure your custom Markdown content survives parse → serialize:
+**测试往返转换**，确保自定义 Markdown 内容在解析 → 序列化后仍能保留：
 
 ```typescript
 editor.commands.setContent('# Hello **World**', { contentType: 'markdown' })
 const result = editor.getMarkdown() // Should match original
 ```
 
-## Key Components
+## 核心组件
 
 ### `MarkdownManager`
 
-The `MarkdownManager` class is the core engine that handles parsing and serialization. It:
+`MarkdownManager` 类是负责解析和序列化的核心引擎。它会：
 
-- Wraps and configures the MarkedJS instance
-- Maintains a registry of extension handlers
-- Creates the [Lexer](../glossary/#lexer) instance and registers all [Tokenizers](../glossary/#tokenizer).
-- Coordinates between Markdown tokens and Tiptap JSON nodes
+- 包装并配置 MarkedJS 实例
+- 维护扩展处理器注册表
+- 创建 [Lexer](../glossary/#lexer) 实例并注册所有 [Tokenizer](../glossary/#tokenizer)。
+- 协调 Markdown token 与 Tiptap JSON 节点之间的转换
 
-### `Markdown` extension
+### `Markdown` 扩展
 
-The `Markdown` extension is the main extension that you add to your editor. It provides:
+`Markdown` 扩展是添加到编辑器中的主要扩展。它提供：
 
-- Overrides for all **content-related** commands on the editor to support Markdown input/output
-- The `getMarkdown()` method to serialize content as Markdown
-- The `setContent()` command with `contentType: 'markdown'` option to parse Markdown input
-- Access to the [`MarkdownManager`](#using-the-markdownmanager-directly) instance via `editor.markdown`
+- 覆盖编辑器中所有与**内容相关**的命令，以支持 Markdown 输入/输出
+- 用于将内容序列化为 Markdown 的 `getMarkdown()` 方法
+- 带有 `contentType: 'markdown'` 选项的 `setContent()` 命令，用于解析 Markdown 输入
+- 通过 `editor.markdown` 访问 [`MarkdownManager`](#using-the-markdownmanager-directly) 实例
 
-### Extension Handlers
+### 扩展处理器
 
-Each Tiptap extension can provide Markdown support by configuring the extension:
+每个 Tiptap 扩展都可以通过配置扩展来提供 Markdown 支持：
 
 ```typescript
 const MyExtension = Node.create({
@@ -257,10 +257,9 @@ const MyExtension = Node.create({
 })
 ```
 
-The handlers translate between Markdown tokens and Tiptap nodes in both directions and are automatically registered
-by the [`MarkdownManager`](#using-the-markdownmanager-directly), creating [Tokenizers](../glossary/#tokenizer) out of them and registering those to the [Lexer](../glossary/#lexer).
+这些处理器负责在 Markdown token 和 Tiptap 节点之间进行双向转换，并由 [`MarkdownManager`](#using-the-markdownmanager-directly) 自动注册。`MarkdownManager` 会根据它们创建 [Tokenizer](../glossary/#tokenizer)，并将其注册到 [Lexer](../glossary/#lexer) 中。
 
-Learn more about:
+了解更多：
 
 - [`renderMarkdown`](../advanced-usage/custom-serializing)
 - [`parseMarkdown`](../advanced-usage/custom-parsing)
