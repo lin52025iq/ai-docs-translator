@@ -34,27 +34,27 @@ export const EnterpriseCalloutAuto = ({
 
   useEffect(() => {
     if (renderMode === 'sidebar') {
-      // Find the secondary sidebar by looking for the requirements-slot's parent
+      // 查找 requirements-slot 的父元素，以定位次级侧边栏
       const requirementsSlot = document.getElementById('requirements-slot')
       if (requirementsSlot && requirementsSlot.parentElement) {
         const sidebar = requirementsSlot.parentElement
-        // Find or create a container for the callout after requirements-slot
+        // 查找或创建位于 requirements-slot 后面的提示框容器
         let container = sidebar.querySelector('#enterprise-callout-slot')
         if (!container) {
           container = document.createElement('div')
           container.id = 'enterprise-callout-slot'
           container.className = 'mt-8'
-          // Insert after requirements-slot
+          // 插入到 requirements-slot 后面
           requirementsSlot.insertAdjacentElement('afterend', container)
         }
-        // The container only exists in the browser, so it can be known only after mounting
+        // 该容器仅在浏览器中存在，因此只能在组件挂载后获取
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setSidebarElement(container)
       }
     }
   }, [renderMode])
 
-  // Render inline
+  // 行内渲染
   if (renderMode === 'inline') {
     return (
       <EnterpriseCallout
@@ -67,7 +67,7 @@ export const EnterpriseCalloutAuto = ({
     )
   }
 
-  // Render in sidebar via portal
+  // 通过 portal 在侧边栏中渲染
   if (sidebarElement && renderMode === 'sidebar') {
     return createPortal(
       <EnterpriseCallout variant={variant} disableWaitlist={disableWaitlist} inverted={inverted} />,
