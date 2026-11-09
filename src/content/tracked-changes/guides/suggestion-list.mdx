@@ -1,29 +1,28 @@
 ---
-title: Build a suggestion list
+title: 构建建议列表
 tags:
   - type: addon
 meta:
-  title: Build a suggestion list | Tiptap Tracked Changes Docs
-  description: Create a sidebar component that displays all tracked change suggestions with accept and reject actions.
-  category: Tracked Changes
+  title: 构建建议列表 | Tiptap 跟踪更改文档
+  description: 创建一个侧边栏组件，用于显示所有跟踪更改建议，并提供接受和拒绝操作。
+  category: 跟踪更改
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Learn how to build a sidebar component that lists all pending suggestions in the document, showing who made each change and allowing users to accept or reject them.
+了解如何构建一个侧边栏组件，列出文档中所有待处理的建议，显示每项更改的作者，并允许用户接受或拒绝这些建议。
 
-<Callout title="Framework note" variant="hint">
-  This guide uses React, but the same concepts apply to Vue and any other framework supported by
-  Tiptap.
+<Callout title="框架说明" variant="hint">
+  本指南使用 React，但相同的概念也适用于 Vue 和 Tiptap 支持的其他框架。
 </Callout>
 
-## Prerequisites
+## 前提条件
 
-This guide assumes you have a working editor with the Tracked Changes extension. If you don't, follow the [editor setup guide](/tracked-changes/guides/editor-setup) first.
+本指南假设你已拥有一个正常运行且启用了 Tracked Changes 扩展的编辑器。如果还没有，请先参阅[编辑器设置指南](/tracked-changes/guides/editor-setup)。
 
-## Query suggestions
+## 查询建议
 
-The extension exports a `findSuggestions` utility that returns all suggestions in the document. Call it on `onCreate` and `onUpdate` to keep your list in sync.
+该扩展导出了 `findSuggestions` 工具函数，可返回文档中的所有建议。在 `onCreate` 和 `onUpdate` 中调用它，即可让列表保持同步。
 
 ```jsx
 import { useState } from 'react'
@@ -81,12 +80,12 @@ function Editor() {
 ```
 
 `★ Insight ─────────────────────────────────────`
-A single suggestion can span multiple text nodes when it crosses formatting boundaries (e.g. part of the text is bold). `findSuggestions` returns one entry per text node, so deduplication by `id` is essential to avoid showing the same suggestion multiple times in the list.
+当建议跨越格式边界时（例如部分文本为粗体），单个建议可能横跨多个文本节点。`findSuggestions` 会为每个文本节点返回一条记录，因此必须按 `id` 去重，避免列表中重复显示同一条建议。
 `─────────────────────────────────────────────────`
 
-## Build the SuggestionList component
+## 构建 SuggestionList 组件
 
-Each suggestion has a `type`, the changed `text`, user metadata, and a timestamp. Attribute-change suggestions also expose the changed node type and values. Use these to render a clear list.
+每条建议都包含 `type`、已更改的 `text`、用户元数据和时间戳。属性更改建议还会提供已更改的节点类型和值。你可以使用这些信息来呈现清晰的列表。
 
 ```jsx
 function SuggestionList({ suggestions, onAccept, onReject }) {
@@ -114,11 +113,11 @@ function SuggestionList({ suggestions, onAccept, onReject }) {
 }
 ```
 
-## Build the SuggestionItem component
+## 构建 SuggestionItem 组件
 
-Display the suggestion type, text preview, user info, and action buttons.
+显示建议类型、文本预览、用户信息和操作按钮。
 
-When a suggestion affects a block-level node (such as a paragraph or heading), the suggestion exposes `insertedNodes` or `deletedNodes` — arrays of `JSONContent` describing the full node structure. Use these to render a node type badge above the content text.
+当建议影响块级节点（例如段落或标题）时，它会提供 `insertedNodes` 或 `deletedNodes`，即描述完整节点结构的 `JSONContent` 数组。你可以使用这些数据，在内容文本上方显示节点类型徽章。
 
 ```jsx
 function SuggestionItem({ suggestion, onAccept, onReject }) {
@@ -186,7 +185,7 @@ function AttributeChanges({ changes }) {
 }
 ```
 
-Using `suggestion.text` shows what each author contributed on their own — the right default for a review panel. When another author has stacked an edit inside this suggestion, `suggestion.fullText` differs from `suggestion.text` and holds the complete span including the nested text. You can surface that as a hint:
+使用 `suggestion.text` 可以显示每位作者各自贡献的内容，这是审核面板中最合适的默认设置。如果另一位作者在该建议中叠加了编辑，`suggestion.fullText` 就会与 `suggestion.text` 不同，并包含嵌套文本在内的完整范围。你可以将其作为提示显示：
 
 ```jsx
 {
@@ -198,9 +197,9 @@ Using `suggestion.text` shows what each author contributed on their own — the 
 }
 ```
 
-See [`text` vs `fullText`](/tracked-changes/api-reference/types#text-vs-fulltext) and [nested suggestions](/tracked-changes/usage/advanced-usage#nested-and-stacked-suggestions) for the full behavior.
+有关完整行为，请参阅 [`text` 与 `fullText`](/tracked-changes/api-reference/types#text-vs-fulltext) 和[嵌套建议](/tracked-changes/usage/advanced-usage#nested-and-stacked-suggestions)。
 
-Style the components to match your UI. Here is a minimal CSS starting point:
+根据你的界面风格设置组件样式。下面是一个精简的 CSS 起始示例：
 
 ```css
 .editor-layout {
@@ -262,9 +261,9 @@ Style the components to match your UI. Here is a minimal CSS starting point:
 }
 ```
 
-## Add bulk actions
+## 添加批量操作
 
-Add buttons above the list to accept or reject all suggestions at once.
+在列表上方添加按钮，以便一次性接受或拒绝所有建议。
 
 ```jsx
 function SuggestionList({ suggestions, onAccept, onReject, onAcceptAll, onRejectAll }) {
@@ -292,7 +291,7 @@ function SuggestionList({ suggestions, onAccept, onReject, onAcceptAll, onReject
 }
 ```
 
-Wire up the bulk actions in the parent:
+在父组件中接入批量操作：
 
 ```jsx
 <SuggestionList
@@ -316,9 +315,9 @@ Wire up the bulk actions in the parent:
 />
 ```
 
-## Filter suggestions
+## 筛选建议
 
-Use the options parameter on `findSuggestions` to filter by type or user:
+使用 `findSuggestions` 的选项参数，按类型或用户筛选建议：
 
 ```jsx
 import { findSuggestions } from '@tiptap-pro/extension-tracked-changes'
@@ -333,11 +332,11 @@ const deletions = findSuggestions(editor, 'suggestion', { type: 'delete' })
 const userSuggestions = findSuggestions(editor, 'suggestion', { userId: 'user-123' })
 ```
 
-You can add filter controls in your sidebar to let users view specific suggestion types.
+你可以在侧边栏中添加筛选控件，让用户查看特定类型的建议。
 
-## Listen to events
+## 监听事件
 
-For more reactive updates, listen to the extension's events instead of (or in addition to) polling on `onUpdate`:
+如需更及时地响应更新，可以监听扩展事件，替代（或补充）在 `onUpdate` 中轮询：
 
 ```jsx
 import { useEffect } from 'react'
@@ -365,7 +364,7 @@ useEffect(() => {
 }, [editor])
 ```
 
-## Next steps
+## 后续步骤
 
-- Add [comments integration](/tracked-changes/guides/comments-integration) for a full review workflow
-- Explore the [utilities API](/tracked-changes/api-reference/utilities) for more query functions like `getSuggestionAtSelection` and `findSuggestionsInRange`
+- 添加[评论集成](/tracked-changes/guides/comments-integration)，构建完整的审核工作流
+- 探索[工具函数 API](/tracked-changes/api-reference/utilities)，了解 `getSuggestionAtSelection` 和 `findSuggestionsInRange` 等更多查询函数
