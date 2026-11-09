@@ -1,38 +1,37 @@
 ---
-title: Webhooks
+title: Webhook
 meta:
-  title: Webhooks | Hocuspocus Docs
+  title: Webhook | Hocuspocus 文档
   category: Hocuspocus
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@hocuspocus/extension-webhook.svg?label=version
     url: https://www.npmjs.com/package/@hocuspocus/extension-webhook
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@hocuspocus/extension-webhook.svg
     url: https://npmcharts.com/compare/@hocuspocus/extension-webhook?minimal=true
-    label: Downloads
+    label: 下载量
   - type: image
     src: https://img.shields.io/npm/l/@hocuspocus/extension-webhook.svg
     url: https://www.npmjs.com/package/@hocuspocus/extension-webhook
-    label: License
+    label: 许可证
   - type: image
     src: https://img.shields.io/badge/chat-on%20discord-7289da.svg?sanitize=true
     url: https://discord.gg/WtJ49jGshW
-    label: Chat
+    label: 聊天
 ---
-The webhook extension allows you to connect Hocuspocus to your existing application by triggering webhooks on certain
-events.
+Webhook 扩展可在特定事件触发时发送 Webhook，从而将 Hocuspocus 连接到现有应用。
 
-## Installation
+## 安装
 
-Install the Webhook package with:
+使用以下命令安装 Webhook 包：
 
 ```bash
 npm install @hocuspocus/extension-webhook
 ```
 
-## Configuration
+## 配置
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -69,14 +68,13 @@ const server = new Server({
 server.listen();
 ```
 
-## How it works
+## 工作原理
 
-The webhook extension listens on up to four configurable events/hooks that will trigger a POST request to the
-configured url.
+Webhook 扩展最多可监听四个可配置的事件/钩子。触发这些事件/钩子时，会向配置的 URL 发送 POST 请求。
 
 ### onConnect
 
-When a new user connects to the server, the onConnect webhook will be triggered with the following payload:
+新用户连接到服务器时，会触发 onConnect Webhook，并发送以下负载：
 
 ```json
 {
@@ -93,7 +91,7 @@ When a new user connects to the server, the onConnect webhook will be triggered 
 }
 ```
 
-You can respond with a JSON payload that will be set as context throughout the rest of the application. For example:
+你可以返回一个 JSON 负载，作为上下文供应用的其余部分使用。例如：
 
 ```js
 // authorize the user by the request parameters or headers
@@ -116,7 +114,7 @@ response.end(
 
 ### onCreate
 
-When a new document is created the onCreate webhook will be triggered with the following payload:
+创建新文档时，会触发 onCreate Webhook，并发送以下负载：
 
 ```json
 {
@@ -127,10 +125,9 @@ When a new document is created the onCreate webhook will be triggered with the f
 }
 ```
 
-You can use this to import a document into Hocuspocus. The webhook extension will first load the document from the
-primary storage and only import it if it doesn't already exist in there.
+你可以利用此功能将文档导入 Hocuspocus。Webhook 扩展会先从主存储加载文档；只有当文档尚不存在时，才会导入。
 
-Just respond with all the single documents keyed by their field name. For example:
+只需返回所有单独文档，并以其字段名作为键。例如：
 
 ```js
 response.writeHead(200, { "Content-Type": "application/json" });
@@ -159,8 +156,7 @@ response.end(
 
 ### onChange
 
-When a document is changed the onChange webhook will be triggered with the following payload including the context you
-set before:
+文档发生更改时，会触发 onChange Webhook，并发送以下负载，其中包含你之前设置的上下文：
 
 ```json
 {
@@ -192,12 +188,11 @@ set before:
 }
 ```
 
-Because this happens on every keystroke up to multiple times a second, the webhook is debounced by default. You can
-configure this (or shut it off entirely) with the `debounce` and `debounceMaxWait` configuration options.
+由于每次击键都可能触发此事件，每秒甚至可能触发多次，因此默认会对 Webhook 进行防抖处理。你可以通过 `debounce` 和 `debounceMaxWait` 配置选项调整防抖设置，也可以完全关闭防抖。
 
 ### onDisconnect
 
-When a user disconnects the onDisconnect webhook will be triggered with the following payload:
+用户断开连接时，会触发 onDisconnect Webhook，并发送以下负载：
 
 ```json
 {
@@ -212,14 +207,11 @@ When a user disconnects the onDisconnect webhook will be triggered with the foll
 }
 ```
 
-### Transformation
+### 转换
 
-The Y-Doc must be serialized into something readable by your application and when importing a document it must be
-converted into a Y-Doc respectively.
+Y-Doc 必须序列化为应用可读取的格式；导入文档时，也必须将其转换为 Y-Doc。
 
-Because Hocuspocus doesn't know how your data is structured, you need to pass a transformer to the Webhook extension.
-You can use one of the transformers from the `@hocuspocus/transformer` package. Make sure to configure them properly.
-In this example we used the TiptapTransformer that needs the list of extensions:
+由于 Hocuspocus 不知道你的数据结构，因此需要向 Webhook 扩展传入一个转换器。你可以使用 `@hocuspocus/transformer` 包中的转换器，并确保正确配置。以下示例使用了 TiptapTransformer，它需要传入扩展列表：
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -243,8 +235,7 @@ const server = new Server({
 server.listen();
 ```
 
-Alternatively you can write your own implementation by simply passing functions that convert a Y-Doc to your
-representation and vice versa:
+你也可以自行实现，只需传入将 Y-Doc 转换为目标表示形式以及反向转换的函数：
 
 ```js
 import { Server } from "@hocuspocus/server";
@@ -274,14 +265,13 @@ const server = new Server({
 server.listen();
 ```
 
-### Verify Request Signature
+### 验证请求签名
 
-On your application server you should verify the signature coming from the webhook extension to secure the route.
+你应该在应用服务器上验证 Webhook 扩展发送的签名，以保护该路由。
 
-The extension sends POST requests, and the signature is stored in the `X-Hocuspocus-Signature-256` header containing a
-message authentication code created with sha256.
+扩展会发送 POST 请求，签名存放在 `X-Hocuspocus-Signature-256` 标头中。该标头包含使用 sha256 生成的消息认证码。
 
-Here are some examples how you could do that in different languages:
+以下示例展示了如何使用不同语言进行验证：
 
 **PHP**
 
@@ -324,4 +314,3 @@ const verifySignature = (request: IncomingMessage): boolean => {
   return signature.length !== digest.length || timingSafeEqual(digest, signature)
 }
 ```
-
