@@ -1,67 +1,67 @@
 ---
-title: Comments webhook
+title: Comments Webhook
 tags:
   - type: team
 meta:
-  title: Webhook | Tiptap Comments Docs
-  description: Enable and manage webhooks for Comments in Tiptap to receive notifications on thread and comment activities. More in the docs!
-  category: Comments
+  title: Webhook | Tiptap Comments 文档
+  description: 启用和管理 Tiptap Comments 的 Webhook，以接收有关讨论串和评论活动的通知。了解更多信息，请参阅文档！
+  category: 评论
 ---
 import { Requirements, RequirementItem } from '@/components/Requirements'
 import { Callout } from '@/components/ui/Callout'
 
-Set up and manage webhooks to improve your Comments integration. Common use cases for Comments webhooks include:
+设置并管理 Webhook，改善 Comments 集成。Comments Webhook 的常见用途包括：
 
-- Sending notifications when a thread is created, resolved, updated, or deleted.
-- Notifying users when comments are added, updated, or deleted.
-- In conjunction with the [mention extension](/editor/extensions/nodes/mention), sending emails or notifications to users when they are mentioned in comments.
+- 在讨论串创建、解决、更新或删除时发送通知。
+- 在评论添加、更新或删除时通知用户。
+- 配合 [mention 扩展](/editor/extensions/nodes/mention)，在用户于评论中被提及时向其发送电子邮件或通知。
 
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Team plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 激活试用或订阅">
+        在账户中开始[免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Team 计划](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Start Document server">
-        Configure your [Comments webhook](https://cloud.tiptap.dev/v2/configuration/document-server) after starting your [Environment](https://cloud.tiptap.dev/v2/configuration/document-server).
+    <RequirementItem label="2. 启动 Document server">
+        启动[环境](https://cloud.tiptap.dev/v2/configuration/document-server)后，配置你的 [Comments Webhook](https://cloud.tiptap.dev/v2/configuration/document-server)。
     </RequirementItem>
 </Requirements>
 
-## Enable comment events
+## 启用评论事件
 
-For accounts created after March 1, 2024, Comments webhooks are enabled by default. Otherwise, you could still be using an older version of the webhook system and need to manually upgrade:
+对于 2024 年 3 月 1 日之后创建的账户，Comments Webhook 默认已启用。否则，你可能仍在使用较旧版本的 Webhook 系统，需要手动升级：
 
-1. In case you’ve previously implemented Collaboration webhooks, check the `type` and `trigger` fields when processing incoming webhooks. ([Documentation](/collaboration/core-concepts/webhooks))
-2. Navigate to your [Collaboration settings](https://cloud.tiptap.dev/v2/configuration/document-server).
-3. In the Webhooks section, click **Upgrade**.
+1. 如果你之前实现过 Collaboration Webhook，请在处理收到的 Webhook 时检查 `type` 和 `trigger` 字段。（[文档](/collaboration/core-concepts/webhooks)）
+2. 前往你的 [Collaboration 设置](https://cloud.tiptap.dev/v2/configuration/document-server)。
+3. 在 Webhooks 部分，点击 **升级**。
 
-This upgrade is necessary to accommodate the introduction of multiple new events being routed to the same webhook endpoint, distinguished by a new `type` and `trigger` field.
+此升级是必要的，因为多个新事件将被路由到同一个 Webhook 端点，并通过新的 `type` 和 `trigger` 字段加以区分。
 
-## Configure webhooks
+## 配置 Webhook
 
-To configure webhooks for Comments notifications:
+配置用于接收 Comments 通知的 Webhook：
 
-1. Navigate to the [Collaboration settings](https://cloud.tiptap.dev/v2/configuration/document-server) in your account.
-2. In the Webhooks section, add your desired endpoint URL.
+1. 前往账户中的 [Collaboration 设置](https://cloud.tiptap.dev/v2/configuration/document-server)。
+2. 在 Webhooks 部分，添加所需的端点 URL。
 
-After adding your URL, the webhook is immediately live. You'll start receiving notifications for the specified events without any delay.
+添加 URL 后，Webhook 会立即生效。你将开始接收指定事件的通知，不会有任何延迟。
 
-## Webhook events
+## Webhook 事件
 
-Comments webhooks trigger notifications for a variety of events related to threads and comments within the Comments extension. These events are triggered immediately as soon as their associated action occur within the comments.
+Comments Webhook 会针对 Comments 扩展中与讨论串和评论相关的各种事件触发通知。相关操作一旦在评论中发生，就会立即触发这些事件。
 
 - `comment.added`
 - `comment.updated`
 - `comment.deleted`
-- `thread.created` (only triggered if the thread is created without a first comment, usually via our 'create thread' API. When using the official Tiptap extensions, you'll only see `comment.added`)
+- `thread.created`（仅当讨论串创建时没有首条评论才会触发，通常是通过我们的“create thread” API 创建时。使用 Tiptap 官方扩展时，你只会看到 `comment.added`）
 - `thread.resolved`
 - `thread.updated`
 - `thread.deleted`
 
-## Example payloads
+## 示例负载
 
-Below are example payloads for different types of webhook events:
+以下是不同类型 Webhook 事件的示例负载：
 
-### Thread/comment created
+### 讨论串/评论已创建
 
 ```json
 {
@@ -114,7 +114,7 @@ Below are example payloads for different types of webhook events:
 }
 ```
 
-### Comment updated
+### 评论已更新
 
 ```json
 {
@@ -162,7 +162,7 @@ Below are example payloads for different types of webhook events:
 }
 ```
 
-### Comment deleted
+### 评论已删除
 
 ```json
 {
@@ -202,7 +202,7 @@ Below are example payloads for different types of webhook events:
 }
 ```
 
-### Thread deleted
+### 讨论串已删除
 
 ```json
 {
@@ -233,7 +233,7 @@ Below are example payloads for different types of webhook events:
 }
 ```
 
-### Thread resolved
+### 讨论串已解决
 
 ```json
 {
@@ -277,7 +277,7 @@ Below are example payloads for different types of webhook events:
 }
 ```
 
-### Thread updated (i.e., Unresolved)
+### 讨论串已更新（即重新打开）
 
 ```json
 {
