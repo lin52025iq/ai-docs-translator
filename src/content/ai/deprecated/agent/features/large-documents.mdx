@@ -1,22 +1,22 @@
 ---
-title: Read large documents
+title: 阅读大型文档
 meta:
-  title: Read large documents | Tiptap Content AI
-  description: Learn how the AI agent reads the document in Tiptap.
+  title: 阅读大型文档 | Tiptap Content AI
+  description: 了解 Tiptap 中的 AI 代理如何读取文档。
   category: Content AI
 ---
 
-The AI agent splits the document in chunks to handle documents of any size efficiently. This chunking mechanism is essential because:
+AI 代理会将文档拆分为多个块，以便高效处理任意大小的文档。这种分块机制至关重要，原因如下：
 
-1. Large documents may exceed the context window of the LLM
-2. Editing chunks is more efficient for multi-turn conversations
-3. It allows the AI agent to focus on specific parts of the document
+1. 大型文档可能超出 LLM 的上下文窗口
+2. 在多轮对话中，编辑文档块的效率更高
+3. 这样 AI 代理就能专注于文档的特定部分
 
-## Chunking mechanism
+## 分块机制
 
-By default, the document is split into chunks of approximately 32000 characters each, while preserving HTML structure. The AI agent reads one chunk at a time and can navigate to the next or previous chunk as needed.
+默认情况下，文档会被拆分为多个块，每块约 32000 个字符，同时保留 HTML 结构。AI 代理一次读取一个块，并可根据需要跳转到下一个或上一个块。
 
-Customize the amount of characters per chunk by setting the `chunkSize` option:
+设置 `chunkSize` 选项可自定义每个块的字符数：
 
 ```tsx
 const provider = new AiAgentProvider({
@@ -25,9 +25,9 @@ const provider = new AiAgentProvider({
 })
 ```
 
-## Custom chunking
+## 自定义分块
 
-You can customize how the document is chunked by providing a custom `chunkHtml` function:
+通过提供自定义的 `chunkHtml` 函数，可以自定义文档的分块方式：
 
 ```tsx
 const provider = new AiAgentProvider({
