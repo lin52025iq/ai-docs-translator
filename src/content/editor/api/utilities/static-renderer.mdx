@@ -1,38 +1,38 @@
 ---
-title: Static Renderer
+title: 静态渲染器
 meta:
-  title: Static Renderer | Tiptap Editor Docs
-  description: Use the Static Renderer to render JSON content as HTML, markdown, or React components without an editor instance. Learn more in our docs!
-  category: Editor
+  title: 静态渲染器 | Tiptap 编辑器文档
+  description: 使用静态渲染器将 JSON 内容渲染为 HTML、Markdown 或 React 组件，无需创建编辑器实例。详情请参阅文档！
+  category: 编辑器
 tags:
   - type: image
     src: https://img.shields.io/npm/v/@tiptap/static-renderer?label=version
     url: https://www.npmjs.com/package/@tiptap/static-renderer
-    label: Version
+    label: 版本
   - type: image
     src: https://img.shields.io/npm/dm/@tiptap/static-renderer?label=version
     url: https://npmcharts.com/compare/@tiptap/static-renderer
-    label: Downloads
+    label: 下载量
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 import { Callout } from '@/components/ui/Callout'
 
-The Static Renderer helps render JSON content as HTML, markdown, or React components without an editor instance. All it needs is JSON content and a list of extensions.
+静态渲染器可帮助你在不创建编辑器实例的情况下，将 JSON 内容渲染为 HTML、Markdown 或 React 组件。你只需要提供 JSON 内容和扩展列表。
 
 <CodeDemo path="/examples/staticrendering" />
 
-## Why Static Render?
+## 为什么使用静态渲染？
 
-The main use case for static rendering is to render a Tiptap/ProseMirror JSON document on the server side, for example within a Next.js or Nuxt.js application. This way, you can render the content of your editor to HTML before sending it to the client, which can improve the performance of your application by not having to load the editor on the client or server.
+静态渲染的主要用途是在服务器端渲染 Tiptap/ProseMirror JSON 文档，例如在 Next.js 或 Nuxt.js 应用中。这样，你可以在将编辑器内容发送到客户端之前将其渲染为 HTML；由于无需在客户端或服务器上加载编辑器，这可以提升应用性能。
 
-Another use case is to render the content of your editor to another format like markdown, which can be useful if you want to send it to a markdown-based API. The static renderer is built in a way that the output can be anything you want, as long as you provide the correct mappings.
+另一种用途是将编辑器内容渲染为 Markdown 等其他格式，这在需要将内容发送到基于 Markdown 的 API 时很有用。静态渲染器的设计十分灵活，只要提供正确的映射，输出格式可以是你需要的任何格式。
 
-But what makes it static? The static renderer doesn't require a browser, DOM or even an editor instance to render the content. It's a pure JavaScript function that takes a document (as JSON or a ProseMirror Node instance) and returns the target format back.
+那么，它的“静态”体现在哪里？静态渲染器不需要浏览器、DOM，甚至不需要编辑器实例即可渲染内容。它是一个纯 JavaScript 函数，接收文档（JSON 或 ProseMirror Node 实例），并返回目标格式的内容。
 
-## Generating HTML strings from JSON
+## 将 JSON 生成 HTML 字符串
 
-Given a JSON document, the `renderToHTMLString` function will return an HTML string representing the JSON content. The function takes three arguments: the JSON document, a list of extensions, and an options object.
+对于给定的 JSON 文档，`renderToHTMLString` 函数会返回表示该 JSON 内容的 HTML 字符串。该函数接收三个参数：JSON 文档、扩展列表和选项对象。
 
 ```js
 import StarterKit from '@tiptap/starter-kit'
@@ -71,23 +71,21 @@ function renderToHTMLString(options: {
 }): string
 ```
 
-- `extensions`: An array of Tiptap extensions that are used to render the content.
-- `content`: The content to render. Can be a Prosemirror Node instance or a JSON representation of a Prosemirror document.
-- `staticEditorOptions`: Optional editor-level options that affect rendered output. Currently supports `textDirection` (`'ltr' | 'rtl' | 'auto'`), which mirrors the `textDirection` editor option on `Editor` so the output includes the expected `dir` attribute.
-- `options`: An object with additional options.
-- `options.nodeMapping`: An object that maps Prosemirror nodes to HTML strings.
-- `options.markMapping`: An object that maps Prosemirror marks to HTML strings.
-- `options.unhandledNode`: A function that is called when an unhandled node is encountered.
-- `options.unhandledMark`: A function that is called when an unhandled mark is encountered.
+- `extensions`：用于渲染内容的 Tiptap 扩展数组。
+- `content`：要渲染的内容。可以是 Prosemirror Node 实例，也可以是 Prosemirror 文档的 JSON 表示。
+- `staticEditorOptions`：可选的编辑器级选项，会影响渲染结果。目前支持 `textDirection`（`'ltr' | 'rtl' | 'auto'`），与 `Editor` 上的 `textDirection` 编辑器选项对应，以便输出包含预期的 `dir` 属性。
+- `options`：包含其他选项的对象。
+- `options.nodeMapping`：将 Prosemirror 节点映射为 HTML 字符串的对象。
+- `options.markMapping`：将 Prosemirror 标记映射为 HTML 字符串的对象。
+- `options.unhandledNode`：遇到未处理的节点时调用的函数。
+- `options.unhandledMark`：遇到未处理的标记时调用的函数。
 
-## Generating Markdown from JSON
+## 将 JSON 生成 Markdown
 
-Given a JSON document, the `renderToMarkdown` function will return a markdown string representing the JSON content. The function takes three arguments: the JSON document, a list of extensions, and an options object.
+对于给定的 JSON 文档，`renderToMarkdown` 函数会返回表示该 JSON 内容的 Markdown 字符串。该函数接收三个参数：JSON 文档、扩展列表和选项对象。
 
 <Callout variant="warning">
-  This package does not validate the markdown output, there are several markdown flavors and this
-  package does not enforce any of them. It&apos;s up to you to ensure that the markdown output is
-  valid.
+  此包不会验证生成的 Markdown。Markdown 有多种风格，本包不会强制采用其中任何一种。你需要自行确保生成的 Markdown 有效。
 </Callout>
 
 ```js
@@ -125,18 +123,18 @@ function renderToMarkdown(options: {
 }): string
 ```
 
-- `extensions`: An array of Tiptap extensions that are used to render the content.
-- `content`: The content to render. Can be a Prosemirror Node instance or a JSON representation of a Prosemirror document.
-- `staticEditorOptions`: Optional editor-level options that affect rendered output. Currently supports `textDirection` (`'ltr' | 'rtl' | 'auto'`), which mirrors the `textDirection` editor option on `Editor` so the output includes the expected `dir` attribute.
-- `options`: An object with additional options.
-- `options.nodeMapping`: An object that maps Prosemirror nodes to markdown strings.
-- `options.markMapping`: An object that maps Prosemirror marks to markdown strings.
-- `options.unhandledNode`: A function that is called when an unhandled node is encountered.
-- `options.unhandledMark`: A function that is called when an unhandled mark is encountered.
+- `extensions`：用于渲染内容的 Tiptap 扩展数组。
+- `content`：要渲染的内容。可以是 Prosemirror Node 实例，也可以是 Prosemirror 文档的 JSON 表示。
+- `staticEditorOptions`：可选的编辑器级选项，会影响渲染结果。目前支持 `textDirection`（`'ltr' | 'rtl' | 'auto'`），与 `Editor` 上的 `textDirection` 编辑器选项对应，以便输出包含预期的 `dir` 属性。
+- `options`：包含其他选项的对象。
+- `options.nodeMapping`：将 Prosemirror 节点映射为 Markdown 字符串的对象。
+- `options.markMapping`：将 Prosemirror 标记映射为 Markdown 字符串的对象。
+- `options.unhandledNode`：遇到未处理的节点时调用的函数。
+- `options.unhandledMark`：遇到未处理的标记时调用的函数。
 
-## Generating React components from JSON
+## 将 JSON 生成 React 组件
 
-Given a JSON document, the `renderToReactElement` function will return a React component representing the JSON content. The function takes three arguments: the JSON document, a list of extensions, and an options object.
+对于给定的 JSON 文档，`renderToReactElement` 函数会返回表示该 JSON 内容的 React 组件。该函数接收三个参数：JSON 文档、扩展列表和选项对象。
 
 ```js
 import StarterKit from '@tiptap/starter-kit'
@@ -175,18 +173,18 @@ function renderToReactElement(options: {
 }): ReactElement
 ```
 
-- `extensions`: An array of Tiptap extensions that are used to render the content.
-- `content`: The content to render. Can be a Prosemirror Node instance or a JSON representation of a Prosemirror document.
-- `staticEditorOptions`: Optional editor-level options that affect rendered output. Currently supports `textDirection` (`'ltr' | 'rtl' | 'auto'`), which mirrors the `textDirection` editor option on `Editor` so the output includes the expected `dir` attribute.
-- `options`: An object with additional options.
-- `options.nodeMapping`: An object that maps Prosemirror nodes to React components.
-- `options.markMapping`: An object that maps Prosemirror marks to React components.
-- `options.unhandledNode`: A function that is called when an unhandled node is encountered.
-- `options.unhandledMark`: A function that is called when an unhandled mark is encountered.
+- `extensions`：用于渲染内容的 Tiptap 扩展数组。
+- `content`：要渲染的内容。可以是 Prosemirror Node 实例，也可以是 Prosemirror 文档的 JSON 表示。
+- `staticEditorOptions`：可选的编辑器级选项，会影响渲染结果。目前支持 `textDirection`（`'ltr' | 'rtl' | 'auto'`），与 `Editor` 上的 `textDirection` 编辑器选项对应，以便输出包含预期的 `dir` 属性。
+- `options`：包含其他选项的对象。
+- `options.nodeMapping`：将 Prosemirror 节点映射为 React 组件的对象。
+- `options.markMapping`：将 Prosemirror 标记映射为 React 组件的对象。
+- `options.unhandledNode`：遇到未处理的节点时调用的函数。
+- `options.unhandledMark`：遇到未处理的标记时调用的函数。
 
 ### React NodeViews
 
-The static renderer doesn't support node views automatically, so you need to provide a mapping for each node type that you want rendered as a node view. Here is an example of how you can render a node view as a React component:
+静态渲染器不会自动支持节点视图，因此你需要为每种要渲染为节点视图的节点类型提供映射。下面是将节点视图渲染为 React 组件的示例：
 
 ```js
 
@@ -237,7 +235,7 @@ renderToReactElement({
 // returns: <div class="my-custom-component-without-content">200 This is a react component!</div>
 ```
 
-But, what if you want to render the rich text content of the node view? You can do that by providing a `NodeViewContent` component as a child of the node view component:
+但是，如果你想渲染节点视图中的富文本内容，该怎么办？你可以将 `NodeViewContent` 组件作为节点视图组件的子组件提供：
 
 ```js
 import { Node } from '@tiptap/core'
@@ -307,14 +305,14 @@ renderToReactElement({
 
 <CodeDemo path="/Examples/StaticRenderingAdvanced" />
 
-## Limitations and workarounds
+## 限制与解决方法
 
-The static renderer builds the schema and runs each extension's `renderHTML`, but does not instantiate an `Editor`. As a result:
+静态渲染器会构建 schema 并运行每个扩展的 `renderHTML`，但不会实例化 `Editor`。因此：
 
-- `addProseMirrorPlugins`, `onCreate`, `onUpdate`, and transaction hooks do not run.
-- Extensions that assign attributes via those mechanisms — for example `UniqueID` (`data-id`) and `TableOfContents` (`id`, `data-toc-id`) — will not populate those attributes on their own.
+- 不会运行 `addProseMirrorPlugins`、`onCreate`、`onUpdate` 和事务钩子。
+- 通过这些机制设置属性的扩展（例如 `UniqueID`（`data-id`）和 `TableOfContents`（`id`、`data-toc-id`））不会自动填充这些属性。
 
-For these cases, pre-process the JSON document before rendering:
+遇到这些情况时，请在渲染前预处理 JSON 文档：
 
 ```ts
 import { generateUniqueIds } from '@tiptap/extension-unique-id'
@@ -332,11 +330,11 @@ const html = renderToHTMLString({
 })
 ```
 
-Editor-level options that affect output are accepted via the `staticEditorOptions` object (currently `textDirection`). Other editor options that depend on a runtime view or transaction stream are out of scope.
+影响输出的编辑器级选项可以通过 `staticEditorOptions` 对象传入（目前支持 `textDirection`）。其他依赖运行时视图或事务流的编辑器选项不在支持范围内。
 
-## Shared Options
+## 通用选项
 
-The `renderToHTMLString`, `renderToMarkdown`, and `renderToReactElement` functions take an options object as an argument. This object can be used to customize the output of the renderer by providing custom node and mark mappings, or handling unhandled nodes and marks.
+`renderToHTMLString`、`renderToMarkdown` 和 `renderToReactElement` 函数都接收一个选项对象。你可以通过提供自定义节点和标记映射，或处理未处理的节点和标记，来定制渲染器的输出。
 
 ```js
 import StarterKit from '@tiptap/starter-kit'
@@ -386,11 +384,11 @@ renderToHTMLString({
 })
 ```
 
-## Technical Details
+## 技术细节
 
-### Namespaced imports
+### 命名空间导入
 
-To cut down on bundle size in your application, the static renderer is split into three separate packages: `@tiptap/static-renderer/pm/html-string`, `@tiptap/static-renderer/pm/markdown`, and `@tiptap/static-renderer/pm/react`. This way, you only need to import the parts of the static renderer that you need. If you want the most flexibility, you can import the entire static renderer package with `@tiptap/static-renderer`.
+为了减小应用的打包体积，静态渲染器拆分为三个独立的包：`@tiptap/static-renderer/pm/html-string`、`@tiptap/static-renderer/pm/markdown` 和 `@tiptap/static-renderer/pm/react`。这样，你只需导入所需的静态渲染器部分。如果想要最大的灵活性，也可以通过 `@tiptap/static-renderer` 导入整个静态渲染器包。
 
 ```ts
 // Just the HTML renderer
@@ -406,7 +404,7 @@ import { renderToReactElement } from '@tiptap/static-renderer/pm/react'
 import { renderToHTMLString, renderToMarkdown, renderToReactElement } from '@tiptap/static-renderer'
 ```
 
-Packages in the `json` namespace are also available for statically rendering without a runtime dependency on any ProseMirror packages. But, these packages cannot automatically map Prosemirror nodes and marks to the target format. You will need to provide custom mappings for every node and mark in these packages.
+此外，`json` 命名空间中也提供了无需在运行时依赖任何 ProseMirror 包的静态渲染包。但这些包无法自动将 Prosemirror 节点和标记映射到目标格式。你需要为这些包中的每个节点和标记提供自定义映射。
 
 ```ts
 // Just the HTML renderer
@@ -416,23 +414,23 @@ import { renderJSONContentToString } from '@tiptap/static-renderer/json/html'
 import { renderJSONContentToReactElement } from '@tiptap/static-renderer/json/react'
 ```
 
-These packages have the same API as the `pm` namespace, but:
+这些包的 API 与 `pm` 命名空间相同，但：
 
-- they require you to provide custom mappings for every node and mark
-- they do not require `extensions`, as they are not dependent on the ProseMirror package
+- 需要你为每个节点和标记提供自定义映射
+- 不需要 `extensions`，因为它们不依赖 ProseMirror 包
 
-### Custom mappings
+### 自定义映射
 
-The static renderer uses default mappings for Prosemirror nodes and marks to the target format. These mappings can be overridden by providing custom mappings in the options object. This allows you to customize the output of the renderer to suit your needs.
+静态渲染器使用默认映射，将 Prosemirror 节点和标记转换为目标格式。你可以在选项对象中提供自定义映射来覆盖这些默认映射，从而按需定制渲染器的输出。
 
-To convert custom nodes and marks to the target format, you should provide a mapping function that takes a `node` or `mark` object as an argument and returns the appropriate target format element. If you encounter an unhandled node or mark, you can provide a function that will be called with the unhandled node or mark as an argument.
+要将自定义节点和标记转换为目标格式，你应提供一个映射函数，该函数接收 `node` 或 `mark` 对象作为参数，并返回相应的目标格式元素。如果遇到未处理的节点或标记，可以提供一个接收该节点或标记作为参数的处理函数。
 
-### How does this work?
+### 这是如何工作的？
 
-The static renderer packages in the `json` namespace map over the JSON content and call the appropriate mapping function for each node and mark. The `renderJSONContentToString` function returns a string representing the JSON content, while the `renderJSONContentToReactElement` function returns a React element representing the JSON content.
+`json` 命名空间中的静态渲染器包会遍历 JSON 内容，并为每个节点和标记调用相应的映射函数。`renderJSONContentToString` 函数会返回表示 JSON 内容的字符串，而 `renderJSONContentToReactElement` 函数会返回表示 JSON 内容的 React 元素。
 
-The static renderer packages in the `pm` namespace, extending the packages in the `json` namespace, utilize the `renderHTML` method of Tiptap extensions to generate default mappings of Prosemirror nodes/marks to the target format. These can be completely overridden by providing custom mappings in the options.
+`pm` 命名空间中的静态渲染器包基于 `json` 命名空间中的包扩展而来，会利用 Tiptap 扩展的 `renderHTML` 方法，生成 Prosemirror 节点/标记到目标格式的默认映射。你可以通过提供自定义映射完全覆盖这些默认映射。
 
-## Source code
+## 源代码
 
 [packages/static-renderer/](https://github.com/ueberdosis/tiptap/blob/main/packages/static-renderer/)
