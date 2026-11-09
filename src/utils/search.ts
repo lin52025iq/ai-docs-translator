@@ -1,7 +1,7 @@
 import TypesenseInstantsearchAdapter from 'typesense-instantsearch-adapter'
 
-// Default weights: hierarchy.lvl0 gets highest weight, then progressively lower for sub-headings
-// Can be overridden via NEXT_PUBLIC_SEARCH_WEIGHTS env var (comma-separated, e.g. "20,10,6,4,3,2,1,1")
+// 默认权重：hierarchy.lvl0 权重最高，子标题的权重依次降低
+// 可通过 NEXT_PUBLIC_SEARCH_WEIGHTS 环境变量覆盖（逗号分隔，例如 "20,10,6,4,3,2,1,1"）
 const DEFAULT_WEIGHTS = '30,12,6,3,2,1,1,1'
 
 export const typesenseAdapter = new TypesenseInstantsearchAdapter({
@@ -25,9 +25,9 @@ export const typesenseAdapter = new TypesenseInstantsearchAdapter({
       'hierarchy.lvl0,hierarchy.lvl1,hierarchy.lvl2,hierarchy.lvl3,hierarchy.lvl4,hierarchy.lvl5,hierarchy.lvl6,content',
     query_by_weights: process.env.NEXT_PUBLIC_SEARCH_WEIGHTS || DEFAULT_WEIGHTS,
     prioritize_exact_match: true,
-    // More lenient token matching - helps with partial word matches
+    // 放宽词元匹配条件，以支持部分单词匹配
     drop_tokens_threshold: 0,
-    // Prefer prefix matches (e.g. "install" matches "installation")
+    // 优先匹配前缀（例如，“install”可匹配“installation”）
     prefix: 'true,true,true,true,true,true,true,false',
     num_typos: 1,
     min_len_1typo: 5,
