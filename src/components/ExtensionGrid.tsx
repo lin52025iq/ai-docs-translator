@@ -75,18 +75,18 @@ function useFilteredExtensions(
   if (!extensions) return []
 
   return extensions.filter((ext) => {
-    // When "All" is selected, don't filter by extension type (open source, Start, Team)
+    // 选择“全部”时，不按扩展类型（开源、Start、Team）筛选
     if (filter === SEARCH_FILTER.ALL) {
-      // Only apply search query filtering
+      // 仅按搜索词筛选
       return (
         ext.name.toLowerCase().includes(query.toLowerCase()) ||
         ext.description.toLowerCase().includes(query.toLowerCase())
       )
     }
 
-    // When "Team" is selected, show both Team and Start plan extensions
+    // 选择“Team”时，同时显示 Team 和 Start 套餐的扩展
     if (filter === SEARCH_FILTER.TEAM) {
-      // Check if it's either a Team extension or also has Start tag
+      // 检查它是否为 Team 扩展，或带有 Start 标签
       return (
         (ext.tags?.includes('Team') || ext.tags?.includes('Start')) &&
         (ext.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -94,7 +94,7 @@ function useFilteredExtensions(
       )
     }
 
-    // When "Addon" is selected, show only Addon extensions
+    // 选择“Add-on”时，仅显示 Add-on 扩展
     if (filter === SEARCH_FILTER.ADDON) {
       return (
         ext.tags?.includes('Addon') &&
@@ -103,7 +103,7 @@ function useFilteredExtensions(
       )
     }
 
-    // Other filter logic remains the same
+    // 其他筛选逻辑保持不变
     if (
       filter === SEARCH_FILTER.OPEN_SOURCE &&
       (ext.tags?.includes('Start') || ext.tags?.includes('Team') || ext.tags?.includes('Addon'))
@@ -125,13 +125,13 @@ function ExtensionCard({ ext }: { ext: ExtensionMetaWithUrl; currentFilter?: Sea
         <div className="flex items-center justify-between gap-2 mb-5">
           <IconByName name={ext.icon} className="w-3.5 h-3.5" />
           <div className="ml-auto flex items-center gap-1">
-            {ext.isNew ? <Tag variant="info">New</Tag> : null}
+            {ext.isNew ? <Tag variant="info">新品</Tag> : null}
           </div>
         </div>
         <div className="font-semibold text-black leading-[140%]">{ext.name}</div>
         <div className="mt-2 leading-[140%] text-grayAlpha-600">{ext.description}</div>
         <div className="mt-5 flex items-center flex-wrap gap-1">
-          {/* Always show all tags regardless of filter */}
+          {/* 无论筛选条件如何，始终显示所有标签 */}
           {ext.tags?.map((tag) => (
             <Tag key={tag}>{tag}</Tag>
           ))}
@@ -251,7 +251,7 @@ export const ExtensionGrid = ({
           <input
             type="text"
             className="w-full outline-none"
-            placeholder="Filter extensions..."
+            placeholder="筛选扩展…"
             value={query}
             onChange={handleInput}
           />
@@ -264,27 +264,27 @@ export const ExtensionGrid = ({
         <div className="flex flex-none items-center gap-1 sm:ml-auto">
           {!hideAll ? (
             <FilterButton isActive={filter === SEARCH_FILTER.ALL} onClick={showAll}>
-              All
+              全部
             </FilterButton>
           ) : null}
           {hasOpenSourceExtensions ? (
             <FilterButton isActive={filter === SEARCH_FILTER.OPEN_SOURCE} onClick={showOpenSource}>
-              Open Source
+              开源
             </FilterButton>
           ) : null}
           {hasStartExtensions ? (
             <FilterButton isActive={filter === SEARCH_FILTER.START} onClick={showStart}>
-              Start Plan
+              Start 套餐
             </FilterButton>
           ) : null}
           {hasTeamExtensions ? (
             <FilterButton isActive={filter === SEARCH_FILTER.TEAM} onClick={showTeam}>
-              Team Plan
+              Team 套餐
             </FilterButton>
           ) : null}
           {hasAddonExtensions ? (
             <FilterButton isActive={filter === SEARCH_FILTER.ADDON} onClick={showAddon}>
-              Add-on
+              附加组件
             </FilterButton>
           ) : null}
         </div>
@@ -292,28 +292,28 @@ export const ExtensionGrid = ({
       <div className="grid gap-20 first:mt-0 last:mb-0">
         {noExtensions ? (
           <div className="text-neutral-700">
-            No extensions found for{' '}
-            {query ? <span className="font-semibold">&quot;{query}&quot;</span> : 'your filters.'}
+            没有找到符合以下条件的扩展：{' '}
+            {query ? <span className="font-semibold">&quot;{query}&quot;</span> : '当前筛选条件。'}
           </div>
         ) : null}
         {nodeExtensions && filteredNodeExtensions.length > 0 ? (
           <ExtensionGroup
             extensions={filteredNodeExtensions}
-            title="Nodes"
+            title="节点"
             currentFilter={filter}
           />
         ) : null}
         {markExtensions && filteredMarkExtensions.length > 0 ? (
           <ExtensionGroup
             extensions={filteredMarkExtensions}
-            title="Marks"
+            title="标记"
             currentFilter={filter}
           />
         ) : null}
         {functionalityExtensions && filteredFunctionalityExtensions.length > 0 ? (
           <ExtensionGroup
             extensions={filteredFunctionalityExtensions}
-            title="Functionality"
+            title="功能"
             currentFilter={filter}
           />
         ) : null}
