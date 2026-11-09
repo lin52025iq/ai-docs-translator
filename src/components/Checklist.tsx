@@ -15,7 +15,7 @@ export function CheckboxItem({ children, defaultChecked = false }: CheckboxItemP
     setIsChecked(!isChecked)
   }
 
-  // Generate a unique ID for accessibility
+  // 生成唯一 ID，确保无障碍访问
   const id = React.useId()
 
   return (
@@ -59,9 +59,9 @@ interface ChecklistProps {
 }
 
 export function Checklist({ children }: ChecklistProps) {
-  // Add the animation styles when component mounts
+  // 组件挂载时添加动画样式
   useEffect(() => {
-    // Check if the style is already added
+    // 检查样式是否已添加
     const styleId = 'checklist-animations'
     if (!document.getElementById(styleId)) {
       const style = document.createElement('style')
