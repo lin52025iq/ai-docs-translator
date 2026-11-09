@@ -14,7 +14,7 @@ export type DemoBridgeEvent =
   | { type: 'height'; height: number }
 
 export type DemoFrameHandle = {
-  /** Replaces the demo's document, without reloading the frame. */
+  /** 替换演示文档，不重新加载 iframe。 */
   setContent: (json: DemoDocument) => void
 }
 
@@ -22,22 +22,22 @@ export type DemoFrameProps = {
   src: string
   title: string
   theme: Theme
-  /** A document to show instead of the demo's own, sent once the demo is ready. */
+  /** 用于替代演示自身文档显示的内容；演示就绪后发送。 */
   initialContent?: DemoDocument | null
-  /** Loads at once, also while hidden; a lazy frame that isn't shown never loads. */
+  /** 立即加载，即使处于隐藏状态也会加载；未显示的延迟加载 iframe 则不会加载。 */
   isEager?: boolean
   onBridge?: (event: DemoBridgeEvent) => void
-  /** The frame loaded, but no message came from it: the demos app has no bridge. */
+  /** iframe 已加载，但没有收到它发来的消息：演示应用没有桥接机制。 */
   onNoBridge?: () => void
   className?: string
 }
 
 /**
- * An iframe with a demo from the demos app. The demos app's preview posts
- * `{ channel: 'tiptap-demo' }` messages (`ready`, `source`, `document`, `height`) and takes
- * `{ channel: 'tiptap-docs' }` messages (`hello`, `theme`, `content`), see tiptap-pro's `demos/preview/Demo.vue`.
+ * 用于显示演示应用中演示内容的 iframe。演示应用的预览会发送
+ * `{ channel: 'tiptap-demo' }` 消息（`ready`、`source`、`document`、`height`），并接收
+ * `{ channel: 'tiptap-docs' }` 消息（`hello`、`theme`、`content`）；参见 tiptap-pro 的 `demos/preview/Demo.vue`。
  */
-// Messages go to the demo's own origin only: `content` carries what the reader typed
+// 消息只会发送到演示自身的来源：`content` 包含读者输入的内容
 const postToFrame = (
   frame: HTMLIFrameElement | null,
   src: string,
@@ -53,7 +53,7 @@ export const DemoFrame = forwardRef<DemoFrameHandle, DemoFrameProps>(
   ({ src, title, theme, initialContent, isEager, onBridge, onNoBridge, className }, ref) => {
     const frameRef = useRef<HTMLIFrameElement>(null)
     const [isReady, setIsReady] = useState(false)
-    // The document to restore is the one at mount; a new `src` mounts a new frame (it is the key)
+    // 要恢复的文档是在挂载时确定的；新的 `src` 会挂载新的 iframe（由 key 决定）
     const [restore] = useState(() => initialContent ?? null)
     const callbacks = useRef({ onBridge, onNoBridge })
     const documents = useRef(0)
@@ -81,7 +81,7 @@ export const DemoFrame = forwardRef<DemoFrameHandle, DemoFrameProps>(
         }
 
         if (message.type === 'ready') {
-          // `ready` comes on load and again in reply to `hello`; the document is restored once
+          // `ready` 会在加载时发送，也会在响应 `hello` 时再次发送；文档只恢复一次
           if (!readyRef.current && restore) {
             postToFrame(frameRef.current, src, { type: 'content', json: restore })
           }
@@ -99,7 +99,7 @@ export const DemoFrame = forwardRef<DemoFrameHandle, DemoFrameProps>(
         }
 
         if (message.type === 'document') {
-          // The first document is the demo's own content, unless one was restored
+          // 第一个文档是演示自身的内容，除非已恢复了其他文档
           documents.current += 1
           callbacks.current.onBridge?.({
             type: 'document',
@@ -114,8 +114,8 @@ export const DemoFrame = forwardRef<DemoFrameHandle, DemoFrameProps>(
       return () => window.removeEventListener('message', onMessage)
     }, [restore, src])
 
-    // The frame may have loaded before this page listened (before hydration): say hello, it answers `ready`
-    // A late `ready` still counts, so a lazy frame that loads after this wait recovers
+    // iframe 可能在此页面开始监听之前就已加载（即水合之前）：发送 hello，它会回复 `ready`
+    // 延迟收到的 `ready` 仍然有效，因此延迟加载的 iframe 即使在等待结束后才加载，也能恢复正常
     useEffect(() => {
       postToFrame(frameRef.current, src, { type: 'hello' })
       const timeout = window.setTimeout(() => {
@@ -124,7 +124,7 @@ export const DemoFrame = forwardRef<DemoFrameHandle, DemoFrameProps>(
       return () => window.clearTimeout(timeout)
     }, [src])
 
-    // The theme changes without a reload, so what the reader typed stays
+    // 主题变化时不会重新加载，因此读者输入的内容会保留
     useEffect(() => {
       if (isReady) {
         postToFrame(frameRef.current, src, { type: 'theme', theme })
