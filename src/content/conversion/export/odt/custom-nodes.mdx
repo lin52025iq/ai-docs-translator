@@ -1,14 +1,14 @@
 ---
-title: Export custom nodes to .odt
+title: 将自定义节点导出为 .odt
 tags:
   - type: start
   - type: beta
   - type: version
     label: v0.6.2
 meta:
-    title: Export custom nodes to ODT | Tiptap Conversion
-    description: Learn how to export custom nodes to ODT (OpenDocument) files using the Export ODT extension.
-    category: Conversion
+    title: 将自定义节点导出为 ODT | Tiptap 转换
+    description: 了解如何使用 Export ODT 扩展将自定义节点导出为 ODT（OpenDocument）文件。
+    category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
@@ -19,23 +19,23 @@ import CustomNodeConversionGuide from '../_shared/_custom-node-conversion-guide.
 <EnterpriseCalloutAuto variant="odt" renderMode="sidebar" disableWaitlist />
 
 <Requirements>
-    <RequirementItem label="1. Activate trial or subscribe">
-        Start a [free trial](https://cloud.tiptap.dev/v2?trial=true) or [subscribe to the Start plan](https://cloud.tiptap.dev/v2/billing) in your account.
+    <RequirementItem label="1. 开始试用或订阅">
+        在你的账户中[开始免费试用](https://cloud.tiptap.dev/v2?trial=true)，或[订阅 Start 计划](https://cloud.tiptap.dev/v2/billing)。
     </RequirementItem>
-    <RequirementItem label="2. Install from private registry">
-        To install this frontend extensions, authenticate to Tiptap's private npm registry by following the [setup guide](/guides/pro-extensions).
+    <RequirementItem label="2. 从私有仓库安装">
+        要安装这些前端扩展，请按照[设置指南](/guides/pro-extensions)进行操作，以通过身份验证访问 Tiptap 的私有 npm 仓库。
     </RequirementItem>
 </Requirements>
 
-The `@tiptap-pro/extension-export-odt` extension supports custom node conversion, allowing you to define how custom nodes in your Tiptap schema should be rendered in ODT exports.
+`@tiptap-pro/extension-export-odt` 扩展支持自定义节点转换，因此你可以定义 Tiptap 架构中的自定义节点在导出为 ODT 时的呈现方式。
 
-<Callout title="Requires Export DOCX extension" variant="warning">
-  Custom node conversion for ODT export requires the `@tiptap-pro/extension-export-docx` extension to be installed and configured in your editor. The ODT export uses DOCX generation under the hood before converting to ODT. Without it, the `customNodes` option will have no effect.
+<Callout title="需要 Export DOCX 扩展" variant="warning">
+  导出 ODT 时进行自定义节点转换，需要在编辑器中安装并配置 `@tiptap-pro/extension-export-docx` 扩展。ODT 导出会先在底层生成 DOCX，然后再将其转换为 ODT。如果没有该扩展，`customNodes` 选项将不起作用。
 </Callout>
 
-## Export custom nodes to .odt
+## 将自定义节点导出为 .odt
 
-Pass your custom node definitions via the `customNodes` option when configuring `ExportOdt`:
+配置 `ExportOdt` 时，通过 `customNodes` 选项传入自定义节点定义：
 
 ```ts
 import { ExportOdt } from '@tiptap-pro/extension-export-odt'
@@ -64,9 +64,9 @@ const editor = new Editor({
 
 <CustomNodeConversionGuide />
 
-### Define the custom node render function
+### 定义自定义节点的 render 函数
 
-And we will define how the `Hintbox` custom node should be rendered in the exported document:
+接下来，我们将定义导出文档中 `Hintbox` 自定义节点的呈现方式：
 
 ```ts
 import { ExportOdt } from '@tiptap-pro/extension-export-odt'
@@ -142,6 +142,6 @@ const editor = new Editor({
 })
 ```
 
-You can construct any supported DOCX elements in the `render` function using the `Docx` library classes (`Paragraph`, `TextRun`, `Table`, etc.) that are provided via the `Docx` import from the `@tiptap-pro/extension-export-docx` package.
+在 `render` 函数中，你可以使用 `Docx` 库提供的类（如 `Paragraph`、`TextRun`、`Table` 等）构造任意受支持的 DOCX 元素。这些类通过从 `@tiptap-pro/extension-export-docx` 包导入 `Docx` 来使用。
 
-The `render` function gets the same second argument as in DOCX exports, so a custom node can fit its image to the page or table cell. See [Fit images to the page or table cell](/conversion/export/docx/custom-nodes#fit-images-to-the-page-or-table-cell).
+`render` 函数接收与 DOCX 导出相同的第二个参数，因此自定义节点可以根据页面或表格单元格调整图像大小。请参阅[将图像调整为适合页面或表格单元格的大小](/conversion/export/docx/custom-nodes#fit-images-to-the-page-or-table-cell)。
