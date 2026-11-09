@@ -20,7 +20,7 @@ export const usePageTrack = () => {
       return
     }
 
-    // Track page view
+    // 跟踪页面浏览
     window.requestAnimationFrame(() => {
       if (
         previousPathname.current !== pathname &&
