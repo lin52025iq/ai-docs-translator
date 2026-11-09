@@ -5,7 +5,7 @@ import { cn } from '@/utils'
 
 type Tone = 'light' | 'dark'
 
-/** A tooltip below its control, on hover and on keyboard focus. The control carries the name. */
+/** 悬停或键盘聚焦时显示在控件下方的提示。控件本身提供名称。 */
 const Tip = ({ label, align = 'center' }: { label: string; align?: 'center' | 'end' }) => (
   <span
     aria-hidden
@@ -20,7 +20,7 @@ const Tip = ({ label, align = 'center' }: { label: string; align?: 'center' | 'e
 )
 
 export type ControlButtonProps = {
-  /** The accessible name, and the tooltip unless `tooltip` is set. */
+  /** 无障碍名称；未设置 `tooltip` 时也用作提示文本。 */
   label: string
   tooltip?: string
   tipAlign?: 'center' | 'end'
@@ -29,7 +29,7 @@ export type ControlButtonProps = {
   children: ReactNode
 } & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'>
 
-/** A small button for the demo bar and the code header: an icon, or an icon and a short word. */
+/** 用于演示栏和代码标题栏的小按钮：可显示图标，或图标与简短文字。 */
 export const ControlButton = forwardRef<HTMLButtonElement, ControlButtonProps>(
   ({ label, tooltip, tipAlign, isActive, tone = 'light', className, children, ...rest }, ref) => (
     <button
@@ -59,7 +59,7 @@ export const ControlButton = forwardRef<HTMLButtonElement, ControlButtonProps>(
 
 ControlButton.displayName = 'ControlButton'
 
-/** A link styled like a control button, such as “New tab” or the GitHub source. */
+/** 外观与控件按钮相同的链接，例如“新标签页”或 GitHub 源码链接。 */
 export const ControlLink = ({
   label,
   tooltip,
@@ -93,7 +93,7 @@ export const ControlLink = ({
   </a>
 )
 
-/** A row of buttons of which one is on, such as Preview / Code / Both. */
+/** 一组按钮，其中一个处于选中状态，例如“预览 / 代码 / 两者”。 */
 export const Segmented = ({
   label,
   tone = 'light',
@@ -117,3 +117,4 @@ export const Segmented = ({
     {children}
   </div>
 )
+
