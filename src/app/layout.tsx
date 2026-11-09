@@ -11,9 +11,9 @@ const inter = Inter({ subsets: ['latin'] })
 
 export async function getMetadata() {
   return createMetadata({
-    title: 'Tiptap Suite Documentation',
-    description: 'Documentation for Tiptap and all Tiptap products',
-    ogTitle: 'Tiptap Suite Documentation',
+    title: 'Tiptap 套件文档',
+    description: 'Tiptap 及其所有产品的文档',
+    ogTitle: 'Tiptap 套件文档',
     canonicalUrl: createCanonicalUrl([]),
   })
 }
@@ -47,7 +47,7 @@ export default function RootLayout({
     alternateName: 'Tiptap Editor',
     legalName: 'Tiptap GmbH',
     description:
-      'A suite of open source content editing and real-time collaboration tools for developers building apps like Notion or Google Docs.',
+      '一套开源内容编辑和实时协作工具，供开发者构建 Notion 或 Google Docs 这类应用。',
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'Kurfürstenstraße 56',
