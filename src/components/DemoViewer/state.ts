@@ -10,10 +10,10 @@ export const THEMES: Theme[] = ['light', 'dark']
 export const SIZES: Size[] = ['desktop', 'tablet', 'phone']
 export const FRAMEWORKS: Framework[] = ['React', 'Vue', 'Svelte', 'JS']
 
-/** The frameworks a demo offers unless the page names them. */
+/** 页面未指定时，演示默认提供的框架。 */
 export const DEFAULT_FRAMEWORKS: Framework[] = ['React', 'Vue']
 
-/** `"React"`, `"React, Vue"` or `['React', 'Vue']`, as written in MDX. */
+/** MDX 中的写法：`"React"`、`"React, Vue"` 或 `['React', 'Vue']`。 */
 export const parseFrameworks = (value: Framework[] | string | undefined): Framework[] => {
   if (!value) return DEFAULT_FRAMEWORKS
   const names = typeof value === 'string' ? value.split(',') : value
@@ -23,14 +23,14 @@ export const parseFrameworks = (value: Framework[] | string | undefined): Framew
   return known.length ? known : DEFAULT_FRAMEWORKS
 }
 
-/** The width of the demo frame for each size; desktop fills the element. */
+/** 各尺寸下演示框的宽度；桌面端会填满所在元素。 */
 export const SIZE_WIDTHS: Record<Size, string> = {
   desktop: '100%',
   tablet: '768px',
   phone: '375px',
 }
 
-/* The reader's framework: one choice for every demo, kept in localStorage */
+/* 阅读者选择的框架：所有演示共用同一选项，并保存在 localStorage 中 */
 
 const FRAMEWORK_KEY = 'tiptap-docs:demo-framework'
 const FRAMEWORK_EVENT = 'tiptap-docs:demo-framework'
@@ -60,7 +60,7 @@ export const useStoredFramework = () => {
     try {
       window.localStorage.setItem(FRAMEWORK_KEY, value)
     } catch {
-      // Private mode: the choice holds for this page only
+      // 隐私浏览模式下，此选择仅在当前页面有效
     }
     window.dispatchEvent(new Event(FRAMEWORK_EVENT))
   }, [])
@@ -69,8 +69,8 @@ export const useStoredFramework = () => {
 }
 
 /*
- * A link can open a demo in a given state: `#demo-extensions-comments:both,vue,phone,dark`.
- * The part before the colon is the element's id, the words after it in any order.
+ * 链接可以按指定状态打开演示：`#demo-extensions-comments:both,vue,phone,dark`。
+ * 冒号前是元素的 id，冒号后是顺序任意的选项。
  */
 
 export type HashState = Partial<{ view: View; framework: Framework; size: Size; theme: Theme }>
@@ -91,7 +91,7 @@ const decodeHash = (hash: string): string | null => {
   try {
     return decodeURIComponent(hash.replace(/^#/, ''))
   } catch {
-    // A broken percent sequence (`#100%`) is not a demo's hash
+    // 无效的百分号编码（如 `#100%`）不是演示的哈希值
     return null
   }
 }
@@ -123,7 +123,7 @@ export const parseHash = (hash: string, id: string): HashState | null => {
 export const formatHash = (id: string, state: Required<HashState>) =>
   `#${id}:${[state.view, state.framework.toLowerCase(), state.size, state.theme].join(',')}`
 
-/** A stable id for a demo element, from its path: `/Extensions/Comments` → `demo-extensions-comments`. */
+/** 根据路径为演示元素生成稳定的 id：`/Extensions/Comments` → `demo-extensions-comments`。 */
 export const demoId = (pathOrSrc: string) =>
   `demo-${
     pathOrSrc
@@ -134,7 +134,7 @@ export const demoId = (pathOrSrc: string) =>
       .replace(/^-|-$/g, '') || 'external'
   }`
 
-/* The height a demo reported last, so the next visit starts at it instead of growing into it */
+/* 上次演示报告的高度，让下次访问时从该高度开始，而不是逐渐撑高 */
 
 const HEIGHT_KEY = 'tiptap-docs:demo-height:'
 
@@ -153,11 +153,11 @@ export const storeHeight = (id: string, height: number) => {
   try {
     window.localStorage.setItem(HEIGHT_KEY + id, String(height))
   } catch {
-    // Private mode: the next visit grows into it again
+    // 隐私浏览模式下，下次访问时会再次逐渐撑高
   }
 }
 
-/** Read once per render; null on the server, so the first client render matches it. */
+/** 每次渲染时读取一次；服务端返回 null，以确保客户端首次渲染与之匹配。 */
 export const useStoredHeight = (id: string) =>
   useSyncExternalStore(
     noSubscribe,
