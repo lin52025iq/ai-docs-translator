@@ -1,21 +1,21 @@
 ---
-title: Font family and size
+title: 字体族和字号
 tags:
   - type: beta
 meta:
-  title: Font Family and Size | Tiptap Conversion
-  description: How font family and font size convert between DOCX and Tiptap, including unit conversions and font fallback handling.
-  category: Conversion
+  title: 字体族和字号 | Tiptap 转换
+  description: 了解字体族和字号如何在 DOCX 与 Tiptap 之间转换，包括单位换算和字体回退处理。
+  category: 转换
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-Font family and font size are inline text styling attributes that flow through the `textStyle` mark. The same pattern as [text color and highlight](/conversion/content-types/text-and-formatting/text-color-highlight): TextStyle is the base, and specific extensions layer on top.
+字体族和字号是通过 `textStyle` 标记传递的行内文本样式属性。其模式与[文本颜色和高亮](/conversion/content-types/text-and-formatting/text-color-highlight)相同：以 TextStyle 为基础，再叠加特定扩展。
 
-## What you need
+## 所需内容
 
-- **Extensions:** [`ConvertKit`](/conversion/import/docx/convertkit). Its bundled `TextStyleKit` provides `TextStyle`, `Color`, `BackgroundColor`, `FontFamily`, `FontSize`, and `LineHeight` in one extension.
-- **Configuration:** None required.
+- **扩展：** [`ConvertKit`](/conversion/import/docx/convertkit)。其捆绑的 `TextStyleKit` 在一个扩展中提供 `TextStyle`、`Color`、`BackgroundColor`、`FontFamily`、`FontSize` 和 `LineHeight`。
+- **配置：** 无需配置。
 
 ```ts
 import { ConvertKit } from '@tiptap-pro/extension-convert-kit'
@@ -23,27 +23,27 @@ import { ConvertKit } from '@tiptap-pro/extension-convert-kit'
 new Editor({ extensions: [ConvertKit] })
 ```
 
-<Callout title="Don't use the deprecated standalone font-size package" variant="warning">
-  Do not install `@tiptap/extension-font-size` separately, and don't pull
-  `@tiptap/extension-font-family` and `@tiptap/extension-font-size` à la carte. Everything lives
-  inside `TextStyleKit`, which ConvertKit registers automatically.
+<Callout title="请勿使用已弃用的独立字号包" variant="warning">
+  请勿单独安装 `@tiptap/extension-font-size`，也不要分别引入
+  `@tiptap/extension-font-family` 和 `@tiptap/extension-font-size`。所有功能都已包含在
+  `TextStyleKit` 中，并由 ConvertKit 自动注册。
 </Callout>
 
-## Support overview
+## 支持概览
 
-|                | Import                                      | Editor                                                                  | Export                      |
+|                | 导入                                      | 编辑器                                                                  | 导出                      |
 | -------------- | ------------------------------------------- | ----------------------------------------------------------------------- | --------------------------- |
-| Font family    | Supported (`textStyle.fontFamily`)          | Supported (FontFamily)                                                  | Supported (first font only) |
-| Font size      | Supported (`textStyle.fontSize` in px)      | Supported (FontSize)                                                    | Supported (px, pt, rem, em) |
-| Letter spacing | Supported (`textStyle.letterSpacing` in px) | Requires extending TextStyle (not bundled in ConvertKit / TextStyleKit) | Not supported               |
+| 字体族         | 支持（`textStyle.fontFamily`）              | 支持（FontFamily）                                                      | 支持（仅保留第一个字体）    |
+| 字号           | 支持（`textStyle.fontSize`，单位为 px）     | 支持（FontSize）                                                        | 支持（px、pt、rem、em）     |
+| 字间距         | 支持（`textStyle.letterSpacing`，单位为 px）| 需扩展 TextStyle（ConvertKit / TextStyleKit 未捆绑此功能）              | 不支持                      |
 
-## Import
+## 导入
 
-Import font family and size using the [editor extension](/conversion/import/docx/editor-extension) or the [REST API](/conversion/import/docx/rest-api). Both produce identical output.
+可通过[编辑器扩展](/conversion/import/docx/editor-extension)或 [REST API](/conversion/import/docx/rest-api)导入字体族和字号。两者产生的输出完全相同。
 
-The conversion service reads the `w:ascii` attribute from `<w:rFonts>`, falling back to `w:hAnsi` if `w:ascii` is not present. The raw attribute value is stored as-is in `textStyle.fontFamily` (e.g., `"Courier New"`).
+转换服务会读取 `<w:rFonts>` 的 `w:ascii` 属性；如果没有 `w:ascii`，则使用 `w:hAnsi`。原始属性值会原样存储在 `textStyle.fontFamily` 中（例如 `"Courier New"`）。
 
-Font size comes from `<w:sz>` in half-points and is converted to pixels with `halfPointsToPixels` from ConvertKit's OOXML registry:
+字号取自 `<w:sz>`，单位为半磅，并使用 ConvertKit 的 OOXML 注册表中的 `halfPointsToPixels` 转换为像素：
 
 ```ts
 import { halfPointsToPixels } from '@tiptap-pro/extension-convert-kit/ooxml-registry'
@@ -51,34 +51,33 @@ import { halfPointsToPixels } from '@tiptap-pro/extension-convert-kit/ooxml-regi
 halfPointsToPixels(24) // 12pt -> 16px
 ```
 
-Use that helper rather than writing the arithmetic yourself, so your values match the importer's exactly. The result is rounded to the nearest integer pixel via `Math.round()`. Standard sizes like 12pt (16px), 14pt (19px), and 18pt (24px) convert cleanly. The result is stored as `textStyle.fontSize` (e.g., `"16px"`).
+请使用此辅助函数，而不要自行编写换算公式，这样得到的值才能与导入器完全一致。结果会通过 `Math.round()` 四舍五入到最接近的整数像素。12pt（16px）、14pt（19px）和 18pt（24px）等常见字号都能准确转换。结果会存储在 `textStyle.fontSize` 中（例如 `"16px"`）。
 
-Letter spacing is also extracted from `<w:spacing>` on text runs (converted from twips to pixels) and stored as `textStyle.letterSpacing`. Neither ConvertKit's bundled `TextStyleKit` nor [CSS injection](/conversion/import/docx/css-injection) renders this attribute. Letter spacing is the canonical "extracted but not rendered out of the box" case. To make it visible in the editor, extend `TextStyle` with a `letterSpacing` attribute that emits `style="letter-spacing: ..."` in `renderHTML`. The [Styling converted content](/conversion/getting-started/guides/styling-converted-content#extending-extensions-for-unsupported-attributes) guide has a copy-paste example. Letter spacing is not preserved on export.
+文本运行中的 `<w:spacing>` 也会提取字间距（从 twip 转换为像素），并存储在 `textStyle.letterSpacing` 中。ConvertKit 捆绑的 `TextStyleKit` 和 [CSS 注入](/conversion/import/docx/css-injection)都不会渲染此属性。字间距是典型的“已提取但默认不渲染”的情况。若要在编辑器中显示它，请为 `TextStyle` 扩展 `letterSpacing` 属性，并使其在 `renderHTML` 中输出 `style="letter-spacing: ..."`。[设置转换后内容的样式](/conversion/getting-started/guides/styling-converted-content#extending-extensions-for-unsupported-attributes)指南提供了可直接复制粘贴的示例。导出时不会保留字间距。
 
-## Editor rendering
+## 编辑器渲染
 
-[`FontFamily`](/editor/extensions/functionality/fontfamily) and [`FontSize`](/editor/extensions/functionality/fontsize) both depend on [`TextStyle`](/editor/extensions/marks/text-style). All three are bundled inside `TextStyleKit`, which ConvertKit registers automatically:
+[`FontFamily`](/editor/extensions/functionality/fontfamily) 和 [`FontSize`](/editor/extensions/functionality/fontsize) 都依赖于 [`TextStyle`](/editor/extensions/marks/text-style)。这三者都包含在 `TextStyleKit` 中，并由 ConvertKit 自动注册：
 
 ```bash
 npm install @tiptap-pro/extension-convert-kit
 ```
 
-Font family renders as `style="font-family: ..."` and font size as `style="font-size: ..."` on `<span>` elements. If you disable `ConvertKit.configure({ textStyleKit: false })`, the attributes from import are not recognised by the schema. See the [invalid schema guide](/guides/invalid-schema) for how to manage this.
+字体族会在 `<span>` 元素上渲染为 `style="font-family: ..."`，字号则渲染为 `style="font-size: ..."`。如果禁用了 `ConvertKit.configure({ textStyleKit: false })`，则架构无法识别导入的属性。请参阅[无效架构指南](/guides/invalid-schema)了解如何处理。
 
-## Export
+## 导出
 
-Export font family and size using the [editor extension](/conversion/export/docx/editor-extension) or the [REST API](/conversion/export/docx/rest-api). Both handle font family and size identically.
+可通过[编辑器扩展](/conversion/export/docx/editor-extension)或 [REST API](/conversion/export/docx/rest-api)导出字体族和字号。两者对字体族和字号的处理方式完全相同。
 
-On export, font family values are sanitized: quotes are stripped and only the first font from a comma-separated value is used. Since import produces a single font name, round-tripped values pass through unchanged.
+导出时会清理字体族值：移除引号，并且对于以逗号分隔的值，仅使用第一个字体。由于导入时只会产生单个字体名称，因此往返转换的值会原样保留。
 
-<Callout title="Font fallback lists are collapsed" variant="info">
-  DOCX does not support CSS-style font fallback lists. If your editor content contains a manually
-  set value like `"Arial, Helvetica, sans-serif"`, the exporter picks the first font name (`Arial`)
-  and discards the rest. Values imported from DOCX are already single font names and are not
-  affected.
+<Callout title="字体回退列表会被合并" variant="info">
+  DOCX 不支持 CSS 样式的字体回退列表。如果编辑器内容包含手动设置的值，例如
+  `"Arial, Helvetica, sans-serif"`，导出器会选取第一个字体名称（`Arial`），
+  并丢弃其余名称。从 DOCX 导入的值已经是单个字体名称，不受影响。
 </Callout>
 
-Font size is unit-aware. A value with no unit, or a `px` value, is treated as pixels and converted to half-points with `pixelsToHalfPoints`:
+字号会根据单位进行处理。没有单位的值或带 `px` 单位的值会被视为像素，并使用 `pixelsToHalfPoints` 转换为半磅：
 
 ```ts
 import { pixelsToHalfPoints } from '@tiptap-pro/extension-convert-kit/ooxml-registry'
@@ -86,11 +85,11 @@ import { pixelsToHalfPoints } from '@tiptap-pro/extension-convert-kit/ooxml-regi
 pixelsToHalfPoints(16) // 16px -> 24 half-points (12pt)
 ```
 
-A value that carries a unit is honored rather than being read as pixels:
+带有单位的值会按其单位处理，而不会被视为像素：
 
-- `pt` maps straight to points, so `12pt` exports as 12pt (24 half-points).
-- `rem` and `em` resolve against a 16px base (for example `1rem` is 16px).
+- `pt` 会直接映射为磅，因此 `12pt` 导出后仍为 12pt（24 个半磅）。
+- `rem` 和 `em` 会以 16px 为基准进行换算（例如 `1rem` 为 16px）。
 
-A bare number stays pixels, so content imported from DOCX (which stores `textStyle.fontSize` in px) round-trips unchanged.
+不带单位的数字仍按像素处理，因此从 DOCX 导入的内容（其中 `textStyle.fontSize` 以 px 存储）往返转换后不会改变。
 
-Values that were imported from DOCX will produce the same half-point value on export, provided the original half-point value converts to an exact integer pixel. When `Math.round()` alters the pixel value during import (e.g., 14pt becomes 18.67px, rounded to 19px), the exported half-point value will differ from the original (19px exports as 28.5 half-points instead of the original 28). A font size that cannot be parsed is skipped with a console warning.
+从 DOCX 导入的值在导出时会得到相同的半磅值，前提是原始半磅值能够转换为整数像素。如果导入时 `Math.round()` 改变了像素值（例如 14pt 转换为 18.67px 后四舍五入为 19px），导出的半磅值就会与原值不同（19px 会导出为 28.5 个半磅，而原值为 28）。无法解析的字号会被跳过，并在控制台输出警告。
