@@ -1,36 +1,36 @@
 ---
-title: 'Highlight Search Terms with Decorations in React'
+title: '在 React 中使用装饰突出显示搜索词'
 meta:
-  title: 'Highlight Search Terms with Decorations in React | Tiptap Editor Docs'
-  description: Build a term highlighter for a React Tiptap editor with inline, node, and widget decorations.
-  category: Editor
+  title: '在 React 中使用装饰突出显示搜索词 | Tiptap 编辑器文档'
+  description: 使用行内、节点和小部件装饰，为 React Tiptap 编辑器构建词语高亮功能。
+  category: 编辑器
 ---
 
 import { Callout } from '@/components/ui/Callout'
 
-In this tutorial, you will build a term highlighter for a Tiptap editor in React. The user types a search term into an input field, and every match in the document gets highlighted. Nothing about the document itself changes. The highlights are purely visual.
+在本教程中，你将为 React 中的 Tiptap 编辑器构建词语高亮功能。用户在输入框中输入搜索词后，文档中的所有匹配项都会突出显示。文档本身不会发生任何变化；高亮效果纯粹是视觉呈现。
 
-The finished feature uses all three decoration types:
+最终实现会用到全部三种装饰类型：
 
-- **Inline decorations** highlight every match with a yellow background.
-- **Node decorations** outline every block that contains at least one match.
-- **Widget decorations** render a small numbered React badge after each match.
+- **行内装饰**以黄色背景突出显示每个匹配项。
+- **节点装饰**为每个至少包含一个匹配项的块添加轮廓。
+- **小部件装饰**会在每个匹配项后渲染一个带编号的 React 小徽标。
 
-## What are decorations?
+## 什么是装饰？
 
-Decorations are visual markers that sit on top of the document. They change what the user sees, but they do not change the document content. When you save the editor as JSON or HTML, decorations are not included.
+装饰是叠加在文档上的视觉标记。它们会改变用户看到的内容，但不会更改文档内容。将编辑器保存为 JSON 或 HTML 时，不会包含装饰。
 
-Tiptap has three kinds of decoration:
+Tiptap 有三种装饰：
 
-- **Inline** wraps a range of text in a styled span. Use it for highlights.
-- **Node** adds attributes (like a CSS class) to the DOM wrapper of a whole block. Use it to outline paragraphs or headings.
-- **Widget** inserts a DOM element at a single position. Use it for badges, markers, or small UI elements.
+- **行内装饰**会用带样式的 span 包裹一段文本，可用于高亮。
+- **节点装饰**会向整个块的 DOM 包装元素添加属性（例如 CSS 类），可用于为段落或标题添加轮廓。
+- **小部件装饰**会在单个位置插入 DOM 元素，可用于徽标、标记或小型 UI 元素。
 
-You create all three with the `Decoration` class, imported from `@tiptap/core`. For widgets that render React components, you use `ReactWidgetRenderer` from `@tiptap/react`.
+这三种装饰都通过从 `@tiptap/core` 导入的 `Decoration` 类创建。对于渲染 React 组件的小部件，则使用从 `@tiptap/react` 导入的 `ReactWidgetRenderer`。
 
-## Set up the editor and search input
+## 设置编辑器和搜索输入框
 
-Start with a basic React component that renders a search input and the editor:
+先创建一个基本的 React 组件，用来渲染搜索输入框和编辑器：
 
 ```tsx
 // Editor.tsx
@@ -75,13 +75,13 @@ export function TiptapEditor() {
 }
 ```
 
-The `Highlight` extension does not exist yet. We will create it next. The input is wired to React state but not yet connected to the editor. We will do that after the extension is ready.
+`Highlight` 扩展目前还不存在，接下来我们会创建它。输入框已连接到 React 状态，但还没有连接到编辑器。等扩展准备就绪后，我们再完成连接。
 
-## Create the highlight extension
+## 创建高亮扩展
 
-Extensions are the building blocks of Tiptap. Every feature, from bold text to code blocks, lives in an extension. We need a custom extension that reads a search term and produces decorations.
+扩展是 Tiptap 的构建模块。从粗体文本到代码块，每项功能都由扩展实现。我们需要一个自定义扩展，用来读取搜索词并生成装饰。
 
-Start with an empty extension and a storage field for the search term:
+先创建一个空扩展，并添加一个用于存储搜索词的字段：
 
 ```tsx
 // Highlight.tsx
@@ -127,13 +127,13 @@ export const Highlight = Extension.create<{}, HighlightStorage>({
 })
 ```
 
-Storage is a plain object that lives on the extension instance. Writing to it alone does not trigger a decoration rebuild, so we added a `setSearchTerm` command that stores the term and calls `updateDecorations` in one step. We will call it from the React component later. Inside `addDecorations`, we read the term from storage.
+Storage 是一个普通对象，存放在扩展实例上。仅向其中写入数据不会触发装饰重建，因此我们添加了 `setSearchTerm` 命令，让它在存储搜索词的同时调用 `updateDecorations`。稍后我们会在 React 组件中调用此命令。在 `addDecorations` 中，我们会从 storage 读取搜索词。
 
-## Create the badge widget component
+## 创建徽标小部件组件
 
-Before we add decorations, let us create the React component that the widget will render. It is a small numbered badge that appears after each match.
+添加装饰之前，先创建小部件将要渲染的 React 组件。它是一个小型编号徽标，会显示在每个匹配项后面。
 
-`ReactWidgetRenderer` automatically passes `editor` and `getPos` to your component as props, alongside any props you provide. For this badge we only need the match number:
+`ReactWidgetRenderer` 会自动将 `editor` 和 `getPos` 作为 props 传给组件，同时也会传入你提供的其他 props。这个徽标只需要匹配项的编号：
 
 ```tsx
 // MatchBadge.tsx
@@ -154,23 +154,19 @@ export function MatchBadge({ matchNumber }: MatchBadgeProps) {
 }
 ```
 
-The `contentEditable={false}` prop is important. Without it, the user could type inside the badge, which would confuse ProseMirror's editing logic.
+`contentEditable={false}` 这个 prop 很重要。没有它，用户就可以在徽标内输入内容，这会干扰 ProseMirror 的编辑逻辑。
 
-<Callout title="What are editor and getPos?" variant="info">
-  Every widget component receives `editor` (the Tiptap editor instance) and `getPos` (a function
-  that returns the widget's current document position). We do not need them for a static badge, but
-  they are essential for interactive widgets. For example, a "replace" button would use `getPos()`
-  to know which part of the document to replace. Always call `getPos()` when you need the position,
-  never store its result, because the position changes as the user edits.
+<Callout title="editor 和 getPos 是什么？" variant="info">
+  每个小部件组件都会收到 `editor`（Tiptap 编辑器实例）和 `getPos`（返回小部件当前文档位置的函数）。静态徽标不需要它们，但它们对于交互式小部件至关重要。例如，“替换”按钮可以使用 `getPos()` 确定要替换文档中的哪个部分。需要获取位置时，务必调用 `getPos()`，不要保存它的返回值，因为位置会随着用户编辑而改变。
 </Callout>
 
-## Find and highlight matches
+## 查找并突出显示匹配项
 
-Now we add the `addDecorations` hook to the extension. This is where we scan the document for matches and return decorations.
+现在，我们在扩展中添加 `addDecorations` 钩子。在这里扫描文档、查找匹配项并返回装饰。
 
-We build it up in three steps: inline decorations first, then node decorations, then widget decorations.
+我们分三步逐步实现：先添加行内装饰，再添加节点装饰，最后添加小部件装饰。
 
-### Step 1: Inline decorations for highlighting
+### 第 1 步：使用行内装饰突出显示
 
 ```tsx
 // Highlight.tsx
@@ -237,17 +233,13 @@ export const Highlight = Extension.create<{}, HighlightStorage>({
 })
 ```
 
-<Callout title="Why use the manual update strategy?" variant="info">
-  The search term comes from outside the document (an input field). When the user types in the
-  editor, the document changes but the search term does not. There is no reason to rebuild
-  decorations on every keystroke. With `update: 'manual'`, Tiptap only maps existing decorations
-  to their new positions (which is fast) and waits for us to call `updateDecorations()` when the
-  search term actually changes.
+<Callout title="为什么使用手动更新策略？" variant="info">
+  搜索词来自文档之外（即输入框）。用户在编辑器中输入时，文档会发生变化，但搜索词不会变。因此，没有必要在每次按键时都重建装饰。使用 `update: 'manual'` 后，Tiptap 只会将现有装饰映射到新的位置（速度很快），并等待我们在搜索词实际发生变化时调用 `updateDecorations()`。
 </Callout>
 
-### Step 2: Node decorations for outlining blocks
+### 第 2 步：使用节点装饰为块添加轮廓
 
-Inline decorations highlight individual words. Node decorations can outline the entire block (paragraph, heading, etc.) that contains a match. We track which blocks we have already decorated to avoid duplicates:
+行内装饰会突出显示单个词语。节点装饰则可以为包含匹配项的整个块（段落、标题等）添加轮廓。我们会记录已经添加装饰的块，以避免重复处理：
 
 ```tsx
 // Inside create, before the descendants() call, add a Set to track decorated blocks:
@@ -304,9 +296,9 @@ create: ({ editor, state }) => {
 },
 ```
 
-### Step 3: Widget decorations for the numbered badge
+### 第 3 步：使用小部件装饰添加编号徽标
 
-Now we add the widget. We use `ReactWidgetRenderer` to render the `MatchBadge` component we created earlier. We need a counter to number matches across all text nodes:
+现在添加小部件。我们使用 `ReactWidgetRenderer` 渲染前面创建的 `MatchBadge` 组件。还需要一个计数器，为所有文本节点中的匹配项编号：
 
 ```tsx
 // Add the import at the top of Highlight.tsx:
@@ -339,20 +331,15 @@ decorations.push(
 )
 ```
 
-<Callout title="Widget keys explained" variant="info">
-  Every widget needs a `key`. ProseMirror uses the key to decide whether to reuse the widget's DOM
-  across redraws or destroy and recreate it. If the key stays the same, the widget stays mounted and
-  React preserves its state. If the key changes, the widget is recreated.
+<Callout title="小部件 key 说明" variant="info">
+  每个小部件都需要一个 `key`。ProseMirror 会根据这个 key 决定在重绘时复用小部件的 DOM，还是销毁并重新创建。如果 key 保持不变，小部件就会继续挂载，React 也会保留其状态。如果 key 发生变化，小部件就会重新创建。
 
-  For stateless widgets like this badge, a position-based key (`match-badge-${matchFrom}`) is fine.
-  For stateful widgets (anything that holds data the user changed), use a stable key tied to the
-  item's identity, like `comment-${id}`. See the
-  [widget keys section](/editor/core-concepts/decorations#widget-keys) in the core concepts guide.
+  对于这个徽标这样的无状态小部件，使用基于位置的 key（`match-badge-${matchFrom}`）即可。对于有状态的小部件（即持有用户修改过的数据的小部件），应使用与项目身份相关联的稳定 key，例如 `comment-${id}`。请参阅核心概念指南中的[小部件 key 部分](/editor/core-concepts/decorations#widget-keys)。
 </Callout>
 
-## The complete extension
+## 完整扩展
 
-Here is the full extension with all three decoration types:
+以下是包含全部三种装饰类型的完整扩展：
 
 ```tsx
 // Highlight.tsx
@@ -451,9 +438,9 @@ export const Highlight = Extension.create<{}, HighlightStorage>({
 })
 ```
 
-## Connect the search input
+## 连接搜索输入框
 
-Now we connect the input to the extension. When the search term changes, we write it into the extension's storage and tell Tiptap to rebuild the decorations:
+现在将输入框连接到扩展。搜索词发生变化时，我们会将其写入扩展的 storage，并让 Tiptap 重建装饰：
 
 ```tsx
 // Editor.tsx
@@ -508,11 +495,11 @@ export function TiptapEditor() {
 }
 ```
 
-The flow is: the user types, React state updates, the `setSearchTerm` command stores the term and triggers a rebuild, and Tiptap calls our `create` function which scans the document and returns new decorations.
+整个流程如下：用户输入内容后，React 状态会更新；`setSearchTerm` 命令会存储搜索词并触发重建；随后 Tiptap 调用我们的 `create` 函数扫描文档并返回新的装饰。
 
-## Style the decorations
+## 设置装饰样式
 
-The decorations add CSS classes to the document. Add these styles to make them visible:
+装饰会为文档添加 CSS 类。添加以下样式即可显示装饰效果：
 
 ```css
 /* styles.css */
@@ -543,8 +530,8 @@ The decorations add CSS classes to the document. Add these styles to make them v
 }
 ```
 
-## Next steps
+## 后续步骤
 
-- Review [decoration types and update strategies](/editor/core-concepts/decorations) in the core concepts guide.
-- Read the full [Decorations API reference](/editor/api/decorations) for every signature and option.
-- See the [Vanilla JS tutorial](/guides/decorations-vanilla) if you want to build widgets by hand without a framework, or the [Vue 3 tutorial](/guides/decorations-vue) for Vue.
+- 在核心概念指南中了解[装饰类型和更新策略](/editor/core-concepts/decorations)。
+- 阅读完整的 [Decorations API 参考](/editor/api/decorations)，了解所有签名和选项。
+- 如果想在不使用框架的情况下手动构建小部件，请参阅 [Vanilla JS 教程](/guides/decorations-vanilla)；如果使用 Vue，请参阅 [Vue 3 教程](/guides/decorations-vue)。
