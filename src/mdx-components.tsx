@@ -7,7 +7,7 @@ import { Checklist, CheckboxItem } from './components/Checklist'
 import Link from '@/components/Link'
 
 /**
- * Extracts the text from a nested children object
+ * 从嵌套的 children 对象中提取文本
  */
 const getHeadlineId = (children: React.ReactNode) => {
   let text = ''
@@ -112,7 +112,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       // @ts-ignore
       return <Link {...props} target={isExternal ? '_blank' : props.target} />
     },
-    // Direct custom component usage
+    // 直接使用自定义组件
     Checklist,
     CheckboxItem,
   }
