@@ -2,10 +2,10 @@ import { cache } from 'react'
 import { getAllContent } from './getAllContent'
 
 /**
- * Get all content paths from the content directory
- * MDX paths are replaced to URL paths
- * f.e. src/content/about/license.mdx => /about/license
- * Cached per-request to avoid duplicate processing.
+ * 获取内容目录中的所有内容路径
+ * 将 MDX 路径替换为 URL 路径
+ * 例如：src/content/about/license.mdx => /about/license
+ * 按请求缓存，以避免重复处理。
  */
 export const getAllContentPaths = cache(async (options?: { withoutIndex?: boolean }) => {
   const allFiles = await getAllContent()
