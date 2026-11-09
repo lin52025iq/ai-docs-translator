@@ -1,6 +1,6 @@
 ---
-title: 'Size and view'
-intro: "A chart or a diagram takes the full width of the editor's text until you give it a size of its own. Until then, a chart has an aspect ratio of 16:9, and a diagram keeps the aspect ratio of its drawing, at most 640px high."
+title: '尺寸与视图'
+intro: "图表或示意图会占据编辑器文本的全部宽度，直到为其单独设置尺寸。在此之前，图表的宽高比为 16:9；示意图则保持其绘图的宽高比，高度最高为 640px。"
 headerDemo:
   path: '/Extensions/DiagramsSizeAndZoom'
   isPro: true
@@ -8,14 +8,14 @@ tags:
   - type: alpha
   - type: restricted
 meta:
-  title: 'Size and view | Tiptap Diagrams Docs'
-  description: "A chart or a diagram takes the full width of the editor's text until you give it a size of its own."
+  title: '尺寸与视图 | Tiptap Diagrams 文档'
+  description: "图表或示意图会占据编辑器文本的全部宽度，直到为其单独设置尺寸。"
   category: Diagrams
 ---
 
 import { CodeDemo } from '@/components/CodeDemo'
 
-## Quick start
+## 快速开始
 
 ```ts
 // Half the width of the editor's text, at 4:3, stored in the document
@@ -25,153 +25,128 @@ editor.commands.setDiagramSize({ size: { width: 0.5, ratio: 4 / 3, locked: true 
 editor.storage.diagrams.setZoom({}, 1.5)
 ```
 
-## What is stored and what is not
+## 哪些内容会被存储，哪些不会
 
-The document stores the size and the alignment. So collaborators share them, and they are kept
-after a reload. Zoom, pan and maximize change only how one editor shows a chart or a diagram. They
-are not shared, and they are gone after a reload.
+文档会存储尺寸和对齐方式，因此协作者可以共享这些设置，重新加载后也会保留。缩放、平移和最大化只会改变当前编辑器中图表或示意图的显示方式。这些设置不会共享，重新加载后也会消失。
 
-## Narrow screens
+## 窄屏
 
-On phones, the [`chart.minRenderWidth`](/diagrams/api-reference/options#minrenderwidth) option draws a chart as wide as
-on a large screen and then scales it down. Compare a narrow chart with and without the option:
+在手机上，使用 [`chart.minRenderWidth`](/diagrams/api-reference/options#minrenderwidth) 选项可以按大屏幕上的宽度绘制图表，然后再缩小。比较使用和不使用此选项时的窄图表：
 
 <CodeDemo isPro viewer view="preview" path="/Extensions/DiagramsNarrowScreens" />
 
-## View functions
+## 视图函数
 
-The view functions are on `editor.storage.diagrams`. Each takes a `target`, which is `{ pos? }`.
-Without `pos`, a function acts on the selected chart or diagram.
+视图函数位于 `editor.storage.diagrams` 上。每个函数都接收一个 `target`，其形式为 `{ pos? }`。如果不传入 `pos`，函数会作用于选中的图表或示意图。
 
-| Function                          | What it does                                                      |
-| --------------------------------- | ----------------------------------------------------------------- |
-| `setZoom(target, zoom)`           | Sets the zoom. `zoom` is `number \| 'fit'`                        |
-| `getZoom(target?)`                | Returns the zoom, or `null`                                       |
-| `setPan(target, { x, y })`        | Moves the zoomed chart or diagram inside its frame                |
-| `getPan(target?)`                 | Returns the offset `{ x, y }`, or `null`                          |
-| `setMaximized(target, maximized)` | Lays the chart or diagram over the window, or puts it back        |
-| `getMaximized()`                  | Returns the position of the maximized chart or diagram, or `null` |
-| `getShownSize(target?)`           | Returns the size it has on screen as a `FigureSize`, or `null`    |
+| 函数                              | 功能                                                             |
+| --------------------------------- | ---------------------------------------------------------------- |
+| `setZoom(target, zoom)`           | 设置缩放级别。`zoom` 的类型为 `number \| 'fit'`                   |
+| `getZoom(target?)`                | 返回缩放级别，或 `null`                                           |
+| `setPan(target, { x, y })`        | 在框架内移动已缩放的图表或示意图                                 |
+| `getPan(target?)`                 | 返回偏移量 `{ x, y }`，或 `null`                                 |
+| `setMaximized(target, maximized)` | 将图表或示意图铺展到窗口上，或将其还原                           |
+| `getMaximized()`                  | 返回最大化图表或示意图的位置，或 `null`                           |
+| `getShownSize(target?)`           | 返回其屏幕显示尺寸，类型为 `FigureSize`，或 `null`                |
 
-These functions work only on a chart or a diagram that is on screen. For one that is not, the
-`set` functions return `false` and the `get` functions return `null`.
+这些函数仅适用于当前显示在屏幕上的图表或示意图。对于未显示在屏幕上的对象，`set` 函数会返回 `false`，`get` 函数会返回 `null`。
 
-## Zoom
+## 缩放
 
 ```ts
 editor.storage.diagrams.setZoom({ pos }, 1.5) // 150 % of the unzoomed size
 editor.storage.diagrams.setZoom({}, 'fit') // the selected chart, back to the unzoomed size
 ```
 
-The unzoomed size, `'fit'`, is the size at which a chart fills its own width. A number is a factor
-of it, from `0.25` to `4`. A number outside that range is clamped.
+未缩放尺寸（`'fit'`）是图表恰好填满自身宽度时的尺寸。数值表示相对于该尺寸的倍数，范围为 `0.25` 到 `4`。超出此范围的数值会被限制在范围内。
 
-Zoomed in, the chart keeps its height, and you scroll inside it. Zoomed out, it takes less room.
-Every Renderer works with zoom, because the drawn chart is scaled, not drawn again. The chart's
-root element carries the zoom as `data-tt-chart-zoom`.
+放大时，图表高度保持不变，你可以在其中滚动。缩小时，图表占用的空间会减少。所有 Renderer 都支持缩放，因为缩放的是已绘制的图表，而不是重新绘制。图表的根元素会通过 `data-tt-chart-zoom` 属性携带缩放值。
 
-## Pan
+## 平移
 
 ```ts
 editor.storage.diagrams.setZoom({ pos }, 2)
 editor.storage.diagrams.setPan({ pos }, { x: 120, y: 40 })
 ```
 
-Pan moves a zoomed-in chart or diagram inside its frame.
+平移可在框架内移动放大后的图表或示意图。
 
-- **Dragging** with the mouse button held down moves it. A click without movement selects it.
-- **`setPan`** moves it from code. `x` and `y` are how many pixels of the zoomed chart or diagram
-  are moved out of view at the left and at the top.
-- **`'fit'`** moves it back to `0, 0`.
-- **While you drag**, the root element carries `data-tt-chart-panning` or
-  `data-tt-flow-diagram-panning`.
+- **按住鼠标拖动**即可移动对象。不移动直接单击则会选中对象。
+- **`setPan`** 可通过代码移动对象。`x` 和 `y` 表示放大后的图表或示意图在左侧和顶部移出可视范围的像素数。
+- **`'fit'`** 会将对象移回 `0, 0`。
+- **拖动期间**，根元素会带有 `data-tt-chart-panning` 或 `data-tt-flow-diagram-panning` 属性。
 
-## Maximize
+## 最大化
 
 ```ts
 editor.storage.diagrams.setMaximized({ pos }, true) // over the window
 editor.storage.diagrams.setMaximized({ pos }, false) // back into the text
 ```
 
-A maximized chart covers the window, at the distance `--tt-chart-maximized-inset` from its edges.
-The chart is drawn again at the new size, and its zoom starts at `'fit'`. While maximized, its
-root element carries `data-tt-chart-maximized`.
+最大化后的图表会覆盖窗口，并与窗口边缘保持 `--tt-chart-maximized-inset` 指定的距离。图表会以新的尺寸重新绘制，缩放级别从 `'fit'` 开始。最大化期间，根元素会带有 `data-tt-chart-maximized` 属性。
 
-Only one chart can be maximized. Maximizing another chart, pressing Escape in the editor, or
-deleting or moving the chart puts it back. Each change dispatches a transaction that does not
-change the document, so a toolbar that listens to `transaction` can update its button.
+同一时间只能最大化一个图表。最大化另一个图表、在编辑器中按 Escape，或删除或移动该图表，都会将其还原。每次更改都会派发一个不改变文档的事务，因此监听 `transaction` 的工具栏可以更新按钮状态。
 
-## Resize handles
+## 调整大小的控点
 
-With the [`resizable`](/diagrams/api-reference/options#resizable) option, a selected chart or diagram shows handles
-while the editor is editable. The handles sit at the left and right sides, at the bottom, and at
-the two lower corners.
+启用 [`resizable`](/diagrams/api-reference/options#resizable) 选项后，在编辑器可编辑时，选中的图表或示意图会显示控点。控点位于左右两侧、底部和两个下角。
 
-- **A side handle** changes the width and keeps the height. A centered chart or diagram grows on
-  both sides. One aligned left or right (see [`setDiagramAlign`](/diagrams/guides/size-and-view#setdiagramalign)) grows only on
-  the side of the handle.
-- **The bottom handle** changes the height.
-- **A corner handle** changes both. It keeps the aspect ratio while the size has `locked: true`.
-  Holding Shift does the opposite.
-- **Near the full width**, a drag snaps to the edge of the editor's text. A double click on a
-  handle sets the full width.
-- **When the drag ends**, `setDiagramSize` writes the size, as one undo step.
+- **侧边控点**可更改宽度并保持高度不变。居中的图表或示意图会向两侧扩展。左对齐或右对齐的对象（参见 [`setDiagramAlign`](/diagrams/guides/size-and-view#setdiagramalign)）只会向控点所在的一侧扩展。
+- **底部控点**可更改高度。
+- **角落控点**可同时更改宽度和高度。当尺寸设置为 `locked: true` 时，它会保持宽高比。按住 Shift 则会反向操作。
+- **接近全宽时**，拖动会自动吸附到编辑器文本边缘。双击控点可将对象设为全宽。
+- **拖动结束时**，`setDiagramSize` 会写入尺寸，并将其作为一个撤销步骤。
 
-## Commands
+## 命令
 
 ### setDiagramSize
 
-Gives the selected chart or diagram, or the one at `pos`, a size.
+为选中的图表或示意图，或 `pos` 位置上的图表或示意图，设置尺寸。
 
 ```ts
 editor.commands.setDiagramSize({ size: { width: 0.5, ratio: 4 / 3, locked: true } })
 ```
 
-| Option | Type                 | Description                                                                          |
-| ------ | -------------------- | ------------------------------------------------------------------------------------ |
-| `size` | `FigureSize \| null` | The size, see below. `null` goes back to the full width and the natural aspect ratio |
-| `pos`  | `number`             | The position of the chart or diagram. Defaults to the selected one                   |
+| 选项   | 类型                 | 说明                                                                            |
+| ------ | -------------------- | ------------------------------------------------------------------------------- |
+| `size` | `FigureSize \| null` | 尺寸，见下文。`null` 会恢复为全宽和自然宽高比                                  |
+| `pos`  | `number`             | 图表或示意图的位置。默认为选中的对象                                            |
 
-A `FigureSize` has these fields. Values outside the range are clamped.
+`FigureSize` 包含以下字段。超出范围的值会被限制在范围内。
 
-| Field    | Type                            | Description                                                                                      |
-| -------- | ------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `width`  | `number`                        | A share of the width of the editor's text, from `0.1` to `1`                                     |
-| `ratio`  | `number`                        | The aspect ratio: width divided by height of the drawing area, from `0.25` to `8`                |
-| `locked` | `boolean`                       | Whether a corner handle keeps the aspect ratio                                                   |
-| `align`  | `'left' \| 'center' \| 'right'` | The alignment, see [`setDiagramAlign`](/diagrams/guides/size-and-view#setdiagramalign). Optional |
+| 字段     | 类型                            | 说明                                                                                          |
+| -------- | ------------------------------- | --------------------------------------------------------------------------------------------- |
+| `width`  | `number`                        | 相对于编辑器文本宽度的比例，范围为 `0.1` 到 `1`                                               |
+| `ratio`  | `number`                        | 宽高比，即绘图区域的宽度除以高度，范围为 `0.25` 到 `8`                                        |
+| `locked` | `boolean`                       | 角落控点是否保持宽高比                                                                        |
+| `align`  | `'left' \| 'center' \| 'right'` | 对齐方式，参见 [`setDiagramAlign`](/diagrams/guides/size-and-view#setdiagramalign)。可选项     |
 
-| Where           | What happens to the size                                        |
-| --------------- | --------------------------------------------------------------- |
-| A chart         | Is kept in its Chart Spec as `size`                             |
-| A diagram       | Is kept in its `options` as `size`                              |
-| An image export | Keeps the aspect ratio, at the export's usual width             |
-| Word            | Places the chart or the diagram at that share of the page width |
-| HTML            | Becomes `style="width: …%"` on the `<figure>` element           |
+| 位置           | 尺寸的处理方式                                      |
+| -------------- | --------------------------------------------------- |
+| 图表           | 以 `size` 的形式保存在其 Chart Spec 中             |
+| 示意图         | 以 `size` 的形式保存在其 `options` 中              |
+| 导出为图像     | 保持宽高比，并使用导出时的常规宽度                 |
+| Word           | 按页面宽度的相应比例放置图表或示意图               |
+| HTML           | 在 `<figure>` 元素上转换为 `style="width: …%"`     |
 
-Returns `false` when there is no chart or diagram, or when `size` is not a size.
+如果没有图表或示意图，或者 `size` 不是有效尺寸，则返回 `false`。
 
 ### setDiagramAlign
 
-Aligns the selected chart or diagram, or the one at `pos`, to the `'left'`, the `'center'` or the
-`'right'` of the editor's text.
+将选中的图表或示意图，或 `pos` 位置上的图表或示意图，与编辑器文本的 `'left'`、`'center'` 或 `'right'` 对齐。
 
 ```ts
 editor.commands.setDiagramAlign({ align: 'right' })
 ```
 
-| Option  | Type                            | Description                                                        |
-| ------- | ------------------------------- | ------------------------------------------------------------------ |
-| `align` | `'left' \| 'center' \| 'right'` | The alignment                                                      |
-| `pos`   | `number`                        | The position of the chart or diagram. Defaults to the selected one |
+| 选项    | 类型                            | 说明                                             |
+| ------- | ------------------------------- | ------------------------------------------------ |
+| `align` | `'left' \| 'center' \| 'right'` | 对齐方式                                         |
+| `pos`   | `number`                        | 图表或示意图的位置。默认为选中的对象             |
 
-- **The alignment is stored** in the size as `align`. `center` is the default and is not written.
-- **A chart or diagram without a size of its own** gets the size it has on screen,
-  `getShownSize()`, together with the alignment.
-- **At the full width**, you see the alignment only once the chart or diagram is made narrower.
-- **HTML** carries the alignment as margins. **Word** carries it as the alignment of the
-  paragraph that holds the chart or diagram.
+- **对齐方式会**以 `align` 的形式存储在尺寸中。`center` 是默认值，不会写入。
+- **没有独立尺寸的图表或示意图**会采用其屏幕显示尺寸 `getShownSize()`，并同时设置对齐方式。
+- **全宽时**，只有在缩窄图表或示意图后才能看到对齐效果。
+- **HTML** 会通过边距保留对齐方式。**Word** 会通过容纳图表或示意图的段落对齐方式保留对齐方式。
 
-Returns `false` when there is no chart or diagram, or for an unknown alignment. It also returns
-`false` for a chart or diagram that has no size of its own and is not on screen, because the
-command reads the aspect ratio from the screen.
+如果没有图表或示意图，或者对齐方式未知，则返回 `false`。如果图表或示意图没有独立尺寸且当前未显示在屏幕上，也会返回 `false`，因为此命令需要从屏幕读取宽高比。
