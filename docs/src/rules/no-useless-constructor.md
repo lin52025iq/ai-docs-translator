@@ -4,7 +4,7 @@ rule_type: suggestion
 ---
 
 
-ES2015 provides a default class constructor if one is not specified. As such, it is unnecessary to provide an empty constructor or one that simply delegates into its parent class, as in the following examples:
+ES2015 会在未指定类构造函数时提供默认构造函数。因此，以下示例中的空构造函数，或仅委托给父类的构造函数，都没有必要：
 
 ```js
 class A {
@@ -19,11 +19,13 @@ class B extends A {
 }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule flags class constructors that can be safely removed without changing how the class works.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则会标记可以安全删除且不会改变类行为的构造函数。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -44,7 +46,7 @@ class B extends A {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -75,9 +77,9 @@ class D extends A {
 
 :::
 
-This rule additionally supports TypeScript type syntax.
+此规则还支持 TypeScript 类型语法。
 
-Examples of **incorrect** TypeScript code for this rule:
+此规则的**错误** TypeScript 代码示例：
 
 ::: incorrect
 
@@ -91,7 +93,7 @@ class A {
 
 :::
 
-Examples of **correct** TypeScript code for this rule:
+此规则的**正确** TypeScript 代码示例：
 
 ::: correct
 
@@ -115,10 +117,14 @@ class C {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-If you don't want to be notified about unnecessary constructors, you can safely disable this rule.
+<a id="when-not-to-use-it"></a>
+
+## 何时不应使用此规则
+
+如果不希望收到有关不必要构造函数的提示，可以放心禁用此规则。
