@@ -1,60 +1,68 @@
 ---
-title: Ways to Extend ESLint
+title: 扩展 ESLint 的方式
 eleventyNavigation:
     key: ways to extend
     parent: extend eslint
-    title: Ways to Extend ESLint
+    title: 扩展 ESLint 的方式
     order: 1
 ---
 
-ESLint is highly pluggable and configurable. There are a variety of ways that you can extend ESLint's functionality.
+ESLint 具有很强的可插拔性和可配置性。你可以通过多种方式扩展 ESLint 的功能。
 
-This page explains the ways to extend ESLint, and how these extensions all fit together.
+本页介绍扩展 ESLint 的各种方式，以及这些扩展如何协同工作。
 
-## Plugins
+<a id="plugins"></a>
 
-Plugins let you add your own ESLint custom rules and custom processors to a project. You can publish a plugin as an npm module.
+## 插件
 
-Plugins are useful because your project may require some ESLint configuration that isn't included in the core `eslint` package. For example, if you're using a frontend JavaScript library like [React](https://react.dev/) or framework like [Vue](https://vuejs.org/), these tools have some features that require custom rules outside the scope of the ESLint core rules.
+插件可让你为项目添加自定义 ESLint 规则和自定义处理器。你可以将插件作为 npm 模块发布。
 
-Often a plugin is paired with a configuration for ESLint that applies a set of features from the plugin to a project. You can include configurations in a plugin as well.
+插件很有用，因为你的项目可能需要一些核心 `eslint` 包中未包含的 ESLint 配置。例如，如果你使用 [React](https://react.dev/) 这样的前端 JavaScript 库或 [Vue](https://vuejs.org/) 这样的框架，这些工具的某些功能需要使用 ESLint 核心规则范围之外的自定义规则。
 
-For example, [`eslint-plugin-react`](https://www.npmjs.com/package/eslint-plugin-react) is an ESLint plugin that includes rules specifically for React projects. The rules include things like enforcing consistent usage of React component lifecycle methods and requiring the use of key props when rendering dynamic lists.
+插件通常会配有一份 ESLint 配置，用于将插件中的一组功能应用到项目中。你也可以在插件中包含配置。
 
-To learn more about creating the extensions you can include in a plugin, refer to the following documentation:
+例如，[`eslint-plugin-react`](https://www.npmjs.com/package/eslint-plugin-react) 是一个 ESLint 插件，其中包含专为 React 项目设计的规则。这些规则包括强制一致地使用 React 组件生命周期方法，以及要求在渲染动态列表时使用 key 属性。
 
-- [Custom Rules](custom-rules)
-- [Custom Processors](custom-processors)
-- [Configs in Plugins](plugins#configs-in-plugins)
+要详细了解如何创建可包含在插件中的扩展，请参阅以下文档：
 
-To learn more about bundling these extensions into a plugin, refer to [Plugins](plugins).
+- [自定义规则](custom-rules)
+- [自定义处理器](custom-processors)
+- [插件中的配置](plugins#configs-in-plugins)
 
-## Shareable Configs
+要详细了解如何将这些扩展打包到插件中，请参阅[插件](plugins)。
 
-ESLint shareable configs are pre-defined configurations for ESLint that you can use in your projects. They bundle rules and other configuration together in an npm package. Anything that you can put in a configuration file can be put in a shareable config.
+<a id="shareable-configs"></a>
 
-You can either publish a shareable config independently or as part of a plugin.
+## 可共享配置
 
-For example, a popular shareable config is [`eslint-config-airbnb`](https://www.npmjs.com/package/eslint-config-airbnb), which contains a variety of rules in addition to some [parser options](../use/configure/language-options#specify-parser-options). This is a set of rules for ESLint that is designed to match the style guide used by the [Airbnb JavaScript style guide](https://github.com/airbnb/javascript). By using the `eslint-config-airbnb` shareable config, you can automatically enforce the Airbnb style guide in your project without having to manually configure each rule.
+ESLint 可共享配置是预先定义的 ESLint 配置，可用于你的项目。它们会将规则和其他配置打包到一个 npm 包中。配置文件中可以包含的任何内容，都可以放入可共享配置中。
 
-To learn more about creating a shareable config, refer to [Share Configurations](shareable-configs).
+你可以独立发布可共享配置，也可以将它作为插件的一部分发布。
 
-## Custom Formatters
+例如，广受欢迎的可共享配置 [`eslint-config-airbnb`](https://www.npmjs.com/package/eslint-config-airbnb) 除了包含各种规则，还包含一些[解析器选项](../use/configure/language-options#specify-parser-options)。这组 ESLint 规则旨在与 [Airbnb JavaScript 风格指南](https://github.com/airbnb/javascript)保持一致。使用 `eslint-config-airbnb` 可共享配置，可以在项目中自动强制执行 Airbnb 风格指南，而无需手动配置每条规则。
 
-Custom formatters take ESLint linting results and output the results in a format that you define. Custom formatters let you display linting results in a format that best fits your needs, whether that's in a specific file format, a certain display style, or a format optimized for a particular tool. You only need to create a custom formatter if the [built-in formatters](../use/formatters/) don't serve your use case.
+要详细了解如何创建可共享配置，请参阅[共享配置](shareable-configs)。
 
-For example, the custom formatter [eslint-formatter-gitlab](https://www.npmjs.com/package/eslint-formatter-gitlab) can be used to display ESLint results in [GitLab](https://about.gitlab.com/) code quality reports.
+<a id="custom-formatters"></a>
 
-To learn more about creating a custom formatter, refer to [Custom Formatters](custom-formatters).
+## 自定义格式化器
 
-## Custom Parsers
+自定义格式化器会获取 ESLint 代码检查结果，并以你定义的格式输出。无论你需要特定文件格式、某种显示样式，还是针对特定工具优化的格式，自定义格式化器都能以最符合需求的方式显示代码检查结果。只有在[内置格式化器](../use/formatters/)无法满足你的使用场景时，才需要创建自定义格式化器。
 
-ESLint custom parsers are a way to extend ESLint to support the linting of new language features or custom syntax in your code. A parser is responsible for taking your code and transforming it into an abstract syntax tree (AST) that ESLint can then analyze and lint.
+例如，自定义格式化器 [eslint-formatter-gitlab](https://www.npmjs.com/package/eslint-formatter-gitlab) 可用于在 [GitLab](https://about.gitlab.com/) 代码质量报告中显示 ESLint 结果。
 
-ESLint ships with a built-in JavaScript parser (Espree), but custom parsers allow you to lint other languages or to extend the linting capabilities of the built-in parser.
+要详细了解如何创建自定义格式化器，请参阅[自定义格式化器](custom-formatters)。
 
-For example, the custom parser [@typescript-eslint/parser](https://typescript-eslint.io/packages/parser) extends ESLint to lint TypeScript code.
+<a id="custom-parsers"></a>
 
-Custom parsers can be also included in a plugin.
+## 自定义解析器
 
-To learn more about creating a custom parser, refer to [Custom Parsers](custom-parsers).
+ESLint 自定义解析器可扩展 ESLint，使其支持对代码中的新语言特性或自定义语法进行代码检查。解析器负责将代码转换为抽象语法树（AST），以便 ESLint 对其进行分析和代码检查。
+
+ESLint 内置了 JavaScript 解析器（Espree），但自定义解析器可以让你检查其他语言的代码，也可以扩展内置解析器的代码检查能力。
+
+例如，自定义解析器 [@typescript-eslint/parser](https://typescript-eslint.io/packages/parser) 扩展了 ESLint，使其能够检查 TypeScript 代码。
+
+自定义解析器也可以包含在插件中。
+
+要详细了解如何创建自定义解析器，请参阅[自定义解析器](custom-parsers)。
