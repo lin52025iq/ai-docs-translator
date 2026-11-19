@@ -11,7 +11,7 @@ related_rules:
 ---
 
 
-The `max-statements` rule allows you to specify the maximum number of statements allowed in a function.
+`max-statements` 规则允许你指定函数中允许的最大语句数。
 
 ```js
 function foo() {
@@ -21,25 +21,29 @@ function foo() {
 }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces a maximum number of statements allowed in function blocks.
+## 规则详情
 
-## Options
+此规则限制函数块中允许的最大语句数。
 
-This rule has a number or object option:
+<a id="options"></a>
 
-* `"max"` (default `10`) enforces a maximum number of statements allows in function blocks
+## 选项
 
-**Deprecated:** The object property `maximum` is deprecated; please use the object property `max` instead.
+此规则有一个数字或对象选项：
 
-This rule has an object option:
+* `"max"`（默认值为 `10`）限制函数块中允许的最大语句数。
 
-* `"ignoreTopLevelFunctions": true` ignores top-level functions
+**已弃用：** 对象属性 `maximum` 已弃用；请改用对象属性 `max`。
+
+此规则还有一个对象选项：
+
+* `"ignoreTopLevelFunctions": true` 忽略顶层函数。
 
 ### max
 
-Examples of **incorrect** code for this rule with the default `{ "max": 10 }` option:
+使用默认选项 `{ "max": 10 }` 时，此规则的**错误**代码示例如下：
 
 ::: incorrect
 
@@ -79,7 +83,7 @@ const bar = () => {
 
 :::
 
-Examples of **correct** code for this rule with the default `{ "max": 10 }` option:
+使用默认选项 `{ "max": 10 }` 时，此规则的**正确**代码示例如下：
 
 ::: correct
 
@@ -131,9 +135,9 @@ const bar = () => {
 
 :::
 
-Note that this rule does not apply to class static blocks, and that statements in class static blocks do not count as statements in the enclosing function.
+请注意，此规则不适用于类静态代码块，并且类静态代码块中的语句不计入外层函数的语句数。
 
-Examples of **correct** code for this rule with `{ "max": 2 }` option:
+使用选项 `{ "max": 2 }` 时，此规则的**正确**代码示例如下：
 
 ::: correct
 
@@ -161,7 +165,7 @@ function foo() {
 
 ### ignoreTopLevelFunctions
 
-Examples of additional **correct** code for this rule with the `{ "max": 10 }, { "ignoreTopLevelFunctions": true }` options:
+使用选项 `{ "max": 10 }, { "ignoreTopLevelFunctions": true }` 时，此规则的其他**正确**代码示例如下：
 
 ::: correct
 
