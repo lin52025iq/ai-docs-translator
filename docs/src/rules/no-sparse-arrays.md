@@ -7,27 +7,29 @@ further_reading:
 
 
 
-Sparse arrays contain empty slots, most frequently due to multiple commas being used in an array literal, such as:
+稀疏数组包含空槽位，最常见的情况是在数组字面量中使用多个逗号，例如：
 
 ```js
 const items = [,,];
 ```
 
-While the `items` array in this example has a `length` of 2, there are actually no values in `items[0]` or `items[1]`. The fact that the array literal is valid with only commas inside, coupled with the `length` being set and actual item values not being set, make sparse arrays confusing for many developers. Consider the following:
+在此示例中，`items` 数组的 `length` 为 2，但 `items[0]` 和 `items[1]` 实际上都没有值。数组字面量中只有逗号也有效，再加上数组设置了 `length`，却没有设置实际的元素值，这些因素让许多开发者对稀疏数组感到困惑。请看下面的例子：
 
 ```js
 const colors = [ "red",, "blue" ];
 ```
 
-In this example, the `colors` array has a `length` of 3. But did the developer intend for there to be an empty spot in the middle of the array? Or is it a typo?
+在此示例中，`colors` 数组的 `length` 为 3。但开发者是有意在数组中间留空，还是不小心打错了？
 
-The confusion around sparse arrays defined in this manner is enough that it's recommended to avoid using them unless you are certain that they are useful in your code.
+以这种方式定义稀疏数组容易引起混淆，因此建议避免使用，除非你确定它们对代码有用。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows sparse array literals which have "holes" where commas are not preceded by elements. It does not apply to a trailing comma following the last element.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止包含“空洞”的稀疏数组字面量，即逗号前没有元素的情况。但最后一个元素后的尾随逗号不在此规则的限制范围内。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -40,7 +42,7 @@ const colors = [ "red",, "blue" ];
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -56,10 +58,14 @@ const colors = [ "red", "blue", ];
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-If you want to use sparse arrays, then it is safe to disable this rule.
+<a id="when-not-to-use-it"></a>
+
+## 何时不使用此规则
+
+如果你想使用稀疏数组，可以放心禁用此规则。
