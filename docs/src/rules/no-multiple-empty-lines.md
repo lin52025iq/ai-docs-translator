@@ -2,23 +2,25 @@
 title: no-multiple-empty-lines
 rule_type: layout
 ---
-Some developers prefer to have multiple blank lines removed, while others feel that it helps improve readability. Whitespace is useful for separating logical sections of code, but excess whitespace takes up more of the screen.
+有些开发者希望移除多个空行，而另一些开发者则认为这有助于提高可读性。空白有助于分隔代码中的逻辑部分，但过多的空白会占用更多屏幕空间。
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule aims to reduce the scrolling required when reading through your code. It will warn when the maximum amount of empty lines has been exceeded.
+此规则旨在减少阅读代码时所需的滚动操作。当空行数量超过最大值时，它会发出警告。
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule has an object option:
+此规则接受一个对象选项：
 
-* `"max"` (default: `2`) enforces a maximum number of consecutive empty lines.
-* `"maxEOF"` enforces a maximum number of consecutive empty lines at the end of files.
-* `"maxBOF"` enforces a maximum number of consecutive empty lines at the beginning of files.
+* `"max"`（默认值：`2`）用于限制连续空行的最大数量。
+* `"maxEOF"` 用于限制文件末尾连续空行的最大数量。
+* `"maxBOF"` 用于限制文件开头连续空行的最大数量。
 
 ### max
 
-Examples of **incorrect** code for this rule with the default `{ "max": 2 }` option:
+以下是使用默认选项 `{ "max": 2 }` 时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -34,7 +36,7 @@ var bar = 3;
 
 :::
 
-Examples of **correct** code for this rule with the default `{ "max": 2 }` option:
+以下是使用默认选项 `{ "max": 2 }` 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -51,7 +53,7 @@ var bar = 3;
 
 ### maxEOF
 
-Examples of **incorrect** code for this rule with the `{ max: 2, maxEOF: 0 }` options:
+以下是使用选项 `{ max: 2, maxEOF: 0 }` 时的**错误**代码示例：
 
 ::: incorrect
 
@@ -68,7 +70,7 @@ var bar = 3;⏎
 
 :::
 
-Examples of **correct** code for this rule with the `{ max: 2, maxEOF: 0 }` options:
+以下是使用选项 `{ max: 2, maxEOF: 0 }` 时的**正确**代码示例：
 
 ::: correct
 
@@ -83,9 +85,9 @@ var bar = 3;
 
 :::
 
-**Note**: Although this ensures zero empty lines at the EOF, most editors will still show one empty line at the end if the file ends with a line break, as illustrated below. There is no empty line at the end of a file after the last `\n`, although editors may show an additional line. A true additional line would be represented by `\n\n`.
+**注意**：虽然此选项可确保文件末尾没有空行，但如果文件以换行符结尾，大多数编辑器仍会显示末尾有一行空行，如下所示。最后一个 `\n` 之后并没有真正的空行，但编辑器可能会显示额外的一行。真正多出一行的情况应表示为 `\n\n`。
 
-**Correct**:
+**正确**：
 
 ::: correct
 
@@ -103,7 +105,7 @@ var bar = 3;⏎
 
 ### maxBOF
 
-Examples of **incorrect** code for this rule with the `{ max: 2, maxBOF: 1 }` options:
+以下是使用选项 `{ max: 2, maxBOF: 1 }` 时的**错误**代码示例：
 
 ::: incorrect
 
@@ -121,7 +123,7 @@ var bar = 3;
 
 :::
 
-Examples of **correct** code for this rule with the `{ max: 2, maxBOF: 1 }` options:
+以下是使用选项 `{ max: 2, maxBOF: 1 }` 时的**正确**代码示例：
 
 ::: correct
 
@@ -150,6 +152,7 @@ var bar = 3;
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 何时不使用此规则
 
-If you do not care about extra blank lines, turn this off.
+如果你不在意多余的空行，可以关闭此规则。
