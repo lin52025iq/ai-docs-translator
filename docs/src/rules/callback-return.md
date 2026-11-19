@@ -8,8 +8,7 @@ further_reading:
 - https://web.archive.org/web/20171224042620/https://docs.nodejitsu.com/articles/errors/what-are-the-error-conventions/
 ---
 
-The callback pattern is at the heart of most I/O and event-driven programming
- in JavaScript.
+回调模式是 JavaScript 中大多数 I/O 和事件驱动编程的核心。
 
 ```js
 function doSomething(err, callback) {
@@ -20,23 +19,25 @@ function doSomething(err, callback) {
 }
 ```
 
-To prevent calling the callback multiple times it is important to `return` anytime the callback is triggered outside
- of the main function body. Neglecting this technique often leads to issues where you do something more than once.
- For example, in the case of an HTTP request, you may try to send HTTP headers more than once leading Node.js to `throw`
- a `Can't render headers after they are sent to the client.` error.
+为避免多次调用回调，每当在主函数体之外触发回调时，都应使用 `return`。忽略这一做法往往会导致操作重复执行等问题。例如，在 HTTP 请求中，你可能会尝试多次发送 HTTP 标头，从而导致 Node.js `throw` 出 `Can't render headers after they are sent to the client.` 错误。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at ensuring that callbacks used outside of the main function block are always part-of or immediately
-preceding a `return` statement. This rule decides what is a callback based on the name of the function being called.
+## 规则详情
 
-## Options
+此规则旨在确保在主函数块之外使用的回调始终属于某个 `return` 语句，或紧邻该语句之前。此规则根据被调用函数的名称来判断哪些函数是回调。
 
-The rule takes a single option - an array of possible callback names - which may include object methods. The default callback names are `callback`, `cb`, `next`.
+<a id="options"></a>
 
-### Default callback names
+## 选项
 
-Examples of **incorrect** code for this rule with the default `["callback", "cb", "next"]` option:
+此规则接受一个选项：可能的回调名称数组，其中可以包含对象方法。默认的回调名称为 `callback`、`cb` 和 `next`。
+
+<a id="default-callback-names"></a>
+
+### 默认回调名称
+
+以下示例展示了使用默认选项 `["callback", "cb", "next"]` 时违反此规则的代码：
 
 :::incorrect
 
@@ -53,7 +54,7 @@ function foo(err, callback) {
 
 :::
 
-Examples of **correct** code for this rule with the default `["callback", "cb", "next"]` option:
+以下示例展示了使用默认选项 `["callback", "cb", "next"]` 时符合此规则的代码：
 
 :::correct
 
@@ -70,9 +71,11 @@ function foo(err, callback) {
 
 :::
 
-### Supplied callback names
+<a id="supplied-callback-names"></a>
 
-Examples of **incorrect** code for this rule with the option `["done", "send.error", "send.success"]`:
+### 指定的回调名称
+
+以下示例展示了使用选项 `["done", "send.error", "send.success"]` 时违反此规则的代码：
 
 :::incorrect
 
@@ -96,7 +99,7 @@ function bar(err, send) {
 
 :::
 
-Examples of **correct** code for this rule with the option `["done", "send.error", "send.success"]`:
+以下示例展示了使用选项 `["done", "send.error", "send.success"]` 时符合此规则的代码：
 
 :::correct
 
@@ -120,18 +123,22 @@ function bar(err, send) {
 
 :::
 
-## Known Limitations
+<a id="known-limitations"></a>
 
-Because it is difficult to understand the meaning of a program through static analysis, this rule has limitations:
+## 已知限制
 
-* *false negatives* when this rule reports correct code, but the program calls the callback more than one time (which is incorrect behavior)
-* *false positives* when this rule reports incorrect code, but the program calls the callback only one time (which is correct behavior)
+由于很难通过静态分析理解程序的含义，此规则有以下限制：
 
-### Passing the callback by reference
+* *假阴性*：此规则报告代码正确，但程序实际多次调用了回调（这属于错误行为）。
+* *假阳性*：此规则报告代码有误，但程序实际上只调用了一次回调（这属于正确行为）。
 
-The static analysis of this rule does not detect that the program calls the callback if it is an argument of a function (for example,  `setTimeout`).
+<a id="passing-the-callback-by-reference"></a>
 
-Example of a *false negative* when this rule reports correct code:
+### 通过引用传递回调
+
+如果回调是某个函数的参数（例如 `setTimeout`），此规则的静态分析无法检测到程序会调用该回调。
+
+以下示例展示了此规则报告代码正确时出现的*假阴性*：
 
 ```js
 /*eslint callback-return: "error"*/
@@ -144,11 +151,13 @@ function foo(err, callback) {
 }
 ```
 
-### Triggering the callback within a nested function
+<a id="triggering-the-callback-within-a-nested-function"></a>
 
-The static analysis of this rule does not detect that the program calls the callback from within a nested function or an immediately-invoked function expression (IIFE).
+### 在嵌套函数中触发回调
 
-Example of a *false negative* when this rule reports correct code:
+此规则的静态分析无法检测到程序在嵌套函数或立即调用函数表达式（IIFE）中调用回调。
+
+以下示例展示了此规则报告代码正确时出现的*假阴性*：
 
 ```js
 /*eslint callback-return: "error"*/
@@ -163,11 +172,13 @@ function foo(err, callback) {
 }
 ```
 
-### If/else statements
+<a id="ifelse-statements"></a>
 
-The static analysis of this rule does not detect that the program calls the callback only one time in each branch of an `if` statement.
+### If/else 语句
 
-Example of a *false positive* when this rule reports incorrect code:
+此规则的静态分析无法检测到程序在 `if` 语句的每个分支中都只调用一次回调。
+
+以下示例展示了此规则报告代码有误时出现的*假阳性*：
 
 ```js
 /*eslint callback-return: "error"*/
@@ -181,8 +192,8 @@ function foo(err, callback) {
 }
 ```
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-There are some cases where you might want to call a callback function more than once. In those cases this rule
- may lead to incorrect behavior. In those cases you may want to reserve a special name for those callbacks and
- not include that in the list of callbacks that trigger warnings.
+## 何时不应使用此规则
+
+在某些情况下，你可能希望多次调用回调函数。这时，此规则可能会导致错误行为。此时，你可以为这类回调指定一个专用名称，并将其排除在触发警告的回调名称列表之外。
