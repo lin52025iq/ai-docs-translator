@@ -7,17 +7,18 @@ handled_by_typescript: true
 
 
 
+开发者可能会在想要表示和的相反数 `-(a + b)` 时，误写成 `-a + b`；同样，他们也可能误写成 `!key in object`，而他们几乎肯定是想写 `!(key in object)`，以测试某个键是否不在对象中。`!obj instanceof Ctor` 也是类似的情况。
 
-Just as developers might type `-a + b` when they mean `-(a + b)` for the negative of a sum, they might type `!key in object` by mistake when they almost certainly mean `!(key in object)` to test that a key is not in an object. `!obj instanceof Ctor` is similar.
+<a id="rule-details"></a>
 
-## Rule Details
+## 规则详情
 
-This rule disallows negating the left operand of the following relational operators:
+此规则禁止对以下关系运算符的左操作数取反：
 
-* [`in` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/in).
-* [`instanceof` operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/instanceof).
+* [`in` 运算符](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/in)。
+* [`instanceof` 运算符](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/instanceof)。
 
-Examples of **incorrect** code for this rule:
+此规则中**错误**代码的示例：
 
 ::: incorrect
 
@@ -37,7 +38,7 @@ if (!obj instanceof Ctor) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则中**正确**代码的示例：
 
 ::: correct
 
@@ -55,12 +56,14 @@ if (!(obj instanceof Ctor)) {
 
 :::
 
-### Exception
+<a id="exception"></a>
 
-For rare situations when negating the left operand is intended, this rule allows an exception.
-If the whole negation is explicitly wrapped in parentheses, the rule will not report a problem.
+### 例外情况
 
-Examples of **correct** code for this rule:
+在少数确实需要对左操作数取反的情况下，此规则允许例外。
+如果整个取反表达式都明确地用括号括起来，此规则就不会报告问题。
+
+此规则中**正确**代码的示例：
 
 ::: correct
 
@@ -80,7 +83,7 @@ if(("" + !foo) in object) {
 
 :::
 
-Examples of **incorrect** code for this rule:
+此规则中**错误**代码的示例：
 
 ::: incorrect
 
@@ -94,25 +97,29 @@ if (!(foo) in object) {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option:
+## 选项
 
-* `"enforceForOrderingRelations": false` (default) allows negation of the left-hand side of ordering relational operators (`<`, `>`, `<=`, `>=`)
-* `"enforceForOrderingRelations": true` disallows negation of the left-hand side of ordering relational operators
+此规则有一个对象选项：
+
+* `"enforceForOrderingRelations": false`（默认值）允许对排序关系运算符（`<`、`>`、`<=`、`>=`）的左侧取反
+* `"enforceForOrderingRelations": true` 禁止对排序关系运算符的左侧取反
+
+<a id="enforcefororderingrelations"></a>
 
 ### enforceForOrderingRelations
 
-With this option set to `true` the rule is additionally enforced for:
+将此选项设为 `true` 后，此规则还会检查以下运算符：
 
-* `<` operator.
-* `>` operator.
-* `<=` operator.
-* `>=` operator.
+* `<` 运算符。
+* `>` 运算符。
+* `<=` 运算符。
+* `>=` 运算符。
 
-The purpose is to avoid expressions such as `! a < b` (which is equivalent to `(a ? 0 : 1) < b`) when what is really intended is `!(a < b)`.
+这样做是为了避免诸如 `! a < b` 这样的表达式（它等价于 `(a ? 0 : 1) < b`），因为实际意图通常是 `!(a < b)`。
 
-Examples of additional **incorrect** code for this rule with the `{ "enforceForOrderingRelations": true }` option:
+启用 `{ "enforceForOrderingRelations": true }` 选项时，此规则还会将以下代码视为**错误**：
 
 ::: incorrect
 
@@ -130,6 +137,8 @@ foo = ! a >= b;
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you don't want to notify unsafe logical negations, then it's safe to disable this rule.
+## 何时不应使用
+
+如果你不希望收到有关不安全逻辑取反的提示，可以安全地禁用此规则。
