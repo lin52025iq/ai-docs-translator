@@ -5,22 +5,24 @@ rule_type: problem
 
 
 
-Semicolons are usually optional in JavaScript, because of automatic semicolon insertion (ASI). You can require or disallow semicolons with the [semi](./semi) rule.
+在 JavaScript 中，分号通常是可选的，因为 JavaScript 会自动插入分号（ASI）。你可以使用 [semi](./semi) 规则要求或禁止使用分号。
 
-The rules for ASI are relatively straightforward: As once described by Isaac Schlueter, a newline character always ends a statement, just like a semicolon, **except** where one of the following is true:
+ASI 的规则相对简单：正如 Isaac Schlueter 曾经描述的那样，换行符总是会结束一条语句，就像分号一样，**但**以下情况除外：
 
-* The statement has an unclosed paren, array literal, or object literal or ends in some other way that is not a valid way to end a statement. (For instance, ending with `.` or `,`.)
-* The line is `--` or `++` (in which case it will decrement/increment the next token.)
-* It is a `for()`, `while()`, `do`, `if()`, or `else`, and there is no `{`
-* The next line starts with `[`, `(`, `+`, `*`, `/`, `-`, `,`, `.`, or some other binary operator that can only be found between two tokens in a single expression.
+* 语句有未闭合的圆括号、数组字面量或对象字面量，或者以其他无效方式结束。（例如，以 `.` 或 `,` 结尾。）
+* 该行是 `--` 或 `++`（此时会对下一个 token 进行递减或递增操作。）
+* 该行是 `for()`、`while()`、`do`、`if()` 或 `else`，且后面没有 `{`
+* 下一行以 `[`, `(`, `+`, `*`, `/`, `-`, `,`、`.` 或其他只能出现在单个表达式中两个 token 之间的二元运算符开头。
 
-In the exceptions where a newline does **not** end a statement, a typing mistake to omit a semicolon causes two unrelated consecutive lines to be interpreted as one expression. Especially for a coding style without semicolons, readers might overlook the mistake. Although syntactically correct, the code might throw exceptions when it is executed.
+在换行符**不会**结束语句的例外情况下，输入时忘记写分号会导致两条无关的连续代码行被解释为一个表达式。尤其是在不使用分号的编码风格中，读者可能会忽略这个错误。尽管语法正确，代码在执行时仍可能抛出异常。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows confusing multiline expressions where a newline looks like it is ending a statement, but is not.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止容易造成混淆的多行表达式：换行看起来像是结束了一条语句，实际上却没有。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -46,7 +48,7 @@ const z = foo
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -74,12 +76,16 @@ tag `hello`
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-You can turn this rule off if you are confident that you will not accidentally introduce code like this.
+<a id="when-not-to-use-it"></a>
 
-Note that the patterns considered problems are **not** flagged by the [semi](semi) rule.
+## 何时不使用
+
+如果你确信自己不会意外引入此类代码，可以关闭此规则。
+
+请注意，[semi](semi) 规则不会标记此规则认定有问题的模式。
