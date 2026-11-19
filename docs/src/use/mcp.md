@@ -1,23 +1,23 @@
 ---
-title: MCP Server Setup
+title: MCP 服务器设置
 eleventyNavigation:
     key: mcp server
     parent: use eslint
-    title: MCP Server Setup
+    title: MCP 服务器设置
     order: 5
 ---
 
 {%- from 'components/npm_tabs.macro.html' import npm_tabs with context %}
 
-[Model Context Protocol](https://modelcontextprotocol.io) (MCP) is an open standard that enables AI models to interact with external tools and services through a unified interface. The ESLint CLI contains an MCP server that you can register with your code editor to allow LLMs to use ESLint directly.
+[模型上下文协议](https://modelcontextprotocol.io) (MCP) 是一项开放标准，可让 AI 模型通过统一接口与外部工具和服务交互。ESLint CLI 内置了 MCP 服务器，你可以将其注册到代码编辑器中，让 LLM 直接使用 ESLint。
 
-## Set Up ESLint MCP Server in VS Code
+## 在 VS Code 中设置 ESLint MCP 服务器
 
-To use MCP servers in VS Code, you must have the [Copilot Chat](https://code.visualstudio.com/docs/copilot/copilot-chat) extension installed. After that, follow these steps so add the ESLint MCP server:
+要在 VS Code 中使用 MCP 服务器，必须安装 [Copilot Chat](https://code.visualstudio.com/docs/copilot/copilot-chat) 扩展。然后，按照以下步骤添加 ESLint MCP 服务器：
 
-### 1. Create MCP Configuration File
+### 1. 创建 MCP 配置文件
 
-Create a `.vscode/mcp.json` file in your project with the following configuration:
+在项目中创建 `.vscode/mcp.json` 文件，并添加以下配置：
 
 ```json
 {
@@ -31,83 +31,47 @@ Create a `.vscode/mcp.json` file in your project with the following configuratio
 }
 ```
 
-Alternatively, you can use the Command Palette:
+或者，也可以使用命令面板：
 
-1. Press `Ctrl+Shift+P` (Windows/Linux) or `Cmd+Shift+P` (macOS)
-2. Type and select `MCP: Add Server`
-3. Select `Command (stdio)` from the dropdown
-4. Enter `npx @eslint/mcp@latest` as the command
-5. Type `ESLint` as the server ID
-6. Choose `Workspace Settings` to create the configuration in `.vscode/mcp.json`
+1. 按 `Ctrl+Shift+P`（Windows/Linux）或 `Cmd+Shift+P`（macOS）
+2. 输入并选择 `MCP: Add Server`
+3. 从下拉列表中选择 `Command (stdio)`
+4. 将 `npx @eslint/mcp@latest` 作为命令输入
+5. 输入 `ESLint` 作为服务器 ID
+6. 选择 `Workspace Settings`，在 `.vscode/mcp.json` 中创建配置
 
-### 2. Enable MCP Server in User Settings (Optional)
+### 2. 在用户设置中启用 MCP 服务器（可选）
 
-If you want to use the ESLint MCP server across all workspaces, you can follow the previous steps and choose `User Settings` instead of `Workspace Settings` to add the MCP server to your `settings.json` file.
+如果要在所有工作区中使用 ESLint MCP 服务器，可以按照上述步骤操作，并选择 `User Settings` 而非 `Workspace Settings`，将 MCP 服务器添加到 `settings.json` 文件中。
 
-### Use the ESLint MCP Server with GitHub Copilot
+### 使用 ESLint MCP 服务器与 GitHub Copilot 配合
 
-Once your MCP server is configured, you can use it with [GitHub Copilot's agent mode](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode):
+配置好 MCP 服务器后，你可以通过 [GitHub Copilot 的代理模式](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode)使用它：
 
-1. Open the Copilot Chat view in VS Code
-2. Ensure agent mode is enabled (look for the agent icon in the chat input)
-3. Toggle on the ESLint MCP server tools using the "Tools" button in the chat view
-4. Ask Copilot to perform ESLint tasks, such as:
-    - "Check this file for linting errors"
-    - "Fix all ESLint issues in the current file"
-    - "Show me what ESLint rules are being violated"
+1. 在 VS Code 中打开 Copilot Chat 视图
+2. 确认已启用代理模式（在聊天输入框中查找代理图标）
+3. 在聊天视图中使用“Tools”按钮启用 ESLint MCP 服务器工具
+4. 让 Copilot 执行 ESLint 任务，例如：
+    - “检查此文件是否有代码检查错误”
+    - “修复当前文件中的所有 ESLint 问题”
+    - “告诉我哪些 ESLint 规则遭到违反”
 
-## Troubleshooting
+## 故障排除
 
-If you encounter issues with the ESLint MCP server:
+如果 ESLint MCP 服务器出现问题：
 
-1. Check the MCP server status by running `MCP: List Servers` from the Command Palette
-2. Select the ESLint server and choose `Show Output` to view server logs
-3. Ensure that ESLint is installed in your project or globally
-4. Verify that your MCP configuration is correct
+1. 在命令面板中运行 `MCP: List Servers`，检查 MCP 服务器状态
+2. 选择 ESLint 服务器，然后选择 `Show Output` 查看服务器日志
+3. 确保已在项目中或全局安装 ESLint
+4. 确认 MCP 配置正确
 
-## Set Up ESLint MCP Server in Cursor
+## 在 Cursor 中设置 ESLint MCP 服务器
 
-To configure the ESLint MCP server in [Cursor](https://cursor.com), follow these steps:
+要在 [Cursor](https://cursor.com) 中配置 ESLint MCP 服务器，请按以下步骤操作：
 
-### 1. Create MCP Configuration File
+### 1. 创建 MCP 配置文件
 
-Create a `.cursor/mcp.json` file in your project directory with the following configuration:
-
-```json
-{
-	"mcpServers": {
-		"eslint": {
-			"command": "npx",
-			"args": ["@eslint/mcp@latest"],
-			"env": {}
-		}
-	}
-}
-```
-
-### 2. Global Configuration (Optional)
-
-If you want to use the ESLint MCP server across all your Cursor workspaces, create a `~/.cursor/mcp.json` file in your home directory with the same configuration.
-
-### 3. Verify Tool Availability
-
-Once configured, the ESLint MCP server should appear in the "Available Tools" section on the MCP settings page in Cursor.
-
-## Set Up ESLint MCP Server in Windsurf
-
-To configure the ESLint MCP server in [Windsurf](https://docs.windsurf.com/), follow these steps:
-
-### 1. Access Windsurf Settings
-
-Navigate to Windsurf - Settings > Advanced Settings, or open the Command Palette and select "Open Windsurf Settings Page".
-
-### 2. Add ESLint MCP Server
-
-Scroll down to the Cascade section and click the "Add Server" button. Then select "Add custom server +".
-
-### 3. Configure MCP Server
-
-Add the following configuration to your `~/.codeium/windsurf/mcp_config.json` file:
+在项目目录中创建 `.cursor/mcp.json` 文件，并添加以下配置：
 
 ```json
 {
@@ -121,26 +85,62 @@ Add the following configuration to your `~/.codeium/windsurf/mcp_config.json` fi
 }
 ```
 
-### 4. Refresh Server List
+### 2. 全局配置（可选）
 
-After adding the configuration, press the refresh button to update the list of available MCP servers.
+如果要在所有 Cursor 工作区中使用 ESLint MCP 服务器，请在主目录中创建 `~/.cursor/mcp.json` 文件，并使用相同的配置。
 
-### 5. Use ESLint with Cascade
+### 3. 验证工具是否可用
 
-Once configured, you can use ESLint tools with Cascade by asking it to:
+配置完成后，ESLint MCP 服务器应显示在 Cursor MCP 设置页面的“Available Tools”部分。
 
-- Check files for linting errors
-- Explain ESLint rule violations
+## 在 Windsurf 中设置 ESLint MCP 服务器
 
-Note: MCP tool calls in Windsurf will consume credits regardless of success or failure.
+要在 [Windsurf](https://docs.windsurf.com/) 中配置 ESLint MCP 服务器，请按以下步骤操作：
 
-## Use TypeScript Configuration Files
+### 1. 打开 Windsurf 设置
 
-If your project uses a TypeScript configuration file (`eslint.config.ts`, `eslint.config.mts`, or `eslint.config.cts`), additional setup is required for the MCP server to load it. There are two approaches depending on your environment. For more details, see [TypeScript Configuration Files](configure/configuration-files#typescript-configuration-files).
+前往 Windsurf - Settings > Advanced Settings，或打开命令面板并选择“Open Windsurf Settings Page”。
 
-### Option A: Local Installation with jiti (Node.js)
+### 2. 添加 ESLint MCP 服务器
 
-When you run the MCP server with `npx @eslint/mcp@latest`, ESLint is installed into a temporary directory and cannot resolve `jiti` from your project's `node_modules`. To use `jiti` for TypeScript config loading, install both `@eslint/mcp` and `jiti` locally:
+向下滚动到 Cascade 部分，然后点击“Add Server”按钮。接着选择“Add custom server +”。
+
+### 3. 配置 MCP 服务器
+
+将以下配置添加到 `~/.codeium/windsurf/mcp_config.json` 文件中：
+
+```json
+{
+	"mcpServers": {
+		"eslint": {
+			"command": "npx",
+			"args": ["@eslint/mcp@latest"],
+			"env": {}
+		}
+	}
+}
+```
+
+### 4. 刷新服务器列表
+
+添加配置后，点击刷新按钮以更新可用 MCP 服务器列表。
+
+### 5. 在 Cascade 中使用 ESLint
+
+配置完成后，你可以通过以下请求让 Cascade 使用 ESLint 工具：
+
+- 检查文件是否存在代码检查错误
+- 解释违反 ESLint 规则的情况
+
+注意：在 Windsurf 中调用 MCP 工具无论成功与否都会消耗点数。
+
+## 使用 TypeScript 配置文件
+
+如果项目使用 TypeScript 配置文件（`eslint.config.ts`、`eslint.config.mts` 或 `eslint.config.cts`），则需要进行额外设置，让 MCP 服务器能够加载该文件。根据你的环境，有两种方法。详情请参阅 [TypeScript 配置文件](configure/configuration-files#typescript-configuration-files)。
+
+### 选项 A：使用 jiti 本地安装（Node.js）
+
+使用 `npx @eslint/mcp@latest` 运行 MCP 服务器时，ESLint 会安装到临时目录中，因此无法从项目的 `node_modules` 解析 `jiti`。若要使用 `jiti` 加载 TypeScript 配置，请在本地安装 `@eslint/mcp` 和 `jiti`：
 
 {{ npm_tabs({
     command: "install",
@@ -148,9 +148,9 @@ When you run the MCP server with `npx @eslint/mcp@latest`, ESLint is installed i
     args: ["--save-dev"]
 }) }}
 
-Then update your MCP configuration to use the locally installed server (without `@latest`, so `npx` resolves the local binary):
+然后，更新 MCP 配置以使用本地安装的服务器（去掉 `@latest`，这样 `npx` 才会解析本地二进制文件）：
 
-**VS Code** (`.vscode/mcp.json`):
+**VS Code**（`.vscode/mcp.json`）：
 
 ```json
 {
@@ -164,7 +164,7 @@ Then update your MCP configuration to use the locally installed server (without 
 }
 ```
 
-**Cursor / Windsurf** (`.cursor/mcp.json` or `~/.codeium/windsurf/mcp_config.json`):
+**Cursor / Windsurf**（`.cursor/mcp.json` 或 `~/.codeium/windsurf/mcp_config.json`）：
 
 ```json
 {
@@ -177,23 +177,23 @@ Then update your MCP configuration to use the locally installed server (without 
 }
 ```
 
-When `@eslint/mcp` is installed locally, its bundled ESLint resolves `jiti` from the shared `node_modules` directory via standard Node.js module resolution.
+在本地安装 `@eslint/mcp` 后，其中捆绑的 ESLint 会通过标准 Node.js 模块解析，从共享的 `node_modules` 目录中解析 `jiti`。
 
 #### Yarn Plug'n'Play (PnP)
 
-Yarn 2+ uses Plug'n'Play by default and does not create a `node_modules` directory. To run `npx @eslint/mcp` in a Yarn project, set `nodeLinker` to `node-modules` in your `.yarnrc.yml` and run `yarn install` again:
+Yarn 2+ 默认使用 Plug'n'Play，且不会创建 `node_modules` 目录。要在 Yarn 项目中运行 `npx @eslint/mcp`，请在 `.yarnrc.yml` 中将 `nodeLinker` 设为 `node-modules`，然后再次运行 `yarn install`：
 
 ```yaml
 nodeLinker: node-modules
 ```
 
-With a `node_modules` directory present, the `npx` configuration shown above works as expected. The `nodeLinker: pnpm` setting also works. Only the default Plug'n'Play (`nodeLinker: pnp`) mode is not supported with `npx @eslint/mcp`.
+创建 `node_modules` 目录后，上述 `npx` 配置即可正常工作。`nodeLinker: pnpm` 设置也可行。只有默认的 Plug'n'Play 模式（`nodeLinker: pnp`）不支持 `npx @eslint/mcp`。
 
-### Option B: Native Node.js TypeScript Support
+### 选项 B：Node.js 原生 TypeScript 支持
 
-If you're using **Node.js >= 22.13.0**, you can load TypeScript configuration files without `jiti` by enabling Node.js type stripping and the ESLint `unstable_native_nodejs_ts_config` flag. Set these as environment variables in your MCP configuration.
+如果你使用的是 **Node.js >= 22.13.0**，可以启用 Node.js 类型剥离和 ESLint 的 `unstable_native_nodejs_ts_config` 标志，无需使用 `jiti` 即可加载 TypeScript 配置文件。在 MCP 配置中将这些设置为环境变量。
 
-**VS Code** (`.vscode/mcp.json`):
+**VS Code**（`.vscode/mcp.json`）：
 
 ```json
 {
@@ -211,7 +211,7 @@ If you're using **Node.js >= 22.13.0**, you can load TypeScript configuration fi
 }
 ```
 
-**Cursor / Windsurf** (`.cursor/mcp.json` or `~/.codeium/windsurf/mcp_config.json`):
+**Cursor / Windsurf**（`.cursor/mcp.json` 或 `~/.codeium/windsurf/mcp_config.json`）：
 
 ```json
 {
@@ -228,9 +228,9 @@ If you're using **Node.js >= 22.13.0**, you can load TypeScript configuration fi
 }
 ```
 
-## Example Prompts
+## 示例提示词
 
-Here are some example prompts to an LLM for running ESLint and addressing its findings:
+以下是一些可以提供给 LLM 的示例提示词，用于运行 ESLint 并处理其发现的问题：
 
 ```text
 Lint the current file and explain any issues found
@@ -238,10 +238,10 @@ Lint the current file and explain any issues found
 Lint and fix #file:index.js
 ```
 
-## Additional Resources
+## 更多资源
 
-- [Model Context Protocol Documentation](https://modelcontextprotocol.io/introduction)
-- [VS Code MCP Servers Documentation](https://code.visualstudio.com/docs/copilot/chat/mcp-servers)
-- [GitHub Copilot in VS Code Documentation](https://code.visualstudio.com/docs/copilot/copilot-chat)
-- [Model Context Protocol in Cursor documentation](https://docs.cursor.com/context/model-context-protocol)
-- [Model Context Protocol in Windsurf documentation](https://docs.windsurf.com/)
+- [模型上下文协议文档](https://modelcontextprotocol.io/introduction)
+- [VS Code MCP 服务器文档](https://code.visualstudio.com/docs/copilot/chat/mcp-servers)
+- [VS Code 中的 GitHub Copilot 文档](https://code.visualstudio.com/docs/copilot/copilot-chat)
+- [Cursor 中的模型上下文协议文档](https://docs.cursor.com/context/model-context-protocol)
+- [Windsurf 中的模型上下文协议文档](https://docs.windsurf.com/)
