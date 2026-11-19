@@ -8,19 +8,23 @@ further_reading:
 ---
 
 
-It is considered good practice to only pass instances of the built-in `Error` object to the `reject()` function for user-defined errors in Promises. `Error` objects automatically store a stack trace, which can be used to debug an error by determining where it came from. If a Promise is rejected with a non-`Error` value, it can be difficult to determine where the rejection occurred.
+对于 Promise 中用户自定义的错误，最好只将内置 `Error` 对象的实例传递给 `reject()` 函数。`Error` 对象会自动保存堆栈跟踪，可用于通过确定错误来源来调试错误。如果 Promise 因非 `Error` 值而被拒绝，就很难确定拒绝发生的位置。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to ensure that Promises are only rejected with `Error` objects.
+## 规则详情
 
-## Options
+此规则旨在确保 Promise 仅因 `Error` 对象而被拒绝。
 
-This rule takes one optional object argument:
+<a id="options"></a>
 
-* `allowEmptyReject: true` (`false` by default) allows calls to `Promise.reject()` with no arguments.
+## 选项
 
-Examples of **incorrect** code for this rule:
+此规则接受一个可选的对象参数：
+
+* `allowEmptyReject: true`（默认值为 `false`）允许调用不带参数的 `Promise.reject()`。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -45,7 +49,7 @@ new Promise(function(resolve, reject) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -66,7 +70,7 @@ Promise.reject(foo);
 
 :::
 
-Examples of **correct** code for this rule with the `allowEmptyReject: true` option:
+启用 `allowEmptyReject: true` 选项时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -82,12 +86,16 @@ new Promise(function(resolve, reject) {
 
 :::
 
-## Known Limitations
+<a id="known-limitations"></a>
 
-Due to the limits of static analysis, this rule cannot guarantee that you will only reject Promises with `Error` objects. While the rule will report cases where it can guarantee that the rejection reason is clearly not an `Error`, it will not report cases where there is uncertainty about whether a given reason is an `Error`. For more information on this caveat, see the [similar limitations](no-throw-literal#known-limitations) in the `no-throw-literal` rule.
+## 已知限制
 
-To avoid conflicts between rules, this rule does not report non-error values used in `throw` statements in async functions, even though these lead to Promise rejections. To lint for these cases, use the [`no-throw-literal`](no-throw-literal) rule.
+由于静态分析能力有限，此规则无法保证你只使用 `Error` 对象拒绝 Promise。此规则会报告能够确定拒绝原因显然不是 `Error` 的情况，但对于无法确定给定原因是否为 `Error` 的情况则不会报告。有关此限制的更多信息，请参阅 `no-throw-literal` 规则中的[类似限制](no-throw-literal#known-limitations)。
 
-## When Not To Use It
+为避免规则之间发生冲突，此规则不会报告 async 函数中 `throw` 语句使用的非错误值，即使这些值会导致 Promise 被拒绝。若要对这些情况进行代码检查，请使用 [`no-throw-literal`](no-throw-literal) 规则。
 
-If you're using custom non-error values as Promise rejection reasons, you can turn off this rule.
+<a id="when-not-to-use-it"></a>
+
+## 何时不使用
+
+如果你使用自定义的非错误值作为 Promise 的拒绝原因，可以关闭此规则。
