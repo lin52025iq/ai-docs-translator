@@ -1,6 +1,6 @@
 ---
 layout: main.html
-title: Languages
+title: 语言
 permalink: /languages/
 hook: "languages-page"
 ---
