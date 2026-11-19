@@ -8,34 +8,38 @@ related_rules:
 - max-params
 - max-statements
 ---
-Very long lines of code in any language can be difficult to read. In order to aid in readability and maintainability many coders have developed a convention to limit lines of code to X number of characters (traditionally 80 characters).
+任何语言中非常长的代码行都可能难以阅读。为了提高可读性和可维护性，许多编码人员形成了一种惯例，将代码行限制在 X 个字符以内（传统上为 80 个字符）。
 
 ```js
 var foo = { "bar": "This is a bar.", "baz": { "qux": "This is a qux" }, "difficult": "to read" }; // very long
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces a maximum line length to increase code readability and maintainability. The length of a line is defined as the number of Unicode characters in the line.
+## 规则详情
 
-## Options
+此规则限制行的最大长度，以提高代码的可读性和可维护性。行的长度定义为该行中的 Unicode 字符数。
 
-This rule can have up to two numbers as positional arguments (for `code` and `tabWidth` options), followed by an object option (provided positional arguments have priority):
+<a id="options"></a>
 
-* `"code"` (default `80`) enforces a maximum line length
-* `"tabWidth"` (default `4`) specifies the character width for tab characters
-* `"comments"` enforces a maximum line length for comments; defaults to value of `code`
-* `"ignorePattern"` ignores lines matching a regular expression; can only match a single line and need to be double escaped when written in YAML or JSON
-* `"ignoreComments": true` ignores all trailing comments and comments on their own line
-* `"ignoreTrailingComments": true` ignores only trailing comments
-* `"ignoreUrls": true` ignores lines that contain a URL
-* `"ignoreStrings": true` ignores lines that contain a double-quoted or single-quoted string
-* `"ignoreTemplateLiterals": true` ignores lines that contain a template literal
-* `"ignoreRegExpLiterals": true` ignores lines that contain a RegExp literal
+## 选项
+
+此规则最多可将两个数字作为位置参数（分别对应 `code` 和 `tabWidth` 选项），后面可跟一个对象选项（位置参数优先）：
+
+* `"code"`（默认值为 `80`）用于限制行的最大长度
+* `"tabWidth"`（默认值为 `4`）用于指定制表符的字符宽度
+* `"comments"` 用于限制注释的最大行长度；默认值为 `code` 的值
+* `"ignorePattern"` 忽略与正则表达式匹配的行；只能匹配单行，写入 YAML 或 JSON 时需要进行双重转义
+* `"ignoreComments": true` 忽略所有行尾注释和独占一行的注释
+* `"ignoreTrailingComments": true` 仅忽略行尾注释
+* `"ignoreUrls": true` 忽略包含 URL 的行
+* `"ignoreStrings": true` 忽略包含双引号或单引号字符串的行
+* `"ignoreTemplateLiterals": true` 忽略包含模板字面量的行
+* `"ignoreRegExpLiterals": true` 忽略包含正则表达式字面量的行
 
 ### code
 
-Examples of **incorrect** code for this rule with the default `{ "code": 80 }` option:
+以下代码在此规则使用默认选项 `{ "code": 80 }` 时**不正确**：
 
 ::: incorrect
 
@@ -47,7 +51,7 @@ var foo = { "bar": "This is a bar.", "baz": { "qux": "This is a qux" }, "difficu
 
 :::
 
-Examples of **correct** code for this rule with the default `{ "code": 80 }` option:
+以下代码在此规则使用默认选项 `{ "code": 80 }` 时**正确**：
 
 ::: correct
 
@@ -65,7 +69,7 @@ var foo = {
 
 ### tabWidth
 
-Examples of **incorrect** code for this rule with the default `{ "tabWidth": 4 }` option:
+以下代码在此规则使用默认选项 `{ "tabWidth": 4 }` 时**不正确**：
 
 <!-- markdownlint-capture -->
 <!-- markdownlint-disable MD010 -->
@@ -80,7 +84,7 @@ Examples of **incorrect** code for this rule with the default `{ "tabWidth": 4 }
 :::
 <!-- markdownlint-restore -->
 
-Examples of **correct** code for this rule with the default `{ "tabWidth": 4 }` option:
+以下代码在此规则使用默认选项 `{ "tabWidth": 4 }` 时**正确**：
 
 <!-- markdownlint-capture -->
 <!-- markdownlint-disable MD010 -->
@@ -100,7 +104,7 @@ Examples of **correct** code for this rule with the default `{ "tabWidth": 4 }` 
 
 ### comments
 
-Examples of **incorrect** code for this rule with the `{ "comments": 65 }` option:
+以下代码在使用选项 `{ "comments": 65 }` 时**不正确**：
 
 ::: incorrect
 
@@ -116,7 +120,7 @@ Examples of **incorrect** code for this rule with the `{ "comments": 65 }` optio
 
 ### ignoreComments
 
-Examples of **correct** code for this rule with the `{ "ignoreComments": true }` option:
+以下代码在使用选项 `{ "ignoreComments": true }` 时**正确**：
 
 ::: correct
 
@@ -132,7 +136,7 @@ Examples of **correct** code for this rule with the `{ "ignoreComments": true }`
 
 ### ignoreTrailingComments
 
-Examples of **correct** code for this rule with the `{ "ignoreTrailingComments": true }` option:
+以下代码在使用选项 `{ "ignoreTrailingComments": true }` 时**正确**：
 
 ::: correct
 
@@ -146,7 +150,7 @@ var foo = 'bar'; // This is a really really really really really really really l
 
 ### ignoreUrls
 
-Examples of **correct** code for this rule with the `{ "ignoreUrls": true }` option:
+以下代码在使用选项 `{ "ignoreUrls": true }` 时**正确**：
 
 ::: correct
 
@@ -160,7 +164,7 @@ var url = 'https://www.example.com/really/really/really/really/really/really/rea
 
 ### ignoreStrings
 
-Examples of **correct** code for this rule with the `{ "ignoreStrings": true }` option:
+以下代码在使用选项 `{ "ignoreStrings": true }` 时**正确**：
 
 ::: correct
 
@@ -174,7 +178,7 @@ var longString = 'this is a really really really really really long string!';
 
 ### ignoreTemplateLiterals
 
-Examples of **correct** code for this rule with the `{ "ignoreTemplateLiterals": true }` option:
+以下代码在使用选项 `{ "ignoreTemplateLiterals": true }` 时**正确**：
 
 ::: correct
 
@@ -188,7 +192,7 @@ var longTemplateLiteral = `this is a really really really really really long tem
 
 ### ignoreRegExpLiterals
 
-Examples of **correct** code for this rule with the `{ "ignoreRegExpLiterals": true }` option:
+以下代码在使用选项 `{ "ignoreRegExpLiterals": true }` 时**正确**：
 
 ::: correct
 
@@ -202,7 +206,7 @@ var longRegExpLiteral = /this is a really really really really really long regul
 
 ### ignorePattern
 
-Examples of **correct** code for this rule with the `ignorePattern` option:
+以下代码在使用 `ignorePattern` 选项时**正确**：
 
 ::: correct
 
