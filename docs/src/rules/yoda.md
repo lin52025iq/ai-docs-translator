@@ -8,7 +8,7 @@ further_reading:
 
 
 
-Yoda conditions are so named because the literal value of the condition comes first while the variable comes second. For example, the following is a Yoda condition:
+尤达条件之所以得名，是因为条件中的字面量位于前面，而变量位于后面。例如，以下就是一个尤达条件：
 
 ```js
 if ("red" === color) {
@@ -16,7 +16,7 @@ if ("red" === color) {
 }
 ```
 
-This is called a Yoda condition because it reads as, "if red equals the color", similar to the way the Star Wars character Yoda speaks. Compare to the other way of arranging the operands:
+之所以称为尤达条件，是因为它读起来像是“如果红色等于颜色”，类似于《星球大战》角色尤达的说话方式。对比另一种操作数排列方式：
 
 ```js
 if (color === "red") {
@@ -24,33 +24,39 @@ if (color === "red") {
 }
 ```
 
-This typically reads, "if the color equals red", which is arguably a more natural way to describe the comparison.
+这通常读作“如果颜色等于红色”，可以说是描述这种比较更自然的方式。
 
-Proponents of Yoda conditions highlight that it is impossible to mistakenly use `=` instead of `==` because you cannot assign to a literal value. Doing so will cause a syntax error and you will be informed of the mistake early on. This practice was therefore very common in early programming where tools were not yet available.
+尤达条件的支持者指出，由于无法给字面量赋值，因此不可能误将 `=` 用作 `==`。这样做会导致语法错误，让你能尽早发现问题。因此，在工具尚未普及的早期编程中，这种做法十分常见。
 
-Opponents of Yoda conditions point out that tooling has made us better programmers because tools will catch the mistaken use of `=` instead of `==` (ESLint will catch this for you). Therefore, they argue, the utility of the pattern doesn't outweigh the readability hit the code takes while using Yoda conditions.
+尤达条件的反对者指出，工具让我们成为了更优秀的程序员，因为工具会捕获误将 `=` 用作 `==` 的情况（ESLint 会为你捕获这种错误）。因此，他们认为，这种模式带来的好处并不足以弥补使用尤达条件时对代码可读性的损害。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to enforce consistent style of conditions which compare a variable to a literal value.
+## 规则详情
 
-## Options
+此规则旨在确保将变量与字面量进行比较的条件具有一致的风格。
 
-This rule can take a string option:
+<a id="options"></a>
 
-* If it is the default `"never"`, then comparisons must never be Yoda conditions.
-* If it is `"always"`, then the literal value must always come first.
+## 选项
 
-The default `"never"` option can have exception options in an object literal:
+此规则接受一个字符串选项：
 
-* If the `"exceptRange"` property is `true`, the rule *allows* Yoda conditions in range comparisons which are wrapped directly in parentheses, including the parentheses of an `if` or `while` condition. The default value is `false`. A *range* comparison tests whether a variable is inside or outside the range between two literal values.
-* If the `"onlyEquality"` property is `true`, the rule reports Yoda conditions *only* for the equality operators `==` and `===`. The default value is `false`.
+* 如果使用默认值 `"never"`，比较中绝不能使用尤达条件。
+* 如果使用 `"always"`，字面量必须始终位于前面。
 
-The `onlyEquality` option allows a superset of the exceptions which `exceptRange` allows, thus both options are not useful together.
+默认选项 `"never"` 可以通过对象字面量中的选项指定例外：
+
+* 如果属性 `"exceptRange"` 为 `true`，那么对于直接用括号括起来的范围比较，此规则*允许*使用尤达条件；这些括号也可以是 `if` 或 `while` 条件本身的括号。默认值为 `false`。*范围*比较用于测试变量是否位于两个字面量所界定的范围之内或之外。
+* 如果属性 `"onlyEquality"` 为 `true`，那么此规则*仅*针对相等运算符 `==` 和 `===` 报告尤达条件。默认值为 `false`。
+
+`onlyEquality` 选项允许的例外范围比 `exceptRange` 更广，因此同时使用这两个选项没有意义。
+
+<a id="never"></a>
 
 ### never
 
-Examples of **incorrect** code for the default `"never"` option:
+默认选项 `"never"` 下的**错误**代码示例：
 
 ::: incorrect
 
@@ -88,7 +94,7 @@ if (0 <= x && x < 1) {
 
 :::
 
-Examples of **correct** code for the default `"never"` option:
+默认选项 `"never"` 下的**正确**代码示例：
 
 ::: correct
 
@@ -114,9 +120,11 @@ if (`${value}` === `red`) {
 
 :::
 
+<a id="exceptrange"></a>
+
 ### exceptRange
 
-Examples of **correct** code for the `"never", { "exceptRange": true }` options:
+使用选项 `"never", { "exceptRange": true }` 时的**正确**代码示例：
 
 ::: correct
 
@@ -146,9 +154,11 @@ function howLong(arr) {
 
 :::
 
+<a id="onlyequality"></a>
+
 ### onlyEquality
 
-Examples of **correct** code for the `"never", { "onlyEquality": true }` options:
+使用选项 `"never", { "onlyEquality": true }` 时的**正确**代码示例：
 
 ::: correct
 
@@ -167,9 +177,11 @@ if (x !== `foo` && `bar` != x) {
 
 :::
 
+<a id="always"></a>
+
 ### always
 
-Examples of **incorrect** code for the `"always"` option:
+选项 `"always"` 下的**错误**代码示例：
 
 ::: incorrect
 
@@ -187,7 +199,7 @@ if (color == `blue`) {
 
 :::
 
-Examples of **correct** code for the `"always"` option:
+选项 `"always"` 下的**正确**代码示例：
 
 ::: correct
 
