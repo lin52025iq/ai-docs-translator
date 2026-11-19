@@ -5,7 +5,7 @@ rule_type: suggestion
 
 
 
-If an `if` block contains a `return` statement, the `else` block becomes unnecessary. Its contents can be placed outside of the block.
+如果 `if` 代码块中包含 `return` 语句，那么 `else` 代码块就没有必要了。可以将其中的内容移到代码块之外。
 
 ```js
 function foo() {
@@ -17,11 +17,12 @@ function foo() {
 }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule is aimed at highlighting an unnecessary block of code following an `if` containing a `return` statement. As such, it will warn when it encounters an `else` following a chain of `if`s, all of them containing a `return` statement.
+此规则旨在指出 `if` 语句中包含 `return` 语句后出现的不必要代码块。因此，当一系列 `if` 语句（其中每个语句都包含 `return` 语句）之后出现 `else` 时，此规则会发出警告。
 
-Examples of **incorrect** code for this rule:
+此规则的错误代码示例如下：
 
 ::: incorrect
 
@@ -70,7 +71,7 @@ function foo4() {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例如下：
 
 ::: correct
 
@@ -126,15 +127,16 @@ function foo5() {
 
 :::
 
-## Options
+<a id="options"></a>
+## 选项
 
 ### allowElseIf
 
-This rule has an object option:
+此规则有一个对象选项：
 
-* `allowElseIf: true` (default) - If true, allows `else if` blocks after a `return`
+* `allowElseIf: true`（默认值）- 如果为 true，则允许在 `return` 之后使用 `else if` 代码块。
 
-Examples of **correct** code for the default `{"allowElseIf": true}` option:
+默认选项 `{"allowElseIf": true}` 的正确代码示例如下：
 
 ::: correct
 
@@ -163,7 +165,7 @@ function foo2() {
 
 :::
 
-Examples of **incorrect** code for the `{"allowElseIf": false}` option:
+选项 `{"allowElseIf": false}` 的错误代码示例如下：
 
 ::: incorrect
 
@@ -181,7 +183,7 @@ function foo() {
 
 :::
 
-Examples of **correct** code for the `{"allowElseIf": false}` option:
+选项 `{"allowElseIf": false}` 的正确代码示例如下：
 
 ::: correct
 
