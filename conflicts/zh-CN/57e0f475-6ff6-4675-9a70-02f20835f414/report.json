@@ -1,0 +1,54 @@
+{
+    "schemaVersion": 1,
+    "status": "conflict",
+    "origin": "local_validation",
+    "projectId": "eslint-docs",
+    "locale": "zh-CN",
+    "sourcePath": "docs/src/rules/no-use-before-define.md",
+    "createdAt": "2026-11-19T11:31:18.124Z",
+    "reason": "文件校验未通过",
+    "artifacts": {
+        "before": "before/docs/src/rules/no-use-before-define.md",
+        "after": "after/docs/src/rules/no-use-before-define.md",
+        "previous": "previous/docs/src/rules/no-use-before-define.md"
+    },
+    "translationModel": "gpt-6-luna",
+    "translationResponseId": "resp_080d76d29b779e5d016afeddcfeea487d2ad971c80efffd9b1",
+    "contextHash": "64ced0491d8917d86d3057d903a53f0f98ed63c72e258488e934ac7f76453200",
+    "diagnostics": [
+        [
+            {
+                "message": "译文改变了应保留的内容：code, inlineCode",
+                "path": "docs/src/rules/no-use-before-define.md"
+            },
+            {
+                "message": "inlineCode 缺少：[\"alias\",\"alias\"]。多出：[]",
+                "path": "docs/src/rules/no-use-before-define.md"
+            },
+            {
+                "message": "第 19 个代码块应逐字复制原文：[\"ts\",\"/*eslint no-use-before-define: [\\\"error\\\", \\\"nofunc\\\"]*/\\n\\nfunction foo(): Foo {\\n\\treturn Foo.FOO;\\n}\\n\\t\\nenum Foo {\\n\\tFOO,\\n}\\n\"]",
+                "path": "docs/src/rules/no-use-before-define.md"
+            }
+        ],
+        [
+            {
+                "message": "译文改变了应保留的内容：code",
+                "path": "docs/src/rules/no-use-before-define.md"
+            },
+            {
+                "message": "第 19 个代码块应逐字复制原文：[\"ts\",\"/*eslint no-use-before-define: [\\\"error\\\", \\\"nofunc\\\"]*/\\n\\nfunction foo(): Foo {\\n\\treturn Foo.FOO;\\n}\\n\\t\\nenum Foo {\\n\\tFOO,\\n}\\n\"]",
+                "path": "docs/src/rules/no-use-before-define.md"
+            }
+        ],
+        [
+            {
+                "message": "译文改变了应保留的内容：code",
+                "path": "docs/src/rules/no-use-before-define.md"
+            },
+            {
+                "message": "第 21 个代码块应逐字复制原文：[\"ts\",\"/*eslint no-use-before-define: [\\\"error\\\", \\\"nofunc\\\"]*/\\n\\t\\nenum Foo {\\n\\tFOO,\\n}\\n\\nconst foo = Foo.Foo;\\n\"]",
+                "path": "docs/src/rules/no-use-before-define.md"
+            }
+        ]
+    ]
+}
