@@ -1,14 +1,16 @@
 ---
-title: Correct and incorrect code usage
+title: 正确和错误的代码用法
 ---
 
-To indicate correct and incorrect code usage, some code blocks can have correct and incorrect icons added to them, respectively.
+为了标示代码用法正确或错误，可以分别为某些代码块添加正确和错误图标。
 
-## Usage
+<a id="usage"></a>
 
-To indicate that a code block is correct or incorrect, wrap the code block in a container labeled either `correct` or `incorrect`.
+## 用法
 
-Make sure to leave space above and below the markdown code block to ensure it is rendered correctly.
+要标示代码块正确或错误，请将代码块放在标记为 `correct` 或 `incorrect` 的容器中。
+
+请确保 Markdown 代码块的上方和下方留有空白，以保证其正确渲染。
 
 ```text
 ::: correct
@@ -32,9 +34,11 @@ function() {
 :::
 ```
 
-## Examples
+<a id="examples"></a>
 
-Correct usage:
+## 示例
+
+正确用法：
 
 ::: correct
 
@@ -65,7 +69,7 @@ const { ESLint } = require("eslint");
 
 :::
 
-Incorrect usage:
+错误用法：
 
 ::: incorrect
 
