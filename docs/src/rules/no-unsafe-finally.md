@@ -5,7 +5,7 @@ rule_type: problem
 
 
 
-JavaScript suspends the control flow statements of `try` and `catch` blocks until the execution of `finally` block finishes. So, when `return`, `throw`, `break`, or `continue` is used in `finally`, control flow statements inside `try` and `catch` are overwritten, which is considered as unexpected behavior. Such as:
+JavaScript 会暂停 `try` 和 `catch` 块中的控制流语句，直到 `finally` 块执行完毕。因此，在 `finally` 中使用 `return`、`throw`、`break` 或 `continue` 时，`try` 和 `catch` 中的控制流语句会被覆盖，这被认为是意外行为。例如：
 
 ```js
 // We expect this function to return 1;
@@ -64,11 +64,13 @@ JavaScript suspends the control flow statements of `try` and `catch` blocks unti
 // > 1
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows `return`, `throw`, `break`, and `continue` statements inside `finally` blocks. It allows indirect usages, such as in `function` or `class` definitions.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止在 `finally` 块中使用 `return`、`throw`、`break` 和 `continue` 语句。此规则允许间接使用这些语句，例如在 `function` 或 `class` 定义中使用。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -104,7 +106,7 @@ let foo = function() {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -164,13 +166,17 @@ let foo = function(a) {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-If you want to allow control flow operations in `finally` blocks, you can turn this rule off.
+<a id="when-not-to-use-it"></a>
 
-Note that [using `return` with `try`/`finally` in generator functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator/return#using_return_with_try...finally) can be used to override the value returned.
-If you want to use this feature of generator functions, you can disable this rule using an `eslint-disable` comment.
+## 何时不应使用此规则
+
+如果你希望允许在 `finally` 块中执行控制流操作，可以关闭此规则。
+
+请注意，在生成器函数中[将 `return` 与 `try`/`finally` 配合使用](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator/return#using_return_with_try...finally)，可以覆盖返回值。
+如果你想使用生成器函数的这一特性，可以通过 `eslint-disable` 注释禁用此规则。
