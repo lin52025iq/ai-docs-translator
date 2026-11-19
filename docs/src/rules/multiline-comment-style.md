@@ -3,23 +3,27 @@ title: multiline-comment-style
 rule_type: suggestion
 ---
 
-Many style guides require a particular style for comments that span multiple lines. For example, some style guides prefer the use of a single block comment for multiline comments, whereas other style guides prefer consecutive line comments.
+许多风格指南要求多行注释采用特定的风格。例如，一些风格指南倾向于在多行注释中使用单个块注释，而另一些则倾向于使用连续的行注释。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to enforce a particular style for multiline comments.
+## 规则详情
 
-### Options
+此规则旨在强制多行注释采用特定的风格。
 
-This rule has a string option, which can have one of the following values:
+<a id="options"></a>
 
-* `"starred-block"` (default): Disallows consecutive line comments in favor of block comments. Additionally, requires block comments to have an aligned `*` character before each line.
-* `"bare-block"`: Disallows consecutive line comments in favor of block comments, and disallows block comments from having a `"*"` character before each line. This option ignores JSDoc comments.
-* `"separate-lines"`: Disallows block comments in favor of consecutive line comments. By default, this option ignores JSDoc comments. To also apply this rule to JSDoc comments, set the `checkJSDoc` option to `true`.
+### 选项
 
-The rule always ignores directive comments such as `/* eslint-disable */`.
+此规则有一个字符串选项，其值可以是以下之一：
 
-Examples of **incorrect** code for this rule with the default `"starred-block"` option:
+* `"starred-block"`（默认）：禁止使用连续的行注释，改用块注释。此外，要求块注释的每一行前都有对齐的 `*` 字符。
+* `"bare-block"`：禁止使用连续的行注释，改用块注释，并禁止块注释的每一行前出现 `"*"` 字符。此选项会忽略 JSDoc 注释。
+* `"separate-lines"`：禁止使用块注释，改用连续的行注释。默认情况下，此选项会忽略 JSDoc 注释。若要对 JSDoc 注释也应用此规则，请将 `checkJSDoc` 选项设为 `true`。
+
+此规则始终忽略指令注释，例如 `/* eslint-disable */`。
+
+使用默认的 `"starred-block"` 选项时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -55,7 +59,7 @@ foo();
 
 :::
 
-Examples of **correct** code for this rule with the default `"starred-block"` option:
+使用默认的 `"starred-block"` 选项时，此规则的正确代码示例：
 
 ::: correct
 
@@ -73,7 +77,7 @@ foo();
 
 :::
 
-Examples of **incorrect** code for this rule with the `"bare-block"` option:
+使用 `"bare-block"` 选项时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -93,7 +97,7 @@ foo();
 
 :::
 
-Examples of **correct** code for this rule with the `"bare-block"` option:
+使用 `"bare-block"` 选项时，此规则的正确代码示例：
 
 ::: correct
 
@@ -107,7 +111,7 @@ foo();
 
 :::
 
-Examples of **incorrect** code for this rule with the `"separate-lines"` option:
+使用 `"separate-lines"` 选项时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -129,7 +133,7 @@ foo();
 
 :::
 
-Examples of **correct** code for this rule with the `"separate-lines"` option:
+使用 `"separate-lines"` 选项时，此规则的正确代码示例：
 
 ::: correct
 
@@ -144,7 +148,7 @@ foo();
 
 :::
 
-Examples of **incorrect** code for this rule with the `"separate-lines"` option and `checkJSDoc` set to `true`:
+使用 `"separate-lines"` 选项并将 `checkJSDoc` 设为 `true` 时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -162,7 +166,7 @@ foo();
 
 :::
 
-Examples of **correct** code for this rule with the `"separate-lines"` option and `checkJSDoc` set to `true`:
+使用 `"separate-lines"` 选项并将 `checkJSDoc` 设为 `true` 时，此规则的正确代码示例：
 
 ::: correct
 
@@ -177,6 +181,8 @@ foo();
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you don't want to enforce a particular style for multiline comments, you can disable the rule.
+## 何时不应使用此规则
+
+如果你不想强制多行注释采用特定的风格，可以禁用此规则。
