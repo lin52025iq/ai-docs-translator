@@ -6,27 +6,29 @@ related_rules:
 - no-new-wrappers
 ---
 
-The `Object` constructor is used to create new generic objects in JavaScript, such as:
+在 JavaScript 中，`Object` 构造函数用于创建新的通用对象，例如：
 
 ```js
 var myObject = new Object();
 ```
 
-However, this is no different from using the more concise object literal syntax:
+然而，这与使用更简洁的对象字面量语法并无不同：
 
 ```js
 var myObject = {};
 ```
 
-For this reason, many prefer to always use the object literal syntax and never use the `Object` constructor.
+因此，许多人更愿意始终使用对象字面量语法，而不使用 `Object` 构造函数。
 
-While there are no performance differences between the two approaches, the byte savings and conciseness of the object literal form is what has made it the de facto way of creating new objects.
+这两种方式在性能上没有差异，但对象字面量形式能够节省字节且更加简洁，因此已成为创建新对象的事实标准。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows calling the `Object` constructor with `new`.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止使用 `new` 调用 `Object` 构造函数。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -42,7 +44,7 @@ var foo = new Object("foo");
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -61,6 +63,8 @@ var foo = Object("foo");
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you wish to allow the use of the `Object` constructor with `new`, you can safely turn this rule off.
+## 何时不使用此规则
+
+如果你希望允许使用 `new` 调用 `Object` 构造函数，可以放心关闭此规则。
