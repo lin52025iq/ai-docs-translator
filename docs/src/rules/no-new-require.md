@@ -3,31 +3,33 @@ title: no-new-require
 rule_type: suggestion
 ---
 
-The `require` function is used to include modules that exist in separate files, such as:
+`require` 函数用于引入位于独立文件中的模块，例如：
 
 ```js
 var appHeader = require('app-header');
 ```
 
-Some modules return a constructor which can potentially lead to code such as:
+有些模块会返回一个构造函数，这可能导致出现如下代码：
 
 ```js
 var appHeader = new require('app-header');
 ```
 
-Unfortunately, this introduces a high potential for confusion since the code author likely meant to write:
+遗憾的是，这种写法很容易造成混淆，因为代码作者很可能原本想写的是：
 
 ```js
 var appHeader = new (require('app-header'));
 ```
 
-For this reason, it is usually best to disallow this particular expression.
+因此，通常最好禁止这种表达式。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to eliminate use of the `new require` expression.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在消除 `new require` 表达式的使用。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -39,7 +41,7 @@ var appHeader = new require('app-header');
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -52,6 +54,8 @@ var appHeader = new AppHeader();
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you are using a custom implementation of `require` and your code will never be used in projects where a standard `require` (CommonJS, Node.js, AMD) is expected, you can safely turn this rule off.
+## 何时不使用此规则
+
+如果你使用的是自定义的 `require` 实现，并且代码绝不会用于预期使用标准 `require`（CommonJS、Node.js、AMD）的项目中，则可以放心关闭此规则。
