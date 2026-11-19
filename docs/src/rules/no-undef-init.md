@@ -8,7 +8,7 @@ related_rules:
 
 
 
-In JavaScript, a variable that is declared and not initialized to any value automatically gets the value of `undefined`. For example:
+在 JavaScript 中，已声明但未初始化为任何值的变量会自动获得 `undefined` 值。例如：
 
 ```js
 var foo;
@@ -16,19 +16,21 @@ var foo;
 console.log(foo === undefined);     // true
 ```
 
-It's therefore unnecessary to initialize a variable to `undefined`, such as:
+因此，没有必要将变量初始化为 `undefined`，例如：
 
 ```js
 var foo = undefined;
 ```
 
-It's considered a best practice to avoid initializing variables to `undefined`.
+避免将变量初始化为 `undefined` 是一种最佳实践。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to eliminate `var` and `let` variable declarations that initialize to `undefined`.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在消除初始化为 `undefined` 的 `var` 和 `let` 变量声明。
+
+此规则下的**错误**代码示例：
 
 ::: incorrect
 
@@ -41,7 +43,7 @@ let bar = undefined;
 
 :::
 
-Examples of **correct** code for this rule:
+此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -54,9 +56,9 @@ let bar;
 
 :::
 
-Please note that this rule does not check `const` declarations, `using` declarations, `await using` declarations, destructuring patterns, function parameters, and class fields.
+请注意，此规则不检查 `const` 声明、`using` 声明、`await using` 声明、解构模式、函数参数和类字段。
 
-Examples of additional **correct** code for this rule:
+此规则下的其他**正确**代码示例：
 
 ::: correct
 
@@ -82,17 +84,21 @@ class Foo {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-There are situations where initializing to `undefined` behaves differently than omitting the initialization.
+<a id="when-not-to-use-it"></a>
 
-One such case is when a `var` declaration occurs inside of a loop. For example:
+## 何时不应使用此规则
 
-Example of **incorrect** code for this rule:
+在某些情况下，将变量初始化为 `undefined` 与省略初始化的行为不同。
+
+其中一种情况是 `var` 声明出现在循环内部。例如：
+
+此规则下的**错误**代码示例：
 
 ::: incorrect
 
@@ -108,7 +114,7 @@ for (i = 0; i < 10; i++) {
 
 :::
 
-In this case, the `var x` is hoisted out of the loop, effectively creating:
+在这种情况下，`var x` 会被提升到循环之外，实际效果相当于：
 
 ```js
 var x;
@@ -120,7 +126,7 @@ for (i = 0; i < 10; i++) {
 }
 ```
 
-If you were to remove the initialization, then the behavior of the loop changes:
+如果移除初始化，循环的行为就会改变：
 
 ```js
 for (i = 0; i < 10; i++) {
@@ -130,7 +136,7 @@ for (i = 0; i < 10; i++) {
 }
 ```
 
-This code is equivalent to:
+这段代码等价于：
 
 ```js
 var x;
@@ -141,11 +147,11 @@ for (i = 0; i < 10; i++) {
 }
 ```
 
-This produces a different outcome than defining `var x = undefined` in the loop, as `x` is no longer reset to `undefined` each time through the loop.
+这与在循环中定义 `var x = undefined` 的结果不同，因为每次循环时 `x` 都不会再重置为 `undefined`。
 
-If you're using such an initialization inside of a loop, then you should disable this rule.
+如果你在循环中使用了此类初始化，则应禁用此规则。
 
-Example of **correct** code for this rule, because it is disabled on a specific line:
+此规则下的**正确**代码示例，因为规则在特定行被禁用：
 
 ::: correct
 
@@ -161,7 +167,7 @@ for (i = 0; i < 10; i++) {
 
 :::
 
-Another such case is when a variable is redeclared using `var`. For example:
+另一种情况是使用 `var` 重新声明变量。例如：
 
 ```js
 function foo() {
@@ -178,4 +184,4 @@ function foo() {
 foo();
 ```
 
-In this case, you can avoid redeclaration by changing it to an assignment (`x = undefined;`), or use an eslint disable comment on a specific line.
+在这种情况下，你可以将其改为赋值（`x = undefined;`）来避免重新声明，也可以在特定行使用 eslint 禁用注释。
