@@ -1,0 +1,50 @@
+{
+    "schemaVersion": 1,
+    "status": "conflict",
+    "origin": "local_validation",
+    "projectId": "eslint-docs",
+    "locale": "zh-CN",
+    "sourcePath": "docs/src/rules/no-dupe-else-if.md",
+    "createdAt": "2026-11-19T11:14:30.526Z",
+    "reason": "文件校验未通过",
+    "artifacts": {
+        "before": "before/docs/src/rules/no-dupe-else-if.md",
+        "after": "after/docs/src/rules/no-dupe-else-if.md",
+        "previous": "previous/docs/src/rules/no-dupe-else-if.md"
+    },
+    "translationModel": "gpt-6-luna",
+    "translationResponseId": "resp_0e927293a2a21a9f016afed9ff482087d29817c3d192b3057b",
+    "contextHash": "64ced0491d8917d86d3057d903a53f0f98ed63c72e258488e934ac7f76453200",
+    "diagnostics": [
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode",
+                "path": "docs/src/rules/no-dupe-else-if.md"
+            },
+            {
+                "message": "inlineCode 缺少：[]。多出：[\"bar()\"]",
+                "path": "docs/src/rules/no-dupe-else-if.md"
+            }
+        ],
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode",
+                "path": "docs/src/rules/no-dupe-else-if.md"
+            },
+            {
+                "message": "inlineCode 缺少：[\"bar()\"]。多出：[]",
+                "path": "docs/src/rules/no-dupe-else-if.md"
+            }
+        ],
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode",
+                "path": "docs/src/rules/no-dupe-else-if.md"
+            },
+            {
+                "message": "inlineCode 缺少：[]。多出：[\"bar()\"]",
+                "path": "docs/src/rules/no-dupe-else-if.md"
+            }
+        ]
+    ]
+}
