@@ -7,7 +7,7 @@ further_reading:
 
 
 
-It is very common to write code like:
+下面这样的代码非常常见：
 
 ```js
 if (Object.prototype.hasOwnProperty.call(object, "foo")) {
@@ -15,9 +15,9 @@ if (Object.prototype.hasOwnProperty.call(object, "foo")) {
 }
 ```
 
-This is a common practice because methods on `Object.prototype` can sometimes be unavailable or redefined (see the [no-prototype-builtins](no-prototype-builtins) rule).
+这种做法很常见，因为 `Object.prototype` 上的方法有时可能不可用或被重新定义（参见 [no-prototype-builtins](no-prototype-builtins) 规则）。
 
-Introduced in ES2022, `Object.hasOwn()` is a shorter alternative to `Object.prototype.hasOwnProperty.call()`:
+`Object.hasOwn()` 在 ES2022 中引入，是 `Object.prototype.hasOwnProperty.call()` 的简短替代写法：
 
 ```js
 if (Object.hasOwn(object, "foo")) {
@@ -25,9 +25,11 @@ if (Object.hasOwn(object, "foo")) {
 }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-Examples of **incorrect** code for this rule:
+## 规则详情
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -45,7 +47,7 @@ const hasProperty = Object.prototype.hasOwnProperty.call(object, property);
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -59,10 +61,14 @@ const hasProperty = Object.hasOwn(object, property);
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-This rule should not be used unless ES2022 is supported in your codebase.
+<a id="when-not-to-use-it"></a>
+
+## 不适用的情况
+
+除非你的代码库支持 ES2022，否则不应使用此规则。
