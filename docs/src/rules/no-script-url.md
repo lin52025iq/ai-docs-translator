@@ -6,11 +6,13 @@ further_reading:
 ---
 
 
-Using `javascript:` URLs is considered by some as a form of `eval`. Code passed in `javascript:` URLs has to be parsed and evaluated by the browser in the same way that `eval` is processed.
+使用 `javascript:` URL 被一些人视为一种 `eval` 形式。传入 `javascript:` URL 的代码必须由浏览器解析并执行，其方式与处理 `eval` 相同。
 
-## Rule Details
+<a id="rule-details"></a>
 
-Examples of **incorrect** code for this rule:
+## 规则详情
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -24,10 +26,14 @@ location.href = `javascript:void(0)`;
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## Compatibility
+此规则没有选项。
 
-* **JSHint**: This rule corresponds to `scripturl` rule of JSHint.
+<a id="compatibility"></a>
+
+## 兼容性
+
+* **JSHint**：此规则对应于 JSHint 的 `scripturl` 规则。
