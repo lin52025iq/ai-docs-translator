@@ -4,15 +4,17 @@ rule_type: problem
 ---
 
 
-Comparing a variable against itself is usually an error, either a typo or refactoring error. It is confusing to the reader and may potentially introduce a runtime error.
+将变量与其自身进行比较通常是错误的，可能是拼写错误，也可能是重构错误。这会使读者感到困惑，并可能导致运行时错误。
 
-The only time you would compare a variable against itself is when you are testing for `NaN`. However, it is far more appropriate to use `typeof x === 'number' && isNaN(x)` or the [Number.isNaN ES2015 function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN) for that use case rather than leaving the reader of the code to determine the intent of self comparison.
+只有在测试变量是否为 `NaN` 时，才会将变量与其自身进行比较。不过，对于这种情况，更合适的做法是使用 `typeof x === 'number' && isNaN(x)` 或 [Number.isNaN ES2015 函数](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN)，而不是让代码读者自行判断自我比较的意图。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This error is raised to highlight a potentially confusing and potentially pointless piece of code. There are almost no situations in which you would need to compare something to itself.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此错误用于指出可能令人困惑且毫无意义的代码。几乎没有需要将某个值与其自身进行比较的情况。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -27,13 +29,17 @@ if (x === x) {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## Known Limitations
+此规则没有选项。
 
-This rule works by directly comparing the tokens on both sides of the operator. It flags them as problematic if they are structurally identical. However, it doesn't consider possible side effects or that functions may return different objects even when called with the same arguments. As a result, it can produce false positives in some cases, such as:
+<a id="known-limitations"></a>
+
+## 已知限制
+
+此规则通过直接比较运算符两侧的词元来工作。如果两侧在结构上完全相同，就会将其标记为问题。不过，它不会考虑潜在的副作用，也不会考虑函数即使使用相同参数调用，也可能返回不同的对象。因此，在某些情况下可能产生误报，例如：
 
 ::: incorrect
 
