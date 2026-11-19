@@ -5,9 +5,7 @@ rule_type: suggestion
 
 
 
-ECMAScript 6 allows programmers to create variables with block scope instead of function scope using the `let`
-and `const` keywords. Block scope is common in many other programming languages and helps programmers avoid mistakes
-such as:
+ECMAScript 6 允许程序员使用 `let` 和 `const` 关键字创建块级作用域变量，而非函数作用域变量。块级作用域在许多其他编程语言中很常见，有助于程序员避免以下错误：
 
 ```js
 var count = people.length;
@@ -22,11 +20,13 @@ if (enoughFood) {
 console.log("We have " + count + " people and " + sandwiches.length + " sandwiches!");
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at discouraging the use of `var` and encouraging the use of `const` or `let` instead.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在减少 `var` 的使用，并鼓励改用 `const` 或 `let`。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -39,7 +39,7 @@ var CONFIG = {};
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -52,9 +52,9 @@ const CONFIG = {};
 
 :::
 
-This rule additionally supports TypeScript type syntax. There are multiple ways to declare global variables in TypeScript. Only using `var` works for all cases. See this [TypeScript playground](https://www.typescriptlang.org/play/?#code/PQgEB4CcFMDNpgOwMbVAGwJYCMC8AiAEwHsBbfUYAPgFgAoew6ZdAQxlAHN1jtX1QAb3qhRGaABdQAGUkAuUAGcJkTIk4ixAN3agAauwXLV6+ptFqJCWK1SgA6mpIB3IebGjHiIyrUa6HgC+9MEMdGDcvPygtqiKivSyEvQGkPReZuHAoM5OxK6ckvS5iC4AdEnFec5lqVWl+WUZYWAlLkpFdG2NSaC4oADkA-XlqX2Dw13VTWrjQ5kRPHzoACoAFpiKXJ2Ry+ubFTtL-PuKtez0uycbZ830i1GrNx3JdFdPB73982-HH2djb6Td6nGaIOaTe7ZRTQdCwbavGFww6I2Gwc5pOhI9F3LIdOEvejYlEQolojGkrHkryU+jQAAeAAdiJApIJAkA) for reference.
+此规则还支持 TypeScript 类型语法。在 TypeScript 中，声明全局变量有多种方式。只有使用 `var` 才适用于所有情况。请参阅此 [TypeScript 在线编辑器](https://www.typescriptlang.org/play/?#code/PQgEB4CcFMDNpgOwMbVAGwJYCMC8AiAEwHsBbfUYAPgFgAoew6ZdAQxlAHN1jtX1QAb3qhRGaABdQAGUkAuUAGcJkTIk4ixAN3agAauwXLV6+ptFqJCWK1SgA6mpIB3IebGjHiIyrUa6HgC+9MEMdGDcvPygtqiKivSyEvQGkPReZuHAoM5OxK6ckvS5iC4AdEnFec5lqVWl+WUZYWAlLkpFdG2NSaC4oADkA-XlqX2Dw13VTWrjQ5kRPHzoACoAFpiKXJ2Ry+ubFTtL-PuKtez0uycbZ830i1GrNx3JdFdPB73982-HH2djb6Td6nGaIOaTe7ZRTQdCwbavGFww6I2Gwc5pOhI9F3LIdOEvejYlEQolojGkrHkryU+jQAAeAAdiJApIJAkA) 作为参考。
 
-Examples of **incorrect** TypeScript code for this rule:
+此规则的错误 TypeScript 代码示例：
 
 :::incorrect
 
@@ -74,7 +74,7 @@ declare module 'module' {
 
 :::
 
-Examples of **correct** TypeScript code for this rule:
+此规则的正确 TypeScript 代码示例：
 
 :::correct
 
@@ -88,11 +88,14 @@ declare global {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-In addition to non-ES6 environments, existing JavaScript projects that are beginning to introduce ES6 into their
-codebase may not want to apply this rule if the cost of migrating from `var` to `let` is too costly.
+<a id="when-not-to-use-it"></a>
+
+## 何时不应使用
+
+除了非 ES6 环境外，如果现有 JavaScript 项目刚开始在代码库中引入 ES6，而将 `var` 迁移为 `let` 的成本过高，则可能不适合应用此规则。
