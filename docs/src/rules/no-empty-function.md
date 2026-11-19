@@ -6,8 +6,7 @@ related_rules:
 ---
 
 
-Empty functions can reduce readability because readers need to guess whether it's intentional or not.
-So writing a clear comment for empty functions is a good practice.
+空函数会降低代码的可读性，因为读者需要猜测它是否是有意为空的。因此，为空函数编写清晰的注释是个好习惯。
 
 ```js
 function foo() {
@@ -15,20 +14,20 @@ function foo() {
 }
 ```
 
-Especially, the empty block of arrow functions might be confusing developers.
-It's very similar to an empty object literal.
+尤其是，箭头函数的空代码块可能会让开发者感到困惑。它与空对象字面量非常相似。
 
 ```js
 list.map(() => {});   // This is a block, would return undefined.
 list.map(() => ({})); // This is an empty object.
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at eliminating empty functions.
-A function will not be considered a problem if it contains a comment.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在消除空函数。如果函数中包含注释，则不会被视为问题。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -82,7 +81,7 @@ class A {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -176,29 +175,31 @@ class A {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an option to allow specific kinds of functions to be empty.
+## 选项
 
-* `allow` (`string[]`) - A list of kind to allow empty functions. List items are some of the following strings. An empty array (`[]`) by default.
-    * `"functions"` - Normal functions.
-    * `"arrowFunctions"` - Arrow functions.
-    * `"generatorFunctions"` - Generator functions.
-    * `"methods"` - Class methods and method shorthands of object literals.
-    * `"generatorMethods"` - Class methods and method shorthands of object literals with generator.
-    * `"getters"` - Getters.
-    * `"setters"` - Setters.
-    * `"constructors"` - Class constructors.
-    * `"asyncFunctions"` - Async functions.
-    * `"asyncMethods"` - Async class methods and method shorthands of object literals.
-    * `"privateConstructors"` - Private class constructors. (TypeScript only)
-    * `"protectedConstructors"` - Protected class constructors. (TypeScript only)
-    * `"decoratedFunctions"` - Class methods with decorators. (TypeScript only)
-    * `"overrideMethods"` - Methods that use the override keyword. (TypeScript only)
+此规则提供一个选项，用于允许特定类型的函数为空。
+
+* `allow` (`string[]`) - 允许为空的函数类型列表。列表项可以是以下字符串之一。默认值为空数组 (`[]`)。
+    * `"functions"` - 普通函数。
+    * `"arrowFunctions"` - 箭头函数。
+    * `"generatorFunctions"` - 生成器函数。
+    * `"methods"` - 类方法和对象字面量中的方法简写。
+    * `"generatorMethods"` - 带生成器的类方法和对象字面量中的方法简写。
+    * `"getters"` - getter。
+    * `"setters"` - setter。
+    * `"constructors"` - 类构造函数。
+    * `"asyncFunctions"` - 异步函数。
+    * `"asyncMethods"` - 异步类方法和对象字面量中的方法简写。
+    * `"privateConstructors"` - 私有类构造函数。（仅限 TypeScript）
+    * `"protectedConstructors"` - 受保护的类构造函数。（仅限 TypeScript）
+    * `"decoratedFunctions"` - 带装饰器的类方法。（仅限 TypeScript）
+    * `"overrideMethods"` - 使用 override 关键字的方法。（仅限 TypeScript）
 
 ### allow: functions
 
-Examples of **correct** code for the `{ "allow": ["functions"] }` option:
+`{ "allow": ["functions"] }` 选项的正确代码示例：
 
 ::: correct
 
@@ -218,7 +219,7 @@ const obj = {
 
 ### allow: arrowFunctions
 
-Examples of **correct** code for the `{ "allow": ["arrowFunctions"] }` option:
+`{ "allow": ["arrowFunctions"] }` 选项的正确代码示例：
 
 ::: correct
 
@@ -232,7 +233,7 @@ const foo = () => {};
 
 ### allow: generatorFunctions
 
-Examples of **correct** code for the `{ "allow": ["generatorFunctions"] }` option:
+`{ "allow": ["generatorFunctions"] }` 选项的正确代码示例：
 
 ::: correct
 
@@ -252,7 +253,7 @@ const obj = {
 
 ### allow: methods
 
-Examples of **correct** code for the `{ "allow": ["methods"] }` option:
+`{ "allow": ["methods"] }` 选项的正确代码示例：
 
 ::: correct
 
@@ -273,7 +274,7 @@ class A {
 
 ### allow: generatorMethods
 
-Examples of **correct** code for the `{ "allow": ["generatorMethods"] }` option:
+`{ "allow": ["generatorMethods"] }` 选项的正确代码示例：
 
 ::: correct
 
@@ -294,7 +295,7 @@ class A {
 
 ### allow: getters
 
-Examples of **correct** code for the `{ "allow": ["getters"] }` option:
+`{ "allow": ["getters"] }` 选项的正确代码示例：
 
 ::: correct
 
@@ -315,7 +316,7 @@ class A {
 
 ### allow: setters
 
-Examples of **correct** code for the `{ "allow": ["setters"] }` option:
+`{ "allow": ["setters"] }` 选项的正确代码示例：
 
 ::: correct
 
@@ -336,7 +337,7 @@ class A {
 
 ### allow: constructors
 
-Examples of **correct** code for the `{ "allow": ["constructors"] }` option:
+`{ "allow": ["constructors"] }` 选项的正确代码示例：
 
 ::: correct
 
@@ -352,7 +353,7 @@ class A {
 
 ### allow: asyncFunctions
 
-Examples of **correct** code for the `{ "allow": ["asyncFunctions"] }` options:
+`{ "allow": ["asyncFunctions"] }` 选项的正确代码示例：
 
 ::: correct
 
@@ -366,7 +367,7 @@ async function a(){}
 
 ### allow: asyncMethods
 
-Examples of **correct** code for the `{ "allow": ["asyncMethods"] }` options:
+`{ "allow": ["asyncMethods"] }` 选项的正确代码示例：
 
 ::: correct
 
@@ -387,7 +388,7 @@ class A {
 
 ### allow: privateConstructors
 
-Examples of **correct** TypeScript code for the `{ "allow": ["privateConstructors"] }` option:
+`{ "allow": ["privateConstructors"] }` 选项的正确 TypeScript 代码示例：
 
 ::: correct
 
@@ -403,7 +404,7 @@ class A {
 
 ### allow: protectedConstructors
 
-Examples of **correct** TypeScript code for the `{ "allow": ["protectedConstructors"] }` option:
+`{ "allow": ["protectedConstructors"] }` 选项的正确 TypeScript 代码示例：
 
 ::: correct
 
@@ -419,7 +420,7 @@ class A {
 
 ### allow: decoratedFunctions
 
-Examples of **correct** TypeScript code for the `{ "allow": ["decoratedFunctions"] }` option:
+`{ "allow": ["decoratedFunctions"] }` 选项的正确 TypeScript 代码示例：
 
 ::: correct
 
@@ -436,7 +437,7 @@ class A {
 
 ### allow: overrideMethods
 
-Examples of **correct** TypeScript code for the `{ "allow": ["overrideMethods"] }` option:
+`{ "allow": ["overrideMethods"] }` 选项的正确 TypeScript 代码示例：
 
 ::: correct
 
@@ -454,6 +455,8 @@ class Derived extends Base {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you don't want to be notified about empty functions, then it's safe to disable this rule.
+## 何时不应使用
+
+如果你不希望收到有关空函数的提示，可以安全地禁用此规则。
