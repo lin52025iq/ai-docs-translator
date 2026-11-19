@@ -4,15 +4,11 @@ rule_type: problem
 ---
 
 
-Performing an operation on each element of an iterable is a common task. However, performing an
-`await` as part of each operation may indicate that the program is not taking full advantage of
-the parallelization benefits of `async`/`await`.
+对可迭代对象中的每个元素执行操作是常见任务。不过，如果在每次操作中都使用 `await`，这可能表明程序没有充分利用 `async`/`await` 的并行化优势。
 
-Often, the code can be refactored to create all the promises at once, then get access to the
-results using `Promise.all()` (or one of the other [promise concurrency methods](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise#promise_concurrency)). Otherwise, each successive operation will not start until the
-previous one has completed.
+通常，可以重构代码，一次性创建所有 Promise，然后使用 `Promise.all()`（或其他[Promise 并发方法](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise#promise_concurrency)）获取结果。否则，每次后续操作都要等前一次操作完成后才能开始。
 
-Concretely, the following function could be refactored as shown:
+具体来说，下面的函数可以按如下方式重构：
 
 ```js
 async function foo(things) {
@@ -38,10 +34,7 @@ async function foo(things) {
 }
 ```
 
-This can be beneficial for subtle error-handling reasons as well. Given an array of promises that might reject,
-sequential awaiting puts the program at risk of unhandled promise rejections. The exact behavior of unhandled
-rejections depends on the environment running your code, but they are generally considered harmful regardless.
-In Node.js, for example, [unhandled rejections cause a program to terminate](https://nodejs.org/api/cli.html#--unhandled-rejectionsmode) unless configured otherwise.
+这样做在细微的错误处理方面也可能有好处。如果有一个 Promise 数组，其中的 Promise 可能会被拒绝，按顺序等待会使程序面临未处理的 Promise 拒绝风险。未处理拒绝的具体行为取决于代码运行的环境，但无论如何，它们通常都被认为有害。例如，在 Node.js 中，除非另行配置，否则[未处理的拒绝会导致程序终止](https://nodejs.org/api/cli.html#--unhandled-rejectionsmode)。
 
 ```js
 async function foo() {
@@ -69,11 +62,13 @@ async function foo() {
 }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows the use of `await` within loop bodies.
+## 规则详情
 
-Examples of **correct** code for this rule:
+此规则禁止在循环体内使用 `await`。
+
+符合此规则的代码示例：
 
 :::correct
 
@@ -94,7 +89,7 @@ async function foo(things) {
 
 :::
 
-Examples of **incorrect** code for this rule:
+不符合此规则的代码示例：
 
 :::incorrect
 
@@ -119,16 +114,19 @@ async function bar(things) {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-In many cases the iterations of a loop are not actually independent of each other, and awaiting in
-the loop is correct. As a few examples:
+<a id="when-not-to-use-it"></a>
 
-* Any code that should run serially, such as implementing a countdown, or processing items sequentially (when each item is already processed in parallel), as in this example:
+## 何时不应使用此规则
+
+在许多情况下，循环的各次迭代实际上并非彼此独立，因此在循环中等待是正确的。以下是一些示例：
+
+* 任何应按顺序运行的代码，例如实现倒计时，或按顺序处理项目（其中每个项目已经并行处理），如下例所示：
 
     ```js
     async function printCountdown() {
@@ -139,7 +137,7 @@ the loop is correct. As a few examples:
     }
     ```
 
-* Using standard browser/OS APIs that are inherently serial (as controlled by the underlying operating system), such as `File` or directory contents reading, as in this example:
+* 使用本质上按顺序运行（由底层操作系统控制）的标准浏览器/操作系统 API，例如 `File` 或读取目录内容，如下例所示：
 
     ```js
     async function writeNumbersToFile() {
@@ -150,7 +148,7 @@ the loop is correct. As a few examples:
     }
     ```
 
-* Any code where the creation of the Promise allocates a bounded resource (RAM, file descriptors, network bandwidth), as in this example:
+* 创建 Promise 会分配有限资源（RAM、文件描述符、网络带宽）的代码，如下例所示：
 
     ```js
     async function streamingProcess() {
@@ -171,7 +169,7 @@ the loop is correct. As a few examples:
     }
     ```
 
-* The output of one iteration might be used as the input to another.
+* 某次迭代的输出可能会用作另一次迭代的输入。
 
     ```js
     async function loopIterationsDependOnEachOther() {
@@ -187,9 +185,9 @@ the loop is correct. As a few examples:
     }
     ```
 
-    The previous examples were all similar to this, but they relied on a _side effect_ of one iteration being needed for the next, while this example has the dependency explicit via a result variable.
+    前面的示例与此情况类似，但它们依赖的是某次迭代所需的副作用；而此示例则通过结果变量明确体现了这种依赖关系。
 
-* Loops may be used to retry asynchronous operations that were unsuccessful.
+* 循环可用于重试未成功的异步操作。
 
     ```js
     async function retryUpTo10Times() {
@@ -204,7 +202,7 @@ the loop is correct. As a few examples:
     }
     ```
 
-* Loops may be used to prevent your code from sending an excessive amount of requests in parallel.
+* 循环可用于防止代码并行发送过多请求。
 
     ```js
     async function makeUpdatesToRateLimitedApi(thingsToUpdate) {
@@ -215,5 +213,4 @@ the loop is correct. As a few examples:
     }
     ```
 
-In such cases it makes sense to use `await` within a
-loop and it is recommended to disable the rule via a standard ESLint disable comment.
+在这些情况下，在循环中使用 `await` 是合理的，建议通过标准的 ESLint 禁用注释禁用此规则。
