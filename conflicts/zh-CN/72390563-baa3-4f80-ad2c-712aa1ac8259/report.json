@@ -1,0 +1,62 @@
+{
+    "schemaVersion": 1,
+    "status": "conflict",
+    "origin": "local_validation",
+    "projectId": "eslint-docs",
+    "locale": "zh-CN",
+    "sourcePath": "docs/src/extend/custom-rules.md",
+    "createdAt": "2026-11-19T10:48:42.572Z",
+    "reason": "文件校验未通过",
+    "artifacts": {
+        "before": "before/docs/src/extend/custom-rules.md",
+        "after": "after/docs/src/extend/custom-rules.md",
+        "previous": "previous/docs/src/extend/custom-rules.md"
+    },
+    "translationModel": "gpt-6-luna",
+    "translationResponseId": "resp_098e37bfeecc588d016afed39b128887d296c007974becc096",
+    "contextHash": "64ced0491d8917d86d3057d903a53f0f98ed63c72e258488e934ac7f76453200",
+    "diagnostics": [
+        [
+            {
+                "message": "译文改变了应保留的内容：templates, code, inlineCode, links, html",
+                "path": "docs/src/extend/custom-rules.md"
+            },
+            {
+                "message": "inlineCode 缺少：[\"\\\"*\\\"\",\"\\\"*\\\"\",\"\\\"Shebang\\\"\",\"\\\"always\\\"\",\"\\\"basic\\\"\",\"\\\"code\\\"\",\"\\\"double\\\"\",\"\\\"double\\\"\",\"\\\"error\\\"\",\"\\\"error\\\"\",\"\\\"js/js\\\"\",\"\\\"layout\\\"\",\"\\\"layout\\\"\",\"\\\"markdown/gfm\\\"\",\"\\\"module\\\"\",\"\\\"never\\\"\",\"\\\"off\\\"\",\"\\\"off\\\"\",\"\\\"off\\\"\",\"\\\"plugin/*\\\"\",\"\\\"pluginName/*\\\"\",\"\\\"pluginName/languageName\\\"\",\"\\\"problem\\\"\",\"\\\"problem\\\"\",\"\\\"readonly\\\" | \\\"writable\\\" | undefined\",\"\\\"strict\\\"\",\"\\\"suggestion\\\"\",\"\\\"suggestion\\\"\",\"\\\"test/lang\\\"\",\"\\\"warn\\\"\",\"\\\"warn\\\"\",\"\\\"whitespace\\\"\",\"$data\",\"$ref\",\"'script' | 'module' | 'commonjs'\",\"--fix\",\"--fix-type\",\"--no-config-lookup\",\"--rule\",\"--stdin-filename\",\".eslintrc\",\"/* global */\",\"/* globals */\",\"/* globals */\",\"/* globals */\",\"/* globals */\",\"0\",\"0\",\"1\",\"1\",\"2\",\"6\",\":exit\",\"<text>\",\"@eslint/js\",\"ArrowFunctionExpression\",\"ArrowFunctionExpression\",\"ArrowFunctionExpression\",\"BlockStatement\",\"CatchClause\",\"CatchClause\",\"ClassDeclaration\",\"ClassDeclaration\",\"ClassExpression\",\"ClassExpression\",\"Comment[] | undefined\",\"Definition\",\"Definitions\",\"ForInStatement\",\"ForOfStatement\",\"ForStatement\",\"FunctionDeclaration\",\"FunctionDeclaration\",\"FunctionExpression\",\"FunctionExpression\",\"ImportDeclaration\",\"ImportDefaultSpecifier\",\"ImportNamespaceSpecifier\",\"ImportSpecifier\",\"Literal\",\"Program\",\"Program\",\"Program\",\"Program\",\"Program#sourceType\",\"PropertyDefinition#value\",\"Reference\",\"Reference\",\"RegExp\",\"ReturnStatement\",\"RuleTester\",\"Scope\",\"Scope#variables\",\"SourceCode\",\"SourceCode\",\"SourceCode\",\"SourceCode\",\"SourceCode\",\"SourceCode#getScope()\",\"SourceCode#getScope(node)\",\"StaticBlock\",\"SwitchStatement\",\"TIMING\",\"TIMING=50\",\"TIMING=all\",\"Variable\",\"Variable\",\"Variable\",\"Variable\",\"Variable#defs\",\"Variable#eslintExplicitGlobal\",\"Variable#eslintExplicitGlobalComments\",\"Variable#eslintImplicitGlobalSetting\",\"Variable#references\",\"Variable#writeable\",\"VariableDeclaration\",\"VariableDeclarator\",\"WithStatement\",\"[\\\"JavaScript\\\", \\\"TypeScript\\\"]\",\"[\\\"error\\\", { alias: \\\"complex\\\" }]\",\"[\\\"off\\\"]\",\"[\\\"warn\\\", \\\"never\\\", { someOption: 5 }]\",\"alias\",\"anyOf\",\"array\",\"。多出：[]",
+                "path": "docs/src/extend/custom-rules.md"
+            },
+            {
+                "message": "links 缺少：[\"[[\\\"href\\\",\\\"#accessing-comments\\\"]]\",\"[[\\\"href\\\",\\\"#accessing-comments\\\"]]\",\"[[\\\"href\\\",\\\"#accessing-comments\\\"]]\",\"[[\\\"href\\\",\\\"#accessing-comments\\\"]]\",\"[[\\\"href\\\",\\\"#accessing-comments\\\"]]\",\"[[\\\"href\\\",\\\"#accessing-options-passed-to-a-rule\\\"]]\",\"[[\\\"href\\\",\\\"#accessing-the-source-code\\\"]]\",\"[[\\\"href\\\",\\\"#accessing-the-source-text\\\"]]\",\"[[\\\"href\\\",\\\"#applying-fixes\\\"]]\",\"[[\\\"href\\\",\\\"#applying-fixes\\\"]]\",\"[[\\\"href\\\",\\\"#applying-fixes\\\"]]\",\"[[\\\"href\\\",\\\"#messageids\\\"]]\",\"[[\\\"href\\\",\\\"#messageids\\\"]]\",\"[[\\\"href\\\",\\\"#messageids\\\"]]\",\"[[\\\"href\\\",\\\"#option-defaults\\\"]]\",\"[[\\\"href\\\",\\\"#options-schemas\\\"]]\",\"[[\\\"href\\\",\\\"#options-schemas\\\"]]\",\"[[\\\"href\\\",\\\"#report-problems\\\"]]\",\"[[\\\"href\\\",\\\"#rule-structure\\\"]]\",\"[[\\\"href\\\",\\\"#rule-structure\\\"]]\",\"[[\\\"href\\\",\\\"#suggestion-messageids\\\"]]\",\"[[\\\"href\\\",\\\"#use-message-placeholders\\\"]]\",\"[[\\\"href\\\",\\\"#use-message-placeholders\\\"]]\",\"[[\\\"href\\\",\\\"../contribute/core-rules#frozen-rules\\\"]]\",\"[[\\\"href\\\",\\\"../contribute/core-rules#rule-naming-conventions\\\"]]\",\"[[\\\"href\\\",\\\"../integrate/nodejs-api#linter\\\"]]\",\"[[\\\"href\\\",\\\"../integrate/nodejs-api#ruletester\\\"]]\",\"[[\\\"href\\\",\\\"../rules/\\\"]]\",\"[[\\\"href\\\",\\\"../rules/array-callback-return\\\"]]\",\"[[\\\"href\\\",\\\"../rules/no-redeclare\\\"]]\",\"[[\\\"href\\\",\\\"../rules/no-shadow\\\"]]\",\"[[\\\"href\\\",\\\"../rules/no-unused-vars\\\"]]\",\"[[\\\"href\\\",\\\"../rules/no-unused-vars\\\"]]\",\"[[\\\"href\\\",\\\"../rules/quotes\\\"]]\",\"[[\\\"href\\\",\\\"../use/command-line-interface#--fix\\\"]]\",\"[[\\\"href\\\",\\\"../use/command-line-interface#--fix-type\\\"]]\",\"[[\\\"href\\\",\\\"../use/command-line-interface#caching\\\"]]\",\"[[\\\"href\\\",\\\"../use/configure/configuration-files#configuration-file\\\"]]\",\"[[\\\"href\\\",\\\"../use/configure/configuration-files#configure-shared-settings\\\"]]\",\"[[\\\"href\\\",\\\"../use/configure/configuration-files#configure-shared-settings\\\"]]\",\"[[\\\"href\\\",\\\"../use/configure/language-options\\\"]]\",\"[[\\\"href\\\",\\\"../use/configure/plugins#configure-a-virtual-plugin\\\"]]\",\"[[\\\"href\\\",\\\"../use/configure/rules\\\"]]\",\"[[\\\"href\\\",\\\"../use/configu。多出：[]",
+                "path": "docs/src/extend/custom-rules.md"
+            },
+            {
+                "message": "第 2 个代码块应逐字复制原文：[\"js\",\"// Rule only runs when the active language is the built-in JavaScript language\\nmeta: {\\n    languages: [\\\"js/js\\\"],\\n}\\n\\n// Rule runs with any language from the \\\"markdown\\\" plugin\\nmeta: {\\n    languages: [\\\"markdown/*\\\"],\\n}\\n\\n// Rule runs with any language\\nmeta: {\\n    languages: [\\\"*\\\"],\\n}\\n\"]",
+                "path": "docs/src/extend/custom-rules.md"
+            }
+        ],
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode, links",
+                "path": "docs/src/extend/custom-rules.md"
+            },
+            {
+                "message": "inlineCode 缺少：[\"Definitions\",\"[\\\"error\\\", { alias: \\\"complex\\\" }]\",\"[\\\"warn\\\", \\\"never\\\", { someOption: 5 }]\",\"column\",\"fixing\",\"line\"]。多出：[\" [\\\"error\\\", { alias: \\\"complex\\\" }]\",\" [\\\"warn\\\", \\\"never\\\", { someOption: 5 }]\",\"Definition\",\"array-callback-return\",\"no-unused-vars\",\"true\",\"true\"]",
+                "path": "docs/src/extend/custom-rules.md"
+            },
+            {
+                "message": "links 缺少：[\"[[\\\"href\\\",\\\"../use/command-line-interface#--fix\\\"]]\"]。多出：[]",
+                "path": "docs/src/extend/custom-rules.md"
+            }
+        ],
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode",
+                "path": "docs/src/extend/custom-rules.md"
+            },
+            {
+                "message": "inlineCode 缺少：[\"column\",\"fixing\",\"line\",\"no-unused-vars\"]。多出：[]",
+                "path": "docs/src/extend/custom-rules.md"
+            }
+        ]
+    ]
+}
