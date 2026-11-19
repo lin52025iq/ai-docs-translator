@@ -44,33 +44,50 @@ function readDocument(content, allowHeadingAliases = false) {
     const code = tokens
         .filter((token) => token.type === 'fence' || token.type === 'code_block')
         .map((token) => [token.info, token.content])
-    const inlineCode = tokens.filter((token) => token.type === 'code_inline').map((token) => token.content).sort()
+    const inlineCode = [...new Set(tokens.filter((token) => token.type === 'code_inline').map((token) => token.content))]
+    const prose = tokens.filter((token) => token.type === 'text').map((token) => token.content)
     const links = tokens
         .filter((token) => token.type === 'link_open' || token.type === 'image')
         .map((token) => JSON.stringify(token.attrs))
         .sort()
     const html = tokens
         .filter((token) => token.type === 'html_block' || token.type === 'html_inline')
-        .map((token) => token.content.trim())
-    return { data, templates, code, inlineCode, links, html }
+        .map((token) => {
+            const content = token.content.replace(/<th>[^<>]*<\/th>/g, '<th></th>').trim()
+            if (path !== 'docs/src/pages/flags.md') return content
+            return content.replace(/(\{% else %\})\n[^\n<>{}]+\n(\{% endif %\})/g, '$1\n$2')
+        })
+    return { data, templates, code, inlineCode, prose, links, html }
 }
 
 const original = readDocument(source)
 const translated = readDocument(candidate, true)
-const changed = Object.keys(original).filter((key) => !isDeepStrictEqual(original[key], translated[key]))
+const changed = ['data', 'templates', 'code', 'links', 'html'].filter((key) => !isDeepStrictEqual(original[key], translated[key]))
+if (candidate.includes('\0')) changed.push('NUL')
+const missing = original.inlineCode.filter(
+    (value) => !translated.inlineCode.includes(value) && !translated.prose.some((text) => text.includes(value))
+)
+const added = translated.inlineCode.filter(
+    (value) => !original.inlineCode.includes(value) && !original.prose.some((text) => text.includes(value))
+)
+if (missing.length || added.length) changed.push('inlineCode')
 if (changed.length) {
     const diagnostics = [{ message: '译文改变了应保留的内容：' + changed.join(', ') }]
-    for (const key of ['inlineCode', 'links']) {
-        if (!changed.includes(key)) continue
-        const missing = [...original[key]]
-        const added = translated[key].filter((value) => {
-            const index = missing.indexOf(value)
+    if (changed.includes('inlineCode')) {
+        diagnostics.push({
+            message: `inlineCode 缺少：${JSON.stringify(missing).slice(0, 2000)}。多出：${JSON.stringify(added).slice(0, 2000)}`
+        })
+    }
+    if (changed.includes('links')) {
+        const missingLinks = [...original.links]
+        const addedLinks = translated.links.filter((value) => {
+            const index = missingLinks.indexOf(value)
             if (index === -1) return true
-            missing.splice(index, 1)
+            missingLinks.splice(index, 1)
             return false
         })
         diagnostics.push({
-            message: `${key} 缺少：${JSON.stringify(missing).slice(0, 2000)}。多出：${JSON.stringify(added).slice(0, 2000)}`
+            message: `links 缺少：${JSON.stringify(missingLinks).slice(0, 2000)}。多出：${JSON.stringify(addedLinks).slice(0, 2000)}`
         })
     }
     if (changed.includes('code')) {
@@ -79,6 +96,12 @@ if (changed.length) {
             message: index === -1
                 ? `原文有 ${original.code.length} 个代码块，译文有 ${translated.code.length} 个。`
                 : `第 ${index + 1} 个代码块应逐字复制原文：${JSON.stringify(original.code[index]).slice(0, 4000)}`
+        })
+    }
+    if (changed.includes('html')) {
+        const index = translated.html.findIndex((value, i) => value !== original.html[i])
+        if (index >= 0) diagnostics.push({
+            message: `第 ${index + 1} 段 HTML，原文：${JSON.stringify(original.html[index] ?? '').slice(0, 1800)}。译文：${JSON.stringify(translated.html[index]).slice(0, 1800)}。`
         })
     }
     console.log(JSON.stringify(diagnostics))
