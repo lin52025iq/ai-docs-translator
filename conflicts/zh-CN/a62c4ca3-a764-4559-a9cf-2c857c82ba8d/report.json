@@ -1,0 +1,50 @@
+{
+    "schemaVersion": 1,
+    "status": "conflict",
+    "origin": "local_validation",
+    "projectId": "eslint-docs",
+    "locale": "zh-CN",
+    "sourcePath": "docs/src/use/configure/combine-configs.md",
+    "createdAt": "2026-11-19T11:51:00.573Z",
+    "reason": "文件校验未通过",
+    "artifacts": {
+        "before": "before/docs/src/use/configure/combine-configs.md",
+        "after": "after/docs/src/use/configure/combine-configs.md",
+        "previous": "previous/docs/src/use/configure/combine-configs.md"
+    },
+    "translationModel": "gpt-6-luna",
+    "translationResponseId": "resp_0c81cf51f18d14c3016afee1aa27f487d291cb1f53398b9a3b",
+    "contextHash": "64ced0491d8917d86d3057d903a53f0f98ed63c72e258488e934ac7f76453200",
+    "diagnostics": [
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode",
+                "path": "docs/src/use/configure/combine-configs.md"
+            },
+            {
+                "message": "inlineCode 缺少：[\"**/*.js\\\"\"]。多出：[\"**/*.js\"]",
+                "path": "docs/src/use/configure/combine-configs.md"
+            }
+        ],
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode",
+                "path": "docs/src/use/configure/combine-configs.md"
+            },
+            {
+                "message": "inlineCode 缺少：[\"**/*.js\\\"\"]。多出：[\"\\\"**/*.js\\\"\"]",
+                "path": "docs/src/use/configure/combine-configs.md"
+            }
+        ],
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode",
+                "path": "docs/src/use/configure/combine-configs.md"
+            },
+            {
+                "message": "inlineCode 缺少：[\"**/*.js\\\"\"]。多出：[\"**/*.js\"]",
+                "path": "docs/src/use/configure/combine-configs.md"
+            }
+        ]
+    ]
+}
