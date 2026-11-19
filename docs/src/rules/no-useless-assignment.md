@@ -12,17 +12,17 @@ further_reading:
 ---
 
 
-[Wikipedia describes a "dead store"](https://en.wikipedia.org/wiki/Dead_store) as follows:
+[维基百科对“无用存储”（dead store）的描述](https://en.wikipedia.org/wiki/Dead_store)如下：
 
-> In computer programming, a local variable that is assigned a value but is not read by any subsequent instruction is referred to as a **dead store**.
+> 在计算机编程中，如果一个局部变量被赋值后，后续指令都没有读取该值，则称其为**无用存储**。
 
-"Dead stores" waste processing and memory, so it is better to remove unnecessary assignments to variables.
+“无用存储”会浪费处理资源和内存，因此最好删除对变量不必要的赋值。
 
-Also, if the author intended the variable to be used, there is likely a mistake around the dead store.
-For example,
+此外，如果作者原本打算使用该变量，那么无用存储附近很可能存在错误。
+例如：
 
-* you should have used a stored value but forgot to do so.
-* you made a mistake in the name of the variable to be stored.
+* 应该使用已存储的值，却忘了使用。
+* 要赋值的变量名称写错了。
 
 ```js
 let id = "x1234";    // this is a "dead store" - this value ("x1234") is never read
@@ -32,11 +32,13 @@ id = generateId();
 doSomethingWith(id);
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to report variable assignments when the value is not used.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在报告未使用所赋值的变量赋值操作。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -89,7 +91,7 @@ function fn5() {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -134,8 +136,7 @@ function fn4() {
 
 :::
 
-This rule will not report variables that are never read.
-Because it's clearly an unused variable. If you want it reported, please enable the [no-unused-vars](./no-unused-vars) rule.
+此规则不会报告从未读取过的变量，因为它们显然是未使用的变量。如果希望报告这类变量，请启用 [no-unused-vars](./no-unused-vars) 规则。
 
 ::: correct
 
@@ -151,13 +152,17 @@ function fn() {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## Known Limitations
+此规则没有选项。
 
-This rule does not report certain variable reassignments when they occur inside the `try` block. This is intentional because such assignments may still be observed within the corresponding `catch` block or after the `try-catch` structure, due to potential early exits or error handling logic.
+<a id="known-limitations"></a>
+
+## 已知限制
+
+如果某些变量重新赋值操作发生在 `try` 代码块中，此规则不会报告。这是有意为之，因为由于可能提前退出或存在错误处理逻辑，这些赋值仍可能在相应的 `catch` 代码块中或 `try-catch` 结构之后被观察到。
 
 ```js
 function foo() {
@@ -190,6 +195,8 @@ function unsafeFn() {
 }
 ```
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you don't want to be notified about values that are never read, you can safely disable this rule.
+## 何时不应使用
+
+如果不希望收到有关从未读取的值的提示，可以放心禁用此规则。
