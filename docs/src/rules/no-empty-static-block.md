@@ -9,13 +9,15 @@ further_reading:
 - https://github.com/tc39/proposal-class-static-block
 ---
 
-Empty static blocks, while not technically errors, usually occur due to refactoring that wasn't completed. They can cause confusion when reading code.
+空的静态块虽然并非技术上的错误，但通常是由于重构未完成造成的。阅读代码时，它们可能会引起困惑。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows empty static blocks. This rule ignores static blocks which contain a comment.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止空的静态块。此规则会忽略包含注释的静态块。
+
+此规则的**错误**示例：
 
 ::: incorrect
 
@@ -29,7 +31,7 @@ class Foo {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**示例：
 
 :::correct
 
@@ -51,10 +53,14 @@ class Bar {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-This rule should not be used in environments prior to ES2022.
+<a id="when-not-to-use-it"></a>
+
+## 何时不应使用此规则
+
+在 ES2022 之前的环境中，不应使用此规则。
