@@ -3,13 +3,13 @@ title: global-require
 rule_type: suggestion
 ---
 
-In Node.js, module dependencies are included using the `require()` function, such as:
+在 Node.js 中，使用 `require()` 函数引入模块依赖，例如：
 
 ```js
 var fs = require("fs");
 ```
 
-While `require()` may be called anywhere in code, some style guides prescribe that it should be called only in the top level of a module to make it easier to identify dependencies. For instance, it's arguably harder to identify dependencies when they are deeply nested inside of functions and other statements:
+虽然可以在代码中的任何位置调用 `require()`，但一些风格指南规定，只能在模块顶层调用它，以便更轻松地识别依赖。例如，如果依赖深深嵌套在函数和其他语句中，就很难识别：
 
 ```js
 function foo() {
@@ -19,15 +19,17 @@ function foo() {
 }
 ```
 
-Since `require()` does a synchronous load, it can cause performance problems when used in other locations.
+由于 `require()` 会同步加载模块，在其他位置使用它可能导致性能问题。
 
-Further, ES6 modules mandate that `import` and `export` statements can only occur in the top level of the module's body.
+此外，ES6 模块规定，`import` 和 `export` 语句只能出现在模块主体的顶层。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule requires all calls to `require()` to be at the top level of the module, similar to ES6 `import` and `export` statements, which also can occur only at the top level.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则要求所有 `require()` 调用都位于模块顶层，与 ES6 的 `import` 和 `export` 语句类似，它们也只能出现在顶层。
+
+此规则的错误代码示例：
 
 ::: incorrect { "sourceType": "script" }
 
@@ -70,7 +72,7 @@ try {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct { "sourceType": "script" }
 
@@ -101,6 +103,8 @@ var x = require("x"),
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you have a module that must be initialized with information that comes from the file-system or if a module is only used in very rare situations and will cause significant overhead to load it may make sense to disable the rule. If you need to `require()` an optional dependency inside of a `try`/`catch`, you can disable this rule for just that dependency using the `// eslint-disable-line global-require` comment.
+## 何时不应使用此规则
+
+如果某个模块必须使用来自文件系统的信息进行初始化，或者某个模块只在极少数情况下使用，而加载它会造成显著开销，那么禁用此规则可能是合理的。如果需要在 `try`/`catch` 中 `require()` 可选依赖，可以使用 `// eslint-disable-line global-require` 注释，仅针对该依赖禁用此规则。
