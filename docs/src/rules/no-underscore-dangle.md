@@ -3,23 +3,25 @@ title: no-underscore-dangle
 rule_type: suggestion
 ---
 
-As far as naming conventions for identifiers go, dangling underscores may be the most polarizing in JavaScript. Dangling underscores are underscores at either the beginning or end of an identifier, such as:
+说到标识符的命名约定，首尾下划线可能是 JavaScript 中最容易引起争议的一种。首尾下划线指位于标识符开头或结尾的下划线，例如：
 
 ```js
 let _foo;
 ```
 
-There is a long history of marking "private" members with dangling underscores in JavaScript, beginning with SpiderMonkey adding nonstandard methods such as `__defineGetter__()`. Since that time, using a single underscore prefix has become the most popular convention for indicating a member is not part of the public interface of an object.
+在 JavaScript 中，使用首尾下划线标记“私有”成员由来已久，最早可以追溯到 SpiderMonkey 添加 `__defineGetter__()` 等非标准方法。从那时起，使用单个下划线前缀来表示某个成员不属于对象的公共接口，已成为最流行的约定。
 
-It is recommended to use the formal [private class features](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_class_fields) introduced in ECMAScript 2022 for encapsulating private data and methods rather than relying on naming conventions.
+建议使用 ECMAScript 2022 引入的正式[私有类特性](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_class_fields)来封装私有数据和方法，而不是依赖命名约定。
 
-Allowing dangling underscores in identifiers is purely a convention and has no effect on performance, readability, or complexity. They do not have the same encapsulation benefits as private class features, even with this rule enabled.
+允许标识符使用首尾下划线纯粹是一种约定，不会影响性能、可读性或复杂度。即使启用了此规则，首尾下划线也无法提供与私有类特性相同的封装优势。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows dangling underscores in identifiers.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止在标识符中使用首尾下划线。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -33,7 +35,7 @@ foo._bar();
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -51,23 +53,27 @@ const baz = (_bar) => {};
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option:
+## 选项
 
-* `"allow"` allows specified identifiers to have dangling underscores
-* `"allowAfterThis": false` (default) disallows dangling underscores in members of the `this` object
-* `"allowAfterSuper": false` (default) disallows dangling underscores in members of the `super` object
-* `"allowAfterThisConstructor": false` (default) disallows dangling underscores in members of the `this.constructor` object
-* `"enforceInMethodNames": false` (default) allows dangling underscores in method names
-* `"enforceInClassFields": false` (default) allows dangling underscores in es2022 class fields names
-* `"allowInArrayDestructuring": true` (default) allows dangling underscores in variable names assigned by array destructuring
-* `"allowInObjectDestructuring": true` (default) allows dangling underscores in variable names assigned by object destructuring
-* `"allowFunctionParams": true` (default) allows dangling underscores in function parameter names
+此规则接受一个对象选项：
+
+* `"allow"` 允许指定的标识符使用首尾下划线
+* `"allowAfterThis": false`（默认值）禁止在 `this` 对象的成员中使用首尾下划线
+* `"allowAfterSuper": false`（默认值）禁止在 `super` 对象的成员中使用首尾下划线
+* `"allowAfterThisConstructor": false`（默认值）禁止在 `this.constructor` 对象的成员中使用首尾下划线
+* `"enforceInMethodNames": false`（默认值）允许在方法名中使用首尾下划线
+* `"enforceInClassFields": false`（默认值）允许在 es2022 类字段名中使用首尾下划线
+* `"allowInArrayDestructuring": true`（默认值）允许通过数组解构赋值的变量名使用首尾下划线
+* `"allowInObjectDestructuring": true`（默认值）允许通过对象解构赋值的变量名使用首尾下划线
+* `"allowFunctionParams": true`（默认值）允许函数参数名使用首尾下划线
+
+<a id="allow"></a>
 
 ### allow
 
-Examples of additional **correct** code for this rule with the `{ "allow": ["foo_", "_bar"] }` option:
+使用 `{ "allow": ["foo_", "_bar"] }` 选项时，此规则的其他正确代码示例：
 
 ::: correct
 
@@ -80,9 +86,11 @@ foo._bar();
 
 :::
 
+<a id="allowafterthis"></a>
+
 ### allowAfterThis
 
-Examples of **correct** code for this rule with the `{ "allowAfterThis": true }` option:
+使用 `{ "allowAfterThis": true }` 选项时，此规则的正确代码示例：
 
 ::: correct
 
@@ -95,9 +103,11 @@ this._bar();
 
 :::
 
+<a id="allowaftersuper"></a>
+
 ### allowAfterSuper
 
-Examples of **correct** code for this rule with the `{ "allowAfterSuper": true }` option:
+使用 `{ "allowAfterSuper": true }` 选项时，此规则的正确代码示例：
 
 ::: correct
 
@@ -114,9 +124,11 @@ class Foo extends Bar {
 
 :::
 
+<a id="allowafterthisconstructor"></a>
+
 ### allowAfterThisConstructor
 
-Examples of **correct** code for this rule with the `{ "allowAfterThisConstructor": true }` option:
+使用 `{ "allowAfterThisConstructor": true }` 选项时，此规则的正确代码示例：
 
 ::: correct
 
@@ -129,9 +141,11 @@ this.constructor._bar();
 
 :::
 
+<a id="enforceinmethodnames"></a>
+
 ### enforceInMethodNames
 
-Examples of **incorrect** code for this rule with the `{ "enforceInMethodNames": true }` option:
+使用 `{ "enforceInMethodNames": true }` 选项时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -157,9 +171,11 @@ const o2 = {
 
 :::
 
+<a id="enforceinclassfields"></a>
+
 ### enforceInClassFields
 
-Examples of **incorrect** code for this rule with the `{ "enforceInClassFields": true }` option:
+使用 `{ "enforceInClassFields": true }` 选项时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -189,9 +205,11 @@ class FooBar {
 
 :::
 
+<a id="allowinarraydestructuring"></a>
+
 ### allowInArrayDestructuring
 
-Examples of **incorrect** code for this rule with the `{ "allowInArrayDestructuring": false }` option:
+使用 `{ "allowInArrayDestructuring": false }` 选项时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -205,9 +223,11 @@ const [foo, [bar, _baz]] = list;
 
 :::
 
+<a id="allowinobjectdestructuring"></a>
+
 ### allowInObjectDestructuring
 
-Examples of **incorrect** code for this rule with the `{ "allowInObjectDestructuring": false }` option:
+使用 `{ "allowInObjectDestructuring": false }` 选项时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -220,7 +240,7 @@ const { qux, xyz, _baz } = collection;
 
 :::
 
-Examples of **correct** code for this rule with the `{ "allowInObjectDestructuring": false }` option:
+使用 `{ "allowInObjectDestructuring": false }` 选项时，此规则的正确代码示例：
 
 ::: correct
 
@@ -233,9 +253,11 @@ const { qux, xyz, _baz: baz } = collection;
 
 :::
 
+<a id="allowfunctionparams"></a>
+
 ### allowFunctionParams
 
-Examples of **incorrect** code for this rule with the `{ "allowFunctionParams": false }` option:
+使用 `{ "allowFunctionParams": false }` 选项时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -257,6 +279,8 @@ const foo9 = (..._bar) => {};
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you want to allow dangling underscores in identifiers, then you can safely turn this rule off.
+## 何时不应使用此规则
+
+如果你希望允许标识符使用首尾下划线，可以放心关闭此规则。
