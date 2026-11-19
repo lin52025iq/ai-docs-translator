@@ -9,13 +9,15 @@ related_rules:
 
 
 
-In JavaScript, it's possible to redeclare the same variable name using `var`. This can lead to confusion as to where the variable is actually declared and initialized.
+在 JavaScript 中，可以使用 `var` 重新声明同一个变量名。这可能会让人困惑，不清楚变量究竟在哪里声明和初始化。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at eliminating variables that have multiple declarations in the same scope.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在消除同一作用域中存在多个声明的变量。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -40,7 +42,7 @@ class C {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -66,16 +68,18 @@ class C {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule takes one optional argument, an object with a boolean property `"builtinGlobals"`. It defaults to `true`.
-If set to `true`, this rule also checks redeclaration of built-in globals, such as `Object`, `Array`, `Number`...
+## 选项
+
+此规则接受一个可选参数，即一个包含布尔属性 `"builtinGlobals"` 的对象。默认值为 `true`。
+如果设为 `true`，此规则还会检查内置全局变量是否被重新声明，例如 `Object`、`Array`、`Number`……
 
 ### builtinGlobals
 
-The `"builtinGlobals"` option will check for redeclaration of built-in globals in global scope.
+`"builtinGlobals"` 选项会检查全局作用域中是否重新声明了内置全局变量。
 
-Examples of **incorrect** code for the `{ "builtinGlobals": true }` option:
+`{ "builtinGlobals": true }` 选项的错误代码示例：
 
 ::: incorrect { "sourceType": "script" }
 
@@ -87,4 +91,4 @@ var Object = 0;
 
 :::
 
-Note that when using `sourceType: "commonjs"` (or `ecmaFeatures.globalReturn`, if using the default parser), the top scope of a program is not actually the global scope, but rather a "module" scope. When this is the case, declaring a variable named after a builtin global is not a redeclaration, but rather a shadowing of the global variable. In that case, the [`no-shadow`](no-shadow) rule with the `"builtinGlobals"` option should be used.
+请注意，使用 `sourceType: "commonjs"`（或者在使用默认解析器时使用 `ecmaFeatures.globalReturn`）时，程序的顶层作用域实际上并非全局作用域，而是“模块”作用域。在这种情况下，声明一个与内置全局变量同名的变量并不属于重新声明，而是对全局变量的遮蔽。此时应使用带有 `"builtinGlobals"` 选项的 [`no-shadow`](no-shadow) 规则。
