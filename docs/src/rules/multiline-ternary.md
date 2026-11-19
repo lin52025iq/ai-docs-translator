@@ -4,15 +4,15 @@ rule_type: layout
 related_rules:
 - operator-linebreak
 ---
-JavaScript allows operands of ternary expressions to be separated by newlines, which can improve the readability of your program.
+JavaScript 允许在三元表达式的操作数之间换行，这有助于提高程序的可读性。
 
-For example:
+例如：
 
 ```js
 var foo = bar > baz ? value1 : value2;
 ```
 
-The above can be rewritten as the following to improve readability and more clearly delineate the operands:
+上面的代码可以改写为以下形式，以提高可读性并更清晰地划分操作数：
 
 ```js
 
@@ -25,24 +25,30 @@ var foo = bar > baz
     : value2;
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces or disallows newlines between operands of a ternary expression.
-Note: The location of the operators is not enforced by this rule. Please see the [operator-linebreak](operator-linebreak) rule if you are interested in enforcing the location of the operators themselves.
+## 规则详情
 
-## Options
+此规则强制要求或禁止在三元表达式的操作数之间换行。
+注意：此规则不强制要求运算符位于特定位置。如果你希望强制规定运算符的位置，请参阅 [operator-linebreak](operator-linebreak) 规则。
 
-This rule has a string option:
+<a id="options"></a>
 
-* `"always"` (default) enforces newlines between the operands of a ternary expression.
-* `"always-multiline"` enforces newlines between the operands of a ternary expression if the expression spans multiple lines.
-* `"never"` disallows newlines between the operands of a ternary expression.
+## 选项
 
-### always
+此规则有一个字符串选项：
 
-This is the default option.
+* `"always"`（默认值）强制要求在三元表达式的操作数之间换行。
+* `"always-multiline"` 在表达式跨越多行时，强制要求在三元表达式的操作数之间换行。
+* `"never"` 禁止在三元表达式的操作数之间换行。
 
-Examples of **incorrect** code for this rule with the `"always"` option:
+<a id="always"></a>
+
+### 始终换行
+
+这是默认选项。
+
+使用 `"always"` 选项时，此规则下的**错误**代码示例：
 
 ::: incorrect
 
@@ -60,7 +66,7 @@ foo > bar ?
 
 :::
 
-Examples of **correct** code for this rule with the `"always"` option:
+使用 `"always"` 选项时，此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -86,9 +92,11 @@ foo > bar
 
 :::
 
-### always-multiline
+<a id="always-multiline"></a>
 
-Examples of **incorrect** code for this rule with the `"always-multiline"` option:
+### 多行时始终换行
+
+使用 `"always-multiline"` 选项时，此规则下的**错误**代码示例：
 
 ::: incorrect
 
@@ -107,7 +115,7 @@ foo > bar &&
 
 :::
 
-Examples of **correct** code for this rule with the `"always-multiline"` option:
+使用 `"always-multiline"` 选项时，此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -144,9 +152,11 @@ foo > bar
 
 :::
 
-### never
+<a id="never"></a>
 
-Examples of **incorrect** code for this rule with the `"never"` option:
+### 从不换行
+
+使用 `"never"` 选项时，此规则下的**错误**代码示例：
 
 ::: incorrect
 
@@ -167,7 +177,7 @@ foo >
 
 :::
 
-Examples of **correct** code for this rule with the `"never"` option:
+使用 `"never"` 选项时，此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -185,10 +195,15 @@ foo > bar ? (
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You can safely disable this rule if you do not have any strict conventions about whether the operands of a ternary expression should be separated by newlines.
+## 何时不应使用
 
-## Compatibility
+如果你对三元表达式的操作数是否应该换行没有严格的约定，可以放心地禁用此规则。
 
-* **JSCS**: [requireMultiLineTernary](https://jscs-dev.github.io/rule/requireMultiLineTernary)
+<a id="compatibility"></a>
+
+## 兼容性
+
+* **JSCS**：[requireMultiLineTernary](https://jscs-dev.github.io/rule/requireMultiLineTernary)
+
