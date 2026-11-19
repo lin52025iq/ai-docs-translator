@@ -1,29 +1,31 @@
 ---
-title: Formatters Reference
+title: 格式化器参考
 eleventyNavigation:
     key: formatters
     parent: use eslint
-    title: Formatters Reference
+    title: 格式化器参考
     order: 7
 edit_link: https://github.com/eslint/eslint/edit/main/templates/formatter-examples.md.ejs
 ---
 
-ESLint comes with several built-in formatters to control the appearance of the linting results, and supports third-party formatters as well.
+ESLint 内置了多种格式化器，用于控制代码检查结果的显示方式，同时也支持第三方格式化器。
 
-You can specify a formatter using the [`--format` or `-f`](../command-line-interface#-f---format) flag in the CLI. For example, `--format json` uses the `json` formatter.
+你可以在 CLI 中使用 [`--format` 或 `-f`](../command-line-interface#-f---format) 标志指定格式化器。例如，`--format json` 会使用 `json` 格式化器。
 
-The built-in formatter options are:
+内置格式化器选项包括：
 
 * [html](#html)
 * [json-with-metadata](#json-with-metadata)
 * [json](#json)
 * [stylish](#stylish)
 
-## Example Source
+<a id="example-source"></a>
 
-Examples of each formatter were created from linting `fullOfProblems.js` using the `eslint.config.js` configuration shown below.
+## 示例源码
 
-`fullOfProblems.js`:
+以下示例均通过使用下方所示的 `eslint.config.js` 配置对 `fullOfProblems.js` 进行代码检查生成。
+
+`fullOfProblems.js`：
 
 ```js
 function addOne(i) {
@@ -35,7 +37,7 @@ function addOne(i) {
 };
 ```
 
-`eslint.config.js`:
+`eslint.config.js`：
 
 ```js
 import { defineConfig } from "eslint/config";
@@ -59,29 +61,31 @@ export default defineConfig([
 ]);
 ```
 
-Tests the formatters with the CLI:
+使用 CLI 测试这些格式化器：
 
 ```shell
 npx eslint --format <Add formatter here> fullOfProblems.js
 ```
 
-## Built-In Formatter Options
+<a id="built-in-formatter-options"></a>
+
+## 内置格式化器选项
 
 ### html
 
-Outputs results to HTML. The `html` formatter is useful for visual presentation in the browser.
+将结果输出为 HTML。`html` 格式化器适合在浏览器中进行可视化展示。
 
-Example output:
+示例输出：
 
 <iframe src="html-formatter-example.html" width="100%" height="460px"></iframe>
 
 ### json-with-metadata
 
-Outputs JSON-serialized results. The `json-with-metadata` provides the same linting results as the [`json`](#json) formatter with additional metadata about the rules applied. The linting results are included in the `results` property and the rules metadata is included in the `metadata` property.
+将结果输出为 JSON 序列化格式。`json-with-metadata` 提供与 [`json`](#json) 格式化器相同的代码检查结果，并附带有关所应用规则的元数据。代码检查结果包含在 `results` 属性中，规则元数据则包含在 `metadata` 属性中。
 
-Alternatively, you can use the [ESLint Node.js API](../../integrate/nodejs-api) to programmatically use ESLint.
+或者，你也可以使用 [ESLint Node.js API](../../integrate/nodejs-api) 以编程方式使用 ESLint。
 
-Example output (formatted for easier reading):
+示例输出（为便于阅读进行了格式化）：
 
 ```json
 {
@@ -984,11 +988,11 @@ Example output (formatted for easier reading):
 
 ### json
 
-Outputs JSON-serialized results. The `json` formatter is useful when you want to programmatically work with the CLI&#39;s linting results.
+将结果输出为 JSON 序列化格式。当你想以编程方式处理 CLI 的代码检查结果时，`json` 格式化器会很有用。
 
-Alternatively, you can use the [ESLint Node.js API](../../integrate/nodejs-api) to programmatically use ESLint.
+或者，你也可以使用 [ESLint Node.js API](../../integrate/nodejs-api) 以编程方式使用 ESLint。
 
-Example output (formatted for easier reading):
+示例输出（为便于阅读进行了格式化）：
 
 ```json
 [
@@ -1254,9 +1258,9 @@ Example output (formatted for easier reading):
 
 ### stylish
 
-Human-readable output format. This is the default formatter.
+面向用户阅读的输出格式，也是默认格式化器。
 
-Example output:
+示例输出：
 
 ```text
 
