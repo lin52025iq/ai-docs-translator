@@ -8,10 +8,10 @@ further_reading:
 ---
 
 :::important
-This rule was removed in ESLint v9.0.0 and replaced by the [`eslint-plugin-jsdoc`](https://github.com/gajus/eslint-plugin-jsdoc) equivalent.
+此规则已在 ESLint v9.0.0 中移除，并由 [`eslint-plugin-jsdoc`](https://github.com/gajus/eslint-plugin-jsdoc) 中的对应规则取代。
 :::
 
-[JSDoc](https://jsdoc.app) generates application programming interface (API) documentation from specially-formatted comments in JavaScript code. For example, this is a JSDoc comment for a function:
+[JSDoc](https://jsdoc.app) 可以从 JavaScript 代码中经过特殊格式编写的注释生成应用程序编程接口 (API) 文档。例如，以下是函数的 JSDoc 注释：
 
 ```js
 /**
@@ -25,26 +25,28 @@ function add(num1, num2) {
 }
 ```
 
-If comments are invalid because of typing mistakes, then documentation will be incomplete.
+如果注释因拼写错误而无效，生成的文档就会不完整。
 
-If comments are inconsistent because they are not updated when function definitions are modified, then readers might become confused.
+如果修改了函数定义，却没有更新注释，注释就会不一致，读者可能因此感到困惑。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces valid and consistent JSDoc comments. It reports any of the following problems:
+## 规则详情
 
-* missing parameter tag: `@arg`, `@argument`, or `@param`
-* inconsistent order of parameter names in a comment compared to the function or method
-* missing return tag: `@return` or `@returns`
-* missing parameter or return type
-* missing parameter or return description
-* syntax error
+此规则要求 JSDoc 注释有效且一致。它会报告以下问题：
 
-This rule does not report missing JSDoc comments for classes, functions, or methods.
+* 缺少参数标签：`@arg`、`@argument` 或 `@param`
+* 注释中的参数名称顺序与函数或方法中的顺序不一致
+* 缺少返回值标签：`@return` 或 `@returns`
+* 缺少参数或返回值类型
+* 缺少参数或返回值说明
+* 语法错误
 
-**Note:** This rule does not support all of the Google Closure documentation tool's use cases. As such, some code such as `(/**number*/ n => n * 2);` will be flagged as missing appropriate function JSDoc comments even though `/**number*/` is intended to be a type hint and not a documentation block for the function. We don't recommend using this rule if you use type hints in this way.
+此规则不会报告类、函数或方法缺少 JSDoc 注释的问题。
 
-Examples of **incorrect** code for this rule:
+**注意：**此规则不支持 Google Closure 文档工具的所有使用场景。因此，即使 `/**number*/` 的用途是类型提示，而非函数的文档块，类似 `(/**number*/ n => n * 2);` 的代码仍会被标记为缺少适当的函数 JSDoc 注释。如果你以这种方式使用类型提示，我们不建议使用此规则。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -88,7 +90,7 @@ function sum(num1, num2) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -168,24 +170,26 @@ class WonderfulWidget extends Widget {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option:
+## 选项
 
-* `"prefer"` enforces consistent documentation tags specified by an object whose properties mean instead of key use value (for example, `"return": "returns"` means instead of `@return` use `@returns`)
-* `"preferType"` enforces consistent type strings specified by an object whose properties mean instead of key use value (for example, `"object": "Object"` means instead of `object` use `Object`)
-* `"requireReturn"` requires a return tag:
-    * `true` (default) **even if** the function or method does not have a `return` statement (this option value does not apply to constructors)
-    * `false` **if and only if** the function or method has a `return` statement or returns a value e.g. `async` function (this option value does apply to constructors)
-* `"requireReturnType": false` allows missing type in return tags
-* `"matchDescription"` specifies (as a string) a regular expression to match the description in each JSDoc comment (for example, `".+"` requires a description; this option does not apply to descriptions in parameter or return tags)
-* `"requireParamDescription": false` allows missing description in parameter tags
-* `"requireReturnDescription": false` allows missing description in return tags
-* `"requireParamType": false` allows missing type in parameter tags
+此规则有一个对象选项：
+
+* `"prefer"` 强制使用一致的文档标签；选项对象的属性表示应使用的值，而不是键（例如，`"return": "returns"` 表示应使用 `@returns` 而不是 `@return`）
+* `"preferType"` 强制使用选项对象指定的一致类型字符串；属性表示应使用的值，而不是键（例如，`"object": "Object"` 表示应使用 `Object` 而不是 `object`）
+* `"requireReturn"` 要求使用返回值标签：
+    * `true`（默认值）：**即使**函数或方法没有 `return` 语句也要求使用（此选项值不适用于构造函数）
+    * `false`：**当且仅当**函数或方法有 `return` 语句或返回值（例如 `async` 函数）时才要求使用（此选项值适用于构造函数）
+* `"requireReturnType": false` 允许返回值标签缺少类型
+* `"matchDescription"` 指定一个正则表达式（字符串），用于匹配每条 JSDoc 注释中的说明（例如，`".+"` 要求提供说明；此选项不适用于参数或返回值标签中的说明）
+* `"requireParamDescription": false` 允许参数标签缺少说明
+* `"requireReturnDescription": false` 允许返回值标签缺少说明
+* `"requireParamType": false` 允许参数标签缺少类型
 
 ### prefer
 
-Examples of additional **incorrect** code for this rule with sample `"prefer": { "arg": "param", "argument": "param", "class": "constructor", "return": "returns", "virtual": "abstract" }` options:
+使用示例选项 `"prefer": { "arg": "param", "argument": "param", "class": "constructor", "return": "returns", "virtual": "abstract" }` 时，此规则的其他**错误**代码示例：
 
 ::: incorrect
 
@@ -230,7 +234,7 @@ class Widget {
 
 ### preferType
 
-Examples of additional **incorrect** code for this rule with sample `"preferType": { "Boolean": "boolean", "Number": "number", "object": "Object", "String": "string" }` options:
+使用示例选项 `"preferType": { "Boolean": "boolean", "Number": "number", "object": "Object", "String": "string" }` 时，此规则的其他**错误**代码示例：
 
 ::: incorrect
 
@@ -273,7 +277,7 @@ class Widget {
 
 ### requireReturn
 
-Examples of additional **incorrect** code for this rule with the `"requireReturn": false` option:
+使用选项 `"requireReturn": false` 时，此规则的其他**错误**代码示例：
 
 ::: incorrect
 
@@ -304,7 +308,7 @@ class Widget {
 
 :::
 
-Example of additional **correct** code for this rule with the `"requireReturn": false` option:
+使用选项 `"requireReturn": false` 时，此规则的其他**正确**代码示例：
 
 ::: correct
 
@@ -323,7 +327,7 @@ function greet(name) {
 
 ### requireReturnType
 
-Example of additional **correct** code for this rule with the `"requireReturnType": false` option:
+使用选项 `"requireReturnType": false` 时，此规则的其他**正确**代码示例：
 
 ::: correct
 
@@ -345,7 +349,7 @@ function add(num1, num2) {
 
 ### requireParamType
 
-Example of additional **correct** code for this rule with the `"requireParamType": false` option:
+使用选项 `"requireParamType": false` 时，此规则的其他**正确**代码示例：
 
 ::: correct
 
@@ -367,7 +371,7 @@ function add(num1, num2) {
 
 ### matchDescription
 
-Example of additional **incorrect** code for this rule with a sample `"matchDescription": ".+"` option:
+使用示例选项 `"matchDescription": ".+"` 时，此规则的其他**错误**代码示例：
 
 ::: incorrect
 
@@ -388,7 +392,7 @@ function greet(name) {
 
 ### requireParamDescription
 
-Example of additional **correct** code for this rule with the `"requireParamDescription": false` option:
+使用选项 `"requireParamDescription": false` 时，此规则的其他**正确**代码示例：
 
 ::: correct
 
@@ -410,7 +414,7 @@ function add(num1, num2) {
 
 ### requireReturnDescription
 
-Example of additional **correct** code for this rule with the `"requireReturnDescription": false` option:
+使用选项 `"requireReturnDescription": false` 时，此规则的其他**正确**代码示例：
 
 ::: correct
 
@@ -430,6 +434,8 @@ function add(num1, num2) {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you aren't using JSDoc, then you can safely turn this rule off.
+## 何时不应使用
+
+如果你不使用 JSDoc，可以放心关闭此规则。
