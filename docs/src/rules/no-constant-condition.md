@@ -7,7 +7,7 @@ related_rules:
 
 
 
-A constant expression (for example, a literal) as a test condition might be a typo or development trigger for a specific behavior. For example, the following code looks as if it is not ready for production.
+将常量表达式（例如字面量）用作测试条件，可能是笔误，也可能是为了触发特定行为而进行的开发操作。例如，下面的代码看起来还没有准备好用于生产环境。
 
 ```js
 if (false) {
@@ -15,14 +15,16 @@ if (false) {
 }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows constant expressions in the test condition of:
+## 规则详情
 
-* `if`, `for`, `while`, or `do...while` statement
-* `?:` ternary expression
+此规则禁止在以下结构的测试条件中使用常量表达式：
 
-Examples of **incorrect** code for this rule:
+* `if`、`for`、`while` 或 `do...while` 语句
+* `?:` 三元表达式
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -82,7 +84,7 @@ if(input === "hello" || "bye"){
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -114,19 +116,23 @@ if(input === "hello" || input === "bye"){
 
 :::
 
-## Options
+<a id="options"></a>
+
+## 选项
+
+<a id="checkloops"></a>
 
 ### checkLoops
 
-This is a string option having following values:
+此字符串选项支持以下取值：
 
-* `"all"` - Disallow constant expressions in all loops.
-* `"allExceptWhileTrue"` (default) - Disallow constant expressions in all loops except `while` loops with expression `true`.
-* `"none"` - Allow constant expressions in loops.
+* `"all"` - 禁止在所有循环中使用常量表达式。
+* `"allExceptWhileTrue"`（默认值）- 除表达式为 `true` 的 `while` 循环外，禁止在所有循环中使用常量表达式。
+* `"none"` - 允许在循环中使用常量表达式。
 
-Or instead you can set the `checkLoops` value to booleans where `true` is same as `"all"` and `false` is same as `"none"`.
+或者，你也可以将 `checkLoops` 的值设为布尔值，其中 `true` 等同于 `"all"`，`false` 等同于 `"none"`。
 
-Examples of **incorrect** code for when `checkLoops` is `"all"` or `true`:
+当 `checkLoops` 为 `"all"` 或 `true` 时的错误代码示例：
 
 ::: incorrect
 
@@ -160,7 +166,7 @@ do {
 
 :::
 
-Examples of **correct** code for when `checkLoops` is `"all"` or `true`:
+当 `checkLoops` 为 `"all"` 或 `true` 时的正确代码示例：
 
 ::: correct
 
@@ -186,7 +192,7 @@ for (let x = 0; x <= 10; x++) {
 
 :::
 
-Example of **correct** code for when `checkLoops` is `"allExceptWhileTrue"`:
+当 `checkLoops` 为 `"allExceptWhileTrue"` 时的正确代码示例：
 
 ::: correct
 
@@ -200,7 +206,7 @@ while (true) {
 
 :::
 
-Examples of **correct** code for when `checkLoops` is `"none"` or `false`:
+当 `checkLoops` 为 `"none"` 或 `false` 时的正确代码示例：
 
 ::: correct
 
