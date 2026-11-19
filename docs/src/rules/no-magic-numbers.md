@@ -4,20 +4,21 @@ rule_type: suggestion
 ---
 
 
-'Magic numbers' are numbers that occur multiple times in code without an explicit meaning.
-They should preferably be replaced by named constants.
+“魔法数字”是指在代码中多次出现、却没有明确含义的数字。
+最好用具名常量替换它们。
 
 ```js
 const now = Date.now(),
     inOneHour = now + (60 * 60 * 1000);
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-The `no-magic-numbers` rule aims to make code more readable and refactoring easier by ensuring that special numbers
-are declared as constants to make their meaning explicit.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+`no-magic-numbers` 规则旨在确保将特殊数字声明为常量，以明确其含义，从而提高代码的可读性并简化重构。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -54,7 +55,7 @@ SECONDS = 60;
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -69,17 +70,21 @@ const dutyFreePrice = 100,
 
 :::
 
-## Options
+<a id="options"></a>
 
-### ignore
+## 选项
 
-An array of numbers to ignore. It's set to `[]` by default.
-If provided, it must be an `Array`.
+<a id="ignore"></a>
 
-The array can contain values of `number` and `string` types.
-If it's a string, the text must be parsed as `bigint` literal (e.g., `"100n"`).
+### 忽略指定数值
 
-Examples of **correct** code for the sample `{ "ignore": [1] }` option:
+要忽略的数字数组。默认值为 `[]`。
+如果提供此选项，其值必须是 `Array`。
+
+数组可以包含 `number` 和 `string` 类型的值。
+如果值为字符串，则文本必须能解析为 `bigint` 字面量（例如，`"100n"`）。
+
+对于示例选项 `{ "ignore": [1] }`，以下代码正确：
 
 ::: correct
 
@@ -92,7 +97,7 @@ const dataLast = data.length && data[data.length - 1];
 
 :::
 
-Examples of **correct** code for the sample `{ "ignore": ["1n"] }` option:
+对于示例选项 `{ "ignore": ["1n"] }`，以下代码正确：
 
 ::: correct
 
@@ -104,17 +109,19 @@ foo(1n);
 
 :::
 
-### ignoreArrayIndexes
+<a id="ignorearrayindexes"></a>
 
-A boolean to specify if numbers used in the context of array indexes (e.g., `data[2]`) are considered okay. `false` by default.
+### 忽略数组索引
 
-This option allows only valid array indexes: numbers that will be coerced to one of `"0"`, `"1"`, `"2"` ... `"4294967294"`.
+布尔值，用于指定在数组索引上下文中使用的数字（例如 `data[2]`）是否可以接受。默认值为 `false`。
 
-Arrays are objects, so they can have property names such as `"-1"` or `"2.5"`. However, those are just "normal" object properties that don't represent array elements. They don't influence the array's `length`, and they are ignored by array methods like `.map` or `.forEach`.
+此选项仅允许有效的数组索引：即会被强制转换为 `"0"`、`"1"`、`"2"`……`"4294967294"` 之一的数字。
 
-Additionally, since the maximum [array length](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/length) is 2<sup>32</sup> - 1, all values above 2<sup>32</sup> - 2 also represent just normal property names and are thus not considered to be array indexes.
+数组是对象，因此可以具有诸如 `"-1"` 或 `"2.5"` 这样的属性名。不过，这些只是普通的对象属性，并不代表数组元素。它们不会影响数组的 `length`，也会被 `.map` 或 `.forEach` 等数组方法忽略。
 
-Examples of **correct** code for the `{ "ignoreArrayIndexes": true }` option:
+此外，由于最大[数组长度](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/length)为 2<sup>32</sup> - 1，所有大于 2<sup>32</sup> - 2 的值也只代表普通属性名，因此不视为数组索引。
+
+对于选项 `{ "ignoreArrayIndexes": true }`，以下代码正确：
 
 ::: correct
 
@@ -141,7 +148,7 @@ a = data[4294967294]; // max array index
 
 :::
 
-Examples of **incorrect** code for the `{ "ignoreArrayIndexes": true }` option:
+对于选项 `{ "ignoreArrayIndexes": true }`，以下代码错误：
 
 ::: incorrect
 
@@ -165,11 +172,13 @@ a = data[1e500]; // same as data["Infinity"]
 
 :::
 
-### ignoreDefaultValues
+<a id="ignoredefaultvalues"></a>
 
-A boolean to specify if numbers used in default value assignments are considered okay. `false` by default.
+### 忽略默认值
 
-Examples of **correct** code for the `{ "ignoreDefaultValues": true }` option:
+布尔值，用于指定默认值赋值中使用的数字是否可以接受。默认值为 `false`。
+
+对于选项 `{ "ignoreDefaultValues": true }`，以下代码正确：
 
 ::: correct
 
@@ -194,11 +203,13 @@ let head;
 
 :::
 
-### ignoreClassFieldInitialValues
+<a id="ignoreclassfieldinitialvalues"></a>
 
-A boolean to specify if numbers used as initial values of class fields are considered okay. `false` by default.
+### 忽略类字段初始值
 
-Examples of **correct** code for the `{ "ignoreClassFieldInitialValues": true }` option:
+布尔值，用于指定用作类字段初始值的数字是否可以接受。默认值为 `false`。
+
+对于选项 `{ "ignoreClassFieldInitialValues": true }`，以下代码正确：
 
 ::: correct
 
@@ -216,7 +227,7 @@ class C {
 
 :::
 
-Examples of **incorrect** code for the `{ "ignoreClassFieldInitialValues": true }` option:
+对于选项 `{ "ignoreClassFieldInitialValues": true }`，以下代码错误：
 
 ::: incorrect
 
@@ -234,11 +245,13 @@ class D {
 
 :::
 
-### enforceConst
+<a id="enforceconst"></a>
 
-A boolean to specify if we should check for the const keyword in variable declaration of numbers. `false` by default.
+### 强制使用 const
 
-Examples of **incorrect** code for the `{ "enforceConst": true }` option:
+布尔值，用于指定是否检查数字变量声明中是否使用了 const 关键字。默认值为 `false`。
+
+对于选项 `{ "enforceConst": true }`，以下代码错误：
 
 ::: incorrect
 
@@ -253,11 +266,13 @@ let dutyFreePrice = 100,
 
 :::
 
-### detectObjects
+<a id="detectobjects"></a>
 
-A boolean to specify if we should detect numbers when setting object properties for example. `false` by default.
+### 检测对象
 
-Examples of **incorrect** code for the `{ "detectObjects": true }` option:
+布尔值，用于指定是否检测例如设置对象属性时使用的数字。默认值为 `false`。
+
+对于选项 `{ "detectObjects": true }`，以下代码错误：
 
 ::: incorrect
 
@@ -274,7 +289,7 @@ const dutyFreePrice = 100,
 
 :::
 
-Examples of **correct** code for the `{ "detectObjects": true }` option:
+对于选项 `{ "detectObjects": true }`，以下代码正确：
 
 ::: correct
 
@@ -293,11 +308,13 @@ const dutyFreePrice = 100,
 
 :::
 
-### ignoreEnums (TypeScript only)
+<a id="ignoreenums-typescript-only"></a>
 
-Whether enums used in TypeScript are considered okay. `false` by default.
+### 忽略枚举（仅限 TypeScript）
 
-Examples of **incorrect** code for the `{ "ignoreEnums": false }` option:
+指定是否可以接受 TypeScript 中使用的枚举。默认值为 `false`。
+
+对于选项 `{ "ignoreEnums": false }`，以下代码错误：
 
 ::: incorrect
 
@@ -311,7 +328,7 @@ enum foo {
 
 :::
 
-Examples of **correct** code for the `{ "ignoreEnums": true }` option:
+对于选项 `{ "ignoreEnums": true }`，以下代码正确：
 
 ::: correct
 
@@ -325,11 +342,13 @@ enum foo {
 
 :::
 
-### ignoreNumericLiteralTypes (TypeScript only)
+<a id="ignorenumericliteraltypes-typescript-only"></a>
 
-Whether numbers used in TypeScript numeric literal types are considered okay. `false` by default.
+### 忽略数字字面量类型（仅限 TypeScript）
 
-Examples of **incorrect** code for the `{ "ignoreNumericLiteralTypes": false }` option:
+指定是否可以接受 TypeScript 数字字面量类型中使用的数字。默认值为 `false`。
+
+对于选项 `{ "ignoreNumericLiteralTypes": false }`，以下代码错误：
 
 ::: incorrect
 
@@ -341,7 +360,7 @@ type Foo = 1 | 2 | 3;
 
 :::
 
-Examples of **correct** code for the `{ "ignoreNumericLiteralTypes": true }` option:
+对于选项 `{ "ignoreNumericLiteralTypes": true }`，以下代码正确：
 
 ::: correct
 
@@ -353,11 +372,13 @@ type Foo = 1 | 2 | 3;
 
 :::
 
-### ignoreReadonlyClassProperties (TypeScript only)
+<a id="ignorereadonlyclassproperties-typescript-only"></a>
 
-Whether numbers used in TypeScript readonly class properties are considered okay. `false` by default.
+### 忽略只读类属性（仅限 TypeScript）
 
-Examples of **incorrect** code for the `{ "ignoreReadonlyClassProperties": false }` option:
+指定是否可以接受 TypeScript 只读类属性中使用的数字。默认值为 `false`。
+
+对于选项 `{ "ignoreReadonlyClassProperties": false }`，以下代码错误：
 
 ::: incorrect
 
@@ -374,7 +395,7 @@ class Foo {
 
 :::
 
-Examples of **correct** code for the `{ "ignoreReadonlyClassProperties": true }` option:
+对于选项 `{ "ignoreReadonlyClassProperties": true }`，以下代码正确：
 
 ::: correct
 
@@ -391,11 +412,13 @@ class Foo {
 
 :::
 
-### ignoreTypeIndexes (TypeScript only)
+<a id="ignoretypeindexes-typescript-only"></a>
 
-Whether numbers used to index types are okay. `false` by default.
+### 忽略类型索引（仅限 TypeScript）
 
-Examples of **incorrect** code for the `{ "ignoreTypeIndexes": false }` option:
+指定是否可以接受用于索引类型的数字。默认值为 `false`。
+
+对于选项 `{ "ignoreTypeIndexes": false }`，以下代码错误：
 
 ::: incorrect
 
@@ -408,7 +431,7 @@ type Baz = Parameters<Foo>[2];
 
 :::
 
-Examples of **correct** code for the `{ "ignoreTypeIndexes": true }` option:
+对于选项 `{ "ignoreTypeIndexes": true }`，以下代码正确：
 
 ::: correct
 
