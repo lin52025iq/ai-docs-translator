@@ -7,13 +7,15 @@ further_reading:
 ---
 
 
-The `block-scoped-var` rule generates warnings when variables are used outside of the block in which they were defined. This emulates C-style block scope.
+`block-scoped-var` 规则会在变量被用于其定义所在代码块之外时发出警告。此规则模拟 C 风格的块级作用域。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to reduce the usage of variables outside of their binding context and emulate traditional block scope from other languages. This is to help newcomers to the language avoid difficult bugs with variable hoisting.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在减少变量在其绑定上下文之外的使用，并模拟其他语言中的传统块级作用域。这有助于语言初学者避免因变量提升而导致的棘手错误。
+
+此规则的错误代码示例：
 
 :::incorrect
 
@@ -63,7 +65,7 @@ class C {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 :::correct
 
@@ -120,6 +122,8 @@ class C {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
+
+此规则没有选项。
