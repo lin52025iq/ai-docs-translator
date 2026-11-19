@@ -6,7 +6,7 @@ related_rules:
 - object-curly-spacing
 - computed-property-spacing
 ---
-Some style guides require or disallow spaces inside of parentheses:
+有些代码风格指南要求或禁止在括号内添加空格：
 
 ```js
 foo( 'bar' );
@@ -16,20 +16,24 @@ foo('bar');
 var x = (1 + 2) * 3;
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule will enforce consistent spacing directly inside of parentheses, by disallowing or requiring one or more spaces to the right of `(` and to the left of `)`.
+## 规则详情
 
-As long as you do not explicitly disallow empty parentheses using the `"empty"` exception , `()` will be allowed.
+此规则通过禁止或要求在 `(` 右侧和 `)` 左侧添加一个或多个空格，来确保括号内侧的空格保持一致。
 
-## Options
+只要没有使用 `"empty"` 异常明确禁止空括号，就允许使用 `()`。
 
-There are two options for this rule:
+<a id="options"></a>
 
-* `"never"` (default) enforces zero spaces inside of parentheses
-* `"always"` enforces a space inside of parentheses
+## 选项
 
-Depending on your coding conventions, you can choose either option by specifying it in your configuration:
+此规则有两个选项：
+
+* `"never"`（默认）要求括号内不含空格
+* `"always"` 要求括号内有空格
+
+根据你的代码约定，可以在配置中指定其中一个选项：
 
 ```json
 "space-in-parens": ["error", "always"]
@@ -37,7 +41,7 @@ Depending on your coding conventions, you can choose either option by specifying
 
 ### "never"
 
-Examples of **incorrect** code for this rule with the default `"never"` option:
+以下示例中，使用此规则的默认选项 `"never"` 时，代码**不正确**：
 
 ::: incorrect
 
@@ -58,7 +62,7 @@ var foo = ( 1 + 2 ) * 3;
 
 :::
 
-Examples of **correct** code for this rule with the default `"never"` option:
+以下示例中，使用此规则的默认选项 `"never"` 时，代码**正确**：
 
 ::: correct
 
@@ -79,7 +83,7 @@ var foo = (1 + 2) * 3;
 
 ### "always"
 
-Examples of **incorrect** code for this rule with the `"always"` option:
+以下示例中，使用选项 `"always"` 时，代码**不正确**：
 
 ::: incorrect
 
@@ -98,7 +102,7 @@ var foo = (1 + 2) * 3;
 
 :::
 
-Examples of **correct** code for this rule with the `"always"` option:
+以下示例中，使用选项 `"always"` 时，代码**正确**：
 
 ::: correct
 
@@ -118,24 +122,28 @@ var foo = ( 1 + 2 ) * 3;
 
 :::
 
-### Exceptions
+<a id="exceptions"></a>
 
-An object literal may be used as a third array item to specify exceptions, with the key `"exceptions"` and an array as the value. These exceptions work in the context of the first option. That is, if `"always"` is set to enforce spacing, then any "exception" will *disallow* spacing. Conversely, if `"never"` is set to disallow spacing, then any "exception" will *enforce* spacing.
+### 异常
 
-Note that this rule only enforces spacing within parentheses; it does not check spacing within curly or square brackets, but will enforce or disallow spacing of those brackets if and only if they are adjacent to an opening or closing parenthesis.
+可以将对象字面量用作第三个数组项，以指定异常；其中键为 `"exceptions"`，值为数组。这些异常的效果取决于第一个选项。也就是说，如果设置 `"always"` 来要求添加空格，那么任何“异常”都会**禁止**添加空格。反之，如果设置 `"never"` 来禁止添加空格，那么任何“异常”都会**要求**添加空格。
 
-The following exceptions are available: `["{}", "[]", "()", "empty"]`.
+请注意，此规则只会检查圆括号内的空格；不会检查花括号或方括号内的空格，但当这些括号与左圆括号或右圆括号相邻时，会要求或禁止在它们与圆括号之间添加空格。
 
-### Empty Exception
+可用的异常如下：`["{}", "[]", "()", "empty"]`。
 
-Empty parens exception and behavior:
+<a id="empty-exception"></a>
 
-* `always` allows for both `()` and `( )`
-* `never` (default) requires `()`
-* `always` excepting `empty` requires `()`
-* `never` excepting `empty` requires `( )` (empty parens without a space is here forbidden)
+### 空内容异常
 
-Examples of **incorrect** code for this rule with the `"never", { "exceptions": ["{}"] }` option:
+空括号异常及其行为：
+
+* `always` 允许使用 `()` 和 `( )`
+* `never`（默认）要求使用 `()`
+* `always` 配合 `empty` 异常时要求使用 `()`
+* `never` 配合 `empty` 异常时要求使用 `( )`（此时禁止使用不带空格的空括号）
+
+以下示例中，使用选项 `"never", { "exceptions": ["{}"] }` 时，代码**不正确**：
 
 ::: incorrect
 
@@ -148,7 +156,7 @@ foo(1, {bar: 'baz'});
 
 :::
 
-Examples of **correct** code for this rule with the `"never", { "exceptions": ["{}"] }` option:
+以下示例中，使用选项 `"never", { "exceptions": ["{}"] }` 时，代码**正确**：
 
 ::: correct
 
@@ -161,7 +169,7 @@ foo(1, {bar: 'baz'} );
 
 :::
 
-Examples of **incorrect** code for this rule with the `"always", { "exceptions": ["{}"] }` option:
+以下示例中，使用选项 `"always", { "exceptions": ["{}"] }` 时，代码**不正确**：
 
 ::: incorrect
 
@@ -174,7 +182,7 @@ foo( 1, {bar: 'baz'} );
 
 :::
 
-Examples of **correct** code for this rule with the `"always", { "exceptions": ["{}"] }` option:
+以下示例中，使用选项 `"always", { "exceptions": ["{}"] }` 时，代码**正确**：
 
 ::: correct
 
@@ -187,7 +195,7 @@ foo( 1, {bar: 'baz'});
 
 :::
 
-Examples of **incorrect** code for this rule with the `"never", { "exceptions": ["[]"] }` option:
+以下示例中，使用选项 `"never", { "exceptions": ["[]"] }` 时，代码**不正确**：
 
 ::: incorrect
 
@@ -200,7 +208,7 @@ foo([bar, baz], 1);
 
 :::
 
-Examples of **correct** code for this rule with the `"never", { "exceptions": ["[]"] }` option:
+以下示例中，使用选项 `"never", { "exceptions": ["[]"] }` 时，代码**正确**：
 
 ::: correct
 
@@ -213,7 +221,7 @@ foo( [bar, baz], 1);
 
 :::
 
-Examples of **incorrect** code for this rule with the `"always", { "exceptions": ["[]"] }` option:
+以下示例中，使用选项 `"always", { "exceptions": ["[]"] }` 时，代码**不正确**：
 
 ::: incorrect
 
@@ -226,7 +234,7 @@ foo( [bar, baz], 1 );
 
 :::
 
-Examples of **correct** code for this rule with the `"always", { "exceptions": ["[]"] }` option:
+以下示例中，使用选项 `"always", { "exceptions": ["[]"] }` 时，代码**正确**：
 
 ::: correct
 
@@ -239,7 +247,7 @@ foo([bar, baz], 1 );
 
 :::
 
-Examples of **incorrect** code for this rule with the `"never", { "exceptions": ["()"] }]` option:
+以下示例中，使用选项 `"never", { "exceptions": ["()"] }]` 时，代码**不正确**：
 
 ::: incorrect
 
@@ -253,7 +261,7 @@ foo(bar());
 
 :::
 
-Examples of **correct** code for this rule with the `"never", { "exceptions": ["()"] }]` option:
+以下示例中，使用选项 `"never", { "exceptions": ["()"] }]` 时，代码**正确**：
 
 ::: correct
 
@@ -267,7 +275,7 @@ foo(bar() );
 
 :::
 
-Examples of **incorrect** code for this rule with the `"always", { "exceptions": ["()"] }]` option:
+以下示例中，使用选项 `"always", { "exceptions": ["()"] }]` 时，代码**不正确**：
 
 ::: incorrect
 
@@ -280,7 +288,7 @@ foo( ( 1 + 2 ), 1 );
 
 :::
 
-Examples of **correct** code for this rule with the `"always", { "exceptions": ["()"] }]` option:
+以下示例中，使用选项 `"always", { "exceptions": ["()"] }]` 时，代码**正确**：
 
 ::: correct
 
@@ -293,9 +301,9 @@ foo(( 1 + 2 ), 1 );
 
 :::
 
-The `"empty"` exception concerns empty parentheses, and works the same way as the other exceptions, inverting the first option.
+`"empty"` 异常针对空括号，其作用方式与其他异常相同，即反转第一个选项的行为。
 
-Example of **incorrect** code for this rule with the `"never", { "exceptions": ["empty"] }]` option:
+以下示例中，使用选项 `"never", { "exceptions": ["empty"] }]` 时，代码**不正确**：
 
 ::: incorrect
 
@@ -307,7 +315,7 @@ foo();
 
 :::
 
-Example of **correct** code for this rule with the `"never", { "exceptions": ["empty"] }]` option:
+以下示例中，使用选项 `"never", { "exceptions": ["empty"] }]` 时，代码**正确**：
 
 ::: correct
 
@@ -319,7 +327,7 @@ foo( );
 
 :::
 
-Example of **incorrect** code for this rule with the `"always", { "exceptions": ["empty"] }]` option:
+以下示例中，使用选项 `"always", { "exceptions": ["empty"] }]` 时，代码**不正确**：
 
 ::: incorrect
 
@@ -331,7 +339,7 @@ foo( );
 
 :::
 
-Example of **correct** code for this rule with the `"always", { "exceptions": ["empty"] }]` option:
+以下示例中，使用选项 `"always", { "exceptions": ["empty"] }]` 时，代码**正确**：
 
 ::: correct
 
@@ -343,9 +351,9 @@ foo();
 
 :::
 
-You can include multiple entries in the `"exceptions"` array.
+你可以在 `"exceptions"` 数组中包含多个条目。
 
-Examples of **incorrect** code for this rule with the `"always", { "exceptions": ["{}", "[]"] }]` option:
+以下示例中，使用选项 `"always", { "exceptions": ["{}", "[]"] }]` 时，代码**不正确**：
 
 ::: incorrect
 
@@ -359,7 +367,7 @@ foo( {bar: 'baz'}, [1, 2] );
 
 :::
 
-Examples of **correct** code for this rule with the `"always", { "exceptions": ["{}", "[]"] }]` option:
+以下示例中，使用选项 `"always", { "exceptions": ["{}", "[]"] }]` 时，代码**正确**：
 
 ::: correct
 
@@ -373,6 +381,8 @@ foo({bar: 'baz'}, [1, 2]);
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You can turn this rule off if you are not concerned with the consistency of spacing between parentheses.
+## 何时不使用
+
+如果你不关心圆括号内空格的一致性，可以关闭此规则。
