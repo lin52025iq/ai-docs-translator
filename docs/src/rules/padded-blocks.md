@@ -5,8 +5,7 @@ related_rules:
 - lines-between-class-members
 - padding-line-between-statements
 ---
-Some style guides require block statements to start and end with blank lines. The goal is
-to improve readability by visually separating the block content and the surrounding code.
+一些风格指南要求代码块语句以空行开头和结尾。这样做的目的是通过在视觉上分隔代码块内容与周围代码，提高可读性。
 
 ```js
 if (a) {
@@ -16,38 +15,46 @@ if (a) {
 }
 ```
 
-Since it's good to have a consistent code style, you should either always write
-padded blocks or never do it.
+为了保持代码风格一致，你应该始终使用带空行的代码块，或者始终不使用。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces consistent empty line padding within blocks.
+## 规则详情
 
-## Options
+此规则要求代码块内的空行填充保持一致。
 
-This rule has two options, the first one can be a string option or an object option.
-The second one is an object option, it can allow exceptions.
+<a id="options"></a>
 
-### First option
+## 选项
 
-String option:
+此规则有两个选项：第一个选项可以是字符串选项或对象选项，第二个选项是对象选项，可以允许例外情况。
 
-* `"always"` (default) requires empty lines at the beginning and ending of block statements, function bodies, class static blocks, classes, and `switch` statements.
-* `"never"` disallows empty lines at the beginning and ending of block statements, function bodies, class static blocks, classes, and `switch` statements.
+<a id="first-option"></a>
 
-Object option:
+### 第一个选项
 
-* `"blocks"` require or disallow padding within block statements, function bodies, and class static blocks
-* `"classes"` require or disallow padding within classes
-* `"switches"` require or disallow padding within `switch` statements
+字符串选项：
 
-### Second option
+* `"always"`（默认值）要求代码块语句、函数体、类静态代码块、类和 `switch` 语句的开头和结尾有空行。
+* `"never"` 禁止在代码块语句、函数体、类静态代码块、类和 `switch` 语句的开头和结尾出现空行。
 
-* `"allowSingleLineBlocks": true` allows single-line blocks
+对象选项：
 
-### always
+* `"blocks"` 要求或禁止在代码块语句、函数体和类静态代码块中添加空行
+* `"classes"` 要求或禁止在类中添加空行
+* `"switches"` 要求或禁止在 `switch` 语句中添加空行
 
-Examples of **incorrect** code for this rule with the default `"always"` option:
+<a id="second-option"></a>
+
+### 第二个选项
+
+* `"allowSingleLineBlocks": true` 允许单行代码块
+
+<a id="always"></a>
+
+### 始终
+
+使用默认选项 `"always"` 时，此规则下的错误代码示例：
 
 ::: incorrect
 
@@ -85,7 +92,7 @@ class C {
 
 :::
 
-Examples of **correct** code for this rule with the default `"always"` option:
+使用默认选项 `"always"` 时，此规则下的正确代码示例：
 
 ::: correct
 
@@ -125,9 +132,11 @@ class C {
 
 :::
 
-### never
+<a id="never"></a>
 
-Examples of **incorrect** code for this rule with the `"never"` option:
+### 从不
+
+使用选项 `"never"` 时，此规则下的错误代码示例：
 
 ::: incorrect
 
@@ -170,7 +179,7 @@ class C {
 
 :::
 
-Examples of **correct** code for this rule with the `"never"` option:
+使用选项 `"never"` 时，此规则下的正确代码示例：
 
 ::: correct
 
@@ -195,9 +204,11 @@ class C {
 
 :::
 
-### blocks
+<a id="blocks"></a>
 
-Examples of **incorrect** code for this rule with the `{ "blocks": "always" }` option:
+### 代码块
+
+使用选项 `{ "blocks": "always" }` 时，此规则下的错误代码示例：
 
 ::: incorrect
 
@@ -242,7 +253,7 @@ class C {
 
 :::
 
-Examples of **correct** code for this rule with the `{ "blocks": "always" }` option:
+使用选项 `{ "blocks": "always" }` 时，此规则下的正确代码示例：
 
 ::: correct
 
@@ -291,7 +302,7 @@ class D {
 
 :::
 
-Examples of **incorrect** code for this rule with the `{ "blocks": "never" }` option:
+使用选项 `{ "blocks": "never" }` 时，此规则下的错误代码示例：
 
 ::: incorrect
 
@@ -332,7 +343,7 @@ class C {
 
 :::
 
-Examples of **correct** code for this rule with the `{ "blocks": "never" }` option:
+使用选项 `{ "blocks": "never" }` 时，此规则下的正确代码示例：
 
 ::: correct
 
@@ -365,9 +376,11 @@ class D {
 
 :::
 
-### classes
+<a id="classes"></a>
 
-Examples of **incorrect** code for this rule with the `{ "classes": "always" }` option:
+### 类
+
+使用选项 `{ "classes": "always" }` 时，此规则下的错误代码示例：
 
 ::: incorrect
 
@@ -382,7 +395,7 @@ class  A {
 
 :::
 
-Examples of **correct** code for this rule with the `{ "classes": "always" }` option:
+使用选项 `{ "classes": "always" }` 时，此规则下的正确代码示例：
 
 ::: correct
 
@@ -399,7 +412,7 @@ class  A {
 
 :::
 
-Examples of **incorrect** code for this rule with the `{ "classes": "never" }` option:
+使用选项 `{ "classes": "never" }` 时，此规则下的错误代码示例：
 
 ::: incorrect
 
@@ -416,7 +429,7 @@ class  A {
 
 :::
 
-Examples of **correct** code for this rule with the `{ "classes": "never" }` option:
+使用选项 `{ "classes": "never" }` 时，此规则下的正确代码示例：
 
 ::: correct
 
@@ -431,9 +444,11 @@ class  A {
 
 :::
 
-### switches
+<a id="switches"></a>
 
-Examples of **incorrect** code for this rule with the `{ "switches": "always" }` option:
+### switch 语句
+
+使用选项 `{ "switches": "always" }` 时，此规则下的错误代码示例：
 
 ::: incorrect
 
@@ -447,7 +462,7 @@ switch (a) {
 
 :::
 
-Examples of **correct** code for this rule with the `{ "switches": "always" }` option:
+使用选项 `{ "switches": "always" }` 时，此规则下的正确代码示例：
 
 ::: correct
 
@@ -467,7 +482,7 @@ if (a) {
 
 :::
 
-Examples of **incorrect** code for this rule with the `{ "switches": "never" }` option:
+使用选项 `{ "switches": "never" }` 时，此规则下的错误代码示例：
 
 ::: incorrect
 
@@ -483,7 +498,7 @@ switch (a) {
 
 :::
 
-Examples of **correct** code for this rule with the `{ "switches": "never" }` option:
+使用选项 `{ "switches": "never" }` 时，此规则下的正确代码示例：
 
 ::: correct
 
@@ -503,9 +518,11 @@ if (a) {
 
 :::
 
-### always + allowSingleLineBlocks
+<a id="always--allowsinglelineblocks"></a>
 
-Examples of **incorrect** code for this rule with the `"always", {"allowSingleLineBlocks": true}` options:
+### 始终 + allowSingleLineBlocks
+
+使用选项 `"always", {"allowSingleLineBlocks": true}` 时，此规则下的错误代码示例：
 
 ::: incorrect
 
@@ -529,7 +546,7 @@ if (a) {
 
 :::
 
-Examples of **correct** code for this rule with the `"always", {"allowSingleLineBlocks": true}` options:
+使用选项 `"always", {"allowSingleLineBlocks": true}` 时，此规则下的正确代码示例：
 
 ::: correct
 
@@ -547,6 +564,8 @@ if (a) {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You can turn this rule off if you are not concerned with the consistency of padding within blocks.
+## 何时不应使用
+
+如果你不关心代码块内空行填充的一致性，可以关闭此规则。
