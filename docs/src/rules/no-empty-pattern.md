@@ -5,34 +5,36 @@ rule_type: problem
 
 
 
-When using destructuring, it's possible to create a pattern that has no effect. This happens when empty curly braces are used to the right of an embedded object destructuring pattern, such as:
+使用解构时，可能会创建一个不起作用的模式。当嵌入式对象解构模式右侧使用空花括号时，就会发生这种情况，例如：
 
 ```js
 // doesn't create any variables
 const {a: {}} = foo;
 ```
 
-In this code, no new variables are created because `a` is just a location helper while the `{}` is expected to contain the variables to create, such as:
+在这段代码中，不会创建任何新变量，因为 `a` 只是一个定位辅助项，而 `{}` 本应包含要创建的变量，例如：
 
 ```js
 // creates variable b
 const {a: { b }} = foo;
 ```
 
-In many cases, the empty object pattern is a mistake where the author intended to use a default value instead, such as:
+很多时候，空对象模式是一个错误，作者原本想使用默认值，例如：
 
 ```js
 // creates variable a
 const {a = {}} = foo;
 ```
 
-The difference between these two patterns is subtle, especially because the problematic empty pattern looks just like an object literal.
+这两种模式之间的区别很微妙，尤其是因为有问题的空模式看起来就像对象字面量。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to flag any empty patterns in destructured objects and arrays, and as such, will report a problem whenever one is encountered.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在标记解构对象和数组中的所有空模式，因此每当遇到空模式时都会报告问题。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -51,7 +53,7 @@ function qux({a: []}) {}
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -66,17 +68,19 @@ function bar({a = []}) {}
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option for exceptions:
+## 选项
+
+此规则有一个用于设置例外的对象选项：
 
 ### allowObjectPatternsAsParameters
 
-Set to `false` by default. Setting this option to `true` allows empty object patterns as function parameters.
+默认设置为 `false`。将此选项设为 `true` 后，函数参数中允许使用空对象模式。
 
-**Note:** This rule doesn't allow empty array patterns as function parameters.
+**注意：** 此规则不允许函数参数中使用空数组模式。
 
-Examples of **incorrect** code for this rule with the `{"allowObjectPatternsAsParameters": true}` option:
+启用 `{"allowObjectPatternsAsParameters": true}` 选项时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -94,7 +98,7 @@ function baz([]) {}
 
 :::
 
-Examples of **correct** code for this rule with the `{"allowObjectPatternsAsParameters": true}` option:
+启用 `{"allowObjectPatternsAsParameters": true}` 选项时，此规则的**正确**代码示例：
 
 ::: correct
 
