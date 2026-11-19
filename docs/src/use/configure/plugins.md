@@ -1,27 +1,29 @@
 ---
-title: Configure Plugins
+title: 配置插件
 eleventyNavigation:
     key: configure plugins
     parent: configure
-    title: Configure Plugins
+    title: 配置插件
     order: 4
 ---
 
 ::: tip
-This page explains how to configure plugins using the flat config format.
+本页介绍如何使用扁平配置格式配置插件。
 :::
 
-You can extend ESLint with plugins in a variety of different ways. Plugins can include:
+你可以通过多种不同的方式使用插件扩展 ESLint。插件可以包含：
 
-- Custom rules to validate if your code meets a certain expectation, and what to do if it does not meet that expectation.
-- Custom configurations. Please refer to the plugin's documentation for details on how to use these configurations.
-- Custom processors to extract JavaScript code from other kinds of files or preprocess code before linting.
+- 自定义规则，用于验证代码是否符合特定要求，以及在代码不符合要求时采取什么措施。
+- 自定义配置。有关如何使用这些配置的详细信息，请参阅插件文档。
+- 自定义处理器，用于从其他类型的文件中提取 JavaScript 代码，或在代码检查前对代码进行预处理。
 
-## Configure Plugins
+<a id="configure-plugins"></a>
 
-ESLint supports the use of third-party plugins. Plugins are simply objects that conform to a specific interface that ESLint recognizes.
+## 配置插件
 
-To configure plugins inside of a [configuration file](./configuration-files#configuration-file), use the `plugins` key, which contains an object with properties representing plugin namespaces and values equal to the plugin object.
+ESLint 支持使用第三方插件。插件只是符合 ESLint 可识别的特定接口的对象。
+
+要在[配置文件](./configuration-files#configuration-file)中配置插件，请使用 `plugins` 键。该键包含一个对象，其属性表示插件命名空间，属性值则是插件对象。
 
 ```js
 // eslint.config.js
@@ -41,12 +43,14 @@ export default defineConfig([
 ```
 
 ::: tip
-When creating a namespace for a plugin, the convention is to use the npm package name without the `eslint-plugin-` prefix. In the preceding example, `eslint-plugin-example` is assigned a namespace of `example`.
+创建插件命名空间时，通常使用 npm 包名并去掉 `eslint-plugin-` 前缀。在上面的示例中，`eslint-plugin-example` 使用的命名空间是 `example`。
 :::
 
-### Configure a Local Plugin
+<a id="configure-a-local-plugin"></a>
 
-Plugins don't need to be published to npm for use with ESLint. You can also load plugins directly from a file, as in this example:
+### 配置本地插件
+
+插件无需发布到 npm 即可供 ESLint 使用。你也可以直接从文件加载插件，如下例所示：
 
 ```js
 // eslint.config.js
@@ -65,11 +69,13 @@ export default defineConfig([
 ]);
 ```
 
-Here, the namespace `local` is used, but you can also use any name you'd like instead.
+此处使用了命名空间 `local`，你也可以改用任何喜欢的名称。
 
-### Configure a Virtual Plugin
+<a id="configure-a-virtual-plugin"></a>
 
-Plugin definitions can be created virtually directly in your config. For example, suppose you have a rule contained in a file called `my-rule.js` that you'd like to enable in your config. You can define a virtual plugin to do so, as in this example:
+### 配置虚拟插件
+
+你可以直接在配置中虚拟创建插件定义。例如，假设你有一个名为 `my-rule.js` 的文件，其中包含一条想要在配置中启用的规则。你可以定义一个虚拟插件来实现这一点，如下例所示：
 
 ```js
 // eslint.config.js
@@ -92,13 +98,13 @@ export default defineConfig([
 ]);
 ```
 
-Here, the namespace `local` is used to define a virtual plugin. The rule `myRule` is then assigned a name of `my-rule` inside of the virtual plugin's `rules` object. (See [Create Plugins](../../extend/plugins) for the complete format of a plugin.) You can then reference the rule as `local/my-rule` to configure it.
+此处使用命名空间 `local` 来定义虚拟插件。随后，规则 `myRule` 会在虚拟插件的 `rules` 对象中被命名为 `my-rule`。（有关插件的完整格式，请参阅[创建插件](../../extend/plugins)。）然后，你可以通过 `local/my-rule` 引用该规则并进行配置。
 
-## Use Plugin Rules
+<a id="use-plugin-rules"></a>
 
-You can use specific rules included in a plugin. To do this, specify the plugin
-in a configuration object using the `plugins` key. The value for the `plugin` key
-is an object where the name of the plugin is the property name and the value is the plugin object itself. Here's an example:
+## 使用插件规则
+
+你可以使用插件中包含的特定规则。为此，请在配置对象中使用 `plugins` 键指定插件。`plugin` 键的值是一个对象，其中插件名称作为属性名，属性值则是插件对象本身。示例如下：
 
 ```js
 // eslint.config.js
@@ -119,9 +125,9 @@ export default defineConfig([
 ]);
 ```
 
-In this configuration, the JSDoc plugin is defined to have the name `jsdoc`. The prefix `jsdoc/` in each rule name indicates that the rule is coming from the plugin with that name rather than from ESLint itself.
+在此配置中，JSDoc 插件被定义为 `jsdoc`。每个规则名称中的前缀 `jsdoc/` 表示该规则来自同名插件，而不是 ESLint 本身。
 
-Because the name of the plugin and the plugin object are both `jsdoc`, you can also shorten the configuration to this:
+由于插件名称和插件对象都是 `jsdoc`，你也可以将配置简写为：
 
 ```js
 import jsdoc from "eslint-plugin-jsdoc";
@@ -141,7 +147,7 @@ export default defineConfig([
 ]);
 ```
 
-While this is the most common convention, you don't need to use the same name that the plugin prescribes. You can specify any prefix that you'd like, such as:
+虽然这是最常见的约定，但你不必使用插件指定的名称。你可以指定任意前缀，例如：
 
 ```js
 import jsdoc from "eslint-plugin-jsdoc";
@@ -161,13 +167,15 @@ export default defineConfig([
 ]);
 ```
 
-This configuration object uses `jsd` as the prefix plugin instead of `jsdoc`.
+此配置对象使用 `jsd` 作为插件前缀，而不是 `jsdoc`。
 
-## Specify a Processor
+<a id="specify-a-processor"></a>
 
-Plugins may provide processors. Processors can extract JavaScript code from other kinds of files, then let ESLint lint the JavaScript code. Alternatively, processors can convert JavaScript code during preprocessing.
+## 指定处理器
 
-To specify processors in a [configuration file](./configuration-files#configuration-file), use the `processor` key and assign the name of processor in the format `namespace/processor-name`. For example, the following uses the processor from `@eslint/markdown` for `*.md` files.
+插件可能会提供处理器。处理器可以从其他类型的文件中提取 JavaScript 代码，然后让 ESLint 对这些代码进行代码检查。或者，处理器也可以在预处理期间转换 JavaScript 代码。
+
+要在[配置文件](./configuration-files#configuration-file)中指定处理器，请使用 `processor` 键，并将处理器名称设为 `namespace/processor-name` 格式。例如，以下配置对 `*.md` 文件使用 `@eslint/markdown` 提供的处理器。
 
 ```js
 // eslint.config.js
@@ -185,7 +193,7 @@ export default defineConfig([
 ]);
 ```
 
-Processors may make named code blocks such as `0.js` and `1.js`. ESLint handles such a named code block as a child file of the original file. You can specify additional configurations for named code blocks with additional config objects. For example, the following disables the `strict` rule for the named code blocks which end with `.js` in markdown files.
+处理器可能会生成诸如 `0.js` 和 `1.js` 这样的命名代码块。ESLint 会将此类命名代码块视为原始文件的子文件。你可以通过添加配置对象，为命名代码块指定其他配置。例如，以下配置会对 Markdown 文件中以 `.js` 结尾的命名代码块禁用 `strict` 规则。
 
 ```js
 // eslint.config.js
@@ -219,7 +227,7 @@ export default defineConfig([
 ]);
 ```
 
-ESLint only lints named code blocks when they are JavaScript files or if they match a `files` entry in a config object. Be sure to add a config object with a matching `files` entry if you want to lint non-JavaScript named code blocks. Also note that [global ignores](./ignore) apply to named code blocks as well.
+只有当命名代码块是 JavaScript 文件，或与配置对象中的 `files` 条目匹配时，ESLint 才会对其进行代码检查。如果你想对非 JavaScript 的命名代码块进行代码检查，请确保添加具有匹配 `files` 条目的配置对象。另请注意，[全局忽略项](./ignore)同样适用于命名代码块。
 
 ```js
 // eslint.config.js
@@ -255,9 +263,11 @@ export default defineConfig([
 ]);
 ```
 
-## Specify a Language
+<a id="specify-a-language"></a>
 
-Plugins may provide languages. Languages allow ESLint to lint programming languages besides JavaScript. To specify a language in a [configuration file](./configuration-files#configuration-file), use the `language` key and assign the name of language in the format `namespace/language-name`. For example, the following uses the `json/jsonc` language from `@eslint/json` for `*.json` files.
+## 指定语言
+
+插件可能会提供语言。语言使 ESLint 能够对 JavaScript 以外的编程语言进行代码检查。要在[配置文件](./configuration-files#configuration-file)中指定语言，请使用 `language` 键，并将语言名称设为 `namespace/language-name` 格式。例如，以下配置对 `*.json` 文件使用 `@eslint/json` 提供的 `json/jsonc` 语言。
 
 ```js
 // eslint.config.js
@@ -276,10 +286,12 @@ export default defineConfig([
 ```
 
 ::: tip
-When you specify a `language` in a config object, `languageOptions` becomes specific to that language. Each language defines its own `languageOptions`, so check the documentation of the plugin to determine which options are available.
+在配置对象中指定 `language` 后，`languageOptions` 就会针对该语言而定。每种语言都有自己的 `languageOptions`，因此请查阅插件文档，了解有哪些选项可用。
 :::
 
-## Common Problems
+<a id="common-problems"></a>
 
-- [Plugin rules using the ESLint < v9.0.0 API](../troubleshooting/v9-rule-api-changes)
-- [Plugin configurations have not been upgraded to flat config](migration-guide#use-eslintrc-configs-in-flat-config)
+## 常见问题
+
+- [使用 ESLint < v9.0.0 API 的插件规则](../troubleshooting/v9-rule-api-changes)
+- [插件配置尚未升级为扁平配置](migration-guide#use-eslintrc-configs-in-flat-config)
