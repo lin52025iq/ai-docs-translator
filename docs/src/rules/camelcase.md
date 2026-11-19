@@ -4,29 +4,33 @@ rule_type: suggestion
 ---
 
 
-When it comes to naming variables, style guides generally fall into one of two camps: camelcase (`variableName`) and underscores (`variable_name`). This rule focuses on using the camelcase approach. If your style guide calls for camelCasing your variable names, then this rule is for you!
+在变量命名方面，风格指南通常分为两派：驼峰命名法（`variableName`）和下划线命名法（`variable_name`）。本规则关注驼峰命名法。如果你的风格指南要求变量名采用驼峰命名法，那么本规则正适合你！
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule looks for any underscores (`_`) located within the source code. It ignores leading and trailing underscores and only checks those in the middle of a variable name. If ESLint decides that the variable is a constant (all uppercase), then no warning will be thrown. Otherwise, a warning will be thrown. This rule only flags definitions and assignments but not function calls. In case of ES6 `import` statements, this rule only targets the name of the variable that will be imported into the local module scope.
+## 规则详情
 
-## Options
+本规则会查找源代码中所有的下划线（`_`）。它会忽略开头和结尾的下划线，只检查变量名中间的下划线。如果 ESLint 判断变量是常量（全大写），则不会发出警告；否则会发出警告。本规则只标记定义和赋值，不标记函数调用。对于 ES6 `import` 语句，本规则只检查将要导入到本地模块作用域中的变量名。
 
-This rule has an object option:
+<a id="options"></a>
 
-* `"properties": "always"` (default) enforces camelcase style for property names
-* `"properties": "never"` does not check property names
-* `"ignoreDestructuring": false` (default) enforces camelcase style for destructured identifiers
-* `"ignoreDestructuring": true` does not check destructured identifiers (but still checks any use of those identifiers later in the code)
-* `"ignoreImports": false` (default) enforces camelcase style for ES2015 imports
-* `"ignoreImports": true` does not check ES2015 imports (but still checks any use of the imports later in the code except function arguments)
-* `"ignoreGlobals": false` (default) enforces camelcase style for global variables
-* `"ignoreGlobals": true` does not enforce camelcase style for global variables
-* `allow` (`string[]`) list of properties to accept. Accept regex.
+## 选项
+
+本规则有一个对象选项：
+
+* `"properties": "always"`（默认值）要求属性名使用驼峰命名法
+* `"properties": "never"` 不检查属性名
+* `"ignoreDestructuring": false`（默认值）要求解构标识符使用驼峰命名法
+* `"ignoreDestructuring": true` 不检查解构标识符（但仍会检查这些标识符之后在代码中的任何用法）
+* `"ignoreImports": false`（默认值）要求 ES2015 导入使用驼峰命名法
+* `"ignoreImports": true` 不检查 ES2015 导入（但仍会检查这些导入之后在代码中的任何用法，函数参数除外）
+* `"ignoreGlobals": false`（默认值）要求全局变量使用驼峰命名法
+* `"ignoreGlobals": true` 不要求全局变量使用驼峰命名法
+* `allow`（`string[]`）要接受的属性列表。接受正则表达式。
 
 ### properties: "always"
 
-Examples of **incorrect** code for this rule with the default `{ "properties": "always" }` option:
+使用默认选项 `{ "properties": "always" }` 时，本规则的**错误**代码示例如下：
 
 :::incorrect
 
@@ -70,7 +74,7 @@ const { foo: bar_baz = 1 } = quz;
 
 :::
 
-Examples of **correct** code for this rule with the default `{ "properties": "always" }` option:
+使用默认选项 `{ "properties": "always" }` 时，本规则的**正确**代码示例如下：
 
 :::correct
 
@@ -116,7 +120,7 @@ const { foo: camelCasedName = 1 } = quz;
 
 ### properties: "never"
 
-Examples of **correct** code for this rule with the `{ "properties": "never" }` option:
+使用选项 `{ "properties": "never" }` 时，本规则的**正确**代码示例如下：
 
 :::correct
 
@@ -134,7 +138,7 @@ obj.foo_bar = "baz";
 
 ### ignoreDestructuring: false
 
-Examples of **incorrect** code for this rule with the default `{ "ignoreDestructuring": false }` option:
+使用默认选项 `{ "ignoreDestructuring": false }` 时，本规则的**错误**代码示例如下：
 
 :::incorrect
 
@@ -156,7 +160,7 @@ const { category_id: categoryId, ...other_props } = query;
 
 ### ignoreDestructuring: true
 
-Examples of **incorrect** code for this rule with the `{ "ignoreDestructuring": true }` option:
+使用选项 `{ "ignoreDestructuring": true }` 时，本规则的**错误**代码示例如下：
 
 :::incorrect
 
@@ -170,7 +174,7 @@ const { category_id, ...other_props } = query;
 
 :::
 
-Examples of **correct** code for this rule with the `{ "ignoreDestructuring": true }` option:
+使用选项 `{ "ignoreDestructuring": true }` 时，本规则的**正确**代码示例如下：
 
 :::correct
 
@@ -186,9 +190,9 @@ const { category_id_name: category_id_name } = query;
 
 :::
 
-Please note that this option applies only to identifiers inside destructuring patterns. It doesn't additionally allow any particular use of the created variables later in the code apart from the use that is already allowed by default or by other options.
+请注意，此选项仅适用于解构模式中的标识符。除了默认情况下或通过其他选项已允许的用法外，它不会额外允许之后在代码中对所创建变量的任何特定用法。
 
-Examples of additional **incorrect** code for this rule with the `{ "ignoreDestructuring": true }` option:
+使用选项 `{ "ignoreDestructuring": true }` 时，其他**错误**代码示例如下：
 
 :::incorrect
 
@@ -201,9 +205,9 @@ const foo = some_property + 1; // error, ignoreDestructuring does not apply to t
 
 :::
 
-A common use case for this option is to avoid useless renaming when the identifier is not intended to be used later in the code.
+此选项的常见用途之一，是在后续代码中不打算使用该标识符时，避免无意义的重命名。
 
-Examples of additional **correct** code for this rule with the `{ "ignoreDestructuring": true }` option:
+使用选项 `{ "ignoreDestructuring": true }` 时，其他**正确**代码示例如下：
 
 :::correct
 
@@ -216,9 +220,9 @@ const { some_property, ...rest } = obj;
 
 :::
 
-Another common use case for this option is in combination with `{ "properties": "never" }`, when the identifier is intended to be used only as a property shorthand.
+此选项的另一种常见用法是与 `{ "properties": "never" }` 搭配使用，此时该标识符仅作为属性简写使用。
 
-Examples of additional **correct** code for this rule with the `{ "properties": "never", "ignoreDestructuring": true }` options:
+使用选项 `{ "properties": "never", "ignoreDestructuring": true }` 时，其他**正确**代码示例如下：
 
 :::correct
 
@@ -233,7 +237,7 @@ doSomething({ some_property });
 
 ### ignoreImports: false
 
-Examples of **incorrect** code for this rule with the default `{ "ignoreImports": false }` option:
+使用默认选项 `{ "ignoreImports": false }` 时，本规则的**错误**代码示例如下：
 
 :::incorrect
 
@@ -247,7 +251,7 @@ import { snake_cased } from 'mod';
 
 ### ignoreImports: true
 
-Examples of **incorrect** code for this rule with the `{ "ignoreImports": true }` option:
+使用选项 `{ "ignoreImports": true }` 时，本规则的**错误**代码示例如下：
 
 :::incorrect
 
@@ -261,7 +265,7 @@ import * as namespaced_import from 'mod';
 
 :::
 
-Examples of **correct** code for this rule with the `{ "ignoreImports": true }` option:
+使用选项 `{ "ignoreImports": true }` 时，本规则的**正确**代码示例如下：
 
 :::correct
 
@@ -275,7 +279,7 @@ import { snake_cased } from 'mod';
 
 ### ignoreGlobals: false
 
-Examples of **incorrect** code for this rule with the default `{ "ignoreGlobals": false }` option:
+使用默认选项 `{ "ignoreGlobals": false }` 时，本规则的**错误**代码示例如下：
 
 :::incorrect
 
@@ -290,7 +294,7 @@ const foo = no_camelcased;
 
 ### ignoreGlobals: true
 
-Examples of **correct** code for this rule with the `{ "ignoreGlobals": true }` option:
+使用选项 `{ "ignoreGlobals": true }` 时，本规则的**正确**代码示例如下：
 
 :::correct
 
@@ -305,7 +309,7 @@ const foo = no_camelcased;
 
 ### allow
 
-Examples of **correct** code for this rule with the `allow` option:
+使用 `allow` 选项时，本规则的**正确**代码示例如下：
 
 :::correct
 
@@ -335,6 +339,8 @@ function UNSAFE_componentWillReceiveProps() {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you have established coding standards using a different naming convention (separating words with underscores), turn this rule off.
+## 何时不应使用该规则
+
+如果你已采用使用其他命名约定（用下划线分隔单词）的编码规范，请关闭此规则。
