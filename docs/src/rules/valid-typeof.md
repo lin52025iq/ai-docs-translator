@@ -8,14 +8,15 @@ further_reading:
 
 
 
+对于绝大多数使用场景，`typeof` 运算符的结果都是以下字符串字面量之一：`"undefined"`、`"object"`、`"boolean"`、`"number"`、`"string"`、`"function"`、`"symbol"` 和 `"bigint"`。将 `typeof` 运算符的结果与其他字符串字面量进行比较通常是拼写错误。
 
-For a vast majority of use cases, the result of the `typeof` operator is one of the following string literals: `"undefined"`, `"object"`, `"boolean"`, `"number"`, `"string"`, `"function"`, `"symbol"`, and `"bigint"`. It is usually a typing mistake to compare the result of a `typeof` operator to other string literals.
+<a id="rule-details"></a>
 
-## Rule Details
+## 规则详情
 
-This rule enforces comparing `typeof` expressions to valid string literals.
+此规则要求将 `typeof` 表达式与有效的字符串字面量进行比较。
 
-Examples of **incorrect** code for this rule:
+此规则下的**错误**代码示例：
 
 ::: incorrect
 
@@ -30,7 +31,7 @@ typeof bar !== "fucntion"
 
 :::
 
-Examples of **correct** code for this rule:
+此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -45,15 +46,17 @@ typeof bar === typeof qux
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option:
+## 选项
 
-* `"requireStringLiterals": true` allows the comparison of `typeof` expressions with only string literals or other `typeof` expressions, and disallows comparisons to any other value. Default is `false`.
+此规则有一个对象选项：
+
+* `"requireStringLiterals": true` 允许将 `typeof` 表达式仅与字符串字面量或其他 `typeof` 表达式进行比较，并禁止与任何其他值进行比较。默认值为 `false`。
 
 ### requireStringLiterals
 
-Examples of **incorrect** code with the `{ "requireStringLiterals": true }` option:
+启用 `{ "requireStringLiterals": true }` 选项时的**错误**代码示例：
 
 ::: incorrect
 
@@ -70,7 +73,7 @@ typeof foo == 5
 
 :::
 
-Examples of **correct** code with the `{ "requireStringLiterals": true }` option:
+启用 `{ "requireStringLiterals": true }` 选项时的**正确**代码示例：
 
 ::: correct
 
@@ -85,6 +88,9 @@ typeof bar === typeof qux
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You may want to turn this rule off if you will be using the `typeof` operator on host objects.
+## 何时不应使用
+
+如果你要对宿主对象使用 `typeof` 运算符，可以考虑关闭此规则。
+
