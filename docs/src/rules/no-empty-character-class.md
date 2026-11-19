@@ -5,17 +5,19 @@ rule_type: problem
 
 
 
-Because empty character classes in regular expressions do not match anything, they might be typing mistakes.
+由于正则表达式中的空字符类无法匹配任何内容，它们可能是输入错误。
 
 ```js
 const foo = /^abc[]/;
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows empty character classes in regular expressions.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止在正则表达式中使用空字符类。
+
+此规则中**不正确**代码的示例：
 
 ::: incorrect
 
@@ -45,7 +47,7 @@ regex.test("abc"); // false, the nested `[]` has no effect
 
 :::
 
-Examples of **correct** code for this rule:
+此规则中**正确**代码的示例：
 
 ::: correct
 
@@ -64,15 +66,19 @@ Examples of **correct** code for this rule:
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## Known Limitations
+此规则没有选项。
 
-This rule does not report empty character classes in the string argument of calls to the `RegExp` constructor.
+<a id="known-limitations"></a>
 
-Example of a *false negative* when this rule reports correct code:
+## 已知限制
+
+此规则不会报告传递给 `RegExp` 构造函数调用的字符串参数中的空字符类。
+
+本规则发生*漏报*的示例：
 
 ```js
 /*eslint no-empty-character-class: "error"*/
