@@ -5,7 +5,7 @@ rule_type: suggestion
 
 
 
-JavaScript provides shorthand operators that combine variable assignment and some simple mathematical operations. For example, `x = x + 4` can be shortened to `x += 4`. The supported shorthand forms are as follows:
+JavaScript 提供了简写运算符，可将变量赋值与一些简单的数学运算合并。例如，`x = x + 4` 可以简写为 `x += 4`。支持的简写形式如下：
 
 ```text
  Shorthand | Separate
@@ -24,22 +24,25 @@ JavaScript provides shorthand operators that combine variable assignment and som
  x |= y    | x = x | y
 ```
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule requires or disallows assignment operator shorthand where possible.
+此规则要求在可能的情况下使用赋值运算符简写，或禁止使用此类简写。
 
-The rule applies to the operators listed in the above table. It does not report the logical assignment operators `&&=`, `||=`, and `??=` because their short-circuiting behavior is different from the other assignment operators.
+此规则适用于上表列出的运算符。它不会报告逻辑赋值运算符 `&&=`、`||=` 和 `??=`，因为这些运算符的短路行为与其他赋值运算符不同。
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule has a single string option:
+此规则只有一个字符串选项：
 
-* `"always"` (default)  requires assignment operator shorthand where possible
-* `"never"` disallows assignment operator shorthand
+* `"always"`（默认值）要求在可能的情况下使用赋值运算符简写
+* `"never"` 禁止使用赋值运算符简写
 
-### always
+<a id="always"></a>
+### 始终
 
-Examples of **incorrect** code for this rule with the default `"always"` option:
+使用默认选项 `"always"` 时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -54,7 +57,7 @@ x.y = x.y << z;
 
 :::
 
-Examples of **correct** code for this rule with the default `"always"` option:
+使用默认选项 `"always"` 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -72,9 +75,10 @@ x = y + x; // `+` is not always commutative (e.g. x = "abc")
 
 :::
 
-### never
+<a id="never"></a>
+### 从不
 
-Examples of **incorrect** code for this rule with the `"never"` option:
+使用选项 `"never"` 时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -87,7 +91,7 @@ x ^= (y + z) / foo();
 
 :::
 
-Examples of **correct** code for this rule with the `"never"` option:
+使用选项 `"never"` 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -100,6 +104,7 @@ x.y = x.y / a.b;
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 何时不应使用此规则
 
-Use of operator assignment shorthand is a stylistic choice. Leaving this rule turned off would allow developers to choose which style is more readable on a case-by-case basis.
+是否使用赋值运算符简写是一种风格选择。关闭此规则后，开发者可以根据具体情况选择自己认为更易读的写法。
