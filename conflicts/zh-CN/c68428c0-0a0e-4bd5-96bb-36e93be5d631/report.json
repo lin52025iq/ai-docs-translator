@@ -1,0 +1,54 @@
+{
+    "schemaVersion": 1,
+    "status": "conflict",
+    "origin": "local_validation",
+    "projectId": "eslint-docs",
+    "locale": "zh-CN",
+    "sourcePath": "docs/src/rules/strict.md",
+    "createdAt": "2026-11-19T11:45:06.969Z",
+    "reason": "文件校验未通过",
+    "artifacts": {
+        "before": "before/docs/src/rules/strict.md",
+        "after": "after/docs/src/rules/strict.md",
+        "previous": "previous/docs/src/rules/strict.md"
+    },
+    "translationModel": "gpt-6-luna",
+    "translationResponseId": "resp_078ec1cccac9e880016afee12138bc87d2a484954df52b34c3",
+    "contextHash": "64ced0491d8917d86d3057d903a53f0f98ed63c72e258488e934ac7f76453200",
+    "diagnostics": [
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode, links",
+                "path": "docs/src/rules/strict.md"
+            },
+            {
+                "message": "inlineCode 缺少：[]。多出：[\"function\"]",
+                "path": "docs/src/rules/strict.md"
+            },
+            {
+                "message": "links 缺少：[\"[[\\\"href\\\",\\\"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode/Transitioning_to_strict_mode#Differences_from_non-strict_to_strict\\\"]]\"]。多出：[\"[[\\\"href\\\",\\\"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode/Transitioning_to_strict_mode#Differences_from_non-strict_to-strict\\\"]]\"]",
+                "path": "docs/src/rules/strict.md"
+            }
+        ],
+        [
+            {
+                "message": "译文改变了应保留的内容：links",
+                "path": "docs/src/rules/strict.md"
+            },
+            {
+                "message": "links 缺少：[\"[[\\\"href\\\",\\\"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode/Transitioning_to_strict_mode#Differences_from_non-strict_to_strict\\\"]]\"]。多出：[\"[[\\\"href\\\",\\\"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode/Transitioning_to_strict_mode#Differences_from_non-strict_to-strict\\\"]]\"]",
+                "path": "docs/src/rules/strict.md"
+            }
+        ],
+        [
+            {
+                "message": "译文改变了应保留的内容：links",
+                "path": "docs/src/rules/strict.md"
+            },
+            {
+                "message": "links 缺少：[\"[[\\\"href\\\",\\\"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode/Transitioning_to_strict_mode#Differences_from_non-strict_to_strict\\\"]]\"]。多出：[\"[[\\\"href\\\",\\\"https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode/Transitioning_to_strict_mode#Differences-from-non-strict_to-strict\\\"]]\"]",
+                "path": "docs/src/rules/strict.md"
+            }
+        ]
+    ]
+}
