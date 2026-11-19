@@ -5,7 +5,7 @@ rule_type: suggestion
 
 
 
-If an `if` statement is the only statement in the `else` block, it is often clearer to use an `else if` form.
+如果 `if` 语句是 `else` 块中的唯一语句，通常使用 `else if` 的形式会更清晰。
 
 ```js
 if (foo) {
@@ -17,7 +17,7 @@ if (foo) {
 }
 ```
 
-should be rewritten as
+应改写为
 
 ```js
 if (foo) {
@@ -27,11 +27,12 @@ if (foo) {
 }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule disallows `if` statements as the only statement in `else` blocks.
+此规则禁止在 `else` 块中仅包含 `if` 语句。
 
-Examples of **incorrect** code for this rule:
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -59,7 +60,7 @@ if (condition) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -92,10 +93,12 @@ if (condition) {
 
 :::
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule has no options.
+此规则没有选项。
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 何时不使用该规则
 
-Disable this rule if the code is clearer without requiring the `else if` form.
+如果不要求使用 `else if` 的形式时代码更清晰，请禁用此规则。
