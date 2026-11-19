@@ -1,23 +1,27 @@
 ---
-title: Migrating from JSCS
+title: 从 JSCS 迁移
 ---
 
 {%- from 'components/npm_tabs.macro.html' import npm_tabs with context %}
 
-In April 2016, we [announced](https://eslint.org/blog/2016/04/welcoming-jscs-to-eslint) that the JSCS project was shutting down and the JSCS team would be joining the ESLint team. This guide is intended to help those who are using JSCS to migrate their settings and projects to use ESLint. We've tried to automate as much of the conversion as possible, but there are some manual changes that are needed.
+2016 年 4 月，我们[宣布](https://eslint.org/blog/2016/04/welcoming-jscs-to-eslint) JSCS 项目即将关闭，JSCS 团队将加入 ESLint 团队。本指南旨在帮助 JSCS 用户将设置和项目迁移到 ESLint。我们已尽可能自动化转换过程，但仍需手动进行一些更改。
 
-## Terminology
+<a id="terminology"></a>
 
-Before beginning the process of migrating to ESLint, it's helpful to understand some of the terminology that ESLint uses and how it relates to terminology that JSCS uses.
+## 术语
 
-- **Configuration File** - In JSCS, the configuration file is `.jscsrc`, `.jscsrc.json`, `.jscsrc.yaml`, or `.jscsrs.js`. In ESLint, the configuration file can be `.eslintrc.json`, `.eslintrc.yml`, `.eslintrc.yaml`, or `.eslintrc.js` (there is also a deprecated `.eslintrc` file format).
-- **Presets** - In JSCS, there were numerous predefined configurations shipped directly within JSCS. ESLint ships with just one predefined configuration (`eslint:recommended`) that has no style rules enabled. However, ESLint does support [shareable configs](../extend/shareable-configs). Shareable configs are configurations that are published on their own to npm and there are shareable configs available for almost all of the JSCS presets (see [the "Converting Presets" section](#converting-presets) below). Additionally, the `preset` option in a configuration file is the equivalent of the ESLint `extends` option.
+开始迁移到 ESLint 之前，了解 ESLint 使用的一些术语，以及它们与 JSCS 术语的对应关系，会很有帮助。
 
-## Convert Configuration Files Using Polyjuice
+- **配置文件** - 在 JSCS 中，配置文件可以是 `.jscsrc`、`.jscsrc.json`、`.jscsrc.yaml` 或 `.jscsrs.js`。在 ESLint 中，配置文件可以是 `.eslintrc.json`、`.eslintrc.yml`、`.eslintrc.yaml` 或 `.eslintrc.js`（此外还有已弃用的 `.eslintrc` 文件格式）。
+- **预设** - JSCS 内置了许多预定义配置。ESLint 只内置一种预定义配置（`eslint:recommended`），且其中未启用任何样式规则。不过，ESLint 支持[可共享配置](../extend/shareable-configs)。可共享配置是单独发布到 npm 的配置，几乎所有 JSCS 预设都有对应的可共享配置（见下文[“转换预设”一节](#converting-presets)）。此外，配置文件中的 `preset` 选项相当于 ESLint 的 `extends` 选项。
 
-[Polyjuice](https://github.com/brenolf/polyjuice) is a utility for converting JSCS (and JSHint) configuration files into ESLint configuration files automatically. It understands the equivalent rules from each utility and will automatically output an ESLint configuration file that is a good approximation of your existing JSCS file.
+<a id="convert-configuration-files-using-polyjuice"></a>
 
-To install Polyjuice:
+## 使用 Polyjuice 转换配置文件
+
+[Polyjuice](https://github.com/brenolf/polyjuice) 是一个实用工具，可自动将 JSCS（和 JSHint）配置文件转换为 ESLint 配置文件。它能够识别这两个工具中的对应规则，并自动生成一个 ESLint 配置文件，尽可能接近你现有的 JSCS 文件。
+
+安装 Polyjuice：
 
 {{ npm_tabs({
     command: "install",
@@ -25,27 +29,29 @@ To install Polyjuice:
     args: ["--global"]
 }) }}
 
-Polyjuice works with JSON configuration files, so if you're using a JavaScript or YAML JSCS configuration file, you should first convert it into a JSON configuration file.
+Polyjuice 适用于 JSON 配置文件，因此，如果你使用的是 JavaScript 或 YAML 格式的 JSCS 配置文件，应先将其转换为 JSON 配置文件。
 
-To convert your configuration file, pass in the location of your `.jscs.json` file using the `--jscs` flag:
+若要转换配置文件，请使用 `--jscs` 标志传入 `.jscs.json` 文件的位置：
 
 ```shell
 polyjuice --jscs .jscsrc.json > .eslintrc.json
 ```
 
-This creates an `.eslintrc.json` with the equivalent rules from `.jscsrc.json`.
+这会创建一个 `.eslintrc.json` 文件，其中包含与 `.jscsrc.json` 等效的规则。
 
-If you have multiple `.jscsrc.json` files, you can pass them all and Polyjuice will combine them into one `.eslintrc.json` file:
+如果你有多个 `.jscsrc.json` 文件，可以将它们全部传入，Polyjuice 会将它们合并到一个 `.eslintrc.json` 文件中：
 
 ```shell
 polyjuice --jscs .jscsrc.json ./foo/.jscsrc.json > .eslintrc.json
 ```
 
-**Note:** Polyjuice does a good job of creating a reasonable ESLint configuration from your JSCS configuration, but it may not be 100%. You may still see different warnings than you saw with JSCS, and so you may need to further modify your configuration after using Polyjuice. This is especially true if you're using inline comments to enable/disable certain rules in JSCS (you'll need to manually convert those to use ESLint-style comments instead, [see "Disable Rules Inline"](#disable-rules-inline) later in this page).
+**注意：**Polyjuice 能够根据 JSCS 配置生成相当合理的 ESLint 配置，但转换结果可能并非百分之百准确。你看到的警告可能与使用 JSCS 时不同，因此使用 Polyjuice 后可能需要进一步修改配置。如果你在 JSCS 中使用内联注释启用或禁用某些规则，尤其需要注意这一点（你需要手动将这些注释转换为 ESLint 风格的注释，详见本页后面的[“内联禁用规则”](#disable-rules-inline)）。
 
-### Create a New Configuration From Scratch
+<a id="create-a-new-configuration-from-scratch"></a>
 
-If you don't want to convert your JSCS configuration directly into an ESLint configuration, then you can use ESLint's built-in wizard to get you started. Just run:
+### 从头创建新配置
+
+如果你不想直接将 JSCS 配置转换为 ESLint 配置，可以使用 ESLint 内置的向导开始设置。运行：
 
 {{ npm_tabs({
     command: "init-create",
@@ -53,16 +59,18 @@ If you don't want to convert your JSCS configuration directly into an ESLint con
     args: []
 }) }}
 
-You'll be guided through a series of questions that will help you setup a basic configuration file to get you started.
+向导会引导你回答一系列问题，帮助你设置一个基础配置文件。
 
-## Converting Presets
+<a id="converting-presets"></a>
 
-There are shareable configs available for most JSCS presets. The equivalent shareable configs for each JSCS preset are listed in the following table:
+## 转换预设
 
-| **JSCS Preset**    | **ESLint Shareable Config**                                                                                        |
+大多数 JSCS 预设都有对应的可共享配置。下表列出了各个 JSCS 预设对应的可共享配置：
+
+| **JSCS 预设**      | **ESLint 可共享配置**                                                                                             |
 | ------------------ | ------------------------------------------------------------------------------------------------------------------ |
 | `airbnb`           | [`eslint-config-airbnb-base`](https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb-base) |
-| `crockford`        | (not available)                                                                                                    |
+| `crockford`        | （不可用）                                                                                                          |
 | `google`           | [`eslint-config-google`](https://github.com/google/eslint-config-google)                                           |
 | `grunt`            | [`eslint-config-grunt`](https://github.com/markelog/eslint-config-grunt)                                           |
 | `idiomatic`        | [`eslint-config-idiomatic`](https://github.com/jamespamplin/eslint-config-idiomatic)                               |
@@ -72,7 +80,7 @@ There are shareable configs available for most JSCS presets. The equivalent shar
 | `wikimedia`        | [`eslint-config-wikimedia`](https://github.com/wikimedia/eslint-config-wikimedia)                                  |
 | `wordpress`        | [`eslint-config-wordpress`](https://github.com/WordPress-Coding-Standards/eslint-config-wordpress)                 |
 
-As an example, suppose that you are using the `airbnb` preset, so your `.jscsrc` file looks like this:
+例如，假设你使用的是 `airbnb` 预设，那么你的 `.jscsrc` 文件如下所示：
 
 ```json
 {
@@ -80,7 +88,7 @@ As an example, suppose that you are using the `airbnb` preset, so your `.jscsrc`
 }
 ```
 
-In order to get the same functionality in ESLint, you would first need to install the `eslint-config-airbnb` shareable config package:
+若要在 ESLint 中实现相同的功能，首先需要安装 `eslint-config-airbnb` 可共享配置包：
 
 {{ npm_tabs({
     command: "install",
@@ -88,7 +96,7 @@ In order to get the same functionality in ESLint, you would first need to instal
     args: ["--save-dev"]
 }) }}
 
-And then you would modify your configuration file like this:
+然后按如下方式修改配置文件：
 
 ```json
 {
@@ -96,35 +104,39 @@ And then you would modify your configuration file like this:
 }
 ```
 
-ESLint sees `"airbnb-base"` and will look for `eslint-config-airbnb-base` (to save you some typing).
+ESLint 会看到 `"airbnb-base"`，并查找 `eslint-config-airbnb-base`（这样可以少输入一些内容）。
 
-## Disable Rules Inline
+<a id="disable-rules-inline"></a>
 
-Both JSCS and ESLint use comments inside of files to disable rules around certain parts of your code. The following table lists out the JSCS inline configuration comments and their ESLint equivalents.
+## 内联禁用规则
 
-| **Description**                 | **JSCS Comment**                                                                    | **ESLint Comment**                            |
-| ------------------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------- |
-| Disable all rules               | `// jscs:disable` or `/* jscs:disable */`                                           | `/* eslint-disable */`                        |
-| Enable all rules                | `// jscs:enable` or `/* jscs:enable */`                                             | `/* eslint-enable */`                         |
-| Disable one rule                | `// jscs:disable ruleName` or `/* jscs:disable ruleName */`                         | `/* eslint-disable rule-name */`              |
-| Enable one rule                 | `// jscs:enable ruleName` or `/* jscs:enable ruleName */`                           | `/* eslint-enable rule-name */`               |
-| Disable multiple rules          | `// jscs:disable ruleName1, ruleName2` or `/* jscs:disable ruleName1, ruleName2 */` | `/* eslint-disable rule-name1, rule-name2 */` |
-| Enable multiple rules           | `// jscs:enable ruleName1, ruleName2` or `/* jscs:enable ruleName1, ruleName2 */`   | `/* eslint-enable rule-name1, rule-name2 */`  |
-| Disable one rule on single line | `// jscs:ignore ruleName`                                                           | `// eslint-disable-line rule-name`            |
+JSCS 和 ESLint 都可以使用文件中的注释，在代码的特定部分禁用规则。下表列出了 JSCS 的内联配置注释及其对应的 ESLint 注释。
 
-## Command Line Options
+| **说明**               | **JSCS 注释**                                                                      | **ESLint 注释**                             |
+| ---------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------- |
+| 禁用所有规则           | `// jscs:disable` 或 `/* jscs:disable */`                                           | `/* eslint-disable */`                        |
+| 启用所有规则           | `// jscs:enable` 或 `/* jscs:enable */`                                             | `/* eslint-enable */`                         |
+| 禁用一条规则           | `// jscs:disable ruleName` 或 `/* jscs:disable ruleName */`                         | `/* eslint-disable rule-name */`              |
+| 启用一条规则           | `// jscs:enable ruleName` 或 `/* jscs:enable ruleName */`                           | `/* eslint-enable rule-name */`               |
+| 禁用多条规则           | `// jscs:disable ruleName1, ruleName2` 或 `/* jscs:disable ruleName1, ruleName2 */` | `/* eslint-disable rule-name1, rule-name2 */` |
+| 启用多条规则           | `// jscs:enable ruleName1, ruleName2` 或 `/* jscs:enable ruleName1, ruleName2 */`   | `/* eslint-enable rule-name1, rule-name2 */`  |
+| 在单行中禁用一条规则   | `// jscs:ignore ruleName`                                                           | `// eslint-disable-line rule-name`            |
 
-Both JSCS and ESLint have command line arguments corresponding to many of their configuration options. The following are the ESLint equivalents of JSCS command line options.
+<a id="command-line-options"></a>
+
+## 命令行选项
+
+JSCS 和 ESLint 都有与许多配置选项对应的命令行参数。以下是 JSCS 命令行选项在 ESLint 中的对应选项。
 
 ### `--fix`
 
-JSCS uses the `--fix` option to apply automatic fixes to code:
+JSCS 使用 `--fix` 选项对代码应用自动修复：
 
 ```shell
 jscs --fix file.js
 ```
 
-ESLint has the same option:
+ESLint 也有相同的选项：
 
 ```shell
 eslint --fix file.js
@@ -132,13 +144,13 @@ eslint --fix file.js
 
 ### `--auto-configure`
 
-The JSCS `--auto-configure` option created a configuration based on what it found in a given file:
+JSCS 的 `--auto-configure` 选项会根据在指定文件中发现的内容创建配置：
 
 ```shell
 jscs --auto-configure file.js
 ```
 
-In ESLint, there's a similar option when you use `--init`. Just select "Inspect your JavaScript file(s)":
+在 ESLint 中，使用 `--init` 时有一个类似的选项。只需选择“检查你的 JavaScript 文件”：
 
 ```shell
 eslint --init
@@ -150,29 +162,31 @@ eslint --init
 
 ## `--config`, `-c`
 
-JSCS allows you to specify a configuration file to use on the command line using either `--config` or `-c`, such as:
+JSCS 允许通过 `--config` 或 `-c` 在命令行中指定要使用的配置文件，例如：
 
 ```shell
 jscs --config myconfig.json file.js
 jscs -c myconfig.json file.js
 ```
 
-Both flags are also supported by ESLint:
+ESLint 也支持这两个标志：
 
 ```shell
 eslint --config myconfig.json file.js
 eslint -c myconfig.json file.js
 ```
 
-## Piping Code Into ESLint
+<a id="piping-code-into-eslint"></a>
 
-In JSCS, you can pipe code in like this:
+## 将代码通过管道传入 ESLint
+
+在 JSCS 中，可以这样通过管道传入代码：
 
 ```shell
 cat file.js | jscs
 ```
 
-In ESLint, you can also pipe in code, but you need to use the `--stdin` flag:
+在 ESLint 中也可以通过管道传入代码，但需要使用 `--stdin` 标志：
 
 ```shell
 cat file.js | eslint --stdin
