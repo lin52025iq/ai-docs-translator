@@ -9,7 +9,7 @@ further_reading:
 ---
 
 
-JavaScript's `eval()` function is potentially dangerous and is often misused. Using `eval()` on untrusted code can open a program up to several different injection attacks. The use of `eval()` in most contexts can be substituted for a better, alternative approach to a problem.
+JavaScript 的 `eval()` 函数可能具有危险性，而且经常被误用。对不可信代码使用 `eval()` 可能会使程序遭受多种注入攻击。在大多数情况下，可以用更好的替代方案来解决问题，而无需使用 `eval()`。
 
 ```js
 const obj = { x: "foo" },
@@ -17,11 +17,13 @@ const obj = { x: "foo" },
     value = eval("obj." + key);
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at preventing potentially dangerous, unnecessary, and slow code by disallowing the use of the `eval()` function. As such, it will warn whenever the `eval()` function is used.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在通过禁止使用 `eval()` 函数，避免可能具有危险性、不必要且运行缓慢的代码。因此，每当使用 `eval()` 函数时，都会发出警告。
+
+此规则的错误代码示例：
 
 ::: incorrect { "sourceType": "script" }
 
@@ -43,7 +45,7 @@ this.eval("const a = 0");
 
 :::
 
-Example of additional **incorrect** code for this rule with `window` global variable:
+使用 `window` 全局变量时，此规则的其他错误代码示例：
 
 ::: incorrect
 
@@ -56,7 +58,7 @@ window.eval("const a = 0");
 
 :::
 
-Example of additional **incorrect** code for this rule with `global` global variable:
+使用 `global` 全局变量时，此规则的其他错误代码示例：
 
 ::: incorrect
 
@@ -69,7 +71,7 @@ global.eval("const a = 0");
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct { "sourceType": "script" }
 
@@ -101,12 +103,14 @@ class A {
 
 :::
 
-## Options
+<a id="options"></a>
+
+## 选项
 
 ### allowIndirect
 
-This rule has an option to allow ["indirect eval"](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval#direct_and_indirect_eval).
-Indirect calls to `eval` are less dangerous than direct calls to `eval` because they cannot dynamically change the scope. Because of this, they also will not negatively impact performance to the degree of direct `eval`.
+此规则提供了一个选项，用于允许[“间接 eval”](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval#direct_and_indirect_eval)。
+间接调用 `eval` 比直接调用 `eval` 危险性低，因为它们无法动态更改作用域。因此，它们对性能的负面影响也不会达到直接调用 `eval` 的程度。
 
 ```js
 {
@@ -114,7 +118,7 @@ Indirect calls to `eval` are less dangerous than direct calls to `eval` because 
 }
 ```
 
-Example of **incorrect** code for this rule with the `{"allowIndirect": true}` option:
+启用 `{"allowIndirect": true}` 选项时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -128,7 +132,7 @@ const obj = { x: "foo" },
 
 :::
 
-Examples of **correct** code for this rule with the `{"allowIndirect": true}` option:
+启用 `{"allowIndirect": true}` 选项时，此规则的正确代码示例：
 
 ::: correct { "sourceType": "script" }
 
@@ -167,10 +171,12 @@ global.eval("const a = 0");
 
 :::
 
-## Known Limitations
+<a id="known-limitations"></a>
 
-* This rule is warning every `eval()` even if the `eval` is not global's.
-  This behavior is in order to detect calls of direct `eval`. Such as:
+## 已知限制
+
+* 即使 `eval()` 并非全局对象上的 `eval`，此规则也会对每次调用发出警告。
+  这样做是为了检测直接调用 `eval` 的情况。例如：
 
   ```js
   module.exports = function(eval) {
@@ -180,7 +186,7 @@ global.eval("const a = 0");
   };
   ```
 
-* This rule cannot catch renaming the global object. Such as:
+* 此规则无法检测全局对象被重命名的情况。例如：
 
   ```js
   const foo = window;
