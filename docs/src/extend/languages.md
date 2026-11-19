@@ -1,99 +1,109 @@
 ---
-title: Languages
+title: 语言
 eleventyNavigation:
     key: languages
     parent: create plugins
-    title: Languages
+    title: 语言
     order: 4
 ---
 
-Starting with ESLint v9.7.0, you can extend ESLint with additional languages through plugins. While ESLint began as a linter strictly for JavaScript, the ESLint core is generic and can be used to lint any programming language. Each language is defined as an object that contains all of the parsing, evaluating, and traversal functionality required to lint a file. These languages are then distributed in plugins for use in user configurations.
+从 ESLint v9.7.0 开始，你可以通过插件为 ESLint 扩展其他语言。ESLint 最初只是一个专用于 JavaScript 的代码检查工具，但 ESLint 核心具有通用性，可用于检查任何编程语言。每种语言都由一个对象定义，其中包含检查文件所需的所有解析、求值和遍历功能。随后，这些语言会通过插件分发，以供用户在配置中使用。
 
-## Language Requirements
+<a id="language-requirements"></a>
 
-In order to create a language, you need:
+## 语言要求
 
-1. **A parser.** The parser is the piece that converts plain text into a data structure. There is no specific format that ESLint requires the data structure to be in, so you can use any already-existing parser, or write your own.
-1. **A `SourceCode` object.** The way ESLint works with an AST is through a `SourceCode` object. There are some required methods on each `SourceCode`, and you can also add more methods or properties that you'd like to expose to rules.
-1. **A `Language` object.** The `Language` object contains information about the language itself along with methods for parsing and creating the `SourceCode` object.
+要创建一种语言，你需要具备以下内容：
 
-### Parser Requirements for Languages
+1. **一个解析器。** 解析器负责将纯文本转换为数据结构。ESLint 不要求数据结构采用特定格式，因此你可以使用任何现有解析器，也可以自行编写。
+1. **一个 `SourceCode` 对象。** ESLint 通过 `SourceCode` 对象处理 AST。每个 `SourceCode` 对象都必须实现一些方法，你也可以添加希望向规则公开的其他方法或属性。
+1. **一个 `Language` 对象。** `Language` 对象包含有关语言本身的信息，以及用于解析和创建 `SourceCode` 对象的方法。
 
-To get started, make sure you have a parser that can be called from JavaScript. The parser must return a data structure representing the code that was parsed. Most parsers return an [abstract syntax tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree) (AST) to represent the code, but they can also return a [concrete syntax tree](https://en.wikipedia.org/wiki/Parse_tree) (CST). Whether an AST or CST is returned doesn't matter to ESLint, it only matters that there is a data structure to traverse.
+<a id="parser-requirements-for-languages"></a>
 
-While there is no specific structure an AST or CST must follow, it's easier to integrate with ESLint when each node in the tree contains the following information:
+### 各语言的解析器要求
 
-1. **Type** - A property on each node representing the node type is required. For example, in JavaScript, the `type` property contains this information for each node. ESLint rules use node types to define the visitor methods, so it's important that each node can be identified by a string. The name of the property doesn't matter (discussed further below) so long as one exists. This property is typically named `type` or `kind` by most parsers.
-1. **Location** - A property on each node representing the location of the node in the original source code is required. The location must contain:
-    - The line on which the node starts
-    - The column on which the node starts
-    - The line on which the node ends
-    - The column on which the node ends
+首先，确保你有一个可以从 JavaScript 调用的解析器。解析器必须返回一个表示所解析代码的数据结构。大多数解析器会返回[抽象语法树](https://en.wikipedia.org/wiki/Abstract_syntax_tree)（AST）来表示代码，但也可以返回[具体语法树](https://en.wikipedia.org/wiki/Parse_tree)（CST）。对于 ESLint 来说，返回 AST 还是 CST 并不重要；重要的是存在可供遍历的数据结构。
 
-    As with the node type, the property name doesn't matter. Two common property names are `loc` (as in [ESTree](https://github.com/estree/estree/blob/3851d4a6eae5e5473371893959b88b62007469e8/es5.md#node-objects)) and `position` (as in [Unist](https://github.com/syntax-tree/unist?tab=readme-ov-file#node)). This information is used by ESLint to report errors and rule violations.
+AST 或 CST 无须遵循特定结构，但如果树中的每个节点都包含以下信息，就更容易与 ESLint 集成：
 
-1. **Range** - A property on each node representing the location of the node's source inside the source code is required. The range indicates the index at which the first character is found and the index after the last character, such that calling `code.slice(start, end)` returns the text that the node represents. Once again, no specific property name is required, and this information may even be merged with location information. ESTree uses the `range` property while Unist includes this information on `position` along with the location information. This information is used by ESLint to apply autofixes.
+1. **类型** - 每个节点都必须有一个表示节点类型的属性。例如，在 JavaScript 中，每个节点的 `type` 属性都包含此信息。ESLint 规则根据节点类型定义访问器方法，因此每个节点都必须能通过字符串加以识别。只要存在该属性，其名称并不重要（详见下文）；大多数解析器通常将其命名为 `type` 或 `kind`。
+1. **位置** - 每个节点都必须有一个表示该节点在原始源代码中位置的属性。该位置必须包含：
+    - 节点的起始行
+    - 节点的起始列
+    - 节点的结束行
+    - 节点的结束列
 
-### The `SourceCode` Object
+    与节点类型一样，属性名称并不重要。两个常见的属性名是 `loc`（如 [ESTree](https://github.com/estree/estree/blob/3851d4a6eae5e5473371893959b88b62007469e8/es5.md#node-objects)）和 `position`（如 [Unist](https://github.com/syntax-tree/unist?tab=readme-ov-file#node)）。ESLint 使用这些信息报告错误和规则违规。
 
-ESLint holds information about source code in a `SourceCode` object. This object is the API used both by ESLint internally and by rules written to work on the code (via `context.sourceCode`). The `SourceCode` object must implement the `TextSourceCode` interface as defined in the [`@eslint/core`](https://npmjs.com/package/@eslint/core) package.
+1. **范围** - 每个节点都必须有一个表示该节点在源代码中所占范围的属性。范围表示首个字符所在的索引以及最后一个字符之后的索引，因此调用 `code.slice(start, end)` 会返回该节点所表示的文本。同样，这里不要求特定的属性名，而且此信息也可以与位置信息合并。ESTree 使用 `range` 属性，而 Unist 将此信息与位置信息一并包含在 `position` 中。ESLint 使用这些信息应用自动修复。
 
-A basic `SourceCode` object must implement the following:
+<a id="the-sourcecode-object"></a>
 
-- `ast` - a property containing the AST or CST for the source code.
-- `text` - the text of the source code.
-- `getLoc(nodeOrToken)` - a method that returns the location of a given node, token, or comment. This must match the `loc` structure that ESTree uses.
-- `getRange(nodeOrToken)` - a method that returns the range of a given node, token, or comment. This must return an array where the first item is the start index and the second is the end index.
-- `traverse()` - a method that returns an iterable for traversing the AST or CST. The iterator must return objects that implement either `VisitTraversalStep` or `CallTraversalStep` from `@eslint/core`.
+### `SourceCode` 对象
 
-The following optional members allow you to customize how ESLint interacts with the object:
+ESLint 使用 `SourceCode` 对象保存源代码信息。该对象是 ESLint 内部以及针对代码编写的规则（通过 `context.sourceCode`）所使用的 API。`SourceCode` 对象必须实现 [`@eslint/core`](https://npmjs.com/package/@eslint/core) 包中定义的 `TextSourceCode` 接口。
 
-- `visitorKeys` - visitor keys that are specific to just this `SourceCode` object. Typically not necessary as `Language#visitorKeys` is used most of the time.
-- `applyLanguageOptions(languageOptions)` - if you have specific language options that need to be applied after parsing, you can do so in this method.
-- `getDisableDirectives()` - returns any disable directives in the code. ESLint uses this to apply disable directives and track unused directives.
-- `getInlineConfigNodes()` - returns any inline config nodes. ESLint uses this to report errors when `noInlineConfig` is enabled.
-- `applyInlineConfig()` - returns inline configuration elements to ESLint. ESLint uses this to alter the configuration of the file being linted.
-- `finalize()` - this method is called just before linting begins and is your last chance to modify `SourceCode`. If you've defined `applyLanguageOptions()` or `applyInlineConfig()`, then you may have additional changes to apply before the `SourceCode` object is ready.
+基本的 `SourceCode` 对象必须实现以下内容：
 
-Additionally, the following members are common on `SourceCode` objects and are recommended to implement:
+- `ast` - 包含源代码 AST 或 CST 的属性。
+- `text` - 源代码文本。
+- `getLoc(nodeOrToken)` - 返回给定节点、令牌或注释位置的方法。其返回值必须符合 ESTree 使用的 `loc` 结构。
+- `getRange(nodeOrToken)` - 返回给定节点、令牌或注释范围的方法。必须返回一个数组，其中第一项是起始索引，第二项是结束索引。
+- `traverse()` - 返回可迭代对象以遍历 AST 或 CST 的方法。迭代器必须返回实现了 `@eslint/core` 中 `VisitTraversalStep` 或 `CallTraversalStep` 的对象。
 
-- `lines` - the individual lines of the source code as an array of strings.
-- `getParent(node)` - returns the parent of the given node or `undefined` if the node is the root.
-- `getAncestors(node)` - returns an array of the ancestry of the node with the first item as the root of the tree and each subsequent item as the descendants of the root that lead to `node`.
-- `getText(node, beforeCount, afterCount)` - returns the string that represents the given node, token, or comment, and optionally, a specified number of characters before and after its range. If `node` is omitted or `undefined`, the entire source text is returned.
+以下可选成员允许你自定义 ESLint 与该对象的交互方式：
 
-See [`JSONSourceCode`](https://github.com/eslint/json/blob/main/src/languages/json-source-code.js) as an example of a basic `SourceCode` class.
+- `visitorKeys` - 仅适用于此 `SourceCode` 对象的访问器键。通常不需要，因为大多数情况下会使用 `Language#visitorKeys`。
+- `applyLanguageOptions(languageOptions)` - 如果你有需要在解析后应用的特定语言选项，可以在此方法中处理。
+- `getDisableDirectives()` - 返回代码中的所有禁用指令。ESLint 使用此方法应用禁用指令并跟踪未使用的指令。
+- `getInlineConfigNodes()` - 返回所有内联配置节点。启用 `noInlineConfig` 时，ESLint 会使用此方法报告错误。
+- `applyInlineConfig()` - 向 ESLint 返回内联配置元素。ESLint 使用这些元素更改正在进行代码检查的文件的配置。
+- `finalize()` - 此方法会在代码检查开始前调用，是你修改 `SourceCode` 的最后机会。如果你定义了 `applyLanguageOptions()` 或 `applyInlineConfig()`，可能还需要在 `SourceCode` 对象准备就绪前应用其他更改。
+
+此外，以下成员常见于 `SourceCode` 对象，建议实现：
+
+- `lines` - 将源代码的各行作为字符串数组返回。
+- `getParent(node)` - 返回给定节点的父节点；如果该节点是根节点，则返回 `undefined`。
+- `getAncestors(node)` - 返回给定节点的祖先数组，第一项是树的根节点，后续各项是从根节点到 `node` 的后代节点。
+- `getText(node, beforeCount, afterCount)` - 返回给定节点、令牌或注释所表示的字符串；也可以指定其范围前后要包含的字符数。如果省略 `node` 或将其设为 `undefined`，则返回整个源文本。
+
+请参阅 [`JSONSourceCode`](https://github.com/eslint/json/blob/main/src/languages/json-source-code.js)，了解基本 `SourceCode` 类的示例。
 
 ::: tip
-The [`@eslint/plugin-kit`](https://npmjs.com/package/@eslint/plugin-kit) package contains multiple classes that aim to make creating a `SourceCode` object easier. The `TextSourceCodeBase` class, in particular, implements the `TextSourceCode` interface and provides some basic functionality typically found in `SourceCode` objects.
+[`@eslint/plugin-kit`](https://npmjs.com/package/@eslint/plugin-kit) 包含多个类，旨在简化 `SourceCode` 对象的创建。尤其是 `TextSourceCodeBase` 类，它实现了 `TextSourceCode` 接口，并提供了 `SourceCode` 对象通常具备的一些基本功能。
 :::
 
-### The `Language` Object
+<a id="the-language-object"></a>
 
-The `Language` object contains all of the information about the programming language as well as methods for interacting with code written in that language. ESLint uses this object to determine how to deal with a particular file. The `Language` object must implement the `Language` interface as defined in the [`@eslint/core`](https://npmjs.com/package/@eslint/core) package.
+### `Language` 对象
 
-A basic `Language` object must implement the following:
+`Language` 对象包含有关编程语言的所有信息，以及用于处理以该语言编写的代码的方法。ESLint 使用此对象来确定如何处理特定文件。`Language` 对象必须实现 [`@eslint/core`](https://npmjs.com/package/@eslint/core) 包中定义的 `Language` 接口。
 
-- `fileType` - should be `"text"` (in the future, we will also support `"binary"`)
-- `lineStart` - either 0 or 1 to indicate how the AST represents the first line in the file. ESLint uses this to correctly display error locations.
-- `columnStart` - either 0 or 1 to indicate how the AST represents the first column in each line. ESLint uses this to correctly display error locations.
-- `nodeTypeKey` - the name of the property that indicates the node type (usually `"type"` or `"kind"`).
-- `validateLanguageOptions(languageOptions)` - validates language options for the language. This method is expected to throw a validation error when an expected language option doesn't have the correct type or value. Unexpected language options should be silently ignored and no error should be thrown. This method is required even if the language doesn't specify any options.
-- `parse(file, context)` - parses the given file into an AST or CST, and can also include additional values meant for use in rules. Called internally by ESLint.
-- `createSourceCode(file, parseResult, context)` - creates a `SourceCode` object. Call internally by ESLint after `parse()`, and the second argument is the exact return value from `parse()`.
+基本的 `Language` 对象必须实现以下内容：
 
-The following optional members allow you to customize how ESLint interacts with the object:
+- `fileType` - 应为 `"text"`（未来还将支持 `"binary"`）
+- `lineStart` - 取值为 0 或 1，表示 AST 如何表示文件中的第一行。ESLint 使用此值正确显示错误位置。
+- `columnStart` - 取值为 0 或 1，表示 AST 如何表示每一行中的第一列。ESLint 使用此值正确显示错误位置。
+- `nodeTypeKey` - 表示节点类型的属性名称（通常为 `"type"` 或 `"kind"`）。
+- `validateLanguageOptions(languageOptions)` - 验证该语言的语言选项。如果预期的语言选项类型或值不正确，此方法应抛出验证错误。意外的语言选项应静默忽略，不应抛出错误。即使该语言未指定任何选项，此方法也必须实现。
+- `parse(file, context)` - 将给定文件解析为 AST 或 CST，也可以包含供规则使用的其他值。由 ESLint 内部调用。
+- `createSourceCode(file, parseResult, context)` - 创建 `SourceCode` 对象。由 ESLint 在调用 `parse()` 后内部调用，第二个参数是 `parse()` 的确切返回值。
 
-- `visitorKeys` - visitor keys that are specific to the AST or CST. This is used to optimize traversal of the AST or CST inside of ESLint. While not required, it is strongly recommended, especially for AST or CST formats that deviate significantly from ESTree format.
-- `defaultLanguageOptions` - default `languageOptions` when the language is used. User-specified `languageOptions` are merged with this object when calculating the config for the file being linted.
-- `matchesSelectorClass(className, node, ancestry)` - allows you to specify selector classes, such as `:expression`, that match more than one node. This method is called whenever an [esquery](https://github.com/estools/esquery) selector contains a `:` followed by an identifier.
-- `normalizeLanguageOptions(languageOptions)` - takes a validated language options object and normalizes its values. This is helpful for backwards compatibility when language options properties change and also to add custom serialization with a `toJSON()` method.
+以下可选成员允许你自定义 ESLint 与该对象的交互方式：
 
-See [`JSONLanguage`](https://github.com/eslint/json/blob/main/src/languages/json-language.js) as an example of a basic `Language` class.
+- `visitorKeys` - 专用于 AST 或 CST 的访问器键。ESLint 使用此项优化 AST 或 CST 的遍历。虽然不是必需项，但强烈建议提供，特别是 AST 或 CST 格式与 ESTree 格式差异较大时。
+- `defaultLanguageOptions` - 使用该语言时的默认 `languageOptions`。计算正在进行代码检查的文件的配置时，用户指定的 `languageOptions` 会与此对象合并。
+- `matchesSelectorClass(className, node, ancestry)` - 允许你指定能够匹配多个节点的选择器类，例如 `:expression`。每当 [esquery](https://github.com/estools/esquery) 选择器包含 `:` 后接标识符时，都会调用此方法。
+- `normalizeLanguageOptions(languageOptions)` - 接收经过验证的语言选项对象，并对其值进行规范化。这有助于在语言选项属性发生变化时保持向后兼容，也可用于通过 `toJSON()` 方法添加自定义序列化。
 
-## Publish a Language in a Plugin
+请参阅 [`JSONLanguage`](https://github.com/eslint/json/blob/main/src/languages/json-language.js)，了解基本 `Language` 类的示例。
 
-Languages are published in plugins similar to processors and rules. Define the `languages` key in your plugin as an object whose names are the language names and the values are the language objects. Here's an example:
+<a id="publish-a-language-in-a-plugin"></a>
+
+## 在插件中发布语言
+
+语言的发布方式与处理器和规则类似。将插件中的 `languages` 键定义为一个对象，其属性名是语言名称，属性值是语言对象。示例如下：
 
 ```js
 import { myLanguage } from "../languages/my.js";
@@ -119,7 +129,7 @@ export default plugin;
 module.exports = plugin;
 ```
 
-In order to use a language from a plugin in a configuration file, import the plugin and include it in the `plugins` key, specifying a namespace. Then, use that namespace to reference the language in the `language` configuration, like this:
+要在配置文件中使用插件提供的语言，请导入该插件并将其包含在 `plugins` 键中，同时指定一个命名空间。然后像下面这样，在 `language` 配置中使用该命名空间引用语言：
 
 ```js
 // eslint.config.js
@@ -137,4 +147,4 @@ export default defineConfig([
 ]);
 ```
 
-See [Specify a Language](../use/configure/plugins#specify-a-language) in the Plugin Configuration documentation for more details.
+有关更多详情，请参阅插件配置文档中的[指定语言](../use/configure/plugins#specify-a-language)。
