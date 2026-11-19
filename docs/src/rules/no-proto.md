@@ -6,13 +6,15 @@ further_reading:
 ---
 
 
-`__proto__` property has been deprecated as of ECMAScript 3.1 and shouldn't be used in the code. Use `Object.getPrototypeOf` and `Object.setPrototypeOf` instead.
+`__proto__` 属性自 ECMAScript 3.1 起已弃用，不应在代码中使用。请改用 `Object.getPrototypeOf` 和 `Object.setPrototypeOf`。
 
-## Rule Details
+<a id="rule-details"></a>
 
-When an object is created with the `new` operator, `__proto__` is set to the original "prototype" property of the object's constructor function. `Object.getPrototypeOf` is the preferred method of getting the object's prototype. To change an object's prototype, use `Object.setPrototypeOf`.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+使用 `new` 运算符创建对象时，`__proto__` 会被设置为该对象构造函数的原始“prototype”属性。获取对象原型的首选方法是 `Object.getPrototypeOf`。若要更改对象的原型，请使用 `Object.setPrototypeOf`。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -30,7 +32,7 @@ obj["__proto__"] = b;
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -46,11 +48,14 @@ const c = { __proto__: a };
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-You might want to turn this rule off if you need to support legacy browsers which implement the
-`__proto__` property but not `Object.getPrototypeOf` or `Object.setPrototypeOf`.
+<a id="when-not-to-use-it"></a>
+
+## 何时不使用
+
+如果需要支持实现了 `__proto__` 属性、但未实现 `Object.getPrototypeOf` 或 `Object.setPrototypeOf` 的旧版浏览器，可以考虑关闭此规则。
