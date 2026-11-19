@@ -1,29 +1,39 @@
 ---
-title: Maintain ESLint
+title: 维护 ESLint
 eleventyNavigation:
     key: maintain eslint
-    title: Maintain ESLint
+    title: 维护 ESLint
     order: 5
 ---
 
-This guide is intended for those who work as part of the ESLint project team.
+本指南适用于 ESLint 项目团队的成员。
 
-## [How ESLint is Maintained](overview)
+<a id="how-eslint-is-maintained"></a>
 
-Explains how ESLint is maintained, including information about team, governance, and funding.
+## [ESLint 的维护方式](overview)
 
-## [Manage Issues](manage-issues)
+介绍 ESLint 的维护方式，包括团队、治理和资金方面的信息。
 
-Describes how to deal with issues when they're opened, how to interact with users who open issues, and how to close issues effectively.
+<a id="manage-issues"></a>
 
-## [Review Pull Requests](review-pull-requests)
+## [管理问题](manage-issues)
 
-Describes how to review incoming pull requests.
+介绍如何处理新提交的问题、如何与提交问题的用户互动，以及如何有效关闭问题。
 
-## [Manage Releases](manage-releases)
+<a id="review-pull-requests"></a>
 
-Describes how to do an ESLint project release.
+## [审查拉取请求](review-pull-requests)
 
-## [Working Groups](working-groups)
+介绍如何审查新收到的拉取请求。
 
-Describes how working groups are created and how they function within the ESLint project.
+<a id="manage-releases"></a>
+
+## [管理发布](manage-releases)
+
+介绍如何发布 ESLint 项目。
+
+<a id="working-groups"></a>
+
+## [工作组](working-groups)
+
+介绍如何创建工作组，以及工作组在 ESLint 项目中的运作方式。
