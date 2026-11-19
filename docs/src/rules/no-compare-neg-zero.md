@@ -5,11 +5,12 @@ rule_type: problem
 
 
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-The rule should warn against code that tries to compare against `-0`, since that will not work as intended. That is, code like `x === -0` will pass for both `+0` and `-0`. The author probably intended `Object.is(x, -0)`.
+该规则应对尝试与 `-0` 进行比较的代码发出警告，因为这种比较无法按预期工作。也就是说，像 `x === -0` 这样的代码对于 `+0` 和 `-0` 都会通过。作者可能原本想使用 `Object.is(x, -0)`。
 
-Examples of **incorrect** code for this rule:
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -23,7 +24,7 @@ if (x === -0) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -49,6 +50,7 @@ if (Object.is(x, -0)) {
 
 :::
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule has no options.
+此规则没有选项。
