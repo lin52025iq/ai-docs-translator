@@ -10,25 +10,26 @@ further_reading:
 
 
 
-
-Although not being specified in the language until ECMAScript 2021, `\8` and `\9` escape sequences in string literals were allowed in most JavaScript engines, and treated as "useless" escapes:
+虽然直到 ECMAScript 2021 才在语言规范中有所规定，但大多数 JavaScript 引擎都允许在字符串字面量中使用 `\8` 和 `\9` 转义序列，并将它们视为“无效”转义：
 
 ```js
 "\8" === "8"; // true
 "\9" === "9"; // true
 ```
 
-Since ECMAScript 2021, these escape sequences are specified as [non-octal decimal escape sequences](https://tc39.es/ecma262/#prod-annexB-NonOctalDecimalEscapeSequence), retaining the same behavior.
+从 ECMAScript 2021 开始，这些转义序列被规定为[非八进制十进制转义序列](https://tc39.es/ecma262/#prod-annexB-NonOctalDecimalEscapeSequence)，行为保持不变。
 
-Nevertheless, the ECMAScript specification treats `\8` and `\9` in string literals as a legacy feature. This syntax is optional if the ECMAScript host is not a web browser. Browsers still have to support it, but only in non-strict mode.
+不过，ECMAScript 规范将字符串字面量中的 `\8` 和 `\9` 视为遗留功能。如果 ECMAScript 宿主不是 Web 浏览器，则可以不支持这种语法。浏览器仍必须支持它，但仅限非严格模式。
 
-Regardless of your targeted environment, these escape sequences shouldn't be used when writing new code.
+无论目标环境是什么，编写新代码时都不应使用这些转义序列。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows `\8` and `\9` escape sequences in string literals.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止在字符串字面量中使用 `\8` 和 `\9` 转义序列。
+
+此规则的错误代码示例：
 
 ::: incorrect { "sourceType": "script" }
 
@@ -50,7 +51,7 @@ const quux = "\0\8";
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct { "sourceType": "script" }
 
@@ -72,6 +73,8 @@ const quux = "\0\u0038";
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
+
+此规则没有选项。
