@@ -4,13 +4,13 @@ rule_type: suggestion
 related_rules:
 - one-var
 ---
-Some developers declare multiple var statements on the same line:
+有些开发者会在同一行声明多个 var 语句：
 
 ```js
 var foo, bar, baz;
 ```
 
-Others prefer to declare one var per line.
+另一些开发者则倾向于每行声明一个 var。
 
 ```js
 var foo,
@@ -18,22 +18,26 @@ var foo,
     baz;
 ```
 
-Keeping to one of these styles across a project's codebase can help with maintaining code consistency.
+在项目代码库中统一采用其中一种风格，有助于保持代码一致性。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces a consistent newlines around variable declarations. This rule ignores variable declarations inside `for` loop conditionals.
+## 规则详情
 
-## Options
+此规则要求变量声明周围的换行保持一致。此规则会忽略 `for` 循环条件中的变量声明。
 
-This rule has a single string option:
+<a id="options"></a>
 
-* `"initializations"` (default) enforces a newline around variable initializations
-* `"always"` enforces a newline around variable declarations
+## 选项
+
+此规则只有一个字符串选项：
+
+* `"initializations"`（默认值）要求变量初始化周围有换行
+* `"always"` 要求变量声明周围有换行
 
 ### initializations
 
-Examples of **incorrect** code for this rule with the default `"initializations"` option:
+使用默认选项 `"initializations"` 时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -48,7 +52,7 @@ let d,
 
 :::
 
-Examples of **correct** code for this rule with the default `"initializations"` option:
+使用默认选项 `"initializations"` 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -68,7 +72,7 @@ let e,
 
 ### always
 
-Examples of **incorrect** code for this rule with the `"always"` option:
+使用选项 `"always"` 时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -84,7 +88,7 @@ const e = 0, f = 0;
 
 :::
 
-Examples of **correct** code for this rule with the `"always"` option:
+使用选项 `"always"` 时，此规则的**正确**代码示例：
 
 ::: correct
 
