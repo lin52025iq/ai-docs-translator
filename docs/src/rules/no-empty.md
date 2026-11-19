@@ -7,13 +7,15 @@ related_rules:
 
 
 
-Empty block statements, while not technically errors, usually occur due to refactoring that wasn't completed. They can cause confusion when reading code.
+空代码块语句虽然严格来说不算错误，但通常是未完成重构的结果。它们会让代码阅读者感到困惑。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows empty block statements. This rule ignores block statements which contain a comment (for example, in an empty `catch` or `finally` block of a `try` statement to indicate that execution should continue regardless of errors).
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止空代码块语句。此规则会忽略包含注释的代码块语句（例如，在 `try` 语句的空 `catch` 或 `finally` 代码块中添加注释，表示无论是否发生错误，都应继续执行）。
+
+此规则下的**错误**代码示例：
 
 ::: incorrect
 
@@ -40,7 +42,7 @@ try {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -74,15 +76,17 @@ try {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option for exceptions:
+## 选项
 
-* `"allowEmptyCatch": true` allows empty `catch` clauses (that is, which do not contain a comment)
+此规则有一个用于例外情况的对象选项：
+
+* `"allowEmptyCatch": true` 允许空 `catch` 子句（即不包含注释的子句）
 
 ### allowEmptyCatch
 
-Examples of additional **correct** code for this rule with the `{ "allowEmptyCatch": true }` option:
+启用 `{ "allowEmptyCatch": true }` 选项后，此规则下的其他**正确**代码示例：
 
 ::: correct
 
@@ -103,6 +107,8 @@ finally {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you intentionally use empty block statements then you can disable this rule.
+## 何时不应使用
+
+如果你有意使用空代码块语句，可以禁用此规则。
