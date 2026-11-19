@@ -3,7 +3,7 @@ title: default-param-last
 rule_type: suggestion
 ---
 
-Putting default parameter at last allows function calls to omit optional tail arguments.
+将默认参数放在最后，可以在调用函数时省略末尾的可选参数。
 
 ```js
 // Correct: optional argument can be omitted
@@ -15,11 +15,13 @@ function createUser(isAdmin = false, id) {}
 createUser(undefined, "tabby")
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces default parameters to be the last of parameters.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+该规则要求默认参数位于参数列表末尾。
+
+以下是此规则下**不正确**代码的示例：
 
 ::: incorrect
 
@@ -33,7 +35,7 @@ function g(a, b = 0, c) {}
 
 :::
 
-Examples of **correct** code for this rule:
+以下是此规则下**正确**代码的示例：
 
 ::: correct
 
@@ -47,9 +49,9 @@ function g(a, b = 0, c = 0) {}
 
 :::
 
-This rule additionally supports TypeScript type syntax.
+此规则还支持 TypeScript 类型语法。
 
-Examples of **incorrect** TypeScript code for this rule:
+以下是不符合此规则的 TypeScript 代码示例：
 
 ::: incorrect
 
@@ -61,7 +63,7 @@ function h(a = 0, b: number) {}
 
 :::
 
-Examples of **correct** TypeScript code for this rule:
+以下是符合此规则的 TypeScript 代码示例：
 
 ::: correct
 
@@ -73,7 +75,9 @@ function h(a = 0, b?: number) {}
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
+
+此规则没有选项。
 
