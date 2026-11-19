@@ -7,20 +7,24 @@ further_reading:
 ---
 
 <!-- markdownlint-disable-next-line MD051 -->
-With ES6, it's possible to create functions called [tagged template literals](#further-reading) where the function parameters consist of a template literal's strings and expressions.
+在 ES6 中，可以创建名为[标签模板字面量](#further-reading)的函数，其参数由模板字面量中的字符串和表达式组成。
 
-When using tagged template literals, it's possible to insert whitespace between the tag function and the template literal. Since this whitespace is optional, the following lines are equivalent:
+使用标签模板字面量时，可以在标签函数和模板字面量之间插入空白。由于空白是可选的，以下两行等效：
 
 ```js
 let hello = func`Hello world`;
 let hello = func `Hello world`;
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to maintain consistency around the spacing between template tag functions and their template literals.
+## 规则详情
 
-## Options
+此规则旨在保持模板标签函数与其模板字面量之间的间距一致。
+
+<a id="options"></a>
+
+## 选项
 
 ```json
 {
@@ -28,14 +32,14 @@ This rule aims to maintain consistency around the spacing between template tag f
 }
 ```
 
-This rule has one option whose value can be set to `"never"` or `"always"`
+此规则有一个选项，其值可以设为 `"never"` 或 `"always"`。
 
-* `"never"` (default) - Disallows spaces between a tag function and its template literal.
-* `"always"` - Requires one or more spaces between a tag function and its template literal.
+* `"never"`（默认）- 禁止在标签函数与其模板字面量之间使用空格。
+* `"always"` - 要求在标签函数与其模板字面量之间使用一个或多个空格。
 
 ### never
 
-Examples of **incorrect** code for this rule with the default `"never"` option:
+以下是使用默认选项 `"never"` 时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -47,7 +51,7 @@ func `Hello world`;
 
 :::
 
-Examples of **correct** code for this rule with the default `"never"` option:
+以下是使用默认选项 `"never"` 时，此规则的正确代码示例：
 
 ::: correct
 
@@ -61,7 +65,7 @@ func`Hello world`;
 
 ### always
 
-Examples of **incorrect** code for this rule with the `"always"` option:
+以下是使用选项 `"always"` 时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -73,7 +77,7 @@ func`Hello world`;
 
 :::
 
-Examples of **correct** code for this rule with the `"always"` option:
+以下是使用选项 `"always"` 时，此规则的正确代码示例：
 
 ::: correct
 
@@ -85,6 +89,8 @@ func `Hello world`;
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you don't want to be notified about usage of spacing between tag functions and their template literals, then it's safe to disable this rule.
+## 何时不使用此规则
+
+如果你不希望在标签函数与其模板字面量之间使用空格时收到提示，可以安全地禁用此规则。
