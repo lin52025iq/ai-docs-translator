@@ -4,31 +4,35 @@ rule_type: suggestion
 ---
 
 
-Imports are an ES6/ES2015 standard for making the functionality of other modules available in your current module. In CommonJS this is implemented through the `require()` call which makes this ESLint rule roughly equivalent to its CommonJS counterpart `no-restricted-modules`.
+导入是 ES6/ES2015 标准，用于在当前模块中使用其他模块提供的功能。在 CommonJS 中，这通过 `require()` 调用实现，因此这条 ESLint 规则大致相当于其 CommonJS 对应规则 `no-restricted-modules`。
 
-Why would you want to restrict imports?
+为什么要限制导入？
 
-* Some imports might not make sense in a particular environment. For example, Node.js' `fs` module would not make sense in an environment that didn't have a file system.
+* 某些导入在特定环境中可能毫无意义。例如，在没有文件系统的环境中，Node.js 的 `fs` 模块就没有意义。
 
-* Some modules provide similar or identical functionality, think `lodash` and `underscore`. Your project may have standardized on a module. You want to make sure that the other alternatives are not being used as this would unnecessarily bloat the project and provide a higher maintenance cost of two dependencies when one would suffice.
+* 有些模块提供相似或相同的功能，例如 `lodash` 和 `underscore`。你的项目可能已经选定了一个模块。你可能希望确保不使用其他替代模块，因为这会不必要地增加项目体积；而当一个依赖就足够时，使用两个依赖还会增加维护成本。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule allows you to specify imports that you don't want to use in your application.
+## 规则详情
 
-It applies to static imports only, not dynamic ones.
+此规则允许你指定不希望在应用程序中使用的导入。
 
-## Options
+此规则仅适用于静态导入，不适用于动态导入。
 
-This rule has both string and object options to specify the imported modules to restrict.
+<a id="options"></a>
 
-Using string option, you can specify  the name of a module that you want to restrict from being imported as a value in the rule options array:
+## 选项
+
+此规则支持字符串和对象两种选项，用于指定要限制导入的模块。
+
+使用字符串选项时，你可以在规则选项数组中指定要禁止导入的模块名称：
 
 ```json
 "no-restricted-imports": ["error", "import1", "import2"]
 ```
 
-Examples of **incorrect** code for string option:
+字符串选项的**错误**代码示例：
 
 ::: incorrect
 
@@ -40,7 +44,7 @@ import fs from 'fs';
 
 :::
 
-String options also restrict the module from being exported, as in this example:
+字符串选项也会限制模块的导出，如以下示例所示：
 
 ::: incorrect
 
@@ -62,7 +66,7 @@ export * from 'fs';
 
 :::
 
-Examples of **correct** code for string option:
+字符串选项的**正确**代码示例：
 
 ::: correct
 
@@ -75,7 +79,7 @@ export { foo } from "bar";
 
 :::
 
-You may also specify a custom message for a particular module using the `name` and `message` properties inside an object, where the value of the `name` is the name of the module and `message` property contains the custom message. (The custom message is appended to the default error message from the rule.)
+你也可以在对象中使用 `name` 和 `message` 属性，为特定模块指定自定义消息。`name` 的值是模块名称，`message` 属性包含自定义消息。（自定义消息会追加到该规则的默认错误消息后。）
 
 ```json
 "no-restricted-imports": ["error", {
@@ -87,7 +91,7 @@ You may also specify a custom message for a particular module using the `name` a
 }]
 ```
 
-Examples of **incorrect** code for string option:
+字符串选项的**错误**代码示例：
 
 ::: incorrect
 
@@ -104,13 +108,13 @@ import foo from 'disallowed-import';
 
 ### paths
 
-This is an object option whose value is an array containing the names of the modules you want to restrict.
+此对象选项的值是一个数组，其中包含你想要限制的模块名称。
 
 ```json
 "no-restricted-imports": ["error", { "paths": ["import1", "import2"] }]
 ```
 
-Examples of **incorrect** code for `paths`:
+`paths` 的**错误**代码示例：
 
 ::: incorrect
 
@@ -122,7 +126,7 @@ import cluster from 'cluster';
 
 :::
 
-Custom messages for a particular module can also be specified in `paths` array using objects with `name` and `message`.
+你也可以在 `paths` 数组中使用包含 `name` 和 `message` 的对象，为特定模块指定自定义消息。
 
 ```json
 "no-restricted-imports": ["error", {
@@ -138,9 +142,9 @@ Custom messages for a particular module can also be specified in `paths` array u
 
 #### importNames
 
-This option in `paths` is an array and can be used to specify the names of certain bindings exported from a module. Import names specified inside `paths` array affect the module specified in the `name` property of corresponding object, so it is required to specify the `name` property first when you are using `importNames` or `message` option.
+`paths` 中的此选项是一个数组，可用于指定模块导出的某些绑定名称。`paths` 数组中指定的导入名称会作用于相应对象的 `name` 属性所指定的模块，因此使用 `importNames` 或 `message` 选项时，必须先指定 `name` 属性。
 
-Specifying `"default"` string inside the `importNames` array will restrict the default export from being imported.
+在 `importNames` 数组中指定字符串 `"default"`，即可限制默认导出的导入。
 
 ```json
 "no-restricted-imports": ["error", {
@@ -152,7 +156,7 @@ Specifying `"default"` string inside the `importNames` array will restrict the d
 }]
 ```
 
-Examples of **incorrect** code when `importNames` in `paths` has `"default"`:
+当 `paths` 中的 `importNames` 包含 `"default"` 时，**错误**代码示例：
 
 ::: incorrect
 
@@ -168,7 +172,7 @@ import DisallowedObject from "foo";
 
 :::
 
-Examples of **incorrect** code for `importNames` in `paths`:
+`paths` 中 `importNames` 的**错误**代码示例：
 
 ::: incorrect
 
@@ -202,9 +206,9 @@ import * as Foo from "foo";
 
 :::
 
-Examples of **correct** code for `importNames` in `paths`:
+`paths` 中 `importNames` 的**正确**代码示例：
 
-If the local name assigned to a default export is the same as a string in `importNames`, this will not cause an error.
+如果默认导出所分配的本地名称与 `importNames` 中的某个字符串相同，也不会导致错误。
 
 ::: correct
 
@@ -232,9 +236,9 @@ import { AllowedObject as DisallowedObject } from "foo";
 
 #### allowImportNames
 
-This option is an array. Inverse of `importNames`, `allowImportNames` allows the imports that are specified inside this array. So it restricts all imports from a module, except specified allowed ones.
+此选项是一个数组。它与 `importNames` 作用相反：`allowImportNames` 允许导入数组中指定的名称。因此，除了指定允许的名称外，它会限制从模块导入的所有内容。
 
-Note: `allowImportNames` cannot be used in combination with `importNames`.
+注意：`allowImportNames` 不能与 `importNames` 一起使用。
 
 ```json
 "no-restricted-imports": ["error", {
@@ -246,9 +250,9 @@ Note: `allowImportNames` cannot be used in combination with `importNames`.
 }]
 ```
 
-Examples of **incorrect** code for `allowImportNames` in `paths`:
+`paths` 中 `allowImportNames` 的**错误**代码示例：
 
-Disallowing all import names except 'AllowedObject'.
+除 AllowedObject 外，禁止导入所有名称。
 
 ::: incorrect
 
@@ -264,9 +268,9 @@ import { DisallowedObject } from "foo";
 
 :::
 
-Examples of **correct** code for `allowImportNames` in `paths`:
+`paths` 中 `allowImportNames` 的**正确**代码示例：
 
-Disallowing all import names except 'AllowedObject'.
+除 AllowedObject 外，禁止导入所有名称。
 
 ::: correct
 
@@ -282,11 +286,13 @@ import { AllowedObject } from "foo";
 
 :::
 
-#### allowTypeImports (TypeScript only)
+<a id="allowtypeimports-typescript-only"></a>
 
-Whether to allow [Type-Only Imports](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export) for a path. This includes type-only `export` statements, as they are equivalent to re-exporting an `import`. Default: `false`.
+#### allowTypeImports（仅限 TypeScript）
 
-Examples of **incorrect** code for `allowTypeImports` in `paths`:
+是否允许从某个路径进行[仅类型导入](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export)。这也包括仅类型的 `export` 语句，因为它们等同于重新导出一个 `import`。默认值：`false`。
+
+`paths` 中 `allowTypeImports` 的**错误**代码示例：
 
 ::: incorrect
 
@@ -303,7 +309,7 @@ export { Foo } from 'import-foo';
 
 :::
 
-Examples of **correct** code for `allowTypeImports` in `paths`:
+`paths` 中 `allowTypeImports` 的**正确**代码示例：
 
 ::: correct
 
@@ -339,9 +345,9 @@ import { Bar, type Baz } from "import-foo";
 
 ### patterns
 
-This is also an object option whose value is an array. This option allows you to specify multiple modules to restrict using `gitignore`-style patterns or regular expressions.
+这也是一个对象选项，其值为数组。此选项允许你使用 `gitignore` 风格的模式或正则表达式，指定要限制的多个模块。
 
-Where `paths` option takes exact import paths, `patterns` option can be used to specify the import paths with more flexibility, allowing for the restriction of multiple modules within the same directory. For example:
+`paths` 选项接受精确的导入路径，而 `patterns` 选项可以更灵活地指定导入路径，从而限制同一目录中的多个模块。例如：
 
 ```json
 "no-restricted-imports": ["error", {
@@ -351,7 +357,7 @@ Where `paths` option takes exact import paths, `patterns` option can be used to 
 }]
 ```
 
-This configuration restricts import of the `import-foo` module but wouldn't restrict the import of `import-foo/bar` or `import-foo/baz`. You can use `patterns` to restrict both:
+此配置会限制导入 `import-foo` 模块，但不会限制导入 `import-foo/bar` 或 `import-foo/baz`。你可以使用 `patterns` 同时限制这两者：
 
 ```json
 "no-restricted-imports": ["error", {
@@ -364,9 +370,9 @@ This configuration restricts import of the `import-foo` module but wouldn't rest
 }]
 ```
 
-This configuration restricts imports not just from `import-foo` using `path`, but also `import-foo/bar` and `import-foo/baz` using `patterns`.
+此配置不仅使用 `path` 限制从 `import-foo` 导入，还使用 `patterns` 限制从 `import-foo/bar` 和 `import-foo/baz` 导入。
 
-To re-include a module when using `gitignore-`style patterns, add a negation (`!`) mark before the pattern. (Make sure these negated patterns are placed last in the array, as order matters)
+使用 `gitignore-` 风格的模式时，如果要重新纳入某个模块，请在模式前添加否定符号（`!`）。（请确保将这些否定模式放在数组末尾，因为顺序会影响结果。）
 
 ```json
 "no-restricted-imports": ["error", {
@@ -374,9 +380,9 @@ To re-include a module when using `gitignore-`style patterns, add a negation (`!
 }]
 ```
 
-You can also use regular expressions to restrict modules (see the [`regex` option](#regex)).
+你也可以使用正则表达式来限制模块（参见 [`regex` 选项](#regex)）。
 
-Examples of **incorrect** code for `patterns` option:
+`patterns` 选项的**错误**代码示例：
 
 ::: incorrect
 
@@ -408,9 +414,9 @@ import pick from 'import1/private/someModule';
 
 :::
 
-In this example, `"!import1/private/*"` is not reincluding the modules inside `private` because the negation mark (`!`) does not reinclude the files if it's parent directory is excluded by a pattern. In this case, `import1/private` directory is already excluded by the `import1/*` pattern. (The excluded directory can be reincluded using `"!import1/private"`.)
+在这个示例中，`"!import1/private/*"` 并未重新纳入 `private` 中的模块，因为如果某个文件的父目录被模式排除，否定符号（`!`）就无法重新纳入该文件。在这种情况下，`import1/private` 目录已被 `import1/*` 模式排除。（可以使用 `"!import1/private"` 重新纳入这个被排除的目录。）
 
-Examples of **correct** code for `patterns` option:
+`patterns` 选项的**正确**代码示例：
 
 ::: correct
 
@@ -444,9 +450,9 @@ import pick from 'import1/private/someModule';
 
 #### group
 
-The `patterns` array can also include objects. The `group` property is used to specify the `gitignore`-style patterns for restricting modules and the `message` property is used to specify a custom message.
+`patterns` 数组中也可以包含对象。`group` 属性用于指定限制模块的 `gitignore` 风格模式，`message` 属性用于指定自定义消息。
 
-Either of the `group` or `regex` properties is required when using the `patterns` option.
+使用 `patterns` 选项时，必须提供 `group` 或 `regex` 属性之一。
 
 ```json
 "no-restricted-imports": ["error", {
@@ -460,7 +466,7 @@ Either of the `group` or `regex` properties is required when using the `patterns
 }]
 ```
 
-Examples of **incorrect** code for `group` option:
+`group` 选项的**错误**代码示例：
 
 ::: incorrect
 
@@ -475,7 +481,7 @@ import pick from 'lodash/pick';
 
 :::
 
-Examples of **correct** code for this `group` option:
+此 `group` 选项的**正确**代码示例：
 
 ::: correct
 
@@ -492,9 +498,9 @@ import lodash from 'lodash';
 
 #### regex
 
-The `regex` property is used to specify the regex patterns for restricting modules.
+`regex` 属性用于指定限制模块的正则表达式模式。
 
-Note: `regex` cannot be used in combination with `group`.
+注意：`regex` 不能与 `group` 一起使用。
 
 ```json
 "no-restricted-imports": ["error", {
@@ -508,7 +514,7 @@ Note: `regex` cannot be used in combination with `group`.
 }]
 ```
 
-Examples of **incorrect** code for `regex` option:
+`regex` 选项的**错误**代码示例：
 
 ::: incorrect
 
@@ -525,7 +531,7 @@ import Bux from '@app/api/enums/foo';
 
 :::
 
-Examples of **correct** code for `regex` option:
+`regex` 选项的**正确**代码示例：
 
 ::: correct
 
@@ -541,7 +547,7 @@ import Foo from '@app/api/enums';
 
 #### caseSensitive
 
-This is a boolean option and sets the patterns specified in the `group` or `regex` properties to be case-sensitive when `true`. Default is `false`.
+这是一个布尔选项；当值为 `true` 时，`group` 或 `regex` 属性指定的模式区分大小写。默认值为 `false`。
 
 ```json
 "no-restricted-imports": ["error", {
@@ -552,7 +558,7 @@ This is a boolean option and sets the patterns specified in the `group` or `rege
 }]
 ```
 
-Examples of **incorrect** code for `caseSensitive: true` option:
+`caseSensitive: true` 选项的**错误**代码示例：
 
 ::: incorrect
 
@@ -567,7 +573,7 @@ import pick from 'fooBar';
 
 :::
 
-Examples of **correct** code for `caseSensitive: true` option:
+`caseSensitive: true` 选项的**正确**代码示例：
 
 ::: correct
 
@@ -584,7 +590,7 @@ import pick from 'food';
 
 #### importNames
 
-You can also specify `importNames` within objects inside the `patterns` array. In this case, the specified names apply only to the associated `group` or `regex` property.
+你也可以在 `patterns` 数组中的对象内指定 `importNames`。在这种情况下，指定的名称仅适用于相应的 `group` 或 `regex` 属性。
 
 ```json
 "no-restricted-imports": ["error", {
@@ -596,7 +602,7 @@ You can also specify `importNames` within objects inside the `patterns` array. I
 }]
 ```
 
-Examples of **incorrect** code for `importNames` in `patterns`:
+`patterns` 中 `importNames` 的**错误**代码示例：
 
 ::: incorrect
 
@@ -612,7 +618,7 @@ import { isEmpty } from 'utils/collection-utils';
 
 :::
 
-Examples of **correct** code for `importNames` in `patterns`:
+`patterns` 中 `importNames` 的**正确**代码示例：
 
 ::: correct
 
@@ -630,9 +636,9 @@ import { hasValues } from 'utils/collection-utils';
 
 #### allowImportNames
 
-You can also specify `allowImportNames` within objects inside the `patterns` array. In this case, the specified names apply only to the associated `group` or `regex` property.
+你也可以在 `patterns` 数组中的对象内指定 `allowImportNames`。在这种情况下，指定的名称仅适用于相应的 `group` 或 `regex` 属性。
 
-Note: `allowImportNames` cannot be used in combination with `importNames`, `importNamePattern` or `allowImportNamePattern`.
+注意：`allowImportNames` 不能与 `importNames`、`importNamePattern` 或 `allowImportNamePattern` 一起使用。
 
 ```json
 "no-restricted-imports": ["error", {
@@ -644,7 +650,7 @@ Note: `allowImportNames` cannot be used in combination with `importNames`, `impo
 }]
 ```
 
-Examples of **incorrect** code for `allowImportNames` in `patterns`:
+`patterns` 中 `allowImportNames` 的**错误**代码示例：
 
 ::: incorrect
 
@@ -660,7 +666,7 @@ import { hasValues } from 'utils/collection-utils';
 
 :::
 
-Examples of **correct** code for `allowImportNames` in `patterns`:
+`patterns` 中 `allowImportNames` 的**正确**代码示例：
 
 ::: correct
 
@@ -678,7 +684,7 @@ import { isEmpty } from 'utils/collection-utils';
 
 #### importNamePattern
 
-This option allows you to use regex patterns to restrict import names:
+此选项允许你使用正则表达式模式限制导入名称：
 
 ```json
 "no-restricted-imports": ["error", {
@@ -689,7 +695,7 @@ This option allows you to use regex patterns to restrict import names:
 }]
 ```
 
-Examples of **incorrect** code for `importNamePattern` option:
+`importNamePattern` 选项的**错误**代码示例：
 
 ::: incorrect
 
@@ -733,7 +739,7 @@ import { bar, bazQux } from 'foo/quux';
 
 :::
 
-Examples of **correct** code for `importNamePattern` option:
+`importNamePattern` 选项的**正确**代码示例：
 
 ::: correct
 
@@ -749,9 +755,9 @@ import isEmpty, { hasValue } from 'utils/collection-utils';
 
 :::
 
-You can also use this option to allow only side-effect imports by setting it to a pattern that matches any name, such as `^`.
+你还可以将此选项设置为匹配任意名称的模式（例如 `^`），从而只允许副作用导入。
 
-Examples of **incorrect** code for `importNamePattern` option:
+`importNamePattern` 选项的**错误**代码示例：
 
 ::: incorrect
 
@@ -768,7 +774,7 @@ import * as file from 'utils/file-utils';
 
 :::
 
-Examples of **correct** code for `importNamePattern` option:
+`importNamePattern` 选项的**正确**代码示例：
 
 ::: correct
 
@@ -785,9 +791,9 @@ import 'utils/init-utils';
 
 #### allowImportNamePattern
 
-This is a string option. Inverse of `importNamePattern`, this option allows imports that matches the specified regex pattern. So it restricts all imports from a module, except specified allowed patterns.
+这是一个字符串选项。它与 `importNamePattern` 作用相反：此选项允许匹配指定正则表达式模式的导入。因此，除了指定允许的模式外，它会限制从模块导入的所有内容。
 
-Note: `allowImportNamePattern` cannot be used in combination with `importNames`, `importNamePattern` or `allowImportNames`.
+注意：`allowImportNamePattern` 不能与 `importNames`、`importNamePattern` 或 `allowImportNames` 一起使用。
 
 ```json
 "no-restricted-imports": ["error", {
@@ -798,7 +804,7 @@ Note: `allowImportNamePattern` cannot be used in combination with `importNames`,
 }]
 ```
 
-Examples of **incorrect** code for `allowImportNamePattern` option:
+`allowImportNamePattern` 选项的**错误**代码示例：
 
 ::: incorrect
 
@@ -813,7 +819,7 @@ import { isEmpty } from 'utils/collection-utils';
 
 :::
 
-Examples of **correct** code for `allowImportNamePattern` option:
+`allowImportNamePattern` 选项的**正确**代码示例：
 
 ::: correct
 
@@ -828,9 +834,11 @@ import { isEmpty } from 'utils/collection-utils';
 
 :::
 
-#### allowTypeImports (TypeScript only)
+<a id="allowtypeimports-typescript-only-1"></a>
 
-Whether to allow [Type-Only Imports](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export) for a path. This includes type-only `export` statements, as they are equivalent to re-exporting an `import`. Default: `false`.
+#### allowTypeImports（仅限 TypeScript）
+
+是否允许从某个路径进行[仅类型导入](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export)。这也包括仅类型的 `export` 语句，因为它们等同于重新导出一个 `import`。默认值：`false`。
 
 ```json
 "no-restricted-imports": ["error", {
@@ -841,7 +849,7 @@ Whether to allow [Type-Only Imports](https://www.typescriptlang.org/docs/handboo
 }]
 ```
 
-Examples of **incorrect** code for `allowTypeImports` in `patterns`:
+`patterns` 中 `allowTypeImports` 的**错误**代码示例：
 
 ::: incorrect
 
@@ -858,7 +866,7 @@ export { foo } from 'import/private/bar';
 
 :::
 
-Examples of **correct** code for `allowTypeImports` in `patterns`:
+`patterns` 中 `allowTypeImports` 的**正确**代码示例：
 
 ::: correct
 
@@ -892,13 +900,15 @@ import { Bar, type Baz } from "import/private/bar";
 
 :::
 
-## Known Limitations
+<a id="known-limitations"></a>
 
-TypeScript [`import = require()` syntax](https://www.typescriptlang.org/docs/handbook/2/modules.html#es-module-syntax-with-commonjs-behavior) is valid and the rule can recognize and lint such instances, but with certain limitations.
+## 已知限制
 
-You can only fully restrict these imports, you cannot restrict them based on specific import names like `importNames`, `allowImportNames`, `importNamePattern`, or `allowImportNamePattern` options.
+TypeScript 的 [`import = require()` 语法](https://www.typescriptlang.org/docs/handbook/2/modules.html#es-module-syntax-with-commonjs-behavior)是有效语法，且此规则能够识别并检查此类情况，但存在一些限制。
 
-Examples of **incorrect** code for TypeScript import equals declarations:
+你只能完全限制这些导入，不能根据特定的导入名称来限制它们，例如不能使用 `importNames`、`allowImportNames`、`importNamePattern` 或 `allowImportNamePattern` 选项。
+
+TypeScript import equals 声明的**错误**代码示例：
 
 ::: incorrect
 
@@ -922,7 +932,7 @@ import foo = require("disallowed-import");
 
 :::
 
-**Note:** Import name restrictions do not apply to TypeScript import equals declarations. The following configuration will not restrict the import equals declaration:
+**注意：**导入名称限制不适用于 TypeScript import equals 声明。以下配置不会限制该 import equals 声明：
 
 ::: correct
 
@@ -941,6 +951,8 @@ import foo = require("foo");
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-Don't use this rule or don't include a module in the list for this rule if you want to be able to import a module in your project without an ESLint error or warning.
+## 何时不应使用此规则
+
+如果你希望在项目中导入模块时不会出现 ESLint 错误或警告，就不要使用此规则，也不要将该模块加入此规则的列表。
