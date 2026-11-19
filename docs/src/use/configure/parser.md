@@ -1,21 +1,23 @@
 ---
-title: Configure a Parser
+title: 配置解析器
 eleventyNavigation:
     key: configure parser
     parent: configure
-    title: Configure a Parser
+    title: 配置解析器
     order: 5
 ---
 
 ::: tip
-This page explains how to configure parsers using the flat config format.
+本页介绍如何使用扁平配置格式配置解析器。
 :::
 
-You can use custom parsers to convert JavaScript code into an abstract syntax tree for ESLint to evaluate. You might want to add a custom parser if your code isn't compatible with ESLint's default parser, Espree.
+你可以使用自定义解析器将 JavaScript 代码转换为抽象语法树，供 ESLint 进行检查。如果你的代码与 ESLint 的默认解析器 Espree 不兼容，可以添加自定义解析器。
 
-## Configure a Custom Parser
+<a id="configure-a-custom-parser"></a>
 
-In many cases, you can use the [default parser](https://github.com/eslint/js/tree/main/packages/espree) that ESLint ships with for parsing your JavaScript code. You can optionally override the default parser by using the `parser` property. The `parser` property must be an object that conforms to the [parser interface](../../extend/custom-parsers). For example, you can use the [`@babel/eslint-parser`](https://www.npmjs.com/package/@babel/eslint-parser) package to allow ESLint to parse experimental syntax:
+## 配置自定义解析器
+
+在许多情况下，你可以使用 ESLint 随附的[默认解析器](https://github.com/eslint/js/tree/main/packages/espree)来解析 JavaScript 代码。你也可以使用 `parser` 属性覆盖默认解析器。`parser` 属性必须是符合[解析器接口](../../extend/custom-parsers)的对象。例如，你可以使用 [`@babel/eslint-parser`](https://www.npmjs.com/package/@babel/eslint-parser) 包，让 ESLint 能够解析实验性语法：
 
 ```js
 // eslint.config.js
@@ -32,21 +34,23 @@ export default defineConfig([
 ]);
 ```
 
-This configuration ensures that the Babel parser, rather than the default Espree parser, is used to parse all files ending with `.js` and `.mjs`.
+此配置确保使用 Babel 解析器而非默认的 Espree 解析器，来解析所有以 `.js` 和 `.mjs` 结尾的文件。
 
-The following third-party parsers are known to be compatible with ESLint:
+以下第三方解析器已知与 ESLint 兼容：
 
 - [Esprima](https://www.npmjs.com/package/esprima)
-- [@babel/eslint-parser](https://www.npmjs.com/package/@babel/eslint-parser) - A wrapper around the [Babel](https://babeljs.io) parser that makes it compatible with ESLint.
-- [@typescript-eslint/parser](https://www.npmjs.com/package/@typescript-eslint/parser) - A parser that converts TypeScript into an ESTree-compatible form so it can be used in ESLint.
+- [@babel/eslint-parser](https://www.npmjs.com/package/@babel/eslint-parser) - 一个包装器，可让 [Babel](https://babeljs.io) 解析器与 ESLint 兼容。
+- [@typescript-eslint/parser](https://www.npmjs.com/package/@typescript-eslint/parser) - 将 TypeScript 转换为兼容 ESTree 的形式，以便在 ESLint 中使用。
 
 ::: warning
-There are no guarantees that an external parser works correctly with ESLint. ESLint does not fix bugs related to incompatibilities that affect only third-party parsers.
+无法保证外部解析器能与 ESLint 正常协同工作。对于仅影响第三方解析器的兼容性问题所导致的错误，ESLint 不会予以修复。
 :::
 
-## Configure Parser Options
+<a id="configure-parser-options"></a>
 
-Parsers may accept options to alter the way they behave. The `languageOptions.parserOptions` is used to pass options directly to parsers. These options are always parser-specific, so you'll need to check the documentation of the parser you're using for available options. Here's an example of setting parser options for the Babel ESLint parser:
+## 配置解析器选项
+
+解析器可能接受用于改变其行为的选项。`languageOptions.parserOptions` 用于直接向解析器传递选项。这些选项始终因解析器而异，因此你需要查阅所用解析器的文档，了解可用选项。以下是为 Babel ESLint 解析器设置解析器选项的示例：
 
 ```js
 // eslint.config.js
@@ -71,5 +75,5 @@ export default defineConfig([
 ```
 
 ::: tip
-In addition to the options specified in `languageOptions.parserOptions`, ESLint also passes `languageOptions.ecmaVersion` and `languageOptions.sourceType` to all parsers. ESLint uses `languageOptions.ecmaVersion` internally (for example, to add built-in globals), and passing these values allows parsers to understand the context in which ESLint is evaluating JavaScript code. If you need to pass a different `ecmaVersion` or `sourceType` specifically to the parser, you can set `languageOptions.parserOptions.ecmaVersion` or `languageOptions.parserOptions.sourceType`. These options will take precedence over the corresponding `languageOptions` for the parser.
+除了 `languageOptions.parserOptions` 中指定的选项外，ESLint 还会向所有解析器传递 `languageOptions.ecmaVersion` 和 `languageOptions.sourceType`。ESLint 会在内部使用 `languageOptions.ecmaVersion`（例如，添加内置全局变量）；传递这些值也能让解析器了解 ESLint 检查 JavaScript 代码时所处的上下文。如果你需要专门为解析器传递不同的 `ecmaVersion` 或 `sourceType`，可以设置 `languageOptions.parserOptions.ecmaVersion` 或 `languageOptions.parserOptions.sourceType`。对于解析器而言，这些选项的优先级高于相应的 `languageOptions` 选项。
 :::
