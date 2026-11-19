@@ -8,17 +8,19 @@ related_rules:
 
 
 
-Characters `/=` at the beginning of a regular expression literal can be confused with a division assignment operator.
+正则表达式字面量开头的 `/=` 字符可能会与除法赋值运算符混淆。
 
 ```js
 function bar() { return /=foo/; }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule forbids equal signs (`=`) after the slash (`/`) at the beginning of a regular expression literal, because the characters `/=` can be confused with a division assignment operator.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止在正则表达式字面量开头的斜杠 (`/`) 后使用等号 (`=`)，因为 `/=` 字符可能会与除法赋值运算符混淆。
+
+此规则的错误代码示例：
 
 :::incorrect
 
@@ -30,7 +32,7 @@ function bar() { return /=foo/; }
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 :::correct
 
@@ -42,6 +44,8 @@ function bar() { return /[=]foo/; }
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
+
+此规则没有选项。
