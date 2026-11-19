@@ -6,8 +6,8 @@ handled_by_typescript: true
 
 
 
-If there are declarations of the same name in class members, the last declaration overwrites other declarations silently.
-It can cause unexpected behaviors.
+如果类成员中存在同名声明，最后一个声明会静默覆盖其他声明。
+这可能导致意外行为。
 
 ```js
 class Foo {
@@ -19,11 +19,13 @@ const foo = new Foo();
 foo.bar(); // goodbye
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed to flag the use of duplicate names in class members.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在标记类成员中使用重复名称的情况。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -58,7 +60,7 @@ class E {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -93,9 +95,9 @@ class E {
 
 :::
 
-This rule additionally supports TypeScript type syntax. It has support for TypeScript's method overload definitions.
+此规则还支持 TypeScript 类型语法，也支持 TypeScript 的方法重载定义。
 
-Examples of **correct** TypeScript code for this rule:
+此规则的**正确** TypeScript 代码示例：
 
 ::: correct
 
@@ -111,12 +113,16 @@ class A {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-This rule should not be used in ES3/5 environments.
+<a id="when-not-to-use-it"></a>
 
-In ES2015 (ES6) or later, if you don't want to be notified about duplicate names in class members, you can safely disable this rule.
+## 不应使用此规则的情况
+
+此规则不应用于 ES3/5 环境。
+
+在 ES2015 (ES6) 或更高版本中，如果你不希望收到有关类成员重复名称的提示，可以放心禁用此规则。
