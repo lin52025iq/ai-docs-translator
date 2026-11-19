@@ -4,17 +4,19 @@ rule_type: suggestion
 ---
 
 
-The use of bitwise operators in JavaScript is very rare and often `&` or `|` is simply a mistyped `&&` or `||`, which will lead to unexpected behavior.
+在 JavaScript 中很少使用按位运算符，而且 `&` 或 `|` 往往只是误写成了 `&&` 或 `||`，从而导致意外行为。
 
 ```js
 const x = y | z;
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows bitwise operators.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止使用按位运算符。
+
+此规则的**不正确**代码示例：
 
 ::: incorrect
 
@@ -50,7 +52,7 @@ x >>>= y;
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -70,16 +72,18 @@ x += y;
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option:
+## 选项
 
-* `"allow"`: Allows a list of bitwise operators to be used as exceptions.
-* `"int32Hint"`: Allows the use of bitwise OR in `|0` pattern for type casting.
+此规则有一个对象选项：
+
+* `"allow"`：允许将一组按位运算符作为例外使用。
+* `"int32Hint"`：允许在 `|0` 模式中使用按位或进行类型转换。
 
 ### allow
 
-Examples of **correct** code for this rule with the `{ "allow": ["~"] }` option:
+使用 `{ "allow": ["~"] }` 选项时的**正确**代码示例：
 
 ::: correct
 
@@ -93,7 +97,7 @@ Examples of **correct** code for this rule with the `{ "allow": ["~"] }` option:
 
 ### int32Hint
 
-Examples of **correct** code for this rule with the `{ "int32Hint": true }` option:
+使用 `{ "int32Hint": true }` 选项时的**正确**代码示例：
 
 ::: correct
 
