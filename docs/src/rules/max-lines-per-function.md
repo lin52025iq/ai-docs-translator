@@ -11,15 +11,19 @@ related_rules:
 ---
 
 
-Some people consider large functions a code smell. Large functions tend to do a lot of things and can make it hard following what's going on. Many coding style guides dictate a limit of the number of lines that a function can comprise of. This rule can help enforce that style.
+有些人认为大型函数是一种代码异味。大型函数往往承担很多职责，可能让人难以理解代码的运行逻辑。许多编码风格指南都规定了函数行数上限。本规则可帮助强制执行这一风格要求。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces a maximum number of lines per function, in order to aid in maintainability and reduce complexity.
+## 规则详情
 
-### Why not use `max-statements` or other complexity measurement rules instead?
+本规则限制每个函数的最大行数，以提高可维护性并降低复杂度。
 
-Nested long method chains like the below example are often broken onto separate lines for readability:
+<a id="why-not-use-max-statements-or-other-complexity-measurement-rules-instead"></a>
+
+### 为什么不使用 `max-statements` 或其他复杂度度量规则？
+
+如下例所示，嵌套的长方法链通常会拆分到多行，以提高可读性：
 
 ```js
 function() {
@@ -40,38 +44,42 @@ function() {
 }
 ```
 
-* `max-statements` will only report this as 1 statement, despite being 16 lines of code.
-* `complexity` will only report a complexity of 1
-* `max-nested-callbacks` will only report 1
-* `max-depth` will report a depth of 0
+* `max-statements` 只会将其报告为 1 条语句，尽管代码有 16 行。
+* `complexity` 只会报告复杂度为 1
+* `max-nested-callbacks` 只会报告 1
+* `max-depth` 会报告深度为 0
 
-## Options
+<a id="options"></a>
 
-This rule has the following options that can be specified using an object:
+## 选项
 
-* `"max"` (default `50`) enforces a maximum number of lines in a function.
+本规则有以下可通过对象指定的选项：
 
-* `"skipBlankLines"` (default `false`) ignore lines made up purely of whitespace.
+* `"max"`（默认值为 `50`）规定函数的最大行数。
 
-* `"skipComments"` (default `false`) ignore lines containing just comments.
+* `"skipBlankLines"`（默认值为 `false`）忽略仅由空白字符组成的行。
 
-* `"IIFEs"` (default `false`) include any code included in IIFEs.
+* `"skipComments"`（默认值为 `false`）忽略仅包含注释的行。
 
-Alternatively, you may specify a single integer for the `max` option:
+* `"IIFEs"`（默认值为 `false`）将 IIFE 中的代码也纳入统计。
+
+也可以为 `max` 选项指定单个整数：
 
 ```json
 "max-lines-per-function": ["error", 20]
 ```
 
-is equivalent to
+等同于
 
 ```json
 "max-lines-per-function": ["error", { "max": 20 }]
 ```
 
-### code
+<a id="code"></a>
 
-Examples of **incorrect** code for this rule with a particular max value:
+### 代码
+
+以下是指定最大行数时违反本规则的代码示例：
 
 ::: incorrect
 
@@ -109,7 +117,7 @@ function foo() {
 
 :::
 
-Examples of **correct** code for this rule with a particular max value:
+以下是指定最大行数时符合本规则的代码示例：
 
 ::: correct
 
@@ -147,9 +155,11 @@ function foo() {
 
 :::
 
-### skipBlankLines
+<a id="skipblanklines"></a>
 
-Examples of **incorrect** code for this rule with the `{ "skipBlankLines": true }` option:
+### 忽略空行
+
+以下是使用 `{ "skipBlankLines": true }` 选项时违反本规则的代码示例：
 
 ::: incorrect
 
@@ -163,7 +173,7 @@ function foo() {
 
 :::
 
-Examples of **correct** code for this rule with the `{ "skipBlankLines": true }` option:
+以下是使用 `{ "skipBlankLines": true }` 选项时符合本规则的代码示例：
 
 ::: correct
 
@@ -177,9 +187,11 @@ function foo() {
 
 :::
 
-### skipComments
+<a id="skipcomments"></a>
 
-Examples of **incorrect** code for this rule with the `{ "skipComments": true }` option:
+### 忽略注释
+
+以下是使用 `{ "skipComments": true }` 选项时违反本规则的代码示例：
 
 ::: incorrect
 
@@ -193,7 +205,7 @@ function foo() {
 
 :::
 
-Examples of **correct** code for this rule with the `{ "skipComments": true }` option:
+以下是使用 `{ "skipComments": true }` 选项时符合本规则的代码示例：
 
 ::: correct
 
@@ -207,9 +219,11 @@ function foo() {
 
 :::
 
-### IIFEs
+<a id="iifes"></a>
 
-Examples of **incorrect** code for this rule with the `{ "IIFEs": true }` option:
+### 立即调用的函数表达式（IIFE）
+
+以下是使用 `{ "IIFEs": true }` 选项时违反本规则的代码示例：
 
 ::: incorrect
 
@@ -226,7 +240,7 @@ Examples of **incorrect** code for this rule with the `{ "IIFEs": true }` option
 
 :::
 
-Examples of **correct** code for this rule with the `{ "IIFEs": true }` option:
+以下是使用 `{ "IIFEs": true }` 选项时符合本规则的代码示例：
 
 ::: correct
 
@@ -243,6 +257,8 @@ Examples of **correct** code for this rule with the `{ "IIFEs": true }` option:
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You can turn this rule off if you are not concerned with the number of lines in your functions.
+## 何时不应使用
+
+如果你不关心函数的行数，可以关闭本规则。
