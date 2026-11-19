@@ -4,16 +4,17 @@ rule_type: suggestion
 ---
 
 
-It is considered good practice to only `throw` the `Error` object itself or an object using the `Error` object as base objects for user-defined exceptions.
-The fundamental benefit of `Error` objects is that they automatically keep track of where they were built and originated.
+通常认为，只应 `throw` `Error` 对象本身，或以 `Error` 对象为基类、用于定义用户自定义异常的对象。`Error` 对象的一个根本优势是，它们会自动记录自身的构建位置和来源。
 
-This rule restricts what can be thrown as an exception.  When it was first created, it only prevented literals from being thrown (hence the name), but it has now been expanded to only allow expressions which have a possibility of being an `Error` object.
+此规则限制可作为异常抛出的内容。该规则最初创建时，只禁止抛出字面量（因此得名）；现在已扩展为仅允许可能是 `Error` 对象的表达式。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at maintaining consistency when throwing exception by disallowing to throw literals and other expressions which cannot possibly be an `Error` object.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在保持抛出异常时的一致性：禁止抛出字面量和其他不可能是 `Error` 对象的表达式。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -39,7 +40,7 @@ throw `${err2}`
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -62,15 +63,19 @@ try {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## Known Limitations
+此规则没有选项。
 
-Due to the limits of static analysis, this rule cannot guarantee that you will only throw `Error` objects.
+<a id="known-limitations"></a>
 
-Examples of **correct** code for this rule, but which do not throw an `Error` object:
+## 已知限制
+
+由于静态分析的局限性，此规则无法保证你只会抛出 `Error` 对象。
+
+以下代码符合此规则，但抛出的并非 `Error` 对象：
 
 ::: correct
 
