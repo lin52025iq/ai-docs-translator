@@ -4,9 +4,9 @@ rule_type: problem
 ---
 
 
-Using a single `import` statement per module will make the code clearer because you can see everything being imported from that module on one line.
+每个模块使用单条 `import` 语句可以让代码更清晰，因为这样可以在一行中看到从该模块导入的所有内容。
 
-In the following example the `module` import on line 1 is repeated on line 3. These can be combined to make the list of imports more succinct.
+在下面的示例中，第 1 行的 `module` 导入在第 3 行重复出现。可以将它们合并，让导入列表更加简洁。
 
 ```js
 import { merge } from 'module';
@@ -14,11 +14,13 @@ import something from 'another-module';
 import { find } from 'module';
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule requires that all imports from a single module that can be merged exist in a single `import` statement.
+## 规则详情
 
-Example of **incorrect** code for this rule:
+此规则要求将同一模块中所有可以合并的导入放在同一条 `import` 语句中。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -32,7 +34,7 @@ import { find } from 'module';
 
 :::
 
-Example of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -45,7 +47,7 @@ import something from 'another-module';
 
 :::
 
-Example of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -59,18 +61,20 @@ import * as something from 'module';
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option:
+## 选项
 
-* `"includeExports"`: `true` (default `false`) checks for exports in addition to imports.
-* `"allowSeparateTypeImports"`: `true` (default `false`) allows a type import alongside a value import from the same module in TypeScript files.
+此规则接受一个对象选项：
+
+* `"includeExports"`：`true`（默认值为 `false`）时，除导入外，也会检查导出。
+* `"allowSeparateTypeImports"`：`true`（默认值为 `false`）时，允许在 TypeScript 文件中从同一模块分别导入类型和值。
 
 ### includeExports
 
-If re-exporting from an imported module, you should add the imports to the `import`-statement, and export that directly, not use `export ... from`.
+如果要从已导入的模块重新导出，应将这些导入添加到 `import` 语句中，并直接导出，而不是使用 `export ... from`。
 
-Example of **incorrect** code for this rule with the `{ "includeExports": true }` option:
+此规则在 `{ "includeExports": true }` 选项下的错误代码示例：
 
 ::: incorrect
 
@@ -84,7 +88,7 @@ export { find } from 'module';
 
 :::
 
-Example of **correct** code for this rule with the `{ "includeExports": true }` option:
+此规则在 `{ "includeExports": true }` 选项下的正确代码示例：
 
 ::: correct
 
@@ -98,7 +102,7 @@ export { find };
 
 :::
 
-Example of **correct** code for this rule with the `{ "includeExports": true }` option:
+此规则在 `{ "includeExports": true }` 选项下的正确代码示例：
 
 ::: correct
 
@@ -118,9 +122,9 @@ export * from 'module';
 
 ### allowSeparateTypeImports
 
-TypeScript allows importing types using `import type`. By default, this rule flags instances of `import type` that have the same specifier as `import`. The `allowSeparateTypeImports` option allows you to override this behavior.
+TypeScript 允许使用 `import type` 导入类型。默认情况下，如果 `import type` 的模块说明符与 `import` 相同，此规则会报告问题。`allowSeparateTypeImports` 选项允许你覆盖此行为。
 
-Example of **incorrect** TypeScript code for this rule with the default `{ "allowSeparateTypeImports": false }` option:
+此规则在默认选项 `{ "allowSeparateTypeImports": false }` 下的 TypeScript 错误代码示例：
 
 ::: incorrect
 
@@ -133,7 +137,7 @@ import type { SomeType } from 'module';
 
 :::
 
-Example of **correct** TypeScript code for this rule with the default `{ "allowSeparateTypeImports": false }` option:
+此规则在默认选项 `{ "allowSeparateTypeImports": false }` 下的 TypeScript 正确代码示例：
 
 ::: correct
 
@@ -145,7 +149,7 @@ import { someValue, type SomeType } from 'module';
 
 :::
 
-Example of **incorrect** TypeScript code for this rule with the `{ "allowSeparateTypeImports": true }` option:
+此规则在 `{ "allowSeparateTypeImports": true }` 选项下的 TypeScript 错误代码示例：
 
 ::: incorrect
 
@@ -159,7 +163,7 @@ import type { AnotherType } from 'module';
 
 :::
 
-Example of **correct** TypeScript code for this rule with the `{ "allowSeparateTypeImports": true }` option:
+此规则在 `{ "allowSeparateTypeImports": true }` 选项下的 TypeScript 正确代码示例：
 
 ::: correct
 
