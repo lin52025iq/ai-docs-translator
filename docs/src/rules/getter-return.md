@@ -9,7 +9,7 @@ further_reading:
 
 
 
-The get syntax binds an object property to a function that will be called when that property is looked up. It was first introduced in ECMAScript 5:
+get 语法会将对象属性绑定到一个函数，该函数会在访问该属性时调用。它首次在 ECMAScript 5 中引入：
 
 ```js
 const p = {
@@ -25,13 +25,15 @@ Object.defineProperty(p, "age", {
 });
 ```
 
-Note that every `getter` is expected to return a value.
+请注意，每个 `getter` 都应返回一个值。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces that a return statement is present in property getters.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则要求属性 getter 中包含 return 语句。
+
+此规则下的错误代码示例：
 
 ::: incorrect
 
@@ -59,7 +61,7 @@ class P{
 
 :::
 
-Examples of **correct** code for this rule:
+此规则下的正确代码示例：
 
 ::: correct
 
@@ -87,13 +89,15 @@ class P{
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option:
+## 选项
 
-* `"allowImplicit": false` (default) disallows implicitly returning `undefined` with a `return` statement.
+此规则有一个对象选项：
 
-Examples of **correct** code for the `{ "allowImplicit": true }` option:
+* `"allowImplicit": false`（默认值）禁止通过 `return` 语句隐式返回 `undefined`。
+
+`{ "allowImplicit": true }` 选项下的正确代码示例：
 
 ::: correct
 
@@ -108,6 +112,8 @@ const p = {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If your project will not be using ES5 property getters you do not need this rule.
+## 何时不使用
+
+如果你的项目不会使用 ES5 属性 getter，则无需使用此规则。
