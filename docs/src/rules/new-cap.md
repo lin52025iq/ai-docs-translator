@@ -4,15 +4,17 @@ rule_type: suggestion
 ---
 
 
-The `new` operator in JavaScript creates a new instance of a particular type of object. That type of object is represented by a constructor function. Since constructor functions are just regular functions, the only defining characteristic is that `new` is being used as part of the call. Native JavaScript functions begin with an uppercase letter to distinguish those functions that are to be used as constructors from functions that are not. Many style guides recommend following this pattern to more easily determine which functions are to be used as constructors.
+JavaScript 中的 `new` 运算符会创建特定对象类型的新实例。该对象类型由构造函数表示。由于构造函数只是普通函数，唯一能表明其用途的特征就是调用时使用了 `new`。原生 JavaScript 函数以大写字母开头，以区分用作构造函数的函数和其他函数。许多风格指南建议遵循这一模式，以便更容易判断哪些函数用作构造函数。
 
 ```js
 const friend = new Person();
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule requires constructor names to begin with a capital letter. Certain built-in identifiers are exempt from this rule. These identifiers are:
+## 规则详情
+
+此规则要求构造函数名称以大写字母开头。某些内置标识符不受此规则限制，包括：
 
 * `Array`
 * `Boolean`
@@ -26,9 +28,9 @@ This rule requires constructor names to begin with a capital letter. Certain bui
 * `Symbol`
 * `BigInt`
 
-These identifiers are exempt only when they reference the global built-in, either directly or as a property of the global object (`global`, `globalThis`, `self`, or `window`). `Date.UTC()` is exempt under the same condition.
+只有当这些标识符引用全局内置对象时，才不受此规则限制；可以直接引用，也可以将其作为全局对象（`global`、`globalThis`、`self` 或 `window`）的属性引用。在相同条件下，`Date.UTC()` 也不受限制。
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -50,7 +52,7 @@ const otherTime = globalThis.Date.UTC(2000, 0);
 
 :::
 
-Examples of **incorrect** code for this rule:
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -70,24 +72,26 @@ const time = Date.UTC(2000, 0);
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option:
+## 选项
 
-* `"newIsCap": true` (default) requires all `new` operators to be called with uppercase-started functions.
-* `"newIsCap": false` allows `new` operators to be called with lowercase-started or uppercase-started functions.
-* `"capIsNew": true` (default) requires all uppercase-started functions to be called with `new` operators.
-* `"capIsNew": false` allows uppercase-started functions to be called without `new` operators.
-* `"newIsCapExceptions"` allows specified lowercase-started function names to be called with the `new` operator.
-* `"newIsCapExceptionPattern"` allows any lowercase-started function names that match the specified regex pattern to be called with the `new` operator.
-* `"capIsNewExceptions"` allows specified uppercase-started function names to be called without the `new` operator.
-* `"capIsNewExceptionPattern"` allows any uppercase-started function names that match the specified regex pattern to be called without the `new` operator.
-* `"properties": true` (default) enables checks on object properties.
-* `"properties": false` disables checks on object properties.
+此规则有一个对象选项：
+
+* `"newIsCap": true`（默认值）要求所有 `new` 运算符都与以大写字母开头的函数一起使用。
+* `"newIsCap": false` 允许 `new` 运算符与以小写或大写字母开头的函数一起使用。
+* `"capIsNew": true`（默认值）要求所有以大写字母开头的函数都使用 `new` 运算符调用。
+* `"capIsNew": false` 允许不使用 `new` 运算符调用以大写字母开头的函数。
+* `"newIsCapExceptions"` 允许对指定的以小写字母开头的函数名称使用 `new` 运算符。
+* `"newIsCapExceptionPattern"` 允许对匹配指定正则表达式模式的任意以小写字母开头的函数名称使用 `new` 运算符。
+* `"capIsNewExceptions"` 允许不使用 `new` 运算符调用指定的以大写字母开头的函数名称。
+* `"capIsNewExceptionPattern"` 允许不使用 `new` 运算符调用匹配指定正则表达式模式的任意以大写字母开头的函数名称。
+* `"properties": true`（默认值）启用对对象属性的检查。
+* `"properties": false` 禁用对对象属性的检查。
 
 ### newIsCap
 
-Examples of **incorrect** code for this rule with the default `{ "newIsCap": true }` option:
+在默认选项 `{ "newIsCap": true }` 下，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -99,7 +103,7 @@ const friend = new person();
 
 :::
 
-Examples of **correct** code for this rule with the default `{ "newIsCap": true }` option:
+在默认选项 `{ "newIsCap": true }` 下，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -111,7 +115,7 @@ const friend = new Person();
 
 :::
 
-Examples of **correct** code for this rule with the `{ "newIsCap": false }` option:
+在选项 `{ "newIsCap": false }` 下，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -125,7 +129,7 @@ const friend = new person();
 
 ### capIsNew
 
-Examples of **incorrect** code for this rule with the default `{ "capIsNew": true }` option:
+在默认选项 `{ "capIsNew": true }` 下，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -137,7 +141,7 @@ const colleague = Person();
 
 :::
 
-Examples of **correct** code for this rule with the default `{ "capIsNew": true }` option:
+在默认选项 `{ "capIsNew": true }` 下，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -149,7 +153,7 @@ const colleague = new Person();
 
 :::
 
-Examples of **correct** code for this rule with the `{ "capIsNew": false }` option:
+在选项 `{ "capIsNew": false }` 下，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -163,7 +167,7 @@ const colleague = Person();
 
 ### newIsCapExceptions
 
-Examples of additional **correct** code for this rule with the `{ "newIsCapExceptions": ["events"] }` option:
+在选项 `{ "newIsCapExceptions": ["events"] }` 下，以下是此规则的其他**正确**代码示例：
 
 ::: correct
 
@@ -179,7 +183,7 @@ const emitter = new events();
 
 ### newIsCapExceptionPattern
 
-Examples of additional **correct** code for this rule with the `{ "newIsCapExceptionPattern": "^person\\.." }` option:
+在选项 `{ "newIsCapExceptionPattern": "^person\\.." }` 下，以下是此规则的其他**正确**代码示例：
 
 ::: correct
 
@@ -193,7 +197,7 @@ const bestFriend = new person.friend();
 
 :::
 
-Examples of additional **correct** code for this rule with the `{ "newIsCapExceptionPattern": "\\.bar$" }` option:
+在选项 `{ "newIsCapExceptionPattern": "\\.bar$" }` 下，以下是此规则的其他**正确**代码示例：
 
 ::: correct
 
@@ -207,7 +211,7 @@ const friend = new person.bar();
 
 ### capIsNewExceptions
 
-Examples of additional **correct** code for this rule with the `{ "capIsNewExceptions": ["Person"] }` option:
+在选项 `{ "capIsNewExceptions": ["Person"] }` 下，以下是此规则的其他**正确**代码示例：
 
 ::: correct
 
@@ -223,7 +227,7 @@ function foo(arg) {
 
 ### capIsNewExceptionPattern
 
-Examples of additional **correct** code for this rule with the `{ "capIsNewExceptionPattern": "^person\\.." }` option:
+在选项 `{ "capIsNewExceptionPattern": "^person\\.." }` 下，以下是此规则的其他**正确**代码示例：
 
 ::: correct
 
@@ -236,7 +240,7 @@ const bestFriend = person.Friend();
 
 :::
 
-Examples of additional **correct** code for this rule with the `{ "capIsNewExceptionPattern": "\\.Bar$" }` option:
+在选项 `{ "capIsNewExceptionPattern": "\\.Bar$" }` 下，以下是此规则的其他**正确**代码示例：
 
 ::: correct
 
@@ -248,7 +252,7 @@ foo.Bar();
 
 :::
 
-Examples of additional **correct** code for this rule with the `{ "capIsNewExceptionPattern": "^Foo" }` option:
+在选项 `{ "capIsNewExceptionPattern": "^Foo" }` 下，以下是此规则的其他**正确**代码示例：
 
 ::: correct
 
@@ -266,7 +270,7 @@ const z = Foo.Bar(42);
 
 ### properties
 
-Examples of **incorrect** code for this rule with the default `{ "properties": true }` option:
+在默认选项 `{ "properties": true }` 下，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -278,7 +282,7 @@ const friend = new person.acquaintance();
 
 :::
 
-Examples of **correct** code for this rule with the default `{ "properties": true }` option:
+在默认选项 `{ "properties": true }` 下，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -290,7 +294,7 @@ const friend = new person.Acquaintance();
 
 :::
 
-Examples of **correct** code for this rule with the `{ "properties": false }` option:
+在选项 `{ "properties": false }` 下，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -302,6 +306,8 @@ const friend = new person.acquaintance();
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you have conventions that don't require an uppercase letter for constructors, or don't require capitalized functions be only used as constructors, turn this rule off.
+## 何时不应使用
+
+如果你的约定不要求构造函数名称以大写字母开头，或不要求以大写字母开头的函数只能用作构造函数，请关闭此规则。
