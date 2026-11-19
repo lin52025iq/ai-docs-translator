@@ -1,17 +1,19 @@
 ---
-title: Plugin Migration to Flat Config
+title: 插件迁移到扁平配置
 eleventyNavigation:
     key: plugin flat config
     parent: create plugins
-    title: Migration to Flat Config
+    title: 迁移到扁平配置
     order: 5
 ---
 
-Beginning in ESLint v9.0.0, the default configuration system will be the new flat config system. In order for your plugins to work with flat config files, you'll need to make some changes to your existing plugins.
+从 ESLint v9.0.0 开始，默认配置系统将采用新的扁平配置系统。要让你的插件适用于扁平配置文件，你需要对现有插件进行一些更改。
 
-## Recommended Plugin Structure
+<a id="recommended-plugin-structure"></a>
 
-To make it easier to work with your plugin in the flat config system, it's recommended that you switch your existing plugin entrypoint to look like this:
+## 推荐的插件结构
+
+为了让你的插件更容易用于扁平配置系统，建议将现有插件入口点改为如下结构：
 
 ```js
 const plugin = {
@@ -28,11 +30,13 @@ export default plugin;
 module.exports = plugin;
 ```
 
-This structure allows the most flexibility when making other changes discussed on this page.
+此结构能让你在进行本页讨论的其他更改时拥有最大的灵活性。
 
-## Adding Plugin Meta Information
+<a id="adding-plugin-meta-information"></a>
 
-With the old eslintrc configuration system, ESLint could pull information about the plugin from the package name, but with flat config, ESLint no longer has access to the name of the plugin package. To replace that missing information, you should add a `meta` key that contains at least a `name` key, and ideally, a `version` key, such as:
+## 添加插件元信息
+
+在旧的 eslintrc 配置系统中，ESLint 可以从包名获取插件信息，但在扁平配置中，ESLint 无法再获知插件包的名称。要补充缺失的信息，你应该添加一个 `meta` 键，其中至少包含 `name` 键，最好还包含 `version` 键，例如：
 
 ```js
 const plugin = {
@@ -52,19 +56,23 @@ export default plugin;
 module.exports = plugin;
 ```
 
-If your plugin is published as an npm package, the `name` and `version` should be the same as in your `package.json` file; otherwise, you can assign any value you'd like.
+如果你的插件作为 npm 包发布，`name` 和 `version` 应与 `package.json` 文件中的值相同；否则，你可以指定任意值。
 
-Without this meta information, your plugin will not be usable with the `--cache` and `--print-config` command line options.
+没有这些元信息，你的插件将无法使用 `--cache` 和 `--print-config` 命令行选项。
 
-## Migrating Rules for Flat Config
+<a id="migrating-rules-for-flat-config"></a>
 
-No changes are necessary for the `rules` key in your plugin. Everything works the same as with the old eslintrc configuration system.
+## 迁移扁平配置中的规则
 
-## Migrating Processors for Flat Config
+你的插件中的 `rules` 键无需更改。它的工作方式与旧的 eslintrc 配置系统完全相同。
 
-Each processor should specify a `meta` object. For more information, see the [full documentation](custom-processors).
+<a id="migrating-processors-for-flat-config"></a>
 
-No other changes are necessary for the `processors` key in your plugin as long as you aren't using file extension-named processors. If you have any file extension-named processors, you must update the name to a valid identifier (numbers and letters). File extension-named processors were automatically applied in the old configuration system but are not automatically applied when using flat config. Here is an example of a file extension-named processor:
+## 迁移扁平配置中的处理器
+
+每个处理器都应指定一个 `meta` 对象。更多信息请参阅[完整文档](custom-processors)。
+
+只要你没有使用以文件扩展名命名的处理器，插件中的 `processors` 键就无需进行其他更改。如果你使用了任何以文件扩展名命名的处理器，就必须将名称更新为有效标识符（数字和字母）。在旧的配置系统中，这类处理器会自动应用；而在扁平配置中则不会自动应用。以下是一个以文件扩展名命名的处理器示例：
 
 ```js
 const plugin = {
@@ -86,7 +94,7 @@ export default plugin;
 module.exports = plugin;
 ```
 
-The name `".md"` is no longer valid for a processor, so it must be replaced with a valid identifier such as `markdown`:
+`".md"` 不再是有效的处理器名称，因此必须将其替换为有效标识符，例如 `markdown`：
 
 ```js
 const plugin = {
@@ -108,7 +116,7 @@ export default plugin;
 module.exports = plugin;
 ```
 
-In order to use this renamed processor, you'll also need to manually specify it inside of a config, such as:
+要使用重命名后的处理器，你还需要在配置中手动指定它，例如：
 
 ```js
 import { defineConfig } from "eslint/config";
@@ -125,11 +133,13 @@ export default defineConfig([
 ]);
 ```
 
-You should update your plugin's documentation to advise your users if you have renamed a file extension-named processor.
+如果你重命名了以文件扩展名命名的处理器，应更新插件文档并告知用户。
 
-## Migrating Configs for Flat Config
+<a id="migrating-configs-for-flat-config"></a>
 
-If your plugin is exporting configs that refer back to your plugin, then you'll need to update your configs to flat config format. As part of the migration, you'll need to reference your plugin directly in the `plugins` key. For example, here is an exported config in the old configuration system format for a plugin named `eslint-plugin-example`:
+## 迁移扁平配置中的配置
+
+如果你的插件导出的配置会引用自身，就需要将这些配置更新为扁平配置格式。迁移时，你需要在 `plugins` 键中直接引用插件。比如，名为 `eslint-plugin-example` 的插件在旧配置系统格式下导出的配置如下：
 
 ```js
 // plugin name: eslint-plugin-example
@@ -152,7 +162,7 @@ module.exports = {
 };
 ```
 
-To migrate to flat config format, you'll need to move the configs to after the definition of the `plugin` variable in the recommended plugin structure, like this:
+要迁移到扁平配置格式，你需要按照推荐的插件结构，在定义 `plugin` 变量之后再添加配置，如下所示：
 
 ```js
 const plugin = {
@@ -181,7 +191,7 @@ export default plugin;
 module.exports = plugin;
 ```
 
-Your users can then use this exported config like this:
+用户随后可以像这样使用导出的配置：
 
 ```js
 import { defineConfig } from "eslint/config";
@@ -202,7 +212,7 @@ export default defineConfig([
 ]);
 ```
 
-If your config extends other configs, you can export an array:
+如果你的配置扩展了其他配置，可以导出一个数组：
 
 ```js
 const baseConfig = require("./base-config");
@@ -222,13 +232,15 @@ module.exports = {
 };
 ```
 
-You should update your documentation so your plugin users know how to reference the exported configs.
+你应更新文档，告知插件用户如何引用导出的配置。
 
-For more information, see the [full documentation](https://eslint.org/docs/latest/extend/plugins#configs-in-plugins).
+更多信息请参阅[完整文档](https://eslint.org/docs/latest/extend/plugins#configs-in-plugins)。
 
-## Migrating Environments for Flat Config
+<a id="migrating-environments-for-flat-config"></a>
 
-Environments are no longer supported in flat config, and so we recommend transitioning your environments into exported configs. For example, suppose you export a `mocha` environment like this:
+## 迁移扁平配置中的环境
+
+扁平配置不再支持环境，因此我们建议将环境转换为导出的配置。例如，假设你导出了如下 `mocha` 环境：
 
 ```js
 // plugin name: eslint-plugin-example
@@ -250,7 +262,7 @@ module.exports = {
 };
 ```
 
-To migrate this environment into a config, you need to add a new key in the `plugin.configs` object that has a flat config object containing the same information, like this:
+要将此环境迁移为配置，你需要在 `plugin.configs` 对象中添加一个新键，其值为包含相同信息的扁平配置对象，如下所示：
 
 ```js
 const plugin = {
@@ -280,7 +292,7 @@ export default plugin;
 module.exports = plugin;
 ```
 
-Your users can then use this exported config like this:
+用户随后可以像这样使用导出的配置：
 
 ```js
 import { defineConfig } from "eslint/config";
@@ -306,18 +318,22 @@ export default defineConfig([
 ]);
 ```
 
-You should update your documentation so your plugin users know how to reference the exported configs.
+你应更新文档，告知插件用户如何引用导出的配置。
 
-## Backwards Compatibility
+<a id="backwards-compatibility"></a>
 
-If your plugin needs to work with both the old and new configuration systems, then you'll need to:
+## 向后兼容
 
-1. **Export a CommonJS entrypoint.** The old configuration system cannot load plugins that are published only in ESM format. If your source code is in ESM, then you'll need to use a bundler that can generate a CommonJS version and use the [`exports`](https://nodejs.org/api/packages.html#package-entry-points) key in your `package.json` file to ensure the CommonJS version can be found by Node.js.
-1. **Keep the `environments` key.** If your plugin exports custom environments, you should keep those as they are and also export the equivalent flat configs as described above. The `environments` key is ignored when ESLint is running in flat config mode.
-1. **Export both eslintrc and flat configs.** The `configs` key is only validated when a config is used, so you can provide both formats of configs in the `configs` key. We recommend prefixing older format configs with `legacy-`. For example, if your primary config is called `recommended` and is in flat config format, then you can also have a config named `legacy-recommended` that is the eslintrc config format. If you don’t want to update the config name, you can also create an additional entry in the configs object prefixed with `"flat/"` (for example, `"flat/recommended"`). See [Backwards Compatibility for Legacy Configs](plugins#backwards-compatibility-for-legacy-configs) for more details.
+如果你的插件需要同时适用于新旧两种配置系统，则需要：
 
-## Further Reading
+1. **导出 CommonJS 入口点。** 旧的配置系统无法加载仅以 ESM 格式发布的插件。如果你的源代码使用 ESM，则需要使用打包工具生成 CommonJS 版本，并在 `package.json` 文件中使用 [`exports`](https://nodejs.org/api/packages.html#package-entry-points) 键，以确保 Node.js 能找到 CommonJS 版本。
+1. **保留 `environments` 键。** 如果你的插件导出了自定义环境，应保持原样，同时按照上述说明导出对应的扁平配置。ESLint 在扁平配置模式下运行时会忽略 `environments` 键。
+1. **同时导出 eslintrc 和扁平配置。** 只有在使用配置时才会验证 `configs` 键，因此你可以在 `configs` 键中同时提供两种格式的配置。我们建议在旧格式配置前加上 `legacy-` 前缀。例如，如果你的主要配置名为 `recommended`，且采用扁平配置格式，那么你也可以创建一个名为 `legacy-recommended` 的配置，使用 eslintrc 配置格式。如果你不想更改配置名称，也可以在 configs 对象中创建一个额外条目，并加上 `"flat/"` 前缀（例如 `"flat/recommended"`）。更多详情请参阅[旧版配置的向后兼容性](plugins#backwards-compatibility-for-legacy-configs)。
 
-- [Overview of the flat config file format blog post](https://eslint.org/blog/2022/08/new-config-system-part-2/)
-- [API usage of new configuration system blog post](https://eslint.org/blog/2022/08/new-config-system-part-3/)
-- [Background to new configuration system blog post](https://eslint.org/blog/2022/08/new-config-system-part-1/)
+<a id="further-reading"></a>
+
+## 延伸阅读
+
+- [扁平配置文件格式概述博客文章](https://eslint.org/blog/2022/08/new-config-system-part-2/)
+- [新配置系统 API 用法博客文章](https://eslint.org/blog/2022/08/new-config-system-part-3/)
+- [新配置系统背景介绍博客文章](https://eslint.org/blog/2022/08/new-config-system-part-1/)
