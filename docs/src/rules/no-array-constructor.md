@@ -7,17 +7,15 @@ related_rules:
 ---
 
 
-Use of the `Array` constructor to construct a new array is generally
-discouraged in favor of array literal notation because of the single-argument
-pitfall and because the `Array` global may be redefined. The exception is when
-the `Array` constructor is used to intentionally create sparse arrays of a
-specified size by giving the constructor a single numeric argument.
+通常不建议使用 `Array` 构造函数创建新数组，而应使用数组字面量表示法，因为它存在单参数陷阱，而且 `Array` 全局对象可能会被重新定义。例外情况是：为有意创建指定大小的稀疏数组，可以向 `Array` 构造函数传入单个数值参数。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows `Array` constructors.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止使用 `Array` 构造函数。
+
+此规则的错误代码示例：
 
 :::incorrect
 
@@ -35,7 +33,7 @@ Array(...args);
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 :::correct
 
@@ -53,9 +51,9 @@ const createArray = Array => new Array();
 
 :::
 
-This rule additionally supports TypeScript type syntax.
+此规则还支持 TypeScript 类型语法。
 
-Examples of **correct** code for this rule:
+正确代码示例：
 
 :::correct
 
@@ -75,7 +73,7 @@ Array?.foo();
 
 :::
 
-Examples of **incorrect** code for this rule:
+错误代码示例：
 
 :::incorrect
 
@@ -93,11 +91,14 @@ Array?.(0, 1, 2);
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-This rule enforces a nearly universal stylistic concern. That being said, this
-rule may be disabled if the constructor style is preferred.
+<a id="when-not-to-use-it"></a>
+
+## 不使用此规则的情形
+
+此规则针对的是几乎普遍存在的风格问题。不过，如果你更喜欢使用构造函数风格，也可以禁用此规则。
