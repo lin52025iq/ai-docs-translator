@@ -7,17 +7,19 @@ related_rules:
 ---
 
 
-JavaScript's `alert`, `confirm`, and `prompt` functions are widely considered to be obtrusive as UI elements and should be replaced by a more appropriate custom UI implementation. Furthermore, `alert` is often used while debugging code, which should be removed before deployment to production.
+JavaScript 的 `alert`、`confirm` 和 `prompt` 函数通常被认为会作为 UI 元素造成干扰，应替换为更合适的自定义 UI 实现。此外，`alert` 常用于调试代码，应在部署到生产环境之前移除。
 
 ```js
 alert("here!");
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at catching debugging code that should be removed and popup UI elements that should be replaced with less obtrusive, custom UIs. As such, it will warn when it encounters `alert`, `prompt`, and `confirm` function calls which are not shadowed.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在捕获应当移除的调试代码，以及应替换为干扰较小的自定义 UI 的弹出式 UI 元素。因此，当遇到未被遮蔽的 `alert`、`prompt` 和 `confirm` 函数调用时，此规则会发出警告。
+
+此规则的**错误**代码示例：
 
 :::incorrect
 
@@ -33,7 +35,7 @@ prompt("What's your name?", "John Doe");
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 :::correct
 
@@ -54,6 +56,8 @@ function foo() {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
+
+此规则没有选项。
