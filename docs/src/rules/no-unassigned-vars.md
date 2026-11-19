@@ -8,9 +8,9 @@ related_rules:
 ---
 
 
-This rule flags `let` or `var` declarations that are never assigned a value but are still read or used in the code. Since these variables will always be `undefined`, their usage is likely a programming mistake.
+此规则会标记声明后从未赋值、但仍在代码中读取或使用的 `let` 或 `var` 变量。由于这些变量的值始终为 `undefined`，使用它们很可能是编程错误。
 
-For example, if you check the value of a `status` variable, but it was never given a value, it will always be `undefined`:
+例如，如果检查 `status` 变量的值，但从未给它赋值，那么它的值始终为 `undefined`：
 
 ```js
 let status;
@@ -22,9 +22,11 @@ if (status === 'ready') {
 }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-Examples of **incorrect** code for this rule:
+## 规则详情
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -60,7 +62,7 @@ function init() {
 
 :::
 
-In TypeScript:
+在 TypeScript 中：
 
 ::: incorrect
 
@@ -73,7 +75,7 @@ console.log(value);
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -120,7 +122,7 @@ if (one === two) {
 
 :::
 
-In TypeScript:
+在 TypeScript 中：
 
 ::: correct
 
@@ -138,13 +140,17 @@ declare module "my-module" {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-You can disable this rule if your code intentionally uses variables that are declared and used, but are never assigned a value. This might be the case in:
+<a id="when-not-to-use-it"></a>
 
-- Legacy codebases where uninitialized variables are used as placeholders.
-- Certain TypeScript use cases where variables are declared with a type and intentionally left unassigned (though using `declare` is preferred).
+## 何时不应使用
+
+如果代码有意声明并使用从未赋值的变量，可以禁用此规则。以下情况可能会这样做：
+
+- 在旧代码库中，未初始化的变量被用作占位符。
+- 某些 TypeScript 使用场景中，变量声明了类型但有意不赋值（不过更推荐使用 `declare`）。
