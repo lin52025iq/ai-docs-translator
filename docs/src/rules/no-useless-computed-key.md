@@ -5,23 +5,25 @@ rule_type: suggestion
 
 
 
-It's unnecessary to use computed properties with literals such as:
+对于如下使用字面量的计算属性，使用方括号是多余的：
 
 ```js
 const foo = {["a"]: "b"};
 ```
 
-The code can be rewritten as:
+可以将代码改写为：
 
 ```js
 const foo = {"a": "b"};
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows unnecessary usage of computed property keys.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止不必要地使用计算属性键。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -53,7 +55,7 @@ class Foo {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -85,7 +87,7 @@ class Foo {
 
 :::
 
-Examples of additional **correct** code for this rule:
+此规则的其他正确代码示例：
 
 ::: correct
 
@@ -113,20 +115,21 @@ class Foo {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option:
+## 选项
 
-* `enforceForClassMembers` set to `false` disables this rule for class members (Default `true`).
+此规则有一个对象选项：
+
+* 将 `enforceForClassMembers` 设为 `false` 可对类成员禁用此规则（默认为 `true`）。
 
 ### enforceForClassMembers
 
-By default, this rule also checks class declarations and class expressions,
-as the default value for `enforceForClassMembers` is `true`.
+默认情况下，此规则也会检查类声明和类表达式，因为 `enforceForClassMembers` 的默认值为 `true`。
 
-When `enforceForClassMembers` is set to `false`, the rule will allow unnecessary computed keys inside of class fields, class methods, class getters, and class setters.
+将 `enforceForClassMembers` 设为 `false` 时，此规则允许在类字段、类方法、类 getter 和类 setter 中使用不必要的计算属性键。
 
-Examples of **incorrect** code for this rule with the `{ "enforceForClassMembers": false }` option:
+使用 `{ "enforceForClassMembers": false }` 选项时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -145,7 +148,7 @@ const obj = {
 
 :::
 
-Examples of **correct** code for this rule with the `{ "enforceForClassMembers": false }` option:
+使用 `{ "enforceForClassMembers": false }` 选项时，此规则的正确代码示例：
 
 ::: correct
 
@@ -167,6 +170,8 @@ class SomeClass {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you don't want to be notified about unnecessary computed property keys, you can safely disable this rule.
+## 何时不应使用此规则
+
+如果你不希望收到有关不必要的计算属性键的提示，可以放心地禁用此规则。
