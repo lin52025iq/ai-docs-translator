@@ -4,7 +4,7 @@ rule_type: suggestion
 ---
 
 
-It is often necessary to capture the current execution context in order to make it available subsequently. A prominent example of this are jQuery callbacks:
+通常需要捕获当前执行上下文，以便之后使用。一个典型例子是 jQuery 回调：
 
 ```js
 const that = this;
@@ -14,22 +14,26 @@ jQuery('li').click(function (event) {
 });
 ```
 
-There are many commonly used aliases for `this` such as `that`, `self` or `me`. It is desirable to ensure that whichever alias the team agrees upon is used consistently throughout the application.
+`this` 有许多常用别名，例如 `that`、`self` 或 `me`。最好确保整个应用始终一致地使用团队选定的别名。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces two things about variables with the designated alias names for `this`:
+## 规则详情
 
-* If a variable with a designated name is declared, it *must* be either initialized (in the declaration) or assigned (in the same scope as the declaration) the value `this`.
-* If a variable is initialized or assigned the value `this`, the name of the variable *must* be a designated alias.
+此规则对使用指定别名的变量作出以下两项要求：
 
-## Options
+* 如果声明了一个使用指定名称的变量，则必须在声明时初始化为 `this`，或在与声明相同的作用域内将其赋值为 `this`。
+* 如果某个变量被初始化为 `this` 或被赋值为 `this`，则该变量的名称必须是指定别名之一。
 
-This rule has one or more string options:
+<a id="options"></a>
 
-* designated alias names for `this` (default `"that"`)
+## 选项
 
-Examples of **incorrect** code for this rule with the default `"that"` option:
+此规则有一个或多个字符串选项：
+
+* `this` 的指定别名（默认为 `"that"`）
+
+以下是使用默认选项 `"that"` 时违反此规则的代码示例：
 
 ::: incorrect
 
@@ -47,7 +51,7 @@ self = this;
 
 :::
 
-Examples of **correct** code for this rule with the default `"that"` option:
+以下是使用默认选项 `"that"` 时符合此规则的代码示例：
 
 ::: correct
 
@@ -67,7 +71,7 @@ foo.bar = this;
 
 :::
 
-Examples of **incorrect** code for this rule with the default `"that"` option, if the variable is not initialized:
+以下是使用默认选项 `"that"` 且变量未初始化时违反此规则的代码示例：
 
 ::: incorrect { "sourceType": "script" }
 
@@ -82,9 +86,9 @@ function f() {
 
 :::
 
-Examples of **correct** code for this rule with the default `"that"` option, if the variable is not initialized:
+以下是使用默认选项 `"that"` 且变量未初始化时符合此规则的代码示例：
 
-Declaring a variable `that` and assigning `this` to it.
+声明变量 `that`，并将 `this` 赋值给它。
 
 ::: correct
 
@@ -97,7 +101,7 @@ that = this;
 
 :::
 
-Declaring two variables, `foo` and `that`, with `foo` initialized, and then assigning `this` to `that`.
+声明两个变量 `foo` 和 `that`，将 `foo` 初始化，然后把 `this` 赋值给 `that`。
 
 ::: correct
 
@@ -110,6 +114,8 @@ that = this;
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you need to capture nested context, `consistent-this` is going to be problematic. Code of that nature is usually difficult to read and maintain and you should consider refactoring it.
+## 何时不使用
+
+如果需要捕获嵌套上下文，`consistent-this` 可能会带来问题。这类代码通常难以阅读和维护，因此建议考虑重构。

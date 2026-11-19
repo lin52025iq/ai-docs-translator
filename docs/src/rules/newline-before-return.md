@@ -5,7 +5,7 @@ related_rules:
 - newline-after-var
 ---
 
-There is no hard and fast rule about whether empty lines should precede `return` statements in JavaScript. However, clearly delineating where a function is returning can greatly increase the readability and clarity of the code. For example:
+在 JavaScript 中，`return` 语句前是否应有空行，并没有硬性规定。不过，清楚地标示函数返回的位置，可以大大提高代码的可读性和清晰度。例如：
 
 ```js
 function foo(bar) {
@@ -18,7 +18,7 @@ function foo(bar) {
 }
 ```
 
-Adding newlines visibly separates the return statements from the previous lines, making it clear where the function exits and what value it returns:
+添加换行可以将 `return` 语句与前面的代码明显分隔开，让函数在哪里退出以及返回什么值一目了然：
 
 ```js
 function foo(bar) {
@@ -34,11 +34,13 @@ function foo(bar) {
 }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule requires an empty line before `return` statements to increase code clarity, except when the `return` is alone inside a statement group (such as an if statement). In the latter case, the `return` statement does not need to be delineated by virtue of it being alone. Comments are ignored and do not count as empty lines.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则要求在 `return` 语句前留出一个空行，以提高代码清晰度；但如果 `return` 是语句组（例如 if 语句）中唯一的语句，则不作此要求。在后一种情况下，由于它本身就是唯一的语句，因此无需通过空行将 `return` 语句单独标示。注释会被忽略，也不计为空行。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -64,7 +66,7 @@ function foo2(bar) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -118,6 +120,8 @@ function foo8() {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You can safely disable this rule if you do not have any strict conventions about whitespace before `return` statements.
+## 何时不应使用
+
+如果你对 `return` 语句前的空白没有严格约定，可以放心地禁用此规则。

@@ -8,23 +8,25 @@ further_reading:
 ---
 
 
-A `switch` statement can optionally have a `default` clause.
+`switch` 语句可以选择包含 `default` 子句。
 
-If present, it's usually the last clause, but it doesn't need to be. It is also allowed to put the `default` clause before all `case` clauses, or anywhere between. The behavior is mostly the same as if it was the last clause. The `default` block will be still executed only if there is no match in the `case` clauses (including those defined after the `default`), but there is also the ability to "fall through" from the `default` clause to the following clause in the list. However, such flow is not common and it would be confusing to the readers.
+如果包含，子句通常位于最后，但并非必须如此。也可以将子句放在所有 `case` 子句之前，或放在它们之间的任意位置。其行为大体上与将它放在最后相同。只有在 `case` 子句（包括定义在 `default` 之后的子句）都没有匹配项时，才会执行 `default` 代码块；不过，也可以从 `default` 子句“贯穿”到列表中的下一个子句。这种流程并不常见，也会让读者感到困惑。
 
-Even if there is no "fall through" logic, it's still unexpected to see the `default` clause before or between the `case` clauses. By convention, it is expected to be the last clause.
+即使不存在“贯穿”逻辑，在 `case` 子句之前或之间看到 `default` 子句仍然会让人感到意外。按照惯例，它应当是最后一个子句。
 
-If a `switch` statement should have a `default` clause, it's considered a best practice to define it as the last clause.
+如果 `switch` 语句应当包含 `default` 子句，最佳实践是将它放在最后。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces `default` clauses in `switch` statements to be last.
+## 规则详情
 
-It applies only to `switch` statements that already have a `default` clause.
+此规则要求 `switch` 语句中的 `default` 子句位于最后。
 
-This rule does not enforce the existence of `default` clauses. See [default-case](default-case) if you also want to enforce the existence of `default` clauses in `switch` statements.
+此规则仅适用于已经包含 `default` 子句的 `switch` 语句。
 
-Examples of **incorrect** code for this rule:
+此规则不要求必须存在 `default` 子句。如果你还想要求 `switch` 语句中必须存在 `default` 子句，请参阅 [default-case](default-case)。
+
+此规则的**错误**示例如下：
 
 :::incorrect
 
@@ -80,7 +82,7 @@ switch (foo) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**示例如下：
 
 :::correct
 
@@ -132,7 +134,8 @@ doSomethingAnyway();
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
+此规则没有选项。

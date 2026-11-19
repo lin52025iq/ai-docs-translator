@@ -1,17 +1,19 @@
 ---
-title: Combine Configs
+title: 合并配置
 eleventyNavigation:
     key: combine configs
     parent: configure
-    title: Combine Configs
+    title: 合并配置
     order: 6
 ---
 
-In many cases, you won't write an ESLint config file from scratch, but rather, you'll use a combination of predefined and shareable configs along with your own overrides to create the config for your project. This page explains some of the patterns you can use to combine configs in your configuration file.
+在许多情况下，你不会从头编写 ESLint 配置文件，而是会结合使用预定义配置、可共享配置以及自己的覆盖项，为项目创建配置。本页将介绍一些可在配置文件中合并配置的常用方式。
 
-## Apply a Config Object
+<a id="apply-a-config-object"></a>
 
-If you are importing a [config object](../core-concepts/glossary#config-object) from another module, you can apply it to just a subset of files by creating a new object with a `files` key and using the `extends` key to merge in the rest of the properties from the imported object. For example:
+## 应用配置对象
+
+如果你从其他模块导入了一个[配置对象](../core-concepts/glossary#config-object)，可以创建一个带有 `files` 键的新对象，并使用 `extends` 键合并导入对象的其余属性，从而将它应用于部分文件。例如：
 
 ```js
 // eslint.config.js
@@ -32,11 +34,13 @@ export default defineConfig([
 ]);
 ```
 
-Here, the `"js/recommended"` predefined configuration is applied to files that match the pattern `"**/*.js"` first and then adds the desired configuration for `no-unused-vars`.
+这里，预定义配置 `"js/recommended"` 会先应用于匹配模式 `"**/*.js"` 的文件，然后再为 `no-unused-vars` 添加所需的配置。
 
-## Apply a Config Array
+<a id="apply-a-config-array"></a>
 
-If you are importing a [config array](../core-concepts/glossary#config-array) from another module, you can apply a config array (an array of configuration objects) to just a subset of files by using the `extends` key. For example:
+## 应用配置数组
+
+如果你从其他模块导入了一个[配置数组](../core-concepts/glossary#config-array)，可以使用 `extends` 键将配置数组（配置对象数组）应用于部分文件。例如：
 
 ```js
 // eslint.config.js
@@ -54,4 +58,4 @@ export default defineConfig([
 ]);
 ```
 
-Here, the `exampleConfigs` shareable configuration is applied to files that match the pattern "`**/*.js"` first and then another configuration object adds the desired configuration for `no-unused-vars`.
+这里，可共享配置 `exampleConfigs` 会先应用于匹配模式 "`**/*.js"` 的文件，然后另一个配置对象会为 `no-unused-vars` 添加所需的配置。

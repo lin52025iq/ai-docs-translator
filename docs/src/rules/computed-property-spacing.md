@@ -6,8 +6,7 @@ related_rules:
 - comma-spacing
 - space-in-parens
 ---
-While formatting preferences are very personal, a number of style guides require
-or disallow spaces between computed properties in the following situations:
+虽然格式偏好因人而异，但许多风格指南会要求或禁止在以下情形的计算属性中添加空格：
 
 ```js
 var obj = { prop: "value" };
@@ -24,29 +23,32 @@ var a = "prop";
 var { [a]: x } = obj; // computed property key in object destructuring pattern (ECMAScript 6)
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces consistent spacing inside computed property brackets.
+## 规则详情
 
-It either requires or disallows spaces between the brackets and the values inside of them.
-This rule does not apply to brackets that are separated from the adjacent value by a newline.
+此规则确保计算属性方括号内的空格保持一致。
 
-## Options
+此规则会要求或禁止在方括号与其中的值之间添加空格。如果方括号与相邻值之间有换行，则此规则不适用。
 
-This rule has two options, a string option and an object option.
+<a id="options"></a>
 
-String option:
+## 选项
 
-* `"never"` (default) disallows spaces inside computed property brackets
-* `"always"` requires one or more spaces inside computed property brackets
+此规则有两个选项：一个字符串选项和一个对象选项。
 
-Object option:
+字符串选项：
 
-* `"enforceForClassMembers": true` (default) additionally applies this rule to class members.
+* `"never"`（默认值）禁止在计算属性方括号内添加空格
+* `"always"` 要求在计算属性方括号内添加一个或多个空格
+
+对象选项：
+
+* `"enforceForClassMembers": true`（默认值）还会将此规则应用于类成员。
 
 ### never
 
-Examples of **incorrect** code for this rule with the default `"never"` option:
+使用默认的 `"never"` 选项时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -64,7 +66,7 @@ const { [ a ]: someProp } = obj;
 
 :::
 
-Examples of **correct** code for this rule with the default `"never"` option:
+使用默认的 `"never"` 选项时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -84,7 +86,7 @@ const { [a]: someProp } = obj;
 
 ### always
 
-Examples of **incorrect** code for this rule with the `"always"` option:
+使用 `"always"` 选项时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -103,7 +105,7 @@ const { [a]: someProp } = obj;
 
 :::
 
-Examples of **correct** code for this rule with the `"always"` option:
+使用 `"always"` 选项时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -122,9 +124,9 @@ const { [ a ]: someProp } = obj;
 
 #### enforceForClassMembers
 
-With `enforceForClassMembers` set to `true` (default), the rule also disallows/enforces spaces inside of computed keys of class methods, getters and setters.
+将 `enforceForClassMembers` 设为 `true`（默认值）后，此规则也会禁止或要求在类方法、getter 和 setter 的计算属性键内添加空格。
 
-Examples of **incorrect** code for this rule with `"never"` and `{ "enforceForClassMembers": true }` (default):
+使用 `"never"` 和 `{ "enforceForClassMembers": true }`（默认值）时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -147,7 +149,7 @@ const Bar = class {
 
 :::
 
-Examples of **correct** code for this rule with `"never"` and `{ "enforceForClassMembers": true }` (default):
+使用 `"never"` 和 `{ "enforceForClassMembers": true }`（默认值）时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -170,7 +172,7 @@ const Bar = class {
 
 :::
 
-Examples of **correct** code for this rule with `"never"` and `{ "enforceForClassMembers": false }`:
+使用 `"never"` 和 `{ "enforceForClassMembers": false }` 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -193,6 +195,8 @@ const Bar = class {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You can turn this rule off if you are not concerned with the consistency of computed properties.
+## 何时不使用此规则
+
+如果你不在意计算属性格式的一致性，可以关闭此规则。

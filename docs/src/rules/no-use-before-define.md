@@ -4,15 +4,17 @@ rule_type: problem
 ---
 
 
-In JavaScript, prior to ES6, variable and function declarations are hoisted to the top of a scope, so it's possible to use identifiers before their formal declarations in code. This can be confusing and some believe it is best to always declare variables and functions before using them.
+在 JavaScript 中，ES6 之前，变量和函数声明会提升到作用域顶部，因此可以在代码中正式声明标识符之前使用它们。这可能会令人困惑，有些人认为最好始终先声明变量和函数，再使用它们。
 
-In ES6, block-level bindings (`let` and `const`) introduce a "temporal dead zone" where a `ReferenceError` will be thrown with any attempt to access the variable before its declaration.
+在 ES6 中，块级绑定（`let` 和 `const`）引入了“暂时性死区”：任何在变量声明前访问变量的尝试都会抛出 `ReferenceError`。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule will warn when it encounters a reference to an identifier that has not yet been declared.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+当此规则遇到对尚未声明的标识符的引用时，会发出警告。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -66,7 +68,7 @@ const foo = 1;
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -122,7 +124,9 @@ export { foo };
 
 :::
 
-## Options
+<a id="options"></a>
+
+## 选项
 
 ```json
 {
@@ -139,47 +143,49 @@ export { foo };
 ```
 
 * `functions` (`boolean`) -
-  This flag determines whether or not the rule checks function declarations.
-  If this is `true`, the rule warns on every reference to a function before the function declaration.
-  Otherwise, the rule ignores those references.
-  Function declarations are hoisted, so it's safe to disable this option (note that some idiomatic patterns, such as [mutual recursion](https://en.wikipedia.org/wiki/Mutual_recursion), are incompatible with enabling this option).
-  Default is `true`.
+  此标志决定规则是否检查函数声明。
+  如果此项为 `true`，规则会对函数声明之前的每个函数引用发出警告。
+  否则，规则会忽略这些引用。
+  函数声明会提升，因此禁用此选项是安全的（请注意，某些惯用模式，例如[相互递归](https://en.wikipedia.org/wiki/Mutual_recursion)，与启用此选项不兼容）。
+  默认值为 `true`。
 * `classes` (`boolean`) -
-  This flag determines whether or not the rule checks class declarations of upper scopes.
-  If this is `true`, the rule warns on every reference to a class before the class declaration.
-  Otherwise, the rule ignores such references, provided the declaration is in an upper function scope.
-  References inside a synchronous, non-generator function expression that is called directly before the declaration (an IIFE) are still reported, because the function body runs immediately.
-  Class declarations are not hoisted, so it might be dangerous to disable this option.
-  Default is `true`.
+  此标志决定规则是否检查上层作用域中的类声明。
+  如果此项为 `true`，规则会对类声明之前的每个类引用发出警告。
+  否则，只要声明位于上层函数作用域中，规则就会忽略此类引用。
+  在声明之前直接调用的同步、非生成器函数表达式（IIFE）中的引用仍会被报告，因为函数体会立即执行。
+  类声明不会提升，因此禁用此选项可能会有风险。
+  默认值为 `true`。
 * `variables` (`boolean`) -
-  This flag determines whether or not the rule checks variable declarations in upper scopes.
-  If this is `true`, the rule warns on every reference to a variable before the variable declaration.
-  Otherwise, the rule ignores a reference if the declaration is in an upper scope, while still reporting the reference if it's in the same scope as the declaration.
-  References inside a synchronous, non-generator function expression that is called directly before the declaration (an IIFE) are also reported, because the function body runs immediately.
-  Default is `true`.
+  此标志决定规则是否检查上层作用域中的变量声明。
+  如果此项为 `true`，规则会对变量声明之前的每个变量引用发出警告。
+  否则，如果声明位于上层作用域中，规则会忽略该引用；但如果引用与声明位于同一作用域中，仍会报告。
+  在声明之前直接调用的同步、非生成器函数表达式（IIFE）中的引用也会被报告，因为函数体会立即执行。
+  默认值为 `true`。
 * `allowNamedExports` (`boolean`) -
-  If this flag is set to `true`, the rule always allows references in `export {};` declarations.
-  These references are safe even if the variables are declared later in the code.
-  Default is `false`.
+  如果此标志设为 `true`，规则始终允许在 `export {};` 声明中出现引用。
+  即使变量在代码后面才声明，这些引用也是安全的。
+  默认值为 `false`。
 
-This rule additionally supports TypeScript type syntax. The following options enable checking for the references to `type`, `interface` and `enum` declarations:
+此规则还支持 TypeScript 类型语法。以下选项可启用对 `type`、`interface` 和 `enum` 声明引用的检查：
 
 * `enums` (`boolean`) -
-  If it is `true`, the rule warns every reference to an `enum` before it is defined.
-  Default is `true`.
+  如果为 `true`，规则会对定义之前的每个 `enum` 引用发出警告。
+  默认值为 `true`。
 * `typedefs` (`boolean`) -
-  If it is `true`, this rule warns every reference to a type `alias` or `interface` before its declaration. If `false`, the rule allows using type `alias`es and `interface`s before they are defined.
-  Default is `true`.
+  如果为 `true`，规则会对声明之前的每个类型 `alias` 或 `interface` 引用发出警告。如果为 `false`，则允许在类型 `alias` 和 `interface` 定义之前使用它们。
+  默认值为 `true`。
 * `ignoreTypeReferences` (`boolean`) -
-  If it is `true`, rule will ignore all type references, such as in type annotations and assertions.
-  Default is `true`.
+  如果为 `true`，规则会忽略所有类型引用，例如类型注解和断言中的引用。
+  默认值为 `true`。
 
-This rule accepts `"nofunc"` string as an option.
-`"nofunc"` is the same as `{ "functions": false, "classes": true, "variables": true, "allowNamedExports": false, "enums": true, "typedefs": true, "ignoreTypeReferences": true }`.
+此规则接受字符串 `"nofunc"` 作为选项。
+`"nofunc"` 等同于 `{ "functions": false, "classes": true, "variables": true, "allowNamedExports": false, "enums": true, "typedefs": true, "ignoreTypeReferences": true }`。
 
-### functions
+<a id="functions"></a>
 
-Examples of **correct** code for the `{ "functions": false }` option:
+### 函数
+
+`{ "functions": false }` 选项的正确代码示例：
 
 ::: correct
 
@@ -192,11 +198,13 @@ function f() {}
 
 :::
 
-This option allows references to function declarations. For function expressions and arrow functions, please see the [`variables`](#variables) option.
+此选项允许引用函数声明。有关函数表达式和箭头函数，请参阅 [`variables`](#variables) 选项。
 
-### classes
+<a id="classes"></a>
 
-Examples of **incorrect** code for the `{ "classes": false }` option:
+### 类
+
+`{ "classes": false }` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -235,7 +243,7 @@ class A {
 
 :::
 
-Examples of **correct** code for the `{ "classes": false }` option:
+`{ "classes": false }` 选项的正确代码示例：
 
 ::: correct
 
@@ -252,9 +260,11 @@ class A {
 
 :::
 
-### variables
+<a id="variables"></a>
 
-Examples of **incorrect** code for the `{ "variables": false }` option:
+### 变量
+
+`{ "variables": false }` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -302,7 +312,7 @@ const g = function() {};
 
 :::
 
-Examples of **correct** code for the `{ "variables": false }` option:
+`{ "variables": false }` 选项的正确代码示例：
 
 ::: correct
 
@@ -332,9 +342,11 @@ const g = function() {}
 
 :::
 
-### allowNamedExports
+<a id="allownamedexports"></a>
 
-Examples of **correct** code for the `{ "allowNamedExports": true }` option:
+### 允许命名导出
+
+`{ "allowNamedExports": true }` 选项的正确代码示例：
 
 ::: correct
 
@@ -354,7 +366,7 @@ class C {}
 
 :::
 
-Examples of **incorrect** code for the `{ "allowNamedExports": true }` option:
+`{ "allowNamedExports": true }` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -375,9 +387,11 @@ const d = 1;
 
 :::
 
-### enums (TypeScript only)
+<a id="enums-typescript-only"></a>
 
-Examples of **incorrect** code for the `{ "enums": true }` option:
+### 枚举（仅限 TypeScript）
+
+`{ "enums": true }` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -393,7 +407,7 @@ enum Foo {
 
 :::
 
-Examples of **correct** code for the `{ "enums": true }` option:
+`{ "enums": true }` 选项的正确代码示例：
 
 ::: correct
 
@@ -409,9 +423,11 @@ const x = Foo.FOO;
 
 :::
 
-### typedefs (TypeScript only)
+<a id="typedefs-typescript-only"></a>
 
-Examples of **incorrect** code for the `{ "enums": true }` with `{ "ignoreTypeReferences": false }` option:
+### 类型定义（仅限 TypeScript）
+
+`{ "enums": true }` 和 `{ "ignoreTypeReferences": false }` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -429,7 +445,7 @@ interface Foo {}
 
 :::
 
-Examples of **correct** code for the `{ "typedefs": true }` with `{ "ignoreTypeReferences": false }` option:
+`{ "typedefs": true }` 和 `{ "ignoreTypeReferences": false }` 选项的正确代码示例：
 
 ::: correct
 
@@ -447,9 +463,11 @@ const x: Foo = {};
 
 :::
 
-### ignoreTypeReferences (TypeScript only)
+<a id="ignoretypereferences-typescript-only"></a>
 
-Examples of **incorrect** code for the `{ "ignoreTypeReferences": false }` option:
+### 忽略类型引用（仅限 TypeScript）
+
+`{ "ignoreTypeReferences": false }` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -467,7 +485,7 @@ enum Enum {}
 
 :::
 
-Examples of **correct** code for the `{ "ignoreTypeReferences": false }` option:
+`{ "ignoreTypeReferences": false }` 选项的正确代码示例：
 
 ::: correct
 
@@ -483,7 +501,7 @@ enum Enum {}
 let var2: Enum;
 ```
 
-Examples of **correct** code for the `{ "ignoreTypeReferences": false }` with `{ "typedefs": false }` option:
+`{ "ignoreTypeReferences": false }` 和 `{ "typedefs": false }` 选项的正确代码示例：
 
 ::: correct
 
@@ -501,9 +519,11 @@ interface Foo {}
 
 :::
 
+<a id="nofunc"></a>
+
 ### nofunc
 
-Examples of **incorrect** code for the `"nofunc"` option:
+`"nofunc"` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -556,7 +576,7 @@ enum Foo {
 
 :::
 
-Examples of **correct** code for the `"nofunc"` option:
+`"nofunc"` 选项的正确代码示例：
 
 ::: correct
 
@@ -595,3 +615,5 @@ const foo = Foo.Foo;
 ``` 
 
 :::
+
+</rejected_candidate_66736a18cd8048d69e28ea77e98c2d3c>

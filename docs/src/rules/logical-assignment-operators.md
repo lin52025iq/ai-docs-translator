@@ -3,34 +3,38 @@ title: logical-assignment-operators
 rule_type: suggestion
 ---
 
-ES2021 introduces the assignment operator shorthand for the logical operators `||`, `&&` and `??`.
-Before, this was only allowed for mathematical operations such as `+` or `*` (see the rule [operator-assignment](./operator-assignment)).
-The shorthand can be used if the assignment target and the left expression of a logical expression are the same.
-For example `a = a || b` can be shortened to `a ||= b`.
+ES2021 为逻辑运算符 `||`、`&&` 和 `??` 引入了赋值运算符简写。
+此前，只有 `+` 或 `*` 等数学运算才支持这种简写（参见规则 [operator-assignment](./operator-assignment)）。
+如果赋值目标与逻辑表达式的左侧表达式相同，就可以使用这种简写。
+例如，`a = a || b` 可以简写为 `a ||= b`。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule requires or disallows logical assignment operator shorthand.
+## 规则详情
 
-## Options
+此规则要求使用或禁止使用逻辑赋值运算符简写。
 
-This rule has a string and an object option.
-String option:
+<a id="options"></a>
 
-* `"always"` (default)
+## 选项
+
+此规则有一个字符串选项和一个对象选项。
+字符串选项：
+
+* `"always"`（默认）
 * `"never"`
 
-Object option (only available if string option is set to `"always"`):
+对象选项（仅当字符串选项设为 `"always"` 时可用）：
 
-* `"enforceForIfStatements": false` (default) Do *not* check for equivalent `if` statements.
-* `"enforceForIfStatements": true` Check for equivalent `if` statements.
+* `"enforceForIfStatements": false`（默认）不检查等价的 `if` 语句。
+* `"enforceForIfStatements": true` 检查等价的 `if` 语句。
 
 ### always
 
-This option checks for expressions that can be shortened using logical assignment operator. For example, `a = a || b` can be shortened to `a ||= b`.
-Expressions with associativity such as `a = a || b || c` are reported as being able to be shortened to `a ||= b || c` unless the evaluation order is explicitly defined using parentheses, such as `a = (a || b) || c`.
+此选项会检查可以使用逻辑赋值运算符简写的表达式。例如，`a = a || b` 可以简写为 `a ||= b`。
+对于具有结合性的表达式，例如 `a = a || b || c`，规则会报告它们可以简写为 `a ||= b || c`；但如果使用括号明确指定求值顺序，则不会报告，例如 `a = (a || b) || c`。
 
-Examples of **incorrect** code for this rule with the default `"always"` option:
+在默认的 `"always"` 选项下，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -50,7 +54,7 @@ a = a ?? b ?? c
 
 :::
 
-Examples of **correct** code for this rule with the default `"always"` option:
+在默认的 `"always"` 选项下，此规则的正确代码示例：
 
 ::: correct
 
@@ -72,7 +76,7 @@ a = (a || b) || c
 
 ### never
 
-Examples of **incorrect** code for this rule with the `"never"` option:
+在 `"never"` 选项下，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -86,7 +90,7 @@ a ??= b
 
 :::
 
-Examples of **correct** code for this rule with the `"never"` option:
+在 `"never"` 选项下，此规则的正确代码示例：
 
 ::: correct
 
@@ -102,9 +106,9 @@ a = a ?? b
 
 ### enforceForIfStatements
 
-This option checks for additional patterns with if statements which could be expressed with the logical assignment operator.
+此选项还会检查其他可以用逻辑赋值运算符表示的 `if` 语句模式。
 
-Examples of **incorrect** code for this rule with the `["always", { enforceForIfStatements: true }]` option:
+在 `["always", { enforceForIfStatements: true }]` 选项下，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -120,7 +124,7 @@ if (a === null || a === undefined) a = b // <=> a ??= b
 
 :::
 
-Examples of **correct** code for this rule with the `["always", { enforceForIfStatements: true }]` option:
+在 `["always", { enforceForIfStatements: true }]` 选项下，此规则的正确代码示例：
 
 ::: correct
 
@@ -133,6 +137,8 @@ if (a === 0) a = b
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-Use of logical operator assignment shorthand is a stylistic choice. Leaving this rule turned off would allow developers to choose which style is more readable on a case-by-case basis.
+## 何时不应使用
+
+是否使用逻辑运算符赋值简写属于风格选择。关闭此规则可以让开发者根据具体情况选择可读性更好的风格。

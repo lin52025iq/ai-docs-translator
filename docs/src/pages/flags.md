@@ -1,47 +1,51 @@
 ---
-title: Feature Flags
+title: 功能标志
 permalink: /flags/index.html
 eleventyNavigation:
     key: feature flags
     parent: use eslint
-    title: Feature Flags
+    title: 功能标志
     order: 6
 ---
 
 {%- from 'components/npx_tabs.macro.html' import npx_tabs %}
 
-ESLint ships experimental and future breaking changes behind feature flags to let users opt-in to behavior they want. Flags are used in these situations:
+ESLint 通过功能标志提供实验性功能和未来可能引入的破坏性变更，让用户选择启用所需行为。以下情况会使用功能标志：
 
-1. When a feature is experimental and not ready to be enabled for everyone.
-1. When a feature is a breaking change that will be formally merged in the next major release, but users may opt-in to that behavior prior to the next major release.
+1. 某项功能处于实验阶段，尚未准备好向所有人启用。
+1. 某项功能属于破坏性变更，计划在下一个主版本中正式合并，但用户可以在下一个主版本发布前选择启用该行为。
 
-## Flag Prefixes
+<a id="flag-prefixes"></a>
 
-The prefix of a flag indicates its status:
+## 标志前缀
 
-- `unstable_` indicates that the feature is experimental and the implementation may change before the feature is stabilized. This is a "use at your own risk" feature.
-- `v##_` indicates that the feature is stabilized and will be available in the next major release. For example, `v10_some_feature` indicates that this is a breaking change that will be formally released in ESLint v10.0.0. These flags are removed each major release, and further use of them throws an error.
+标志的前缀表示其状态：
 
-A feature may move from unstable to being enabled by default without a major release if it is a non-breaking change.
+- `unstable_` 表示该功能处于实验阶段，其实现可能会在功能稳定之前发生变化。这是一项“使用风险自负”的功能。
+- `v##_` 表示该功能已稳定，并将在下一个主版本中推出。例如，`v10_some_feature` 表示这是一项破坏性变更，将在 ESLint v10.0.0 中正式发布。这些标志会在每个主版本发布时移除，之后继续使用会报错。
 
-The following policies apply to `unstable_` flags.
+如果某项功能不会造成破坏性变更，它可以在不发布主版本的情况下从不稳定状态转为默认启用。
 
-- When the feature is stabilized
-    - If enabling the feature by default would be a breaking change, a new `v##_` flag is added as active, and the `unstable_` flag becomes inactive. Further use of the `unstable_` flag automatically enables the `v##_` flag but emits a warning.
-    - Otherwise, the feature is enabled by default, and the `unstable_` flag becomes inactive. Further use of the `unstable_` flag emits a warning.
-- If the feature is abandoned, the `unstable_` flag becomes inactive. Further use of it throws an error.
-- All inactive `unstable_` flags are removed each major release, and further use of them throws an error.
+以下策略适用于 `unstable_` 标志。
 
-## Active Flags
+- 当功能稳定后
+    - 如果默认启用该功能会造成破坏性变更，则会新增一个处于启用状态的 `v##_` 标志，并将 `unstable_` 标志设为非活动状态。之后继续使用 `unstable_` 标志会自动启用 `v##_` 标志，但会发出警告。
+    - 否则，该功能将默认启用，并将 `unstable_` 标志设为非活动状态。之后继续使用 `unstable_` 标志会发出警告。
+- 如果该功能被弃用，`unstable_` 标志将变为非活动状态。继续使用该标志会报错。
+- 所有非活动的 `unstable_` 标志都会在每个主版本发布时移除，之后继续使用会报错。
+
+<a id="active-flags"></a>
+
+## 活动标志
 
 {% if flags.active | length %}
-The following flags are currently available for use in ESLint.
+以下标志目前可在 ESLint 中使用。
 
 <table>
     <thead>
         <tr>
-            <th>Flag</th>
-            <th>Description</th>
+            <th>标志</th>
+            <th>说明</th>
         </tr>
     </thead>
     <tbody>
@@ -51,20 +55,22 @@ The following flags are currently available for use in ESLint.
     </tbody>
 </table>
 {% else %}
-There are currently no active flags.
+目前没有活动标志。
 {% endif %}
 
-## Inactive Flags
+<a id="inactive-flags"></a>
+
+## 非活动标志
 
 {% if flags.inactive | length %}
-The following flags were once used but are no longer active.
+以下标志曾经使用过，但目前已不再活动。
 
 <table>
     <thead>
         <tr>
-            <th>Flag</th>
-            <th>Description</th>
-            <th>Inactivity Reason</th>
+            <th>标志</th>
+            <th>说明</th>
+            <th>非活动原因</th>
         </tr>
     </thead>
     <tbody>
@@ -74,35 +80,43 @@ The following flags were once used but are no longer active.
     </tbody>
 </table>
 {% else %}
-There are currently no inactive flags.
+目前没有非活动标志。
 {% endif %}
 
-## How to Use Feature Flags
+<a id="how-to-use-feature-flags"></a>
 
-Because feature flags are strictly opt-in, you need to manually enable the flags that you want.
+## 如何使用功能标志
 
-### Enable Feature Flags with the CLI
+由于功能标志必须由用户主动选择启用，因此你需要手动启用所需的标志。
 
-On the command line, you can specify feature flags using the `--flag` option. You can specify as many flags as you'd like:
+<a id="enable-feature-flags-with-the-cli"></a>
+
+### 使用 CLI 启用功能标志
+
+在命令行中，你可以使用 `--flag` 选项指定功能标志。你可以按需指定任意数量的标志：
 
 {{ npx_tabs({
     package: "eslint",
     args: ["--flag", "flag_one", "--flag", "flag_two", "file.js"]
 }) }}
 
-### Enable Feature Flags with Environment Variables
+<a id="enable-feature-flags-with-environment-variables"></a>
 
-You can also set feature flags using the `ESLINT_FLAGS` environment variable. Multiple flags can be specified as a comma-separated list and are merged with any flags passed on the CLI or in the API. For example, here's how you can add feature flags to your `.bashrc` or `.bash_profile` files:
+### 使用环境变量启用功能标志
+
+你也可以使用 `ESLINT_FLAGS` 环境变量设置功能标志。多个标志可以用逗号分隔，并会与通过 CLI 或 API 传入的标志合并。例如，下面演示了如何将功能标志添加到 `.bashrc` 或 `.bash_profile` 文件中：
 
 ```bash
 export ESLINT_FLAGS="flag_one,flag_two"
 ```
 
-This approach is especially useful in CI/CD pipelines or when you want to enable the same flags across multiple ESLint commands.
+如果你想在多个 ESLint 命令中启用相同的标志，或者在 CI/CD 流水线中使用，这种方式尤其有用。
 
-### Enable Feature Flags with the API
+<a id="enable-feature-flags-with-the-api"></a>
 
-When using the API, you can pass a `flags` array to both the `ESLint` and `Linter` classes:
+### 使用 API 启用功能标志
+
+使用 API 时，你可以向 `ESLint` 和 `Linter` 类传入 `flags` 数组：
 
 ```js
 const { ESLint, Linter } = require("eslint");
@@ -117,12 +131,14 @@ const linter = new Linter({
 ```
 
 ::: tip
-The `ESLint` class also reads the `ESLINT_FLAGS` environment variable to set flags.
+`ESLint` 类也会读取 `ESLINT_FLAGS` 环境变量来设置标志。
 :::
 
-### Enable Feature Flags in VS Code
+<a id="enable-feature-flags-in-vs-code"></a>
 
-To enable flags in the VS Code ESLint Extension for the editor, specify the flags you'd like in the `eslint.options` setting in your [`settings.json`](https://code.visualstudio.com/docs/configure/settings#_settings-json-file) file:
+### 在 VS Code 中启用功能标志
+
+要在 VS Code ESLint 扩展的编辑器中启用标志，请在 [`settings.json`](https://code.visualstudio.com/docs/configure/settings#_settings-json-file) 文件的 `eslint.options` 设置中指定所需的标志：
 
 ```json
 {
@@ -130,7 +146,7 @@ To enable flags in the VS Code ESLint Extension for the editor, specify the flag
 }
 ```
 
-To enable flags in the VS Code ESLint Extension for a lint task, specify the `eslint.lintTask.options` settings:
+要在 VS Code ESLint 扩展的代码检查任务中启用标志，请指定 `eslint.lintTask.options` 设置：
 
 ```json
 {

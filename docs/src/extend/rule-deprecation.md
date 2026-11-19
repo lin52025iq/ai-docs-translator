@@ -1,52 +1,58 @@
 ---
-title: Rule Deprecation
+title: 规则弃用
 ---
 
-The rule deprecation metadata describes whether a rule is deprecated and how the rule can be replaced if there is a replacement.
-The legacy format used the two top-level [rule meta](./custom-rules#rule-structure) properties `deprecated` (as a boolean only) and `replacedBy`.
-In the new format, `deprecated` is a boolean or an object of type `DeprecatedInfo`, and `replacedBy` should be defined inside `deprecated` instead of at the top-level.
+规则弃用元数据用于说明某条规则是否已弃用，以及在存在替代规则时如何替换它。
+旧格式使用两个顶层的[规则元数据](./custom-rules#rule-structure)属性：`deprecated`（仅为布尔值）和 `replacedBy`。
+新格式中，`deprecated` 可以是布尔值，也可以是 `DeprecatedInfo` 类型的对象；`replacedBy` 应定义在 `deprecated` 内部，而不是顶层。
 
-## ◆ DeprecatedInfo type
+<a id="-deprecatedinfo-type"></a>
 
-This type represents general information about a rule deprecation.
-Every property is optional.
+## ◆ DeprecatedInfo 类型
 
-- `message` (`string`)<br>
-  A general message presentable to the user. May contain why this rule is deprecated or how to replace the rule.
-- `url` (`string`)<br>
-  An URL with more information about this rule deprecation.
-- `replacedBy` (`ReplacedByInfo[]`)<br>
-  Information about the available replacements for the rule.
-  This may be an empty array to explicitly state there is no replacement.
-- `deprecatedSince` (`string`)<br>
-  [Semver](https://semver.org/) of the version deprecating the rule. It should be the full semver string that represents the specific version, without leading `"v"`, e.g. `"3.12.0"`.
-- `availableUntil` (`string | null`)<br>
-  [Semver](https://semver.org/) of the version likely to remove the rule, e.g. the next major version. It should be the full semver string that represents the specific version, without leading `"v"`, e.g. `"4.0.0"`.
-  The special value `null` means the rule will no longer be changed but will be kept available.
+此类型表示规则弃用的一般信息。
+所有属性均为可选项。
 
-## ◆ ReplacedByInfo type
+- `message`（`string`）<br>
+  可向用户展示的一般消息。可说明弃用此规则的原因，或如何替换此规则。
+- `url`（`string`）<br>
+  提供有关此规则弃用的更多信息的 URL。
+- `replacedBy`（`ReplacedByInfo[]`）<br>
+  有关此规则可用替代项的信息。
+  可以是空数组，以明确表示没有替代项。
+- `deprecatedSince`（`string`）<br>
+  弃用此规则的版本的 [Semver](https://semver.org/)。应使用表示特定版本的完整 Semver 字符串，且不带前导的 `"v"`，例如 `"3.12.0"`。
+- `availableUntil`（`string | null`）<br>
+  可能移除此规则的版本的 [Semver](https://semver.org/)，例如下一个主版本。应使用表示特定版本的完整 Semver 字符串，且不带前导的 `"v"`，例如 `"4.0.0"`。
+  特殊值 `null` 表示此规则将不再变更，但仍会继续提供。
 
-The type describes a single possible replacement of a rule.
-Every property is optional.
+<a id="-replacedbyinfo-type"></a>
 
-- `message` (`string`)<br>
-  A general message about this rule replacement, e.g.
-- `url` (`string`)<br>
-  An URL with more information about this rule replacement.
-- `plugin` (`ExternalSpecifier`)<br>
-  Specifies which plugin has the replacement rule.
-  The name should be the package name and should be "eslint" if the replacement is an ESLint core rule.
-  This property should be omitted if the replacement is in the same plugin.
-- `rule` (`ExternalSpecifier`)<br>
-  Specifies the replacement rule.
-  May be omitted if the plugin only contains a single rule or has the same name as the rule.
+## ◆ ReplacedByInfo 类型
 
-### ◆ ExternalSpecifier type
+此类型描述一个可能的规则替代项。
+所有属性均为可选项。
 
-This type represents an external resource.
-Every property is optional.
+- `message`（`string`）<br>
+  有关此规则替代项的一般消息，例如：
+- `url`（`string`）<br>
+  提供有关此规则替代项的更多信息的 URL。
+- `plugin`（`ExternalSpecifier`）<br>
+  指定包含替代规则的插件。
+  此名称应为包名；如果替代项是 ESLint 核心规则，则应为 `"eslint"`。
+  如果替代项位于同一插件中，则应省略此属性。
+- `rule`（`ExternalSpecifier`）<br>
+  指定替代规则。
+  如果插件仅包含一条规则，或者替代规则与原规则同名，则可以省略。
 
-- `name` (`string`)<br>
-  The package name for `plugin` and the rule id for `rule`.
-- `url` (`string`)<br>
-  An URL pointing to documentation for the plugin / rule..
+<a id="-externalspecifier-type"></a>
+
+### ◆ ExternalSpecifier 类型
+
+此类型表示外部资源。
+所有属性均为可选项。
+
+- `name`（`string`）<br>
+  `plugin` 对应的包名，以及 `rule` 对应的规则 ID。
+- `url`（`string`）<br>
+  指向插件或规则文档的 URL。

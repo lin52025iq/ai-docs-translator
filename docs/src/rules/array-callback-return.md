@@ -4,8 +4,8 @@ rule_type: problem
 ---
 
 
-`Array` has several methods for filtering, mapping, and folding.
-If we forget to write `return` statement in a callback of those, it's probably a mistake. If you don't want to use a return or don't need the returned results, consider using [.forEach](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach) instead.
+`Array` 有多种用于筛选、映射和归约的方法。
+如果我们忘记在这些方法的回调中编写 `return` 语句，很可能是个错误。如果你不想使用 return，或者不需要返回结果，可以考虑改用 [.forEach](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach)。
 
 ```js
 // example: convert ['a', 'b', 'c'] --> {a: 0, b: 1, c: 2}
@@ -14,12 +14,13 @@ const indexMap = myArray.reduce(function(memo, item, index) {
 }, {}); // Error: cannot set property 'b' of undefined
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces usage of `return` statement in callbacks of array's methods.
-Additionally, it may also enforce the `forEach` array method callback to **not** return a value by using the `checkForEach` option.
+## 规则详情
 
-This rule finds callback functions of the following methods, then checks usage of `return` statement.
+此规则要求在数组方法的回调中使用 `return` 语句。此外，还可以通过 `checkForEach` 选项要求 `forEach` 数组方法的回调**不**返回值。
+
+此规则会查找以下方法的回调函数，并检查其中 `return` 语句的使用情况。
 
 * [`Array.from`](https://www.ecma-international.org/ecma-262/6.0/#sec-array.from)
 * [`Array.fromAsync`](https://tc39.es/ecma262/#sec-array.fromasync)
@@ -30,16 +31,16 @@ This rule finds callback functions of the following methods, then checks usage o
 * [`Array.prototype.findLast`](https://www.ecma-international.org/ecma-262/14.0/#sec-array.prototype.findlast)
 * [`Array.prototype.findLastIndex`](https://www.ecma-international.org/ecma-262/14.0/#sec-array.prototype.findlastindex)
 * [`Array.prototype.flatMap`](https://www.ecma-international.org/ecma-262/10.0/#sec-array.prototype.flatmap)
-* [`Array.prototype.forEach`](https://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.foreach) (optional, based on `checkForEach` parameter)
+* [`Array.prototype.forEach`](https://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.foreach)（可选，取决于 `checkForEach` 参数）
 * [`Array.prototype.map`](https://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.map)
 * [`Array.prototype.reduce`](https://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.reduce)
 * [`Array.prototype.reduceRight`](https://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.reduceright)
 * [`Array.prototype.some`](https://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.some)
 * [`Array.prototype.sort`](https://www.ecma-international.org/ecma-262/6.0/#sec-array.prototype.sort)
 * [`Array.prototype.toSorted`](https://www.ecma-international.org/ecma-262/14.0/#sec-array.prototype.tosorted)
-* And above of typed arrays if applicable.
+* 如果适用，也包括类型化数组上的上述方法。
 
-Examples of **incorrect** code for this rule:
+此规则的**错误**代码示例：
 
 :::incorrect
 
@@ -67,7 +68,7 @@ const bar = foo.filter(function(x) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 :::correct
 
@@ -91,19 +92,21 @@ const bar = foo.map(node => node.getAttribute("id"));
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule accepts a configuration object with three options:
+## 选项
 
-* `"allowImplicit": false` (default) When set to `true`, allows callbacks of methods that require a return value to implicitly return `undefined` with a `return` statement containing no expression.
-* `"checkForEach": false` (default) When set to `true`, rule will also report `forEach` callbacks that return a value.
-* `"allowVoid": false` (default) When set to `true`, allows `void` in `forEach` callbacks, so rule will not report the return value with a `void` operator.
+此规则接受一个包含三个选项的配置对象：
 
-**Note:** `{ "allowVoid": true }` works only if `checkForEach` option is set to `true`.
+* `"allowImplicit": false`（默认值）设为 `true` 时，允许要求返回值的方法的回调使用不含表达式的 `return` 语句，隐式返回 `undefined`。
+* `"checkForEach": false`（默认值）设为 `true` 时，规则还会报告返回值的 `forEach` 回调。
+* `"allowVoid": false`（默认值）设为 `true` 时，允许在 `forEach` 回调中使用 `void`，因此规则不会报告带有 `void` 运算符的返回值。
+
+**注意：**`{ "allowVoid": true }` 仅在设置了 `checkForEach` 选项时生效。
 
 ### allowImplicit
 
-Examples of **correct** code for the `{ "allowImplicit": true }` option:
+`{ "allowImplicit": true }` 选项的**正确**代码示例：
 
 :::correct
 
@@ -118,7 +121,7 @@ const undefAllTheThings = myArray.map(function(item) {
 
 ### checkForEach
 
-Examples of **incorrect** code for the `{ "checkForEach": true }` option:
+`{ "checkForEach": true }` 选项的**错误**代码示例：
 
 :::incorrect
 
@@ -158,7 +161,7 @@ myArray.forEach(item => {
 
 :::
 
-Examples of **correct** code for the `{ "checkForEach": true }` option:
+`{ "checkForEach": true }` 选项的**正确**代码示例：
 
 :::correct
 
@@ -190,7 +193,7 @@ myArray.forEach(item => {
 
 ### allowVoid
 
-Examples of **correct** code for the `{ "allowVoid": true }` option:
+`{ "allowVoid": true }` 选项的**正确**代码示例：
 
 :::correct
 
@@ -213,10 +216,14 @@ myArray.forEach(item => {
 
 :::
 
-## Known Limitations
+<a id="known-limitations"></a>
 
-This rule checks callback functions of methods with the given names, *even if* the object which has the method is *not* an array.
+## 已知限制
 
-## When Not To Use It
+此规则会检查名称与给定名称相同的方法的回调函数，*即使*拥有该方法的对象*并非*数组。
 
-If you don't want to warn about usage of `return` statement in callbacks of array's methods, then it's safe to disable this rule.
+<a id="when-not-to-use-it"></a>
+
+## 何时不应使用此规则
+
+如果你不希望对数组方法回调中使用 `return` 语句发出警告，可以放心禁用此规则。

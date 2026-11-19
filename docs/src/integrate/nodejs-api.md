@@ -1,23 +1,25 @@
 ---
-title: Node.js API Reference
+title: Node.js API 参考
 eleventyNavigation:
     key: node.js api
     parent: integrate eslint
-    title: Node.js API Reference
+    title: Node.js API 参考
     order: 2
 ---
 
-While ESLint is designed to be run on the command line, it's possible to use ESLint programmatically through the Node.js API. The purpose of the Node.js API is to allow plugin and tool authors to use the ESLint functionality directly, without going through the command line interface.
+虽然 ESLint 的设计初衷是在命令行中运行，但也可以通过 Node.js API 以编程方式使用 ESLint。Node.js API 的目的是让插件和工具作者能够直接使用 ESLint 的功能，而无需经过命令行界面。
 
-**Note:** Use undocumented parts of the API at your own risk. Only those parts that are specifically mentioned in this document are approved for use and will remain stable and reliable. Anything left undocumented is unstable and may change or be removed at any point.
+**注意：** 使用未文档化的 API 部分，风险自负。只有本文档中特别提及的部分才获准使用，并且会保持稳定可靠。未文档化的部分都不稳定，随时可能更改或移除。
 
-## ESLint class
+<a id="eslint-class"></a>
 
-The `ESLint` class is the primary class to use in Node.js applications.
+## ESLint 类
 
-This class depends on the Node.js [`fs`](https://nodejs.org/api/fs.html) module and the file system, so you cannot use it in browsers. If you want to lint code on browsers, use the [`Linter`](#linter) class instead.
+`ESLint` 类是 Node.js 应用程序中主要使用的类。
 
-Here's a simple example of using the `ESLint` class:
+此类依赖 Node.js [`fs`](https://nodejs.org/api/fs.html) 模块和文件系统，因此不能在浏览器中使用。如果要在浏览器中检查代码，请改用 [`Linter`](#linter) 类。
+
+下面是使用 `ESLint` 类的简单示例：
 
 ```js
 const { ESLint } = require("eslint");
@@ -41,7 +43,7 @@ const { ESLint } = require("eslint");
 });
 ```
 
-Here's an example that autofixes lint problems:
+下面是自动修复代码检查问题的示例：
 
 ```js
 const { ESLint } = require("eslint");
@@ -68,7 +70,7 @@ const { ESLint } = require("eslint");
 });
 ```
 
-And here is an example of using the `ESLint` class with [`lintText`](#-eslintlinttextcode-options) API:
+下面是使用 `ESLint` 类和 [`lintText`](#-eslintlinttextcode-options) API 的示例：
 
 ```js
 const { ESLint } = require("eslint");
@@ -107,81 +109,99 @@ const testCode = `
 });
 ```
 
+<a id="-new-eslintoptions"></a>
+
 ### ◆ new ESLint(options)
 
 ```js
 const eslint = new ESLint(options);
 ```
 
-Create a new `ESLint` instance.
+创建一个新的 `ESLint` 实例。
 
-#### Parameters
+<a id="parameters"></a>
 
-The `ESLint` constructor takes an `options` object. If you omit the `options` object then it uses default values for all options. The `options` object has the following properties.
+#### 参数
 
-##### File Enumeration
+`ESLint` 构造函数接受一个 `options` 对象。如果省略 `options` 对象，则所有选项都使用默认值。`options` 对象具有以下属性。
+
+<a id="file-enumeration"></a>
+
+##### 文件枚举
 
 - `options.cwd` (`string`)<br>
-  Default is `process.cwd()`. The working directory. This must be an absolute path.
+  默认值为 `process.cwd()`。工作目录。必须是绝对路径。
 - `options.errorOnUnmatchedPattern` (`boolean`)<br>
-  Default is `true`. Unless set to `false`, the [`eslint.lintFiles()`][eslint-lintfiles] method will throw an error when no target files are found.
+  默认值为 `true`。除非设置为 `false`，否则未找到目标文件时，[`eslint.lintFiles()`][eslint-lintfiles] 方法会抛出错误。
 - `options.globInputPaths` (`boolean`)<br>
-  Default is `true`. If `false` is present, the [`eslint.lintFiles()`][eslint-lintfiles] method doesn't interpret glob patterns.
+  默认值为 `true`。如果设置为 `false`，[`eslint.lintFiles()`][eslint-lintfiles] 方法不会解析 glob 模式。
 - `options.ignore` (`boolean`)<br>
-  Default is `true`. If `false` is present, the [`eslint.lintFiles()`][eslint-lintfiles] method doesn't respect `ignorePatterns` in your configuration.
+  默认值为 `true`。如果设置为 `false`，[`eslint.lintFiles()`][eslint-lintfiles] 方法不会遵循配置中的 `ignorePatterns`。
 - `options.ignorePatterns` (`string[] | null`)<br>
-  Default is `null`. Ignore file patterns to use in addition to config ignores. These patterns are relative to `cwd`.
+  默认值为 `null`。除配置中的忽略规则外，还要使用的文件忽略模式。这些模式相对于 `cwd`。
 - `options.passOnNoPatterns` (`boolean`)<br>
-  Default is `false`. When set to `true`, missing patterns cause the linting operation to short circuit and not report any failures.
+  默认值为 `false`。设为 `true` 时，缺少模式会导致代码检查操作提前结束，且不报告任何失败。
 - `options.warnIgnored` (`boolean`)<br>
-  Default is `true`. Show warnings when the file list includes ignored files.
+  默认值为 `true`。文件列表包含被忽略的文件时显示警告。
 
-##### Linting
+<a id="linting"></a>
+
+##### 代码检查
 
 - `options.allowInlineConfig` (`boolean`)<br>
-  Default is `true`. If `false` is present, ESLint suppresses directive comments in source code. If this option is `false`, it overrides the `noInlineConfig` setting in your configurations.
+  默认值为 `true`。如果设置为 `false`，ESLint 会禁用源代码中的指令注释。此选项为 `false` 时，会覆盖配置中的 `noInlineConfig` 设置。
 - `options.baseConfig` (`Config | Config[] | null`)<br>
-  Default is `null`. [Configuration object], extended by all configurations used with this instance. You can use this option to define the default settings that will be used if your configuration files don't configure it.
+  默认值为 `null`。[配置对象]，由此实例使用的所有配置扩展。可以使用此选项定义默认设置，以便在配置文件未设置相关选项时使用。
 - `options.overrideConfig` (`Config | Config[] | null`)<br>
-  Default is `null`. [Configuration object], added after any existing configuration and therefore applies after what's contained in your configuration file (if used).
+  默认值为 `null`。[配置对象]，添加在任何现有配置之后，因此（如果使用了配置文件）其设置会在配置文件内容之后生效。
 - `options.overrideConfigFile` (`null | true | string`)<br>
-  Default is `null`. By default, ESLint searches for a configuration file. When this option is set to `true`, ESLint does not search for a configuration file. When this option is set to a `string` value, ESLint does not search for a configuration file, and uses the provided value as the path to the configuration file.
+  默认值为 `null`。默认情况下，ESLint 会搜索配置文件。此选项设为 `true` 时，ESLint 不会搜索配置文件。此选项设为 `string` 值时，ESLint 不会搜索配置文件，而会使用提供的值作为配置文件路径。
 - `options.plugins` (`Record<string, Plugin> | null`)<br>
-  Default is `null`. The plugin implementations that ESLint uses for the `plugins` setting of your configuration. This is a map-like object. Those keys are plugin IDs and each value is implementation.
+  默认值为 `null`。ESLint 在配置的 `plugins` 设置中使用的插件实现。这是一个类似映射的对象。键是插件 ID，每个值是相应的实现。
 - `options.ruleFilter` (`({ruleId: string, severity: number}) => boolean`)<br>
-  Default is `() => true`. A predicate function that filters rules to be run. This function is called with an object containing `ruleId` and `severity`, and returns `true` if the rule should be run.
+  默认值为 `() => true`。用于筛选要运行的规则的谓词函数。调用此函数时会传入一个包含 `ruleId` 和 `severity` 的对象；如果应运行该规则，则返回 `true`。
 - `options.stats` (`boolean`)<br>
-  Default is `false`. When set to `true`, additional statistics are added to the lint results (see [Stats type](../extend/stats#-stats-type)).
+  默认值为 `false`。设为 `true` 时，代码检查结果中会包含额外的统计信息（参见 [Stats 类型](../extend/stats#-stats-type)）。
 
-##### Autofix
+<a id="autofix"></a>
+
+##### 自动修复
 
 - `options.fix` (`boolean | (message: LintMessage) => boolean`)<br>
-  Default is `false`. If `true` is present, the [`eslint.lintFiles()`][eslint-lintfiles] and [`eslint.lintText()`][eslint-linttext] methods work in autofix mode. If a predicate function is present, the methods pass each lint message to the function, then use only the lint messages for which the function returned `true`.
+  默认值为 `false`。如果设为 `true`，[`eslint.lintFiles()`][eslint-lintfiles] 和 [`eslint.lintText()`][eslint-linttext] 方法会以自动修复模式运行。如果提供谓词函数，这些方法会将每条代码检查消息传递给该函数，然后只使用函数返回 `true` 的消息。
 - `options.fixTypes` (`("directive" | "problem" | "suggestion" | "layout")[] | null`)<br>
-  Default is `null`. The types of the rules that the [`eslint.lintFiles()`][eslint-lintfiles] and [`eslint.lintText()`][eslint-linttext] methods use for autofix.
+  默认值为 `null`。[`eslint.lintFiles()`][eslint-lintfiles] 和 [`eslint.lintText()`][eslint-linttext] 方法用于自动修复的规则类型。
 
-##### Cache-related
+<a id="cache-related"></a>
+
+##### 缓存相关
 
 - `options.cache` (`boolean`)<br>
-  Default is `false`. If `true` is present, the [`eslint.lintFiles()`][eslint-lintfiles] method caches lint results and uses it if each target file is not changed. Please mind that ESLint doesn't clear the cache when you upgrade ESLint plugins. In that case, you have to remove the cache file manually. The [`eslint.lintText()`][eslint-linttext] method doesn't use caches even if you pass the `options.filePath` to the method.
+  默认值为 `false`。如果设为 `true`，[`eslint.lintFiles()`][eslint-lintfiles] 方法会缓存代码检查结果，并在各目标文件未更改时使用缓存。请注意，升级 ESLint 插件时，ESLint 不会清除缓存。在这种情况下，必须手动删除缓存文件。即使向 [`eslint.lintText()`][eslint-linttext] 方法传递了 `options.filePath`，该方法也不会使用缓存。
 - `options.cacheLocation` (`string`)<br>
-  Default is `.eslintcache`. The [`eslint.lintFiles()`][eslint-lintfiles] method writes caches into this file.
+  默认值为 `.eslintcache`。[`eslint.lintFiles()`][eslint-lintfiles] 方法会将缓存写入此文件。
 - `options.cacheStrategy` (`string`)<br>
-  Default is `"metadata"`. Strategy for the cache to use for detecting changed files. Can be either `"metadata"` or `"content"`.
+  默认值为 `"metadata"`。用于检测文件是否已更改的缓存策略。可以是 `"metadata"` 或 `"content"`。
 
-##### Suppressions
+<a id="suppressions"></a>
+
+##### 抑制项
 
 - `options.applySuppressions` (`boolean`)<br>
-  Default is `false`. If `true`, suppressions from the suppressions file are automatically applied to results from both [`eslint.lintFiles()`][eslint-lintfiles] and [`eslint.lintText()`][eslint-linttext]. When using `eslint.lintText()`, the `filePath` option must also be provided for suppressions to take effect.
+  默认值为 `false`。如果设为 `true`，抑制文件中的抑制项会自动应用到 [`eslint.lintFiles()`][eslint-lintfiles] 和 [`eslint.lintText()`][eslint-linttext] 的结果中。使用 `eslint.lintText()` 时，还必须提供 `filePath` 选项，抑制项才会生效。
 - `options.suppressionsLocation` (`string`)<br>
-  Default is `"eslint-suppressions.json"`. The path to the suppressions file. The path can be absolute or relative to `cwd`.
+  默认值为 `"eslint-suppressions.json"`。抑制文件的路径。该路径可以是绝对路径，也可以是相对于 `cwd` 的路径。
 
-##### Other Options
+<a id="other-options"></a>
+
+##### 其他选项
 
 - `options.concurrency` (`number | "auto" | "off"`)<br>
-  Default is `"off"`. By default, ESLint lints all files in the calling thread. If this option specifies an integer, ESLint will use up to that number of worker threads to lint files concurrently. `"auto"` chooses a setting automatically. When this option is specified all other options must be [cloneable](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm).
+  默认值为 `"off"`。默认情况下，ESLint 会在调用线程中检查所有文件。如果此选项指定一个整数，ESLint 最多会使用指定数量的工作线程并发检查文件。`"auto"` 会自动选择设置。指定此选项时，所有其他选项都必须是[可克隆的](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm)。
 - `options.flags` (`string[]`)<br>
-  Default is `[]`. The feature flags to enable for this instance.
+  默认值为 `[]`。要为此实例启用的功能标志。
+
+<a id="-eslintlintfilespatterns"></a>
 
 ### ◆ eslint.lintFiles(patterns)
 
@@ -189,17 +209,23 @@ The `ESLint` constructor takes an `options` object. If you omit the `options` ob
 const results = await eslint.lintFiles(patterns);
 ```
 
-This method lints the files that match the glob patterns and then returns the results.
+此方法会对与 glob 模式匹配的文件进行代码检查，然后返回结果。
 
-#### Parameters
+<a id="parameters-1"></a>
+
+#### 参数
 
 - `patterns` (`string | string[]`)<br>
-  The lint target files. This can contain any of file paths, directory paths, and glob patterns.
+  代码检查目标文件。可以是文件路径、目录路径和 glob 模式。
 
-#### Return Value
+<a id="return-value"></a>
+
+#### 返回值
 
 - (`Promise<LintResult[]>`)<br>
-  The promise that will be fulfilled with an array of [LintResult] objects.
+  此 Promise 成功兑现后会得到一个 [LintResult] 对象数组。
+
+<a id="-eslintlinttextcode-options"></a>
 
 ### ◆ eslint.lintText(code, options)
 
@@ -207,27 +233,33 @@ This method lints the files that match the glob patterns and then returns the re
 const results = await eslint.lintText(code, options);
 ```
 
-This method lints the given source code text and then returns the results.
+此方法会对给定的源代码文本进行代码检查，然后返回结果。
 
-By default, this method uses the configuration that applies to files in the current working directory (the `cwd` constructor option). If you want to use a different configuration, pass `options.filePath`, and ESLint will load the same configuration that [`eslint.lintFiles()`][eslint-lintfiles] would use for a file at `options.filePath`.
+默认情况下，此方法使用适用于当前工作目录（构造函数选项 `cwd`）中各文件的配置。如果要使用其他配置，请传递 `options.filePath`，ESLint 会加载与 [`eslint.lintFiles()`][eslint-lintfiles] 对 `options.filePath` 所指文件使用的相同配置。
 
-If the `options.filePath` value is configured to be ignored, this method returns an empty array. If the `options.warnIgnored` option is set along with the `options.filePath` option, this method returns a [LintResult] object. In that case, the result may contain a warning that indicates the file was ignored.
+如果配置为忽略 `options.filePath` 的值，此方法会返回空数组。如果同时设置了 `options.warnIgnored` 和 `options.filePath` 选项，此方法会返回一个 [LintResult] 对象。在这种情况下，结果可能包含一条指明文件已被忽略的警告。
 
-#### Parameters
+<a id="parameters-2"></a>
 
-The second parameter `options` is omittable.
+#### 参数
+
+第二个参数 `options` 可以省略。
 
 - `code` (`string`)<br>
-  The source code text to check.
+  要检查的源代码文本。
 - `options.filePath` (`string`)<br>
-  Optional. The path to the file of the source code text. If omitted, the `result.filePath` becomes the string `"<text>"`.
+  可选。源代码文本对应的文件路径。如果省略，`result.filePath` 会是字符串 `"<text>"`。
 - `options.warnIgnored` (`boolean`)<br>
-  Optional, defaults to `options.warnIgnored` passed to the constructor. If `true` is present and the `options.filePath` is a file ESLint should ignore, this method returns a lint result contains a warning message.
+  可选，默认值为传递给构造函数的 `options.warnIgnored`。如果设为 `true`，且 `options.filePath` 是 ESLint 应忽略的文件，此方法会返回一条包含警告消息的代码检查结果。
 
-#### Return Value
+<a id="return-value-1"></a>
+
+#### 返回值
 
 - (`Promise<LintResult[]>`)<br>
-  The promise that will be fulfilled with an array of [LintResult] objects. This is an array (despite there being only one lint result) in order to keep the interfaces between this and the [`eslint.lintFiles()`][eslint-lintfiles] method similar.
+  此 Promise 成功兑现后会得到一个 [LintResult] 对象数组。即使只有一个代码检查结果，这里仍返回数组，以便此方法与 [`eslint.lintFiles()`][eslint-lintfiles] 方法保持相似的接口。
+
+<a id="-eslintgetrulesmetaforresultsresults"></a>
 
 ### ◆ eslint.getRulesMetaForResults(results)
 
@@ -236,17 +268,23 @@ const results = await eslint.lintFiles(patterns);
 const rulesMeta = eslint.getRulesMetaForResults(results);
 ```
 
-This method returns an object containing meta information for each rule that triggered a lint error in the given `results`.
+此方法会返回一个对象，其中包含给定 `results` 中触发代码检查错误的每条规则的元信息。
 
-#### Parameters
+<a id="parameters-3"></a>
+
+#### 参数
 
 - `results` (`LintResult[]`)<br>
-  An array of [LintResult] objects returned from a call to `ESLint#lintFiles()` or `ESLint#lintText()`.
+  调用 `ESLint#lintFiles()` 或 `ESLint#lintText()` 后返回的 [LintResult] 对象数组。
 
-#### Return Value
+<a id="return-value-2"></a>
+
+#### 返回值
 
 - (`Object`)<br>
-  An object whose property names are the rule IDs from the `results` and whose property values are the rule's meta information (if available).
+  一个对象，其属性名是 `results` 中的规则 ID，属性值是相应规则的元信息（如果可用）。
+
+<a id="-eslintcalculateconfigforfilefilepath"></a>
 
 ### ◆ eslint.calculateConfigForFile(filePath)
 
@@ -254,17 +292,23 @@ This method returns an object containing meta information for each rule that tri
 const config = await eslint.calculateConfigForFile(filePath);
 ```
 
-This method calculates the configuration for a given file, which can be useful for debugging purposes.
+此方法会计算给定文件的配置，可用于调试。
 
-#### Parameters
+<a id="parameters-4"></a>
+
+#### 参数
 
 - `filePath` (`string`)<br>
-  The path to the file whose configuration you would like to calculate. Directory paths are forbidden because ESLint cannot handle the `overrides` setting.
+  要计算其配置的文件路径。不能使用目录路径，因为 ESLint 无法处理 `overrides` 设置。
 
-#### Return Value
+<a id="return-value-3"></a>
+
+#### 返回值
 
 - (`Promise<Object>`)<br>
-  The promise that will be fulfilled with a configuration object.
+  此 Promise 成功兑现后会得到一个配置对象。
+
+<a id="-eslintfindconfigfilefilepath"></a>
 
 ### ◆ eslint.findConfigFile(filePath)
 
@@ -272,17 +316,23 @@ This method calculates the configuration for a given file, which can be useful f
 const configFilePath = await eslint.findConfigFile(filePath);
 ```
 
-This method finds the configuration file that this `ESLint` instance would use based on the options passed to the constructor.
+此方法会根据传递给构造函数的选项，查找此 `ESLint` 实例将使用的配置文件。
 
-#### Parameters
+<a id="parameters-5"></a>
+
+#### 参数
 
 - `filePath` (`string`)<br>
-  Optional. The path of a file for which to find the associated config file. If omitted, ESLint determines the config file based on the current working directory of this instance.
+  可选。要查找关联配置文件的文件路径。如果省略，ESLint 会根据此实例的当前工作目录确定配置文件。
 
-#### Return Value
+<a id="return-value-4"></a>
+
+#### 返回值
 
 - (`Promise<string | undefined>`)<br>
-  The promise that will be fulfilled with the absolute path to the config file being used, or `undefined` when no config file is used (for example, when `overrideConfigFile: true` is set).
+  此 Promise 成功兑现后会得到正在使用的配置文件的绝对路径；如果未使用配置文件，则为 `undefined`（例如设置了 `overrideConfigFile: true` 时）。
+
+<a id="-eslintispathignoredfilepath"></a>
 
 ### ◆ eslint.isPathIgnored(filePath)
 
@@ -290,17 +340,23 @@ This method finds the configuration file that this `ESLint` instance would use b
 const isPathIgnored = await eslint.isPathIgnored(filePath);
 ```
 
-This method checks if a given file is ignored by your configuration.
+此方法会检查给定文件是否被配置忽略。
 
-#### Parameters
+<a id="parameters-6"></a>
+
+#### 参数
 
 - `filePath` (`string`)<br>
-  The path to the file you want to check.
+  要检查的文件路径。
 
-#### Return Value
+<a id="return-value-5"></a>
+
+#### 返回值
 
 - (`Promise<boolean>`)<br>
-  The promise that will be fulfilled with whether the file is ignored or not. If the file is ignored, then it will return `true`.
+  此 Promise 成功兑现后会得到一个布尔值，表示文件是否被忽略。如果文件被忽略，则返回 `true`。
+
+<a id="-eslintloadformatternameorpath"></a>
 
 ### ◆ eslint.loadFormatter(nameOrPath)
 
@@ -308,28 +364,34 @@ This method checks if a given file is ignored by your configuration.
 const formatter = await eslint.loadFormatter(nameOrPath);
 ```
 
-This method loads a formatter. Formatters convert lint results to a human- or machine-readable string.
+此方法会加载格式化程序。格式化程序会将代码检查结果转换为便于人或机器读取的字符串。
 
-#### Parameters
+<a id="parameters-7"></a>
+
+#### 参数
 
 - `nameOrPath` (`string | undefined`)<br>
-  The path to the file you want to check. The following values are allowed:
-    - `undefined`. In this case, loads the `"stylish"` built-in formatter.
-    - A name of [built-in formatters][builtin-formatters].
-    - A name of [third-party formatters][third-party-formatters]. For examples:
-        - `"foo"` will load `eslint-formatter-foo`.
-        - `"@foo"` will load `@foo/eslint-formatter`.
-        - `"@foo/bar"` will load `@foo/eslint-formatter-bar`.
-    - A path to the file that defines a formatter. The path must contain one or more path separators (`/`) in order to distinguish if it's a path or not. For example, start with `./`.
+  要检查的文件路径。允许使用以下值：
+    - `undefined`。此时会加载内置的 `"stylish"` 格式化程序。
+    - [内置格式化程序][builtin-formatters]的名称。
+    - [第三方格式化程序][third-party-formatters]的名称。例如：
+        - `"foo"` 会加载 `eslint-formatter-foo`。
+        - `"@foo"` 会加载 `@foo/eslint-formatter`。
+        - `"@foo/bar"` 会加载 `@foo/eslint-formatter-bar`。
+    - 定义格式化程序的文件路径。路径必须包含一个或多个路径分隔符（`/`），以便与名称区分。例如，以 `./` 开头。
 
-#### Return Value
+<a id="return-value-6"></a>
+
+#### 返回值
 
 - (`Promise<LoadedFormatter>`)<br>
-  The promise that will be fulfilled with a [LoadedFormatter] object.
+  此 Promise 成功兑现后会得到一个 [LoadedFormatter] 对象。
+
+<a id="-eslinthasflagflagname"></a>
 
 ### ◆ eslint.hasFlag(flagName)
 
-This method is used to determine if a given feature flag is set, as in this example:
+此方法用于确定是否设置了给定的功能标志，如下例所示：
 
 ```js
 if (eslint.hasFlag("x_feature")) {
@@ -337,15 +399,21 @@ if (eslint.hasFlag("x_feature")) {
 }
 ```
 
-#### Parameters
+<a id="parameters-8"></a>
+
+#### 参数
 
 - `flagName` (`string`)<br>
-  The flag to check.
+  要检查的标志。
 
-#### Return Value
+<a id="return-value-7"></a>
+
+#### 返回值
 
 - (`boolean`)<br>
-  True if the flag is enabled.
+  如果已启用该标志，则为 True。
+
+<a id="-eslintversion"></a>
 
 ### ◆ ESLint.version
 
@@ -353,9 +421,11 @@ if (eslint.hasFlag("x_feature")) {
 const version = ESLint.version;
 ```
 
-The version string of ESLint. E.g. `"7.0.0"`.
+ESLint 的版本字符串，例如 `"7.0.0"`。
 
-This is a static property.
+这是一个静态属性。
+
+<a id="-eslintdefaultconfig"></a>
 
 ### ◆ ESLint.defaultConfig
 
@@ -363,9 +433,11 @@ This is a static property.
 const defaultConfig = ESLint.defaultConfig;
 ```
 
-The default configuration that ESLint uses internally. This is provided for tooling that wants to calculate configurations using the same defaults as ESLint. Keep in mind that the default configuration may change from version to version, so you shouldn't rely on any particular keys or values to be present.
+ESLint 内部使用的默认配置。此属性提供给希望使用与 ESLint 相同的默认值来计算配置的工具。请注意，默认配置可能会随版本而变化，因此不应依赖其中一定存在任何特定键或值。
 
-This is a static property.
+这是一个静态属性。
+
+<a id="-eslintfromoptionsmoduleoptionsurl"></a>
 
 ### ◆ ESLint.fromOptionsModule(optionsURL)
 
@@ -373,7 +445,7 @@ This is a static property.
 const eslint = await ESLint.fromOptionsModule(optionsURL);
 ```
 
-This method creates an instance of the `ESLint` class with options loaded from a module, for example:
+此方法会创建一个 `ESLint` 类实例，并从模块加载选项，例如：
 
 ```js
 // eslint-options.js
@@ -397,19 +469,25 @@ const eslint = await ESLint.fromOptionsModule(optionsURL);
 ...
 ```
 
-The `concurrency` option requires all other options to be cloneable so that they can be passed to worker threads, but this restriction does not apply when options are loaded from a module, because in that case worker threads are passed the module URL instead of the options object.
+`concurrency` 选项要求所有其他选项都可克隆，以便传递给工作线程。但是，当选项从模块加载时，此限制不适用，因为此时传递给工作线程的是模块 URL，而不是选项对象。
 
-This is a static method.
+这是一个静态方法。
 
-#### Parameters
+<a id="parameters-9"></a>
+
+#### 参数
 
 - `optionsURL` (`URL`)<br>
-  The URL of the options module. This can be any valid URL, like a file URL or a data URL.
+  选项模块的 URL。可以是任何有效的 URL，例如文件 URL 或数据 URL。
 
-#### Return Value
+<a id="return-value-8"></a>
+
+#### 返回值
 
 - (`Promise<ESLint>`)<br>
-  A new instance of the `ESLint` class.
+  一个新的 `ESLint` 类实例。
+
+<a id="-eslintoutputfixesresults"></a>
 
 ### ◆ ESLint.outputFixes(results)
 
@@ -417,19 +495,25 @@ This is a static method.
 await ESLint.outputFixes(results);
 ```
 
-This method writes code modified by ESLint's autofix feature into its respective file. If any of the modified files don't exist, this method does nothing.
+此方法会将 ESLint 自动修复功能修改后的代码写入相应文件。如果任何已修改的文件不存在，此方法不会执行任何操作。
 
-This is a static method.
+这是一个静态方法。
 
-#### Parameters
+<a id="parameters-10"></a>
+
+#### 参数
 
 - `results` (`LintResult[]`)<br>
-  The [LintResult] objects to write.
+  要写入的 [LintResult] 对象。
 
-#### Return Value
+<a id="return-value-9"></a>
+
+#### 返回值
 
 - (`Promise<void>`)<br>
-  The promise that will be fulfilled after all files are written.
+  此 Promise 会在所有文件写入完成后兑现。
+
+<a id="-eslintgeterrorresultsresults"></a>
 
 ### ◆ ESLint.getErrorResults(results)
 
@@ -437,129 +521,145 @@ This is a static method.
 const filteredResults = ESLint.getErrorResults(results);
 ```
 
-This method copies the given results and removes warnings. The returned value contains only errors.
+此方法会复制给定结果并移除警告。返回值仅包含错误。
 
-This is a static method.
+这是一个静态方法。
 
-#### Parameters
+<a id="parameters-11"></a>
+
+#### 参数
 
 - `results` (`LintResult[]`)<br>
-  The [LintResult] objects to filter.
+  要筛选的 [LintResult] 对象。
 
-#### Return Value
+<a id="return-value-10"></a>
+
+#### 返回值
 
 - (`LintResult[]`)<br>
-  The filtered [LintResult] objects.
+  筛选后的 [LintResult] 对象。
 
-### ◆ LintResult type
+<a id="-lintresult-type"></a>
 
-The `LintResult` value is the information of the linting result of each file. The [`eslint.lintFiles()`][eslint-lintfiles] and [`eslint.lintText()`][eslint-linttext] methods return it. It has the following properties:
+### ◆ LintResult 类型
+
+`LintResult` 值包含每个文件的代码检查结果信息。[`eslint.lintFiles()`][eslint-lintfiles] 和 [`eslint.lintText()`][eslint-linttext] 方法会返回此值。它具有以下属性：
 
 - `filePath` (`string`)<br>
-  The absolute path to the file of this result. This is the string `"<text>"` if the file path is unknown (when you didn't pass the `options.filePath` option to the [`eslint.lintText()`][eslint-linttext] method).
+  此结果对应文件的绝对路径。如果文件路径未知（即未向 [`eslint.lintText()`][eslint-linttext] 方法传递 `options.filePath` 选项），此值为字符串 `"<text>"`。
 - `messages` (`LintMessage[]`)<br>
-  The array of [LintMessage] objects.
+  [LintMessage] 对象数组。
 - `suppressedMessages` (`SuppressedLintMessage[]`)<br>
-  The array of [SuppressedLintMessage] objects.
+  [SuppressedLintMessage] 对象数组。
 - `fixableErrorCount` (`number`)<br>
-  The number of errors that can be fixed automatically by the `fix` constructor option.
+  可由构造函数选项 `fix` 自动修复的错误数量。
 - `fixableWarningCount` (`number`)<br>
-  The number of warnings that can be fixed automatically by the `fix` constructor option.
+  可由构造函数选项 `fix` 自动修复的警告数量。
 - `errorCount` (`number`)<br>
-  The number of errors. This includes fixable errors and fatal errors.
+  错误数量，包括可修复错误和致命错误。
 - `fatalErrorCount` (`number`)<br>
-  The number of fatal errors.
+  致命错误的数量。
 - `warningCount` (`number`)<br>
-  The number of warnings. This includes fixable warnings.
+  警告数量，包括可修复的警告。
 - `output` (`string | undefined`)<br>
-  The modified source code text. This property is undefined if any fixable messages didn't exist.
+  修改后的源代码文本。如果不存在任何可修复消息，此属性为 `undefined`。
 - `source` (`string | undefined`)<br>
-  The original source code text. This property is undefined if any messages didn't exist or the `output` property exists.
+  原始源代码文本。如果不存在任何消息，或者存在 `output` 属性，此属性为 `undefined`。
 - `stats` (`Stats | undefined`)<br>
-  The [Stats](../extend/stats#-stats-type) object. This contains the lint performance statistics collected with the `stats` option.
+  [Stats](../extend/stats#-stats-type) 对象。此对象包含通过 `stats` 选项收集的代码检查性能统计信息。
 - `usedDeprecatedRules` (`{ ruleId: string; replacedBy: string[]; info: DeprecatedInfo | undefined }[]`)<br>
-  The information about the deprecated rules that were used to check this file.
-  The `info` property is set to `rule.meta.deprecated` if the rule uses the [new `deprecated` property](../extend/rule-deprecation).
+  用于检查此文件的已弃用规则的信息。
+  如果规则使用了[新的 `deprecated` 属性](../extend/rule-deprecation)，则 `info` 属性会设为 `rule.meta.deprecated`。
 
-### ◆ LintMessage type
+<a id="-lintmessage-type"></a>
 
-The `LintMessage` value is the information of each linting error. The `messages` property of the [LintResult] type contains it. It has the following properties:
+### ◆ LintMessage 类型
 
-- `ruleId` (`string` | `null`)<br>
-  The rule name that generates this lint message. If this message is generated by the ESLint core rather than rules, this is `null`.
-- `severity` (`1 | 2`)<br>
-  The severity of this message. `1` means warning and `2` means error.
-- `fatal` (`boolean | undefined`)<br>
-  `true` if this is a fatal error unrelated to a rule, like a parsing error.
-- `message` (`string`)<br>
-  The error message.
-- `messageId` (`string | undefined`)<br>
-  The message ID of the lint error. This property is undefined if the rule does not use message IDs.
-- `line` (`number | undefined`)<br>
-  The 1-based line number of the begin point of this message.
-- `column` (`number | undefined`)<br>
-  The 1-based column number of the begin point of this message.
-- `endLine` (`number | undefined`)<br>
-  The 1-based line number of the end point of this message. This property is undefined if this message is not a range.
-- `endColumn` (`number | undefined`)<br>
-  The 1-based column number of the end point of this message. This property is undefined if this message is not a range.
-- `fix` (`EditInfo | undefined`)<br>
-  The [EditInfo] object of autofix. This property is undefined if this message is not fixable.
-- `suggestions` (`{ desc: string; fix: EditInfo; messageId?: string; data?: object }[] | undefined`)<br>
-  The list of suggestions. Each suggestion is the pair of a description and an [EditInfo] object to fix code. API users such as editor integrations can choose one of them to fix the problem of this message. This property is undefined if this message doesn't have any suggestions.
-
-### ◆ SuppressedLintMessage type
-
-The `SuppressedLintMessage` value is the information of each suppressed linting error. The `suppressedMessages` property of the [LintResult] type contains it. It has the following properties:
+`LintMessage` 值包含每条代码检查错误的信息。[LintResult] 类型的 `messages` 属性中包含此值。它具有以下属性：
 
 - `ruleId` (`string` | `null`)<br>
-  Same as `ruleId` in [LintMessage] type.
+  生成此代码检查消息的规则名称。如果此消息由 ESLint 核心而非规则生成，则值为 `null`。
 - `severity` (`1 | 2`)<br>
-  Same as `severity` in [LintMessage] type.
+  此消息的严重程度。`1` 表示警告，`2` 表示错误。
 - `fatal` (`boolean | undefined`)<br>
-  Same as `fatal` in [LintMessage] type.
+  如果这是与规则无关的致命错误（例如解析错误），则值为 `true`。
 - `message` (`string`)<br>
-  Same as `message` in [LintMessage] type.
+  错误消息。
 - `messageId` (`string | undefined`)<br>
-  Same as `messageId` in [LintMessage] type.
+  代码检查错误的消息 ID。如果规则不使用消息 ID，此属性为 `undefined`。
 - `line` (`number | undefined`)<br>
-  Same as `line` in [LintMessage] type.
+  此消息起始位置所在的行号，从 1 开始计数。
 - `column` (`number | undefined`)<br>
-  Same as `column` in [LintMessage] type.
+  此消息起始位置所在的列号，从 1 开始计数。
 - `endLine` (`number | undefined`)<br>
-  Same as `endLine` in [LintMessage] type.
+  此消息结束位置所在的行号，从 1 开始计数。如果此消息不表示一个范围，此属性为 `undefined`。
 - `endColumn` (`number | undefined`)<br>
-  Same as `endColumn` in [LintMessage] type.
+  此消息结束位置所在的列号，从 1 开始计数。如果此消息不表示一个范围，此属性为 `undefined`。
 - `fix` (`EditInfo | undefined`)<br>
-  Same as `fix` in [LintMessage] type.
+  自动修复的 [EditInfo] 对象。如果此消息无法修复，此属性为 `undefined`。
 - `suggestions` (`{ desc: string; fix: EditInfo; messageId?: string; data?: object }[] | undefined`)<br>
-  Same as `suggestions` in [LintMessage] type.
+  建议列表。每条建议由描述和用于修复代码的 [EditInfo] 对象组成。编辑器集成等 API 用户可以选择其中一条建议来修复此消息对应的问题。如果此消息没有任何建议，此属性为 `undefined`。
+
+<a id="-suppressedlintmessage-type"></a>
+
+### ◆ SuppressedLintMessage 类型
+
+`SuppressedLintMessage` 值包含每条被抑制的代码检查错误的信息。[LintResult] 类型的 `suppressedMessages` 属性中包含此值。它具有以下属性：
+
+- `ruleId` (`string` | `null`)<br>
+  与 [LintMessage] 类型中的 `ruleId` 相同。
+- `severity` (`1 | 2`)<br>
+  与 [LintMessage] 类型中的 `severity` 相同。
+- `fatal` (`boolean | undefined`)<br>
+  与 [LintMessage] 类型中的 `fatal` 相同。
+- `message` (`string`)<br>
+  与 [LintMessage] 类型中的 `message` 相同。
+- `messageId` (`string | undefined`)<br>
+  与 [LintMessage] 类型中的 `messageId` 相同。
+- `line` (`number | undefined`)<br>
+  与 [LintMessage] 类型中的 `line` 相同。
+- `column` (`number | undefined`)<br>
+  与 [LintMessage] 类型中的 `column` 相同。
+- `endLine` (`number | undefined`)<br>
+  与 [LintMessage] 类型中的 `endLine` 相同。
+- `endColumn` (`number | undefined`)<br>
+  与 [LintMessage] 类型中的 `endColumn` 相同。
+- `fix` (`EditInfo | undefined`)<br>
+  与 [LintMessage] 类型中的 `fix` 相同。
+- `suggestions` (`{ desc: string; fix: EditInfo; messageId?: string; data?: object }[] | undefined`)<br>
+  与 [LintMessage] 类型中的 `suggestions` 相同。
 - `suppressions` (`{ kind: string; justification: string}[]`)<br>
-  The list of suppressions. Each suppression is the pair of a kind and a justification.
+  抑制项列表。每个抑制项由类型和理由组成。
 
-### ◆ EditInfo type
+<a id="-editinfo-type"></a>
 
-The `EditInfo` value is information to edit text. The `fix` and `suggestions` properties of [LintMessage] type contain it. It has following properties:
+### ◆ EditInfo 类型
+
+`EditInfo` 值包含编辑文本所需的信息。[LintMessage] 类型的 `fix` 和 `suggestions` 属性中包含此值。它具有以下属性：
 
 - `range` (`[number, number]`)<br>
-  The pair of 0-based indices in source code text to remove.
+  一对从 0 开始计数的索引，表示要从源代码文本中移除的范围。
 - `text` (`string`)<br>
-  The text to add.
+  要添加的文本。
 
-This edit information means replacing the range of the `range` property by the `text` property value. It's like `sourceCodeText.slice(0, edit.range[0]) + edit.text + sourceCodeText.slice(edit.range[1])`. Therefore, it's an add if the `range[0]` and `range[1]` property values are the same value, and it's removal if the `text` property value is empty string.
+此编辑信息表示将 `range` 属性指定的范围替换为 `text` 属性的值。这类似于 `sourceCodeText.slice(0, edit.range[0]) + edit.text + sourceCodeText.slice(edit.range[1])`。因此，如果 `range[0]` 和 `range[1]` 属性的值相同，则表示添加；如果 `text` 属性的值为空字符串，则表示移除。
 
-### ◆ LoadedFormatter type
+<a id="-loadedformatter-type"></a>
 
-The `LoadedFormatter` value is the object to convert the [LintResult] objects to text. The [eslint.loadFormatter()][eslint-loadformatter] method returns it. It has the following method:
+### ◆ LoadedFormatter 类型
+
+`LoadedFormatter` 值是将 [LintResult] 对象转换为文本的对象。[eslint.loadFormatter()][eslint-loadformatter] 方法会返回此值。它具有以下方法：
 
 - `format` (`(results: LintResult[], resultsMeta?: ResultsMeta) => string | Promise<string>`)<br>
-  The method to convert the [LintResult] objects to text. `resultsMeta` is an optional parameter that is primarily intended for use by the ESLint CLI and can contain `color` and `maxWarningsExceeded` properties that would be passed through the [`context`](../extend/custom-formatters#the-context-argument) object when this method calls the underlying formatter function. Note that ESLint automatically generates `cwd` and `rulesMeta` properties of the `context` object, so you typically don't need to pass in the second argument when calling this method.
+  将 [LintResult] 对象转换为文本的方法。`resultsMeta` 是可选参数，主要供 ESLint CLI 使用，其中可以包含 `color` 和 `maxWarningsExceeded` 属性。当此方法调用底层格式化程序函数时，这些属性会通过 [`context`](../extend/custom-formatters#the-context-argument) 对象传递。请注意，ESLint 会自动生成 `context` 对象的 `cwd` 和 `rulesMeta` 属性，因此调用此方法时通常无需传递第二个参数。
 
 ---
 
+<a id="loadeslint"></a>
+
 ## loadESLint()
 
-The `loadESLint()` function is used for integrations that wish to support different ESLint versions. In ESLint v10.0.0 and later, it always returns the `ESLint` class, which uses the flat config system:
+`loadESLint()` 函数供希望支持不同 ESLint 版本的集成使用。在 ESLint v10.0.0 及更高版本中，它始终返回使用扁平配置系统的 `ESLint` 类：
 
 ```js
 const { loadESLint } = require("eslint");
@@ -567,16 +667,16 @@ const { loadESLint } = require("eslint");
 const DefaultESLint = await loadESLint();
 ```
 
-In ESLint v9 and earlier, `loadESLint()` accepted a `useFlatConfig` option to choose between the flat config and eslintrc implementations. Because eslintrc support was removed in ESLint v10.0.0, this option is now ignored.
+在 ESLint v9 及更早版本中，`loadESLint()` 接受 `useFlatConfig` 选项，用于在扁平配置和 eslintrc 实现之间进行选择。由于 ESLint v10.0.0 移除了对 eslintrc 的支持，现在会忽略此选项。
 
-You can then use the returned constructor to instantiate a new `ESLint` instance, like this:
+然后，可以使用返回的构造函数实例化一个新的 `ESLint` 实例，如下所示：
 
 ```js
 const DefaultESLint = await loadESLint();
 const eslint = new DefaultESLint();
 ```
 
-If your integration also supports earlier ESLint versions, check the `configType` property to determine which config system the returned constructor uses. In ESLint v10.0.0 and later, it is always `"flat"`, while earlier versions may return `"eslintrc"`:
+如果你的集成还支持更早版本的 ESLint，请检查 `configType` 属性，以确定返回的构造函数使用哪种配置系统。在 ESLint v10.0.0 及更高版本中，该属性始终为 `"flat"`；而在更早版本中，可能为 `"eslintrc"`：
 
 ```js
 const DefaultESLint = await loadESLint();
@@ -586,11 +686,13 @@ if (DefaultESLint.configType === "flat") {
 }
 ```
 
-**If your integration only needs to support ESLint v10.0.0 and later, then it's recommended to just use the `ESLint` constructor directly.**
+**如果你的集成只需要支持 ESLint v10.0.0 及更高版本，建议直接使用 `ESLint` 构造函数。**
+
+<a id="sourcecode"></a>
 
 ## SourceCode
 
-The `SourceCode` type represents the parsed source code that ESLint executes on. It's used internally in ESLint and is also available so that already-parsed code can be used. You can create a new instance of `SourceCode` by passing in the text string representing the code and an abstract syntax tree (AST) in [ESTree](https://github.com/estree/estree) format (including location information, range information, comments, and tokens):
+`SourceCode` 类型表示 ESLint 执行代码检查时使用的已解析源代码。它在 ESLint 内部使用，同时也可供已经解析的代码使用。可以将表示代码的文本字符串和符合 [ESTree](https://github.com/estree/estree) 格式的抽象语法树（AST）传递给 `SourceCode`，以创建其实例。AST 必须包含位置信息、范围信息、注释和令牌：
 
 ```js
 const SourceCode = require("eslint").SourceCode;
@@ -598,10 +700,10 @@ const SourceCode = require("eslint").SourceCode;
 const code = new SourceCode("var foo = bar;", ast);
 ```
 
-The `SourceCode` constructor throws an error if the AST is missing any of the required information.
+如果 AST 缺少任何必需信息，`SourceCode` 构造函数会抛出错误。
 
-The `SourceCode` constructor strips Unicode BOM.
-Please note the AST also should be parsed from stripped text.
+`SourceCode` 构造函数会移除 Unicode BOM。
+请注意，AST 也应从移除了 BOM 的文本解析得到。
 
 ```js
 const SourceCode = require("eslint").SourceCode;
@@ -612,9 +714,11 @@ assert(code.hasBOM === true);
 assert(code.text === "var foo = bar;");
 ```
 
+<a id="sourcecodesplitlines"></a>
+
 ### SourceCode#splitLines()
 
-This is a static function on `SourceCode` that is used to split the source code text into an array of lines.
+这是 `SourceCode` 上的一个静态函数，用于将源代码文本拆分为行数组。
 
 ```js
 const SourceCode = require("eslint").SourceCode;
@@ -635,15 +739,17 @@ const codeLines = SourceCode.splitLines(code);
 
 ---
 
+<a id="linter"></a>
+
 ## Linter
 
-The `Linter` object does the actual evaluation of the JavaScript code. It doesn't do any filesystem operations, it simply parses and reports on the code. In particular, the `Linter` object does not process configuration files. Unless you are working in the browser, you probably want to use the [ESLint class](#eslint-class) instead.
+`Linter` 对象负责实际评估 JavaScript 代码。它不执行任何文件系统操作，只会解析并报告代码问题。特别是，`Linter` 对象不会处理配置文件。除非你是在浏览器中工作，否则通常应改用 [ESLint 类](#eslint-class)。
 
-The `Linter` is a constructor, and you can create a new instance by passing in the options you want to use. The available options are:
+`Linter` 是一个构造函数，可以传入要使用的选项来创建新实例。可用选项如下：
 
-- `cwd` - Path to a directory that should be considered as the current working directory. It is accessible to rules from `context.cwd` (see [The Context Object](../extend/custom-rules#the-context-object)). If `cwd` is `undefined`, it will be normalized to `process.cwd()` if the global `process` object is defined (for example, in the Node.js runtime) , or `undefined` otherwise.
+- `cwd` - 应视为当前工作目录的目录路径。规则可以通过 `context.cwd` 访问此值（参见[上下文对象](../extend/custom-rules#the-context-object)）。如果 `cwd` 为 `undefined`，且全局 `process` 对象已定义（例如在 Node.js 运行时中），则会将其规范化为 `process.cwd()`；否则仍为 `undefined`。
 
-For example:
+例如：
 
 ```js
 const Linter = require("eslint").Linter;
@@ -651,29 +757,31 @@ const linter1 = new Linter({ cwd: "path/to/project" });
 const linter2 = new Linter();
 ```
 
-In this example, rules run on `linter1` will get `path/to/project` from `context.cwd`.
-Those run on `linter2` will get `process.cwd()` if the global `process` object is defined or `undefined` otherwise (e.g. on the browser <https://eslint.org/demo>).
+在此示例中，`linter1` 上运行的规则会从 `context.cwd` 获取 `path/to/project`。
+在 `linter2` 上运行的规则，如果全局 `process` 对象已定义，则会获取 `process.cwd()`；否则会获取 `undefined`（例如在浏览器 <https://eslint.org/demo> 中）。
+
+<a id="linterverify"></a>
 
 ### Linter#verify
 
-The most important method on `Linter` is `verify()`, which initiates linting of the given text. This method accepts three arguments:
+`Linter` 上最重要的方法是 `verify()`，它会对给定文本启动代码检查。此方法接受三个参数：
 
-- `code` - the source code to lint (a string or instance of `SourceCode`).
-- `config` - a [Configuration object] or an array of configuration objects.
-    - **Note**: If you want to lint text and have your configuration be read from the file system, use [`ESLint#lintFiles()`][eslint-lintfiles] or [`ESLint#lintText()`][eslint-linttext] instead.
-- `options` - (optional) Additional options for this run.
-    - `filename` - (optional) the filename to associate with the source code.
-    - `preprocess` - (optional) A function that [Processors in Plugins](../extend/plugins#processors-in-plugins) documentation describes as the `preprocess` method.
-    - `postprocess` - (optional) A function that [Processors in Plugins](../extend/plugins#processors-in-plugins) documentation describes as the `postprocess` method.
-    - `filterCodeBlock` - (optional) A function that decides which code blocks the linter should adopt. The function receives two arguments. The first argument is the virtual filename of a code block. The second argument is the text of the code block. If the function returned `true` then the linter adopts the code block. If the function was omitted, the linter adopts only `*.js` code blocks. If you provided a `filterCodeBlock` function, it overrides this default behavior, so the linter doesn't adopt `*.js` code blocks automatically.
-    - `disableFixes` - (optional) when set to `true`, the linter doesn't make either the `fix` or `suggestions` property of the lint result.
-    - `allowInlineConfig` - (optional) set to `false` to disable inline comments from changing ESLint rules.
-    - `reportUnusedDisableDirectives` - (optional) when set to `true`, adds reported errors for unused `eslint-disable` and `eslint-enable` directives when no problems would be reported in the disabled area anyway.
-    - `ruleFilter` - (optional) A function predicate that decides which rules should run. It receives an object containing `ruleId` and `severity`, and returns `true` if the rule should be run.
+- `code` - 要检查的源代码（字符串或 `SourceCode` 实例）。
+- `config` - [配置对象]或配置对象数组。
+    - **注意：** 如果要检查文本并从文件系统读取配置，请改用 [`ESLint#lintFiles()`][eslint-lintfiles] 或 [`ESLint#lintText()`][eslint-linttext]。
+- `options` -（可选）本次运行的其他选项。
+    - `filename` -（可选）要与源代码关联的文件名。
+    - `preprocess` -（可选）[插件中的处理器](../extend/plugins#processors-in-plugins)文档中称为 `preprocess` 方法的函数。
+    - `postprocess` -（可选）[插件中的处理器](../extend/plugins#processors-in-plugins)文档中称为 `postprocess` 方法的函数。
+    - `filterCodeBlock` -（可选）用于确定代码检查器应采用哪些代码块的函数。此函数接收两个参数：第一个参数是代码块的虚拟文件名，第二个参数是代码块文本。如果函数返回 `true`，代码检查器就会采用该代码块。如果省略此函数，代码检查器只会采用 `*.js` 代码块。如果提供了 `filterCodeBlock` 函数，它会覆盖此默认行为，因此代码检查器不会自动采用 `*.js` 代码块。
+    - `disableFixes` -（可选）设为 `true` 时，代码检查结果中不会包含 `fix` 或 `suggestions` 属性。
+    - `allowInlineConfig` -（可选）设为 `false` 可禁止内联注释更改 ESLint 规则。
+    - `reportUnusedDisableDirectives` -（可选）设为 `true` 时，如果禁用区域本来就不会报告任何问题，则会为未使用的 `eslint-disable` 和 `eslint-enable` 指令添加错误报告。
+    - `ruleFilter` -（可选）用于确定应运行哪些规则的谓词函数。它接收一个包含 `ruleId` 和 `severity` 的对象；如果应运行该规则，则返回 `true`。
 
-If the third argument is a string, it is interpreted as the `filename`.
+如果第三个参数是字符串，则会将其解释为 `filename`。
 
-You can call `verify()` like this:
+可以像这样调用 `verify()`：
 
 ```js
 const Linter = require("eslint").Linter;
@@ -708,7 +816,7 @@ const messages = linter.verify(
 );
 ```
 
-The `verify()` method returns an array of objects containing information about the linting warnings and errors. Here's an example:
+`verify()` 方法会返回一个对象数组，其中包含代码检查警告和错误的信息。示例如下：
 
 ```js
 [
@@ -727,21 +835,21 @@ The `verify()` method returns an array of objects containing information about t
 ];
 ```
 
-The information available for each linting message is:
+每条代码检查消息包含以下信息：
 
-- `column` - the column on which the error occurred.
-- `fatal` - usually omitted, but will be set to true if there's a parsing error (not related to a rule).
-- `line` - the line on which the error occurred.
-- `message` - the message that should be output.
-- `messageId` - the ID of the message used to generate the message (this property is omitted if the rule does not use message IDs).
-- `ruleId` - the ID of the rule that triggered the messages (or null if `fatal` is true).
-- `severity` - either 1 or 2, depending on your configuration.
-- `endColumn` - the end column of the range on which the error occurred (this property is omitted if it's not range).
-- `endLine` - the end line of the range on which the error occurred (this property is omitted if it's not range).
-- `fix` - an object describing the fix for the problem (this property is omitted if no fix is available).
-- `suggestions` - an array of objects describing possible lint fixes for editors to programmatically enable (see details in the [Working with Rules docs](../extend/custom-rules#providing-suggestions)).
+- `column` - 错误所在的列。
+- `fatal` - 通常省略；如果发生解析错误（与规则无关），则会设为 `true`。
+- `line` - 错误所在的行。
+- `message` - 应输出的消息。
+- `messageId` - 用于生成消息的消息 ID（如果规则不使用消息 ID，则省略此属性）。
+- `ruleId` - 触发消息的规则 ID（如果 `fatal` 为 `true`，则为 `null`）。
+- `severity` - 根据配置取值为 1 或 2。
+- `endColumn` - 错误所在范围的结束列（如果没有范围，则省略此属性）。
+- `endLine` - 错误所在范围的结束行（如果没有范围，则省略此属性）。
+- `fix` - 描述问题修复方式的对象（如果没有可用修复，则省略此属性）。
+- `suggestions` - 描述可能的代码检查修复方式的对象数组，编辑器可通过编程方式启用这些修复（详情参见[使用规则](../extend/custom-rules#providing-suggestions)）。
 
-You can get the suppressed messages from the previous run by `getSuppressedMessages()` method. If there is not a previous run, `getSuppressedMessage()` will return an empty list.
+可以通过 `getSuppressedMessages()` 方法获取上一次运行中被抑制的消息。如果之前没有运行过，`getSuppressedMessage()` 会返回空列表。
 
 ```js
 const Linter = require("eslint").Linter;
@@ -761,7 +869,7 @@ const suppressedMessages = linter.getSuppressedMessages();
 console.log(suppressedMessages[0].suppressions); // [{ "kind": "directive", "justification": "Need to suppress" }]
 ```
 
-You can also get an instance of the `SourceCode` object used inside of `linter` by using the `getSourceCode()` method:
+也可以使用 `getSourceCode()` 方法获取 `linter` 内部使用的 `SourceCode` 对象实例：
 
 ```js
 const Linter = require("eslint").Linter;
@@ -782,11 +890,13 @@ const code = linter.getSourceCode();
 console.log(code.text); // "var foo = bar;"
 ```
 
-In this way, you can retrieve the text and AST used for the last run of `linter.verify()`.
+通过这种方式，可以获取上一次运行 `linter.verify()` 时使用的文本和 AST。
+
+<a id="linterverifyandfix"></a>
 
 ### Linter#verifyAndFix()
 
-This method is similar to verify except that it also runs autofixing logic, similar to the `--fix` flag on the command line. The result object will contain the autofixed code, along with any remaining linting messages for the code that were not autofixed.
+此方法与 verify 类似，但还会运行自动修复逻辑，类似于命令行中的 `--fix` 标志。结果对象会包含自动修复后的代码，以及代码中未被自动修复的剩余代码检查消息。
 
 ```js
 const Linter = require("eslint").Linter;
@@ -799,7 +909,7 @@ const messages = linter.verifyAndFix("var foo", {
 });
 ```
 
-Output object from this method:
+此方法的输出对象：
 
 ```js
 {
@@ -809,15 +919,17 @@ Output object from this method:
 }
 ```
 
-The information available is:
+其中包含以下信息：
 
-- `fixed` - True, if the code was fixed.
-- `output` - Fixed code text (might be the same as input if no fixes were applied).
-- `messages` - Collection of all messages for the given code (It has the same information as explained above under `verify` block).
+- `fixed` - 如果代码已修复，则为 True。
+- `output` - 修复后的代码文本（如果未应用任何修复，可能与输入相同）。
+- `messages` - 给定代码的所有消息集合（包含与上文 `verify` 部分所述相同的信息）。
+
+<a id="linterversionlinterversion"></a>
 
 ### Linter#version/Linter.version
 
-Each instance of `Linter` has a `version` property containing the semantic version number of ESLint that the `Linter` instance is from.
+每个 `Linter` 实例都有一个 `version` 属性，其中包含该 `Linter` 实例所属 ESLint 版本的语义化版本号。
 
 ```js
 const Linter = require("eslint").Linter;
@@ -826,7 +938,7 @@ const linter = new Linter();
 linter.version; // => '9.0.0'
 ```
 
-There is also a `Linter.version` property that you can read without instantiating `Linter`:
+也可以不实例化 `Linter`，直接读取 `Linter.version` 属性：
 
 ```js
 const Linter = require("eslint").Linter;
@@ -834,17 +946,23 @@ const Linter = require("eslint").Linter;
 Linter.version; // => '9.0.0'
 ```
 
+<a id="lintergettimes"></a>
+
 ### Linter#getTimes()
 
-This method is used to get the times spent on (parsing, fixing, linting) a file. See `times` property of the [Stats](../extend/stats#-stats-type) object.
+此方法用于获取文件在解析、修复和代码检查上所花费的时间。参见 [Stats](../extend/stats#-stats-type) 对象的 `times` 属性。
+
+<a id="lintergetfixpasscount"></a>
 
 ### Linter#getFixPassCount()
 
-This method is used to get the number of autofix passes made. See `fixPasses` property of the [Stats](../extend/stats#-stats-type) object.
+此方法用于获取执行自动修复的次数。参见 [Stats](../extend/stats#-stats-type) 对象的 `fixPasses` 属性。
+
+<a id="linterhasflag"></a>
 
 ### Linter#hasFlag()
 
-This method is used to determine if a given feature flag is set, as in this example:
+此方法用于确定是否设置了给定的功能标志，如下例所示：
 
 ```js
 const Linter = require("eslint").Linter;
@@ -855,11 +973,13 @@ console.log(linter.hasFlag("x_feature")); // true
 
 ---
 
+<a id="ruletester"></a>
+
 ## RuleTester
 
-`eslint.RuleTester` is a utility to write tests for ESLint rules. It is used internally for the bundled rules that come with ESLint, and it can also be used by plugins.
+`eslint.RuleTester` 是用于为 ESLint 规则编写测试的工具。它在内部用于 ESLint 自带的规则，插件也可以使用它。
 
-Example usage:
+用法示例：
 
 ```js
 "use strict";
@@ -897,15 +1017,17 @@ ruleTester.run("my-rule", rule, {
 });
 ```
 
-The `RuleTester` constructor accepts an optional object argument, which can be used to specify defaults for your test cases. For example, if all of your test cases use ES2015, you can set it as a default:
+`RuleTester` 构造函数接受一个可选对象参数，可用于为测试用例指定默认值。例如，如果所有测试用例都使用 ES2015，可以将其设为默认值：
 
 ```js
 const ruleTester = new RuleTester({ languageOptions: { ecmaVersion: 2015 } });
 ```
 
 ::: tip
-If you don't specify any options to the `RuleTester` constructor, then it uses the ESLint defaults (`languageOptions: { ecmaVersion: "latest", sourceType: "module" }`).
+如果没有为 `RuleTester` 构造函数指定任何选项，则会使用 ESLint 默认值（`languageOptions: { ecmaVersion: "latest", sourceType: "module" }`）。
 :::
+
+<a id="ruletestersetdefaultconfigconfig"></a>
 
 ### RuleTester.setDefaultConfig(config)
 
@@ -920,14 +1042,18 @@ RuleTester.setDefaultConfig({
 const ruleTester = new RuleTester(); // picks up defaults above
 ```
 
-Sets the default configuration used by `RuleTester` instances created after this call.
+设置此调用之后创建的 `RuleTester` 实例所使用的默认配置。
 
-This is a static method.
+这是一个静态方法。
 
-#### Parameters
+<a id="parameters-12"></a>
+
+#### 参数
 
 - `config` (`Config`)<br>
-  A [Configuration object] applied by default to all tests. It is applied before per-instance `RuleTester` constructor options and before per-test configuration. Throws a `TypeError` if `config` is not an object.
+  默认应用于所有测试的[配置对象]。此配置会先于每个实例的 `RuleTester` 构造函数选项以及每个测试的配置应用。如果 `config` 不是对象，则会抛出 `TypeError`。
+
+<a id="ruletestergetdefaultconfig"></a>
 
 ### RuleTester.getDefaultConfig()
 
@@ -935,14 +1061,18 @@ This is a static method.
 const currentDefaultConfig = RuleTester.getDefaultConfig();
 ```
 
-Returns the current default configuration used by `RuleTester`.
+返回 `RuleTester` 当前使用的默认配置。
 
-This is a static method.
+这是一个静态方法。
 
-#### Return Value
+<a id="return-value-11"></a>
+
+#### 返回值
 
 - (`Config`)<br>
-  The current default configuration object.
+  当前默认配置对象。
+
+<a id="ruletesterresetdefaultconfig"></a>
 
 ### RuleTester.resetDefaultConfig()
 
@@ -950,46 +1080,48 @@ This is a static method.
 RuleTester.resetDefaultConfig();
 ```
 
-Resets the default configuration back to ESLint's built-in defaults for subsequently created `RuleTester` instances.
+将之后创建的 `RuleTester` 实例的默认配置重置为 ESLint 内置默认值。
 
-This is a static method.
+这是一个静态方法。
+
+<a id="ruletesterrun"></a>
 
 ### RuleTester#run()
 
-The `RuleTester#run()` method is used to run the tests. It should be passed the following arguments:
+`RuleTester#run()` 方法用于运行测试。应向其传递以下参数：
 
-- The name of the rule (string).
-- The rule object itself (see ["working with rules"](../extend/custom-rules)).
-- An object containing `valid` and `invalid` properties, each of which is an array containing test cases.
-    - In this object, you can also pass the `assertionOptions` property to configure requirements for assertions of `invalid` test cases to enforce consistency.
+- 规则的名称（字符串）。
+- 规则对象本身（参见[“使用规则”](../extend/custom-rules)）。
+- 一个包含 `valid` 和 `invalid` 属性的对象，这两个属性分别是包含测试用例的数组。
+    - 也可以在此对象中传递 `assertionOptions` 属性，为 `invalid` 测试用例的断言配置要求，以确保一致性。
 
-A test case is an object with the following properties:
+测试用例是一个具有以下属性的对象：
 
-- `name` (string, optional): The name to use for the test case, to make it easier to find.
-- `code` (string, required): The source code that the rule should be run on.
-- `options` (array, optional): The options passed to the rule. The rule severity should not be included in this list.
-- `before` (function, optional): Function to execute before testing the case.
-- `after` (function, optional): Function to execute after testing the case regardless of its result.
-- `filename` (string, optional): The filename for the given case (useful for rules that make assertions about filenames).
-- `only` (boolean, optional): Run this case exclusively for debugging in supported test frameworks.
+- `name`（字符串，可选）：测试用例的名称，便于查找。
+- `code`（字符串，必需）：要运行规则检查的源代码。
+- `options`（数组，可选）：传递给规则的选项。此列表中不应包含规则严重程度。
+- `before`（函数，可选）：测试用例之前执行的函数。
+- `after`（函数，可选）：无论测试用例结果如何，都会在测试之后执行的函数。
+- `filename`（字符串，可选）：给定测试用例的文件名（适用于需要断言文件名的规则）。
+- `only`（布尔值，可选）：在支持的测试框架中仅运行此测试用例，以便调试。
 
-In addition to the properties above, invalid test cases can also have the following properties:
+除了上述属性外，无效测试用例还可以包含以下属性：
 
-- `errors` (number or array, required): Asserts some properties of the errors that the rule is expected to produce when run on this code. If this is a number, asserts the number of errors produced. Otherwise, this should be a list of objects, each containing information about a single reported error. The following properties can be used for an error (all are optional unless otherwise noted):
-    - `message` (string/regexp): The message for the error. Must provide this or `messageId`.
-    - `messageId` (string): The ID for the error. Must provide this or `message`. See [testing errors with messageId](#testing-errors-with-messageid) for details.
-    - `data` (object): Placeholder data which can be used in combination with `messageId`.
-    - `line` (number): The 1-based line number of the reported location.
-    - `column` (number): The 1-based column number of the reported location.
-    - `endLine` (number): The 1-based line number of the end of the reported location.
-    - `endColumn` (number): The 1-based column number of the end of the reported location.
-    - `suggestions` (array): An array of objects with suggestion details to check. Required if the rule produces suggestions. See [Testing Suggestions](#testing-suggestions) for details.
+- `errors`（数字或数组，必需）：断言规则对这段代码运行时预期生成的错误的某些属性。如果是数字，则断言生成的错误数量；否则应为对象列表，每个对象包含一条已报告错误的信息。错误可使用以下属性（除非另有说明，均为可选）：
+    - `message`（字符串/正则表达式）：错误消息。必须提供此属性或 `messageId`。
+    - `messageId`（字符串）：错误的 ID。必须提供此属性或 `message`。详情参见[使用 `messageId` 测试错误](#testing-errors-with-messageid)。
+    - `data`（对象）：可与 `messageId` 一起使用的占位符数据。
+    - `line`（数字）：已报告位置的行号，从 1 开始计数。
+    - `column`（数字）：已报告位置的列号，从 1 开始计数。
+    - `endLine`（数字）：已报告位置结束处的行号，从 1 开始计数。
+    - `endColumn`（数字）：已报告位置结束处的列号，从 1 开始计数。
+    - `suggestions`（数组）：包含要检查的建议详情的对象数组。如果规则会生成建议，则此属性为必需。详情参见[测试建议](#testing-suggestions)。
 
-    If a string is provided as an error instead of an object, the string is used to assert the `message` of the error.
+    如果错误以字符串而非对象的形式提供，则使用该字符串断言错误的 `message`。
 
-- `output` (string, required if the rule fixes code): Asserts the output that will be produced when using this rule for a single pass of autofixing (e.g. with the `--fix` command line flag). If this is `null` or omitted, asserts that none of the reported problems suggest autofixes.
+- `output`（字符串；如果规则会修复代码，则为必需）：断言使用此规则执行一轮自动修复（例如使用命令行标志 `--fix`）时生成的输出。如果此值为 `null` 或省略，则断言所有已报告问题都不提供自动修复。
 
-Any additional properties of a test case will be passed directly to the linter as config options. For example, a test case can have a `languageOptions` property to configure parser behavior:
+测试用例的任何其他属性都会直接作为配置选项传递给代码检查器。例如，测试用例可以使用 `languageOptions` 属性配置解析器行为：
 
 ```js
 {
@@ -998,23 +1130,25 @@ Any additional properties of a test case will be passed directly to the linter a
 }
 ```
 
-If a valid test case only uses the `code` property, it can optionally be provided as a string containing the code, rather than an object with a `code` key.
+如果有效测试用例只使用 `code` 属性，也可以选择将其作为包含代码的字符串提供，而不必使用包含 `code` 键的对象。
 
-You can optionally configure the following `assertionOptions` that apply to all error assertions in that call:
+可以选择配置以下 `assertionOptions`，它们适用于本次调用中的所有错误断言：
 
-- `requireMessage` (boolean/`"message"`/`"messageId"`, optional):
-    - If `true`, each `errors` block must check the expected error messages, either via string/regexp values in the `errors` array, or via `message`/`messageId` in error objects.
-    - If `"message"`, each `errors` block must check the expected error messages, either via string/regexp values in the `errors` array, or via `message` in error objects.
-    - If `"messageId"`, each `errors` block must check the expected error messages via `messageId` in error objects.
-- `requireLocation` (boolean, optional): If `true`, each `errors` block must be an array of objects, and each object must contain location properties `line`, `column`, `endLine`, and `endColumn`. Properties `endLine` and `endColumn` may be omitted if the actual error does not contain them.
-- `requireData` (boolean/`"error"`/`"suggestion"`, optional):
-    - If `true`, each error object that specifies `messageId` and each suggestion object that specifies `messageId` must also specify `data` if the message referenced by `messageId` has [placeholders](../extend/custom-rules#use-message-placeholders).
-    - If `"error"`, each error object that specifies `messageId` must also specify `data` if the message referenced by `messageId` has [placeholders](../extend/custom-rules#use-message-placeholders).
-    - If `"suggestion"`, each suggestion object that specifies `messageId` must also specify `data` if the message referenced by `messageId` has [placeholders](../extend/custom-rules#use-message-placeholders).
+- `requireMessage`（布尔值/`"message"`/`"messageId"`，可选）：
+    - 如果为 `true`，每个 `errors` 块都必须检查预期错误消息，可以通过 `errors` 数组中的字符串/正则表达式值，或错误对象中的 `message`/`messageId` 检查。
+    - 如果为 `"message"`，每个 `errors` 块都必须检查预期错误消息，可以通过 `errors` 数组中的字符串/正则表达式值，或错误对象中的 `message` 检查。
+    - 如果为 `"messageId"`，每个 `errors` 块都必须通过错误对象中的 `messageId` 检查预期错误消息。
+- `requireLocation`（布尔值，可选）：如果为 `true`，每个 `errors` 块都必须是对象数组，且每个对象必须包含位置属性 `line`、`column`、`endLine` 和 `endColumn`。如果实际错误不包含 `endLine` 和 `endColumn`，可以省略这两个属性。
+- `requireData`（布尔值/`"error"`/`"suggestion"`，可选）：
+    - 如果为 `true`，每个指定了 `messageId` 的错误对象和每个指定了 `messageId` 的建议对象，在 `messageId` 引用的消息含有[占位符](../extend/custom-rules#use-message-placeholders)时，还必须指定 `data`。
+    - 如果为 `"error"`，每个指定了 `messageId` 的错误对象，在 `messageId` 引用的消息含有[占位符](../extend/custom-rules#use-message-placeholders)时，还必须指定 `data`。
+    - 如果为 `"suggestion"`，每个指定了 `messageId` 的建议对象，在 `messageId` 引用的消息含有[占位符](../extend/custom-rules#use-message-placeholders)时，还必须指定 `data`。
 
-### Testing Errors with `messageId`
+<a id="testing-errors-with-messageid"></a>
 
-If the rule under test uses `messageId`s, you can use `messageId` property in a test case to assert reported error's `messageId` instead of its `message`.
+### 使用 `messageId` 测试错误
+
+如果待测试规则使用 `messageId`，可以在测试用例中使用 `messageId` 属性，断言已报告错误的 `messageId`，而不是其 `message`。
 
 ```js
 {
@@ -1023,7 +1157,7 @@ If the rule under test uses `messageId`s, you can use `messageId` property in a 
 }
 ```
 
-For messages with placeholders, a test case can also use `data` property to additionally assert reported error's `message`.
+对于含有占位符的消息，测试用例还可以使用 `data` 属性，进一步断言已报告错误的 `message`。
 
 ```js
 {
@@ -1032,11 +1166,13 @@ For messages with placeholders, a test case can also use `data` property to addi
 }
 ```
 
-Please note that `data` in a test case does not assert `data` passed to `context.report`. Instead, it is used to form the expected message text which is then compared with the received `message`.
+请注意，测试用例中的 `data` 不会断言传递给 `context.report` 的 `data`。相反，它用于生成预期消息文本，然后将该文本与收到的 `message` 进行比较。
 
-### Testing Fixes
+<a id="testing-fixes"></a>
 
-The result of applying fixes can be tested by using the `output` property of an invalid test case. The `output` property should be used only when you expect a fix to be applied to the specified `code`; you can safely omit `output` if no changes are expected to the code. Here's an example:
+### 测试修复
+
+可以使用无效测试用例的 `output` 属性测试应用修复后的结果。只有预期指定的 `code` 会应用修复时，才应使用 `output` 属性；如果预期代码不会发生变化，则可以省略 `output`。例如：
 
 ```js
 ruleTester.run("my-rule-for-no-foo", rule, {
@@ -1057,22 +1193,24 @@ ruleTester.run("my-rule-for-no-foo", rule, {
 });
 ```
 
-At the end of this invalid test case, `RuleTester` expects a fix to be applied that results in the code changing from `var foo;` to `var bar;`. If the output after applying the fix doesn't match, then the test fails.
+此无效测试用例结束时，`RuleTester` 预期应用修复，使代码从 `var foo;` 变为 `var bar;`。如果应用修复后的输出不匹配，则测试失败。
 
 ::: important
-ESLint makes its best attempt at applying all fixes, but there is no guarantee that all fixes will be applied. As such, you should aim for testing each type of fix in a separate `RuleTester` test case rather than one test case to test multiple fixes. When there is a conflict between two fixes (because they apply to the same section of code) `RuleTester` applies only the first fix.
+ESLint 会尽力应用所有修复，但不保证所有修复都能应用。因此，应尽量在单独的 `RuleTester` 测试用例中测试每种修复，而不是在一个测试用例中测试多种修复。如果两个修复存在冲突（因为它们应用于同一段代码），`RuleTester` 只会应用第一个修复。
 :::
 
-### Testing Suggestions
+<a id="testing-suggestions"></a>
 
-Suggestions can be tested by defining a `suggestions` key on an errors object. If this is a number, it asserts the number of suggestions provided for the error. Otherwise, this should be an array of objects, each containing information about a single provided suggestion. The following properties can be used:
+### 测试建议
 
-- `desc` (string): The suggestion `desc` value. Must provide this or `messageId`.
-- `messageId` (string): The suggestion `messageId` value for suggestions that use `messageId`s. Must provide this or `desc`.
-- `data` (object): Placeholder data which can be used in combination with `messageId`.
-- `output` (string, required): A code string representing the result of applying the suggestion fix to the input code.
+可以在错误对象上定义 `suggestions` 键来测试建议。如果此值是数字，则断言针对该错误提供的建议数量；否则应为对象数组，每个对象包含一条已提供建议的信息。可以使用以下属性：
 
-Example:
+- `desc`（字符串）：建议的 `desc` 值。必须提供此属性或 `messageId`。
+- `messageId`（字符串）：使用 `messageId` 的建议对应的 `messageId` 值。必须提供此属性或 `desc`。
+- `data`（对象）：可与 `messageId` 一起使用的占位符数据。
+- `output`（字符串，必需）：表示将建议修复应用于输入代码后结果的代码字符串。
+
+示例：
 
 ```js
 ruleTester.run("my-rule-for-no-foo", rule, {
@@ -1095,7 +1233,7 @@ ruleTester.run("my-rule-for-no-foo", rule, {
 });
 ```
 
-`messageId` and `data` properties in suggestion test objects work the same way as in error test objects. See [testing errors with messageId](#testing-errors-with-messageid) for details.
+建议测试对象中的 `messageId` 和 `data` 属性与错误测试对象中的工作方式相同。详情参见[使用 `messageId` 测试错误](#testing-errors-with-messageid)。
 
 ```js
 ruleTester.run("my-rule-for-no-foo", rule, {
@@ -1119,22 +1257,26 @@ ruleTester.run("my-rule-for-no-foo", rule, {
 });
 ```
 
-### Customizing RuleTester
+<a id="customizing-ruletester"></a>
 
-#### Customizing `describe` and `it`
+### 自定义 RuleTester
 
-`RuleTester` depends on two functions to run tests: `describe` and `it`. These functions can come from various places:
+<a id="customizing-describe-and-it"></a>
 
-1. If `RuleTester.describe` and `RuleTester.it` have been set to function values, `RuleTester` will use `RuleTester.describe` and `RuleTester.it` to run tests. You can use this to customize the behavior of `RuleTester` to match a test framework that you're using.
+#### 自定义 `describe` 和 `it`
 
-    If `RuleTester.itOnly` has been set to a function value, `RuleTester` will call `RuleTester.itOnly` instead of `RuleTester.it` to run cases with `only: true`. If `RuleTester.itOnly` is not set but `RuleTester.it` has an `only` function property, `RuleTester` will fall back to `RuleTester.it.only`.
+`RuleTester` 依赖两个函数运行测试：`describe` 和 `it`。这些函数可以来自不同来源：
 
-2. Otherwise, if `describe` and `it` are present as globals, `RuleTester` will use `globalThis.describe` and `globalThis.it` to run tests and `globalThis.it.only` to run cases with `only: true`. This allows `RuleTester` to work when using frameworks like [Mocha](https://mochajs.org/) without any additional configuration.
-3. Otherwise, `RuleTester#run` will simply execute all of the tests in sequence, and will throw an error if one of them fails. This means you can simply execute a test file that calls `RuleTester.run` using `Node.js`, without needing a testing framework.
+1. 如果 `RuleTester.describe` 和 `RuleTester.it` 已设置为函数值，`RuleTester` 就会使用 `RuleTester.describe` 和 `RuleTester.it` 运行测试。你可以用此方式自定义 `RuleTester` 的行为，使其适配正在使用的测试框架。
 
-`RuleTester#run` calls the `describe` function with two arguments: a string describing the rule, and a callback function. The callback calls the `it` function with a string describing the test case, and a test function. The test function will return successfully if the test passes, and throw an error if the test fails. The signature for `only` is the same as `it`. `RuleTester` calls either `it` or `only` for every case even when some cases have `only: true`, and the test framework is responsible for implementing test case exclusivity. (Note that this is the standard behavior for test suites when using frameworks like [Mocha](https://mochajs.org/); this information is only relevant if you plan to customize `RuleTester.describe`, `RuleTester.it`, or `RuleTester.itOnly`.)
+    如果 `RuleTester.itOnly` 已设置为函数值，遇到 `only: true` 的测试用例时，`RuleTester` 会调用 `RuleTester.itOnly`，而不是 `RuleTester.it`。如果未设置 `RuleTester.itOnly`，但 `RuleTester.it` 有 `only` 函数属性，则会回退使用 `RuleTester.it.only`。
 
-Example of customizing `RuleTester`:
+2. 否则，如果 `describe` 和 `it` 作为全局变量存在，`RuleTester` 就会使用 `globalThis.describe` 和 `globalThis.it` 运行测试，并使用 `globalThis.it.only` 运行 `only: true` 的测试用例。这样，使用 [Mocha](https://mochajs.org/) 等框架时，无需任何额外配置即可使用 `RuleTester`。
+3. 否则，`RuleTester#run` 会按顺序执行所有测试。如果其中一个测试失败，就会抛出错误。这意味着你可以直接使用 `Node.js` 执行调用 `RuleTester.run` 的测试文件，无需测试框架。
+
+`RuleTester#run` 会使用两个参数调用 `describe` 函数：描述规则的字符串和回调函数。回调函数会使用两个参数调用 `it` 函数：描述测试用例的字符串和测试函数。测试通过时，测试函数会成功返回；测试失败时，会抛出错误。`only` 的签名与 `it` 相同。`RuleTester` 会为每个测试用例调用 `it` 或 `only`，即使其中有些用例设置了 `only: true`；测试框架负责实现测试用例排他性。（请注意，这是使用 [Mocha](https://mochajs.org/) 等框架时测试套件的标准行为；只有计划自定义 `RuleTester.describe`、`RuleTester.it` 或 `RuleTester.itOnly` 时，这些信息才相关。）
+
+自定义 `RuleTester` 的示例：
 
 ```js
 "use strict";
@@ -1166,11 +1308,15 @@ ruleTester.run("my-rule", myRule, {
 });
 ```
 
-#### Enforcing `assertionOptions` Globally
+<a id="enforcing-assertionoptions-globally"></a>
 
-Because `assertionOptions` is specified per `run()` call, enforcing the same options across every call in a project requires a userland pattern. There are two common approaches:
+#### 全局强制使用 `assertionOptions`
 
-##### Option 1 — Subclass `RuleTester` and override `run()`
+由于 `assertionOptions` 是针对每次 `run()` 调用指定的，因此若要在项目中的每次调用中强制使用相同选项，需要采用用户层模式。常见方法有两种：
+
+<a id="option-1--subclass-ruletester-and-override-run"></a>
+
+##### 选项 1 — 派生 RuleTester 子类并重写 `run()`
 
 ```js
 const { RuleTester } = require("eslint");
@@ -1193,7 +1339,9 @@ class StrictRuleTester extends RuleTester {
 module.exports = StrictRuleTester;
 ```
 
-##### Option 2 — Helper wrapper function
+<a id="option-2--helper-wrapper-function"></a>
+
+##### 选项 2 — 辅助包装函数
 
 ```js
 const { RuleTester } = require("eslint");
@@ -1216,7 +1364,7 @@ function runWithStrictAssertions(ruleName, rule, tests) {
 module.exports = runWithStrictAssertions;
 ```
 
-[configuration object]: ../use/configure/
+[配置对象]: ../use/configure/
 [builtin-formatters]: ../use/formatters/
 [third-party-formatters]: https://www.npmjs.com/search?q=eslintformatter
 [eslint-lintfiles]: #-eslintlintfilespatterns

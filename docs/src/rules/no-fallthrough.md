@@ -7,7 +7,7 @@ related_rules:
 
 
 
-The `switch` statement in JavaScript is one of the more error-prone constructs of the language thanks in part to the ability to "fall through" from one `case` to the next. For example:
+JavaScript 中的 `switch` 语句是较容易出错的语言结构之一，部分原因在于它可以从一个 `case`“贯穿”到下一个 `case`。例如：
 
 ```js
 switch(foo) {
@@ -19,7 +19,7 @@ switch(foo) {
 }
 ```
 
-In this example, if `foo` is `1`, then execution will flow through both cases, as the first falls through to the second. You can prevent this by using `break`, as in this example:
+在此示例中，如果 `foo` 的值为 `1`，执行过程就会贯穿两个分支，因为第一个分支会继续执行第二个分支。你可以像下面这样使用 `break` 来避免这种情况：
 
 ```js
 switch(foo) {
@@ -32,7 +32,7 @@ switch(foo) {
 }
 ```
 
-That works fine when you don't want a fallthrough, but what if the fallthrough is intentional, there is no way to indicate that in the language. It's considered a best practice to always indicate when a fallthrough is intentional using a comment which matches the `/falls?\s?through/i` regular expression but isn't a directive:
+如果你不希望发生贯穿，这样做就没有问题。但如果贯穿是有意为之呢？语言本身并没有提供表示这一意图的方式。最佳实践是，始终使用注释标明有意贯穿；注释应匹配正则表达式 `/falls?\s?through/i`，但不能是指令：
 
 ```js
 switch(foo) {
@@ -74,13 +74,15 @@ switch(foo) {
 }
 ```
 
-In this example, there is no confusion as to the expected behavior. It is clear that the first case is meant to fall through to the second case.
+在此示例中，预期行为一目了然：第一个分支显然有意贯穿到第二个分支。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at eliminating unintentional fallthrough of one case to the other. As such, it flags any fallthrough scenarios that are not marked by a comment.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在消除一个分支意外贯穿到另一个分支的情况。因此，它会标记所有未通过注释标明的贯穿情形。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -98,7 +100,7 @@ switch(foo) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -168,21 +170,23 @@ switch(foo) {
 
 :::
 
-Note that the last `case` statement in these examples does not cause a warning because there is nothing to fall through into.
+请注意，这些示例中的最后一个 `case` 语句不会触发警告，因为它后面没有可贯穿到的分支。
 
-## Options
+<a id="options"></a>
 
-This rule has an object option:
+## 选项
 
-* Set the `commentPattern` option to a regular expression string to change the test for intentional fallthrough comment. If the fallthrough comment matches a directive, that takes precedence over `commentPattern`.
+此规则有一个对象选项：
 
-* Set the `allowEmptyCase` option to `true` to allow empty cases regardless of the layout. By default, this rule does not require a fallthrough comment after an empty `case` only if the empty `case` and the next `case` are on the same line or on consecutive lines.
+* 将 `commentPattern` 选项设为正则表达式字符串，以更改用于检测有意贯穿注释的匹配条件。如果贯穿注释与某个指令匹配，则指令优先于 `commentPattern`。
 
-* Set the `reportUnusedFallthroughComment` option to `true` to prohibit a fallthrough comment from being present if the case cannot fallthrough due to being unreachable. This is mostly intended to help avoid misleading comments occurring as a result of refactoring.
+* 将 `allowEmptyCase` 选项设为 `true`，即可允许空分支，而不受布局影响。默认情况下，只有当空 `case` 和下一个 `case` 位于同一行或相邻行时，此规则才不要求在空 `case` 后添加贯穿注释。
+
+* 将 `reportUnusedFallthroughComment` 选项设为 `true`，即可禁止在分支因不可达而无法贯穿时出现贯穿注释。此选项主要用于避免重构后留下误导性注释。
 
 ### commentPattern
 
-Examples of **correct** code for the `{ "commentPattern": "break[\\s\\w]*omitted" }` option:
+`{ "commentPattern": "break[\\s\\w]*omitted" }` 选项的正确代码示例：
 
 ::: correct
 
@@ -212,7 +216,7 @@ switch(foo) {
 
 ### allowEmptyCase
 
-Examples of **correct** code for the `{ "allowEmptyCase": true }` option:
+`{ "allowEmptyCase": true }` 选项的正确代码示例：
 
 ::: correct
 
@@ -239,7 +243,7 @@ switch(foo){
 
 ### reportUnusedFallthroughComment
 
-Examples of **incorrect** code for the `{ "reportUnusedFallthroughComment": true }` option:
+`{ "reportUnusedFallthroughComment": true }` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -273,7 +277,7 @@ function f() {
 
 :::
 
-Examples of **correct** code for the `{ "reportUnusedFallthroughComment": true }` option:
+`{ "reportUnusedFallthroughComment": true }` 选项的正确代码示例：
 
 ::: correct
 
@@ -291,6 +295,8 @@ switch(foo){
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you don't want to enforce that each `case` statement should end with a `throw`, `return`, `break`, or comment, then you can safely turn this rule off.
+## 何时不使用
+
+如果你不想强制要求每个 `case` 语句都以 `throw`、`return`、`break` 或注释结束，就可以安全地关闭此规则。

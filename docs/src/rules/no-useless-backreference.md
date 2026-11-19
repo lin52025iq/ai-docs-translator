@@ -11,9 +11,9 @@ further_reading:
 
 
 
-In JavaScript regular expressions, it's syntactically valid to define a backreference to a group that belongs to another alternative part of the pattern, a backreference to a group that appears after the backreference, a backreference to a group that contains that backreference, or a backreference to a group that is inside a negative lookaround. However, by the specification, in any of these cases the backreference always ends up matching only zero-length (the empty string), regardless of the context in which the backreference and the group appear.
+在 JavaScript 正则表达式中，语法上允许定义指向模式中另一个备选分支内分组的反向引用、指向出现在该反向引用之后的分组的反向引用、指向包含该反向引用的分组的反向引用，或指向位于否定环视中的分组的反向引用。然而，根据规范，在这些情况下，无论反向引用和分组出现的上下文如何，该反向引用最终都只会匹配零长度（空字符串）。
 
-Backreferences that always successfully match zero-length and cannot match anything else are useless. They are basically ignored and can be removed without changing the behavior of the regular expression.
+始终成功匹配零长度且无法匹配其他内容的反向引用毫无用处。它们基本上会被忽略，移除后也不会改变正则表达式的行为。
 
 ```js
 const regex = /^(?:(a)|\1b)$/;
@@ -29,20 +29,22 @@ equivalentRegex.test("b"); // true
 equivalentRegex.test("ab"); // false
 ```
 
-Useless backreference is a possible error in the code. It usually indicates that the regular expression does not work as intended.
+无用的反向引用可能是代码中的错误。它通常表明正则表达式未按预期工作。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to detect and disallow the following backreferences in regular expression:
+## 规则详情
 
-* Backreference to a group that is in another alternative, e.g., `/(a)|\1b/`. In such constructed regular expression, the backreference is expected to match what's been captured in, at that point, a non-participating group.
-* Backreference to a group that appears later in the pattern, e.g., `/\1(a)/`. The group hasn't captured anything yet, and ECMAScript doesn't support forward references. Inside lookbehinds, which match backward, the opposite applies and this rule disallows backreference to a group that appears before in the same lookbehind, e.g., `/(?<=(a)\1)b/`.
-* Backreference to a group from within the same group, e.g., `/(\1)/`. Similar to the previous, the group hasn't captured anything yet, and ECMAScript doesn't support nested references.
-* Backreference to a group that is in a negative lookaround, if the backreference isn't in the same negative lookaround, e.g., `/a(?!(b)).\1/`. A negative lookaround (lookahead or lookbehind) succeeds only if its pattern cannot match, meaning that the group has failed.
+此规则旨在检测并禁止正则表达式中的以下反向引用：
 
-By the ECMAScript specification, all backreferences listed above are valid, always succeed to match zero-length, and cannot match anything else. Consequently, they don't produce parsing or runtime errors, but also don't affect the behavior of their regular expressions. They are syntactically valid but useless.
+* 指向另一个备选分支中分组的反向引用，例如 `/(a)|\1b/`。在这种构造的正则表达式中，该反向引用试图匹配当时未参与匹配的分组所捕获的内容。
+* 指向模式中后续分组的反向引用，例如 `/\1(a)/`。该分组尚未捕获任何内容，而且 ECMAScript 不支持向前引用。在向后匹配的后行断言中情况相反，因此此规则会禁止指向同一后行断言中前面分组的反向引用，例如 `/(?<=(a)\1)b/`。
+* 在分组内部指向该分组自身的反向引用，例如 `/(\1)/`。与上一种情况类似，该分组尚未捕获任何内容，而且 ECMAScript 不支持嵌套引用。
+* 指向否定环视中分组的反向引用，但反向引用不在同一个否定环视中时，例如 `/a(?!(b)).\1/`。否定环视（先行断言或后行断言）仅当其模式无法匹配时才会成功，这意味着该分组匹配失败。
 
-This might be surprising to developers coming from other languages where some of these backreferences can be used in a meaningful way.
+根据 ECMAScript 规范，上述所有反向引用都是有效的，始终成功匹配零长度，并且无法匹配其他内容。因此，它们不会产生解析错误或运行时错误，但也不会影响正则表达式的行为。它们在语法上有效，但毫无用处。
+
+对于来自其他语言的开发者来说，这可能令人惊讶，因为在其他语言中，有些此类反向引用可以发挥实际作用。
 
 ```js
 // in some other languages, this pattern would successfully match "aab"
@@ -50,7 +52,7 @@ This might be surprising to developers coming from other languages where some of
 /^(?:(a)(?=a)|\1b)+$/.test("aab"); // false
 ```
 
-Examples of **incorrect** code for this rule:
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -88,7 +90,7 @@ new RegExp('(\\1)'); // nested reference to (\1)
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -124,9 +126,9 @@ new RegExp('(.)\\1'); // reference to (.)
 
 :::
 
-Please note that this rule does not aim to detect and disallow a potentially erroneous use of backreference syntax in regular expressions, like the use in character classes or an attempt to reference a group that doesn't exist. Depending on the context, a `\1`...`\9` sequence that is not a syntactically valid backreference may produce syntax error, or be parsed as something else (e.g., as a legacy octal escape sequence).
+请注意，此规则不旨在检测并禁止正则表达式中可能有误的反向引用语法用法，例如在字符类中使用反向引用语法，或尝试引用不存在的分组。根据上下文，语法上并非有效反向引用的 `\1`...`\9` 序列可能导致语法错误，也可能被解析为其他内容（例如旧式八进制转义序列）。
 
-Examples of additional **correct** code for this rule:
+此规则的其他**正确**代码示例：
 
 ::: correct
 
@@ -142,6 +144,8 @@ Examples of additional **correct** code for this rule:
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
+
+此规则没有选项。

@@ -9,9 +9,9 @@ further_reading:
 - https://github.com/microsoft/TypeScript/blob/main/src/lib/es2022.error.d.ts
 ---
 
-JavaScript developers often re-throw errors in `catch` blocks to add context but forget to preserve the original error, resulting in lost debugging information.
+JavaScript 开发者经常会在 `catch` 块中重新抛出错误以补充上下文，却忘记保留原始错误，导致调试信息丢失。
 
-Using the `cause` option when throwing new errors helps retain the original error and maintain complete error chains, which improves debuggability and traceability.
+抛出新错误时使用 `cause` 选项有助于保留原始错误并维护完整的错误链，从而提高可调试性和可追踪性。
 
 ```js
 try {
@@ -24,13 +24,15 @@ try {
 }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces the use of the `cause` property when throwing a new error inside a `catch` block.
+## 规则详情
 
-Checks for all built-in `error types` that support passing a `cause`.
+此规则要求在 `catch` 块中抛出新错误时使用 `cause` 属性。
 
-Examples of **incorrect** code for this rule:
+检查所有支持传入 `cause` 的内置 `error types`。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -72,7 +74,7 @@ try {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -115,16 +117,18 @@ try {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule takes a single option — an object with the following optional properties:
+## 选项
 
-- `requireCatchParameter`: Requires the catch blocks to always have the caught error parameter when set to `true`. By default, this is `false`.
-- `errorClassNames`: Additional error class names to check for cause preservation. By default, this is `[]`.
+此规则接受一个选项——一个具有以下可选属性的对象：
+
+- `requireCatchParameter`：设为 `true` 时，要求 `catch` 块始终具有被捕获错误的参数。默认值为 `false`。
+- `errorClassNames`：要检查是否保留 cause 的其他错误类名称。默认值为 `[]`。
 
 ### requireCatchParameter
 
-Enabling this option mandates for all the catch blocks to have a caught error parameter. This makes sure that the caught error is not discarded at the parameter level.
+启用此选项后，所有 catch 块都必须具有被捕获错误的参数。这样可以确保不会在参数层面丢弃被捕获的错误。
 
 ```js
 "preserve-caught-error": ["error", {
@@ -132,7 +136,7 @@ Enabling this option mandates for all the catch blocks to have a caught error pa
 }]
 ```
 
-Example of **incorrect** code for the `{ "requireCatchParameter": true }` option:
+`{ "requireCatchParameter": true }` 选项的**错误**代码示例：
 
 ::: incorrect
 
@@ -148,7 +152,7 @@ try {
 
 :::
 
-Example of **correct** code for the `{ "requireCatchParameter": true }` option:
+`{ "requireCatchParameter": true }` 选项的**正确**代码示例：
 
 ::: correct
 
@@ -166,12 +170,12 @@ try {
 
 ### errorClassNames
 
-By default, this rule checks only the built-in `Error` types (`Error`, `EvalError`, `RangeError`, `ReferenceError`, `SyntaxError`, `TypeError`, `URIError`, `AggregateError`). Use `errorClassNames` to also check custom error classes.
+默认情况下，此规则只检查内置的 `Error` 类型（`Error`、`EvalError`、`RangeError`、`ReferenceError`、`SyntaxError`、`TypeError`、`URIError`、`AggregateError`）。使用 `errorClassNames` 还可以检查自定义错误类。
 
-Each entry can be either a string or an object:
+每个条目可以是字符串或对象：
 
-- A **string** specifies the class name. The constructor is assumed to accept the options object as the second argument, matching the built-in `Error` signature.
-- An **object** with `name` and `argumentPosition` is used when the constructor accepts the options object at a different position. `argumentPosition` is 1-indexed.
+- **字符串**用于指定类名。构造函数被假定为在第二个参数中接受选项对象，与内置 `Error` 的签名一致。
+- 当构造函数在其他位置接受选项对象时，使用包含 `name` 和 `argumentPosition` 的**对象**。`argumentPosition` 从 1 开始计数。
 
 ```json
 {
@@ -186,7 +190,7 @@ Each entry can be either a string or an object:
 }
 ```
 
-Example of **incorrect** code for the `{ "errorClassNames": ["AppError"] }` option:
+`{ "errorClassNames": ["AppError"] }` 选项的**错误**代码示例：
 
 ::: incorrect
 
@@ -204,7 +208,7 @@ try {
 
 :::
 
-Example of **correct** code for the `{ "errorClassNames": ["AppError"] }` option:
+`{ "errorClassNames": ["AppError"] }` 选项的**正确**代码示例：
 
 ::: correct
 
@@ -222,7 +226,7 @@ try {
 
 :::
 
-Example of **incorrect** code for the `{ "errorClassNames": [{ "name": "APIError", "argumentPosition": 3 }] }` option:
+`{ "errorClassNames": [{ "name": "APIError", "argumentPosition": 3 }] }` 选项的**错误**代码示例：
 
 ::: incorrect
 
@@ -245,7 +249,7 @@ try {
 
 :::
 
-Example of **correct** code for the `{ "errorClassNames": [{ "name": "APIError", "argumentPosition": 3 }] }` option:
+`{ "errorClassNames": [{ "name": "APIError", "argumentPosition": 3 }] }` 选项的**正确**代码示例：
 
 ::: correct
 
@@ -268,13 +272,15 @@ try {
 
 :::
 
-## Known Limitations
+<a id="known-limitations"></a>
 
-The `errorClassNames` option accepts names, not references to specific error classes. The rule matches these configured names in the AST and does not resolve scope or type information.
+## 已知限制
 
-As a result, a local class can shadow the intended error class while having the same name. The rule cannot distinguish the local class from the intended class and may report a false positive.
+`errorClassNames` 选项接受名称，而非对特定错误类的引用。此规则会在 AST 中匹配这些配置的名称，但不会解析作用域或类型信息。
 
-For example:
+因此，同名的本地类可能会遮蔽预期的错误类。此规则无法区分本地类和预期的类，因此可能会报告误报。
+
+例如：
 
 ```js
 /* eslint preserve-caught-error: ["error", { errorClassNames: ["AppError"] }] */
@@ -294,14 +300,16 @@ function makeWrapped() {
 }
 ```
 
-Here, `AppError` is configured by name, but the local `AppError` class is different from the intended global/imported class. The rule still matches the name and may report a missing `cause`, even though this local class has a different constructor signature and does not accept an options object containing `cause`.
+此处按名称配置了 `AppError`，但本地的 `AppError` 类与预期的全局类或导入类不同。此规则仍会匹配该名称，并可能报告缺少 `cause`，即使这个本地类的构造函数签名不同，也不接受包含 `cause` 的选项对象。
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You might not want to enable this rule if:
+## 不应使用此规则的情况
 
-- You follow a custom error-handling approach where the original error is intentionally omitted from re-thrown errors (e.g., to avoid exposing internal details or to log the original error separately).
+以下情况可能不适合启用此规则：
 
-- You use a third-party or internal error-handling library that preserves error context using non-standard properties (e.g., [verror](https://www.npmjs.com/package/verror)) instead of the cause option.
+- 你采用自定义错误处理方式，有意不在重新抛出的错误中包含原始错误（例如，为避免暴露内部细节，或单独记录原始错误）。
 
-- (In rare cases) you are targeting legacy environments where the cause option in `Error` constructors is not supported.
+- 你使用第三方或内部错误处理库，通过非标准属性（例如 [verror](https://www.npmjs.com/package/verror)）而非 cause 选项来保留错误上下文。
+
+- （少数情况下）你的目标运行环境较旧，不支持在 `Error` 构造函数中使用 cause 选项。

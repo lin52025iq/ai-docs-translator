@@ -1,62 +1,72 @@
 ---
-title: Configuration Migration Guide
+title: 配置迁移指南
 eleventyNavigation:
     key: migration guide
     parent: configure
-    title: Configuration Migration Guide
+    title: 配置迁移指南
     order: 9
 ---
 
 {%- from 'components/npm_tabs.macro.html' import npm_tabs with context %}
 {%- from 'components/npx_tabs.macro.html' import npx_tabs %}
 
-This guide provides an overview of how you can migrate your ESLint configuration file from the eslintrc format (typically configured in `.eslintrc.js` or `.eslintrc.json` files) to the new flat config format (typically configured in an `eslint.config.js` file).
+本指南概述如何将 ESLint 配置文件从 eslintrc 格式（通常配置在 `.eslintrc.js` 或 `.eslintrc.json` 文件中）迁移到新的扁平配置格式（通常配置在 `eslint.config.js` 文件中）。
 
-To learn more about the flat config format, refer to [this blog post](https://eslint.org/blog/2022/08/new-config-system-part-2/).
+要进一步了解扁平配置格式，请参阅[这篇博客文章](https://eslint.org/blog/2022/08/new-config-system-part-2/)。
 
-For reference information on flat configuration files, refer to [flat configuration files](configuration-files).
+有关扁平配置文件的参考信息，请参阅[扁平配置文件](configuration-files)。
 
-## Migrate Your Config File
+<a id="migrate-your-config-file"></a>
 
-To get started, use the [configuration migrator](https://npmjs.com/package/@eslint/migrate-config) on your existing configuration file (`.eslintrc`, `.eslintrc.json`, `.eslintrc.yml`), like this:
+## 迁移配置文件
+
+要开始迁移，请对现有配置文件（`.eslintrc`、`.eslintrc.json`、`.eslintrc.yml`）使用[配置迁移工具](https://npmjs.com/package/@eslint/migrate-config)，如下所示：
 
 {{ npx_tabs({
     package: "@eslint/migrate-config",
     args: [".eslintrc.json"]
 }) }}
 
-This will create a starting point for your `eslint.config.js` file but is not guaranteed to work immediately without further modification. It will, however, do most of the conversion work mentioned in this guide automatically.
+这会为你的 `eslint.config.js` 文件创建一个起点，但不保证无需进一步修改即可立即运行。不过，它会自动完成本指南中介绍的大部分转换工作。
 
 ::: important
-The configuration migrator doesn't yet work well for `.eslintrc.js` files. If you are using `.eslintrc.js`, the migration results in a config file that matches the evaluated output of your configuration and won't include any functions, conditionals, or anything other than the raw data represented in your configuration.
+配置迁移工具目前还不能很好地处理 `.eslintrc.js` 文件。如果你使用的是 `.eslintrc.js`，迁移结果会生成一个与配置求值结果相匹配的配置文件，其中不会包含任何函数、条件语句或配置中所表示的原始数据以外的内容。
 :::
 
-## Start Using Flat Config Files
+<a id="start-using-flat-config-files"></a>
 
-The flat config file format has been the default configuration file format since ESLint v9.0.0. You can start using the flat config file format without any additional configuration.
+## 开始使用扁平配置文件
 
-To use flat config with ESLint v8, place a `eslint.config.js` file in the root of your project **or** set the `ESLINT_USE_FLAT_CONFIG` environment variable to `true`.
+自 ESLint v9.0.0 起，扁平配置文件格式一直是默认的配置文件格式。你无需进行任何额外配置，即可开始使用扁平配置文件格式。
 
-## Things That Haven’t Changed between Configuration File Formats
+要在 ESLint v8 中使用扁平配置，请在项目根目录放置一个 `eslint.config.js` 文件，**或**将 `ESLINT_USE_FLAT_CONFIG` 环境变量设为 `true`。
 
-While the configuration file format has changed from eslintrc to flat config, the following has stayed the same:
+<a id="things-that-havent-changed-between-configuration-file-formats"></a>
 
-- Syntax for configuring rules.
-- Syntax for configuring processors.
-- The CLI, except for the flag changes noted in [CLI Flag Changes](#cli-flag-changes).
-- Global variables are configured the same way, but on a different property (see [Configure Language Options](#configure-language-options)).
+## 配置文件格式之间没有变化的部分
 
-## Key Differences between Configuration Formats
+虽然配置文件格式已从 eslintrc 改为扁平配置，但以下内容保持不变：
 
-A few of the most notable differences between the eslintrc and flat config formats are the following:
+- 配置规则的语法。
+- 配置处理器的语法。
+- CLI，但 [CLI 标志的变化](#cli-flag-changes)中提到的标志除外。
+- 全局变量的配置方式相同，但所在属性不同（请参阅[配置语言选项](#configure-language-options)）。
 
-### Import Plugins and Custom Parsers
+<a id="key-differences-between-configuration-formats"></a>
 
-Eslintrc files use string-based import system inside the `plugins` property to load plugins and inside the `extends` property to load external configurations.
+## 配置格式的主要区别
 
-Flat config files represent plugins and parsers as JavaScript objects. This means you can use CommonJS `require()` or ES module `import` statements to load plugins and custom parsers from external files.
+eslintrc 和扁平配置格式之间一些最显著的区别如下：
 
-For example, this eslintrc config file loads `eslint-plugin-jsdoc` and configures rules from that plugin:
+<a id="import-plugins-and-custom-parsers"></a>
+
+### 导入插件和自定义解析器
+
+eslintrc 文件使用基于字符串的导入系统：在 `plugins` 属性中加载插件，在 `extends` 属性中加载外部配置。
+
+扁平配置文件将插件和解析器表示为 JavaScript 对象。这意味着你可以使用 CommonJS `require()` 或 ES 模块 `import` 语句，从外部文件加载插件和自定义解析器。
+
+例如，以下 eslintrc 配置文件会加载 `eslint-plugin-jsdoc`，并配置该插件中的规则：
 
 ```javascript
 // .eslintrc.js
@@ -72,7 +82,7 @@ module.exports = {
 };
 ```
 
-In flat config, you would do the same thing like this:
+在扁平配置中，可以这样实现相同的效果：
 
 ```javascript
 // eslint.config.js
@@ -95,16 +105,18 @@ export default defineConfig([
 ```
 
 ::: tip
-If you import a plugin and get an error such as "TypeError: context.getScope is not a function", then that means the plugin has not yet been updated to the ESLint v9.x rule API. While you should file an issue with the particular plugin, you can manually patch the plugin to work in ESLint v9.x using the [compatibility utilities](https://eslint.org/blog/2024/05/eslint-compatibility-utilities/).
+如果导入插件时遇到类似 "TypeError: context.getScope is not a function" 的错误，说明该插件尚未更新以适配 ESLint v9.x 规则 API。你应向相关插件提交问题反馈，也可以使用[兼容性工具](https://eslint.org/blog/2024/05/eslint-compatibility-utilities/)手动修补插件，使其能在 ESLint v9.x 中正常工作。
 :::
 
-### Custom Parsers
+<a id="custom-parsers"></a>
 
-In eslintrc files, importing a custom parser is similar to importing a plugin: you use a string to specify the name of the parser.
+### 自定义解析器
 
-In flat config files, import a custom parser as a module, then assign it to the `languageOptions.parser` property of a configuration object.
+在 eslintrc 文件中，导入自定义解析器的方式与导入插件类似：使用字符串指定解析器名称。
 
-For example, this eslintrc config file uses the `@babel/eslint-parser` parser:
+在扁平配置文件中，将自定义解析器作为模块导入，然后将其赋值给配置对象的 `languageOptions.parser` 属性。
+
+例如，以下 eslintrc 配置文件使用了 `@babel/eslint-parser` 解析器：
 
 ```javascript
 // .eslintrc.js
@@ -116,7 +128,7 @@ module.exports = {
 };
 ```
 
-In flat config, you would do the same thing like this:
+在扁平配置中，可以这样实现相同的效果：
 
 ```javascript
 // eslint.config.js
@@ -135,13 +147,15 @@ export default defineConfig([
 ]);
 ```
 
-### Processors
+<a id="processors"></a>
 
-In eslintrc files, processors had to be defined in a plugin, and then referenced by name in the configuration. Processors beginning with a dot indicated a file extension-named processor which ESLint would automatically configure for that file extension.
+### 处理器
 
-In flat config files, processors can still be referenced from plugins by their name, but they can now also be inserted directly into the configuration. Processors will _never_ be automatically configured, and must be explicitly set in the configuration.
+在 eslintrc 文件中，处理器必须定义在插件中，然后在配置中通过名称引用。以点号开头的处理器表示按文件扩展名命名的处理器，ESLint 会为该文件扩展名自动配置此处理器。
 
-As an example with a custom plugin with processors:
+在扁平配置文件中，仍然可以通过名称引用插件中的处理器，但现在也可以将处理器直接放入配置中。处理器**绝不会**自动配置，必须在配置中显式设置。
+
+以下是包含处理器的自定义插件示例：
 
 ```javascript
 // node_modules/eslint-plugin-someplugin/index.js
@@ -159,7 +173,7 @@ module.exports = {
 };
 ```
 
-In eslintrc, you would configure as follows:
+在 eslintrc 中，可以这样配置：
 
 ```javascript
 // .eslintrc.js
@@ -169,7 +183,7 @@ module.exports = {
 };
 ```
 
-ESLint would also automatically add the equivalent of the following:
+ESLint 还会自动添加以下等效配置：
 
 ```javascript
 {
@@ -182,7 +196,7 @@ ESLint would also automatically add the equivalent of the following:
 }
 ```
 
-In flat config, the following are all valid ways to express the same:
+在扁平配置中，以下写法都可以表达相同的内容：
 
 ```javascript
 // eslint.config.js
@@ -206,7 +220,7 @@ export default defineConfig([
 ]);
 ```
 
-Note that because the `.md` processor is _not_ automatically added by flat config, you also need to specify an extra configuration element:
+请注意，由于扁平配置**不会**自动添加 `.md` 处理器，因此你还需要指定一个额外的配置项：
 
 ```javascript
 {
@@ -215,15 +229,19 @@ Note that because the `.md` processor is _not_ automatically added by flat confi
 }
 ```
 
-### Glob-Based Configs
+<a id="glob-based-configs"></a>
 
-By default, eslintrc files lint all files (except those covered by `.eslintignore`) in the directory in which they’re placed and its child directories. If you want to have different configurations for different file glob patterns, you can specify them in the `overrides` property.
+### 基于 Glob 的配置
 
-By default, flat config files support different glob pattern-based configs in exported array. You can include the glob pattern in a config object's `files` property. If you don't specify a `files` property, the config defaults to the glob pattern `"**/*.{js,mjs,cjs}"`. Basically, all configuration in the flat config file is like the eslintrc `overrides` property.
+默认情况下，eslintrc 文件会对其所在目录及其子目录中的所有文件进行代码检查（`.eslintignore` 中排除的文件除外）。如果你想为不同的文件 glob 模式使用不同配置，可以在 `overrides` 属性中指定。
 
-#### eslintrc Examples
+默认情况下，扁平配置文件支持在导出的数组中使用基于不同 glob 模式的配置。你可以在配置对象的 `files` 属性中加入 glob 模式。如果不指定 `files` 属性，配置默认使用 glob 模式 `"**/*.{js,mjs,cjs}"`。基本上，扁平配置文件中的所有配置都相当于 eslintrc 的 `overrides` 属性。
 
-For example, this eslintrc file applies to all files in the directory where it is placed and its child directories:
+<a id="eslintrc-examples"></a>
+
+#### eslintrc 示例
+
+例如，以下 eslintrc 文件会应用于其所在目录及其子目录中的所有文件：
 
 ```javascript
 // .eslintrc.js
@@ -236,7 +254,7 @@ module.exports = {
 };
 ```
 
-This eslintrc file supports multiple configs with overrides:
+以下 eslintrc 文件通过覆盖配置支持多种配置：
 
 ```javascript
 // .eslintrc.js
@@ -260,7 +278,7 @@ module.exports = {
 };
 ```
 
-For flat config, here is a configuration with the default glob pattern:
+对于扁平配置，以下是使用默认 glob 模式的配置：
 
 ```javascript
 // eslint.config.js
@@ -281,7 +299,7 @@ export default defineConfig([
 ]);
 ```
 
-A flat config example configuration supporting multiple configs for different glob patterns:
+以下扁平配置示例支持针对不同 glob 模式使用多种配置：
 
 ```javascript
 // eslint.config.js
@@ -308,13 +326,15 @@ export default defineConfig([
 ]);
 ```
 
-### Configure Language Options
+<a id="configure-language-options"></a>
 
-In eslintrc files, you configure various language options across the `env`, `globals` and `parserOptions` properties. Groups of global variables for specific runtimes (e.g. `document` and `window` for browser JavaScript; `process` and `require` for Node.js) are configured with the `env` property.
+### 配置语言选项
 
-In flat config files, the `globals`, and `parserOptions` are consolidated under the `languageOptions` key; the `env` property doesn't exist. Groups of global variables for specific runtimes are imported from the [globals](https://www.npmjs.com/package/globals) npm package and included in the `globals` property. You can use the spread operator (`...`) to import multiple globals at once.
+在 eslintrc 文件中，你可以通过 `env`、`globals` 和 `parserOptions` 属性配置各种语言选项。特定运行环境的全局变量组（例如浏览器 JavaScript 中的 `document` 和 `window`，以及 Node.js 中的 `process` 和 `require`）通过 `env` 属性配置。
 
-For example, here's an eslintrc file with language options:
+在扁平配置文件中，`globals` 和 `parserOptions` 被合并到 `languageOptions` 键下；扁平配置中不存在 `env` 属性。特定运行环境的全局变量组从 [globals](https://www.npmjs.com/package/globals) npm 包中导入，并包含在 `globals` 属性中。你可以使用展开运算符 (`...`) 一次导入多个全局变量组。
+
+例如，以下是包含语言选项的 eslintrc 文件：
 
 ```javascript
 // .eslintrc.js
@@ -335,7 +355,7 @@ module.exports = {
 };
 ```
 
-Here's the same configuration in flat config:
+以下是扁平配置中的相同配置：
 
 ```javascript
 // eslint.config.js
@@ -360,17 +380,19 @@ export default defineConfig([
 ```
 
 ::: tip
-You'll need to install the `globals` package from npm for this example to work. It is not automatically installed by ESLint.
+要使此示例正常运行，你需要从 npm 安装 `globals` 包。ESLint 不会自动安装它。
 :::
 
-### `eslint-env` Configuration Comments
+<a id="eslint-env-configuration-comments"></a>
 
-In the eslintrc config system it was possible to use `eslint-env` configuration comments to define globals for a file.
-These comments are no longer recognized when linting with flat config and will be reported as errors.
-For this reason, when migrating from eslintrc to flat config, `eslint-env` configuration comments should be removed from all files.
-They can be either replaced with equivalent but more verbose `global` configuration comments, or dropped in favor of `globals` definitions in the config file.
+### `eslint-env` 配置注释
 
-For example, when using eslintrc, a file to be linted could look like this:
+在 eslintrc 配置系统中，可以使用 `eslint-env` 配置注释为文件定义全局变量。
+使用扁平配置进行代码检查时，不再识别这些注释，并会将其报告为错误。
+因此，从 eslintrc 迁移到扁平配置时，应从所有文件中删除 `eslint-env` 配置注释。
+你可以将其替换为等效但更冗长的 `global` 配置注释，也可以删除这些注释，改为在配置文件中定义 `globals`。
+
+例如，使用 eslintrc 时，待检查的文件可能如下所示：
 
 ```javascript
 // tests/my-file.js
@@ -384,9 +406,9 @@ describe("unit tests", () => {
 });
 ```
 
-In the above example, `describe` and `it` would be recognized as global identifiers because of the `/* eslint-env mocha */` comment.
+在上例中，由于存在 `/* eslint-env mocha */` 注释，`describe` 和 `it` 会被识别为全局标识符。
 
-The same effect can be achieved with flat config with a `global` configuration comment, e.g.:
+例如，可以在扁平配置中使用 `global` 配置注释来实现相同的效果：
 
 ```javascript
 // tests/my-file.js
@@ -400,7 +422,7 @@ describe("unit tests", () => {
 });
 ```
 
-Another option is to remove the comment from the file being linted and define the globals in the configuration, for example:
+另一种做法是从待检查的文件中删除该注释，并在配置中定义全局变量，例如：
 
 ```javascript
 // eslint.config.js
@@ -421,16 +443,18 @@ export default defineConfig([
 ]);
 ```
 
-### Predefined and Shareable Configs
+<a id="predefined-and-shareable-configs"></a>
 
-In eslintrc files, use the `extends` property to use predefined and shareable configs. ESLint comes with two predefined configs that you can access as strings:
+### 预定义配置和可共享配置
 
-- `"eslint:recommended"`: the rules recommended by ESLint.
-- `"eslint:all"`: all rules shipped with ESLint.
+在 eslintrc 文件中，使用 `extends` 属性来使用预定义配置和可共享配置。ESLint 自带两个可通过字符串访问的预定义配置：
 
-You can also use the `extends` property to extend a shareable config. Shareable configs can either be paths to local config files or npm package names.
+- `"eslint:recommended"`：ESLint 推荐的规则。
+- `"eslint:all"`：ESLint 随附的所有规则。
 
-In flat config files, predefined configs are imported from separate modules into flat config files. The `recommended` and `all` rules configs are located in the [`@eslint/js`](https://www.npmjs.com/package/@eslint/js) package. You must import this package to use these configs:
+你也可以使用 `extends` 属性扩展可共享配置。可共享配置可以是本地配置文件的路径，也可以是 npm 包名称。
+
+在扁平配置文件中，预定义配置从单独的模块导入。`recommended` 和 `all` 规则配置位于 [`@eslint/js`](https://www.npmjs.com/package/@eslint/js) 包中。要使用这些配置，必须导入此包：
 
 {{ npm_tabs({
     command: "install",
@@ -438,9 +462,9 @@ In flat config files, predefined configs are imported from separate modules into
     args: ["--save-dev"]
 }) }}
 
-You can add each of these configs to the exported array or expose specific rules from them. You must import the modules for local config files and npm package configs with flat config.
+你可以将这些配置分别添加到导出的数组中，也可以从中公开特定规则。使用扁平配置时，本地配置文件和 npm 包配置都必须通过模块导入。
 
-For example, here's an eslintrc file using the built-in `eslint:recommended` config:
+例如，以下 eslintrc 文件使用了内置的 `eslint:recommended` 配置：
 
 ```javascript
 // .eslintrc.js
@@ -455,7 +479,7 @@ module.exports = {
 };
 ```
 
-This eslintrc file uses built-in config, local custom config, and shareable config from an npm package:
+以下 eslintrc 文件使用了内置配置、本地自定义配置和来自 npm 包的可共享配置：
 
 ```javascript
 // .eslintrc.js
@@ -474,7 +498,7 @@ module.exports = {
 };
 ```
 
-To use the same configs in flat config, you would do the following:
+要在扁平配置中使用相同的配置，可以这样做：
 
 ```javascript
 // eslint.config.js
@@ -497,7 +521,7 @@ export default defineConfig([
 ]);
 ```
 
-Note that because you are just importing JavaScript modules, you can mutate the config objects before ESLint uses them. For example, you might want to have a certain config object only apply to your test files:
+请注意，由于你只是导入 JavaScript 模块，因此可以在 ESLint 使用配置对象之前对其进行修改。例如，你可能希望某个配置对象仅应用于测试文件：
 
 ```javascript
 // eslint.config.js
@@ -515,9 +539,11 @@ export default defineConfig([
 ]);
 ```
 
-#### Use eslintrc Configs in Flat Config
+<a id="use-eslintrc-configs-in-flat-config"></a>
 
-You may find that there's a shareable config you rely on that hasn't yet been updated to flat config format. In that case, you can use the `FlatCompat` utility to translate the eslintrc format into flat config format. First, install the `@eslint/eslintrc` package:
+#### 在扁平配置中使用 eslintrc 配置
+
+你可能依赖某个尚未更新为扁平配置格式的可共享配置。在这种情况下，可以使用 `FlatCompat` 工具将 eslintrc 格式转换为扁平配置格式。首先，安装 `@eslint/eslintrc` 包：
 
 {{ npm_tabs({
     command: "install",
@@ -525,7 +551,7 @@ You may find that there's a shareable config you rely on that hasn't yet been up
     args: ["--save-dev"]
 }) }}
 
-Then, import `FlatCompat` and create a new instance to convert an existing eslintrc config. For example, if the npm package `eslint-config-my-config` is in eslintrc format, you can write this:
+然后，导入 `FlatCompat` 并创建一个新实例，用于转换现有的 eslintrc 配置。例如，如果 npm 包 `eslint-config-my-config` 使用的是 eslintrc 格式，可以这样编写：
 
 ```js
 import { defineConfig } from "eslint/config";
@@ -547,17 +573,19 @@ export default defineConfig([
 ]);
 ```
 
-This example uses the `FlatCompat#extends()` method to insert the `eslint-config-my-config` into the flat config array.
+此示例使用 `FlatCompat#extends()` 方法将 `eslint-config-my-config` 插入扁平配置数组中。
 
-For more information about the `FlatCompat` class, please see the [package README](https://github.com/eslint/eslintrc#usage).
+有关 `FlatCompat` 类的更多信息，请参阅[包的 README](https://github.com/eslint/eslintrc#usage)。
 
-### Ignore Files
+<a id="ignore-files"></a>
 
-With eslintrc, you can make ESLint ignore files by creating a separate `.eslintignore` file in the root of your project. The `.eslintignore` file uses the same glob pattern syntax as `.gitignore` files. Alternatively, you can use an `ignorePatterns` property in your eslintrc file.
+### 忽略文件
 
-To ignore files with flat config, you can use the `ignores` property in a config object with no other properties. The `ignores` property accepts an array of glob patterns. Flat config does not support loading ignore patterns from `.eslintignore` files, so you'll need to migrate those patterns directly into flat config.
+使用 eslintrc 时，你可以在项目根目录创建单独的 `.eslintignore` 文件，让 ESLint 忽略文件。`.eslintignore` 文件使用与 `.gitignore` 文件相同的 glob 模式语法。或者，你也可以在 eslintrc 文件中使用 `ignorePatterns` 属性。
 
-For example, here's a `.eslintignore` example you can use with an eslintrc config:
+要在扁平配置中忽略文件，可以在不包含其他属性的配置对象中使用 `ignores` 属性。`ignores` 属性接受 glob 模式数组。扁平配置不支持从 `.eslintignore` 文件加载忽略模式，因此你需要将这些模式直接迁移到扁平配置中。
+
+例如，以下是可以与 eslintrc 配置搭配使用的 `.eslintignore` 示例：
 
 ```shell
 # .eslintignore
@@ -566,7 +594,7 @@ config/*
 # ...other ignored files
 ```
 
-Here are the same patterns represented as `ignorePatterns` in a `.eslintrc.js` file:
+以下是在 `.eslintrc.js` 文件中用 `ignorePatterns` 表示相同模式的写法：
 
 ```javascript
 // .eslintrc.js
@@ -576,7 +604,7 @@ module.exports = {
 };
 ```
 
-The equivalent ignore patterns in flat config look like this:
+在扁平配置中，对应的忽略模式如下：
 
 ```javascript
 import { defineConfig } from "eslint/config";
@@ -590,19 +618,21 @@ export default defineConfig([
 ]);
 ```
 
-In `.eslintignore`, `temp.js` ignores all files named `temp.js`, whereas in flat config, you need to specify this as `**/temp.js`. The pattern `temp.js` in flat config only ignores a file named `temp.js` in the same directory as the configuration file.
+在 `.eslintignore` 中，`temp.js` 会忽略所有名为 `temp.js` 的文件；而在扁平配置中，你需要将其指定为 `**/temp.js`。扁平配置中的 `temp.js` 模式只会忽略与配置文件位于同一目录中的 `temp.js` 文件。
 
 ::: important
-In flat config, dotfiles (e.g. `.dotfile.js`) are no longer ignored by default. If you want to ignore dotfiles, add an ignore pattern of `"**/.*"`.
+在扁平配置中，点文件（例如 `.dotfile.js`）默认不再被忽略。如果要忽略点文件，请添加忽略模式 `"**/.*"`。
 :::
 
-### Linter Options
+<a id="linter-options"></a>
 
-Eslintrc files let you configure the linter itself with the `noInlineConfig` and `reportUnusedDisableDirectives` properties.
+### Linter 选项
 
-The flat config system introduces a new top-level property `linterOptions` that you can use to configure the linter. In the `linterOptions` object, you can include `noInlineConfig` and `reportUnusedDisableDirectives`.
+eslintrc 文件允许你使用 `noInlineConfig` 和 `reportUnusedDisableDirectives` 属性来配置代码检查器本身。
 
-For example, here's an eslintrc file with linter options enabled:
+扁平配置系统引入了一个新的顶层属性 `linterOptions`，可用于配置代码检查器。你可以在 `linterOptions` 对象中包含 `noInlineConfig` 和 `reportUnusedDisableDirectives`。
+
+例如，以下是启用了 linter 选项的 eslintrc 文件：
 
 ```javascript
 // .eslintrc.js
@@ -614,7 +644,7 @@ module.exports = {
 };
 ```
 
-Here's the same options in flat config:
+以下是在扁平配置中设置相同选项的方式：
 
 ```javascript
 // eslint.config.js
@@ -632,9 +662,11 @@ export default defineConfig([
 ]);
 ```
 
-### CLI Flag Changes
+<a id="cli-flag-changes"></a>
 
-The following CLI flags are no longer supported with the flat config file format:
+### CLI 标志的变化
+
+以下 CLI 标志不再受扁平配置文件格式支持：
 
 - `--env`
 - `--ignore-path`
@@ -644,9 +676,9 @@ The following CLI flags are no longer supported with the flat config file format
 
 #### `--env`
 
-The `--env` flag was used to enable environment-specific globals (for example, `browser`, or `node`). Flat config doesn't support this flag. Instead, define the relevant globals directly in your configuration. See [Specify Globals](language-options#specify-globals) for more details.
+`--env` 标志用于启用特定环境的全局变量（例如 `browser` 或 `node`）。扁平配置不支持此标志。应改为直接在配置中定义相关的全局变量。更多详情请参阅[指定全局变量](language-options#specify-globals)。
 
-For example, if you previously used `--env browser,node`, you’ll need to update your config file like this:
+例如，如果你以前使用 `--env browser,node`，则需要像这样更新配置文件：
 
 ```js
 // eslint.config.js
@@ -667,9 +699,9 @@ export default defineConfig([
 
 #### `--ignore-path`
 
-The `--ignore-path` flag was used to specify which file to use as your `.eslintignore`. Flat config doesn't load ignore patterns from `.eslintignore` files and does not support this flag. If you want to include patterns from a `.gitignore` file, use `includeIgnoreFile()` from `@eslint/compat`. See [Include `.gitignore` Files](ignore#include-gitignore-files) for more details.
+`--ignore-path` 标志用于指定作为 `.eslintignore` 使用的文件。扁平配置不会从 `.eslintignore` 文件加载忽略模式，也不支持此标志。如果要包含 `.gitignore` 文件中的模式，请使用 `@eslint/compat` 中的 `includeIgnoreFile()`。更多详情请参阅[包含 `.gitignore` 文件](ignore#include-gitignore-files)。
 
-For example, if you previously used `--ignore-path .gitignore`:
+例如，如果你以前使用 `--ignore-path .gitignore`：
 
 ```js
 // eslint.config.js
@@ -685,21 +717,21 @@ export default defineConfig([
 ]);
 ```
 
-_Update (2026-05-01): The `includeIgnoreFile()` from `@eslint/compat` has been deprecated in favor of `includeIgnoreFile()` from `@eslint/config-helpers` (reexported at `eslint/config`). [The new API](ignore#include-gitignore-files) is more versatile and has an option to interpret ignore patterns relative to the ignore file._
+_更新（2026-05-01）：来自 `@eslint/compat` 的 `includeIgnoreFile()` 已弃用，改用来自 `@eslint/config-helpers` 的 `includeIgnoreFile()`（在 `eslint/config` 中重新导出）。[新的 API](ignore#include-gitignore-files)功能更灵活，并提供了一个选项，可将忽略模式解释为相对于忽略文件的路径。_
 
 #### `--no-eslintrc`
 
-The `--no-eslintrc` flag has been replaced with `--no-config-lookup`.
+`--no-eslintrc` 标志已被 `--no-config-lookup` 替代。
 
 #### `--resolve-plugins-relative-to`
 
-The `--resolve-plugins-relative-to` flag was used to indicate which directory plugin references in your configuration file should be resolved relative to. This was necessary because shareable configs could only resolve plugins that were peer dependencies or dependencies of parent packages.
+`--resolve-plugins-relative-to` 标志用于指示应相对于哪个目录解析配置文件中的插件引用。此标志之所以必需，是因为可共享配置只能解析作为对等依赖或父级包依赖的插件。
 
-With flat config, shareable configs can specify their dependencies directly, so this flag is no longer needed.
+使用扁平配置时，可共享配置可以直接指定其依赖，因此不再需要此标志。
 
 #### `--rulesdir`
 
-The `--rulesdir` flag was used to load additional rules from a specified directory. This is no longer supported when using flat config. You can instead create a plugin containing the local rules you have directly in your config, like this:
+`--rulesdir` 标志用于从指定目录加载其他规则。扁平配置不再支持此功能。你可以改为创建一个插件，并在配置中直接包含本地规则，如下所示：
 
 ```js
 // eslint.config.js
@@ -725,31 +757,39 @@ export default defineConfig([
 ]);
 ```
 
-### `package.json` Configuration No Longer Supported
+<a id="packagejson-configuration-no-longer-supported"></a>
 
-With eslintrc, it was possible to use a `package.json` file to configure ESLint using the `eslintConfig` key.
+### 不再支持 `package.json` 配置
 
-With flat config, it's no longer possible to use a `package.json` file to configure ESLint. You'll need to move your configuration into a separate file.
+使用 eslintrc 时，可以通过 `package.json` 文件中的 `eslintConfig` 键来配置 ESLint。
 
-### Additional Changes
+使用扁平配置时，不能再通过 `package.json` 文件配置 ESLint。你需要将配置移至单独的文件中。
 
-The following changes have been made from the eslintrc to the flat config file format:
+<a id="additional-changes"></a>
 
-- The `root` option no longer exists. (Flat config files act as if `root: true` is set.)
-- The `files` option cannot be a single string anymore, it must be an array.
-- The `sourceType` option now supports the new value `"commonjs"` (`.eslintrc` supports it too, but it was never documented).
+### 其他变化
 
-## TypeScript Types for Flat Config Files
+从 eslintrc 到扁平配置文件格式还发生了以下变化：
 
-You can see the TypeScript types for the flat config file format in the [`lib/types` source folder on GitHub](https://github.com/eslint/eslint/tree/main/lib/types). The interface for the objects in the config’s array is called `Linter.Config`.
+- `root` 选项不再存在。（扁平配置文件的行为相当于设置了 `root: true`。）
+- `files` 选项不能再是单个字符串，必须是数组。
+- `sourceType` 选项现在支持新值 `"commonjs"`（`.eslintrc` 也支持此值，但从未对此进行过文档说明）。
 
-You can view the type definitions in [`lib/types/index.d.ts`](https://github.com/eslint/eslint/blob/main/lib/types/index.d.ts).
+<a id="typescript-types-for-flat-config-files"></a>
 
-## Visual Studio Code Support
+## 扁平配置文件的 TypeScript 类型
 
-ESLint v9.x support was added in the [`vscode-eslint`](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) v3.0.10.
+你可以在 GitHub 的 [`lib/types` 源代码目录](https://github.com/eslint/eslint/tree/main/lib/types)中查看扁平配置文件格式的 TypeScript 类型。配置数组中对象的接口名为 `Linter.Config`。
 
-In versions of `vscode-eslint` prior to v3.0.10, the new configuration system is not enabled by default. To enable support for the new configuration files, edit your `.vscode/settings.json` file and add the following:
+你可以在 [`lib/types/index.d.ts`](https://github.com/eslint/eslint/blob/main/lib/types/index.d.ts) 中查看类型定义。
+
+<a id="visual-studio-code-support"></a>
+
+## Visual Studio Code 支持
+
+[`vscode-eslint`](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) v3.0.10 开始支持 ESLint v9.x。
+
+在低于 v3.0.10 的 `vscode-eslint` 版本中，默认不启用新的配置系统。要启用对新配置文件的支持，请编辑 `.vscode/settings.json` 文件并添加以下内容：
 
 ```json
 {
@@ -758,10 +798,12 @@ In versions of `vscode-eslint` prior to v3.0.10, the new configuration system is
 }
 ```
 
-In a future version of the ESLint plugin, you will no longer need to enable this manually.
+在未来版本的 ESLint 插件中，你将不再需要手动启用此功能。
 
-## Further Reading
+<a id="further-reading"></a>
 
-- [Overview of the flat config file format blog post](https://eslint.org/blog/2022/08/new-config-system-part-2/)
-- [API usage of new configuration system blog post](https://eslint.org/blog/2022/08/new-config-system-part-3/)
-- [Background to new configuration system blog post](https://eslint.org/blog/2022/08/new-config-system-part-1/)
+## 延伸阅读
+
+- [扁平配置文件格式概述博客文章](https://eslint.org/blog/2022/08/new-config-system-part-2/)
+- [新配置系统 API 用法博客文章](https://eslint.org/blog/2022/08/new-config-system-part-3/)
+- [新配置系统背景介绍博客文章](https://eslint.org/blog/2022/08/new-config-system-part-1/)

@@ -6,7 +6,7 @@ related_rules:
 ---
 
 
-Comparing to `null` without a type-checking operator (`==` or `!=`) can have unintended results as the comparison will evaluate to `true` when comparing not just to `null`, but also to `undefined`.
+不使用类型检查运算符（`==` 或 `!=`）与 `null` 比较可能会产生意外结果，因为比较结果不仅在与 `null` 比较时会是 `true`，与 `undefined` 比较时也会是 `true`。
 
 ```js
 if (foo == null) {
@@ -14,11 +14,12 @@ if (foo == null) {
 }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-The `no-eq-null` rule aims to reduce potential bugs and unwanted behavior by ensuring that comparisons to `null` only match `null`, and not also `undefined`. As such, it will flag comparisons to `null` when using `==` and `!=`.
+`no-eq-null` 规则旨在确保与 `null` 的比较只匹配 `null`，而不匹配 `undefined`，从而减少潜在错误和不期望的行为。因此，该规则会标记使用 `==` 和 `!=` 与 `null` 进行比较的情况。
 
-Examples of **incorrect** code for this rule:
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -36,7 +37,7 @@ while (qux != null) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -62,19 +63,22 @@ while (qux !== null && qux !== undefined) {
 
 :::
 
-This rule offers two suggestions for each reported comparison:
+此规则会为每个被报告的比较提供两条建议：
 
-* Replace `==` or `!=` with `===` or `!==` to compare with `null` only. This changes the result when the other operand is `undefined`.
-* Replace the operator and add a comparison with `undefined`, as in `foo === null || foo === undefined`, to keep comparing with both `null` and `undefined`. This suggestion is only offered when the other operand can be safely repeated, such as `foo` or `foo.bar`.
+* 将 `==` 或 `!=` 替换为 `===` 或 `!==`，以便只与 `null` 比较。当另一个操作数为 `undefined` 时，这会改变比较结果。
+* 替换运算符，并添加与 `undefined` 的比较，例如 `foo === null || foo === undefined`，以继续同时与 `null` 和 `undefined` 比较。只有当另一个操作数可以安全地重复使用时（例如 `foo` 或 `foo.bar`），才会提供此建议。
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule has no options.
+此规则没有选项。
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 不适用场景
 
-If you want to enforce type-checking operations in general, use the more powerful [eqeqeq](./eqeqeq) instead.
+如果你希望普遍强制使用类型检查运算，请改用功能更强大的 [eqeqeq](./eqeqeq)。
 
-## Compatibility
+<a id="compatibility"></a>
+## 兼容性
 
-* **JSHint**: This rule corresponds to `eqnull` rule of JSHint.
+* **JSHint**：此规则对应于 JSHint 的 `eqnull` 规则。

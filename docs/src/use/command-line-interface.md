@@ -1,29 +1,31 @@
 ---
-title: Command Line Interface Reference
+title: 命令行界面参考
 eleventyNavigation:
     key: command line interface
     parent: use eslint
-    title: Command Line Interface Reference
+    title: 命令行界面参考
     order: 4
 ---
 
 {%- from 'components/npm_tabs.macro.html' import npm_tabs with context %}
 {%- from 'components/npx_tabs.macro.html' import npx_tabs %}
 
-The ESLint Command Line Interface (CLI) lets you execute linting from the terminal. The CLI has a variety of options that you can pass to configure ESLint.
+ESLint 命令行界面（CLI）可让你在终端中执行代码检查。CLI 提供多种选项，可用于配置 ESLint。
 
-## Run the CLI
+<a id="run-the-cli"></a>
 
-ESLint requires [Node.js](https://nodejs.org/) for installation. Follow the instructions in the [Getting Started Guide](getting-started) to install ESLint.
+## 运行 CLI
 
-Most users use [`npx`](https://docs.npmjs.com/cli/v8/commands/npx) to run ESLint on the command line like this:
+ESLint 需要 [Node.js](https://nodejs.org/) 才能安装。请按照[入门指南](getting-started)中的说明安装 ESLint。
+
+大多数用户会使用 [`npx`](https://docs.npmjs.com/cli/v8/commands/npx) 在命令行中运行 ESLint，如下所示：
 
 {{ npx_tabs ({
     package: "eslint",
     args: ["[options]", "[file|dir|glob]*"]
 }) }}
 
-Such as:
+例如：
 
 {{ npx_tabs ({
     package: "eslint",
@@ -31,7 +33,7 @@ Such as:
     comment: "Run on two files"
 }) }}
 
-or
+或者
 
 {{ npx_tabs ({
     package: "eslint",
@@ -39,14 +41,14 @@ or
     comment: "Run on multiple files"
 }) }}
 
-Please note that when passing a glob as a parameter, it is expanded by your shell. The results of the expansion can vary depending on your shell, and its configuration. If you want to use node `glob` syntax, you have to quote your parameter (using double quotes if you need it to run in Windows), as follows:
+请注意，将 glob 作为参数传递时，shell 会对其进行展开。展开结果可能因 shell 及其配置而异。如果你想使用 Node.js 的 `glob` 语法，就必须将参数括起来（若要在 Windows 上运行，请使用双引号），如下所示：
 
 {{ npx_tabs ({
     package: "eslint",
     args: ["\"lib/**\""]
 }) }}
 
-You can also omit the file arguments and ESLint will use `.`. For instance, these two lines perform the same operation:
+你也可以省略文件参数，此时 ESLint 会使用 `.`。例如，以下两行执行的操作相同：
 
 {{ npx_tabs ({
     package: "eslint",
@@ -58,29 +60,33 @@ You can also omit the file arguments and ESLint will use `.`. For instance, thes
     args: []
 }) }}
 
-**Note:** You can also use alternative package managers such as [Yarn](https://yarnpkg.com/) or [pnpm](https://pnpm.io/) to run ESLint. For pnpm use `pnpm dlx eslint` and for Yarn use `yarn dlx eslint`.
+**注意：**你也可以使用 [Yarn](https://yarnpkg.com/) 或 [pnpm](https://pnpm.io/) 等其他包管理器来运行 ESLint。使用 pnpm 时，请运行 `pnpm dlx eslint`；使用 Yarn 时，请运行 `yarn dlx eslint`。
 
-## Pass Multiple Values to an Option
+<a id="pass-multiple-values-to-an-option"></a>
 
-Options that accept multiple values can be specified by repeating the option or with a comma-delimited list (other than [`--ignore-pattern`](#--ignore-pattern), which does not allow the second style).
+## 向选项传递多个值
 
-Examples of options that accept multiple values:
+接受多个值的选项可以通过重复指定选项或使用逗号分隔的列表来设置（[`--ignore-pattern`](#--ignore-pattern) 除外，它不支持后一种方式）。
+
+接受多个值的选项示例：
 
 {{ npx_tabs ({
     package: "eslint",
     args: ["--global", "describe", "--global", "it",  "tests/"]
 }) }}
 
-OR
+或者
 
 {{ npx_tabs ({
     package: "eslint",
     args: ["--global", "describe,it", "tests/"]
 }) }}
 
-## Options
+<a id="options"></a>
 
-You can view all the CLI options by running `npx eslint -h`.
+## 选项
+
+运行 `npx eslint -h` 可以查看所有 CLI 选项。
 
 ```txt
 eslint [options] file.js [file.js] [dir]
@@ -156,15 +162,19 @@ Miscellaneous:
   --concurrency Int|String         Number of linting threads, auto to choose automatically, off for no multithreading - default: off
 ```
 
-### Basic Configuration
+<a id="basic-configuration"></a>
+
+### 基本配置
 
 #### `--no-config-lookup`
 
-Disables use of configuration from files.
+禁用从文件中读取配置。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-##### `--no-config-lookup` example
+<a id="--no-config-lookup-example"></a>
+
+##### `--no-config-lookup` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -173,27 +183,31 @@ Disables use of configuration from files.
 
 #### `-c`, `--config`
 
-This option allows you to specify an additional configuration file for ESLint (see [Configure ESLint](configure/) for more).
+此选项允许你为 ESLint 指定一个额外的配置文件（更多信息请参见[配置 ESLint](configure/)）。
 
-- **Argument Type**: String. Path to file.
-- **Multiple Arguments**: No
+- **参数类型**：字符串。文件路径。
+- **多个参数**：否
 
-##### `-c`, `--config` example
+<a id="-c---config-example"></a>
+
+##### `-c`, `--config` 示例
 
 {{ npx_tabs ({
     package: "eslint",
     args: ["-c", "~/my.eslint.config.js", "file.js"]
 }) }}
 
-This example uses the configuration file at `~/my.eslint.config.js`, which is used instead of searching for an `eslint.config.js` file.
+此示例使用 `~/my.eslint.config.js` 中的配置，而不是搜索 `eslint.config.js` 文件。
 
 #### `--inspect-config`
 
-This option runs `npx @eslint/config-inspector@latest` to start the [config inspector](https://github.com/eslint/config-inspector). You can use the config inspector to better understand what your configuration is doing and which files it applies to. When you use this flag, the CLI does not perform linting.
+此选项会运行 `npx @eslint/config-inspector@latest`，以启动[配置检查器](https://github.com/eslint/config-inspector)。你可以使用配置检查器，更好地了解配置的作用以及它适用于哪些文件。使用此标志时，CLI 不会执行代码检查。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-##### `--inspect-config` example
+<a id="--inspect-config-example"></a>
+
+##### `--inspect-config` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -202,15 +216,17 @@ This option runs `npx @eslint/config-inspector@latest` to start the [config insp
 
 #### `--ext`
 
-This option allows you to specify additional file extensions to lint.
+此选项允许你指定要进行代码检查的其他文件扩展名。
 
-- **Argument Type**: String. File extension.
-- **Multiple Arguments**: Yes
-- **Default Value**: By default, ESLint lints files with extensions `.js`, `.mjs`, `.cjs`, and additional extensions [specified in the configuration file](configure/configuration-files#specify-files-with-arbitrary-extensions).
+- **参数类型**：字符串。文件扩展名。
+- **多个参数**：是
+- **默认值**：默认情况下，ESLint 会检查扩展名为 `.js`、`.mjs` 和 `.cjs` 的文件，以及[配置文件中指定](configure/configuration-files#specify-files-with-arbitrary-extensions)的其他扩展名。
 
-This option is primarily intended for use in combination with the [`--no-config-lookup`](#--no-config-lookup) option, since in that case there is no configuration file in which the additional extensions would be specified.
+此选项主要用于与 [`--no-config-lookup`](#--no-config-lookup) 选项搭配使用，因为在这种情况下，没有配置文件可用于指定其他扩展名。
 
-##### `--ext` example
+<a id="--ext-example"></a>
+
+##### `--ext` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -232,12 +248,14 @@ This option is primarily intended for use in combination with the [`--no-config-
 
 #### `--global`
 
-This option defines global variables so that they are not flagged as undefined by the [`no-undef`](../rules/no-undef) rule.
+此选项用于定义全局变量，以免它们被 [`no-undef`](../rules/no-undef) 规则标记为未定义。
 
-- **Argument Type**: String. Name of the global variable. Any specified global variables are assumed to be read-only by default, but appending `:true` to a variable's name ensures that `no-undef` also allows writes.
-- **Multiple Arguments**: Yes
+- **参数类型**：字符串。全局变量的名称。指定的全局变量默认均视为只读；在变量名称后附加 `:true`，可让 `no-undef` 也允许写入该变量。
+- **多个参数**：是
 
-##### `--global` example
+<a id="--global-example"></a>
+
+##### `--global` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -251,13 +269,15 @@ This option defines global variables so that they are not flagged as undefined b
 
 #### `--parser`
 
-This option allows you to specify a parser to be used by ESLint.
+此选项允许你指定 ESLint 使用的解析器。
 
-- **Argument Type**: String. Parser to be used by ESLint.
-- **Multiple Arguments**: No
-- **Default Value**: `espree`
+- **参数类型**：字符串。ESLint 使用的解析器。
+- **多个参数**：否
+- **默认值**：`espree`
 
-##### `--parser` example
+<a id="--parser-example"></a>
+
+##### `--parser` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -267,12 +287,14 @@ This option allows you to specify a parser to be used by ESLint.
 
 #### `--parser-options`
 
-This option allows you to specify parser options to be used by ESLint. The available parser options are determined by the parser being used.
+此选项允许你指定 ESLint 使用的解析器选项。可用的解析器选项取决于所使用的解析器。
 
-- **Argument Type**: Key/value pair separated by colon (`:`).
-- **Multiple Arguments**: Yes
+- **参数类型**：以冒号 (`:`) 分隔的键值对。
+- **多个参数**：是
 
-##### `--parser-options` example
+<a id="--parser-options-example"></a>
+
+##### `--parser-options` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -288,18 +310,22 @@ This option allows you to specify parser options to be used by ESLint. The avail
     previousCommands: ["echo \'3 ** 4\'"]
 }) }}
 
-### Specify Rules and Plugins
+<a id="specify-rules-and-plugins"></a>
+
+### 指定规则和插件
 
 #### `--plugin`
 
-This option specifies a plugin to load.
+此选项用于指定要加载的插件。
 
-- **Argument Type**: String. Plugin name. You can optionally omit the prefix `eslint-plugin-` from the plugin name.
-- **Multiple Arguments**: Yes
+- **参数类型**：字符串。插件名称。插件名称中的 `eslint-plugin-` 前缀可以省略。
+- **多个参数**：是
 
-Before using the plugin, you have to install it using npm.
+使用插件前，必须使用 npm 安装它。
 
-##### `--plugin` example
+<a id="--plugin-example"></a>
+
+##### `--plugin` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -313,16 +339,18 @@ Before using the plugin, you have to install it using npm.
 
 #### `--rule`
 
-This option specifies the rules to be used.
+此选项用于指定要使用的规则。
 
-- **Argument Type**: Rules and their configuration specified with [levn](https://github.com/gkz/levn#levn--) format.
-- **Multiple Arguments**: Yes
+- **参数类型**：规则及其配置采用 [levn](https://github.com/gkz/levn#levn--) 格式指定。
+- **多个参数**：是
 
-These rules are merged with any rules specified with configuration files. If the rule is defined in a plugin, you have to prefix the rule ID with the plugin name and a `/`.
+这些规则会与配置文件中指定的任何规则合并。如果规则由插件定义，则必须在规则 ID 前加上插件名称和 `/`。
 
-To ignore rules in configuration files and only run rules specified in the command line, use the `--rule` flag in combination with the [`--no-config-lookup`](#--no-config-lookup) flag.
+若要忽略配置文件中的规则，只运行命令行中指定的规则，请将 `--rule` 标志与 [`--no-config-lookup`](#--no-config-lookup) 标志搭配使用。
 
-##### `--rule` example
+<a id="--rule-example"></a>
+
+##### `--rule` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -348,22 +376,26 @@ To ignore rules in configuration files and only run rules specified in the comma
     comment: "Only apply rule from the command line"
 }) }}
 
-### Fix Problems
+<a id="fix-problems"></a>
+
+### 修复问题
 
 #### `--fix`
 
-This option instructs ESLint to try to [fix](core-concepts#rule-fixes) as many issues as possible. The fixes are made to the actual files themselves and only the remaining unfixed issues are output.
+此选项指示 ESLint 尽可能多地尝试[修复](core-concepts#rule-fixes)问题。修复会直接应用到文件中，输出中只会显示仍未修复的问题。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-Not all problems are fixable using this option, and the option does not work in these situations:
+并非所有问题都能通过此选项修复，而且在以下情况下此选项不起作用：
 
-1. This option throws an error when code is piped to ESLint.
-1. This option has no effect on code that uses a processor, unless the processor opts into allowing autofixes.
+1. 将代码通过管道传给 ESLint 时，此选项会报错。
+1. 对使用处理器的代码，此选项不起作用，除非处理器选择允许自动修复。
 
-If you want to fix code from `stdin` or otherwise want to get the fixes without actually writing them to the file, use the [`--fix-dry-run`](#--fix-dry-run) option.
+如果你想修复来自 `stdin` 的代码，或希望获取修复结果但不实际写入文件，请使用 [`--fix-dry-run`](#--fix-dry-run) 选项。
 
-##### `--fix` example
+<a id="--fix-example"></a>
+
+##### `--fix` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -372,15 +404,17 @@ If you want to fix code from `stdin` or otherwise want to get the fixes without 
 
 #### `--fix-dry-run`
 
-This option has the same effect as `--fix` with the difference that the fixes are not saved to the file system. Because the default formatter does not output the fixed code, you'll have to use another formatter (e.g. `--format json`) to get the fixes.
+此选项的效果与 `--fix` 相同，但不会将修复结果保存到文件系统。由于默认格式化程序不会输出修复后的代码，你需要使用其他格式化程序（例如 `--format json`）来获取修复结果。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-This makes it possible to fix code from `stdin` when used with the `--stdin` flag.
+与 `--stdin` 标志搭配使用时，此选项可以修复来自 `stdin` 的代码。
 
-This flag can be useful for integrations (e.g. editor plugins) which need to autofix text from the command line without saving it to the filesystem.
+此标志适用于需要从命令行自动修复文本、但不将其保存到文件系统的集成工具（例如编辑器插件）。
 
-##### `--fix-dry-run` example
+<a id="--fix-dry-run-example"></a>
+
+##### `--fix-dry-run` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -390,18 +424,20 @@ This flag can be useful for integrations (e.g. editor plugins) which need to aut
 
 #### `--fix-type`
 
-This option allows you to specify the type of fixes to apply when using either `--fix` or `--fix-dry-run`.
+此选项允许你指定使用 `--fix` 或 `--fix-dry-run` 时要应用的修复类型。
 
-- **Argument Type**: String. One of the following fix types:
-    1. `problem` - fix potential errors in the code
-    1. `suggestion` - apply fixes to the code that improve it
-    1. `layout` - apply fixes that do not change the program structure (AST)
-    1. `directive` - apply fixes to inline directives such as `// eslint-disable`
-- **Multiple Arguments**: Yes
+- **参数类型**：字符串。以下修复类型之一：
+    1. `problem` - 修复代码中的潜在错误
+    1. `suggestion` - 应用可改进代码的修复
+    1. `layout` - 应用不会改变程序结构（AST）的修复
+    1. `directive` - 应用针对行内指令（如 `// eslint-disable`）的修复
+- **多个参数**：是
 
-This option is helpful if you are using another program to format your code, but you would still like ESLint to apply other types of fixes.
+如果你使用其他程序格式化代码，但仍希望 ESLint 应用其他类型的修复，此选项会很有用。
 
-##### `--fix-type` example
+<a id="--fix-type-example"></a>
+
+##### `--fix-type` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -418,15 +454,19 @@ This option is helpful if you are using another program to format your code, but
     args: ["--fix", "--fix-type", "suggestion,layout", "."]
 }) }}
 
-### Ignore Files
+<a id="ignore-files"></a>
+
+### 忽略文件
 
 #### `--no-ignore`
 
-Disables excluding of files from [`--ignore-pattern`](#--ignore-pattern) flags and the `ignores` property in configuration.
+禁用 [`--ignore-pattern`](#--ignore-pattern) 标志和配置中的 `ignores` 属性所指定的文件排除规则。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-##### `--no-ignore` example
+<a id="--no-ignore-example"></a>
+
+##### `--no-ignore` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -435,27 +475,33 @@ Disables excluding of files from [`--ignore-pattern`](#--ignore-pattern) flags a
 
 #### `--ignore-pattern`
 
-This option allows you to specify patterns of files to ignore.
+此选项允许你指定要忽略的文件模式。
 
-- **Argument Type**: String. The supported syntax is the same as for [`ignores` patterns](configure/configuration-files#exclude-files-with-ignores), which use [minimatch](https://www.npmjs.com/package/minimatch) syntax. You should quote your patterns in order to avoid shell interpretation of glob patterns.
-- **Multiple Arguments**: Yes
+- **参数类型**：字符串。支持的语法与 [`ignores` 模式](configure/configuration-files#exclude-files-with-ignores)相同，采用 [minimatch](https://www.npmjs.com/package/minimatch) 语法。应将模式括起来，以免 shell 对 glob 模式进行解释。
+- **多个参数**：是
 
-##### `--ignore-pattern` example
+<a id="--ignore-pattern-example"></a>
+
+##### `--ignore-pattern` 示例
 
 {{ npx_tabs ({
     package: "eslint",
     args: ["--ignore-pattern", "\"/lib/\"", "--ignore-pattern", "\"/src/vendor/*\"", "."]
 }) }}
 
-### Use stdin
+<a id="use-stdin"></a>
+
+### 使用 stdin
 
 #### `--stdin`
 
-This option tells ESLint to read and lint source code from STDIN instead of from files. You can use this to pipe code to ESLint.
+此选项会指示 ESLint 从 STDIN 读取并检查源代码，而不是从文件读取。你可以用它将代码通过管道传给 ESLint。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-##### `--stdin` example
+<a id="--stdin-example"></a>
+
+##### `--stdin` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -465,14 +511,16 @@ This option tells ESLint to read and lint source code from STDIN instead of from
 
 #### `--stdin-filename`
 
-This option allows you to specify a filename to process STDIN as.
+此选项允许你指定一个文件名，供 ESLint 处理 STDIN 内容时使用。
 
-- **Argument Type**: String. Path to file.
-- **Multiple Arguments**: No
+- **参数类型**：字符串。文件路径。
+- **多个参数**：否
 
-This is useful when processing files from STDIN and you have rules which depend on the filename.
+当你处理来自 STDIN 的文件，且使用了依赖文件名的规则时，此选项会很有用。
 
-##### `--stdin-filename` example
+<a id="--stdin-filename-example"></a>
+
+##### `--stdin-filename` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -480,15 +528,19 @@ This is useful when processing files from STDIN and you have rules which depend 
     previousCommands: ["cat myFile.js"]
 }) }}
 
-### Handle Warnings
+<a id="handle-warnings"></a>
+
+### 处理警告
 
 #### `--quiet`
 
-This option allows you to disable reporting on warnings and running of rules set to warn. If you enable this option, only errors are reported by ESLint and only rules set to error will be run.
+此选项允许你禁用警告报告，并停止运行设置为 warn 的规则。启用此选项后，ESLint 只会报告错误，并且只会运行设置为 error 的规则。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-##### `--quiet` example
+<a id="--quiet-example"></a>
+
+##### `--quiet` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -497,34 +549,40 @@ This option allows you to disable reporting on warnings and running of rules set
 
 #### `--max-warnings`
 
-This option allows you to specify a warning threshold, which can be used to force ESLint to exit with an error status if there are too many warning-level rule violations in your project.
+此选项允许你指定警告阈值；如果项目中的警告级别规则违规数量过多，可以用它强制 ESLint 以错误状态退出。
 
-- **Argument Type**: Integer. The maximum number of warnings to allow. To prevent this behavior, do not use this option or specify `-1` as the argument.
-- **Multiple Arguments**: No
+- **参数类型**：整数。允许的最大警告数量。若要禁用此行为，请不要使用此选项，或将参数设为 `-1`。
+- **多个参数**：否
 
-Normally, if ESLint runs and finds no errors (only warnings), it exits with a success exit status. However, if `--max-warnings` is specified and the total warning count is greater than the specified threshold, ESLint exits with an error status.
+通常，ESLint 运行后若未发现错误（只有警告），会以成功状态退出。但是，如果指定了 `--max-warnings` 且警告总数超过指定阈值，ESLint 就会以错误状态退出。
 
 ::: important
-When used alongside `--quiet`, this will cause rules marked as warn to still be run, but not reported.
+与 `--quiet` 一起使用时，标记为 warn 的规则仍会运行，但不会报告。
 :::
 
-##### `--max-warnings` example
+<a id="--max-warnings-example"></a>
+
+##### `--max-warnings` 示例
 
 {{ npx_tabs ({
     package: "eslint",
     args: ["--max-warnings", "10", "file.js"]
 }) }}
 
-### Output
+<a id="output"></a>
+
+### 输出
 
 #### `-o`, `--output-file`
 
-Write the output of linting results to a specified file.
+将代码检查结果输出到指定文件。
 
-- **Argument Type**: String. Path to file.
-- **Multiple Arguments**: No
+- **参数类型**：字符串。文件路径。
+- **多个参数**：否
 
-##### `-o`, `--output-file` example
+<a id="-o---output-file-example"></a>
+
+##### `-o`, `--output-file` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -533,17 +591,17 @@ Write the output of linting results to a specified file.
 
 #### `-f`, `--format`
 
-This option specifies the output format for the console.
+此选项用于指定控制台的输出格式。
 
-- **Argument Type**: String. One of the [built-in formatters](formatters/) or a custom formatter.
-- **Multiple Arguments**: No
-- **Default Value**: [`stylish`](formatters/#stylish)
+- **参数类型**：字符串。[内置格式化程序](formatters/)之一，或自定义格式化程序。
+- **多个参数**：否
+- **默认值**：[`stylish`](formatters/#stylish)
 
-If you are using a custom formatter defined in a local file, you can specify the path to the custom formatter file.
+如果你使用的是在本地文件中定义的自定义格式化程序，可以指定该文件的路径。
 
-An npm-installed formatter is resolved with or without `eslint-formatter-` prefix.
+npm 安装的格式化程序可通过带有或不带有 `eslint-formatter-` 前缀的名称解析。
 
-When specified, the given format is output to the console. If you'd like to save that output into a file, you can do so on the command line like so:
+指定后，给定格式的输出会显示在控制台中。如果想将输出保存到文件，可以像这样在命令行中操作：
 
 {{ npx_tabs ({
     package: "eslint",
@@ -551,23 +609,25 @@ When specified, the given format is output to the console. If you'd like to save
     comment: "Saves the output into the `results.json` file."
 }) }}
 
-##### `-f`, `--format` example
+<a id="-f---format-example"></a>
 
-Use the built-in `json` formatter:
+##### `-f`, `--format` 示例
+
+使用内置的 `json` 格式化程序：
 
 {{ npx_tabs ({
     package: "eslint",
     args: ["--format", "json", "file.js"]
 }) }}
 
-Use a local custom formatter:
+使用本地自定义格式化程序：
 
 {{ npx_tabs ({
     package: "eslint",
     args: ["-f", "./customformat.js", "file.js"]
 }) }}
 
-Use an npm-installed formatter:
+使用通过 npm 安装的格式化程序：
 
 {{ npm_tabs({
     command: "install",
@@ -575,35 +635,37 @@ Use an npm-installed formatter:
     args: []
 }) }}
 
-Then run one of the following commands
+然后运行以下命令之一
 
 {{ npx_tabs ({
     package: "eslint",
     args: ["-f", "pretty", "file.js"]
 }) }}
 
-or alternatively
+或者
 
 {{ npx_tabs ({
     package: "eslint",
     args: ["-f", "eslint-formatter-pretty", "file.js"]
 }) }}
 
-#### `--color` and `--no-color`
+#### `--color` 和 `--no-color`
 
-These options force the enabling/disabling of colorized output.
+这些选项用于强制启用或禁用彩色输出。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-You can use these options to override the default behavior, which is to enable colorized output unless no TTY is detected, such as when piping `eslint` through `cat` or `less`.
+你可以使用这些选项覆盖默认行为。默认情况下，只要检测到 TTY，就会启用彩色输出；如果未检测到 TTY（例如将 `eslint` 的输出通过管道传给 `cat` 或 `less`），则不会启用。
 
 ::: warning
 
-When neither `--color` nor `--no-color` is specified, the formatter may decide whether to colorize the output based on the runtime environment. For example, when using the default `stylish` formatter under Node.js, [`FORCE_COLOR`](https://nodejs.org/api/cli.html#force_color1-2-3), [`NO_COLOR`](https://nodejs.org/api/cli.html#no_colorany), or [`NODE_DISABLE_COLORS`](https://nodejs.org/api/cli.html#node_disable_colors1) environment variables may affect whether colors are used.
+未指定 `--color` 或 `--no-color` 时，格式化程序可能会根据运行时环境决定是否使用彩色输出。例如，在 Node.js 下使用默认的 `stylish` 格式化程序时，[`FORCE_COLOR`](https://nodejs.org/api/cli.html#force_color1-2-3)、[`NO_COLOR`](https://nodejs.org/api/cli.html#no_colorany) 或 [`NODE_DISABLE_COLORS`](https://nodejs.org/api/cli.html#node_disable_colors1) 环境变量可能会影响是否使用颜色。
 
 :::
 
-##### `--color` and `--no-color` example
+<a id="--color-and---no-color-example"></a>
+
+##### `--color` 和 `--no-color` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -615,16 +677,17 @@ When neither `--color` nor `--no-color` is specified, the formatter may decide w
     args: ["--no-color", "file.js"]
 }) }}
 
-### Inline Configuration Comments
+<a id="inline-configuration-comments"></a>
+
+### 行内配置注释
 
 #### `--no-inline-config`
 
-This option prevents inline comments like `/*eslint-disable*/` or
-`/*global foo*/` from having any effect.
+此选项会阻止 `/*eslint-disable*/` 或 `/*global foo*/` 之类的行内注释产生任何效果。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-This allows you to set an ESLint config without files modifying it. All inline config comments are ignored, such as:
+这样就可以设置 ESLint 配置，而不让文件对其进行修改。所有行内配置注释都会被忽略，例如：
 
 - `/*eslint-disable*/`
 - `/*eslint-enable*/`
@@ -633,7 +696,9 @@ This allows you to set an ESLint config without files modifying it. All inline c
 - `// eslint-disable-line`
 - `// eslint-disable-next-line`
 
-##### `--no-inline-config` example
+<a id="--no-inline-config-example"></a>
+
+##### `--no-inline-config` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -642,19 +707,21 @@ This allows you to set an ESLint config without files modifying it. All inline c
 
 #### `--report-unused-disable-directives`
 
-This option causes ESLint to report directive comments like `// eslint-disable-line` when no errors would have been reported on that line anyway.
+如果某行即使没有禁用指令也不会报告错误，此选项会让 ESLint 报告该行中的 `// eslint-disable-line` 等指令注释。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-This can be useful to prevent future errors from unexpectedly being suppressed, by cleaning up old `eslint-disable` and `eslint-enable` comments which are no longer applicable.
+清理不再适用的旧 `eslint-disable` 和 `eslint-enable` 注释，有助于避免它们在未来意外抑制错误。
 
 ::: warning
-When using this option, it is possible that new errors start being reported whenever ESLint or custom rules are upgraded.
+使用此选项时，升级 ESLint 或自定义规则后可能会开始报告新的错误。
 
-For example, suppose a rule has a bug that causes it to report a false positive, and an `eslint-disable` comment is added to suppress the incorrect report. If the bug is then fixed in a patch release of ESLint, the `eslint-disable` comment becomes unused since ESLint is no longer generating an incorrect report. This results in a new reported error for the unused directive if the `--report-unused-disable-directives` option is used.
+例如，假设某条规则存在缺陷，会产生误报，于是添加了 `eslint-disable` 注释来抑制错误报告。如果该缺陷随后在 ESLint 的补丁版本中修复，ESLint 就不再产生误报，该 `eslint-disable` 注释也会变成未使用的指令。如果启用了 `--report-unused-disable-directives` 选项，这就会导致报告一条未使用指令的新错误。
 :::
 
-##### `--report-unused-disable-directives` example
+<a id="--report-unused-disable-directives-example"></a>
+
+##### `--report-unused-disable-directives` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -663,16 +730,18 @@ For example, suppose a rule has a bug that causes it to report a false positive,
 
 #### `--report-unused-disable-directives-severity`
 
-Same as [`--report-unused-disable-directives`](#--report-unused-disable-directives), but allows you to specify the severity level (`error`, `warn`, `off`) of the reported errors. Only one of these two options can be used at a time.
+此选项与 [`--report-unused-disable-directives`](#--report-unused-disable-directives) 相同，但允许你指定所报告错误的严重级别（`error`、`warn`、`off`）。这两个选项一次只能使用一个。
 
-- **Argument Type**: String. One of the following values:
-    1. `off` (or `0`)
-    1. `warn` (or `1`)
-    1. `error` (or `2`)
-- **Multiple Arguments**: No
-- **Default Value**: By default, `linterOptions.reportUnusedDisableDirectives` configuration setting is used (which defaults to `"warn"`).
+- **参数类型**：字符串。以下值之一：
+    1. `off`（或 `0`）
+    1. `warn`（或 `1`）
+    1. `error`（或 `2`）
+- **多个参数**：否
+- **默认值**：默认使用 `linterOptions.reportUnusedDisableDirectives` 配置项（默认值为 `"warn"`）。
 
-##### `--report-unused-disable-directives-severity` example
+<a id="--report-unused-disable-directives-severity-example"></a>
+
+##### `--report-unused-disable-directives-severity` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -681,42 +750,47 @@ Same as [`--report-unused-disable-directives`](#--report-unused-disable-directiv
 
 #### `--report-unused-inline-configs`
 
-This option causes ESLint to report inline config comments like `/* eslint rule-name: "error" */` whose rule severity and any options match what's already been configured.
+此选项会让 ESLint 报告行内配置注释，例如 `/* eslint rule-name: "error" */`，前提是注释中的规则严重级别及任何选项与已配置的内容相同。
 
-- **Argument Type**: String. One of the following values:
-    1. `off` (or `0`)
-    1. `warn` (or `1`)
-    1. `error` (or `2`)
-- **Multiple Arguments**: No
-- **Default Value**: By default, `linterOptions.reportUnusedInlineConfigs` configuration setting is used (which defaults to `"off"`).
+- **参数类型**：字符串。以下值之一：
+    1. `off`（或 `0`）
+    1. `warn`（或 `1`）
+    1. `error`（或 `2`）
+- **多个参数**：否
+- **默认值**：默认使用 `linterOptions.reportUnusedInlineConfigs` 配置项（默认值为 `"off"`）。
 
-This can be useful to keep files clean and devoid of misleading clutter.
-Inline config comments are meant to change ESLint's behavior in some way: if they change nothing, there is no reason to leave them in.
+此选项有助于保持文件整洁，避免出现误导性的冗余内容。行内配置注释旨在以某种方式改变 ESLint 的行为；如果它们没有任何作用，就没有必要保留。
 
-##### `--report-unused-inline-configs` example
+<a id="--report-unused-inline-configs-example"></a>
+
+##### `--report-unused-inline-configs` 示例
 
 ```shell
 npx eslint --report-unused-inline-configs error file.js
 ```
 
-### Caching
+<a id="caching"></a>
+
+### 缓存
 
 #### `--cache`
 
-Store the info about processed files in order to only operate on the changed ones. Enabling this option can dramatically improve ESLint's run time performance by ensuring that only changed files are linted.
-The cache is stored in `.eslintcache` by default.
+存储已处理文件的信息，以便只处理发生变化的文件。启用此选项可确保只检查发生变化的文件，从而显著提升 ESLint 的运行性能。
+默认情况下，缓存会存储在 `.eslintcache` 中。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-If you run ESLint with `--cache` and then run ESLint without `--cache`, the `.eslintcache` file will be deleted. This is necessary because the results of the lint might change and make `.eslintcache` invalid. If you want to control when the cache file is deleted, then use `--cache-location` to specify an alternate location for the cache file.
+如果先使用 `--cache` 运行 ESLint，之后又不带 `--cache` 运行 ESLint，`.eslintcache` 文件就会被删除。这是必要的，因为代码检查结果可能会发生变化，导致 `.eslintcache` 失效。如果想控制何时删除缓存文件，请使用 `--cache-location` 指定其他缓存文件位置。
 
-Autofixed files are not placed in the cache. Subsequent linting that does not trigger an autofix will place it in the cache.
+自动修复过的文件不会放入缓存。后续运行代码检查时，如果没有触发自动修复，这些文件就会被放入缓存。
 
-ESLint determines whether a cached result is still valid from the file itself (its contents or metadata, depending on `--cache-strategy`) and the configuration. It does not track dependencies between files, so a file's cached results are reused even when another file it depends on has changed. Rules whose results depend on other files can therefore report stale results. This includes type-aware rules, such as those in [`@typescript-eslint/eslint-plugin`](https://typescript-eslint.io/packages/eslint-plugin), and rules that resolve imports across modules, such as those in [`eslint-plugin-import`](https://github.com/import-js/eslint-plugin-import) and [`eslint-plugin-import-x`](https://github.com/un-ts/eslint-plugin-import-x).
+ESLint 根据文件本身（其内容或元数据，具体取决于 `--cache-strategy`）和配置判断缓存结果是否仍然有效。它不会跟踪文件之间的依赖关系，因此即使某个文件所依赖的其他文件已发生变化，该文件的缓存结果仍会被复用。因此，结果取决于其他文件的规则可能会报告过时的结果。这包括类型感知规则，例如 [`@typescript-eslint/eslint-plugin`](https://typescript-eslint.io/packages/eslint-plugin) 中的规则，以及跨模块解析导入的规则，例如 [`eslint-plugin-import`](https://github.com/import-js/eslint-plugin-import) 和 [`eslint-plugin-import-x`](https://github.com/un-ts/eslint-plugin-import-x) 中的规则。
 
-For example, if a module is changed in a way that introduces a problem in an unchanged file that imports it, `--cache` does not report that problem until the importing file or the configuration changes. The opposite can also happen: a problem that has already been fixed in another file continues to be reported. Run ESLint without `--cache` when you need accurate results from such rules. See [Can I use ESLint's `--cache` with typescript-eslint?](https://typescript-eslint.io/troubleshooting/faqs/eslint/#can-i-use-eslints---cache-with-typescript-eslint) for more details.
+例如，如果某个模块发生变化，导致导入该模块的未更改文件出现问题，那么在导入文件或配置发生变化之前，`--cache` 不会报告该问题。反过来也可能发生：其他文件中已经修复的问题仍会继续报告。需要从此类规则获取准确结果时，请在不使用 `--cache` 的情况下运行 ESLint。更多信息请参阅[我可以在 typescript-eslint 中使用 ESLint 的 `--cache` 吗？](https://typescript-eslint.io/troubleshooting/faqs/eslint/#can-i-use-eslints---cache-with-typescript-eslint)。
 
-##### `--cache` example
+<a id="--cache-example"></a>
+
+##### `--cache` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -725,21 +799,23 @@ For example, if a module is changed in a way that introduces a problem in an unc
 
 #### `--cache-file`
 
-**Deprecated**: Use `--cache-location` instead.
+**已弃用**：请改用 `--cache-location`。
 
-Path to the cache file. If none specified `.eslintcache` is used. The file is created in the directory where the `eslint` command is executed.
+缓存文件的路径。如果未指定，则使用 `.eslintcache`。该文件会在执行 `eslint` 命令的目录中创建。
 
 #### `--cache-location`
 
-Specify the path to the cache location. Can be a file or a directory.
+指定缓存位置的路径。可以是文件或目录。
 
-- **Argument Type**: String. Path to file or directory. If a directory is specified, a cache file is created inside the specified folder. The name of the file is based on the hash of the current working directory, e.g.: `.cache_hashOfCWD`.
-- **Multiple Arguments**: No
-- **Default Value**: If no location is specified, `.eslintcache` is used. The file is created in the directory where the `eslint` command is executed.
+- **参数类型**：字符串。文件或目录路径。如果指定目录，缓存文件会在该目录中创建。文件名根据当前工作目录的哈希值生成，例如：`.cache_hashOfCWD`。
+- **多个参数**：否
+- **默认值**：如果未指定位置，则使用 `.eslintcache`。该文件会在执行 `eslint` 命令的目录中创建。
 
-If the directory for the cache does not exist make sure you add a trailing `/` on \*nix systems or `\` on Windows. Otherwise, the path is assumed to be a file.
+如果缓存目录不存在，请确保在 *nix 系统上添加结尾的 `/`，或在 Windows 上添加结尾的 `\`。否则，该路径会被视为文件。
 
-##### `--cache-location` example
+<a id="--cache-location-example"></a>
+
+##### `--cache-location` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -748,32 +824,38 @@ If the directory for the cache does not exist make sure you add a trailing `/` o
 
 #### `--cache-strategy`
 
-Strategy for the cache to use for detecting changed files.
+指定缓存用于检测文件变更的策略。
 
-- **Argument Type**: String. One of the following values:
+- **参数类型**：字符串。以下值之一：
     1. `metadata`
     1. `content`
-- **Multiple Arguments**: No
-- **Default Value**: `metadata`
+- **多个参数**：否
+- **默认值**：`metadata`
 
-The `content` strategy can be useful in cases where the modification time of your files changes even if their contents have not. For example, this can happen during git operations like [`git clone`](https://git-scm.com/docs/git-clone) because git does not track file modification time.
+如果文件内容没有变化，但修改时间发生了变化，那么 `content` 策略会很有用。例如，执行 [`git clone`](https://git-scm.com/docs/git-clone) 等 git 操作时就可能出现这种情况，因为 git 不会跟踪文件的修改时间。
 
-##### `--cache-strategy` example
+<a id="--cache-strategy-example"></a>
+
+##### `--cache-strategy` 示例
 
 {{ npx_tabs ({
     package: "eslint",
     args: ["\"src/**/*.js\"", "--cache", "--cache-strategy", "content"]
 }) }}
 
-### Suppress Violations
+<a id="suppress-violations"></a>
+
+### 抑制违规
 
 #### `--suppress-all`
 
-Suppresses existing violations, so that they are not being reported in subsequent runs. It allows you to enable one or more lint rules and be notified only when new violations show up. The suppressions are stored in `eslint-suppressions.json` by default, unless otherwise specified by `--suppressions-location`. The file gets updated with the new suppressions.
+抑制现有违规，使其在后续运行中不再报告。这样你就可以启用一条或多条代码检查规则，并且只在出现新的违规时收到通知。默认情况下，抑制项会存储在 `eslint-suppressions.json` 中，除非通过 `--suppressions-location` 另行指定。该文件会随新抑制项更新。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-##### `--suppress-all` example
+<a id="--suppress-all-example"></a>
+
+##### `--suppress-all` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -782,12 +864,14 @@ Suppresses existing violations, so that they are not being reported in subsequen
 
 #### `--suppress-rule`
 
-Suppresses violations for specific rules, so that they are not being reported in subsequent runs. Similar to `--suppress-all`, the suppressions are stored in `eslint-suppressions.json` by default, unless otherwise specified by `--suppressions-location`. The file gets updated with the new suppressions.
+抑制特定规则的违规，使其在后续运行中不再报告。与 `--suppress-all` 类似，默认情况下，抑制项会存储在 `eslint-suppressions.json` 中，除非通过 `--suppressions-location` 另行指定。该文件会随新抑制项更新。
 
-- **Argument Type**: String. Rule ID.
-- **Multiple Arguments**: Yes
+- **参数类型**：字符串。规则 ID。
+- **多个参数**：是
 
-##### `--suppress-rule` example
+<a id="--suppress-rule-example"></a>
+
+##### `--suppress-rule` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -796,13 +880,15 @@ Suppresses violations for specific rules, so that they are not being reported in
 
 #### `--suppressions-location`
 
-Specify the path to the suppressions location. Can be a file or a directory.
+指定抑制项位置的路径。可以是文件或目录。
 
-- **Argument Type**: String. Path to file or directory. If a directory is specified, a suppressions file is created inside the specified folder. The name of the file is based on the hash of the current working directory, e.g.: `suppressions_hashOfCWD`
-- **Multiple Arguments**: No
-- **Default Value**: If no location is specified, `eslint-suppressions.json` is used. The file is created in the directory where the `eslint` command is executed.
+- **参数类型**：字符串。文件或目录路径。如果指定目录，抑制文件会在该目录中创建。文件名根据当前工作目录的哈希值生成，例如：`suppressions_hashOfCWD`
+- **多个参数**：否
+- **默认值**：如果未指定位置，则使用 `eslint-suppressions.json`。该文件会在执行 `eslint` 命令的目录中创建。
 
-##### `--suppressions-location` example
+<a id="--suppressions-location-example"></a>
+
+##### `--suppressions-location` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -811,11 +897,13 @@ Specify the path to the suppressions location. Can be a file or a directory.
 
 #### `--prune-suppressions`
 
-Prune unused suppressions from the suppressions file. This option is useful when you addressed one or more of the suppressed violations.
+从抑制文件中清除未使用的抑制项。如果你已处理一条或多条被抑制的违规，此选项会很有用。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-##### `--prune-suppressions` example
+<a id="--prune-suppressions-example"></a>
+
+##### `--prune-suppressions` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -824,28 +912,34 @@ Prune unused suppressions from the suppressions file. This option is useful when
 
 #### `--pass-on-unpruned-suppressions`
 
-Ignore unused suppressions. By default, ESLint exits with exit code `2` and displays an error message if there are unused suppressions in the suppressions file. When you use this flag, unused suppressions do not affect the exit code and ESLint doesn't output an error about unused suppressions.
+忽略未使用的抑制项。默认情况下，如果抑制文件中有未使用的抑制项，ESLint 会以退出码 `2` 退出并显示错误信息。使用此标志后，未使用的抑制项不会影响退出码，ESLint 也不会输出相关错误。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-##### `--pass-on-unpruned-suppressions` example
+<a id="--pass-on-unpruned-suppressions-example"></a>
+
+##### `--pass-on-unpruned-suppressions` 示例
 
 {{ npx_tabs ({
     package: "eslint",
     args: ["\"src/**/*.js\"", "--pass-on-unpruned-suppressions"]
 }) }}
 
-### Miscellaneous
+<a id="miscellaneous"></a>
+
+### 其他
 
 #### `--init`
 
-This option runs `npm init @eslint/config` to start the config initialization wizard. It's designed to help new users quickly create an `eslint.config.js` file by answering a few questions. When you use this flag, the CLI does not perform linting.
+此选项会运行 `npm init @eslint/config`，以启动配置初始化向导。它旨在帮助新用户通过回答几个问题，快速创建 `eslint.config.js` 文件。使用此标志时，CLI 不会执行代码检查。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-The resulting configuration file is created in the current directory.
+生成的配置文件会在当前目录中创建。
 
-##### `--init` example
+<a id="--init-example"></a>
+
+##### `--init` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -854,13 +948,15 @@ The resulting configuration file is created in the current directory.
 
 #### `--env-info`
 
-This option outputs information about the execution environment, including the version of Node.js, npm, and local and global installations of ESLint.
+此选项会输出执行环境的信息，包括 Node.js 和 npm 的版本，以及本地和全局安装的 ESLint 信息。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-The ESLint team may ask for this information to help solve bugs. When you use this flag, the CLI does not perform linting.
+ESLint 团队可能会要求你提供这些信息，以帮助解决问题。使用此标志时，CLI 不会执行代码检查。
 
-##### `--env-info` example
+<a id="--env-info-example"></a>
+
+##### `--env-info` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -869,11 +965,13 @@ The ESLint team may ask for this information to help solve bugs. When you use th
 
 #### `--no-error-on-unmatched-pattern`
 
-This option prevents errors when a quoted glob pattern is unmatched. This does not prevent errors when your shell can't match a glob.
+此选项可避免带引号的 glob 模式未匹配任何文件时发生错误。但如果 shell 无法匹配 glob，则仍会报错。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-##### `--no-error-on-unmatched-pattern` example
+<a id="--no-error-on-unmatched-pattern-example"></a>
+
+##### `--no-error-on-unmatched-pattern` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -882,11 +980,13 @@ This option prevents errors when a quoted glob pattern is unmatched. This does n
 
 #### `--exit-on-fatal-error`
 
-This option causes ESLint to exit with exit code 2 if one or more fatal parsing errors occur. Without this option, ESLint reports fatal parsing errors as rule violations.
+如果发生一个或多个致命解析错误，此选项会使 ESLint 以退出码 2 退出。不使用此选项时，ESLint 会将致命解析错误报告为规则违规。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-##### `--exit-on-fatal-error` example
+<a id="--exit-on-fatal-error-example"></a>
+
+##### `--exit-on-fatal-error` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -895,11 +995,13 @@ This option causes ESLint to exit with exit code 2 if one or more fatal parsing 
 
 #### `--no-warn-ignored`
 
-This option suppresses both `File ignored by default` and `File ignored because of a matching ignore pattern` warnings when an ignored filename is passed explicitly. It is useful when paired with `--max-warnings 0` as it will prevent exit code 1 due to the aforementioned warning.
+显式传入被忽略的文件名时，此选项会抑制 `File ignored by default` 和 `File ignored because of a matching ignore pattern` 两种警告。与 `--max-warnings 0` 搭配使用时很有用，可避免因上述警告导致退出码为 1。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-##### `--no-warn-ignored` example
+<a id="--no-warn-ignored-example"></a>
+
+##### `--no-warn-ignored` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -908,11 +1010,13 @@ This option suppresses both `File ignored by default` and `File ignored because 
 
 #### `--pass-on-no-patterns`
 
-This option allows ESLint to exit with code 0 when no file or directory patterns are passed. Without this option, ESLint assumes you want to use `.` as the pattern.
+此选项允许 ESLint 在没有传入任何文件或目录模式时以代码 0 退出。不使用此选项时，ESLint 会假设你想使用 `.` 作为模式。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-##### `--pass-on-no-patterns` example
+<a id="--pass-on-no-patterns-example"></a>
+
+##### `--pass-on-no-patterns` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -921,13 +1025,15 @@ This option allows ESLint to exit with code 0 when no file or directory patterns
 
 #### `--debug`
 
-This option outputs debugging information to the console. Add this flag to an ESLint command line invocation in order to get extra debugging information while the command runs.
+此选项会向控制台输出调试信息。运行 ESLint 命令时添加此标志，可在命令执行期间获取额外的调试信息。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-This information is useful when you're seeing a problem and having a hard time pinpointing it. The ESLint team may ask for this debugging information to help solve bugs.
+如果你遇到问题且难以确定原因，这些信息会很有用。ESLint 团队可能会要求你提供这些调试信息，以帮助解决问题。
 
-##### `--debug` example
+<a id="--debug-example"></a>
+
+##### `--debug` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -936,11 +1042,13 @@ This information is useful when you're seeing a problem and having a hard time p
 
 #### `-h`, `--help`
 
-This option outputs the help menu, displaying all of the available options. All other options are ignored when this is present. When you use this flag, the CLI does not perform linting.
+此选项会输出帮助菜单，显示所有可用选项。如果指定此选项，其他所有选项都会被忽略。使用此标志时，CLI 不会执行代码检查。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-##### `-h`, `--help` example
+<a id="-h---help-example"></a>
+
+##### `-h`, `--help` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -949,11 +1057,13 @@ This option outputs the help menu, displaying all of the available options. All 
 
 #### `-v`, `--version`
 
-This option outputs the current ESLint version onto the console. All other options are ignored when this is present. When you use this flag, the CLI does not perform linting.
+此选项会在控制台输出当前 ESLint 版本。如果指定此选项，其他所有选项都会被忽略。使用此标志时，CLI 不会执行代码检查。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-##### `-v`, `--version` example
+<a id="-v---version-example"></a>
+
+##### `-v`, `--version` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -962,12 +1072,14 @@ This option outputs the current ESLint version onto the console. All other optio
 
 #### `--print-config`
 
-This option outputs the configuration to be used for the file passed. When present, no linting is performed and only config-related options are valid. When you use this flag, the CLI does not perform linting.
+此选项会输出传入文件将使用的配置。指定此选项时，不会执行代码检查，且只能使用与配置相关的选项。使用此标志时，CLI 不会执行代码检查。
 
-- **Argument Type**: String. Path to file.
-- **Multiple Arguments**: No
+- **参数类型**：字符串。文件路径。
+- **多个参数**：否
 
-##### `--print-config` example
+<a id="--print-config-example"></a>
+
+##### `--print-config` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -976,13 +1088,15 @@ This option outputs the configuration to be used for the file passed. When prese
 
 #### `--stats`
 
-This option adds a series of detailed performance statistics (see [Stats type](../extend/stats#-stats-type)) such as the _parse_-, _fix_- and _lint_-times (time per rule) to [`result`](../integrate/nodejs-api#-lintresult-type) objects that are passed to the formatter (see [Stats CLI usage](../extend/stats#cli-usage)).
+此选项会向传递给格式化程序的 [`result`](../integrate/nodejs-api#-lintresult-type) 对象添加一系列详细的性能统计信息（参见 [Stats 类型](../extend/stats#-stats-type)），例如 _parse_、_fix_ 和 _lint_ 耗时（每条规则的耗时）（参见 [Stats CLI 用法](../extend/stats#cli-usage)）。
 
-- **Argument Type**: No argument.
+- **参数类型**：无参数。
 
-This option is intended for use with custom formatters that display statistics. It can also be used with the built-in `json` formatter.
+此选项适用于会显示统计信息的自定义格式化程序，也可与内置的 `json` 格式化程序搭配使用。
 
-##### `--stats` example
+<a id="--stats-example"></a>
+
+##### `--stats` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -991,12 +1105,14 @@ This option is intended for use with custom formatters that display statistics. 
 
 #### `--flag`
 
-This option enables one or more feature flags for ESLint.
+此选项可为 ESLint 启用一个或多个功能标志。
 
-- **Argument Type**: String. A feature identifier.
-- **Multiple Arguments**: Yes
+- **参数类型**：字符串。功能标识符。
+- **多个参数**：是
 
-##### `--flag` example
+<a id="--flag-example"></a>
+
+##### `--flag` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -1005,12 +1121,14 @@ This option enables one or more feature flags for ESLint.
 
 #### `--mcp`
 
-This option starts the ESLint MCP server for use with AI agents.
+此选项会启动供 AI 智能体使用的 ESLint MCP 服务器。
 
-- **Argument Type**: No argument.
-- **Multiple Arguments**: No
+- **参数类型**：无参数。
+- **多个参数**：否
 
-##### `--mcp` example
+<a id="--mcp-example"></a>
+
+##### `--mcp` 示例
 
 {{ npx_tabs ({
     package: "eslint",
@@ -1019,25 +1137,29 @@ This option starts the ESLint MCP server for use with AI agents.
 
 #### `--concurrency`
 
-This option controls the number of worker threads used to lint files.
+此选项用于控制检查文件时使用的工作线程数。
 
-- **Argument Type**: Int|String. A positive integer, `auto` or `off`.
-- **Multiple Arguments**: No
-- **Default Value**: `off`
+- **参数类型**：Int|String。正整数、`auto` 或 `off`。
+- **多个参数**：否
+- **默认值**：`off`
 
-The value `off` causes all files to be linted in the main thread. The value `auto` attempts to determine the best setting automatically.
+值为 `off` 时，所有文件都会在主线程中进行代码检查。值为 `auto` 时，会尝试自动确定最佳设置。
 
-##### `--concurrency` example
+<a id="--concurrency-example"></a>
+
+##### `--concurrency` 示例
 
 {{ npx_tabs ({
     package: "eslint",
     args: ["--concurrency", "auto"]
 }) }}
 
-## Exit Codes
+<a id="exit-codes"></a>
 
-When linting files, ESLint exits with one of the following exit codes:
+## 退出码
 
-- `0`: Linting was successful and there are no linting errors. If the [`--max-warnings`](#--max-warnings) flag is set to `n`, the number of linting warnings is at most `n`.
-- `1`: Linting was successful and there is at least one linting error, or there are more linting warnings than allowed by the [`--max-warnings`](#--max-warnings) option.
-- `2`: Linting was unsuccessful due to a configuration problem or an internal error.
+检查文件时，ESLint 会以以下某个退出码退出：
+
+- `0`：代码检查成功，且没有代码检查错误。如果 [`--max-warnings`](#--max-warnings) 标志设为 `n`，代码检查警告数量最多为 `n`。
+- `1`：代码检查成功，但至少存在一个代码检查错误；或者代码检查警告数量超过 [`--max-warnings`](#--max-warnings) 选项允许的数量。
+- `2`：由于配置问题或内部错误，代码检查未成功。

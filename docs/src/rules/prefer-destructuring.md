@@ -8,17 +8,19 @@ further_reading:
 
 
 <!-- markdownlint-disable-next-line MD051 -->
-With JavaScript ES6, a new syntax was added for creating variables from an array index or object property, called [destructuring](#further-reading).  This rule enforces usage of destructuring instead of accessing a property through a member expression.
+在 JavaScript ES6 中，新增了一种从数组索引或对象属性创建变量的语法，称为[解构](#further-reading)。此规则要求使用解构，而不是通过成员表达式访问属性。
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule enforces the use of ES6 destructuring to extract values from arrays and objects in variable declarations and assignment expressions, instead of direct property or index access.
+此规则要求在变量声明和赋值表达式中，使用 ES6 解构从数组和对象中提取值，而不是直接访问属性或索引。
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule takes two arguments, both of which are objects. The first object parameter determines what types of destructuring the rule applies to.
+此规则接受两个参数，且两者都是对象。第一个对象参数决定此规则适用于哪些类型的解构。
 
-In the first object, there are two properties, `array` and `object`, that can be used to turn on or off the destructuring requirement for each of those types independently. By default, both are `true`.
+第一个对象包含两个属性：`array` 和 `object`，可分别用于启用或禁用对应类型的解构要求。默认情况下，两者均为 `true`。
 
 ```json
 {
@@ -31,7 +33,7 @@ In the first object, there are two properties, `array` and `object`, that can be
 }
 ```
 
-For example, the following configuration enforces only object destructuring, but not array destructuring:
+例如，以下配置仅强制使用对象解构，不强制使用数组解构：
 
 ```json
 {
@@ -41,7 +43,7 @@ For example, the following configuration enforces only object destructuring, but
 }
 ```
 
-Examples of **incorrect** code for this rule:
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -59,7 +61,7 @@ const quux = object['quux'];
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -83,9 +85,9 @@ let bar;
 
 :::
 
-Alternatively, you can use separate configurations for different assignment types. The first argument accepts two other keys instead of `array` and `object`.
+另外，也可以针对不同的赋值类型使用单独的配置。第一个参数可以接受另外两个键，取代 `array` 和 `object`。
 
-One key is `VariableDeclarator` and the other is `AssignmentExpression`, which can be used to control the destructuring requirement for each of those types independently. Each property is an object containing two properties, `array` and `object`, which can be used to control the destructuring requirement for each of `array` and `object` independently for variable declarations and assignment expressions.  By default, `array` and `object` are set to `true` for both `VariableDeclarator` and `AssignmentExpression`.
+其中一个键是 `VariableDeclarator`，另一个是 `AssignmentExpression`，它们可分别用于控制这两种类型的解构要求。每个属性都是一个对象，包含 `array` 和 `object` 两个属性，可分别控制变量声明和赋值表达式中 `array` 与 `object` 各自的解构要求。默认情况下，`VariableDeclarator` 和 `AssignmentExpression` 的 `array` 与 `object` 均设为 `true`。
 
 ```json
 {
@@ -104,7 +106,7 @@ One key is `VariableDeclarator` and the other is `AssignmentExpression`, which c
 }
 ```
 
-Examples of **correct** code when object destructuring in `VariableDeclarator` is enforced:
+强制在 `VariableDeclarator` 中使用对象解构时的**正确**代码示例：
 
 ::: correct
 
@@ -115,7 +117,7 @@ const {bar: foo} = object;
 
 :::
 
-Examples of **correct** code when array destructuring in `AssignmentExpression` is enforced:
+强制在 `AssignmentExpression` 中使用数组解构时的**正确**代码示例：
 
 ::: correct
 
@@ -128,7 +130,7 @@ Examples of **correct** code when array destructuring in `AssignmentExpression` 
 
 ### enforceForRenamedProperties
 
-The rule has a second object argument with a single key, `enforceForRenamedProperties`, which determines whether the `object` destructuring applies to renamed variables.
+此规则还有第二个对象参数，其中包含一个键 `enforceForRenamedProperties`，用于决定对象解构要求是否适用于重命名的变量。
 
 ```json
 {
@@ -144,7 +146,7 @@ The rule has a second object argument with a single key, `enforceForRenamedPrope
 }
 ```
 
-Examples of **incorrect** code when `enforceForRenamedProperties` is enabled:
+启用 `enforceForRenamedProperties` 时的**错误**代码示例：
 
 ::: incorrect
 
@@ -155,7 +157,7 @@ const foo = object.bar;
 
 :::
 
-Examples of **correct** code when `enforceForRenamedProperties` is enabled:
+启用 `enforceForRenamedProperties` 时的**正确**代码示例：
 
 ::: correct
 
@@ -166,7 +168,7 @@ const { bar: foo } = object;
 
 :::
 
-Examples of additional **correct** code when `enforceForRenamedProperties` is enabled:
+启用 `enforceForRenamedProperties` 时的其他**正确**代码示例：
 
 ::: correct
 
@@ -182,26 +184,27 @@ class C {
 
 :::
 
-**Note**: It is not possible to determine if a variable will be referring to an object or an array at runtime. This rule therefore guesses the assignment type by checking whether the key being accessed is an integer. This can lead to the following possibly confusing situations:
+**注意**：无法在运行时确定一个变量指向的是对象还是数组。因此，此规则会通过检查所访问的键是否为整数来推测赋值类型。这可能导致以下容易引起混淆的情况：
 
-* Accessing an object property whose key is an integer will fall under the category `array` destructuring.
-* Accessing an array element through a computed index will fall under the category `object` destructuring.
+* 访问键为整数的对象属性时，会归入 `array` 解构类别。
+* 通过计算得出的索引访问数组元素时，会归入 `object` 解构类别。
 
-The `--fix` option on the command line fixes only problems reported in variable declarations, and among them only those that fall under the category `object` destructuring. Furthermore, the name of the declared variable has to be the same as the name used for non-computed member access in the initializer. For example, `const foo = object.foo` can be automatically fixed by this rule. Problems that involve computed member access (e.g., `const foo = object[foo]`) or renamed properties (e.g., `const foo = object.bar`) are not automatically fixed.
+命令行中的 `--fix` 选项只会修复变量声明中报告的问题，并且只修复其中归入 `object` 解构类别的问题。此外，声明变量的名称必须与初始化表达式中非计算成员访问所使用的名称相同。例如，此规则可以自动修复 `const foo = object.foo`。涉及计算成员访问（例如 `const foo = object[foo]`）或重命名属性（例如 `const foo = object.bar`）的问题不会自动修复。
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 何时不使用
 
-If you want to be able to access array indices or object properties directly, you can either configure the rule to your tastes or disable the rule entirely.
+如果你希望直接访问数组索引或对象属性，可以根据需要配置此规则，或者完全禁用它。
 
-Additionally, if you intend to access large array indices directly, like:
+此外，如果你打算直接访问较大的数组索引，例如：
 
 ```javascript
 const foo = array[100];
 ```
 
-Then the `array` part of this rule is not recommended, as destructuring does not match this use case very well.
+那么不建议启用此规则中针对 `array` 的部分，因为解构并不太适用于这种情况。
 
-Or for non-iterable 'array-like' objects:
+对于不可迭代的“类数组”对象，也不建议启用：
 
 ```javascript
 const $ = require('jquery');

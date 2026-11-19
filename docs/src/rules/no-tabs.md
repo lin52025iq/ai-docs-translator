@@ -2,13 +2,14 @@
 title: no-tabs
 rule_type: layout
 ---
-Some style guides don't allow the use of tab characters at all, including within comments.
+某些风格指南完全不允许使用制表符，包括在注释中使用。
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule looks for tabs anywhere inside a file: code, comments or anything else.
+此规则会检查文件中的任何位置是否存在制表符：代码、注释或其他内容中都包括在内。
 
-Examples of **incorrect** code for this rule:
+此规则的**错误**代码示例：
 
 <!-- markdownlint-capture -->
 <!-- markdownlint-disable MD010 -->
@@ -30,7 +31,7 @@ var x = 1; // 	 test
 :::
 <!-- markdownlint-restore -->
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -49,15 +50,16 @@ var x = 1; // test
 
 :::
 
-### Options
+<a id="options"></a>
+### 选项
 
-This rule has an optional object option with the following properties:
+此规则有一个可选的对象选项，包含以下属性：
 
-* `allowIndentationTabs` (default: false): If this is set to true, then the rule will not report tabs used for indentation.
+* `allowIndentationTabs`（默认值：false）：如果设为 true，则规则不会报告用于缩进的制表符。
 
 #### allowIndentationTabs
 
-Examples of **correct** code for this rule with the `allowIndentationTabs: true` option:
+启用 `allowIndentationTabs: true` 选项时，此规则的**正确**代码示例：
 
 <!-- markdownlint-capture -->
 <!-- markdownlint-disable MD010 -->
@@ -76,10 +78,12 @@ function test() {
 :::
 <!-- markdownlint-restore -->
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 何时不应使用
 
-If you have established a standard where having tabs is fine, then you can disable this rule.
+如果你已制定标准，认为使用制表符没有问题，那么可以禁用此规则。
 
-## Compatibility
+<a id="compatibility"></a>
+## 兼容性
 
-* **JSCS**: [disallowTabs](https://jscs-dev.github.io/rule/disallowTabs)
+* **JSCS**：[disallowTabs](https://jscs-dev.github.io/rule/disallowTabs)

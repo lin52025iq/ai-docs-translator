@@ -1,197 +1,204 @@
 ---
-title: Migrate to v9.x
+title: 迁移到 v9.x
 ---
 
-ESLint v9.0.0 is a major release of ESLint, and as such, has several breaking changes that you need to be aware of. This guide is intended to walk you through the breaking changes.
+ESLint v9.0.0 是一个重大版本，因此包含多项需要注意的破坏性变更。本指南将带你了解这些破坏性变更。
 
-To help with this migration, ESLint provides codemods to automate many of the changes described in this guide. All official ESLint codemods are available in the [eslint/codemods](https://github.com/eslint/codemods) repository and through the [Codemod Registry](https://app.codemod.com/registry?q=scope%3Aeslint).
+为了帮助完成迁移，ESLint 提供了 codemod，可自动处理本指南中介绍的许多变更。所有官方 ESLint codemod 均可在 [eslint/codemods](https://github.com/eslint/codemods) 仓库和 [Codemod Registry](https://app.codemod.com/registry?q=scope%3Aeslint) 中获取。
 
-## Use migration codemods
+<a id="use-migration-codemods"></a>
+## 使用迁移 codemod
 
-### Migrate ESLint configuration
+<a id="migrate-eslint-configuration"></a>
+### 迁移 ESLint 配置
 
-The `@eslint/v8-to-v9-config` codemod migrates ESLint v8 configuration files to the ESLint v9 flat config format. It updates config structure, rule schemas, plugins, ignores, and deprecated JSDoc rules while preserving existing behavior as much as possible. It also modifies `package.json` entries containing `eslintConfig`, `.eslintignore`/`.gitignore` files, `/* exported */` comments, and certain `/* eslint */` comments.
+`@eslint/v8-to-v9-config` codemod 可将 ESLint v8 配置文件迁移为 ESLint v9 扁平配置格式。它会更新配置结构、规则架构、插件、忽略项和已弃用的 JSDoc 规则，同时尽可能保留现有行为。它还会修改包含 `eslintConfig` 的 `package.json` 条目、`.eslintignore`/`.gitignore` 文件、`/* exported */` 注释以及某些 `/* eslint */` 注释。
 
 ```shell
 npx codemod @eslint/v8-to-v9-config
 ```
 
-Learn more in the [Codemod Registry](https://app.codemod.com/registry/@eslint/v8-to-v9-config).
+请参阅 [Codemod Registry](https://app.codemod.com/registry/@eslint/v8-to-v9-config) 了解详情。
 
-### Migrate custom rules
+<a id="migrate-custom-rules"></a>
+### 迁移自定义规则
 
-If you maintain custom ESLint rules, the `@eslint/v8-to-v9-custom-rules` codemod converts function-style rules to the object format and updates deprecated rule APIs to their ESLint v9-compatible equivalents.
+如果你维护自定义 ESLint 规则，`@eslint/v8-to-v9-custom-rules` codemod 可以将函数式规则转换为对象格式，并将已弃用的规则 API 更新为与 ESLint v9 兼容的等效 API。
 
 ::: warning
-The workflow runs on `**/*.js`, `**/*.mjs`, `**/*.cjs`, `**/*.jsx`, `**/*.ts`, `**/*.mts`, `**/*.cts`, and `**/*.tsx`. Run it only against rule files or directories, since it may incorrectly transform non-rule JavaScript files.
+此工作流会处理 `**/*.js`、`**/*.mjs`、`**/*.cjs`、`**/*.jsx`、`**/*.ts`、`**/*.mts`、`**/*.cts` 和 `**/*.tsx`。请仅对规则文件或目录运行它，因为它可能会错误转换非规则 JavaScript 文件。
 :::
 
 ```shell
 npx codemod @eslint/v8-to-v9-custom-rules
 ```
 
-Learn more in the [Codemod Registry](https://app.codemod.com/registry/@eslint/v8-to-v9-custom-rules).
+请参阅 [Codemod Registry](https://app.codemod.com/registry/@eslint/v8-to-v9-custom-rules) 了解详情。
 
-Codemods are a starting point. Review the changes and consult the breaking changes below for anything the codemods do not cover.
+Codemod 只是迁移的起点。请检查变更，并参考下文的破坏性变更，了解 codemod 未涵盖的内容。
 
-The lists below are ordered roughly by the number of users each change is expected to affect, where the first items are expected to affect the most users.
+下方列表大致按预计受每项变更影响的用户数量排序，排在前面的预计影响用户最多。
 
-## Table of Contents
+<a id="table-of-contents"></a>
+## 目录
 
-### Breaking changes for users
+<a id="breaking-changes-for-users"></a>
+### 对用户的破坏性变更
 
-- [Node.js < v18.18, v19 are no longer supported](#drop-old-node)
-- [New default config format (`eslint.config.js`)](#flat-config)
-- [Removed multiple formatters](#removed-formatters)
-- [Removed `require-jsdoc` and `valid-jsdoc` rules](#remove-jsdoc-rules)
-- [`eslint:recommended` has been updated](#eslint-recommended)
-- [`--quiet` no longer runs rules set to `"warn"`](#quiet-warn)
-- [`--output-file` now writes a file to disk even with an empty output](#output-file)
-- [Change in behavior when no patterns are passed to CLI](#cli-empty-patterns)
-- [`/* eslint */` comments with only severity now retain options from the config file](#eslint-comment-options)
-- [Multiple `/* eslint */` comments for the same rule are now disallowed](#multiple-eslint-comments)
-- [Stricter `/* exported */` parsing](#exported-parsing)
-- [`no-constructor-return` and `no-sequences` rule schemas are stricter](#stricter-rule-schemas)
-- [New checks in `no-implicit-coercion` by default](#no-implicit-coercion)
-- [Case-sensitive flags in `no-invalid-regexp`](#no-invalid-regexp)
-- [`varsIgnorePattern` option of `no-unused-vars` no longer applies to catch arguments](#vars-ignore-pattern)
-- [`no-restricted-imports` now accepts multiple config entries with the same `name`](#no-restricted-imports)
-- [`"eslint:recommended"` and `"eslint:all"` strings no longer accepted in flat config](#string-config)
-- [`no-inner-declarations` has a new default behavior with a new option](#no-inner-declarations)
-- [`no-unused-vars` now defaults `caughtErrors` to `"all"`](#no-unused-vars)
-- [`no-useless-computed-key` flags unnecessary computed member names in classes by default](#no-useless-computed-key)
-- [`camelcase` allow option only accepts an array of strings](#camelcase)
+- [不再支持 Node.js < v18.18 和 v19](#drop-old-node)
+- [新的默认配置格式（`eslint.config.js`）](#flat-config)
+- [移除了多个格式化程序](#removed-formatters)
+- [移除了 `require-jsdoc` 和 `valid-jsdoc` 规则](#remove-jsdoc-rules)
+- [`eslint:recommended` 已更新](#eslint-recommended)
+- [`--quiet` 不再运行设置为 `"warn"` 的规则](#quiet-warn)
+- [`--output-file` 现在即使输出为空也会写入磁盘文件](#output-file)
+- [未向 CLI 传入模式时的行为变更](#cli-empty-patterns)
+- [仅指定严重级别的 `/* eslint */` 注释现在会保留配置文件中的选项](#eslint-comment-options)
+- [现在不允许针对同一规则使用多个 `/* eslint */` 注释](#multiple-eslint-comments)
+- [`/* exported */` 的解析更加严格](#exported-parsing)
+- [`no-constructor-return` 和 `no-sequences` 的规则架构更加严格](#stricter-rule-schemas)
+- [`no-implicit-coercion` 默认会执行新的检查](#no-implicit-coercion)
+- [`no-invalid-regexp` 中的标志区分大小写](#no-invalid-regexp)
+- [`no-unused-vars` 的 `varsIgnorePattern` 选项不再适用于 catch 参数](#vars-ignore-pattern)
+- [`no-restricted-imports` 现在接受多个具有相同 `name` 的配置项](#no-restricted-imports)
+- [扁平配置不再接受 `"eslint:recommended"` 和 `"eslint:all"` 字符串](#string-config)
+- [`no-inner-declarations` 有了新的默认行为和新选项](#no-inner-declarations)
+- [`no-unused-vars` 的 `caughtErrors` 默认值现在为 `"all"`](#no-unused-vars)
+- [`no-useless-computed-key` 默认会标记类中不必要的计算属性成员名](#no-useless-computed-key)
+- [`camelcase` 的 allow 选项仅接受字符串数组](#camelcase)
 
-### Breaking changes for plugin developers
+<a id="breaking-changes-for-plugin-developers"></a>
+### 对插件开发者的破坏性变更
 
-- [Node.js < v18.18, v19 are no longer supported](#drop-old-node)
-- [Removed multiple `context` methods](#removed-context-methods)
-- [Removed `sourceCode.getComments()`](#removed-sourcecode-getcomments)
-- [Removed `CodePath#currentSegments`](#removed-codepath-currentsegments)
-- [Code paths are now precalculated](#codepath-precalc)
-- [Function-style rules are no longer supported](#drop-function-style-rules)
-- [`meta.schema` is required for rules with options](#meta-schema-required)
-- [`FlatRuleTester` is now `RuleTester`](#flat-rule-tester)
-- [Stricter `RuleTester` checks](#stricter-rule-tester)
+- [不再支持 Node.js < v18.18 和 v19](#drop-old-node)
+- [移除了多个 `context` 方法](#removed-context-methods)
+- [移除了 `sourceCode.getComments()`](#removed-sourcecode-getcomments)
+- [移除了 `CodePath#currentSegments`](#removed-codepath-currentsegments)
+- [现在会预先计算代码路径](#codepath-precalc)
+- [不再支持函数式规则](#drop-function-style-rules)
+- [带选项的规则必须提供 `meta.schema`](#meta-schema-required)
+- [`FlatRuleTester` 现在是 `RuleTester`](#flat-rule-tester)
+- [`RuleTester` 检查更加严格](#stricter-rule-tester)
 
-### Breaking changes for integration developers
+<a id="breaking-changes-for-integration-developers"></a>
+### 对集成开发者的破坏性变更
 
-- [Node.js < v18.18, v19 are no longer supported](#drop-old-node)
-- [`FlatESLint` is now `ESLint`](#flat-eslint)
-- [`Linter` now expects flat config format](#flat-linter)
+- [不再支持 Node.js < v18.18 和 v19](#drop-old-node)
+- [`FlatESLint` 现在是 `ESLint`](#flat-eslint)
+- [`Linter` 现在要求使用扁平配置格式](#flat-linter)
 
 ---
 
-## <a name="drop-old-node"></a> Node.js < v18.18, v19 are no longer supported
+## <a name="drop-old-node"></a> 不再支持 Node.js < v18.18 和 v19
 
-ESLint is officially dropping support for these versions of Node.js starting with ESLint v9.0.0. ESLint now supports the following versions of Node.js:
+从 ESLint v9.0.0 开始，ESLint 正式停止支持这些 Node.js 版本。ESLint 现在支持以下 Node.js 版本：
 
-- Node.js v18.18.0 and above
-- Node.js v20.9.0 and above
-- Node.js v21 and above
+- Node.js v18.18.0 及以上版本
+- Node.js v20.9.0 及以上版本
+- Node.js v21 及以上版本
 
-**To address:** Make sure you upgrade to at least Node.js v18.18.0 when using ESLint v9.0.0. One important thing to double check is the Node.js version supported by your editor when using ESLint via editor integrations. If you are unable to upgrade, we recommend continuing to use ESLint v8.56.0 until you are able to upgrade Node.js.
+**解决方法：** 使用 ESLint v9.0.0 时，请确保升级到至少 Node.js v18.18.0。使用编辑器集成运行 ESLint 时，务必确认编辑器支持的 Node.js 版本。如果无法升级，我们建议继续使用 ESLint v8.56.0，直到能够升级 Node.js。
 
-**Related issue(s):** [#17595](https://github.com/eslint/eslint/issues/17595)
+**相关问题：** [#17595](https://github.com/eslint/eslint/issues/17595)
 
-## <a name="flat-config"></a> New default config format (`eslint.config.js`)
+## <a name="flat-config"></a> 新的默认配置格式（`eslint.config.js`）
 
-As announced in our [blog post](/blog/2023/10/flat-config-rollout-plans/), in ESLint v9.0.0, [`eslint.config.js`](./configure/configuration-files) is the new default configuration format. The previous format, eslintrc, is now deprecated and will not automatically be searched for.
+正如我们在[博客文章](/blog/2023/10/flat-config-rollout-plans/)中宣布的那样，ESLint v9.0.0 将 [`eslint.config.js`](./configure/configuration-files) 作为新的默认配置格式。之前的格式 eslintrc 现已弃用，且不会再被自动搜索。
 
-**Codemod:** Use the [@eslint/v8-to-v9-config](#use-migration-codemods) codemod to automate much of this migration.
+**Codemod：** 使用 [@eslint/v8-to-v9-config](#use-migration-codemods) codemod 自动完成大部分迁移工作。
 
-**To address:** Update your configuration manually to the new format following the [Configuration Migration Guide](./configure/migration-guide). In case you still need to use the deprecated eslintrc config format, set environment variable `ESLINT_USE_FLAT_CONFIG` to `false`.
+**解决方法：** 按照[配置迁移指南](./configure/migration-guide)，手动将配置更新为新格式。如果仍需使用已弃用的 eslintrc 配置格式，请将环境变量 `ESLINT_USE_FLAT_CONFIG` 设置为 `false`。
 
-**Related Issues(s):** [#13481](https://github.com/eslint/eslint/issues/13481)
+**相关问题：** [#13481](https://github.com/eslint/eslint/issues/13481)
 
-## <a name="removed-formatters"></a> Removed multiple formatters
+## <a name="removed-formatters"></a> 移除了多个格式化程序
 
-ESLint v9.0.0 has removed the following formatters from the core:
+ESLint v9.0.0 从核心中移除了以下格式化程序：
 
-| **Removed Formatter** | **Replacement npm Package**     |
-| --------------------- | ------------------------------- |
-| `checkstyle`          | `eslint-formatter-checkstyle`   |
-| `compact`             | `eslint-formatter-compact`      |
-| `jslint-xml`          | `eslint-formatter-jslint-xml`   |
-| `junit`               | `eslint-formatter-junit`        |
-| `tap`                 | `eslint-formatter-tap`          |
-| `unix`                | `eslint-formatter-unix`         |
-| `visualstudio`        | `eslint-formatter-visualstudio` |
+| **已移除的格式化程序** | **替代 npm 包**                    |
+| ---------------------- | ---------------------------------- |
+| `checkstyle`           | `eslint-formatter-checkstyle`      |
+| `compact`              | `eslint-formatter-compact`         |
+| `jslint-xml`           | `eslint-formatter-jslint-xml`      |
+| `junit`                | `eslint-formatter-junit`           |
+| `tap`                  | `eslint-formatter-tap`             |
+| `unix`                 | `eslint-formatter-unix`            |
+| `visualstudio`         | `eslint-formatter-visualstudio`    |
 
-**Codemod:** The [@eslint/v8-to-v9-config](#use-migration-codemods) codemod fully supports this change.
+**Codemod：** [@eslint/v8-to-v9-config](#use-migration-codemods) codemod 完全支持此变更。
 
-**To address:** If you are using any of these formatters via the `-f` command line flag, you'll need to install the respective package for the formatter.
+**解决方法：** 如果你通过 `-f` 命令行标志使用了上述任何格式化程序，则需要安装相应的格式化程序包。
 
-**Related issue(s):** [#17524](https://github.com/eslint/eslint/issues/17524)
+**相关问题：** [#17524](https://github.com/eslint/eslint/issues/17524)
 
-## <a name="remove-jsdoc-rules"></a> Removed `require-jsdoc` and `valid-jsdoc` rules
+## <a name="remove-jsdoc-rules"></a> 移除了 `require-jsdoc` 和 `valid-jsdoc` 规则
 
-The `require-jsdoc` and `valid-jsdoc` rules have been removed in ESLint v9.0.0. These rules were initially deprecated in 2018.
+ESLint v9.0.0 移除了 `require-jsdoc` 和 `valid-jsdoc` 规则。这些规则最初于 2018 年弃用。
 
-**Codemod:** The [@eslint/v8-to-v9-config](#use-migration-codemods) codemod migrates deprecated JSDoc rules. When those rules are active in the configuration, it removes `require-jsdoc`/`valid-jsdoc`, adds `eslint-plugin-jsdoc` and `jsdoc({ config: 'flat/recommended' })`, and also removes file-level JSDoc ESLint comments.
+**Codemod：** [@eslint/v8-to-v9-config](#use-migration-codemods) codemod 会迁移已弃用的 JSDoc 规则。当配置中启用了这些规则时，它会移除 `require-jsdoc`/`valid-jsdoc`，添加 `eslint-plugin-jsdoc` 和 `jsdoc({ config: 'flat/recommended' })`，并移除文件级别的 JSDoc ESLint 注释。
 
-**To address:** Use the [replacement rules](https://github.com/gajus/eslint-plugin-jsdoc/wiki/Comparison-with-deprecated-JSdoc-related-ESLint-rules) in `eslint-plugin-jsdoc` for equivalent linting.
+**解决方法：** 在 `eslint-plugin-jsdoc` 中使用[替代规则](https://github.com/gajus/eslint-plugin-jsdoc/wiki/Comparison-with-deprecated-JSdoc-related-ESLint-rules)，实现相同的代码检查效果。
 
-**Related issue(s):** [#15820](https://github.com/eslint/eslint/issues/15820)
+**相关问题：** [#15820](https://github.com/eslint/eslint/issues/15820)
 
-## <a name="eslint-recommended"></a> `eslint:recommended` has been updated
+## <a name="eslint-recommended"></a> `eslint:recommended` 已更新
 
-Four new rules have been enabled in `eslint:recommended`:
+`eslint:recommended` 中启用了四条新规则：
 
 - [`no-constant-binary-expression`](../rules/no-constant-binary-expression)
 - [`no-empty-static-block`](../rules/no-empty-static-block)
 - [`no-new-native-nonconstructor`](../rules/no-new-native-nonconstructor)
 - [`no-unused-private-class-members`](../rules/no-unused-private-class-members)
 
-Additionally, the following rules have been removed from `eslint:recommended`:
+此外，以下规则已从 `eslint:recommended` 中移除：
 
 - [`no-extra-semi`](../rules/no-extra-semi)
 - [`no-inner-declarations`](../rules/no-inner-declarations)
 - [`no-mixed-spaces-and-tabs`](../rules/no-mixed-spaces-and-tabs)
 - [`no-new-symbol`](../rules/no-new-symbol)
 
-**Codemod:** The [@eslint/v8-to-v9-config](#use-migration-codemods) codemod partially covers this change. When your configuration extends `eslint:recommended`, it disables the four newly enabled recommended rules listed above (unless you already configure them explicitly) to preserve ESLint v8 lint behavior. It does not re-enable rules removed from the preset, fix new violations in source files, or change configs that use `@eslint/js` presets without a legacy `eslint:recommended` extend entry.
+**Codemod：** [@eslint/v8-to-v9-config](#use-migration-codemods) codemod 部分涵盖了此变更。当你的配置扩展 `eslint:recommended` 时，它会禁用上面列出的四条新启用的推荐规则（除非你已明确配置这些规则），以保留 ESLint v8 的代码检查行为。它不会重新启用从预设中移除的规则，不会修复源文件中的新违规，也不会更改未使用旧式 `eslint:recommended` 扩展项、而是使用 `@eslint/js` 预设的配置。
 
-**To address:** Fix errors or disable these rules.
+**解决方法：** 修复错误或禁用这些规则。
 
-**Related issue(s):** [#15576](https://github.com/eslint/eslint/issues/15576), [#17446](https://github.com/eslint/eslint/issues/17446), [#17596](https://github.com/eslint/eslint/issues/17596)
+**相关问题：** [#15576](https://github.com/eslint/eslint/issues/15576)、[#17446](https://github.com/eslint/eslint/issues/17446)、[#17596](https://github.com/eslint/eslint/issues/17596)
 
-## <a name="quiet-warn"></a> `--quiet` no longer runs rules set to `"warn"`
+## <a name="quiet-warn"></a> `--quiet` 不再运行设置为 `"warn"` 的规则
 
-Prior to ESLint v9.0.0, the `--quiet` CLI flag would run all rules set to either `"error"` or `"warn"` and then hide the results from rules set to `"warn"`. In ESLint v9.0.0, `--quiet` will prevent rules from being executed when set to `"warn"`. This can result in a performance improvement for configurations containing many rules set to `"warn"`.
+在 ESLint v9.0.0 之前，`--quiet` CLI 标志会运行所有设置为 `"error"` 或 `"warn"` 的规则，然后隐藏设置为 `"warn"` 的规则所产生的结果。在 ESLint v9.0.0 中，`--quiet` 会阻止设置为 `"warn"` 的规则执行。对于包含许多设置为 `"warn"` 的规则的配置，这可能会提升性能。
 
-If `--max-warnings` is used then `--quiet` will not suppress the execution of rules set to `"warn"` but the output of those rules will be suppressed.
+如果使用了 `--max-warnings`，那么 `--quiet` 不会阻止设置为 `"warn"` 的规则执行，但会隐藏这些规则的输出。
 
-**To address:** In most cases, this change is transparent. If, however, you are running a rule set to `"warn"` that makes changes to the data available to other rules (for example, if the rule uses `sourceCode.markVariableAsUsed()`), then this can result in a behavior change. In such a case, you'll need to either set the rule to `"error"` or stop using `--quiet`.
+**解决方法：** 在大多数情况下，此变更不会造成影响。不过，如果你运行的某条 `"warn"` 规则会更改其他规则可用的数据（例如该规则使用了 `sourceCode.markVariableAsUsed()`），则行为可能会发生变化。在这种情况下，你需要将该规则设置为 `"error"`，或者停止使用 `--quiet`。
 
-**Related issue(s):** [#16450](https://github.com/eslint/eslint/issues/16450)
+**相关问题：** [#16450](https://github.com/eslint/eslint/issues/16450)
 
-## <a name="output-file"></a> `--output-file` now writes a file to disk even with an empty output
+## <a name="output-file"></a> `--output-file` 现在即使输出为空也会写入磁盘文件
 
-Prior to ESLint v9.0.0, the `--output-file` flag would skip writing a file to disk if the output was empty. However, in ESLint v9.0.0, `--output-file` now consistently writes a file to disk, even when the output is empty. This update ensures a more consistent and reliable behavior for `--output-file`.
+在 ESLint v9.0.0 之前，如果输出为空，`--output-file` 标志会跳过写入磁盘文件。但在 ESLint v9.0.0 中，即使输出为空，`--output-file` 也会始终将文件写入磁盘。此更新让 `--output-file` 的行为更加一致、可靠。
 
-**To address:** Review your usage of the `--output-file` flag, especially if your processes depend on the file's presence or absence based on output content. If necessary, update your scripts or configurations to accommodate this change.
+**解决方法：** 检查 `--output-file` 标志的使用情况，尤其是那些根据输出内容判断文件是否存在的流程。如有必要，请更新脚本或配置以适应此变更。
 
-**Related Issues(s):** [#17660](https://github.com/eslint/eslint/issues/17660)
+**相关问题：** [#17660](https://github.com/eslint/eslint/issues/17660)
 
-## <a name="cli-empty-patterns"></a> Change in behavior when no patterns are passed to CLI
+## <a name="cli-empty-patterns"></a> 未向 CLI 传入模式时的行为变更
 
-Prior to ESLint v9.0.0, running the ESLint CLI without any file or directory patterns would result in no files being linted and would exit with code 0. This was confusing because it wasn't clear that nothing had actually happened. In ESLint v9.0.0, this behavior has been updated:
+在 ESLint v9.0.0 之前，运行 ESLint CLI 时如果没有传入任何文件或目录模式，就不会检查任何文件，并以代码 0 退出。这种行为容易造成困惑，因为用户无法确定是否实际执行了任何操作。ESLint v9.0.0 更新了此行为：
 
-- **Flat config.** If you are using flat config, you can run `npx eslint` or `eslint` (if globally installed) and ESLint will assume you want to lint the current directory. Effectively, passing no patterns is equivalent to passing `.`.
-- **eslintrc.** If you are using the deprecated eslintrc config, you'll now receive an error when running the CLI without any patterns.
+- **扁平配置。** 如果你使用扁平配置，可以运行 `npx eslint` 或 `eslint`（如果已全局安装），ESLint 会假定你要检查当前目录。实际上，不传入模式等同于传入 `.`。
+- **eslintrc。** 如果你使用已弃用的 eslintrc 配置，不传入任何模式运行 CLI 时会收到错误。
 
-**To address:** In most cases, no change is necessary, and you may find some locations where you thought ESLint was running but it wasn't. If you'd like to keep the v8.x behavior, where passing no patterns results in ESLint exiting with code 0, add the `--pass-on-no-patterns` flag to the CLI call.
+**解决方法：** 在大多数情况下，无需更改；你可能会发现某些原以为 ESLint 正在运行、实际上并未运行的地方。如果要保留 v8.x 的行为，即不传入模式时 ESLint 以代码 0 退出，请在 CLI 调用中添加 `--pass-on-no-patterns` 标志。
 
-**Related issue(s):** [#14308](https://github.com/eslint/eslint/issues/14308)
+**相关问题：** [#14308](https://github.com/eslint/eslint/issues/14308)
 
-## <a name="eslint-comment-options"></a> `/* eslint */` comments with only severity now retain options from the config file
+## <a name="eslint-comment-options"></a> 仅指定严重级别的 `/* eslint */` 注释现在会保留配置文件中的选项
 
-Prior to ESLint v9.0.0, configuration comments such as `/* eslint curly: "warn" */` or `/* eslint curly: ["warn"] */` would completely override any configuration specified for the rule in the config file, and thus enforce the default options of the rule.
+在 ESLint v9.0.0 之前，像 `/* eslint curly: "warn" */` 或 `/* eslint curly: ["warn"] */` 这样的配置注释会完全覆盖配置文件中为该规则指定的配置，因此会采用该规则的默认选项。
 
-In ESLint v9.0.0, the behavior of configuration comments is aligned with how rule configurations in config files are merged, meaning that a configuration comment with only severity now retains options specified in the config file and just overrides the severity.
+在 ESLint v9.0.0 中，配置注释的行为与配置文件中规则配置的合并方式保持一致。这意味着，仅指定严重级别的配置注释现在会保留配置文件中指定的选项，只覆盖严重级别。
 
-For example, if you have the following config file:
+例如，假设你有以下配置文件：
 
 ```js
 // eslint.config.js
@@ -205,7 +212,7 @@ export default [
 ];
 ```
 
-and the following configuration comment:
+以及以下配置注释：
 
 ```js
 // my-file.js
@@ -213,11 +220,11 @@ and the following configuration comment:
 /* eslint curly: "warn" */
 ```
 
-the resulting configuration for the `curly` rule when linting `my-file.js` will be `curly: ["warn", "multi"]`.
+那么对 `my-file.js` 进行代码检查时，`curly` 规则的最终配置将是 `curly: ["warn", "multi"]`。
 
-Note that this change only affects cases where the same rule is configured in the config file with options and using a configuration comment without options. In all other cases (e.g. the rule is only configured using a configuration comment), the behavior remains the same as prior to ESLint v9.0.0.
+请注意，此变更仅影响以下情况：配置文件中为同一规则指定了选项，而配置注释中未指定选项。其他所有情况（例如，仅通过配置注释配置该规则）都与 ESLint v9.0.0 之前的行为相同。
 
-**To address:** We expect that in most cases no change is necessary, as rules configured using configuration comments are typically not already configured in the config file. However, if you need a configuration comment to completely override configuration from the config file and enforce the default options, you'll need to specify at least one option:
+**解决方法：** 我们预计大多数情况下无需更改，因为通过配置注释配置的规则通常不会同时在配置文件中配置。不过，如果你需要配置注释完全覆盖配置文件中的配置并采用默认选项，则需要至少指定一个选项：
 
 ```js
 // my-file.js
@@ -225,11 +232,11 @@ Note that this change only affects cases where the same rule is configured in th
 /* eslint curly: ["warn", "all"] */
 ```
 
-**Related issue(s):** [#17381](https://github.com/eslint/eslint/issues/17381)
+**相关问题：** [#17381](https://github.com/eslint/eslint/issues/17381)
 
-## <a name="multiple-eslint-comments"></a> Multiple `/* eslint */` comments for the same rule are now disallowed
+## <a name="multiple-eslint-comments"></a> 现在不允许针对同一规则使用多个 `/* eslint */` 注释
 
-Prior to ESLint v9.0.0, if the file being linted contained multiple `/* eslint */` configuration comments for the same rule, the last one would be applied, while the others would be silently ignored. For example:
+在 ESLint v9.0.0 之前，如果待检查文件中包含针对同一规则的多个 `/* eslint */` 配置注释，则只会应用最后一个，其他注释会被静默忽略。例如：
 
 ```js
 /* eslint semi: ["error", "always"] */
@@ -238,7 +245,7 @@ Prior to ESLint v9.0.0, if the file being linted contained multiple `/* eslint *
 foo(); // valid, because the configuration is "never"
 ```
 
-In ESLint v9.0.0, the first one is applied, while the others are reported as lint errors:
+在 ESLint v9.0.0 中，会应用第一个注释，而其他注释会被报告为代码检查错误：
 
 ```js
 /* eslint semi: ["error", "always"] */
@@ -247,15 +254,15 @@ In ESLint v9.0.0, the first one is applied, while the others are reported as lin
 foo(); // error: Missing semicolon
 ```
 
-**Codemod:** The [@eslint/v8-to-v9-config](#use-migration-codemods) codemod includes a `remove-unnecessary-eslint-comments` step that modifies these comments. It removes all ESLint config comments matching its regex except the first one, not just duplicates of the same rule.
+**Codemod：** [@eslint/v8-to-v9-config](#use-migration-codemods) codemod 包含一个 `remove-unnecessary-eslint-comments` 步骤，可修改这些注释。它会移除除第一个以外所有匹配其正则表达式的 ESLint 配置注释，而不只是删除同一规则的重复注释。
 
-**To address:** Remove duplicate `/* eslint */` comments.
+**解决方法：** 删除重复的 `/* eslint */` 注释。
 
-**Related issue(s):** [#18132](https://github.com/eslint/eslint/issues/18132)
+**相关问题：** [#18132](https://github.com/eslint/eslint/issues/18132)
 
-## <a name="exported-parsing"></a> Stricter `/* exported */` parsing
+## <a name="exported-parsing"></a> `/* exported */` 的解析更加严格
 
-Prior to ESLint v9.0.0, the `/* exported */` directive incorrectly allowed the following syntax:
+在 ESLint v9.0.0 之前，`/* exported */` 指令会错误地允许以下语法：
 
 ```js
 /* exported foo: true, bar: false */
@@ -265,28 +272,28 @@ Prior to ESLint v9.0.0, the `/* exported */` directive incorrectly allowed the f
 /* exported foo bar */
 ```
 
-The `true` and `false` in this example had no effect on ESLint's behavior, and in fact, was a parsing bug.
+此示例中的 `true` 和 `false` 不会影响 ESLint 的行为；实际上，这是一个解析错误。
 
-In ESLint v9.0.0, any `/* exported */` variables followed by a colon and value will be ignored as invalid.
+在 ESLint v9.0.0 中，任何 `/* exported */` 变量后跟冒号和值的写法都会被视为无效并忽略。
 
-**Codemod:** The [@eslint/v8-to-v9-config](#use-migration-codemods) codemod rewrites both `/* exported foo: true, bar: false */` and the whitespace-separated form into a comma-separated format.
+**Codemod：** [@eslint/v8-to-v9-config](#use-migration-codemods) codemod 会将 `/* exported foo: true, bar: false */` 和以空格分隔的写法都改写为逗号分隔格式。
 
-**To address:** Update any `/* exported */` directives to eliminate the colons and subsequent values, and ensure there are commas between variable names such as:
+**解决方法：** 更新所有 `/* exported */` 指令，去掉冒号及其后的值，并确保变量名之间用逗号分隔，例如：
 
 ```js
 /* exported foo, bar */
 ```
 
-**Related issue(s):** [#17622](https://github.com/eslint/eslint/issues/17622)
+**相关问题：** [#17622](https://github.com/eslint/eslint/issues/17622)
 
-## <a name="stricter-rule-schemas"></a> `no-constructor-return` and `no-sequences` rule schemas are stricter
+## <a name="stricter-rule-schemas"></a> `no-constructor-return` 和 `no-sequences` 的规则架构更加严格
 
-In previous versions of ESLint, `no-constructor-return` and `no-sequences` rules were mistakenly accepting invalid options.
+在之前的 ESLint 版本中，`no-constructor-return` 和 `no-sequences` 规则会错误地接受无效选项。
 
-This has been fixed in ESLint v9.0.0:
+此问题已在 ESLint v9.0.0 中修复：
 
-- The `no-constructor-return` rule does not accept any options.
-- The `no-sequences` rule can take one option, an object with a property `"allowInParentheses"` (boolean).
+- `no-constructor-return` 规则不接受任何选项。
+- `no-sequences` 规则可以接受一个选项，即带有属性 `"allowInParentheses"`（布尔值）的对象。
 
 ```json
 {
@@ -297,22 +304,22 @@ This has been fixed in ESLint v9.0.0:
 }
 ```
 
-**Codemod:** The [@eslint/v8-to-v9-config](#use-migration-codemods) codemod may update your configuration for this.
+**Codemod：** [@eslint/v8-to-v9-config](#use-migration-codemods) codemod 可能会为此更新你的配置。
 
-**To address:** If ESLint still reports invalid configuration for any of these rules, update your configuration manually.
+**解决方法：** 如果 ESLint 仍然报告这些规则中的任何一条配置无效，请手动更新配置。
 
-**Related issue(s):** [#16879](https://github.com/eslint/eslint/issues/16879)
+**相关问题：** [#16879](https://github.com/eslint/eslint/issues/16879)
 
-## <a name="no-implicit-coercion"></a> New checks in `no-implicit-coercion` by default
+## <a name="no-implicit-coercion"></a> `no-implicit-coercion` 默认会执行新的检查
 
-In ESLint v9.0.0, the `no-implicit-coercion` rule additionally reports the following cases by default:
+在 ESLint v9.0.0 中，`no-implicit-coercion` 规则默认还会报告以下情况：
 
 ```js
 -(-foo);
 foo - 0;
 ```
 
-**To address:** If you want to retain the previous behavior of this rule, set `"allow": ["-", "- -"]`.
+**解决方法：** 如果想保留此规则之前的行为，请设置 `"allow": ["-", "- -"]`。
 
 ```json
 {
@@ -322,21 +329,21 @@ foo - 0;
 }
 ```
 
-**Related issue(s):** [#17832](https://github.com/eslint/eslint/pull/17832)
+**相关问题：** [#17832](https://github.com/eslint/eslint/pull/17832)
 
-## <a name="no-invalid-regexp"></a> Case-sensitive flags in `no-invalid-regexp`
+## <a name="no-invalid-regexp"></a> `no-invalid-regexp` 中的标志区分大小写
 
-In ESLint v9.0.0, the option `allowConstructorFlags` is now case-sensitive.
+在 ESLint v9.0.0 中，`allowConstructorFlags` 选项现在区分大小写。
 
-**Codemod:** The [@eslint/v8-to-v9-config](#use-migration-codemods) codemod expands `allowConstructorFlags` with opposite-case variants to preserve ESLint v8 behavior under v9's case-sensitive matching.
+**Codemod：** [@eslint/v8-to-v9-config](#use-migration-codemods) codemod 会为 `allowConstructorFlags` 添加大小写相反的变体，以便在 v9 区分大小写的匹配行为下保留 ESLint v8 的行为。
 
-**To address:** Update your configuration manually if needed.
+**解决方法：** 如有需要，请手动更新配置。
 
-**Related issue(s):** [#16574](https://github.com/eslint/eslint/issues/16574)
+**相关问题：** [#16574](https://github.com/eslint/eslint/issues/16574)
 
-## <a name="vars-ignore-pattern"></a> `varsIgnorePattern` option of `no-unused-vars` no longer applies to catch arguments
+## <a name="vars-ignore-pattern"></a> `no-unused-vars` 的 `varsIgnorePattern` 选项不再适用于 catch 参数
 
-In previous versions of ESLint, the `varsIgnorePattern` option of `no-unused-vars` incorrectly ignored errors specified in a `catch` clause. In ESLint v9.0.0, `varsIgnorePattern` no longer applies to errors in `catch` clauses. For example:
+在之前的 ESLint 版本中，`no-unused-vars` 的 `varsIgnorePattern` 选项会错误地忽略 `catch` 子句中指定的错误。在 ESLint v9.0.0 中，`varsIgnorePattern` 不再适用于 `catch` 子句中的错误。例如：
 
 ```js
 /*eslint no-unused-vars: ["error", { "caughtErrors": "all", "varsIgnorePattern": "^err" }]*/
@@ -349,17 +356,17 @@ try {
 }
 ```
 
-**Codemod:** The [@eslint/v8-to-v9-config](#use-migration-codemods) codemod copies `varsIgnorePattern` to `caughtErrorsIgnorePattern` when the rule is explicitly configured, catch errors are checked (`caughtErrors` is not `"none"`), and no separate `caughtErrorsIgnorePattern` is set. This preserves v8 behavior where `varsIgnorePattern` incorrectly applied to catch bindings. It does not apply when the rule comes only from a preset, when `caughtErrors` is `"none"`, or for `@typescript-eslint/no-unused-vars`.
+**Codemod：** 当规则被明确配置、会检查 catch 错误（`caughtErrors` 不是 `"none"`），且未单独设置 `caughtErrorsIgnorePattern` 时，[@eslint/v8-to-v9-config](#use-migration-codemods) codemod 会将 `varsIgnorePattern` 复制到 `caughtErrorsIgnorePattern`。这会保留 v8 的行为，即 `varsIgnorePattern` 错误地适用于 catch 绑定。如果规则仅来自预设、`caughtErrors` 为 `"none"`，或规则是 `@typescript-eslint/no-unused-vars`，则不会应用此迁移。
 
-**To address:** If you want to specify ignore patterns for `catch` clause variable names, use the `caughtErrorsIgnorePattern` option in addition to `varsIgnorePattern`.
+**解决方法：** 如果想为 `catch` 子句变量名指定忽略模式，请在 `varsIgnorePattern` 之外使用 `caughtErrorsIgnorePattern` 选项。
 
-**Related issue(s):** [#17540](https://github.com/eslint/eslint/issues/17540)
+**相关问题：** [#17540](https://github.com/eslint/eslint/issues/17540)
 
-## <a name="no-restricted-imports"></a> `no-restricted-imports` now accepts multiple config entries with the same `name`
+## <a name="no-restricted-imports"></a> `no-restricted-imports` 现在接受多个具有相同 `name` 的配置项
 
-In previous versions of ESLint, if multiple entries in the `paths` array of your configuration for the `no-restricted-imports` rule had the same `name` property, only the last one would apply, while the previous ones would be ignored.
+在之前的 ESLint 版本中，如果 `no-restricted-imports` 规则配置的 `paths` 数组中有多个条目具有相同的 `name` 属性，则只有最后一个条目会生效，之前的条目会被忽略。
 
-As of ESLint v9.0.0, all entries apply, allowing for specifying different messages for different imported names. For example, you can now configure the rule like this:
+从 ESLint v9.0.0 开始，所有条目都会生效，因此可以为不同的导入名称指定不同的消息。例如，现在可以这样配置规则：
 
 ```js
 {
@@ -382,30 +389,30 @@ As of ESLint v9.0.0, all entries apply, allowing for specifying different messag
 }
 ```
 
-and both `import { Text } from "react-native"` and `import { View } from "react-native"` will be reported, with different messages.
+现在，`import { Text } from "react-native"` 和 `import { View } from "react-native"` 都会被报告，并显示不同的消息。
 
-In previous versions of ESLint, with this configuration only `import { View } from "react-native"` would be reported.
+在之前的 ESLint 版本中，使用此配置时，只有 `import { View } from "react-native"` 会被报告。
 
-**Codemod:** The [@eslint/v8-to-v9-config](#use-migration-codemods) codemod updates `no-restricted-imports` configurations during migration. When the rule uses a `paths` array, it restructures the options for flat config and deduplicates entries that share the same `name`, keeping the last entry so lint behavior matches ESLint v8 (where only the last matching entry applied).
+**Codemod：** [@eslint/v8-to-v9-config](#use-migration-codemods) codemod 会在迁移期间更新 `no-restricted-imports` 配置。当规则使用 `paths` 数组时，它会重组选项以适用于扁平配置，并对具有相同 `name` 的条目去重，只保留最后一个条目，使代码检查行为与 ESLint v8 一致（在 v8 中，只有最后一个匹配条目会生效）。
 
-**To address:** If your configuration for this rule has multiple entries with the same `name`, you may need to remove unintentional ones.
+**解决方法：** 如果此规则的配置中有多个具有相同 `name` 的条目，你可能需要删除非预期的条目。
 
-**Related issue(s):** [#15261](https://github.com/eslint/eslint/issues/15261)
+**相关问题：** [#15261](https://github.com/eslint/eslint/issues/15261)
 
-## <a name="string-config"></a> `"eslint:recommended"` and `"eslint:all"` no longer accepted in flat config
+## <a name="string-config"></a> 扁平配置不再接受 `"eslint:recommended"` 和 `"eslint:all"` 字符串
 
-In ESLint v8.x, `eslint.config.js` could refer to `"eslint:recommended"` and `"eslint:all"` configurations by inserting a string into the config array, as in this example:
+在 ESLint v8.x 中，可以在配置数组中插入字符串，以便在 `eslint.config.js` 中引用 `"eslint:recommended"` 和 `"eslint:all"` 配置，如下例所示：
 
 ```js
 // eslint.config.js
 export default ["eslint:recommended", "eslint:all"];
 ```
 
-In ESLint v9.0.0, this format is no longer supported and will result in an error.
+在 ESLint v9.0.0 中，不再支持此格式，使用时会导致错误。
 
-**Codemod:** Use the [@eslint/v8-to-v9-config](#use-migration-codemods) codemod. It converts legacy string presets in existing `eslint.config.*` files and migrates eslintrc configs via `FlatCompat` + `@eslint/js`.
+**Codemod：** 使用 [@eslint/v8-to-v9-config](#use-migration-codemods) codemod。它会转换现有 `eslint.config.*` 文件中的旧式字符串预设，并通过 `FlatCompat` + `@eslint/js` 迁移 eslintrc 配置。
 
-**To address:** Install and use `@eslint/js` manually:
+**解决方法：** 手动安装并使用 `@eslint/js`：
 
 ```js
 // eslint.config.js
@@ -414,11 +421,11 @@ import js from "@eslint/js";
 export default [js.configs.recommended, js.configs.all];
 ```
 
-**Related issue(s):** [#17488](https://github.com/eslint/eslint/issues/17488)
+**相关问题：** [#17488](https://github.com/eslint/eslint/issues/17488)
 
-## <a name="no-inner-declarations"></a> `no-inner-declarations` has a new default behavior with a new option
+## <a name="no-inner-declarations"></a> `no-inner-declarations` 有了新的默认行为和新选项
 
-ESLint v9.0.0 introduces a new option in `no-inner-declarations` rule called `blockScopeFunctions` which by default allows block-level `function`s in strict mode when `languageOptions.ecmaVersion` is set to `2015` or above.
+ESLint v9.0.0 为 `no-inner-declarations` 规则引入了一个名为 `blockScopeFunctions` 的新选项。默认情况下，当 `languageOptions.ecmaVersion` 设置为 `2015` 或更高版本时，该选项允许严格模式下的块级 `function`。
 
 ```js
 /*eslint no-inner-declarations: "error"*/
@@ -429,17 +436,17 @@ if (test) {
 }
 ```
 
-**Codemod:** The [@eslint/v8-to-v9-config](#use-migration-codemods) codemod adds `blockScopedFunctions: "disallow"` when `no-inner-declarations` is explicitly configured, preserving v8 reporting behavior. It does not apply when the rule comes only from a preset.
+**Codemod：** 当明确配置了 `no-inner-declarations` 时，[@eslint/v8-to-v9-config](#use-migration-codemods) codemod 会添加 `blockScopedFunctions: "disallow"`，以保留 v8 的报告行为。如果规则仅来自预设，则不会应用此更改。
 
-**To address:** If you want to report the block-level `function`s in every condition regardless of strict or non-strict mode, set the `blockScopeFunctions` option to `"disallow"`.
+**解决方法：** 如果无论严格模式还是非严格模式，你都希望在任何情况下报告块级 `function`，请将 `blockScopeFunctions` 选项设置为 `"disallow"`。
 
-**Related issue(s):** [#15576](https://github.com/eslint/eslint/issues/15576)
+**相关问题：** [#15576](https://github.com/eslint/eslint/issues/15576)
 
-## <a name="no-unused-vars"></a> `no-unused-vars` now defaults `caughtErrors` to `"all"`
+## <a name="no-unused-vars"></a> `no-unused-vars` 的 `caughtErrors` 默认值现在为 `"all"`
 
-ESLint v9.0.0 changes the default value for the `no-unused-vars` rule's `caughtErrors` option.
-Previously it defaulted to `"none"` to never check whether caught errors were used.
-It now defaults to `"all"` to check caught errors for being used.
+ESLint v9.0.0 更改了 `no-unused-vars` 规则的 `caughtErrors` 选项默认值。
+之前，该选项默认值为 `"none"`，不会检查捕获的错误是否被使用。
+现在默认值为 `"all"`，会检查捕获的错误是否被使用。
 
 ```js
 /*eslint no-unused-vars: "error"*/
@@ -449,10 +456,10 @@ try {
 }
 ```
 
-**Codemod:** The [@eslint/v8-to-v9-config](#use-migration-codemods) codemod updates `no-unused-vars` when the rule is explicitly configured. It adds `caughtErrors: "none"` if that option is omitted, preserving ESLint v8 behavior. Existing `caughtErrors` values are kept unchanged. If catch errors are checked and `varsIgnorePattern` is set, it also copies that pattern to `caughtErrorsIgnorePattern`. It does not add the rule when it is enabled only through `eslint:recommended`, and it does not migrate `@typescript-eslint/no-unused-vars`.
+**Codemod：** 当明确配置了 `no-unused-vars` 时，[@eslint/v8-to-v9-config](#use-migration-codemods) codemod 会更新该规则。如果省略了 `caughtErrors` 选项，它会添加 `caughtErrors: "none"`，以保留 ESLint v8 的行为。现有的 `caughtErrors` 值会保持不变。如果会检查 catch 错误且设置了 `varsIgnorePattern`，它也会将该模式复制到 `caughtErrorsIgnorePattern`。如果该规则仅通过 `eslint:recommended` 启用，则不会添加此规则；它也不会迁移 `@typescript-eslint/no-unused-vars`。
 
-**To address:** If you want to allow unused caught errors, such as when writing code that will be directly run in an environment that does not support ES2019 optional catch bindings, set the `caughtErrors` option to `"none"`.
-Otherwise, delete the unused caught errors.
+**解决方法：** 如果想允许未使用的捕获错误（例如，编写将直接在不支持 ES2019 可选 catch 绑定的环境中运行的代码时），请将 `caughtErrors` 选项设置为 `"none"`。
+否则，请删除未使用的捕获错误。
 
 ```js
 /*eslint no-unused-vars: "error"*/
@@ -462,12 +469,12 @@ try {
 }
 ```
 
-**Related issue(s):** [#17974](https://github.com/eslint/eslint/issues/17974)
+**相关问题：** [#17974](https://github.com/eslint/eslint/issues/17974)
 
-## <a name="no-useless-computed-key"></a> `no-useless-computed-key` flags unnecessary computed member names in classes by default
+## <a name="no-useless-computed-key"></a> `no-useless-computed-key` 默认会标记类中不必要的计算属性成员名
 
-In ESLint v9.0.0, the default value of the `enforceForClassMembers` option of the `no-useless-computed-key` rule was changed from `false` to `true`.
-The effect of this change is that unnecessary computed member names in classes will be flagged by default.
+在 ESLint v9.0.0 中，`no-useless-computed-key` 规则的 `enforceForClassMembers` 选项默认值从 `false` 改为 `true`。
+此变更意味着，默认情况下会标记类中不必要的计算属性成员名。
 
 ```js
 /*eslint no-useless-computed-key: "error"*/
@@ -477,137 +484,137 @@ class SomeClass {
 }
 ```
 
-**Codemod:** The [@eslint/v8-to-v9-config](#use-migration-codemods) codemod sets `enforceForClassMembers` to `false` when the `no-useless-computed-key` rule is configured with an empty options object, preserving ESLint v8 behavior.
+**Codemod：** 如果 `no-useless-computed-key` 规则配置了空选项对象，[@eslint/v8-to-v9-config](#use-migration-codemods) codemod 会将 `enforceForClassMembers` 设置为 `false`，以保留 ESLint v8 的行为。
 
-**To address:** Fix the problems reported by the rule or revert to the previous behavior by setting the `enforceForClassMembers` option to `false`.
+**解决方法：** 修复此规则报告的问题，或将 `enforceForClassMembers` 选项设置为 `false`，以恢复之前的行为。
 
-**Related issue(s):** [#18042](https://github.com/eslint/eslint/issues/18042)
+**相关问题：** [#18042](https://github.com/eslint/eslint/issues/18042)
 
-## <a name="camelcase"></a> `camelcase` allow option only accepts an array of strings
+## <a name="camelcase"></a> `camelcase` 的 allow 选项仅接受字符串数组
 
-Previously the camelcase rule didn't enforce the `allow` option to be an array of strings. In ESLint v9.0.0, the `allow` option now only accepts an array of strings.
+以前，camelcase 规则不会强制要求 `allow` 选项为字符串数组。在 ESLint v9.0.0 中，`allow` 选项现在仅接受字符串数组。
 
-**Codemod:** The [@eslint/v8-to-v9-config](#use-migration-codemods) codemod may update your configuration for this.
+**Codemod：** [@eslint/v8-to-v9-config](#use-migration-codemods) codemod 可能会为此更新你的配置。
 
-**To address:** If ESLint still reports invalid configuration for this rule, update your configuration manually.
+**解决方法：** 如果 ESLint 仍然报告此规则的配置无效，请手动更新配置。
 
-**Related issue(s):** [#18232](https://github.com/eslint/eslint/pull/18232)
+**相关问题：** [#18232](https://github.com/eslint/eslint/pull/18232)
 
-## <a name="removed-context-methods"></a> Removed multiple `context` methods
+## <a name="removed-context-methods"></a> 移除了多个 `context` 方法
 
-ESLint v9.0.0 removes multiple deprecated methods from the `context` object and moves them onto the `SourceCode` object:
+ESLint v9.0.0 从 `context` 对象中移除了多个已弃用的方法，并将它们移至 `SourceCode` 对象：
 
-| **Removed on `context`**         | **Replacement(s) on `SourceCode`**                                                                  |
+| **从 `context` 中移除**          | **`SourceCode` 上的替代方法**                                                                       |
 | -------------------------------- | --------------------------------------------------------------------------------------------------- |
 | `context.getSource()`            | `sourceCode.getText()`                                                                              |
 | `context.getSourceLines()`       | `sourceCode.getLines()`                                                                             |
 | `context.getAllComments()`       | `sourceCode.getAllComments()`                                                                       |
-| `context.getNodeByRangeIndex()`  | `sourceCode.getNodeByRangeIndex()`                                                                  |
-| `context.getComments()`          | `sourceCode.getCommentsBefore()`, `sourceCode.getCommentsAfter()`, `sourceCode.getCommentsInside()` |
-| `context.getCommentsBefore()`    | `sourceCode.getCommentsBefore()`                                                                    |
-| `context.getCommentsAfter()`     | `sourceCode.getCommentsAfter()`                                                                     |
-| `context.getCommentsInside()`    | `sourceCode.getCommentsInside()`                                                                    |
-| `context.getJSDocComment()`      | `sourceCode.getJSDocComment()`                                                                      |
-| `context.getFirstToken()`        | `sourceCode.getFirstToken()`                                                                        |
-| `context.getFirstTokens()`       | `sourceCode.getFirstTokens()`                                                                       |
-| `context.getLastToken()`         | `sourceCode.getLastToken()`                                                                         |
-| `context.getLastTokens()`        | `sourceCode.getLastTokens()`                                                                        |
-| `context.getTokenAfter()`        | `sourceCode.getTokenAfter()`                                                                        |
-| `context.getTokenBefore()`       | `sourceCode.getTokenBefore()`                                                                       |
-| `context.getTokenByRangeStart()` | `sourceCode.getTokenByRangeStart()`                                                                 |
-| `context.getTokens()`            | `sourceCode.getTokens()`                                                                            |
-| `context.getTokensAfter()`       | `sourceCode.getTokensAfter()`                                                                       |
-| `context.getTokensBefore()`      | `sourceCode.getTokensBefore()`                                                                      |
-| `context.getTokensBetween()`     | `sourceCode.getTokensBetween()`                                                                     |
-| `context.parserServices`         | `sourceCode.parserServices`                                                                         |
-| `context.getDeclaredVariables()` | `sourceCode.getDeclaredVariables()`                                                                 |
+| `context.getNodeByRangeIndex()`   | `sourceCode.getNodeByRangeIndex()`                                                                  |
+| `context.getComments()`           | `sourceCode.getCommentsBefore()`、`sourceCode.getCommentsAfter()`、`sourceCode.getCommentsInside()` |
+| `context.getCommentsBefore()`     | `sourceCode.getCommentsBefore()`                                                                    |
+| `context.getCommentsAfter()`      | `sourceCode.getCommentsAfter()`                                                                     |
+| `context.getCommentsInside()`     | `sourceCode.getCommentsInside()`                                                                    |
+| `context.getJSDocComment()`       | `sourceCode.getJSDocComment()`                                                                      |
+| `context.getFirstToken()`         | `sourceCode.getFirstToken()`                                                                        |
+| `context.getFirstTokens()`        | `sourceCode.getFirstTokens()`                                                                       |
+| `context.getLastToken()`          | `sourceCode.getLastToken()`                                                                         |
+| `context.getLastTokens()`         | `sourceCode.getLastTokens()`                                                                        |
+| `context.getTokenAfter()`         | `sourceCode.getTokenAfter()`                                                                        |
+| `context.getTokenBefore()`        | `sourceCode.getTokenBefore()`                                                                       |
+| `context.getTokenByRangeStart()`  | `sourceCode.getTokenByRangeStart()`                                                                 |
+| `context.getTokens()`             | `sourceCode.getTokens()`                                                                            |
+| `context.getTokensAfter()`        | `sourceCode.getTokensAfter()`                                                                       |
+| `context.getTokensBefore()`       | `sourceCode.getTokensBefore()`                                                                      |
+| `context.getTokensBetween()`      | `sourceCode.getTokensBetween()`                                                                     |
+| `context.parserServices`          | `sourceCode.parserServices`                                                                         |
+| `context.getDeclaredVariables()`  | `sourceCode.getDeclaredVariables()`                                                                 |
 
-In addition to the methods in the above table, there are several other methods that are also moved but required different method signatures:
+除了上表中的方法，还有一些方法也被迁移了，但其方法签名有所不同：
 
-| **Removed on `context`**           | **Replacement(s) on `SourceCode`**          |
-| ---------------------------------- | ------------------------------------------- |
-| `context.getAncestors()`           | `sourceCode.getAncestors(node)`             |
-| `context.getScope()`               | `sourceCode.getScope(node)`                 |
-| `context.markVariableAsUsed(name)` | `sourceCode.markVariableAsUsed(name, node)` |
+| **从 `context` 中移除**             | **`SourceCode` 上的替代方法**             |
+| ---------------------------------- | ---------------------------------------- |
+| `context.getAncestors()`            | `sourceCode.getAncestors(node)`           |
+| `context.getScope()`                | `sourceCode.getScope(node)`               |
+| `context.markVariableAsUsed(name)`  | `sourceCode.markVariableAsUsed(name, node)` |
 
-**Codemod:** Use the [@eslint/v8-to-v9-custom-rules](#use-migration-codemods) codemod to automate much of this migration.
+**Codemod：** 使用 [@eslint/v8-to-v9-custom-rules](#use-migration-codemods) codemod 自动完成大部分迁移工作。
 
-**To address:** For more information, see the [blog post](https://eslint.org/blog/2023/09/preparing-custom-rules-eslint-v9/#automatically-update-your-rules).
+**解决方法：** 如需了解更多信息，请参阅[博客文章](https://eslint.org/blog/2023/09/preparing-custom-rules-eslint-v9/#automatically-update-your-rules)。
 
-**Related Issues(s):** [#16999](https://github.com/eslint/eslint/issues/16999), [#13481](https://github.com/eslint/eslint/issues/13481)
+**相关问题：** [#16999](https://github.com/eslint/eslint/issues/16999)、[#13481](https://github.com/eslint/eslint/issues/13481)
 
-## <a name="removed-sourcecode-getcomments"></a> Removed `sourceCode.getComments()`
+## <a name="removed-sourcecode-getcomments"></a> 移除了 `sourceCode.getComments()`
 
-ESLint v9.0.0 removes the deprecated `sourceCode.getComments()` method.
+ESLint v9.0.0 移除了已弃用的 `sourceCode.getComments()` 方法。
 
-**Codemod:** Use the [@eslint/v8-to-v9-custom-rules](#use-migration-codemods) codemod. It converts both `context.getComments()` and `sourceCode.getComments()` to combinations of `getCommentsBefore()`, `getCommentsInside()`, and `getCommentsAfter()`.
+**Codemod：** 使用 [@eslint/v8-to-v9-custom-rules](#use-migration-codemods) codemod。它会将 `context.getComments()` 和 `sourceCode.getComments()` 转换为 `getCommentsBefore()`、`getCommentsInside()` 和 `getCommentsAfter()` 的组合调用。
 
-**To address:** Replace with `sourceCode.getCommentsBefore()`, `sourceCode.getCommentsAfter()`, or `sourceCode.getCommentsInside()`.
+**解决方法：** 替换为 `sourceCode.getCommentsBefore()`、`sourceCode.getCommentsAfter()` 或 `sourceCode.getCommentsInside()`。
 
-**Related Issues(s):** [#14744](https://github.com/eslint/eslint/issues/14744)
+**相关问题：** [#14744](https://github.com/eslint/eslint/issues/14744)
 
-## <a name="removed-codepath-currentsegments"></a> Removed `CodePath#currentSegments`
+## <a name="removed-codepath-currentsegments"></a> 移除了 `CodePath#currentSegments`
 
-ESLint v9.0.0 removes the deprecated `CodePath#currentSegments` property.
+ESLint v9.0.0 移除了已弃用的 `CodePath#currentSegments` 属性。
 
-**Codemod:** The [@eslint/v8-to-v9-custom-rules](#use-migration-codemods) codemod may automate part of this migration.
+**Codemod：** [@eslint/v8-to-v9-custom-rules](#use-migration-codemods) codemod 可能会自动完成部分迁移工作。
 
-**To address:** Update your code following the recommendations in the [blog post](https://eslint.org/blog/2023/09/preparing-custom-rules-eslint-v9/#codepath%23currentsegments).
+**解决方法：** 按照[博客文章](https://eslint.org/blog/2023/09/preparing-custom-rules-eslint-v9/#codepath%23currentsegments)中的建议更新代码。
 
-**Related Issues(s):** [#17457](https://github.com/eslint/eslint/issues/17457)
+**相关问题：** [#17457](https://github.com/eslint/eslint/issues/17457)
 
-## <a name="codepath-precalc"></a> Code paths are now precalculated
+## <a name="codepath-precalc"></a> 现在会预先计算代码路径
 
-Prior to ESLint v9.0.0, code paths were calculated during the same AST traversal used by rules, meaning that the information passed to methods like `onCodePathStart` and `onCodePathSegmentStart` was incomplete. Specifically, array properties like `CodePath#childCodePaths` and `CodePathSegment#nextSegments` began empty and then were filled with the appropriate information as the traversal completed, meaning that those arrays could have different elements depending on when you checked their values.
+在 ESLint v9.0.0 之前，代码路径是在与规则相同的 AST 遍历期间计算的，因此传递给 `onCodePathStart` 和 `onCodePathSegmentStart` 等方法的信息并不完整。具体来说，`CodePath#childCodePaths` 和 `CodePathSegment#nextSegments` 这类数组属性一开始为空，随后会随着遍历完成逐渐填入相应信息。这意味着，根据检查数组值的时机不同，数组中的元素可能也会不同。
 
-ESLint v9.0.0 now precalculates code path information before the traversal used by rules. As a result, the code path information is now complete regardless of where it is accessed inside of a rule.
+ESLint v9.0.0 现在会在规则遍历之前预先计算代码路径信息。因此，无论在规则中的何处访问，代码路径信息现在都是完整的。
 
-**Codemod:** The migration codemods do not cover code path precalculation. Rules that rely on when `CodePath` or `CodePathSegment` array properties are populated must be reviewed manually. The [@eslint/v8-to-v9-custom-rules](#use-migration-codemods) codemod only migrates removed `CodePath#currentSegments` usage.
+**Codemod：** 迁移 codemod 不会处理代码路径预计算。依赖 `CodePath` 或 `CodePathSegment` 数组属性填充时机的规则必须手动检查。[@eslint/v8-to-v9-custom-rules](#use-migration-codemods) codemod 只会迁移已移除的 `CodePath#currentSegments` 用法。
 
-**To address:** If you are accessing any array properties on `CodePath` or `CodePathSegment`, you'll need to update your code. Specifically:
+**解决方法：** 如果你访问了 `CodePath` 或 `CodePathSegment` 上的任何数组属性，就需要更新代码。具体来说：
 
-- If you are checking the `length` of any array properties, ensure you are using relative comparison operators like `<`, `>`, `<=`, and `>=` instead of equals.
-- If you are accessing the `nextSegments`, `prevSegments`, `allNextSegments`, or `allPrevSegments` properties on a `CodePathSegment`, or `CodePath#childCodePaths`, verify that your code will still work as expected. To be backwards compatible, consider moving the logic that checks these properties into `onCodePathEnd`.
+- 如果你在检查任何数组属性的 `length`，请确保使用 `<`、`>`、`<=` 和 `>=` 等相对比较运算符，而不是等于运算符。
+- 如果你访问了 `CodePathSegment` 上的 `nextSegments`、`prevSegments`、`allNextSegments` 或 `allPrevSegments` 属性，或访问了 `CodePath#childCodePaths`，请确认代码仍能按预期工作。为保持向后兼容，可以考虑将检查这些属性的逻辑移至 `onCodePathEnd`。
 
-**Related Issues(s):** [#16999](https://github.com/eslint/eslint/issues/16999)
+**相关问题：** [#16999](https://github.com/eslint/eslint/issues/16999)
 
-## <a name="drop-function-style-rules"></a> Function-style rules are no longer supported
+## <a name="drop-function-style-rules"></a> 不再支持函数式规则
 
-ESLint v9.0.0 drops support for function-style rules. Function-style rules are rules created by exporting a function rather than an object with a `create()` method. This rule format was deprecated in 2016.
+ESLint v9.0.0 不再支持函数式规则。函数式规则是指通过导出函数（而不是带有 `create()` 方法的对象）创建的规则。此规则格式已于 2016 年弃用。
 
-**Codemod:** Use the [@eslint/v8-to-v9-custom-rules](#use-migration-codemods) codemod to convert function-style rules to the object format.
+**Codemod：** 使用 [@eslint/v8-to-v9-custom-rules](#use-migration-codemods) codemod，将函数式规则转换为对象格式。
 
-**To address:** Update your rules to [the most recent rule format](../extend/custom-rules). For rules written in CommonJS, you can also use [`eslint-transforms`](https://github.com/eslint/eslint-transforms/blob/main/README.md#new-rule-format).
+**解决方法：** 将规则更新为[最新的规则格式](../extend/custom-rules)。对于使用 CommonJS 编写的规则，也可以使用 [`eslint-transforms`](https://github.com/eslint/eslint-transforms/blob/main/README.md#new-rule-format)。
 
-The [eslint-plugin/prefer-object-rule](https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/prefer-object-rule.md) rule can help enforce the usage of object-style rules and autofix any remaining function-style rules.
+[eslint-plugin/prefer-object-rule](https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/prefer-object-rule.md) 规则可以帮助强制使用对象式规则，并自动修复剩余的函数式规则。
 
-**Related Issues(s):** [#14709](https://github.com/eslint/eslint/issues/14709)
+**相关问题：** [#14709](https://github.com/eslint/eslint/issues/14709)
 
-## <a name="meta-schema-required"></a> `meta.schema` is required for rules with options
+## <a name="meta-schema-required"></a> 带选项的规则必须提供 `meta.schema`
 
-As of ESLint v9.0.0, an error will be thrown if any options are [passed](../use/configure/rules#use-configuration-files) to a rule that doesn't specify `meta.schema` property.
+从 ESLint v9.0.0 开始，如果向未指定 `meta.schema` 属性的规则[传入](../use/configure/rules#use-configuration-files)任何选项，就会抛出错误。
 
-**Codemod:** The [@eslint/v8-to-v9-custom-rules](#use-migration-codemods) codemod generates `meta.schema` for function-style and object-style rules, migrates legacy `module.exports.schema`, and inserts a TODO when it detects `context.options` without a schema. The limitation is that it does not fully infer the actual schema.
+**Codemod：** [@eslint/v8-to-v9-custom-rules](#use-migration-codemods) codemod 会为函数式和对象式规则生成 `meta.schema`，迁移旧式 `module.exports.schema`，并在检测到存在 `context.options` 但没有架构时插入 TODO。其局限在于无法完整推断实际架构。
 
-**To address:**
+**解决方法：**
 
-- If your rule expects [options](../extend/custom-rules#accessing-options-passed-to-a-rule), set [`meta.schema`](../extend/custom-rules#options-schemas) property to a JSON Schema format description of the rule’s options. This schema will be used by ESLint to validate configured options and prevent invalid or unexpected inputs to your rule.
-- If your rule doesn't expect any options, there is no action required. This change ensures that end users will not mistakenly configure options for rules that don't expect options.
-- **(not recommended)** you can also set `meta.schema` to `false` to disable this validation, but it is highly recommended to provide a schema if the rule expects options and omit the schema (or set `[]`) if the rule doesn't expect options so that ESLint can ensure that your users' configurations are valid.
+- 如果规则需要[选项](../extend/custom-rules#accessing-options-passed-to-a-rule)，请将 [`meta.schema`](../extend/custom-rules#options-schemas) 属性设置为描述规则选项的 JSON Schema 格式。ESLint 会使用此架构验证配置的选项，防止向规则传入无效或意外的输入。
+- 如果规则不需要任何选项，则无需采取任何操作。此变更可确保最终用户不会错误地为不需要选项的规则配置选项。
+- **（不推荐）** 你也可以将 `meta.schema` 设置为 `false` 以禁用此验证，但强烈建议：如果规则需要选项，则提供架构；如果规则不需要选项，则省略架构（或将其设置为 `[]`），以便 ESLint 确保用户的配置有效。
 
-The [eslint-plugin/require-meta-schema](https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/require-meta-schema.md) rule can help enforce that rules have schemas when required.
+[eslint-plugin/require-meta-schema](https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/require-meta-schema.md) 规则可以帮助确保规则在需要时提供架构。
 
-**Related Issues(s):** [#14709](https://github.com/eslint/eslint/issues/14709)
+**相关问题：** [#14709](https://github.com/eslint/eslint/issues/14709)
 
-## <a name="flat-rule-tester"></a> `FlatRuleTester` is now `RuleTester`
+## <a name="flat-rule-tester"></a> `FlatRuleTester` 现在是 `RuleTester`
 
-As announced in our [blog post](/blog/2023/10/flat-config-rollout-plans/), the temporary `FlatRuleTester` class has been renamed to `RuleTester`, while the `RuleTester` class from v8.x has been removed. Additionally, the `FlatRuleTester` export from `eslint/use-at-your-own-risk` has been removed.
+正如我们在[博客文章](/blog/2023/10/flat-config-rollout-plans/)中宣布的那样，临时的 `FlatRuleTester` 类已重命名为 `RuleTester`，而 v8.x 中的 `RuleTester` 类已被移除。此外，`eslint/use-at-your-own-risk` 中导出的 `FlatRuleTester` 也已移除。
 
-**Codemod:** The [@eslint/v8-to-v9-custom-rules](#use-migration-codemods) codemod renames `FlatRuleTester` to `RuleTester` and moves `parserOptions` to `languageOptions` in test cases. Updating imports from `eslint/use-at-your-own-risk` to `eslint`, adjusting for new `RuleTester` defaults, and translating other eslintrc-style test config must be done manually.
+**Codemod：** [@eslint/v8-to-v9-custom-rules](#use-migration-codemods) codemod 会将 `FlatRuleTester` 重命名为 `RuleTester`，并将测试用例中的 `parserOptions` 移至 `languageOptions`。从 `eslint/use-at-your-own-risk` 更新导入路径为 `eslint`、适配新的 `RuleTester` 默认值，以及转换其他 eslintrc 风格的测试配置，都必须手动完成。
 
-**To address:** Update your rule tests to use the new `RuleTester`. To do so, here are some of the common changes you'll need to make:
+**解决方法：** 更新规则测试以使用新的 `RuleTester`。为此，以下是一些常见的修改：
 
-- **Be aware of new defaults for `ecmaVersion` and `sourceType`.** By default, `RuleTester` uses the flat config default of `ecmaVersion: "latest"` and `sourceType: "module"`. This may cause some tests to break if they were expecting the old default of `ecmaVersion: 5` and `sourceType: "script"`. If you'd like to use the old default, you'll need to manually specify that in your `RuleTester` like this:
+- **请注意 `ecmaVersion` 和 `sourceType` 的新默认值。** 默认情况下，`RuleTester` 使用扁平配置的默认值：`ecmaVersion: "latest"` 和 `sourceType: "module"`。如果某些测试依赖旧的默认值 `ecmaVersion: 5` 和 `sourceType: "script"`，可能会因此失败。如果希望使用旧的默认值，需要像这样在 `RuleTester` 中手动指定：
 
     ```js
     // use eslintrc defaults
@@ -619,7 +626,7 @@ As announced in our [blog post](/blog/2023/10/flat-config-rollout-plans/), the t
     });
     ```
 
-- **Change `parserOptions` to `languageOptions`.** If you're setting `ecmaVersion` or `sourceType` on your tests, move those from `parserOptions` to `languageOptions`, like this:
+- **将 `parserOptions` 改为 `languageOptions`。** 如果在测试中设置了 `ecmaVersion` 或 `sourceType`，请像这样将它们从 `parserOptions` 移到 `languageOptions`：
 
     ```js
     ruleTester.run("my-rule", myRule, {
@@ -647,59 +654,59 @@ As announced in our [blog post](/blog/2023/10/flat-config-rollout-plans/), the t
     });
     ```
 
-- **Translate other config keys.** Keys such as `env` and `parser` that used to run on the eslintrc config system must be translated into the flat config system. Please refer to the [Configuration Migration Guide](configure/migration-guide) for details on translating other keys you may be using.
+- **转换其他配置键。** 以前由 eslintrc 配置系统处理的 `env` 和 `parser` 等键，必须转换为扁平配置系统所用的形式。有关如何转换其他可能使用的键，请参阅[配置迁移指南](configure/migration-guide)。
 
-**Related Issues(s):** [#13481](https://github.com/eslint/eslint/issues/13481)
+**相关问题：** [#13481](https://github.com/eslint/eslint/issues/13481)
 
-## <a name="stricter-rule-tester"></a> Stricter `RuleTester` checks
+## <a name="stricter-rule-tester"></a> `RuleTester` 检查更加严格
 
-In order to aid in the development of high-quality custom rules that are free from common bugs, ESLint v9.0.0 implements several changes to `RuleTester`:
+为了帮助开发高质量且不含常见错误的自定义规则，ESLint v9.0.0 对 `RuleTester` 做出了多项更改：
 
-1. **Test case `output` must be different from `code`.** In ESLint v8.x, if `output` is the same as `code`, it asserts that there was no autofix. When looking at a test case, it's not always immediately clear whether `output` differs from `code`, especially if the strings are longer or multiline, making it difficult for developers to determine whether or not the test case expects an autofix. In ESLint v9.0.0, to avoid this ambiguity, `RuleTester` now throws an error if the test `output` has the same value as the test `code`. Therefore, specifying `output` now necessarily means that the test case expects an autofix and asserts its result. If the test case doesn't expect an autofix, omit the `output` property or set it to `null`. This asserts that there was no autofix.
-1. **Test error objects must specify `message` or `messageId`.** To improve the quality of test coverage, `RuleTester` now throws an error if neither `message` nor `messageId` is specified on test error objects.
-1. **Test error object must specify `suggestions` if the actual error provides suggestions.** In ESLint v8.x, if the `suggestions` property was omitted from test error objects, `RuleTester` wasn't performing any checks related to suggestions, so it was easy to forget to assert if a test case produces suggestions. In ESLint v9.0.0, omitting the `suggestions` property asserts that the actual error does not provide suggestions, while you need to specify the `suggestions` property if the actual error does provide suggestions. We highly recommend that you test suggestions in detail by specifying an array of test suggestion objects, but you can also specify `suggestions: <number>` to assert just the number of suggestions.
-1. **Test suggestion objects must specify `output`.** To improve the quality of test coverage, `RuleTester` now throws an error if `output` property is not specified on test suggestion objects.
-1. **Test suggestion objects must specify `desc` or `messageId`.** To improve the quality of test coverage, `RuleTester` now throws an error if neither `desc` nor `messageId` property is specified on test suggestion objects. It's also not allowed to specify both. If you want to assert the suggestion description text in addition to the `messageId`, then also add the `data` property.
-1. **Suggestion messages must be unique.** Because suggestions are typically displayed in an editor as a dropdown list, it's important that no two suggestions for the same lint problem have the same message. Otherwise, it's impossible to know what any given suggestion will do. This additional check runs automatically.
-1. **Suggestions must change the code.** Suggestions are expected to fix the reported problem by changing the code. `RuleTester` now throws an error if the suggestion test `output` is the same as the test `code`.
-1. **Suggestions must generate valid syntax.** In order for rule suggestions to be helpful, they need to be valid syntax. `RuleTester` now parses the output of suggestions using the same language options as the `code` value and throws an error if parsing fails.
-1. **Test cases must be unique.** Identical test cases can cause confusion and be hard to detect manually in a long test file. Duplicates are now automatically detected and can be safely removed.
-1. **`filename` and `only` must be of the expected type.** `RuleTester` now checks the type of `filename` and `only` properties of test objects. If specified, `filename` must be a string value. If specified, `only` must be a boolean value.
-1. **Messages cannot have unsubstituted placeholders.** The `RuleTester` now also checks if there are {% raw %}`{{ placeholder }}` {% endraw %} still in the message as their values were not passed via `data` in the respective `context.report()` call.
+1. **测试用例的 `output` 必须与 `code` 不同。** 在 ESLint v8.x 中，如果 `output` 与 `code` 相同，就表示断言没有执行自动修复。查看测试用例时，尤其是字符串较长或跨多行时，未必能立即看出 `output` 是否与 `code` 不同，这会让开发者难以判断测试用例是否预期执行自动修复。在 ESLint v9.0.0 中，为避免这种歧义，如果测试 `output` 与测试 `code` 的值相同，`RuleTester` 现在会抛出错误。因此，指定 `output` 就表示测试用例预期执行自动修复并断言其结果。如果测试用例不预期自动修复，请省略 `output` 属性或将其设为 `null`，以断言没有执行自动修复。
+1. **测试错误对象必须指定 `message` 或 `messageId`。** 为了提升测试覆盖质量，如果测试错误对象未指定 `message` 或 `messageId`，`RuleTester` 现在会抛出错误。
+1. **如果实际错误提供了建议，测试错误对象必须指定 `suggestions`。** 在 ESLint v8.x 中，如果测试错误对象省略了 `suggestions` 属性，`RuleTester` 不会检查任何与建议相关的内容，因此很容易忘记断言测试用例是否产生了建议。在 ESLint v9.0.0 中，省略 `suggestions` 属性表示断言实际错误不提供建议；如果实际错误提供了建议，则必须指定 `suggestions` 属性。我们强烈建议通过指定测试建议对象数组来详细测试建议；你也可以指定 `suggestions: <number>`，只断言建议的数量。
+1. **测试建议对象必须指定 `output`。** 为了提升测试覆盖质量，如果测试建议对象未指定 `output` 属性，`RuleTester` 现在会抛出错误。
+1. **测试建议对象必须指定 `desc` 或 `messageId`。** 为了提升测试覆盖质量，如果测试建议对象既未指定 `desc`，也未指定 `messageId`，`RuleTester` 现在会抛出错误。也不允许同时指定两者。如果除了 `messageId` 之外还要断言建议的描述文本，请同时添加 `data` 属性。
+1. **建议消息必须唯一。** 由于建议通常会在编辑器中以下拉列表的形式显示，因此同一代码检查问题的任何两个建议都不能使用相同的消息。否则就无法知道某个建议会执行什么操作。此项检查会自动运行。
+1. **建议必须更改代码。** 建议应通过更改代码来修复报告的问题。如果建议测试的 `output` 与测试 `code` 相同，`RuleTester` 现在会抛出错误。
+1. **建议必须生成有效语法。** 为使规则建议有用，它们必须符合有效语法。`RuleTester` 现在会使用与 `code` 值相同的语言选项解析建议的输出；如果解析失败，就会抛出错误。
+1. **测试用例必须唯一。** 相同的测试用例容易造成混淆，而且在较长的测试文件中很难手动发现。现在会自动检测重复项，可以放心删除。
+1. **`filename` 和 `only` 必须是预期的类型。** `RuleTester` 现在会检查测试对象的 `filename` 和 `only` 属性的类型。如果指定了 `filename`，它必须是字符串；如果指定了 `only`，它必须是布尔值。
+1. **消息不能包含未替换的占位符。** `RuleTester` 现在还会检查消息中是否仍有 {% raw %}`{{ placeholder }}` {% endraw %}，也就是说，相应的 `context.report()` 调用没有通过 `data` 传入这些占位符的值。
 
-**Codemod:** The [@eslint/v8-to-v9-custom-rules](#use-migration-codemods) codemod renames `FlatRuleTester` to `RuleTester`, moves `parserOptions` to `languageOptions` in test cases, and removes `output` when it equals `code`. All other stricter `RuleTester` checks must be fixed manually by running your rule tests and updating failing cases.
+**Codemod：** [@eslint/v8-to-v9-custom-rules](#use-migration-codemods) codemod 会将 `FlatRuleTester` 重命名为 `RuleTester`，将测试用例中的 `parserOptions` 移至 `languageOptions`，并在 `output` 与 `code` 相同时移除 `output`。其他所有更严格的 `RuleTester` 检查都必须通过运行规则测试并更新失败用例来手动修复。
 
-**To address:** Run your rule tests using `RuleTester` and fix any errors that occur. The changes you'll need to make to satisfy `RuleTester` are compatible with ESLint v8.x.
+**解决方法：** 使用 `RuleTester` 运行规则测试，并修复出现的任何错误。为满足 `RuleTester` 要求而进行的修改与 ESLint v8.x 兼容。
 
-**Related Issues(s):** [#15104](https://github.com/eslint/eslint/issues/15104), [#15735](https://github.com/eslint/eslint/issues/15735), [#16908](https://github.com/eslint/eslint/issues/16908), [#18016](https://github.com/eslint/eslint/issues/18016)
+**相关问题：** [#15104](https://github.com/eslint/eslint/issues/15104)、[#15735](https://github.com/eslint/eslint/issues/15735)、[#16908](https://github.com/eslint/eslint/issues/16908)、[#18016](https://github.com/eslint/eslint/issues/18016)
 
-## <a name="flat-eslint"></a> `FlatESLint` is now `ESLint`
+## <a name="flat-eslint"></a> `FlatESLint` 现在是 `ESLint`
 
-As announced in our [blog post](/blog/2023/10/flat-config-rollout-plans/), the temporary `FlatESLint` class has been renamed to `ESLint`, while the `ESLint` class from v8.x has been renamed to `LegacyESLint`.
+正如我们在[博客文章](/blog/2023/10/flat-config-rollout-plans/)中宣布的那样，临时的 `FlatESLint` 类已重命名为 `ESLint`，而 v8.x 中的 `ESLint` 类已重命名为 `LegacyESLint`。
 
-**Codemod:** The [@eslint/v8-to-v9-custom-rules](#use-migration-codemods) codemod renames `FlatESLint` to `ESLint`.
+**Codemod：** [@eslint/v8-to-v9-custom-rules](#use-migration-codemods) codemod 会将 `FlatESLint` 重命名为 `ESLint`。
 
-**To address:** If you are currently using the `ESLint` class, verify that your tests pass using the new `ESLint` class. Not all of the old options are supported, so you may need to update the arguments passed to the constructor. See the [Node.js API Reference](../integrate/nodejs-api) for details.
+**解决方法：** 如果你目前正在使用 `ESLint` 类，请使用新的 `ESLint` 类确认测试能否通过。并非所有旧选项都受支持，因此你可能需要更新传递给构造函数的参数。详情请参阅 [Node.js API 参考](../integrate/nodejs-api)。
 
-If you still need the v8.x `ESLint` functionality, use the `LegacyESLint` class like this:
+如果仍需要 v8.x `ESLint` 的功能，请像这样使用 `LegacyESLint` 类：
 
 ```js
 const { LegacyESLint } = require("eslint/use-at-your-own-risk");
 ```
 
-**Related Issues(s):** [#13481](https://github.com/eslint/eslint/issues/13481)
+**相关问题：** [#13481](https://github.com/eslint/eslint/issues/13481)
 
-## <a name="flat-linter"></a> `Linter` now expects flat config format
+## <a name="flat-linter"></a> `Linter` 现在要求使用扁平配置格式
 
-In ESLint v9.0.0, the `config` argument passed to `Linter#verify()` and `Linter#verifyAndFix()` methods should be in the flat config format.
+在 ESLint v9.0.0 中，传递给 `Linter#verify()` 和 `Linter#verifyAndFix()` 方法的 `config` 参数应使用扁平配置格式。
 
-Additionally, methods `Linter#defineRule()`, `Linter#defineRules()`, `Linter#defineParser()`, and `Linter#getRules()` are no longer available.
+此外，`Linter#defineRule()`、`Linter#defineRules()`、`Linter#defineParser()` 和 `Linter#getRules()` 方法也不再可用。
 
-**Codemod:** The [@eslint/v8-to-v9-custom-rules](#use-migration-codemods) codemod renames `FlatESLint` to `ESLint` and moves `parserOptions` to `languageOptions` in `Linter#verify()` and `Linter#verifyAndFix()` calls. Calls to removed methods (`defineRule`, `defineRules`, `defineParser`, `getRules`) are marked with TODO comments; migrating rules and parsers into flat plugins / `languageOptions` config must be done manually.
+**Codemod：** [@eslint/v8-to-v9-custom-rules](#use-migration-codemods) codemod 会将 `FlatESLint` 重命名为 `ESLint`，并将 `Linter#verify()` 和 `Linter#verifyAndFix()` 调用中的 `parserOptions` 移至 `languageOptions`。对已移除方法（`defineRule`、`defineRules`、`defineParser`、`getRules`）的调用会标记 TODO；将规则和解析器迁移到扁平插件/`languageOptions` 配置中必须手动完成。
 
-**To address:** If you are using the `Linter` class, verify that your tests pass.
+**解决方法：** 如果你正在使用 `Linter` 类，请确认测试能否通过。
 
-If you're passing configuration objects that are incompatible with the flat config format, you'll need to update the code.
+如果传入的配置对象与扁平配置格式不兼容，则需要更新代码。
 
 ```js
 // eslintrc config format
@@ -717,9 +724,9 @@ linter.verify(code, {
 });
 ```
 
-Please refer to the [Configuration Migration Guide](configure/migration-guide) for details on translating other keys you may be using.
+有关如何转换其他可能使用的键，请参阅[配置迁移指南](configure/migration-guide)。
 
-Rules and parsers can be defined directly in the configuration.
+可以直接在配置中定义规则和解析器。
 
 ```js
 // eslintrc mode
@@ -764,7 +771,7 @@ linter.verify(code, {
 });
 ```
 
-If you still need the v8.x `Linter` functionality, pass `configType: "eslintrc"` to the constructor like this:
+如果仍需要 v8.x `Linter` 的功能，请像这样向构造函数传递 `configType: "eslintrc"`：
 
 ```js
 const linter = new Linter({ configType: "eslintrc" });
@@ -778,4 +785,4 @@ linter.verify(code, {
 linter.getRules();
 ```
 
-**Related Issues(s):** [#13481](https://github.com/eslint/eslint/issues/13481)
+**相关问题：** [#13481](https://github.com/eslint/eslint/issues/13481)

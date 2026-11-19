@@ -4,13 +4,15 @@ rule_type: problem
 ---
 
 
-ECMAScript 6 allows programmers to create strings containing variable or expressions using template literals, instead of string concatenation, by writing expressions like `${variable}` between two backtick quotes (\`). It can be easy to use the wrong quotes when wanting to use template literals, by writing `"${variable}"`, and end up with the literal value `"${variable}"` instead of a string containing the value of the injected expressions.
+ECMAScript 6 允许程序员使用模板字面量创建包含变量或表达式的字符串，而不必进行字符串拼接：只需在两个反引号（\`）之间写入 `${variable}` 这样的表达式。想使用模板字面量时，很容易误用引号，例如写成 `"${variable}"`，结果得到的只是字面值 `"${variable}"`，而不是包含插入表达式值的字符串。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to warn when a regular string contains what looks like a template literal placeholder. It will warn when it finds a string containing the template literal placeholder (`${something}`) that uses either `"` or `'` for the quotes.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在当普通字符串中包含看起来像模板字面量占位符的内容时发出警告。如果字符串中包含模板字面量占位符（`${something}`），且使用 `"` 或 `'` 作为引号，此规则就会发出警告。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -23,7 +25,7 @@ Examples of **incorrect** code for this rule:
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -37,10 +39,14 @@ templateFunction`Hello ${name}`;
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-This rule should not be used in ES3/5 environments.
+<a id="when-not-to-use-it"></a>
+
+## 何时不应使用
+
+此规则不应在 ES3/5 环境中使用。

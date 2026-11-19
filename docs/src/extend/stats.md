@@ -1,47 +1,53 @@
 ---
-title: Stats Data
+title: 统计数据
 eleventyNavigation:
     key: stats data
     parent: extend eslint
-    title: Stats Data
+    title: 统计数据
     order: 6
 ---
 
 {%- from 'components/npx_tabs.macro.html' import npx_tabs %}
 
-While an analysis of the overall rule performance for an ESLint run can be carried out by setting the [TIMING](./custom-rules#profile-rule-performance) environment variable, it can sometimes be useful to acquire more _granular_ timing data (lint time per file per rule) or collect other measures of interest. In particular, when developing new [custom plugins](./plugins) and evaluating/benchmarking new languages or rule sets. For these use cases, you can optionally collect runtime statistics from ESLint.
+虽然可以通过设置 [TIMING](./custom-rules#profile-rule-performance) 环境变量来分析一次 ESLint 运行中各规则的整体性能，但有时获取更_细粒度_的计时数据（每个文件中每条规则的代码检查时间）或收集其他关注的指标也很有用。尤其是在开发新的[自定义插件](./plugins)，以及评估或基准测试新的语言或规则集时。对于这些用例，你可以选择收集 ESLint 的运行时统计数据。
 
-## Enable stats collection
+<a id="enable-stats-collection"></a>
 
-To enable collection of statistics, you can either:
+## 启用统计数据收集
 
-1. Use the `--stats` CLI option. This will pass the stats data into the formatter used to output results from ESLint. (Note: not all formatters output stats data.)
-1. Set `stats: true` as an option on the `ESLint` constructor.
+要启用统计数据收集，可以采用以下任一方式：
 
-Enabling stats data adds a new `stats` key to each [LintResult](../integrate/nodejs-api#-lintresult-type) object containing data such as parse times, fix times, lint times per rule.
+1. 使用 `--stats` CLI 选项。它会将统计数据传递给用于输出 ESLint 结果的格式化器。（注意：并非所有格式化器都会输出统计数据。）
+1. 将 `stats: true` 设为 `ESLint` 构造函数的选项。
 
-As such, it is not available via stdout but made easily ingestible via a formatter using the CLI or via the Node.js API to cater to your specific needs.
+启用统计数据后，每个 [LintResult](../integrate/nodejs-api#-lintresult-type) 对象都会新增一个 `stats` 键，其中包含解析时间、修复时间以及每条规则的代码检查时间等数据。
 
-## ◆ Stats type
+因此，这些数据不会通过 stdout 提供，但可以通过 CLI 使用格式化器轻松处理，也可以通过 Node.js API 按照你的特定需求处理。
 
-The `Stats` value is the timing information of each lint run. The `stats` property of the [LintResult](../integrate/nodejs-api#-lintresult-type) type contains it. It has the following properties:
+<a id="-stats-type"></a>
+
+## ◆ 统计数据类型
+
+`Stats` 值是每次代码检查运行的计时信息。它包含在 [LintResult](../integrate/nodejs-api#-lintresult-type) 类型的 `stats` 属性中，具有以下属性：
 
 - `fixPasses` (`number`)<br>
-  The number of times ESLint has applied at least one fix after linting.
+  ESLint 在代码检查后至少应用了一次修复的次数。
 - `times` (`{ passes: TimePass[] }`)<br>
-  The times spent on (parsing, fixing, linting) a file, where the linting refers to the timing information for each rule.
+  对文件进行解析、修复和代码检查所花费的时间；其中代码检查时间是每条规则的计时信息。
     - `TimePass` (`{ parse?: ParseTime, rules?: Record<string, RuleTime>, fix: FixTime, total: number }`)<br>
-      An object containing the times spent on (parsing, fixing, linting)
+      一个包含解析、修复和代码检查所花费时间的对象
         - `ParseTime` (`{ total: number }`)<br>
-          The total time that is spent when parsing a file. The `parse` property is omitted if no parsing was performed, for example, when a processor's `preprocess()` method returns an empty array.
+          解析文件所花费的总时间。如果没有执行解析，例如处理器的 `preprocess()` 方法返回空数组，则会省略 `parse` 属性。
         - `RuleTime` (`{ total: number }`)<br>
-          The total time that is spent on a rule.
+          某条规则所花费的总时间。
         - `FixTime` (`{ total: number }`)<br>
-          The total time that is spent on applying fixes to the code.
+          对代码应用修复所花费的总时间。
 
-### CLI usage
+<a id="cli-usage"></a>
 
-Let's consider the following example:
+### CLI 用法
+
+来看下面这个示例：
 
 ```js [file-to-fix.js]
 /*eslint no-regex-spaces: "error", wrap-regex: "error"*/
@@ -51,14 +57,14 @@ function a() {
 }
 ```
 
-Run ESLint with `--stats` and output to JSON via the built-in [`json` formatter](../use/formatters/):
+使用 `--stats` 运行 ESLint，并通过内置的 [`json` 格式化器](../use/formatters/)输出 JSON：
 
 {{ npx_tabs({
     package: "eslint",
     args: ["file-to-fix.js", "--fix", "--stats", "-f", "json"]
 }) }}
 
-This yields the following `stats` entry as part of the formatted lint results object:
+这会在格式化后的代码检查结果对象中生成以下 `stats` 条目：
 
 ```json
 {
@@ -104,7 +110,7 @@ This yields the following `stats` entry as part of the formatted lint results ob
 }
 ```
 
-Note, that for the simple example above, the sum of all rule times should be directly comparable to the first column of the TIMING output. Running the same command with `TIMING=all`, you can verify this:
+请注意，对于上面的简单示例，所有规则用时之和应当可以直接与 TIMING 输出的第一列进行比较。运行同一命令并设置 `TIMING=all`，即可验证这一点：
 
 ```bash
 $ TIMING=all npx eslint file-to-fix.js --fix --stats -f json
@@ -115,9 +121,11 @@ wrap-regex      |     0.431 |    67.9%
 no-regex-spaces |     0.204 |    32.1%
 ```
 
-### API Usage
+<a id="api-usage"></a>
 
-You can achieve the same thing using the Node.js API by passing `stats: true` as an option to the `ESLint` constructor. For example:
+### API 用法
+
+你也可以通过 Node.js API 实现相同的功能：将 `stats: true` 作为选项传递给 `ESLint` 构造函数。例如：
 
 ```js
 const { ESLint } = require("eslint");

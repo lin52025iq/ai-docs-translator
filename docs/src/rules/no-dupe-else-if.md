@@ -8,7 +8,7 @@ related_rules:
 
 
 
-`if-else-if` chains are commonly used when there is a need to execute only one branch (or at most one branch) out of several possible branches, based on certain conditions.
+`if-else-if` 链通常用于根据特定条件，从多个可能的分支中只执行一个（或至多一个）分支。
 
 ```js
 if (a) {
@@ -20,7 +20,7 @@ if (a) {
 }
 ```
 
-Two identical test conditions in the same chain are almost always a mistake in the code. Unless there are side effects in the expressions, a duplicate will evaluate to the same `true` or `false` value as the identical expression earlier in the chain, meaning that its branch can never execute.
+同一条链中存在两个相同的测试条件，几乎总是代码错误。除非表达式具有副作用，否则重复的条件会与链中较早出现的相同表达式一样，求值得到 `true` 或 `false`，这意味着对应分支永远不会执行。
 
 ```js
 if (a) {
@@ -32,13 +32,15 @@ if (a) {
 }
 ```
 
-In the above example, `baz()` can never execute. Obviously, `baz()` could be executed only when `b` evaluates to `true`, but in that case `bar()` would be executed instead, since it's earlier in the chain.
+在上面的示例中，`baz()` 永远不会执行。显然，只有当 `b` 求值为 `true` 时，才可能执行 `baz()`；但在这种情况下，由于 `bar()` 在链中更靠前，会执行 `bar()`。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows duplicate conditions in the same `if-else-if` chain.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止在同一条 `if-else-if` 链中出现重复条件。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -78,7 +80,7 @@ if (n === 1) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -118,9 +120,9 @@ if (n === 1) {
 
 :::
 
-This rule can also detect some cases where the conditions are not identical, but the branch can never execute due to the logic of `||` and `&&` operators.
+此规则还可以检测一些条件并不完全相同、但由于 `||` 和 `&&` 运算符的逻辑导致分支永远无法执行的情况。
 
-Examples of additional **incorrect** code for this rule:
+此规则的其他错误代码示例：
 
 ::: incorrect
 
@@ -170,7 +172,7 @@ if (a) {
 
 :::
 
-Please note that this rule does not compare conditions from the chain with conditions inside statements, and will not warn in the cases such as follows:
+请注意，此规则不会将链中的条件与语句内部的条件进行比较，因此在以下情况下不会发出警告：
 
 ```js
 if (a) {
@@ -188,10 +190,14 @@ if (a) {
 }
 ```
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-In rare cases where you really need identical test conditions in the same chain, which necessarily means that the expressions in the chain are causing and relying on side effects, you will have to turn this rule off.
+<a id="when-not-to-use-it"></a>
+
+## 何时不应使用此规则
+
+在少数情况下，如果确实需要在同一条链中使用相同的测试条件（这必然意味着链中的表达式会产生并依赖副作用），则必须关闭此规则。
