@@ -6,48 +6,50 @@ extra_typescript_info: Note that, technically, TypeScript will only catch this i
 ---
 
 
-Under the strict mode, `this` keywords outside of classes or class-like objects might be `undefined` and raise a `TypeError`.
+在严格模式下，类或类式对象之外的 `this` 关键字可能是 `undefined`，并导致 `TypeError`。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to flag usage of `this` keywords in contexts where the value of `this` is `undefined`.
+## 规则详情
 
-Top-level `this` in scripts is always considered valid because it refers to the global object regardless of the strict mode.
+此规则旨在标记在 `this` 的值为 `undefined` 的上下文中使用 `this` 关键字的情况。
 
-Top-level `this` in ECMAScript modules is always considered invalid because its value is `undefined`.
+脚本顶层的 `this` 始终被视为有效，因为无论是否处于严格模式，它都指向全局对象。
 
-For `this` inside functions, this rule basically checks whether or not the function containing `this` keyword is a constructor or a method. Note that arrow functions have lexical `this`, and that therefore this rule checks their enclosing contexts.
+ECMAScript 模块顶层的 `this` 始终被视为无效，因为其值为 `undefined`。
 
-This rule judges from following conditions whether or not the function is a constructor:
+对于函数内部的 `this`，此规则基本上会检查包含 `this` 关键字的函数是否为构造函数或方法。请注意，箭头函数具有词法 `this`，因此此规则会检查它们所在的外层上下文。
 
-* The name of the function starts with uppercase.
-* The function is assigned to a variable which starts with an uppercase letter.
-* The function is a constructor of ES2015 Classes.
+此规则根据以下条件判断函数是否为构造函数：
 
-This rule judges from following conditions whether or not the function is a method:
+* 函数名以大写字母开头。
+* 函数被赋值给一个以大写字母开头的变量。
+* 函数是 ES2015 类的构造函数。
 
-* The function is on an object literal.
-* The function is assigned to a property.
-* The function is a method/getter/setter of ES2015 Classes.
+此规则根据以下条件判断函数是否为方法：
 
-And this rule allows `this` keywords in functions below:
+* 函数位于对象字面量中。
+* 函数被赋值给某个属性。
+* 函数是 ES2015 类的方法、getter 或 setter。
 
-* The `call/apply/bind` method of the function is called directly.
-* The function is a callback of array methods (such as `.forEach()`) if `thisArg` is given.
-* The function has `@this` tag in its JSDoc comment.
+此外，此规则允许在以下函数中使用 `this` 关键字：
 
-And this rule always allows `this` keywords in the following contexts:
+* 直接调用该函数的 `call/apply/bind` 方法。
+* 如果提供了 `thisArg`，该函数是数组方法（如 `.forEach()`）的回调函数。
+* 函数的 JSDoc 注释中包含 `@this` 标签。
 
-* At the top level of scripts.
-* In class field initializers.
-* In class static blocks.
+此规则始终允许在以下上下文中使用 `this` 关键字：
 
-Otherwise are considered problems.
+* 脚本顶层。
+* 类字段初始化器中。
+* 类静态代码块中。
 
-This rule applies **only** in strict mode.
-With `"languageOptions": { "sourceType": "module" }` in the ESLint configuration, your code is in strict mode even without a `"use strict"` directive.
+其他情况均视为问题。
 
-Examples of **incorrect** code for this rule in strict mode:
+此规则**仅**适用于严格模式。
+在 ESLint 配置中设置 `"languageOptions": { "sourceType": "module" }` 后，即使没有 `"use strict"` 指令，代码也处于严格模式。
+
+以下是此规则在严格模式下的**错误**代码示例：
 
 ::: incorrect { "sourceType": "script" }
 
@@ -94,7 +96,7 @@ foo.forEach(function() {
 
 :::
 
-Examples of **correct** code for this rule in strict mode:
+以下是此规则在严格模式下的**正确**代码示例：
 
 ::: correct { "sourceType": "script" }
 
@@ -227,19 +229,21 @@ function foo() {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option, with one option:
+## 选项
 
-* `"capIsConstructor": false` (default `true`) disables the assumption that a function which name starts with an uppercase is a constructor.
+此规则有一个对象选项，其中包含一个选项：
+
+* `"capIsConstructor": false`（默认值为 `true`）会禁用“名称以大写字母开头的函数是构造函数”这一假设。
 
 ### capIsConstructor
 
-By default, this rule always allows the use of `this` in functions which name starts with an uppercase and anonymous functions that are assigned to a variable which name starts with an uppercase, assuming that those functions are used as constructor functions.
+默认情况下，此规则始终允许在名称以大写字母开头的函数，以及被赋值给名称以大写字母开头的变量的匿名函数中使用 `this`，假定这些函数用作构造函数。
 
-Set `"capIsConstructor"` to `false` if you want those functions to be treated as 'regular' functions.
+如果希望将这些函数视为“普通”函数，请将 `"capIsConstructor"` 设置为 `false`。
 
-Examples of **incorrect** code for this rule with `"capIsConstructor"` option set to `false`:
+以下是将 `"capIsConstructor"` 选项设为 `false` 时，此规则的**错误**代码示例：
 
 ::: incorrect { "sourceType": "script" }
 
@@ -267,7 +271,7 @@ Baz = function() {
 
 :::
 
-Examples of **correct** code for this rule with `"capIsConstructor"` option set to `false`:
+以下是将 `"capIsConstructor"` 选项设为 `false` 时，此规则的**正确**代码示例：
 
 ::: correct { "sourceType": "script" }
 
@@ -284,9 +288,9 @@ obj.Foo = function Foo() {
 
 :::
 
-This rule additionally supports TypeScript type syntax.
+此规则还支持 TypeScript 类型语法。
 
-Examples of **incorrect** TypeScript code for this rule:
+以下是此规则的 **TypeScript 错误**代码示例：
 
 :::incorrect
 
@@ -313,7 +317,7 @@ function foo() {
 
 :::
 
-Examples of **correct** TypeScript code for this rule:
+以下是此规则的 **TypeScript 正确**代码示例：
 
 :::correct
 
@@ -337,6 +341,8 @@ class A {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you don't want to be notified about usage of `this` keyword outside of classes or class-like objects, you can safely disable this rule.
+## 何时不使用
+
+如果不希望收到关于在类或类式对象之外使用 `this` 关键字的提示，可以放心禁用此规则。
