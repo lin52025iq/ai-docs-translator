@@ -5,13 +5,14 @@ rule_type: suggestion
 
 
 
-A `return;` statement with nothing after it is redundant, and has no effect on the runtime behavior of a function. This can be confusing, so it's better to disallow these redundant statements.
+`return;` 语句后没有任何内容，因此是多余的，不会影响函数的运行时行为。这可能会造成困惑，因此最好禁止这些多余的语句。
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule aims to report redundant `return` statements.
+此规则旨在报告多余的 `return` 语句。
 
-Examples of **incorrect** code for this rule:
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -48,7 +49,7 @@ const item = function() {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -91,10 +92,12 @@ const func = function() {
 
 :::
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule has no options.
+此规则没有选项。
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 何时不使用
 
-If you don't care about disallowing redundant return statements, you can turn off this rule.
+如果你不在意是否禁止多余的 return 语句，可以关闭此规则。
