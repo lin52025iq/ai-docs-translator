@@ -5,15 +5,17 @@ rule_type: suggestion
 
 
 
-The purpose of the `delete` operator is to remove a property from an object. Using the `delete` operator on a variable might lead to unexpected behavior.
+`delete` 运算符用于从对象中移除属性。对变量使用 `delete` 运算符可能会导致意外行为。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows the use of the `delete` operator on variables.
+## 规则详情
 
-If ESLint parses code in strict mode, the parser (instead of this rule) reports the error.
+此规则禁止对变量使用 `delete` 运算符。
 
-Examples of **incorrect** code for this rule:
+如果 ESLint 在严格模式下解析代码，则会由解析器（而非此规则）报告错误。
+
+此规则的错误代码示例：
 
 ::: incorrect { "sourceType": "script" }
 
@@ -26,6 +28,8 @@ delete x;
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
+
+此规则没有选项。
