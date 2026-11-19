@@ -4,7 +4,7 @@ rule_type: suggestion
 ---
 
 
-Writing functions within loops tends to result in errors due to the way the function creates a closure around the loop. For example:
+在循环中编写函数往往会导致错误，这是因为函数会围绕循环创建闭包。例如：
 
 ```js
 for (var i = 0; i < 10; i++) {
@@ -14,9 +14,9 @@ for (var i = 0; i < 10; i++) {
 }
 ```
 
-In this case, you would expect each function created within the loop to return a different number. In reality, each function returns 10, because that was the last value of `i` in the scope.
+在这种情况下，你可能会认为循环中创建的每个函数都会返回不同的数字。实际上，每个函数都返回 10，因为这是作用域中 `i` 的最后一个值。
 
-`let` or `const` mitigate this problem.
+`let` 或 `const` 可以缓解这个问题。
 
 ```js
 for (let i = 0; i < 10; i++) {
@@ -26,15 +26,17 @@ for (let i = 0; i < 10; i++) {
 }
 ```
 
-In this case, each function created within the loop returns a different number as expected.
+在这种情况下，循环中创建的每个函数都会按预期返回不同的数字。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This error is raised to highlight a piece of code that may not work as you expect it to and could also indicate a misunderstanding of how the language works. Your code may run without any problems if you do not fix this error, but in some situations it could behave unexpectedly.
+## 规则详情
 
-This rule disallows any function within a loop that contains unsafe references (e.g. to modified variables from the outer scope). This rule ignores IIFEs but not async or generator functions.
+此错误用于指出一段可能无法按预期运行的代码，也可能表明你对语言的工作方式存在误解。如果不修复此错误，代码可能仍能正常运行，但在某些情况下会出现意料之外的行为。
 
-Examples of **incorrect** code for this rule:
+此规则禁止在循环内包含不安全引用（例如，引用外部作用域中已修改的变量）的函数。此规则会忽略 IIFE，但不会忽略异步函数或生成器函数。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -92,7 +94,7 @@ for (var i = 0; i < 5; i++) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -169,9 +171,9 @@ for (var i = 0; i < 5; i++) {
 
 :::
 
-This rule additionally supports TypeScript type syntax.
+此规则还支持 TypeScript 类型语法。
 
-Examples of **correct** TypeScript code for this rule:
+此规则的正确 TypeScript 代码示例：
 
 ::: correct
 
@@ -187,13 +189,17 @@ for (let i = 0; i < 10; i += 1) {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## Known Limitations
+此规则没有选项。
 
-The rule cannot identify whether the function instance is just immediately invoked and then discarded, or possibly stored for later use.
+<a id="known-limitations"></a>
+
+## 已知限制
+
+此规则无法判断函数实例是否会立即调用后丢弃，还是可能会被存储以供后续使用。
 
 ```js
 const foo = [1, 2, 3, 4];
@@ -204,6 +210,6 @@ while(foo.some(e => e > i)){
 }
 ```
 
-Here the `some` method immediately executes the callback function for each element in the array and then discards the function instance. The function is not stored or reused beyond the scope of the loop iteration. So, this will work as intended.
+这里，`some` 方法会立即对数组中的每个元素执行回调函数，然后丢弃该函数实例。该函数不会在循环迭代的作用域之外存储或重复使用。因此，这段代码会按预期运行。
 
-`eslint-disable` comments can be used in such cases.
+在这种情况下，可以使用 `eslint-disable` 注释。
