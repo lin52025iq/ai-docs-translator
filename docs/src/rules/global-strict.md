@@ -3,27 +3,29 @@ title: global-strict
 
 ---
 
-Requires or disallows strict mode directives in the global scope.
+要求或禁止在全局作用域中使用严格模式指令。
 
 ::: important
-This rule was removed in ESLint v1.0.0 and replaced by the [strict](strict) rule. The `"global"` option in the new rule is most similar to the removed rule.
+此规则已在 ESLint v1.0.0 中移除，并由 [strict](strict) 规则取代。新规则中的 `"global"` 选项与已移除的规则最为相似。
 :::
 
-Strict mode is enabled by using the following pragma in your code:
+在代码中使用以下编译指示即可启用严格模式：
 
 ```js
 "use strict";
 ```
 
-When used globally, as in this example, the strict mode pragma applies to all code within a single file. This can be dangerous if you concatenate scripts together before serving them to a browser. For instance, if you have a file running in strict mode and you concatenate that file with jQuery, the strict mode now also applies to jQuery and may cause errors.
+像本例这样在全局范围内使用时，严格模式编译指示会应用于单个文件中的所有代码。如果在将脚本提供给浏览器之前把它们拼接在一起，这可能会很危险。例如，如果某个文件运行在严格模式下，而你又将该文件与 jQuery 拼接在一起，那么严格模式也会应用于 jQuery，并可能导致错误。
 
-However, if you're using Node.js, you may want to turn strict mode on globally. Files are typically not concatenated together in Node.js projects and therefore the risk of applying strict mode accidentally is minimal. Further, since every file in Node.js has its own scope, global strict mode only effects the single file in which it is placed.
+不过，如果你使用 Node.js，可能会希望在全局范围内启用严格模式。在 Node.js 项目中，文件通常不会拼接在一起，因此意外应用严格模式的风险很小。此外，由于 Node.js 中的每个文件都有自己的作用域，全局严格模式只会影响其所在的单个文件。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule requires or disallows global strict mode invoked by a `"use strict"` pragma in the global scope.
+## 规则详情
 
-The following pattern is under strict mode globally and is considered valid with the `"always"` option and a warning with the `"never"` option.
+此规则要求或禁止在全局作用域中使用 `"use strict"` 编译指示来启用全局严格模式。
+
+以下模式在全局范围内启用严格模式；使用 `"always"` 选项时，该模式有效，使用 `"never"` 选项时则会发出警告。
 
 ```js
 "use strict";
@@ -33,7 +35,7 @@ function foo() {
 }
 ```
 
-The following patterns apply strict mode only to functions so are valid with the `"never"` option but are problems with the `"always"` option.
+以下模式仅对函数启用严格模式，因此使用 `"never"` 选项时有效，使用 `"always"` 选项时则会报错。
 
 ```js
 function foo() {
@@ -49,20 +51,24 @@ function foo() {
 }());
 ```
 
-## Options
+<a id="options"></a>
+
+## 选项
 
 ```json
 "global-strict": ["error", "always"]
 ```
 
-Requires that every file have a top-level `"use strict"` statement.
+要求每个文件都包含顶层的 `"use strict"` 语句。
 
 ```json
 "global-strict": ["error", "never"]
 ```
 
-Warns whenever `"use strict"` is used in the global scope such that it could contaminate concatenated files.
+每当在全局作用域中使用 `"use strict"`，且可能污染拼接后的文件时，都会发出警告。
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-When a project may use non-strict-mode code side by side with strict-mode code and the files are not concatenated, the decision to use global strict mode can be made on an individual basis, rendering this rule unnecessary.
+## 何时不应使用
+
+如果项目可能同时使用非严格模式和严格模式代码，并且文件不会拼接在一起，那么可以针对每个文件单独决定是否使用全局严格模式，因此无需使用此规则。
