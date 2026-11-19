@@ -6,7 +6,7 @@ handled_by_typescript: true
 
 
 
-Multiple properties with the same key in object literals can cause unexpected behavior in your application.
+对象字面量中存在多个键相同的属性，可能会导致应用程序出现意外行为。
 
 ```js
 const foo = {
@@ -15,11 +15,13 @@ const foo = {
 };
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows duplicate keys in object literals.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止在对象字面量中使用重复的键。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -44,7 +46,7 @@ const baz = {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -64,6 +66,8 @@ const obj = {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
+
+此规则没有选项。
