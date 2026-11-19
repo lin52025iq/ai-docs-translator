@@ -6,7 +6,7 @@ related_rules:
 - padded-blocks
 ---
 
-Directives are used in JavaScript to indicate to the execution environment that a script would like to opt into a feature such as `"strict mode"`. Directives are grouped together in a [directive prologue](https://www.ecma-international.org/ecma-262/7.0/#directive-prologue) at the top of either a file or function block and are applied to the scope in which they occur.
+在 JavaScript 中，指令用于告知执行环境，脚本希望启用某项功能，例如`"strict mode"`。指令会在文件或函数块的顶部组成一个[指令序言](https://www.ecma-international.org/ecma-262/7.0/#directive-prologue)，并应用于其所在的作用域。
 
 ```js
 // Strict mode is invoked for the entire script
@@ -30,18 +30,22 @@ function bar() {
 }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule requires or disallows blank newlines around directive prologues. This rule does not enforce any conventions about blank newlines between the individual directives. In addition, it does not require blank newlines before directive prologues unless they are preceded by a comment. Please use the [padded-blocks](padded-blocks) rule if this is a style you would like to enforce.
+## 规则详情
 
-## Options
+此规则要求或禁止指令序言周围出现空行。此规则不规定各个指令之间的空行约定。此外，除非指令序言前有注释，否则此规则不要求其前面有空行。如果你希望强制执行这种风格，请使用 [padded-blocks](padded-blocks) 规则。
 
-This rule has one option. It can either be a string or an object:
+<a id="options"></a>
 
-* `"always"` (default) enforces blank newlines around directives.
-* `"never"` disallows blank newlines around directives.
+## 选项
 
-or
+此规则有一个选项，可以是字符串或对象：
+
+* `"always"`（默认值）要求指令周围有空行。
+* `"never"` 禁止指令周围有空行。
+
+或
 
 ```js
 {
@@ -50,11 +54,13 @@ or
 }
 ```
 
+<a id="always"></a>
+
 ### always
 
-This is the default option.
+这是默认选项。
 
-Examples of **incorrect** code for this rule with the `"always"` option:
+此规则在使用 `"always"` 选项时的**错误**代码示例：
 
 ::: incorrect { "sourceType": "script" }
 
@@ -93,7 +99,7 @@ var foo;
 
 :::
 
-Examples of **correct** code for this rule with the `"always"` option:
+此规则在使用 `"always"` 选项时的**正确**代码示例：
 
 ::: correct { "sourceType": "script" }
 
@@ -138,10 +144,12 @@ var foo;
 ```
 
 :::
+
+<a id="never"></a>
 
 ### never
 
-Examples of **incorrect** code for this rule with the `"never"` option:
+此规则在使用 `"never"` 选项时的**错误**代码示例：
 
 ::: incorrect { "sourceType": "script" }
 
@@ -187,7 +195,7 @@ var foo;
 
 :::
 
-Examples of **correct** code for this rule with the `"never"` option:
+此规则在使用 `"never"` 选项时的**正确**代码示例：
 
 ::: correct { "sourceType": "script" }
 
@@ -228,7 +236,7 @@ var foo;
 
 ### before & after
 
-Examples of **incorrect** code for this rule with the `{ "before": "never", "after": "always" }` option:
+此规则在使用 `{ "before": "never", "after": "always" }` 选项时的**错误**代码示例：
 
 ::: incorrect { "sourceType": "script" }
 
@@ -270,7 +278,7 @@ var foo;
 
 :::
 
-Examples of **correct** code for this rule with the `{ "before": "never", "after": "always" }`  option:
+此规则在使用 `{ "before": "never", "after": "always" }` 选项时的**正确**代码示例：
 
 ::: correct { "sourceType": "script" }
 
@@ -313,7 +321,7 @@ var foo;
 
 :::
 
-Examples of **incorrect** code for this rule with the `{ "before": "always", "after": "never" }` option:
+此规则在使用 `{ "before": "always", "after": "never" }` 选项时的**错误**代码示例：
 
 ::: incorrect { "sourceType": "script" }
 
@@ -356,7 +364,7 @@ var foo;
 
 :::
 
-Examples of **correct** code for this rule with the `{ "before": "always", "after": "never" }` option:
+此规则在使用 `{ "before": "always", "after": "never" }` 选项时的**正确**代码示例：
 
 ::: correct { "sourceType": "script" }
 
@@ -398,11 +406,15 @@ var foo;
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You can safely disable this rule if you do not have any strict conventions about whether or not directive prologues should have blank newlines before or after them.
+## 何时不使用此规则
 
-## Compatibility
+如果你对指令序言前后是否应有空行没有严格约定，则可以放心禁用此规则。
 
-* **JSCS**: [requirePaddingNewLinesAfterUseStrict](https://jscs-dev.github.io/rule/requirePaddingNewLinesAfterUseStrict)
-* **JSCS**: [disallowPaddingNewLinesAfterUseStrict](https://jscs-dev.github.io/rule/disallowPaddingNewLinesAfterUseStrict)
+<a id="compatibility"></a>
+
+## 兼容性
+
+* **JSCS**：[requirePaddingNewLinesAfterUseStrict](https://jscs-dev.github.io/rule/requirePaddingNewLinesAfterUseStrict)
+* **JSCS**：[disallowPaddingNewLinesAfterUseStrict](https://jscs-dev.github.io/rule/disallowPaddingNewLinesAfterUseStrict)
