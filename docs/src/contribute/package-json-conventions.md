@@ -1,19 +1,21 @@
 ---
-title: Package.json Conventions
+title: package.json 约定
 eleventyNavigation:
     key: package.json conventions
     parent: contribute to eslint
-    title: Package.json Conventions
+    title: package.json 约定
     order: 9
 ---
 
-The following applies to the "scripts" section of `package.json` files.
+以下内容适用于 `package.json` 文件中名为 "scripts" 的部分。
 
-## Names
+<a id="names"></a>
 
-npm script names MUST contain only lower case letters, `:` to separate parts, `-` to separate words, and `+` to separate file extensions. Each part name SHOULD be either a full English word (e.g. `coverage` not `cov`) or a well-known initialism in all lowercase (e.g. `wasm`).
+## 名称
 
-Here is a summary of the proposal in ABNF.
+npm 脚本名称只能包含小写字母、用于分隔部分的 `:`、用于分隔单词的 `-`，以及用于分隔文件扩展名的 `+`。每个部分的名称应为完整的英文单词（例如 `coverage`，而不是 `cov`），或广为人知且全部使用小写字母的首字母缩写（例如 `wasm`）。
+
+以下是该提案的 ABNF 概要。
 
 ```abnf
 name         = life-cycle / main target? option* ":watch"?
@@ -25,82 +27,112 @@ word         = ALPHA +
 extension    = ( ALPHA / DIGIT )+
 ```
 
-## Order
+<a id="order"></a>
 
-The script names MUST appear in the `package.json` file in alphabetical order. The other conventions outlined in this document ensure that alphabetical order will coincide with logical groupings.
+## 顺序
 
-## Main Script Names
+脚本名称必须按字母顺序出现在 `package.json` 文件中。本文列出的其他约定可确保字母顺序与逻辑分组相符。
 
-With the exception of [npm life cycle scripts](https://docs.npmjs.com/cli/v8/using-npm/scripts#life-cycle-scripts) all script names MUST begin with one of the following names.
+<a id="main-script-names"></a>
 
-### Build
+## 主要脚本名称
 
-Scripts that generate a set of files from source code and / or data MUST have names that begin with `build`.
+除 [npm 生命周期脚本](https://docs.npmjs.com/cli/v8/using-npm/scripts#life-cycle-scripts) 外，所有脚本名称都必须以下列名称之一开头。
 
-If a package contains any `build:*` scripts, there MAY be a script named `build`. If so, SHOULD produce the same output as running each of the `build` scripts individually. It MUST produce a subset of the output from running those scripts.
+<a id="build"></a>
 
-### Fetch
+### 构建
 
-Scripts that generate a set of files from external data or resources MUST have names that begin with `fetch`.
+从源代码和/或数据生成一组文件的脚本，名称必须以 `build` 开头。
 
-If a package contains any `fetch:*` scripts, there MAY be a script named `fetch`. If so, it SHOULD produce the same output as running each of the `fetch` scripts individually. It MUST produce a subset of the output from running those scripts.
+如果某个包包含任何 `build:*` 脚本，可以有一个名为 `build` 的脚本。如果有，该脚本应产生与逐个运行每个 `build` 脚本相同的输出，并且必须只产生这些脚本运行结果的子集。
 
-### Release
+<a id="fetch"></a>
 
-Scripts that have public side effects (publishing the website, committing to Git, etc.) MUST begin with `release`.
+### 获取
 
-### Lint
+从外部数据或资源生成一组文件的脚本，名称必须以 `fetch` 开头。
 
-Scripts that statically analyze files (mostly, but not limited to running `eslint` itself) MUST have names that begin with `lint`.
+如果某个包包含任何 `fetch:*` 脚本，可以有一个名为 `fetch` 的脚本。如果有，该脚本应产生与逐个运行每个 `fetch` 脚本相同的输出，并且必须只产生这些脚本运行结果的子集。
 
-If a package contains any `lint:*` scripts, there SHOULD be a script named `lint` and it MUST run all of the checks that would have been run if each `lint:*` script was called individually.
+<a id="release"></a>
 
-If fixing is available, a linter MUST NOT apply fixes UNLESS the script contains the `:fix` modifier (see below).
+### 发布
 
-### Fmt
+具有公开副作用的脚本（例如发布网站、提交到 Git 等）必须以 `release` 开头。
 
-Scripts that format source code MUST have names that begin with `fmt`.
+<a id="lint"></a>
 
-If a package contains any `fmt:*` scripts, there SHOULD be a script named `fmt` that applies formatting fixes to all source files. There SHOULD also be a script named `fmt:check` that validates code formatting without modifying files and exits non-zero if any files are out of compliance.
+### 代码检查
 
-### Start
+对文件进行静态分析的脚本（主要是运行 `eslint` 本身，但不限于此），名称必须以 `lint` 开头。
 
-A `start` script is used to start a server. As of this writing, no ESLint package has more than one `start` script, so there's no need `start` to have any modifiers.
+如果某个包包含任何 `lint:*` 脚本，就应有一个名为 `lint` 的脚本，并且该脚本必须运行逐个调用每个 `lint:*` 脚本时会执行的所有检查。
 
-### Test
+如果可以修复问题，代码检查工具不得自动应用修复，除非脚本包含 `:fix` 修饰符（见下文）。
 
-Scripts that execute code in order to ensure the actual behavior matches expected behavior MUST have names that begin with `test`.
+<a id="fmt"></a>
 
-If a package contains any `test:*` scripts, there SHOULD be a script named `test` and it MUST run of all of the tests that would have been run if each `test:*` script was called individually.
+### 格式化
 
-A test script SHOULD NOT include linting.
+用于格式化源代码的脚本，名称必须以 `fmt` 开头。
 
-A test script SHOULD report test coverage when possible.
+如果某个包包含任何 `fmt:*` 脚本，就应有一个名为 `fmt` 的脚本，用于修复所有源文件的格式。此外，还应有一个名为 `fmt:check` 的脚本，用于验证代码格式而不修改文件；如果有任何文件不符合要求，该脚本应以非零状态退出。
 
-## Modifiers
+<a id="start"></a>
 
-One or more of the following modifiers MAY be appended to the standard script names above. If a target has modifiers, they MUST be in the order in which they appear below (e.g. `lint:fix:js:watch` not `lint:watch:js:fix`).
+### 启动
 
-### Fix
+`start` 脚本用于启动服务器。截至本文撰写时，没有任何 ESLint 包拥有多个 `start` 脚本，因此无需为 `start` 添加修饰符。
 
-If it's possible for a linter to fix problems that it finds, add a copy of the script with `:fix` appended to the end that also fixes.
+<a id="test"></a>
 
-### Check
+### 测试
 
-If a script validates code or artifacts without making any modifications, append `:check` to the script name. This modifier is typically used for formatters (e.g., `fmt:check`) to verify that files conform to the expected format and to exit with a non-zero status if any issues are found. Scripts with the `:check` modifier MUST NOT alter any files or outputs.
+为确保实际行为符合预期而执行代码的脚本，名称必须以 `test` 开头。
 
-### Target
+如果某个包包含任何 `test:*` 脚本，就应有一个名为 `test` 的脚本，并且该脚本必须运行逐个调用每个 `test:*` 脚本时会执行的所有测试。
 
-The name of the target of the action being run. In the case of a `build` script, it SHOULD identify the build artifact(s), e.g. "javascript" or "css" or "website". In the case of a `lint` or `test` script, it SHOULD identify the item(s) being linted or tested. In the case of a `start` script, it SHOULD identify which server is starting.
+测试脚本不应包含代码检查。
 
-A target MAY refer to a list of affected file extensions (such as `cjs` or `less`) delimited by a `+`. If there is more than one extension, the list SHOULD be alphabetized. When a file extension has variants (such as `cjs` for CommonJS and `mjs` for ESM), the common part of the extension MAY be used instead of explicitly listing out all of the variants (e.g. `js` instead of `cjs+jsx+mjs`).
+在可行时，测试脚本应报告测试覆盖率。
 
-The target SHOULD NOT refer to name of the name of the tool that's performing the action (`eleventy`, `webpack`, etc.).
+<a id="modifiers"></a>
 
-### Options
+## 修饰符
 
-Additional options that don't fit under the other modifiers.
+可以在上述标准脚本名称后附加一个或多个以下修饰符。如果目标带有修饰符，则修饰符的顺序必须与下文所列顺序一致（例如，使用 `lint:fix:js:watch`，而不是 `lint:watch:js:fix`）。
 
-### Watch
+<a id="fix"></a>
 
-If a script watches the filesystem and responds to changes, add `:watch` to the script name.
+### 修复
+
+如果代码检查工具能够修复发现的问题，则添加一个副本脚本，并在脚本名称末尾附加 `:fix`，使其同时执行修复。
+
+<a id="check"></a>
+
+### 检查
+
+如果脚本在不做任何修改的情况下验证代码或构件，则在脚本名称后附加 `:check`。此修饰符通常用于格式化工具（例如 `fmt:check`），以验证文件是否符合预期格式；如果发现任何问题，则以非零状态退出。带有 `:check` 修饰符的脚本不得更改任何文件或输出。
+
+<a id="target"></a>
+
+### 目标
+
+所执行操作的目标名称。对于 `build` 脚本，应标明构建产物（例如“javascript”“css”或“website”）。对于 `lint` 或 `test` 脚本，应标明代码检查或测试的对象。对于 `start` 脚本，应标明要启动的服务器。
+
+目标可以使用 `+` 分隔受影响文件扩展名的列表（例如 `cjs` 或 `less`）。如果扩展名不止一个，列表应按字母顺序排列。当文件扩展名存在变体时（例如 CommonJS 的 `cjs` 和 ESM 的 `mjs`），可以使用共同的扩展名部分，而不必逐一列出所有变体（例如使用 `js`，而不是 `cjs+jsx+mjs`）。
+
+目标不应包含执行操作的工具名称（`eleventy`、`webpack` 等）。
+
+<a id="options"></a>
+
+### 选项
+
+不属于其他修饰符的附加选项。
+
+<a id="watch"></a>
+
+### 监视
+
+如果脚本会监视文件系统并响应变化，则在脚本名称后添加 `:watch`。
