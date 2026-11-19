@@ -5,27 +5,31 @@ further_reading:
 - https://leanpub.com/understandinges6/read/#leanpub-auto-generators
 ---
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces spacing around the `*` in `yield*` expressions.
+## 规则详情
 
-## Options
+此规则要求在 `yield*` 表达式中的 `*` 周围添加空格。
 
-The rule takes one option, an object, which has two keys `before` and `after` having boolean values `true` or `false`.
+<a id="options"></a>
 
-* `before` enforces spacing between the `yield` and the `*`.
-  If `true`, a space is required, otherwise spaces are disallowed.
+## 选项
 
-* `after` enforces spacing between the `*` and the argument.
-  If it is `true`, a space is required, otherwise spaces are disallowed.
+此规则接受一个对象作为选项，该对象包含 `before` 和 `after` 两个键，其值为布尔值 `true` 或 `false`。
 
-The default is `{"before": false, "after": true}`.
+* `before` 用于设置 `yield` 和 `*` 之间的空格。
+  如果值为 `true`，则必须有一个空格，否则不允许有空格。
+
+* `after` 用于设置 `*` 和参数之间的空格。
+  如果值为 `true`，则必须有一个空格，否则不允许有空格。
+
+默认值为 `{"before": false, "after": true}`。
 
 ```json
 "yield-star-spacing": ["error", {"before": true, "after": false}]
 ```
 
-The option also has a string shorthand:
+此选项也支持使用字符串简写：
 
 * `{"before": false, "after": true}` → `"after"`
 * `{"before": true, "after": false}` → `"before"`
@@ -36,9 +40,11 @@ The option also has a string shorthand:
 "yield-star-spacing": ["error", "after"]
 ```
 
+<a id="after"></a>
+
 ### after
 
-Examples of **correct** code for this rule with the default `"after"` option:
+以下代码在使用默认选项 `"after"` 时符合此规则：
 
 ::: correct
 
@@ -52,9 +58,11 @@ function* generator() {
 
 :::
 
+<a id="before"></a>
+
 ### before
 
-Examples of **correct** code for this rule with the `"before"` option:
+以下代码在使用选项 `"before"` 时符合此规则：
 
 ::: correct
 
@@ -68,9 +76,11 @@ function *generator() {
 
 :::
 
+<a id="both"></a>
+
 ### both
 
-Examples of **correct** code for this rule with the `"both"` option:
+以下代码在使用选项 `"both"` 时符合此规则：
 
 ::: correct
 
@@ -84,9 +94,11 @@ function * generator() {
 
 :::
 
+<a id="neither"></a>
+
 ### neither
 
-Examples of **correct** code for this rule with the `"neither"` option:
+以下代码在使用选项 `"neither"` 时符合此规则：
 
 ::: correct
 
@@ -100,6 +112,8 @@ function*generator() {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If your project will not be using generators or you are not concerned with spacing consistency, you do not need this rule.
+## 何时不使用此规则
+
+如果你的项目不会使用生成器，或者你不在意空格的一致性，就不需要使用此规则。
