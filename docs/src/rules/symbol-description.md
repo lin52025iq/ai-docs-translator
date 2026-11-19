@@ -6,7 +6,7 @@ further_reading:
 ---
 
 
-The `Symbol` function may have an optional description:
+`Symbol` 函数可以有一个可选的描述：
 
 ```js
 const foo = Symbol("some description");
@@ -15,7 +15,7 @@ const someString = "some description";
 const bar = Symbol(someString);
 ```
 
-Using `description` promotes easier debugging: when a symbol is logged the description is used:
+使用 `description` 可以让调试更轻松：记录 symbol 时会使用该描述：
 
 ```js
 const foo = Symbol("some description");
@@ -24,13 +24,14 @@ const foo = Symbol("some description");
 // Symbol(some description)
 ```
 
-It may facilitate identifying symbols when one is observed during debugging.
+在调试过程中观察到 symbol 时，该描述也有助于识别它。
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rules requires a description when creating symbols.
+此规则要求创建 symbol 时提供描述。
 
-Examples of **incorrect** code for this rule:
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -42,7 +43,7 @@ const foo = Symbol();
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -57,11 +58,13 @@ const bar = Symbol(someString);
 
 :::
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule has no options.
+此规则没有选项。
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 何时不应使用
 
-This rule should not be used in ES3/5 environments.
-In addition, this rule can be safely turned off if you don't want to enforce presence of `description` when creating Symbols.
+此规则不应在 ES3/5 环境中使用。
+此外，如果你不想强制要求创建 Symbol 时提供 `description`，可以安全地关闭此规则。
