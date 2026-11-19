@@ -1,0 +1,50 @@
+{
+    "schemaVersion": 1,
+    "status": "conflict",
+    "origin": "local_validation",
+    "projectId": "eslint-docs",
+    "locale": "zh-CN",
+    "sourcePath": "docs/src/use/migrate-to-9.0.0.md",
+    "createdAt": "2026-11-19T12:03:57.853Z",
+    "reason": "文件校验未通过",
+    "artifacts": {
+        "before": "before/docs/src/use/migrate-to-9.0.0.md",
+        "after": "after/docs/src/use/migrate-to-9.0.0.md",
+        "previous": "previous/docs/src/use/migrate-to-9.0.0.md"
+    },
+    "translationModel": "gpt-6-luna",
+    "translationResponseId": "resp_0f08afcc4f467237016afee526cb7887d2991f4bcb390b8fa9",
+    "contextHash": "64ced0491d8917d86d3057d903a53f0f98ed63c72e258488e934ac7f76453200",
+    "diagnostics": [
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode",
+                "path": "docs/src/use/migrate-to-9.0.0.md"
+            },
+            {
+                "message": "inlineCode 缺少：[]。多出：[\"@eslint/v8-to-v9-config\",\"@eslint/v8-to-v9-config\",\"@eslint/v8-to-v9-config\",\"@eslint/v8-to-v9-config\",\"@eslint/v8-to-v9-custom-rules\",\"allow\",\"allow\",\"caughtErrors\",\"output\",\"suggestions\"]",
+                "path": "docs/src/use/migrate-to-9.0.0.md"
+            }
+        ],
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode",
+                "path": "docs/src/use/migrate-to-9.0.0.md"
+            },
+            {
+                "message": "inlineCode 缺少：[\"\\\"allow\\\": [\\\"-\\\", \\\"- -\\\"]\",\"allow\",\"allow\"]。多出：[\"caughtErrors\",\"output\"]",
+                "path": "docs/src/use/migrate-to-9.0.0.md"
+            }
+        ],
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode",
+                "path": "docs/src/use/migrate-to-9.0.0.md"
+            },
+            {
+                "message": "inlineCode 缺少：[]。多出：[\"caughtErrors\",\"output\"]",
+                "path": "docs/src/use/migrate-to-9.0.0.md"
+            }
+        ]
+    ]
+}
