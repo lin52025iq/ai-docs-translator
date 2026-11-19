@@ -10,9 +10,9 @@ further_reading:
 ---
 
 
-The `void` operator takes an operand and returns `undefined`: `void expression` will evaluate `expression` and return `undefined`. It can be used to ignore any side effects `expression` may produce:
+`void` 运算符接受一个操作数并返回 `undefined`：`void expression` 会对 `expression` 求值并返回 `undefined`。它可用于忽略 `expression` 可能产生的任何副作用：
 
-The common case of using `void` operator is to get a "pure" `undefined` value as prior to ES5 the `undefined` variable was mutable:
+使用 `void` 运算符的常见情况是获取一个“纯粹的” `undefined` 值，因为在 ES5 之前，`undefined` 变量是可变的：
 
 ```js
 // will always return undefined
@@ -33,14 +33,14 @@ The common case of using `void` operator is to get a "pure" `undefined` value as
 })();
 ```
 
-Another common case is to minify code as `void 0` is shorter than `undefined`:
+另一个常见用途是压缩代码，因为 `void 0` 比 `undefined` 短：
 
 ```js
 foo = void 0;
 foo = undefined;
 ```
 
-When used with IIFE (immediately-invoked function expression), `void` can be used to force the function keyword to be treated as an expression instead of a declaration:
+与 IIFE（立即调用函数表达式）一起使用时，`void` 可用于强制将 function 关键字视为表达式而非声明：
 
 ```js
 let foo = 1;
@@ -52,13 +52,15 @@ void function(){ foo = 1; }() // will assign foo a value of 1
 function(){ foo = 1; }() // will throw SyntaxError
 ```
 
-Some code styles prohibit `void` operator, marking it as non-obvious and hard to read.
+某些代码风格禁止使用 `void` 运算符，认为它不直观且难以阅读。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to eliminate use of `void` operator.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在禁止使用 `void` 运算符。
+
+此规则下的错误代码示例：
 
 ::: incorrect
 
@@ -76,17 +78,21 @@ function baz() {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option:
+## 选项
 
-* `allowAsStatement` set to `true` allows the `void` operator to be used as a statement (Default `false`).
+此规则有一个对象选项：
+
+* `allowAsStatement` 设置为 `true` 时，允许将 `void` 运算符用作语句（默认值为 `false`）。
+
+<a id="allowasstatement"></a>
 
 ### allowAsStatement
 
-When `allowAsStatement` is set to true, the rule will not error on cases that the `void` operator is used as a statement, i.e. when it's not used in an expression position, like in a variable assignment or a function return.
+当 `allowAsStatement` 设置为 true 时，对于将 `void` 运算符用作语句的情况，此规则不会报错；也就是说，当它未用于表达式位置时（例如变量赋值或函数返回中），不会报错。
 
-Examples of **incorrect** code for `{ "allowAsStatement": true }`:
+`{ "allowAsStatement": true }` 的错误代码示例：
 
 ::: incorrect
 
@@ -101,7 +107,7 @@ function baz() {
 
 :::
 
-Examples of **correct** code for `{ "allowAsStatement": true }`:
+`{ "allowAsStatement": true }` 的正确代码示例：
 
 ::: correct
 
@@ -114,6 +120,8 @@ void someFunction();
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you intentionally use the `void` operator then you can disable this rule.
+## 何时不使用
+
+如果你有意使用 `void` 运算符，可以禁用此规则。
