@@ -4,26 +4,30 @@ rule_type: suggestion
 ---
 
 
-Developers often add comments to code which is not complete or needs review. Most likely you want to fix or review the code, and then remove the comment, before you consider the code to be production ready.
+开发者经常会在尚未完成或需要审查的代码中添加注释。在认为代码已达到可投入生产的状态之前，你很可能需要先修复或审查代码，然后删除这些注释。
 
 ```js
 // TODO: do something
 // FIXME: this is not a good idea
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule reports comments that include any of the predefined terms specified in its configuration.
+## 规则详情
 
-## Options
+此规则会报告包含配置中指定的任意预定义术语的注释。
 
-This rule has an options object literal:
+<a id="options"></a>
 
-* `"terms"`: optional array of terms to match. Defaults to `["todo", "fixme", "xxx"]`. Terms are matched case-insensitively and as whole words: `fix` would match `FIX` but not `fixing`. Terms can consist of multiple words: `really bad idea`.
-* `"location"`: optional string that configures where in your comments to check for matches. Defaults to `"start"`. The start is from the first non-decorative character, ignoring whitespace, new lines and characters specified in `decoration`. The other value is match `anywhere` in comments.
-* `"decoration"`: optional array of characters that are ignored at the start of a comment, when location is `"start"`. Defaults to `[]`. Any sequence of whitespace or the characters from this property are ignored. This option is ignored when location is `"anywhere"`.
+## 选项
 
-Example of **incorrect** code for the default `{ "terms": ["todo", "fixme", "xxx"], "location": "start" }` options:
+此规则接受一个选项对象字面量：
+
+* `"terms"`：可选的匹配术语数组。默认为 `["todo", "fixme", "xxx"]`。术语匹配时不区分大小写，并且必须是完整单词：`fix` 会匹配 `FIX`，但不会匹配 `fixing`。术语可以由多个单词组成，例如 `really bad idea`。
+* `"location"`：可选字符串，用于配置在注释的什么位置检查匹配项。默认为 `"start"`。起始位置从第一个非装饰字符开始，忽略空白字符、换行符以及 `decoration` 中指定的字符。另一个取值是 `anywhere`，表示在注释中的任意位置匹配。
+* `"decoration"`：可选字符数组；当 location 为 `"start"` 时，注释开头的这些字符会被忽略。任意连续的空白字符或此属性中的字符都会被忽略。此选项在 location 为 `"anywhere"` 时无效。默认为 `[]`。
+
+对于默认选项 `{ "terms": ["todo", "fixme", "xxx"], "location": "start" }`，以下代码**不正确**：
 
 ::: incorrect
 
@@ -44,7 +48,7 @@ function callback(err, results) {
 
 :::
 
-Example of **correct** code for the default `{ "terms": ["todo", "fixme", "xxx"], "location": "start" }` options:
+对于默认选项 `{ "terms": ["todo", "fixme", "xxx"], "location": "start" }`，以下代码**正确**：
 
 ::: correct
 
@@ -63,9 +67,11 @@ function callback(err, results) {
 
 :::
 
-### terms and location
+<a id="terms-and-location"></a>
 
-Examples of **incorrect** code for the `{ "terms": ["todo", "fixme", "any other term"], "location": "anywhere" }` options:
+### 术语与位置
+
+对于选项 `{ "terms": ["todo", "fixme", "any other term"], "location": "anywhere" }`，以下代码**不正确**：
 
 ::: incorrect
 
@@ -84,7 +90,7 @@ Examples of **incorrect** code for the `{ "terms": ["todo", "fixme", "any other 
 
 :::
 
-Examples of **correct** code for the `{ "terms": ["todo", "fixme", "any other term"], "location": "anywhere" }` options:
+对于选项 `{ "terms": ["todo", "fixme", "any other term"], "location": "anywhere" }`，以下代码**正确**：
 
 ::: correct
 
@@ -103,9 +109,11 @@ Examples of **correct** code for the `{ "terms": ["todo", "fixme", "any other te
 
 :::
 
-### Decoration Characters
+<a id="decoration-characters"></a>
 
-Examples of **incorrect** code for the `{ "decoration": ["*"] }` options:
+### 装饰字符
+
+对于选项 `{ "decoration": ["*"] }`，以下代码**不正确**：
 
 ::: incorrect
 
@@ -120,7 +128,7 @@ Examples of **incorrect** code for the `{ "decoration": ["*"] }` options:
 
 :::
 
-Examples of **incorrect** code for the `{ "decoration": ["/", "*"] }` options:
+对于选项 `{ "decoration": ["/", "*"] }`，以下代码**不正确**：
 
 ::: incorrect
 
@@ -136,7 +144,7 @@ Examples of **incorrect** code for the `{ "decoration": ["/", "*"] }` options:
 
 :::
 
-Examples of **correct** code for the `{ "decoration": ["/", "*"] }` options:
+对于选项 `{ "decoration": ["/", "*"] }`，以下代码**正确**：
 
 ::: correct
 
@@ -151,7 +159,9 @@ Examples of **correct** code for the `{ "decoration": ["/", "*"] }` options:
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-* If you have a large code base that was not developed with a policy to not use such warning terms, you might get hundreds of warnings / errors which might be counter-productive if you can't fix all of them (e.g. if you don't get the time to do it) as you might overlook other warnings / errors or get used to many of them and don't pay attention on it anymore.
-* Same reason as the point above: You shouldn't configure terms that are used very often (e.g. central parts of the native language used in your comments).
+## 不应使用此规则的情况
+
+* 如果你的大型代码库在开发时没有禁止使用这类警告术语的策略，你可能会遇到数百条警告或错误。如果你无法全部修复（例如没有时间），这可能会适得其反，因为你可能会忽略其他警告或错误，或者习惯了大量警告而不再留意它们。
+* 原因与上一点相同：不应配置使用频率很高的术语（例如注释中使用的母语中的常见词语）。
