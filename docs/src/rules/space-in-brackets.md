@@ -8,13 +8,13 @@ related_rules:
 - computed-property-spacing
 ---
 
-Enforces consistent spacing inside braces of object literals and brackets of array literals.
+强制要求对象字面量的大括号和数组字面量的方括号内的空格保持一致。
 
 ::: important
-This rule was removed in ESLint v1.0.0 and replaced by the [object-curly-spacing](object-curly-spacing) and [array-bracket-spacing](array-bracket-spacing) rules.
+此规则已在 ESLint v1.0.0 中移除，并由 [object-curly-spacing](object-curly-spacing) 和 [array-bracket-spacing](array-bracket-spacing) 规则取代。
 :::
 
-While formatting preferences are very personal, a number of style guides require or disallow spaces between brackets:
+虽然格式偏好因人而异，但许多风格指南要求或禁止在括号内添加空格：
 
 ```js
 var obj = { foo: 'bar' };
@@ -26,26 +26,32 @@ var arr = ['foo', 'bar'];
 foo['bar'];
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to maintain consistency around the spacing inside of square brackets, either by disallowing spaces inside of brackets between the brackets and other tokens or enforcing spaces. Brackets that are separated from the adjacent value by a new line are excepted from this rule, as this is a common pattern.  Object literals that are used as the first or last element in an array are also ignored.
+## 规则详情
 
-## Options
+此规则旨在确保方括号内的空格用法一致：可以禁止括号与其他标记之间的空格，也可以强制添加空格。与相邻值之间隔着换行符的括号不受此规则约束，因为这是一种常见模式。作为数组首个或末个元素的对象字面量也会被忽略。
 
-There are two options for this rule:
+<a id="options"></a>
 
-* `"always"` enforces a space inside of object and array literals
-* `"never"` enforces zero spaces inside of object and array literals (default)
+## 选项
 
-Depending on your coding conventions, you can choose either option by specifying it in your configuration:
+此规则有两个选项：
+
+* `"always"` 强制要求对象字面量和数组字面量内有空格
+* `"never"` 强制要求对象字面量和数组字面量内没有空格（默认值）
+
+根据你的代码规范，可以在配置中指定其中一个选项：
 
 ```json
 "space-in-brackets": ["error", "always"]
 ```
 
+<a id="never"></a>
+
 ### "never"
 
-Examples of **incorrect** code for this rule with the default `"never"` option:
+使用默认选项 `"never"` 时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -69,7 +75,7 @@ var obj = {baz: { 'foo': 'qux' }, bar};
 
 :::
 
-Examples of **correct** code for this rule with the default `"never"` option:
+使用默认选项 `"never"` 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -113,9 +119,11 @@ var obj = {};
 
 :::
 
+<a id="always"></a>
+
 ### "always"
 
-Examples of **incorrect** code for this rule with the `"always"` option:
+使用选项 `"always"` 时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -148,7 +156,7 @@ var obj = {
 
 :::
 
-Examples of **correct** code for this rule with the `"always"` option:
+使用选项 `"always"` 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -178,15 +186,17 @@ var obj = {
 
 :::
 
-Note that `"always"` has a special case where `{}` and `[]` are not considered problems.
+请注意，`"always"` 有一个特殊情况：`{}` 和 `[]` 不会被视为问题。
 
-### Exceptions
+<a id="exceptions"></a>
 
-An object literal may be used as a third array item to specify spacing exceptions. These exceptions work in the context of the first option. That is, if `"always"` is set to enforce spacing and an exception is set to `false`, it will disallow spacing for cases matching the exception. Likewise, if `"never"` is set to disallow spacing and an exception is set to `true`, it will enforce spacing for cases matching the exception.
+### 例外
 
-You can add exceptions like so:
+可以将对象字面量作为第三个数组项，用于指定空格例外。这些例外是在第一个选项的上下文中生效的。也就是说，如果设置 `"always"` 来强制添加空格，而某个例外设为 `false`，则匹配该例外的情况将禁止添加空格。同样，如果设置 `"never"` 来禁止添加空格，而某个例外设为 `true`，则匹配该例外的情况将强制添加空格。
 
-In case of `"always"` option, set an exception to `false` to enable it:
+可以按如下方式添加例外：
+
+对于 `"always"` 选项，将例外设为 `false` 以启用该例外：
 
 ```json
 "space-in-brackets": ["error", "always", {
@@ -199,7 +209,7 @@ In case of `"always"` option, set an exception to `false` to enable it:
 }]
 ```
 
-In case of `"never"` option, set an exception to `true` to enable it:
+对于 `"never"` 选项，将例外设为 `true` 以启用该例外：
 
 ```json
 "space-in-brackets": ["error", "never", {
@@ -212,18 +222,18 @@ In case of `"never"` option, set an exception to `true` to enable it:
 }]
 ```
 
-The following exceptions are available:
+可用的例外如下：
 
-* `singleValue` sets the spacing of a single value inside of square brackets of an array.
-* `objectsInArrays` sets the spacings between the curly braces and square brackets of object literals that are the first or last element in an array.
-* `arraysInArrays` sets the spacing between the square brackets of array literals that are the first or last element in an array.
-* `arraysInObjects` sets the spacing between the square bracket and the curly brace of an array literal that is the last element in an object.
-* `objectsInObjects` sets the spacing between the curly brace of an object literal that is the last element in an object and the curly brace of the containing object.
-* `propertyName` sets the spacing in square brackets of computed member expressions.
+* `singleValue` 设置数组方括号内单个值周围的空格。
+* `objectsInArrays` 设置作为数组首个或末个元素的对象字面量，其大括号与方括号之间的空格。
+* `arraysInArrays` 设置作为数组首个或末个元素的数组字面量，其方括号之间的空格。
+* `arraysInObjects` 设置作为对象末个元素的数组字面量，其方括号与大括号之间的空格。
+* `objectsInObjects` 设置作为对象末个元素的对象字面量，其大括号与外层对象的大括号之间的空格。
+* `propertyName` 设置计算成员表达式方括号内的空格。
 
-In each of the following examples, the `"always"` option is assumed.
+以下示例均假设使用 `"always"` 选项。
 
-Examples of **incorrect** code for this rule when `"singleValue"` is set to `false`:
+当 `"singleValue"` 设为 `false` 时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -240,7 +250,7 @@ var foo = [ { 'foo': 'bar' } ];
 
 :::
 
-Examples of **correct** code for this rule when `"singleValue"` is set to `false`:
+当 `"singleValue"` 设为 `false` 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -253,7 +263,7 @@ var foo = [{ 'foo': 'bar' }];
 
 :::
 
-Examples of **incorrect** code when `"objectsInArrays"` is set to `false`:
+当 `"objectsInArrays"` 设为 `false` 时的**错误**代码示例：
 
 ::: incorrect
 
@@ -266,7 +276,7 @@ var arr = [ {
 
 :::
 
-Examples of **correct** code when `"objectsInArrays"` is set to `false`:
+当 `"objectsInArrays"` 设为 `false` 时的**正确**代码示例：
 
 ::: correct
 
@@ -279,7 +289,7 @@ var arr = [{
 
 :::
 
-Examples of **incorrect** code when `"arraysInArrays"` is set to `false`:
+当 `"arraysInArrays"` 设为 `false` 时的**错误**代码示例：
 
 ::: incorrect
 
@@ -290,7 +300,7 @@ var arr = [ [ 1, 2 ], 2, [ 3, 4 ] ];
 
 :::
 
-Examples of **correct** code when `"arraysInArrays"` is set to `false`:
+当 `"arraysInArrays"` 设为 `false` 时的**正确**代码示例：
 
 ::: correct
 
@@ -301,7 +311,7 @@ var arr = [[ 1, 2 ], 2, [ 3, 4 ]];
 
 :::
 
-Examples of **incorrect** code when `"arraysInObjects"` is set to `false`:
+当 `"arraysInObjects"` 设为 `false` 时的**错误**代码示例：
 
 ::: incorrect
 
@@ -312,7 +322,7 @@ var obj = { "foo": [ "baz", "bar" ] };
 
 :::
 
-Examples of **correct** code when `"arraysInObjects"` is set to `false`:
+当 `"arraysInObjects"` 设为 `false` 时的**正确**代码示例：
 
 ::: correct
 
@@ -323,7 +333,7 @@ var obj = { "foo": [ "baz", "bar" ]};
 
 :::
 
-Examples of **incorrect** code when `"objectsInObjects"` is set to `false`:
+当 `"objectsInObjects"` 设为 `false` 时的**错误**代码示例：
 
 ::: incorrect
 
@@ -334,7 +344,7 @@ var obj = { "foo": [ "baz", "bar" ], "qux": { "baz": 1, "bar": 2 } };
 
 :::
 
-Examples of **correct** code when `"objectsInObjects"` is set to `false`:
+当 `"objectsInObjects"` 设为 `false` 时的**正确**代码示例：
 
 ::: correct
 
@@ -345,7 +355,7 @@ var obj = { "foo": [ "baz", "bar" ], "qux": { "baz": 1, "bar": 2 }};
 
 :::
 
-Examples of **incorrect** code when `"propertyName"` is set to `false`:
+当 `"propertyName"` 设为 `false` 时的**错误**代码示例：
 
 ::: incorrect
 
@@ -356,7 +366,7 @@ var foo = obj[ bar ];
 
 :::
 
-Examples of **correct** code when `"propertyName"` is set to `false`:
+当 `"propertyName"` 设为 `false` 时的**正确**代码示例：
 
 ::: correct
 
@@ -367,6 +377,8 @@ var foo = obj[0, 1];
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You can turn this rule off if you are not concerned with the consistency of spacing between brackets.
+## 何时不使用
+
+如果你不关心括号之间空格的一致性，可以关闭此规则。
