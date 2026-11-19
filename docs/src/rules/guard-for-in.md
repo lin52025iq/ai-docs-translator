@@ -10,7 +10,7 @@ further_reading:
 ---
 
 
-Looping over objects with a `for in` loop will include properties that are inherited through the prototype chain. This behavior can lead to unexpected items in your for loop.
+使用 `for in` 循环遍历对象时，会包含通过原型链继承的属性。这种行为可能会导致循环中出现意料之外的项目。
 
 ```js
 for (key in foo) {
@@ -18,17 +18,19 @@ for (key in foo) {
 }
 ```
 
-For codebases that do not support ES2022, `Object.prototype.hasOwnProperty.call(foo, key)` can be used as a check that the property is not inherited.
+对于不支持 ES2022 的代码库，可以使用 `Object.prototype.hasOwnProperty.call(foo, key)` 检查属性是否为继承属性。
 
-For codebases that do support ES2022, `Object.hasOwn(foo, key)` can be used as a shorter alternative; see [prefer-object-has-own](prefer-object-has-own).
+对于支持 ES2022 的代码库，可以使用更简洁的替代方式 `Object.hasOwn(foo, key)`；请参阅 [prefer-object-has-own](prefer-object-has-own)。
 
-Note that simply checking `foo.hasOwnProperty(key)` is likely to cause an error in some cases; see [no-prototype-builtins](no-prototype-builtins).
+请注意，仅检查 `foo.hasOwnProperty(key)` 在某些情况下可能会导致错误；请参阅 [no-prototype-builtins](no-prototype-builtins)。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at preventing unexpected behavior that could arise from using a `for in` loop without filtering the results in the loop. As such, it will warn when `for in` loops do not filter their results with an `if` statement.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在防止因在 `for in` 循环中未筛选结果而导致的意外行为。因此，当 `for in` 循环未使用 `if` 语句筛选结果时，此规则会发出警告。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -42,7 +44,7 @@ for (key in foo) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -70,6 +72,8 @@ for (key in foo) {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
+
+此规则没有选项。
