@@ -6,13 +6,15 @@ handled_by_typescript: true
 
 
 
-Constant bindings cannot be modified. An attempt to modify a constant binding will raise a runtime error.
+常量绑定不能被修改。尝试修改常量绑定会引发运行时错误。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed to flag modifying variables that are declared using `const`, `using`, or `await using` keywords.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在标记使用 `const`、`using` 或 `await using` 关键字声明的变量被修改的情况。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -65,7 +67,7 @@ if (bar) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -120,10 +122,14 @@ for (const a of [1, 2, 3]) { // `a` is re-defined (not modified) on each loop st
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-If you don't want to be notified about modifying variables that are declared using `const`, `using`, and `await using` keywords, you can safely disable this rule.
+<a id="when-not-to-use-it"></a>
+
+## 何时不使用
+
+如果你不希望收到关于修改使用 `const`、`using` 和 `await using` 关键字声明的变量的提示，可以放心禁用此规则。
