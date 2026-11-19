@@ -11,9 +11,9 @@ further_reading:
 ---
 
 
-It's a common mistake in JavaScript to create an object with just a setter for a property but never have a corresponding getter defined for it. Without a getter, you cannot read the property, so it ends up not being used.
+在 JavaScript 中，常见的错误是创建一个对象，只为某个属性定义 setter，却没有定义对应的 getter。没有 getter，就无法读取该属性，因此该属性最终不会被使用。
 
-Here are some examples:
+以下是一些示例：
 
 ```js
 // Bad
@@ -36,26 +36,32 @@ const p = {
 
 ```
 
-This rule warns if setters are defined without getters. Using an option `getWithoutSet`, it will warn if you have a getter without a setter also.
+如果定义了 setter 却没有 getter，此规则会发出警告。使用 `getWithoutSet` 选项时，如果定义了 getter 却没有 setter，此规则也会发出警告。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces a style where it requires to have a getter for every property which has a setter defined.
+## 规则详情
 
-By activating the option `getWithoutSet` it enforces the presence of a setter for every property which has a getter defined.
+此规则强制要求为每个定义了 setter 的属性提供 getter。
 
-This rule always checks object literals and property descriptors. By default, it also checks class declarations and class expressions.
+启用 `getWithoutSet` 选项后，此规则会强制要求为每个定义了 getter 的属性提供 setter。
 
-## Options
+此规则始终检查对象字面量和属性描述符。默认情况下，它还会检查类声明和类表达式。
 
-* `setWithoutGet` set to `true` will warn for setters without getters (Default `true`).
-* `getWithoutSet` set to `true` will warn for getters without setters (Default `false`).
-* `enforceForClassMembers` set to `true` additionally applies this rule to class getters/setters (Default `true`). Set `enforceForClassMembers` to `false` if you want this rule to ignore class declarations and class expressions.
-* `enforceForTSTypes`: set to `true` additionally applies this rule to TypeScript type definitions (Default `false`).
+<a id="options"></a>
+
+## 选项
+
+* `setWithoutGet` 设置为 `true` 时，如果 setter 没有 getter，则发出警告（默认值为 `true`）。
+* `getWithoutSet` 设置为 `true` 时，如果 getter 没有 setter，则发出警告（默认值为 `false`）。
+* `enforceForClassMembers` 设置为 `true` 时，此规则还会应用于类的 getter/setter（默认值为 `true`）。如果希望此规则忽略类声明和类表达式，请将 `enforceForClassMembers` 设置为 `false`。
+* `enforceForTSTypes`：设置为 `true` 时，此规则还会应用于 TypeScript 类型定义（默认值为 `false`）。
+
+<a id="setwithoutget"></a>
 
 ### setWithoutGet
 
-Examples of **incorrect** code for the default `{ "setWithoutGet": true }` option:
+对于默认的 `{ "setWithoutGet": true }` 选项，以下代码示例是**错误**的：
 
 :::incorrect
 
@@ -93,7 +99,7 @@ Object.defineProperty(r3, 'c', {
 
 :::
 
-Examples of **correct** code for the default `{ "setWithoutGet": true }` option:
+对于默认的 `{ "setWithoutGet": true }` 选项，以下代码示例是**正确**的：
 
 :::correct
 
@@ -133,9 +139,11 @@ Object.defineProperty(t2, 'c', {
 
 :::
 
+<a id="getwithoutset"></a>
+
 ### getWithoutSet
 
-Examples of **incorrect** code for the `{ "getWithoutSet": true }` option:
+对于 `{ "getWithoutSet": true }` 选项，以下代码示例是**错误**的：
 
 :::incorrect
 
@@ -185,7 +193,7 @@ Object.defineProperty(x3, 'c', {
 
 :::
 
-Examples of **correct** code for the `{ "getWithoutSet": true }` option:
+对于 `{ "getWithoutSet": true }` 选项，以下代码示例是**正确**的：
 
 :::correct
 
@@ -224,14 +232,16 @@ Object.defineProperty(z2, 'c', {
 
 :::
 
+<a id="enforceforclassmembers"></a>
+
 ### enforceForClassMembers
 
-When `enforceForClassMembers` is set to `true` (default):
+当 `enforceForClassMembers` 设置为 `true`（默认值）时：
 
-* `"getWithoutSet": true` will also warn for getters without setters in classes.
-* `"setWithoutGet": true` will also warn for setters without getters in classes.
+* `"getWithoutSet": true` 还会针对类中没有 setter 的 getter 发出警告。
+* `"setWithoutGet": true` 还会针对类中没有 getter 的 setter 发出警告。
 
-Examples of **incorrect** code for `{ "getWithoutSet": true, "enforceForClassMembers": true }`:
+对于 `{ "getWithoutSet": true, "enforceForClassMembers": true }`，以下代码示例是**错误**的：
 
 :::incorrect
 
@@ -262,7 +272,7 @@ const Baz = class {
 
 :::
 
-Examples of **incorrect** code for `{ "setWithoutGet": true, "enforceForClassMembers": true }`:
+对于 `{ "setWithoutGet": true, "enforceForClassMembers": true }`，以下代码示例是**错误**的：
 
 :::incorrect
 
@@ -284,9 +294,9 @@ const Bar = class {
 
 :::
 
-When `enforceForClassMembers` is set to `false`, this rule ignores classes.
+当 `enforceForClassMembers` 设置为 `false` 时，此规则会忽略类。
 
-Examples of **correct** code for `{ "getWithoutSet": true, "setWithoutGet": true, "enforceForClassMembers": false }`:
+对于 `{ "getWithoutSet": true, "setWithoutGet": true, "enforceForClassMembers": false }`，以下代码示例是**正确**的：
 
 :::correct
 
@@ -322,14 +332,16 @@ const Quux = class {
 
 :::
 
+<a id="enforcefortstypes"></a>
+
 ### enforceForTSTypes
 
-When `enforceForTSTypes` is set to `true`:
+当 `enforceForTSTypes` 设置为 `true` 时：
 
-* `"getWithoutSet": true` will also warn for getters without setters in TypeScript types.
-* `"setWithoutGet": true` will also warn for setters without getters in TypeScript types.
+* `"getWithoutSet": true` 还会针对 TypeScript 类型中没有 setter 的 getter 发出警告。
+* `"setWithoutGet": true` 还会针对 TypeScript 类型中没有 getter 的 setter 发出警告。
 
-Examples of **incorrect** code for `{ "getWithoutSet": true, "enforceForTSTypes": true }`:
+对于 `{ "getWithoutSet": true, "enforceForTSTypes": true }`，以下代码示例是**错误**的：
 
 :::incorrect
 
@@ -347,7 +359,7 @@ type T = {
 
 :::
 
-Examples of **incorrect** code for `{ "setWithoutGet": true, "enforceForTSTypes": true }`:
+对于 `{ "setWithoutGet": true, "enforceForTSTypes": true }`，以下代码示例是**错误**的：
 
 :::incorrect
 
@@ -365,9 +377,9 @@ type T = {
 
 :::
 
-When `enforceForTSTypes` is set to `false`, this rule ignores TypeScript types.
+当 `enforceForTSTypes` 设置为 `false` 时，此规则会忽略 TypeScript 类型。
 
-Examples of **correct** code for `{ "getWithoutSet": true, "setWithoutGet": true, "enforceForTSTypes": false }`:
+对于 `{ "getWithoutSet": true, "setWithoutGet": true, "enforceForTSTypes": false }`，以下代码示例是**正确**的：
 
 :::correct
 
@@ -387,10 +399,11 @@ type T = {
 
 :::
 
-## Known Limitations
+<a id="known-limitations"></a>
 
-Due to the limits of static analysis, this rule does not account for possible side effects and in certain cases
-might not report a missing pair for a getter/setter that has a computed key, like in the following example:
+## 已知限制
+
+受静态分析能力的限制，此规则不会考虑可能产生的副作用。在某些情况下，如果 getter/setter 使用了计算属性键，此规则可能不会报告缺失的配对，如下例所示：
 
 ```js
 /*eslint accessor-pairs: "error"*/
@@ -408,8 +421,7 @@ const a = {
 };
 ```
 
-Also, this rule does not disallow duplicate keys in object literals and class definitions, and in certain cases with duplicate keys
-might not report a missing pair for a getter/setter, like in the following example:
+此外，此规则不会禁止对象字面量和类定义中的重复键；在某些存在重复键的情况下，此规则可能不会报告 getter/setter 配对缺失，如下例所示：
 
 ```js
 /*eslint accessor-pairs: "error"*/
@@ -426,12 +438,14 @@ const b = {
 };
 ```
 
-The code above creates an object with just a setter for the property `"a"`.
+上述代码创建了一个对象，其中属性 `"a"` 只有 setter。
 
-See [no-dupe-keys](no-dupe-keys) if you also want to disallow duplicate keys in object literals.
+如果还想禁止对象字面量中的重复键，请参阅 [no-dupe-keys](no-dupe-keys)。
 
-See [no-dupe-class-members](no-dupe-class-members) if you also want to disallow duplicate names in class definitions.
+如果还想禁止类定义中的重复名称，请参阅 [no-dupe-class-members](no-dupe-class-members)。
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You can turn this rule off if you are not concerned with the simultaneous presence of setters and getters on objects.
+## 何时不应使用
+
+如果你不关心对象上的 setter 和 getter 是否同时存在，可以关闭此规则。
