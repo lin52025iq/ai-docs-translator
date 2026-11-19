@@ -40,6 +40,7 @@ function readDocument(content, allowHeadingAliases = false) {
     const templates = content.match(/\{\{[\s\S]*?\}\}|\{%[\s\S]*?%\}|\{#[\s\S]*?#\}|\{\{|\{%|\{#/g) ?? []
     let body = content.slice(frontmatter?.[0].length ?? 0)
     if (allowHeadingAliases) body = body.replace(anchorLine, (line, id) => headingIds.delete(id) ? '' : line)
+    const containers = (body.match(/^[ \t]*:{3,}[ \t]+\S[^\r\n]*$/gm) ?? []).map((line) => line.trimEnd())
     const tokens = markdown.parse(body, {}).flatMap((token) => [token, ...(token.children ?? [])])
     const code = tokens
         .filter((token) => token.type === 'fence' || token.type === 'code_block')
@@ -57,12 +58,12 @@ function readDocument(content, allowHeadingAliases = false) {
             if (path !== 'docs/src/pages/flags.md') return content
             return content.replace(/(\{% else %\})\n[^\n<>{}]+\n(\{% endif %\})/g, '$1\n$2')
         })
-    return { data, templates, code, inlineCode, prose, links, html }
+    return { data, templates, containers, code, inlineCode, prose, links, html }
 }
 
 const original = readDocument(source)
 const translated = readDocument(candidate, true)
-const changed = ['data', 'templates', 'code', 'links', 'html'].filter((key) => !isDeepStrictEqual(original[key], translated[key]))
+const changed = ['data', 'templates', 'containers', 'code', 'links', 'html'].filter((key) => !isDeepStrictEqual(original[key], translated[key]))
 if (candidate.includes('\0')) changed.push('NUL')
 const missing = original.inlineCode.filter(
     (value) => !translated.inlineCode.includes(value) && !translated.prose.some((text) => text.includes(value))
