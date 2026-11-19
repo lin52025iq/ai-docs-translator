@@ -4,14 +4,16 @@ rule_type: suggestion
 ---
 
 
-Some style guides disallow comments on the same line as code. Code can become difficult to read if comments immediately follow the code on the same line.
-On the other hand, it is sometimes faster and more obvious to put comments immediately following code.
+有些风格指南不允许在代码所在行添加注释。如果注释紧跟在代码后面且位于同一行，代码可能会变得难以阅读。
+另一方面，有时在代码后面立即添加注释会更快捷，也更直观。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows comments on the same line as code.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止在代码所在行添加注释。
+
+此规则下的**错误**代码示例：
 
 ::: incorrect
 
@@ -32,7 +34,7 @@ const c = 3; /* A block comment after code */
 
 :::
 
-Examples of **correct** code for this rule:
+此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -48,11 +50,13 @@ const bar = 5;
 
 :::
 
-### JSX exception
+<a id="jsx-exception"></a>
 
-Comments inside the curly braces in JSX are allowed to be on the same line as the braces, but only if they are not on the same line with other code, and the braces do not enclose an actual expression.
+### JSX 例外
 
-Examples of **incorrect** code for this rule:
+JSX 中大括号内的注释可以与大括号位于同一行，但前提是它们不与其他代码处于同一行，并且大括号内不包含实际表达式。
+
+此规则下的**错误**代码示例：
 
 ::: incorrect { "parserOptions": { "ecmaFeatures": { "jsx": true } } }
 
@@ -72,7 +76,7 @@ const bar = (
 
 :::
 
-Examples of **correct** code for this rule:
+此规则下的**正确**代码示例：
 
 ::: correct { "parserOptions": { "ecmaFeatures": { "jsx": true } } }
 
@@ -108,13 +112,15 @@ const quux = (
 
 :::
 
-## Options
+<a id="options"></a>
+
+## 选项
 
 ### ignorePattern
 
-To make this rule ignore specific comments, set the `ignorePattern` option to a string pattern that will be passed to the [`RegExp` constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/RegExp).
+若要让此规则忽略特定注释，请将 `ignorePattern` 选项设为字符串模式。该模式将传递给 [`RegExp` 构造函数](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/RegExp)。
 
-Examples of **correct** code for the `ignorePattern` option:
+`ignorePattern` 选项下的**正确**代码示例：
 
 ::: correct
 
@@ -126,7 +132,7 @@ import(/* webpackChunkName: "my-chunk-name" */ './locale/en');
 
 :::
 
-Examples of **incorrect** code for the `ignorePattern` option:
+`ignorePattern` 选项下的**错误**代码示例：
 
 ::: incorrect
 
