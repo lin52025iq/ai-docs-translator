@@ -9,10 +9,9 @@ further_reading:
 
 
 
-ECMAScript 6 provides a concise form for defining object literal methods and properties. This
-syntax can make defining complex object literals much cleaner.
+ECMAScript 6 提供了一种简洁的语法，用于定义对象字面量的方法和属性。这种语法可以让复杂对象字面量的定义更加简洁。
 
-Here are a few common examples using the ES5 syntax:
+下面是几个使用 ES5 语法的常见示例：
 
 ```js
 // properties
@@ -29,7 +28,7 @@ const bar = {
 };
 ```
 
-Now here are ES6 equivalents:
+以下是对应的 ES6 写法：
 
 ```js
 // properties
@@ -42,13 +41,13 @@ const bar = {
 };
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces the use of the shorthand syntax. This applies
-to all methods (including generators) defined in object literals and any
-properties defined where the key name matches name of the assigned variable.
+## 规则详情
 
-Each of the following properties would warn:
+此规则要求使用简写语法。它适用于对象字面量中定义的所有方法（包括生成器），以及键名与所赋值变量名相同的所有属性。
+
+以下属性都会触发警告：
 
 ```js
 /*eslint object-shorthand: "error"*/
@@ -61,7 +60,7 @@ const foo = {
 };
 ```
 
-In that case the expected syntax would have been:
+在这种情况下，预期的语法如下：
 
 ```js
 /*eslint object-shorthand: "error"*/
@@ -74,8 +73,7 @@ const foo = {
 };
 ```
 
-This rule does not flag arrow functions inside of object literals.
-The following will *not* warn:
+此规则不会标记对象字面量中的箭头函数。以下代码*不会*触发警告：
 
 ```js
 /*eslint object-shorthand: "error"*/
@@ -85,18 +83,20 @@ const foo = {
 };
 ```
 
-## Options
+<a id="options"></a>
 
-The rule takes an option which specifies when it should be applied. It can be set to one of the following values:
+## 选项
 
-* `"always"` (default) expects that the shorthand will be used whenever possible.
-* `"methods"` ensures the method shorthand is used (also applies to generators).
-* `"properties"` ensures the property shorthand is used (where the key and variable name match).
-* `"never"` ensures that no property or method shorthand is used in any object literal.
-* `"consistent"` ensures that either all shorthand or all long-form will be used in an object literal.
-* `"consistent-as-needed"` ensures that either all shorthand or all long-form will be used in an object literal, but ensures all shorthand whenever possible.
+此规则接受一个选项，用于指定何时应用此规则。该选项可以设为以下值之一：
 
-You can set the option in configuration like this:
+* `"always"`（默认值）要求在任何可能的情况下都使用简写形式。
+* `"methods"` 要求使用方法简写形式（也适用于生成器）。
+* `"properties"` 要求使用属性简写形式（键名与变量名相同时）。
+* `"never"` 要求对象字面量中不使用任何属性或方法简写形式。
+* `"consistent"` 要求对象字面量中统一使用简写形式或完整形式。
+* `"consistent-as-needed"` 要求对象字面量中统一使用简写形式或完整形式，但在任何可能的情况下都使用简写形式。
+
+可以像这样在配置中设置该选项：
 
 ```json
 {
@@ -104,14 +104,14 @@ You can set the option in configuration like this:
 }
 ```
 
-Additionally, the rule takes an optional object configuration:
+此外，此规则还接受一个可选的对象配置：
 
-* `"avoidQuotes": true` indicates that long-form syntax is preferred whenever the object key is a string literal (default: `false`). Note that this option can only be enabled when the string option is set to `"always"`, `"methods"`, or `"properties"`.
-* `"ignoreConstructors": true` can be used to prevent the rule from reporting errors for constructor functions. (By default, the rule treats constructors the same way as other functions.) Note that this option can only be enabled when the string option is set to `"always"` or `"methods"`.
-* `"methodsIgnorePattern"` (`string`) for methods whose names match this regex pattern, the method shorthand will not be enforced. Note that this option can only be used when the string option is set to `"always"` or `"methods"`.
-* `"avoidExplicitReturnArrows": true` indicates that methods are preferred over explicit-return arrow functions for function properties. (By default, the rule allows either of these.) Note that this option can only be enabled when the string option is set to `"always"` or `"methods"`.
+* `"avoidQuotes": true` 表示对象键为字符串字面量时优先使用完整语法（默认值：`false`）。请注意，只有当字符串选项设为 `"always"`、`"methods"` 或 `"properties"` 时，才能启用此选项。
+* `"ignoreConstructors": true` 可用于阻止此规则报告构造函数相关错误。（默认情况下，此规则对构造函数和其他函数一视同仁。）请注意，只有当字符串选项设为 `"always"` 或 `"methods"` 时，才能启用此选项。
+* `"methodsIgnorePattern"`（`string`）对于名称匹配此正则表达式模式的方法，不强制使用方法简写形式。请注意，只有当字符串选项设为 `"always"` 或 `"methods"` 时，才能使用此选项。
+* `"avoidExplicitReturnArrows": true` 表示函数属性优先使用方法，而不是显式返回值的箭头函数。（默认情况下，此规则允许使用其中任一种形式。）请注意，只有当字符串选项设为 `"always"` 或 `"methods"` 时，才能启用此选项。
 
-Object methods that provide the binding for a `super` reference are ignored when `"never"` or `"avoidQuotes"` would otherwise require long-form syntax because converting them would produce invalid JavaScript.
+当 `"never"` 或 `"avoidQuotes"` 会要求使用完整语法时，如果对象方法为 `super` 引用提供绑定，则会被忽略，因为将其转换为完整语法会生成无效的 JavaScript。
 
 ### avoidQuotes
 
@@ -121,7 +121,7 @@ Object methods that provide the binding for a `super` reference are ignored when
 }
 ```
 
-Example of **incorrect** code for this rule with the `"always", { "avoidQuotes": true }` option:
+在此规则的 `"always", { "avoidQuotes": true }` 选项下，以下代码是**错误**示例：
 
 ::: incorrect
 
@@ -135,7 +135,7 @@ const foo = {
 
 :::
 
-Example of **correct** code for this rule with the `"always", { "avoidQuotes": true }` option:
+在此规则的 `"always", { "avoidQuotes": true }` 选项下，以下代码是**正确**示例：
 
 ::: correct
 
@@ -158,7 +158,7 @@ const foo = {
 }
 ```
 
-Example of **correct** code for this rule with the `"always", { "ignoreConstructors": true }` option:
+在此规则的 `"always", { "ignoreConstructors": true }` 选项下，以下代码是**正确**示例：
 
 ::: correct
 
@@ -178,7 +178,7 @@ const foo = {
 }
 ```
 
-Example of **incorrect** code for this rule with the `"methods", { "ignoreConstructors": false }` option:
+在此规则的 `"methods", { "ignoreConstructors": false }` 选项下，以下代码是**错误**示例：
 
 ::: incorrect
 
@@ -192,7 +192,7 @@ const foo = {
 
 :::
 
-Example of **correct** code for this rule with the `"methods", { "ignoreConstructors": false }` option:
+在此规则的 `"methods", { "ignoreConstructors": false }` 选项下，以下代码是**正确**示例：
 
 ::: correct
 
@@ -208,7 +208,7 @@ const foo = {
 
 ### methodsIgnorePattern
 
-Example of **correct** code for this rule with the `"always", { "methodsIgnorePattern": "^bar$" }` option:
+在此规则的 `"always", { "methodsIgnorePattern": "^bar$" }` 选项下，以下代码是**正确**示例：
 
 ::: correct
 
@@ -230,7 +230,7 @@ const foo = {
 }
 ```
 
-Example of **incorrect** code for this rule with the `"always", { "avoidExplicitReturnArrows": true }` option:
+在此规则的 `"always", { "avoidExplicitReturnArrows": true }` 选项下，以下代码是**错误**示例：
 
 ::: incorrect
 
@@ -250,7 +250,7 @@ const foo = {
 
 :::
 
-Example of **correct** code for this rule with the `"always", { "avoidExplicitReturnArrows": true }` option:
+在此规则的 `"always", { "avoidExplicitReturnArrows": true }` 选项下，以下代码是**正确**示例：
 
 ::: correct
 
@@ -268,7 +268,7 @@ const foo = {
 
 :::
 
-Example of **incorrect** code for this rule with the `"consistent"` option:
+在此规则的 `"consistent"` 选项下，以下代码是**错误**示例：
 
 ::: incorrect
 
@@ -283,7 +283,7 @@ const foo = {
 
 :::
 
-Examples of **correct** code for this rule with the `"consistent"` option:
+在此规则的 `"consistent"` 选项下，以下代码是**正确**示例：
 
 ::: correct
 
@@ -303,7 +303,7 @@ const bar = {
 
 :::
 
-Example of **incorrect** code with the `"consistent-as-needed"` option, which is very similar to `"consistent"`:
+以下代码是 `"consistent-as-needed"` 选项下的**错误**示例，该选项与 `"consistent"` 非常相似：
 
 ::: incorrect
 
@@ -318,7 +318,8 @@ const foo = {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-Anyone not yet in an ES6 environment would not want to apply this rule. Others may find the terseness of the shorthand
-syntax harder to read and may not want to encourage it with this rule.
+## 何时不应使用此规则
+
+尚未使用 ES6 环境的用户不应应用此规则。其他用户可能会觉得简写语法过于简洁，难以阅读，因此不希望通过此规则鼓励使用简写语法。
