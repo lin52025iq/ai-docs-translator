@@ -3,31 +3,35 @@ title: line-comment-position
 rule_type: layout
 ---
 
-Line comments can be positioned above or beside code. This rule helps teams maintain a consistent style.
+行注释可以放在代码上方或旁边。此规则帮助团队保持一致的风格。
 
 ```js
 // above comment
 var foo = "bar";  // beside comment
 ```
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule enforces consistent position of line comments. Block comments are not affected by this rule. By default, this rule ignores comments starting with the following words: `eslint`, `jshint`, `jslint`, `istanbul`, `global`, `exported`, `jscs`, `falls through`.
+此规则强制行注释使用一致的位置。块注释不受此规则影响。默认情况下，此规则会忽略以以下单词开头的注释：`eslint`、`jshint`、`jslint`、`istanbul`、`global`、`exported`、`jscs`、`falls through`。
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule takes one argument, which can be a string or an object. The string settings are the same as those of the `position` property (explained below). The object option has the following properties:
+此规则接受一个参数，可以是字符串或对象。字符串设置与 `position` 属性（如下所述）的设置相同。对象选项具有以下属性：
 
-### position
+<a id="position"></a>
+### 位置
 
-The `position` option has two settings:
+`position` 选项有两个设置：
 
-* `above` (default) enforces line comments only above code, in its own line.
-* `beside` enforces line comments only at the end of code lines.
+* `above`（默认值）要求行注释只能放在代码上方的独立行中。
+* `beside` 要求行注释只能放在代码行末尾。
 
-#### position: above
+<a id="position-above"></a>
+#### position：above
 
-Examples of **correct** code for the `{ "position": "above" }` option:
+`{ "position": "above" }` 选项的**正确**代码示例：
 
 ::: correct
 
@@ -39,7 +43,7 @@ Examples of **correct** code for the `{ "position": "above" }` option:
 
 :::
 
-Examples of **incorrect** code for the `{ "position": "above" }` option:
+`{ "position": "above" }` 选项的**错误**代码示例：
 
 ::: incorrect
 
@@ -50,9 +54,10 @@ Examples of **incorrect** code for the `{ "position": "above" }` option:
 
 :::
 
-#### position: beside
+<a id="position-beside"></a>
+#### position：beside
 
-Examples of **correct** code for the `{ "position": "beside" }` option:
+`{ "position": "beside" }` 选项的**正确**代码示例：
 
 ::: correct
 
@@ -63,7 +68,7 @@ Examples of **correct** code for the `{ "position": "beside" }` option:
 
 :::
 
-Examples of **incorrect** code for the `{ "position": "beside" }` option:
+`{ "position": "beside" }` 选项的**错误**代码示例：
 
 ::: incorrect
 
@@ -77,9 +82,9 @@ Examples of **incorrect** code for the `{ "position": "beside" }` option:
 
 ### ignorePattern
 
-By default this rule ignores comments starting with the following words: `eslint`, `jshint`, `jslint`, `istanbul`, `global`, `exported`, `jscs`, `falls through`. An alternative regular expression can be provided.
+默认情况下，此规则会忽略以以下单词开头的注释：`eslint`、`jshint`、`jslint`、`istanbul`、`global`、`exported`、`jscs`、`falls through`。也可以提供其他正则表达式。
 
-Examples of **correct** code for the `ignorePattern` option:
+`ignorePattern` 选项的**正确**代码示例：
 
 ::: correct
 
@@ -90,7 +95,7 @@ Examples of **correct** code for the `ignorePattern` option:
 
 :::
 
-Examples of **incorrect** code for the `ignorePattern` option:
+`ignorePattern` 选项的**错误**代码示例：
 
 ::: incorrect
 
@@ -103,9 +108,9 @@ Examples of **incorrect** code for the `ignorePattern` option:
 
 ### applyDefaultIgnorePatterns
 
-Default ignore patterns are applied even when `ignorePattern` is provided. If you want to omit default patterns, set this option to `false`.
+即使提供了 `ignorePattern`，也会应用默认忽略模式。如果要省略默认模式，请将此选项设为 `false`。
 
-Examples of **correct** code for the `{ "applyDefaultIgnorePatterns": false }` option:
+`{ "applyDefaultIgnorePatterns": false }` 选项的**正确**代码示例：
 
 ::: correct
 
@@ -116,7 +121,7 @@ Examples of **correct** code for the `{ "applyDefaultIgnorePatterns": false }` o
 
 :::
 
-Examples of **incorrect** code for the `{ "applyDefaultIgnorePatterns": false }` option:
+`{ "applyDefaultIgnorePatterns": false }` 选项的**错误**代码示例：
 
 ::: incorrect
 
@@ -127,12 +132,14 @@ Examples of **incorrect** code for the `{ "applyDefaultIgnorePatterns": false }`
 
 :::
 
-**Deprecated:** the object property `applyDefaultPatterns` is deprecated. Please use the property `applyDefaultIgnorePatterns` instead.
+**已弃用：**对象属性 `applyDefaultPatterns` 已弃用。请改用属性 `applyDefaultIgnorePatterns`。
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 何时不应使用
 
-If you aren't concerned about having different line comment styles, then you can turn off this rule.
+如果你不介意行注释风格不一致，可以关闭此规则。
 
-## Compatibility
+<a id="compatibility"></a>
+## 兼容性
 
-**JSCS**: [validateCommentPosition](https://jscs-dev.github.io/rule/validateCommentPosition)
+**JSCS**：[validateCommentPosition](https://jscs-dev.github.io/rule/validateCommentPosition)
