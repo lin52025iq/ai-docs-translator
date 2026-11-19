@@ -4,20 +4,20 @@ rule_type: suggestion
 ---
 
 
-Unlike statically-typed languages which enforce that a function returns a specified type of value, JavaScript allows different code paths in a function to return different types of values.
+与会强制函数返回指定类型值的静态类型语言不同，JavaScript 允许函数中的不同代码路径返回不同类型的值。
 
-A confusing aspect of JavaScript is that a function returns `undefined` if any of the following are true:
+JavaScript 中一个容易令人困惑的地方是：如果满足以下任一条件，函数就会返回 `undefined`：
 
-* It does not execute a `return` statement before it exits.
-* It executes `return` which does not specify a value explicitly.
-* It executes `return undefined`.
-* It executes `return void` followed by an expression (for example, a function call).
-* It executes `return` followed by any other expression which evaluates to `undefined`.
+* 函数退出前没有执行 `return` 语句。
+* 函数执行了 `return`，但没有显式指定值。
+* 函数执行了 `return undefined`。
+* 函数执行了 `return void`，后面跟着一个表达式（例如函数调用）。
+* 函数执行了 `return`，后面跟着其他任何求值结果为 `undefined` 的表达式。
 
-If any code paths in a function return a value explicitly but some code path do not return a value explicitly, it might be a typing mistake, especially in a large function. In the following example:
+如果函数中的某些代码路径显式返回了值，而另一些代码路径没有显式返回值，这可能是类型错误，尤其是在大型函数中。以下示例中：
 
-* A code path through the function returns a Boolean value `true`.
-* Another code path does not return a value explicitly, therefore returns `undefined` implicitly.
+* 一条经过函数的代码路径返回布尔值 `true`。
+* 另一条代码路径没有显式返回值，因此会隐式返回 `undefined`。
 
 ```js
 function doSomething(condition) {
@@ -29,11 +29,13 @@ function doSomething(condition) {
 }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule requires `return` statements to either always or never specify values. This rule ignores function definitions where the name begins with an uppercase letter, because constructors (when invoked with the `new` operator) return the instantiated object implicitly if they do not return another object explicitly.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则要求 `return` 语句始终指定值，或者始终不指定值。此规则会忽略名称以大写字母开头的函数定义，因为构造函数（通过 `new` 运算符调用时）如果没有显式返回其他对象，就会隐式返回已实例化的对象。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -57,7 +59,7 @@ function doSomethingElse(condition) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -83,16 +85,18 @@ function Foo() {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option:
+## 选项
 
-* `"treatUndefinedAsUnspecified": false` (default) always either specify values or return `undefined` implicitly only.
-* `"treatUndefinedAsUnspecified": true` always either specify values or return `undefined` explicitly or implicitly.
+此规则有一个对象选项：
+
+* `"treatUndefinedAsUnspecified": false`（默认值）：始终指定返回值，或者只隐式返回 `undefined`。
+* `"treatUndefinedAsUnspecified": true`：始终指定返回值，或者显式或隐式返回 `undefined`。
 
 ### treatUndefinedAsUnspecified
 
-Examples of **incorrect** code for this rule with the default `{ "treatUndefinedAsUnspecified": false }` option:
+使用默认选项 `{ "treatUndefinedAsUnspecified": false }` 时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -116,7 +120,7 @@ function bar(condition) {
 
 :::
 
-Examples of **incorrect** code for this rule with the `{ "treatUndefinedAsUnspecified": true }` option:
+使用选项 `{ "treatUndefinedAsUnspecified": true }` 时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -140,7 +144,7 @@ function bar(condition) {
 
 :::
 
-Examples of **correct** code for this rule with the `{ "treatUndefinedAsUnspecified": true }` option:
+使用选项 `{ "treatUndefinedAsUnspecified": true }` 时，此规则的正确代码示例：
 
 ::: correct
 
@@ -164,6 +168,8 @@ function bar(condition) {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you want to allow functions to have different `return` behavior depending on code branching, then it is safe to disable this rule.
+## 何时不使用
+
+如果你希望函数根据代码分支采用不同的 `return` 行为，那么可以安全地禁用此规则。
