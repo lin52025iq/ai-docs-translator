@@ -6,13 +6,13 @@ related_rules:
 - space-return-throw-case
 ---
 
-Enforces consistent spacing before opening parenthesis in function definitions.
+此规则用于确保函数定义中左括号前的空格用法一致。
 
 ::: important
-This rule was removed in ESLint v1.0.0 and replaced by the [space-before-function-paren](space-before-function-paren) rule. The name of the rule changed from "parentheses" to "paren" for consistency with the names of other rules.
+此规则已在 ESLint v1.0.0 中移除，并由 [space-before-function-paren](space-before-function-paren) 规则取代。为与其他规则名称保持一致，该规则的名称从 “parentheses” 改为 “paren”。
 :::
 
-When formatting a function, whitespace is allowed between the function name or `function` keyword and the opening paren. Named functions also require a space between the `function` keyword and the function name, but anonymous functions require no whitespace. For example:
+格式化函数时，函数名或 `function` 关键字与左括号之间可以有空格。具名函数的 `function` 关键字与函数名之间也必须有空格，而匿名函数则不需要空格。例如：
 
 ```js
 function withoutSpace(x) {
@@ -28,15 +28,17 @@ var anonymousWithoutSpace = function() {};
 var anonymousWithSpace = function () {};
 ```
 
-Style guides may require a space after the `function` keyword for anonymous functions, while others specify no whitespace. Similarly, the space after a function name may or may not be required.
+有些风格指南要求匿名函数的 `function` 关键字后有空格，而另一些则规定不加空格。同样，函数名后是否需要空格也因风格指南而异。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to enforce consistent spacing before function parentheses and as such, will warn whenever whitespace doesn't match the preferences specified.
+## 规则详情
 
-This rule takes one argument. If it is `"always"`, which is the default option, all named functions and anonymous functions must have space before function parentheses. If `"never"` then all named functions and anonymous functions must not have space before function parentheses. If you want different spacing for named and anonymous functions you can pass a configuration object as the rule argument to configure those separately (e. g. `{"anonymous": "always", "named": "never"}`).
+此规则旨在确保函数括号前的空格用法一致，因此当空格与指定的偏好不符时会发出警告。
 
-Examples of **incorrect** code for this rule with the default `"always"` option:
+此规则接受一个参数。如果参数为默认选项 `"always"`，则所有具名函数和匿名函数的函数括号前都必须有空格。如果参数为 `"never"`，则所有具名函数和匿名函数的函数括号前都不得有空格。如果希望具名函数和匿名函数使用不同的空格规则，可以将配置对象作为规则参数，分别进行配置（例如 `{"anonymous": "always", "named": "never"}`）。
+
+使用默认选项 `"always"` 时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -68,7 +70,7 @@ var baz = {
 
 :::
 
-Examples of **correct** code for this rule with the default `"always"` option:
+使用默认选项 `"always"` 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -100,7 +102,7 @@ var baz = {
 
 :::
 
-Examples of **incorrect** code for this rule with the `"never"` option:
+使用选项 `"never"` 时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -132,7 +134,7 @@ var baz = {
 
 :::
 
-Examples of **correct** code for this rule with the `"never"` option:
+使用选项 `"never"` 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -164,7 +166,7 @@ var baz = {
 
 :::
 
-Examples of **incorrect** code for this rule with the `{"anonymous": "always", "named": "never"}` option:
+使用选项 `{"anonymous": "always", "named": "never"}` 时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -192,7 +194,7 @@ var baz = {
 
 :::
 
-Examples of **correct** code for this rule with the `{"anonymous": "always", "named": "never"}` option:
+使用选项 `{"anonymous": "always", "named": "never"}` 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -220,7 +222,7 @@ var baz = {
 
 :::
 
-Examples of **incorrect** code for this rule with the `{"anonymous": "never", "named": "always"}` option:
+使用选项 `{"anonymous": "never", "named": "always"}` 时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -248,7 +250,7 @@ var baz = {
 
 :::
 
-Examples of **correct** code for this rule with the `{"anonymous": "never", "named": "always"}` option:
+使用选项 `{"anonymous": "never", "named": "always"}` 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -276,6 +278,8 @@ var baz = {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You can turn this rule off if you are not concerned with the consistency of spacing before function parenthesis.
+## 何时不使用此规则
+
+如果你不关心函数括号前空格的一致性，可以关闭此规则。
