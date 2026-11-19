@@ -7,40 +7,40 @@ rule_type: problem
 
 
 
-Unicode includes characters which are made by multiple code points.
-RegExp character class syntax (`/[abc]/`) cannot handle characters which are made by multiple code points as a character; those characters will be dissolved to each code point. For example, `❇️` is made by `❇` (`U+2747`) and VARIATION SELECTOR-16 (`U+FE0F`). If this character is in a RegExp character class, it will match either `❇` (`U+2747`) or VARIATION SELECTOR-16 (`U+FE0F`) rather than `❇️`.
+Unicode 中包含由多个码位组成的字符。
+RegExp 字符类语法（`/[abc]/`）无法将由多个码位组成的字符作为一个字符处理；这些字符会被拆分为各个码位。例如，`❇️` 由 `❇`（`U+2747`）和 VARIATION SELECTOR-16（`U+FE0F`）组成。如果该字符出现在 RegExp 字符类中，它匹配的将是 `❇`（`U+2747`）或 VARIATION SELECTOR-16（`U+FE0F`），而不是 `❇️`。
 
-This rule reports regular expressions which include multiple code point characters in character class syntax. This rule considers the following characters as multiple code point characters.
+此规则会报告字符类语法中包含多个码位字符的正则表达式。此规则将以下字符视为多个码位字符。
 
-**A character with combining characters:**
+**带有组合字符的字符：**
 
-The combining characters are characters which belong to one of `Mc`, `Me`, and `Mn` [Unicode general categories](https://www.unicode.org/L2/L1999/UnicodeData.html#General%20Category).
+组合字符是属于 [Unicode 通用类别](https://www.unicode.org/L2/L1999/UnicodeData.html#General%20Category) `Mc`、`Me` 和 `Mn` 之一的字符。
 
 ```js
 /^[Á]$/u.test("Á"); //→ false
 /^[❇️]$/u.test("❇️"); //→ false
 ```
 
-**A character with Emoji modifiers:**
+**带有 Emoji 修饰符的字符：**
 
 ```js
 /^[👶🏻]$/u.test("👶🏻"); //→ false
 /^[👶🏽]$/u.test("👶🏽"); //→ false
 ```
 
-**A pair of regional indicator symbols:**
+**一对区域指示符号：**
 
 ```js
 /^[🇯🇵]$/u.test("🇯🇵"); //→ false
 ```
 
-**Characters that ZWJ joins:**
+**由 ZWJ 连接的字符：**
 
 ```js
 /^[👨‍👩‍👦]$/u.test("👨‍👩‍👦"); //→ false
 ```
 
-**A surrogate pair without Unicode flag:**
+**不带 Unicode 标志的代理对：**
 
 ```js
 /^[👍]$/.test("👍"); //→ false
@@ -49,11 +49,13 @@ The combining characters are characters which belong to one of `Mc`, `Me`, and `
 /^[👍]$/u.test("👍"); //→ true
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule reports regular expressions which include multiple code point characters in character class syntax.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则会报告字符类语法中包含多个码位字符的正则表达式。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -71,7 +73,7 @@ new RegExp("[🎵]");
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -87,15 +89,17 @@ new RegExp(`[Á-${z}]`, "u"); // variable pattern
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option:
+## 选项
 
-* `"allowEscape"`: When set to `true`, the rule allows any grouping of code points inside a character class as long as they are written using escape sequences. This option only has effect on regular expression literals and on regular expressions created with the `RegExp` constructor with a literal argument as a pattern.
+此规则有一个对象选项：
+
+* `"allowEscape"`：设为 `true` 时，只要字符类中的码位组合以转义序列形式书写，此规则就允许该组合。此选项仅对正则表达式字面量，以及使用字面量参数作为模式创建的 `RegExp` 构造函数正则表达式生效。
 
 ### allowEscape
 
-Examples of **incorrect** code for this rule with the `{ "allowEscape": true }` option:
+启用 `{ "allowEscape": true }` 选项时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -112,7 +116,7 @@ new RegExp(pattern);
 
 :::
 
-Examples of **correct** code for this rule with the `{ "allowEscape": true }` option:
+启用 `{ "allowEscape": true }` 选项时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -129,6 +133,8 @@ new RegExp("[\\u{1F1EF}\\u{1F1F5}]", "u");
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You can turn this rule off if you don't want to check RegExp character class syntax for multiple code point characters.
+## 何时不使用此规则
+
+如果你不想检查 RegExp 字符类语法中是否包含多个码位字符，可以关闭此规则。
