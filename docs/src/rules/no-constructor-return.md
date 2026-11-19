@@ -4,13 +4,14 @@ rule_type: problem
 ---
 
 
-In JavaScript, returning a value in the constructor of a class may be a mistake. Forbidding this pattern prevents mistakes resulting from unfamiliarity with the language or a copy-paste error.
+在 JavaScript 中，在类的构造函数中返回一个值可能是错误的。禁止这种模式可以避免因不熟悉该语言或复制粘贴错误而导致的问题。
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule disallows return statements in the constructor of a class. Note that returning nothing is allowed.
+此规则禁止在类的构造函数中使用 return 语句。请注意，不返回任何内容是允许的。
 
-Examples of **incorrect** code for this rule:
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -35,7 +36,7 @@ class B {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -68,6 +69,7 @@ class E {
 
 :::
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule has no options.
+此规则没有选项。
