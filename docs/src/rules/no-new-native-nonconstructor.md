@@ -12,7 +12,7 @@ further_reading:
 
 
 
-It is a convention in JavaScript that global variables beginning with an uppercase letter typically represent classes that can be instantiated using the `new` operator, such as `new Array` and `new Map`. Confusingly, JavaScript also provides some global variables that begin with an uppercase letter that cannot be called using the `new` operator and will throw an error if you attempt to do so. These are typically functions that are related to data types and are easy to mistake for classes. Consider the following example:
+在 JavaScript 中，通常约定以大写字母开头的全局变量表示可以使用 `new` 运算符实例化的类，例如 `new Array` 和 `new Map`。但令人困惑的是，JavaScript 也提供了一些以大写字母开头、不能使用 `new` 运算符调用的全局变量；如果尝试这样做，就会抛出错误。这些通常是与数据类型相关的函数，很容易被误认为是类。请看以下示例：
 
 ```js
 // throws a TypeError
@@ -22,16 +22,18 @@ const foo = new Symbol("foo");
 const result = new BigInt(9007199254740991);
 ```
 
-Both `new Symbol` and `new BigInt` throw a type error because they are functions and not classes. It is easy to make this mistake by assuming the uppercase letters indicate classes.
+`new Symbol` 和 `new BigInt` 都会抛出类型错误，因为它们是函数而不是类。假设大写字母表示类，很容易犯下这个错误。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at preventing the accidental calling of native JavaScript global functions with the `new` operator. These functions are:
+## 规则详情
+
+此规则旨在防止意外使用 `new` 运算符调用 JavaScript 原生全局函数。此类函数包括：
 
 * `Symbol`
 * `BigInt`
 
-Examples of **incorrect** code for this rule:
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -44,7 +46,7 @@ const bar = new BigInt(9007199254740991);
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -66,10 +68,15 @@ function quux(BigInt) {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-This rule should not be used in ES3/5 environments.
+<a id="when-not-to-use-it"></a>
+
+## 何时不应使用
+
+不应在 ES3/5 环境中使用此规则。
+
