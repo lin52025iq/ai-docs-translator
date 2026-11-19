@@ -2,13 +2,15 @@
 title: no-trailing-spaces
 rule_type: layout
 ---
-Sometimes in the course of editing files, you can end up with extra whitespace at the end of lines. These whitespace differences can be picked up by source control systems and flagged as diffs, causing frustration for developers. While this extra whitespace causes no functional issues, many code conventions require that trailing spaces be removed before check-in.
+有时在编辑文件时，行尾可能会多出空白字符。源代码管理系统可能会检测到这些空白差异并将其标记为差异，这会让开发者感到困扰。虽然这些额外空白不会造成任何功能问题，但许多代码规范要求在提交前删除行尾空格。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows trailing whitespace (spaces, tabs, and other Unicode whitespace characters) at the end of lines.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止行尾出现空白字符（空格、制表符及其他 Unicode 空白字符）。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -22,7 +24,7 @@ var baz = 5;/* trailing whitespace */
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -35,18 +37,20 @@ var baz = 5;
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option:
+## 选项
 
-* `"skipBlankLines": false` (default) disallows trailing whitespace on empty lines
-* `"skipBlankLines": true` allows trailing whitespace on empty lines
-* `"ignoreComments": false` (default) disallows trailing whitespace in comment blocks
-* `"ignoreComments": true` allows trailing whitespace in comment blocks
+此规则有一个对象选项：
+
+* `"skipBlankLines": false`（默认值）禁止空行末尾有空白字符
+* `"skipBlankLines": true` 允许空行末尾有空白字符
+* `"ignoreComments": false`（默认值）禁止注释块中有行尾空白
+* `"ignoreComments": true` 允许注释块中有行尾空白
 
 ### skipBlankLines
 
-Examples of **correct** code for this rule with the `{ "skipBlankLines": true }` option:
+使用 `{ "skipBlankLines": true }` 选项时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -63,7 +67,7 @@ var baz = 5;
 
 ### ignoreComments
 
-Examples of **correct** code for this rule with the `{ "ignoreComments": true }` option:
+使用 `{ "ignoreComments": true }` 选项时，此规则的**正确**代码示例：
 
 ::: correct
 
