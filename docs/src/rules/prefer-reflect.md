@@ -7,44 +7,50 @@ related_rules:
 - no-delete-var
 ---
 
-The original intent of this rule now seems misguided as we have come to understand that `Reflect` methods are not actually intended to replace the `Object` counterparts the rule suggests, but rather exist as low-level primitives to be used with proxies in order to replicate the default behavior of various previously existing functionality.
+如今我们逐渐认识到，这条规则最初的意图似乎并不恰当：`Reflect` 方法实际上并非旨在取代该规则所建议的对应 `Object` 方法，而是作为低级原语，供代理使用，以复现各种既有功能的默认行为。
 
-**Please note**: This rule contains an incorrect behavior - it will suggest you to use `Reflect.getOwnPropertyNames` rather than `Object.getOwnPropertyNames`, but the former one doesn't exist in the [specification](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-reflection). We suggest using the `exceptions` option with `"getOwnPropertyNames"` to avoid this false suggestion.
+**请注意**：此规则存在错误行为——它会建议使用 `Reflect.getOwnPropertyNames`，而不是 `Object.getOwnPropertyNames`，但前者并不存在于[规范](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-reflection)中。我们建议使用 `exceptions` 选项并设置为 `"getOwnPropertyNames"`，以避免这种错误建议。
 
-The ES6 Reflect API comes with a handful of methods which somewhat deprecate methods on old constructors:
+ES6 Reflect API 提供了若干方法，在某种程度上取代了旧构造函数上的方法：
 
-* [`Reflect.apply`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-reflect.apply) effectively deprecates [`Function.prototype.apply`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-function.prototype.apply) and [`Function.prototype.call`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-function.prototype.call)
-* [`Reflect.deleteProperty`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-reflect.deleteproperty) effectively deprecates the [`delete` keyword](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-delete-operator-runtime-semantics-evaluation)
-* [`Reflect.getOwnPropertyDescriptor`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-reflect.getownpropertydescriptor) effectively deprecates [`Object.getOwnPropertyDescriptor`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-object.getownpropertydescriptor)
-* [`Reflect.getPrototypeOf`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-reflect.getprototypeof) effectively deprecates [`Object.getPrototypeOf`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-object.getprototypeof)
-* [`Reflect.setPrototypeOf`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-reflect.setprototypeof) effectively deprecates [`Object.setPrototypeOf`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-object.setprototypeof)
-* [`Reflect.preventExtensions`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-reflect.preventextensions)  effectively deprecates [`Object.preventExtensions`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-object.preventextensions)
+* [`Reflect.apply`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-reflect.apply) 实际上取代了 [`Function.prototype.apply`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-function.prototype.apply) 和 [`Function.prototype.call`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-function.prototype.call)
+* [`Reflect.deleteProperty`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-reflect.deleteproperty) 实际上取代了 [`delete` 关键字](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-delete-operator-runtime-semantics-evaluation)
+* [`Reflect.getOwnPropertyDescriptor`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-reflect.getownpropertydescriptor) 实际上取代了 [`Object.getOwnPropertyDescriptor`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-object.getownpropertydescriptor)
+* [`Reflect.getPrototypeOf`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-reflect.getprototypeof) 实际上取代了 [`Object.getPrototypeOf`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-object.getprototypeof)
+* [`Reflect.setPrototypeOf`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-reflect.setprototypeof) 实际上取代了 [`Object.setPrototypeOf`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-object.setprototypeof)
+* [`Reflect.preventExtensions`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-reflect.preventextensions)  实际上取代了 [`Object.preventExtensions`](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-object.preventextensions)
 
-The prefer-reflect rule will flag usage of any older method, suggesting to instead use the newer Reflect version.
+prefer-reflect 规则会标记任何旧方法的用法，并建议改用较新的 Reflect 版本。
 
-## Rule Details
+<a id="rule-details"></a>
 
-## Options
+## 规则详情
 
-### Exceptions
+<a id="options"></a>
+
+## 选项
+
+<a id="exceptions"></a>
+
+### 例外
 
 ```js
 "prefer-reflect": [<enabled>, { "exceptions": [<...exceptions>] }]
 ```
 
-The `exceptions` option allows you to pass an array of methods names you'd like to continue to use in the old style.
+`exceptions` 选项允许你传入一个方法名称数组，其中列出你希望继续使用旧写法的方法。
 
-For example if you wish to use all Reflect methods, except for `Function.prototype.apply` then your config would look like `prefer-reflect: [2, { "exceptions": ["apply"] }]`.
+例如，如果你希望使用所有 Reflect 方法，但继续使用 `Function.prototype.apply`，配置可以写成 `prefer-reflect: [2, { "exceptions": ["apply"] }]`。
 
-If you want to use Reflect methods, but keep using the `delete` keyword, then your config would look like `prefer-reflect: [2, { "exceptions": ["delete"] }]`.
+如果你希望使用 Reflect 方法，但继续使用 `delete` 关键字，配置可以写成 `prefer-reflect: [2, { "exceptions": ["delete"] }]`。
 
-These can be combined as much as you like. To make all methods exceptions (thereby rendering this rule useless), use `prefer-reflect: [2, { "exceptions": ["apply", "call", "defineProperty", "getOwnPropertyDescriptor", "getPrototypeOf", "setPrototypeOf", "isExtensible", "getOwnPropertyNames", "preventExtensions", "delete"] }]`
+这些例外可以按需任意组合。若要将所有方法都设为例外（从而使此规则失去作用），请使用 `prefer-reflect: [2, { "exceptions": ["apply", "call", "defineProperty", "getOwnPropertyDescriptor", "getPrototypeOf", "setPrototypeOf", "isExtensible", "getOwnPropertyNames", "preventExtensions", "delete"] }]`
 
 ### Reflect.apply
 
-Deprecates `Function.prototype.apply()` and `Function.prototype.call()`
+取代 `Function.prototype.apply()` 和 `Function.prototype.call()`
 
-Examples of **incorrect** code for this rule when used without exceptions:
+未使用例外时，此规则下的**错误**代码示例：
 
 ::: incorrect
 
@@ -64,7 +70,7 @@ obj.myMethod.call(other, arg);
 
 :::
 
-Examples of **correct** code for this rule when used without exceptions:
+未使用例外时，此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -83,7 +89,7 @@ Reflect.apply(obj.myMethod, other, [arg]);
 
 :::
 
-Examples of **correct** code for this rule with the `{ "exceptions": ["apply"] }` option:
+使用 `{ "exceptions": ["apply"] }` 选项时，此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -99,7 +105,7 @@ obj.myMethod.apply(other, args);
 
 :::
 
-Examples of **correct** code for this rule with the `{ "exceptions": ["call"] }` option:
+使用 `{ "exceptions": ["call"] }` 选项时，此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -117,9 +123,9 @@ obj.myMethod.call(other, arg);
 
 ### Reflect.defineProperty
 
-Deprecates `Object.defineProperty()`
+取代 `Object.defineProperty()`
 
-Examples of **incorrect** code for this rule when used without exceptions:
+未使用例外时，此规则下的**错误**代码示例：
 
 ::: incorrect
 
@@ -131,7 +137,7 @@ Object.defineProperty({}, 'foo', {value: 1})
 
 :::
 
-Examples of **correct** code for this rule when used without exceptions:
+未使用例外时，此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -143,7 +149,7 @@ Reflect.defineProperty({}, 'foo', {value: 1})
 
 :::
 
-Examples of **correct** code for this rule with the `{ "exceptions": ["defineProperty"] }` option:
+使用 `{ "exceptions": ["defineProperty"] }` 选项时，此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -158,9 +164,9 @@ Reflect.defineProperty({}, 'foo', {value: 1})
 
 ### Reflect.getOwnPropertyDescriptor
 
-Deprecates `Object.getOwnPropertyDescriptor()`
+取代 `Object.getOwnPropertyDescriptor()`
 
-Examples of **incorrect** code for this rule when used without exceptions:
+未使用例外时，此规则下的**错误**代码示例：
 
 ::: incorrect
 
@@ -172,7 +178,7 @@ Object.getOwnPropertyDescriptor({}, 'foo')
 
 :::
 
-Examples of **correct** code for this rule when used without exceptions:
+未使用例外时，此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -184,7 +190,7 @@ Reflect.getOwnPropertyDescriptor({}, 'foo')
 
 :::
 
-Examples of **correct** code for this rule with the `{ "exceptions": ["getOwnPropertyDescriptor"] }` option:
+使用 `{ "exceptions": ["getOwnPropertyDescriptor"] }` 选项时，此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -199,9 +205,9 @@ Reflect.getOwnPropertyDescriptor({}, 'foo')
 
 ### Reflect.getPrototypeOf
 
-Deprecates `Object.getPrototypeOf()`
+取代 `Object.getPrototypeOf()`
 
-Examples of **incorrect** code for this rule when used without exceptions:
+未使用例外时，此规则下的**错误**代码示例：
 
 ::: incorrect
 
@@ -213,7 +219,7 @@ Object.getPrototypeOf({}, 'foo')
 
 :::
 
-Examples of **correct** code for this rule when used without exceptions:
+未使用例外时，此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -225,7 +231,7 @@ Reflect.getPrototypeOf({}, 'foo')
 
 :::
 
-Examples of **correct** code for this rule with the `{ "exceptions": ["getPrototypeOf"] }` option:
+使用 `{ "exceptions": ["getPrototypeOf"] }` 选项时，此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -240,9 +246,9 @@ Reflect.getPrototypeOf({}, 'foo')
 
 ### Reflect.setPrototypeOf
 
-Deprecates `Object.setPrototypeOf()`
+取代 `Object.setPrototypeOf()`
 
-Examples of **incorrect** code for this rule when used without exceptions:
+未使用例外时，此规则下的**错误**代码示例：
 
 ::: incorrect
 
@@ -254,7 +260,7 @@ Object.setPrototypeOf({}, Object.prototype)
 
 :::
 
-Examples of **correct** code for this rule when used without exceptions:
+未使用例外时，此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -266,7 +272,7 @@ Reflect.setPrototypeOf({}, Object.prototype)
 
 :::
 
-Examples of **correct** code for this rule with the `{ "exceptions": ["setPrototypeOf"] }` option:
+使用 `{ "exceptions": ["setPrototypeOf"] }` 选项时，此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -281,9 +287,9 @@ Reflect.setPrototypeOf({}, Object.prototype)
 
 ### Reflect.isExtensible
 
-Deprecates `Object.isExtensible`
+取代 `Object.isExtensible`
 
-Examples of **incorrect** code for this rule when used without exceptions:
+未使用例外时，此规则下的**错误**代码示例：
 
 ::: incorrect
 
@@ -295,7 +301,7 @@ Object.isExtensible({})
 
 :::
 
-Examples of **correct** code for this rule when used without exceptions:
+未使用例外时，此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -307,7 +313,7 @@ Reflect.isExtensible({})
 
 :::
 
-Examples of **correct** code for this rule with the `{ "exceptions": ["isExtensible"] }` option:
+使用 `{ "exceptions": ["isExtensible"] }` 选项时，此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -322,9 +328,9 @@ Reflect.isExtensible({})
 
 ### Reflect.preventExtensions
 
-Deprecates `Object.preventExtensions()`
+取代 `Object.preventExtensions()`
 
-Examples of **incorrect** code for this rule when used without exceptions:
+未使用例外时，此规则下的**错误**代码示例：
 
 ::: incorrect
 
@@ -336,7 +342,7 @@ Object.preventExtensions({})
 
 :::
 
-Examples of **correct** code for this rule when used without exceptions:
+未使用例外时，此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -348,7 +354,7 @@ Reflect.preventExtensions({})
 
 :::
 
-Examples of **correct** code for this rule with the `{ "exceptions": ["preventExtensions"] }` option:
+使用 `{ "exceptions": ["preventExtensions"] }` 选项时，此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -363,9 +369,9 @@ Reflect.preventExtensions({})
 
 ### Reflect.deleteProperty
 
-Deprecates the `delete` keyword
+取代 `delete` 关键字
 
-Examples of **incorrect** code for this rule when used without exceptions:
+未使用例外时，此规则下的**错误**代码示例：
 
 ::: incorrect
 
@@ -377,7 +383,7 @@ delete foo.bar; // deleting object property
 
 :::
 
-Examples of **correct** code for this rule when used without exceptions:
+未使用例外时，此规则下的**正确**代码示例：
 
 ::: correct { "sourceType": "script" }
 
@@ -390,9 +396,9 @@ Reflect.deleteProperty(foo, 'bar');
 
 :::
 
-Note: For a rule preventing deletion of variables, see [no-delete-var instead](no-delete-var)
+注意：若要使用阻止删除变量的规则，请参见 [no-delete-var 规则](no-delete-var)
 
-Examples of **correct** code for this rule with the `{ "exceptions": ["delete"] }` option:
+使用 `{ "exceptions": ["delete"] }` 选项时，此规则下的**正确**代码示例：
 
 ::: correct { "sourceType": "script" }
 
@@ -406,8 +412,10 @@ Reflect.deleteProperty(foo, 'bar');
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-This rule should not be used in ES3/5 environments.
+## 何时不应使用
 
-In ES2015 (ES6) or later, if you don't want to be notified about places where Reflect could be used, you can safely disable this rule.
+此规则不应在 ES3/5 环境中使用。
+
+在 ES2015 (ES6) 或更高版本中，如果你不想收到可以使用 Reflect 的位置的提示，可以放心禁用此规则。
