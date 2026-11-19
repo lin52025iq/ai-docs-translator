@@ -7,18 +7,20 @@ further_reading:
 - https://jakearchibald.com/2017/await-vs-return-vs-return-await/
 ---
 
-It is NOT recommended to use the `no-return-await` rule anymore because:
+现在不再建议使用 `no-return-await` 规则，原因如下：
 
-* `return await` on a promise will not result in an extra microtask.
-* `return await` yields a better stack trace for debugging.
+* 对 promise 使用 `return await` 不会产生额外的微任务。
+* `return await` 能提供更好的调试堆栈跟踪。
 
-Historical context: When promises were first introduced, calling `return await` introduced an additional microtask, one for the `await` and one for the return value of the async function. Each extra microtask delays the computation of a result and so this rule was added to help avoid this performance trap. Later, [ECMA-262 changed the way](https://github.com/tc39/ecma262/pull/1250) `return await` worked so it would create a single microtask, which means this rule is no longer necessary.
+历史背景：刚引入 promise 时，调用 `return await` 会引入一个额外的微任务：一个用于 `await`，另一个用于异步函数的返回值。每个额外的微任务都会延迟结果的计算，因此添加了这条规则，以帮助避免这种性能陷阱。后来，[ECMA-262 更改了](https://github.com/tc39/ecma262/pull/1250) `return await` 的工作方式，使其只会创建一个微任务，这意味着这条规则已不再必要。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule warns on any usage of `return await` except in `try` blocks.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+除了 `try` 代码块中的用法外，这条规则会对所有 `return await` 用法发出警告。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -32,7 +34,7 @@ async function foo() {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -64,6 +66,10 @@ async function foo4() {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You should not use this rule. There is no reason to avoid `return await`.
+## 何时不应使用
+
+不应使用这条规则。没有理由避免使用 `return await`。
+
+---
