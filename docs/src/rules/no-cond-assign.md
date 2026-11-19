@@ -5,7 +5,7 @@ rule_type: problem
 
 
 
-In conditional statements, it is very easy to mistype a comparison operator (such as `==`) as an assignment operator (such as `=`). For example:
+在条件语句中，很容易将比较运算符（例如 `==`）误写成赋值运算符（例如 `=`）。例如：
 
 ```js
 // Check the user's job title
@@ -14,22 +14,28 @@ if (user.jobTitle = "manager") {
 }
 ```
 
-There are valid reasons to use assignment operators in conditional statements. However, it can be difficult to tell whether a specific assignment was intentional.
+在条件语句中使用赋值运算符有其合理用途。不过，有时很难判断某个赋值是否出于有意。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows ambiguous assignment operators in test conditions of `if`, `for`, `while`, and `do...while` statements.
+## 规则详情
 
-## Options
+此规则禁止在 `if`、`for`、`while` 和 `do...while` 语句的测试条件中使用含义不明确的赋值运算符。
 
-This rule has a string option:
+<a id="options"></a>
 
-* `"except-parens"` (default) allows assignments in test conditions *only if* they are enclosed in parentheses (for example, to allow reassigning a variable in the test of a `while` or `do...while` loop).
-* `"always"` disallows all assignments in test conditions.
+## 选项
+
+此规则有一个字符串选项：
+
+* `"except-parens"`（默认）仅当测试条件中的赋值被括号括起时才允许使用（例如，允许在 `while` 或 `do...while` 循环的测试条件中重新赋值给变量）。
+* `"always"` 禁止在测试条件中进行任何赋值。
+
+<a id="except-parens"></a>
 
 ### except-parens
 
-Examples of **incorrect** code for this rule with the default `"except-parens"` option:
+以下是使用默认选项 `"except-parens"` 时违反此规则的代码示例：
 
 ::: incorrect
 
@@ -52,7 +58,7 @@ const setHeight = function (someNode) {
 
 :::
 
-Examples of **correct** code for this rule with the default `"except-parens"` option:
+以下是使用默认选项 `"except-parens"` 时符合此规则的代码示例：
 
 ::: correct
 
@@ -82,9 +88,11 @@ const set_height = function (someNode) {
 
 :::
 
+<a id="always"></a>
+
 ### always
 
-Examples of **incorrect** code for this rule with the `"always"` option:
+以下是使用选项 `"always"` 时违反此规则的代码示例：
 
 ::: incorrect
 
@@ -121,7 +129,7 @@ const heightSetter = function (someNode) {
 
 :::
 
-Examples of **correct** code for this rule with the `"always"` option:
+以下是使用选项 `"always"` 时符合此规则的代码示例：
 
 ::: correct
 
