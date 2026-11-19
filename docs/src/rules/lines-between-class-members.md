@@ -5,11 +5,13 @@ related_rules:
 - padded-blocks
 - padding-line-between-statements
 ---
-This rule improves readability by enforcing lines between class members. It will not check empty lines before the first member and after the last member, since that is already taken care of by padded-blocks.
+此规则通过要求类成员之间留有空行来提高可读性。它不会检查首个成员之前和最后一个成员之后的空行，因为这已由 padded-blocks 处理。
 
-## Rule Details
+<a id="rule-details"></a>
 
-Examples of **incorrect** code for this rule:
+## 规则详情
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -28,7 +30,7 @@ class MyClass {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -49,7 +51,7 @@ class MyClass {
 
 :::
 
-Examples of additional **correct** code for this rule:
+其他**正确**代码示例：
 
 ::: correct
 
@@ -64,26 +66,28 @@ class MyClass {
 
 :::
 
-### Options
+<a id="options"></a>
 
-This rule has two options, first option can be string or object, second option is object.
+### 选项
 
-First option can be string `"always"` or `"never"` or an object with a property named `enforce`:
+此规则有两个选项：第一个选项可以是字符串或对象，第二个选项是对象。
 
-* `"always"`(default) require an empty line after class members
-* `"never"` disallows an empty line after class members
-* `Object`: An object with a property named `enforce`. The enforce property should be an array of objects, each specifying the configuration for enforcing empty lines between specific pairs of class members.
-    * **enforce**: You can supply any number of configurations. If a member pair matches multiple configurations, the last matched configuration will be used. If a member pair does not match any configurations, it will be ignored. Each object should have the following properties:
-        * **blankLine**: Can be set to either `"always"` or `"never"`, indicating whether a blank line should be required or disallowed between the specified members.
-        * **prev**: Specifies the type of the preceding class member. It can be `"method"` for class methods, `"field"` for class fields, or `"*"` for any class member.
-        * **next**: Specifies the type of the following class member. It follows the same options as `prev`.
+第一个选项可以是字符串 `"always"` 或 `"never"`，也可以是具有 `enforce` 属性的对象：
 
-Second option is an object with a property named `exceptAfterSingleLine`:
+* `"always"`（默认值）：要求类成员后有空行
+* `"never"`：禁止类成员后出现空行
+* `Object`：具有 `enforce` 属性的对象。enforce 属性应为对象数组，每个对象分别指定在特定类成员对之间强制执行空行规则的配置。
+    * **enforce**：可以提供任意数量的配置。如果某一成员对匹配多个配置，则使用最后一个匹配的配置。如果某一成员对不匹配任何配置，则会忽略该成员对。每个对象应具有以下属性：
+        * **blankLine**：可设为 `"always"` 或 `"never"`，分别表示是否要求或禁止指定成员之间出现空行。
+        * **prev**：指定前一个类成员的类型。类方法可设为 `"method"`，类字段可设为 `"field"`，任意类成员可设为 `"*"`。
+        * **next**：指定后一个类成员的类型。可选值与 `prev` 相同。
 
-* `"exceptAfterSingleLine": false`(default) **do not** skip checking empty lines after single-line class members
-* `"exceptAfterSingleLine": true` skip checking empty lines after single-line class members
+第二个选项是具有 `exceptAfterSingleLine` 属性的对象：
 
-Examples of **incorrect** code for this rule with the string option:
+* `"exceptAfterSingleLine": false`（默认值）：**不**跳过对单行类成员之后空行的检查
+* `"exceptAfterSingleLine": true`：跳过对单行类成员之后空行的检查
+
+使用字符串选项时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -113,7 +117,7 @@ class Bar{
 
 :::
 
-Examples of **correct** code for this rule with the string option:
+使用字符串选项时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -143,7 +147,7 @@ class Bar{
 
 :::
 
-Examples of **incorrect** code for this rule with the array of configurations option:
+使用配置数组选项时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -213,7 +217,7 @@ class MyClass {
 
 :::
 
-Examples of **correct** code for this rule with the array of configurations option:
+使用配置数组选项时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -283,7 +287,7 @@ class MyClass {
 
 :::
 
-Examples of **correct** code for this rule with the object option:
+使用对象选项时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -336,11 +340,15 @@ class MyClass {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you don't want to enforce empty lines between class members, you can disable this rule.
+## 何时不使用
 
-## Compatibility
+如果不想强制要求类成员之间出现空行，可以禁用此规则。
+
+<a id="compatibility"></a>
+
+## 兼容性
 
 * [requirePaddingNewLinesAfterBlocks](https://jscs-dev.github.io/rule/requirePaddingNewLinesAfterBlocks)
 * [disallowPaddingNewLinesAfterBlocks](https://jscs-dev.github.io/rule/disallowPaddingNewLinesAfterBlocks)
