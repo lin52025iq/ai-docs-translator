@@ -1,76 +1,82 @@
 ---
-title: Bulk Suppressions
+title: 批量抑制
 eleventyNavigation:
     key: suppressions
     parent: use eslint
-    title: Bulk Suppressions
+    title: 批量抑制
     order: 8
 ---
 
-Enabling a new lint rule as `"error"` can be challenging when the codebase has many violations and the rule isn't auto-fixable. Unless the rule is enabled during the early stages of the project, it becomes harder and harder to enable it as the codebase grows. Existing violations must be resolved before enabling the rule, but while doing that other violations may occur.
+当代码库中存在大量违规，且规则无法自动修复时，将新的代码检查规则设为 `"error"` 可能颇具挑战。除非在项目早期就启用该规则，否则随着代码库不断增长，启用它会变得越来越困难。启用规则前必须先解决现有违规，但在此过程中可能又会出现其他违规。
 
-To address this, ESLint provides a way to suppress existing violations for one or more rules. While the rule will be enforced for new code, the existing violations will not be reported. This way, you can address the existing violations at your own pace.
+为此，ESLint 提供了一种抑制一个或多个规则现有违规的方法。规则仍会对新代码生效，但不会报告现有违规。这样，你就可以按照自己的节奏处理现有违规。
 
 ::: important
-Only rules configured as `"error"` are suppressed. If a rule is enabled as `"warn"`, ESLint will not suppress the violations.
+只有配置为 `"error"` 的规则才会被抑制。如果规则设为 `"warn"`，ESLint 不会抑制违规。
 :::
 
-After you enable a rule as `"error"` in your configuration file, you can suppress all the existing violations at once by using the `--suppress-all` flag. It is recommended to execute the command with the `--fix` flag so that you don't suppress violations that can be auto-fixed.
+在配置文件中将规则设为 `"error"` 后，可以使用 `--suppress-all` 标志一次性抑制所有现有违规。建议执行命令时使用 `--fix` 标志，这样就不会抑制那些可以自动修复的违规。
 
 ```bash
 eslint --fix --suppress-all
 ```
 
-This command will suppress all the existing violations of all the rules that are enabled as `"error"`. Running the `eslint` command again will not report these violations.
+此命令会抑制所有设为 `"error"` 的规则中的全部现有违规。再次运行 `eslint` 命令时，这些违规将不会被报告。
 
-If you would like to suppress violations of a specific rule, you can use the `--suppress-rule` flag.
+如果要抑制特定规则的违规，可以使用 `--suppress-rule` 标志。
 
 ```bash
 eslint --fix --suppress-rule no-unused-expressions
 ```
 
-You can also suppress violations of multiple rules by providing multiple rule names.
+你也可以提供多个规则名称，以抑制多个规则的违规。
 
 ```bash
 eslint --fix --suppress-rule no-unused-expressions --suppress-rule no-unsafe-assignment
 ```
 
-## Suppressions File
+<a id="suppressions-file"></a>
 
-When you suppress violations, ESLint creates a `eslint-suppressions.json` file in the root of the project. This file contains the list of rules that have been suppressed. You should commit this file to the repository so that the suppressions are shared with all the developers.
+## 抑制文件
 
-If necessary, you can change the location of the suppressions file by using the `--suppressions-location` argument. Note that the argument must be provided not only when suppressing violations but also when running ESLint. This is necessary so that ESLint picks up the correct suppressions file.
+抑制违规时，ESLint 会在项目根目录下创建一个 `eslint-suppressions.json` 文件。此文件包含已抑制的规则列表。你应该将此文件提交到代码库，以便所有开发者共享这些抑制项。
+
+如有需要，可以使用 `--suppressions-location` 参数更改抑制文件的位置。请注意，抑制违规和运行 ESLint 时都必须提供此参数。这样 ESLint 才能找到正确的抑制文件。
 
 ```bash
 eslint --suppressions-location .github/.eslint-suppressions
 ```
 
-## Resolving Suppressions
+<a id="resolving-suppressions"></a>
 
-You can address any of the reported violations by making the necessary changes to the code as usual. If you run ESLint again you will notice that it exits with a non-zero exit code and an error is reported about unused suppressions. This is because the violations have been resolved but the suppressions are still in place.
+## 处理抑制项
+
+你可以像往常一样，通过对代码进行必要的修改来处理报告的违规。如果再次运行 ESLint，你会发现它以非零退出码退出，并报告存在未使用的抑制项。这是因为违规已经解决，但抑制项仍然保留。
 
 ```bash
 > eslint
 There are suppressions left that do not occur anymore. Consider re-running the command with `--prune-suppressions`.
 ```
 
-To remove the suppressions that are no longer needed, you can use the [`--prune-suppressions`](./command-line-interface#--prune-suppressions) flag.
+要移除不再需要的抑制项，可以使用 [`--prune-suppressions`](./command-line-interface#--prune-suppressions) 标志。
 
 ```bash
 eslint --prune-suppressions
 ```
 
-To ignore unused suppressions when calculating the exit code and not report an error about unused suppressions, you can use the `--pass-on-unpruned-suppressions` flag.
+如果要在计算退出码时忽略未使用的抑制项，且不报告未使用抑制项的错误，可以使用 `--pass-on-unpruned-suppressions` 标志。
 
 ```bash
 eslint --pass-on-unpruned-suppressions
 ```
 
-For more information on the available CLI options, refer to [Command Line Interface](./command-line-interface).
+有关可用 CLI 选项的详细信息，请参阅[命令行界面](./command-line-interface)。
 
-## Usage with the Node.js API
+<a id="usage-with-the-nodejs-api"></a>
 
-Suppressions can also be applied when using ESLint programmatically through the [Node.js API](../integrate/nodejs-api). To enable suppressions, set the `applySuppressions` option to `true` in the `ESLint` constructor:
+## 与 Node.js API 配合使用
+
+通过 [Node.js API](../integrate/nodejs-api) 以编程方式使用 ESLint 时，也可以应用抑制项。要启用抑制项，请在 `ESLint` 构造函数中将 `applySuppressions` 选项设为 `true`：
 
 ```js
 const eslint = new ESLint({
@@ -78,7 +84,7 @@ const eslint = new ESLint({
 });
 ```
 
-By default, ESLint looks for `eslint-suppressions.json` in the current working directory. You can specify a custom suppressions file location using the `suppressionsLocation` option:
+默认情况下，ESLint 会在当前工作目录中查找 `eslint-suppressions.json`。你可以使用 `suppressionsLocation` 选项指定自定义的抑制文件位置：
 
 ```js
 const eslint = new ESLint({
@@ -87,6 +93,6 @@ const eslint = new ESLint({
 });
 ```
 
-When using `lintText()`, you must provide the `filePath` option for suppressions to take effect, since suppressions are matched by file path.
+使用 `lintText()` 时，必须提供 `filePath` 选项才能应用抑制项，因为抑制项是按文件路径匹配的。
 
-**Note:** The Node.js API only supports applying existing suppressions. Creating new suppressions (`--suppress-all`, `--suppress-rule`) and pruning unused suppressions (`--prune-suppressions`) are only available through the CLI.
+**注意：**Node.js API 仅支持应用现有抑制项。创建新的抑制项（`--suppress-all`、`--suppress-rule`）和清理未使用的抑制项（`--prune-suppressions`）只能通过 CLI 执行。
