@@ -7,18 +7,20 @@ related_rules:
 ---
 
 
-In JavaScript that is designed to be executed in the browser, it's considered a best practice to avoid using methods on `console`. Such messages are considered to be for debugging purposes and therefore not suitable to ship to the client. In general, calls using `console` should be stripped before being pushed to production.
+在设计为于浏览器中运行的 JavaScript 中，最佳实践是避免使用 `console` 的方法。这类消息被视为用于调试，因此不适合随代码发送给客户端。通常，在将代码部署到生产环境之前，应移除对 `console` 的调用。
 
 ```js
 console.log("Made it here.");
 console.error("That shouldn't have happened.");
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows calls or assignments to methods of the `console` object.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止调用或赋值给 `console` 对象的方法。
+
+此规则的错误示例：
 
 ::: incorrect
 
@@ -33,7 +35,7 @@ console.log = foo();
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确示例：
 
 ::: correct
 
@@ -46,13 +48,15 @@ Console.log("Hello world!");
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option for exceptions:
+## 选项
 
-* `"allow"` has an array of strings which are allowed methods of the `console` object
+此规则提供一个对象选项，用于指定例外：
 
-Examples of additional **correct** code for this rule with a sample `{ "allow": ["warn", "error"] }` option:
+* `"allow"` 是一个字符串数组，列出 `console` 对象中允许使用的方法
+
+以下示例使用 `{ "allow": ["warn", "error"] }` 选项，展示了此规则的其他正确代码：
 
 ::: correct
 
@@ -65,11 +69,13 @@ console.error("Log an error level message.");
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you're using Node.js, however, `console` is used to output information to the user and so is not strictly used for debugging purposes. If you are developing for Node.js then you most likely do not want this rule enabled.
+## 何时不使用此规则
 
-Another case where you might not use this rule is if you want to enforce `console` calls and not `console` overwrites. For example:
+不过，如果你使用 Node.js，`console` 用于向用户输出信息，因此不完全是用于调试。如果你是为 Node.js 开发，通常不需要启用此规则。
+
+另一种可能不适用此规则的情况是：你想强制要求调用 `console`，但不限制覆盖 `console`。例如：
 
 ```js
 /* eslint no-console: ["error", { allow: ["warn"] }] */
@@ -78,7 +84,7 @@ console.error = function (message) {
 };
 ```
 
-With the `no-console` rule in the above example, ESLint will report an error. For the above example, you can disable the rule:
+在上面的示例中，`no-console` 规则会使 ESLint 报错。对于上述示例，你可以禁用此规则：
 
 ```js
 // eslint-disable-next-line no-console
@@ -93,7 +99,7 @@ console.error = function (message) {  // eslint-disable-line no-console
 };
 ```
 
-However, you might not want to manually add `eslint-disable-next-line` or `eslint-disable-line`. You can achieve the effect of only receiving errors for console calls with the `no-restricted-syntax` rule:
+不过，你可能不想手动添加 `eslint-disable-next-line` 或 `eslint-disable-line`。你可以通过 `no-restricted-syntax` 规则实现仅在调用 console 时收到错误的效果：
 
 ```json
 {
