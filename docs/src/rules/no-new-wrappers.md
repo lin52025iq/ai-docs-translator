@@ -9,15 +9,15 @@ further_reading:
 ---
 
 
-There are three primitive types in JavaScript that have wrapper objects: string, number, and boolean. These are represented by the constructors `String`, `Number`, and `Boolean`, respectively. The primitive wrapper types are used whenever one of these primitive values is read, providing them with object-like capabilities such as methods. Behind the scenes, an object of the associated wrapper type is created and then destroyed, which is why you can call methods on primitive values, such as:
+JavaScript 中有三种具有包装对象的原始类型：字符串、数字和布尔值。它们分别由构造函数 `String`、`Number` 和 `Boolean` 表示。每当读取这些原始值之一时，都会使用原始类型包装对象，为它们提供类似对象的功能，例如方法。在幕后，系统会创建并销毁相应包装类型的对象，因此你可以在原始值上调用方法，例如：
 
 ```js
 const text = "Hello world".substring(2);
 ```
 
-Behind the scenes in this example, a `String` object is constructed. The `substring()` method exists on `String.prototype` and so is accessible to the string instance.
+在这个示例中，幕后会构造一个 `String` 对象。`substring()` 方法存在于 `String.prototype` 上，因此字符串实例可以访问它。
 
-It's also possible to manually create a new wrapper instance:
+也可以手动创建新的包装对象实例：
 
 ```js
 const stringObject = new String("Hello world");
@@ -25,7 +25,7 @@ const numberObject = new Number(33);
 const booleanObject = new Boolean(false);
 ```
 
-Although possible, there aren't any good reasons to use these primitive wrappers as constructors. They tend to confuse other developers more than anything else because they seem like they should act as primitives, but they do not. For example:
+虽然可以这样做，但没有充分理由将这些原始类型包装对象用作构造函数。它们往往只会让其他开发者感到困惑，因为它们看起来应该像原始值一样工作，实际上却并非如此。例如：
 
 ```js
 const stringObject = new String("Hello world");
@@ -40,15 +40,17 @@ if (booleanObject) {    // all objects are truthy!
 }
 ```
 
-The first problem is that primitive wrapper objects are, in fact, objects. That means `typeof` will return `"object"` instead of `"string"`, `"number"`, or `"boolean"`. The second problem comes with boolean objects. Every object is truthy, that means an instance of `Boolean` always resolves to `true` even when its actual value is `false`.
+第一个问题是，原始类型包装对象实际上是对象。这意味着 `typeof` 会返回 `"object"`，而不是 `"string"`、`"number"` 或 `"boolean"`。第二个问题与布尔对象有关。所有对象都是真值，因此即使 `Boolean` 实例的实际值为 `false`，它也始终会被判定为 `true`。
 
-For these reasons, it's considered a best practice to avoid using primitive wrapper types with `new`.
+因此，最佳实践是避免将原始类型包装对象与 `new` 一起使用。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to eliminate the use of `String`, `Number`, and `Boolean` with the `new` operator. As such, it warns whenever it sees `new String`, `new Number`, or `new Boolean`.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在禁止使用 `new` 运算符创建 `String`、`Number` 和 `Boolean` 实例。因此，每当发现 `new String`、`new Number` 或 `new Boolean` 时，都会发出警告。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -66,7 +68,7 @@ const booleanObject2 = new Boolean;
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -81,10 +83,14 @@ const object = new MyString();
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-If you want to allow the use of primitive wrapper objects, then you can safely disable this rule.
+<a id="when-not-to-use-it"></a>
+
+## 何时不使用
+
+如果你希望允许使用原始类型包装对象，可以安全地禁用此规则。
