@@ -15,37 +15,43 @@ further_reading:
 - https://www.crockford.com/code.html
 - https://dojotoolkit.org/reference-guide/1.9/developer/styleguide.html
 ---
-Spacing around commas improves readability of a list of items. Although most of the style guidelines for languages prescribe adding a space after a comma and not before it, it is subjective to the preferences of a project.
+逗号周围的空格有助于提高列表的可读性。虽然大多数语言风格指南都建议在逗号后添加空格，而不是在逗号前添加空格，但具体偏好取决于项目。
 
 ```js
 var foo = 1, bar = 2;
 var foo = 1 ,bar = 2;
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces consistent spacing before and after commas in variable declarations, array literals, object literals, function parameters, and sequences.
+## 规则详情
 
-This rule does not apply in either of the following cases:
+此规则要求在变量声明、数组字面量、对象字面量、函数参数和序列表达式中的逗号前后保持一致的空格格式。
 
-* between two commas
-* between opening bracket `[` and comma, to avoid conflicts with the [`array-bracket-spacing`](array-bracket-spacing) rule
-* between comma and closing bracket `]`, to avoid conflicts with the [`array-bracket-spacing`](array-bracket-spacing) rule
-* between comma and closing brace `}`, to avoid conflicts with the [`object-curly-spacing`](object-curly-spacing) rule
-* between comma and closing parentheses `)`, to avoid conflicts with the [`space-in-parens`](space-in-parens) rule
+以下情况不适用此规则：
 
-## Options
+* 两个逗号之间
+* 左方括号 `[` 与逗号之间，以避免与 [`array-bracket-spacing`](array-bracket-spacing) 规则冲突
+* 逗号与右方括号 `]` 之间，以避免与 [`array-bracket-spacing`](array-bracket-spacing) 规则冲突
+* 逗号与右花括号 `}` 之间，以避免与 [`object-curly-spacing`](object-curly-spacing) 规则冲突
+* 逗号与右圆括号 `)` 之间，以避免与 [`space-in-parens`](space-in-parens) 规则冲突
 
-This rule has an object option:
+<a id="options"></a>
 
-* `"before": false` (default) disallows spaces before commas
-* `"before": true` requires one or more spaces before commas
-* `"after": true` (default) requires one or more spaces after commas
-* `"after": false` disallows spaces after commas
+## 选项
 
-### after
+此规则有一个对象选项：
 
-Examples of **incorrect** code for this rule with the default `{ "before": false, "after": true }` options:
+* `"before": false`（默认值）禁止在逗号前添加空格
+* `"before": true` 要求在逗号前添加一个或多个空格
+* `"after": true`（默认值）要求在逗号后添加一个或多个空格
+* `"after": false` 禁止在逗号后添加空格
+
+<a id="after"></a>
+
+### 逗号后
+
+以下是此规则使用默认选项 `{ "before": false, "after": true }` 时的**错误**代码示例：
 
 :::incorrect
 
@@ -63,7 +69,7 @@ a ,b
 
 :::
 
-Examples of **correct** code for this rule with the default `{ "before": false, "after": true }` options:
+以下是此规则使用默认选项 `{ "before": false, "after": true }` 时的**正确**代码示例：
 
 :::correct
 
@@ -83,7 +89,7 @@ a, b
 
 :::
 
-Additional examples of **correct** code for this rule with the default `{ "before": false, "after": true }` options:
+以下是此规则使用默认选项 `{ "before": false, "after": true }` 时的其他**正确**代码示例：
 
 :::correct
 
@@ -115,9 +121,11 @@ foo(a, b,)
 
 :::
 
-### before
+<a id="before"></a>
 
-Examples of **incorrect** code for this rule with the `{ "before": true, "after": false }` options:
+### 逗号前
+
+以下是此规则使用选项 `{ "before": true, "after": false }` 时的**错误**代码示例：
 
 :::incorrect
 
@@ -134,7 +142,7 @@ a, b
 
 :::
 
-Examples of **correct** code for this rule with the `{ "before": true, "after": false }` options:
+以下是此规则使用选项 `{ "before": true, "after": false }` 时的**正确**代码示例：
 
 :::correct
 
@@ -154,6 +162,8 @@ a ,b
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If your project will not be following a consistent comma-spacing pattern, turn this rule off.
+## 何时不应使用
+
+如果项目不打算采用一致的逗号空格格式，请关闭此规则。
