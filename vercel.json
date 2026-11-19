@@ -5,6 +5,7 @@
     "redirects": [
         { "source": "/docs/latest/:path*", "destination": "/:path*", "permanent": false },
         { "source": "/docs/head/:path*", "destination": "/:path*", "permanent": false },
+        { "source": "/docs/:version/:path*", "destination": "https://eslint.org/docs/:version/:path*", "permanent": false },
         { "source": "/play", "destination": "https://eslint.org/play", "permanent": false },
         { "source": "/og", "destination": "https://eslint.org/og", "permanent": false }
     ]
