@@ -7,28 +7,28 @@ further_reading:
 ---
 
 
-RegExp `u` flag has two effects:
+RegExp `u` 标志有两种作用：
 
-1. **Make the regular expression handling UTF-16 surrogate pairs correctly.**
+1. **让正则表达式正确处理 UTF-16 代理对。**
 
-    Especially, character range syntax gets the correct behavior.
+    特别是，字符范围语法会按预期工作。
 
     ```js
     /^[👍]$/.test("👍") //→ false
     /^[👍]$/u.test("👍") //→ true
     ```
 
-2. **Make the regular expression throwing syntax errors early as disabling [Annex B extensions](https://www.ecma-international.org/ecma-262/6.0/#sec-regular-expressions-patterns).**
+2. **禁用 [附录 B 扩展](https://www.ecma-international.org/ecma-262/6.0/#sec-regular-expressions-patterns)，让正则表达式更早抛出语法错误。**
 
-    Because of historical reason, JavaScript regular expressions are tolerant of syntax errors. For example, `/\w{1, 2/` is a syntax error, but JavaScript doesn't throw the error. It matches strings such as `"a{1, 2"` instead. Such a recovering logic is defined in Annex B.
+    由于历史原因，JavaScript 正则表达式对语法错误的容忍度较高。例如，`/\w{1, 2/` 是语法错误，但 JavaScript 不会抛出错误，而是匹配诸如 `"a{1, 2"` 这样的字符串。这种错误恢复逻辑在附录 B 中定义。
 
-    The `u` flag disables the recovering logic Annex B defined. As a result, you can find errors early. This is similar to [the strict mode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode).
+    `u` 标志会禁用附录 B 定义的错误恢复逻辑。因此，你可以更早发现错误。这类似于[严格模式](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode)。
 
-The RegExp `v` flag, introduced in ECMAScript 2024, is a superset of the `u` flag, and offers two more features:
+ECMAScript 2024 引入的 RegExp `v` 标志是 `u` 标志的超集，并额外提供两项功能：
 
-1. **Unicode properties of strings**
+1. **字符串的 Unicode 属性**
 
-    With the Unicode property escape, you can use properties of strings.
+    使用 Unicode 属性转义，可以使用字符串的属性。
 
     ```js
     const re = /^\p{RGI_Emoji}$/v;
@@ -42,9 +42,9 @@ The RegExp `v` flag, introduced in ECMAScript 2024, is a superset of the `u` fla
     // → true ✅
     ```
 
-2. **Set notation**
+2. **集合表示法**
 
-    It allows for set operations between character classes.
+    它允许对字符类进行集合运算。
 
     ```js
     const re = /[\p{White_Space}&&\p{ASCII}]/v;
@@ -52,13 +52,15 @@ The RegExp `v` flag, introduced in ECMAScript 2024, is a superset of the `u` fla
     re.test('\u2028'); // → false
     ```
 
-Therefore, the `u` and `v` flags let us work better with regular expressions.
+因此，`u` 和 `v` 标志能帮助我们更好地使用正则表达式。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to enforce the use of `u` or `v` flag on regular expressions.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在要求正则表达式使用 `u` 或 `v` 标志。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -73,7 +75,7 @@ const d = new RegExp("ddd", "gi")
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -98,17 +100,21 @@ function i(flags) {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has one object option:
+## 选项
 
-* `"requireFlag": "u"|"v"` requires a particular Unicode regex flag
+此规则有一个对象选项：
+
+* `"requireFlag": "u"|"v"` 要求使用特定的 Unicode 正则表达式标志
+
+<a id="requireflag-u"></a>
 
 ### requireFlag: "u"
 
-The `u` flag may be preferred in environments that do not support the `v` flag.
+对于不支持 `v` 标志的环境，可以优先使用 `u` 标志。
 
-Examples of **incorrect** code for this rule with the `{ "requireFlag": "u" }` option:
+启用 `{ "requireFlag": "u" }` 选项时，此规则的错误代码示例：
 
 :::incorrect
 
@@ -126,7 +132,7 @@ const fooRegexp = new RegExp('foo', 'v');
 
 :::
 
-Examples of **correct** code for this rule with the `{ "requireFlag": "u" }` option:
+启用 `{ "requireFlag": "u" }` 选项时，此规则的正确代码示例：
 
 :::correct
 
@@ -139,15 +145,14 @@ const fooRegexp = new RegExp('foo', 'u');
 ```
 
 :::
+
+<a id="requireflag-v"></a>
 
 ### requireFlag: "v"
 
-The `v` flag may be a better choice when it is supported because it has more
-features than the `u` flag (e.g., the ability to test Unicode properties of strings). It
-does have a stricter syntax, however (e.g., the need to escape certain
-characters within character classes).
+如果环境支持 `v` 标志，它可能是更好的选择，因为它比 `u` 标志提供了更多功能（例如，测试字符串 Unicode 属性的能力）。不过，它的语法确实更严格（例如，在字符类中需要转义某些字符）。
 
-Examples of **incorrect** code for this rule with the `{ "requireFlag": "v" }` option:
+启用 `{ "requireFlag": "v" }` 选项时，此规则的错误代码示例：
 
 :::incorrect
 
@@ -165,7 +170,7 @@ const fooRegexp = new RegExp('foo', 'u');
 
 :::
 
-Examples of **correct** code for this rule with the `{ "requireFlag": "v" }` option:
+启用 `{ "requireFlag": "v" }` 选项时，此规则的正确代码示例：
 
 :::correct
 
@@ -179,15 +184,19 @@ const fooRegexp = new RegExp('foo', 'v');
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you don't want to warn on regular expressions without either a `u` or a `v` flag, then it's safe to disable this rule.
+## 何时不使用
 
-### Note on `i` flag and `\w`
+如果你不希望对未使用 `u` 或 `v` 标志的正则表达式发出警告，那么可以放心禁用此规则。
 
-In some cases, adding the `u` flag to a regular expression using both the `i` flag and the `\w` character class can change its behavior due to Unicode case folding.
+<a id="note-on-i-flag-and-w"></a>
 
-For example:
+### 关于 `i` 标志和 `\w` 的说明
+
+在某些情况下，由于 Unicode 大小写折叠，对同时使用 `i` 标志和 `\w` 字符类的正则表达式添加 `u` 标志可能会改变其行为。
+
+例如：
 
 ```js
 const regexWithoutU = /^\w+$/i;
@@ -199,7 +208,7 @@ console.log(regexWithoutU.test(str)); // false
 console.log(regexWithU.test(str)); // true
 ```
 
-If you prefer to use a non-Unicode-aware regex in this specific case, you can disable this rule using an `eslint-disable` comment:
+如果在这种特定情况下你更倾向于使用不识别 Unicode 的正则表达式，可以使用 `eslint-disable` 注释禁用此规则：
 
 ```js
 /* eslint-disable require-unicode-regexp */
