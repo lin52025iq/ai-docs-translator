@@ -8,7 +8,7 @@ related_rules:
 ---
 
 
-Labeled statements in JavaScript are used in conjunction with `break` and `continue` to control flow around multiple loops. For example:
+JavaScript 中的带标签语句与 `break` 和 `continue` 配合使用，用于控制多个循环之间的流程。例如：
 
 ```js
 outer:
@@ -20,15 +20,16 @@ outer:
     }
 ```
 
-The `break outer` statement ensures that this code will not result in an infinite loop because control is returned to the next statement after the `outer` label was applied. If this statement was changed to be just `break`, control would flow back to the outer `while` statement and an infinite loop would result.
+`break outer` 语句可确保这段代码不会导致无限循环，因为控制流会返回到应用 `outer` 标签之后的下一条语句。如果将此语句改为仅使用 `break`，控制流就会返回到外层 `while` 语句，从而导致无限循环。
 
-While convenient in some cases, labels tend to be used only rarely and are frowned upon by some as a remedial form of flow control that is more error prone and harder to understand.
+虽然标签在某些情况下很方便，但它们通常很少使用。有些人不赞成使用标签，认为它们是一种补救式的流程控制方式，更容易出错，也更难理解。
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule aims to eliminate the use of labeled statements in JavaScript. It will warn whenever a labeled statement is encountered and whenever `break` or `continue` are used with a label.
+此规则旨在消除 JavaScript 中带标签语句的使用。每当遇到带标签的语句，或在 `break` 或 `continue` 中使用标签时，都会发出警告。
 
-Examples of **incorrect** code for this rule:
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -69,7 +70,7 @@ label:
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -91,19 +92,19 @@ while (true) {
 
 :::
 
-## Options
+<a id="options"></a>
+## 选项
 
-The options allow labels with loop or switch statements:
+这些选项允许在循环或 switch 语句中使用标签：
 
-* `"allowLoop"` (`boolean`, default is `false`) - If this option was set `true`, this rule ignores labels which are sticking to loop statements.
-* `"allowSwitch"` (`boolean`, default is `false`) - If this option was set `true`, this rule ignores labels which are sticking to switch statements.
+* `"allowLoop"`（`boolean`，默认为 `false`）- 如果将此选项设为 `true`，此规则会忽略附加在循环语句上的标签。
+* `"allowSwitch"`（`boolean`，默认为 `false`）- 如果将此选项设为 `true`，此规则会忽略附加在 switch 语句上的标签。
 
-Actually labeled statements in JavaScript can be used with other than loop and switch statements.
-However, this way is ultra rare, not well-known, so this would be confusing developers.
+实际上，JavaScript 中的带标签语句也可以用于循环和 switch 语句之外的其他语句。不过，这种用法极为罕见，也鲜为人知，可能会让开发者感到困惑。
 
 ### allowLoop
 
-Examples of **correct** code for the `{ "allowLoop": true }` option:
+`{ "allowLoop": true }` 选项的正确代码示例：
 
 ::: correct
 
@@ -120,7 +121,7 @@ label:
 
 ### allowSwitch
 
-Examples of **correct** code for the `{ "allowSwitch": true }` option:
+`{ "allowSwitch": true }` 选项的正确代码示例：
 
 ::: correct
 
@@ -136,6 +137,7 @@ label:
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 何时不应使用
 
-If you need to use labeled statements everywhere, then you can safely disable this rule.
+如果你需要在任何地方使用带标签语句，可以放心地禁用此规则。
