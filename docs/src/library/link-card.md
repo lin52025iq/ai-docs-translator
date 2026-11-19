@@ -1,14 +1,16 @@
 ---
-title: Link Card
+title: 链接卡片
 ---
 
-Links can be rendered as cards by using the `link` shortcode. The only required parameter is the URL you wish to scrape for metadata.
+使用 `link` 短代码可以将链接呈现为卡片。唯一必需的参数是要抓取元数据的 URL。
 
 ```html
 { % link "https://thesiteurl.com" % }
 ```
 
-## Examples
+<a id="examples"></a>
+
+## 示例
 
 <!-- markdownlint-disable MD034 -->
 
