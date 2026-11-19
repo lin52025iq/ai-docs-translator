@@ -7,13 +7,14 @@ related_rules:
 ---
 
 
-When declaring multiple properties, some developers prefer to sort property names alphabetically to more easily find and/or diff necessary properties at a later time. Others feel that it adds complexity and becomes burden to maintain.
+声明多个属性时，一些开发者倾向于按字母顺序排列属性名，以便日后更轻松地查找和/或比较必要的属性。另一些开发者则认为，这会增加复杂性和维护负担。
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule checks all property definitions of object expressions and verifies that all variables are sorted alphabetically.
+此规则会检查对象表达式中的所有属性定义，并验证所有变量是否按字母顺序排列。
 
-Examples of **incorrect** code for this rule:
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -38,7 +39,7 @@ const obj6 = {a: 1, [S]: 3, b: 2};
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -70,7 +71,8 @@ const obj11 = {b: 1, ...c, a: 2};
 
 :::
 
-## Options
+<a id="options"></a>
+## 选项
 
 ```json
 {
@@ -78,29 +80,29 @@ const obj11 = {b: 1, ...c, a: 2};
 }
 ```
 
-The 1st option is `"asc"` or `"desc"`.
+第 1 个选项为 `"asc"` 或 `"desc"`。
 
-* `"asc"` (default) - enforce properties to be in ascending order.
-* `"desc"` - enforce properties to be in descending order.
+* `"asc"`（默认值）- 强制属性按升序排列。
+* `"desc"` - 强制属性按降序排列。
 
-The 2nd option is an object which has the following properties.
+第 2 个选项是一个对象，包含以下属性。
 
-* `caseSensitive` - if `true`, enforce properties to be in case-sensitive order. Default is `true`.
-* `minKeys` - Specifies the minimum number of keys that an object should have in order for the object's unsorted keys to produce an error. Default is `2`, which means by default all objects with unsorted keys will result in lint errors.
-* `natural` - if `true`, enforce properties to be in natural order. Default is `false`. Natural Order compares strings containing combination of letters and numbers in the way a human being would sort. It basically sorts numerically, instead of sorting alphabetically. So the number 10 comes after the number 3 in Natural Sorting.
-* `allowLineSeparatedGroups` - if `true`, the rule allows to group object keys through line breaks. In other words, a blank line after a property will reset the sorting of keys. Default is `false`.
-* `ignoreComputedKeys` - if `true`, the rule ignores all computed keys and doesn't report unsorted properties separated by them. A computed key will reset the sorting of the following non-computed keys. Default is `false`.
+* `caseSensitive` - 如果为 `true`，强制属性按区分大小写的顺序排列。默认值为 `true`。
+* `minKeys` - 指定对象至少包含多少个键时，未排序的键才会导致错误。默认值为 `2`，这意味着默认情况下，所有键未排序的对象都会导致代码检查错误。
+* `natural` - 如果为 `true`，强制属性按自然顺序排列。默认值为 `false`。自然排序会以人类的排序方式比较由字母和数字组成的字符串。它基本上是按数值排序，而不是按字母顺序排序。因此，在自然排序中，数字 10 排在数字 3 后面。
+* `allowLineSeparatedGroups` - 如果为 `true`，此规则允许通过换行对对象键分组。换句话说，属性后面的空行会重置键的排序。默认值为 `false`。
+* `ignoreComputedKeys` - 如果为 `true`，此规则会忽略所有计算键，并且不会报告被计算键分隔的未排序属性。计算键会重置后续非计算键的排序。默认值为 `false`。
 
-Example for a list:
+列表示例：
 
-With `natural` as `true`, the ordering would be
+当 `natural` 为 `true` 时，排序结果如下：
 1
 3
 6
 8
 10
 
-With `natural` as `false`, the ordering would be
+当 `natural` 为 `false` 时，排序结果如下：
 1
 10
 3
@@ -109,7 +111,7 @@ With `natural` as `false`, the ordering would be
 
 ### desc
 
-Examples of **incorrect** code for the `"desc"` option:
+`"desc"` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -128,7 +130,7 @@ const obj4 = {10: b, 2: c, 1: a};
 
 :::
 
-Examples of **correct** code for the `"desc"` option:
+`"desc"` 选项的正确代码示例：
 
 ::: correct
 
@@ -149,7 +151,7 @@ const obj4 = {2: c, 10: b, 1: a};
 
 ### caseSensitive
 
-Examples of **incorrect** code for the `{caseSensitive: false}` option:
+`{caseSensitive: false}` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -162,7 +164,7 @@ const obj2 = {a: 1, C: 3, c: 4, b: 2};
 
 :::
 
-Examples of **correct** code for the `{caseSensitive: false}` option:
+`{caseSensitive: false}` 选项的正确代码示例：
 
 ::: correct
 
@@ -177,7 +179,7 @@ const obj2 = {a: 1, b: 2, C: 3, c: 4};
 
 ### natural
 
-Examples of **incorrect** code for the `{natural: true}` option:
+`{natural: true}` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -189,7 +191,7 @@ const obj = {1: a, 10: c, 2: b};
 
 :::
 
-Examples of **correct** code for the `{natural: true}` option:
+`{natural: true}` 选项的正确代码示例：
 
 ::: correct
 
@@ -203,7 +205,7 @@ const obj = {1: a, 2: b, 10: c};
 
 ### minKeys
 
-Examples of **incorrect** code for the `{minKeys: 4}` option:
+`{minKeys: 4}` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -230,7 +232,7 @@ const obj2 = {
 
 :::
 
-Examples of **correct** code for the `{minKeys: 4}` option:
+`{minKeys: 4}` 选项的正确代码示例：
 
 ::: correct
 
@@ -255,7 +257,7 @@ const obj2 = {
 
 ### allowLineSeparatedGroups
 
-Examples of **incorrect** code for the `{allowLineSeparatedGroups: true}` option:
+`{allowLineSeparatedGroups: true}` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -300,7 +302,7 @@ const obj4 = {
 
 :::
 
-Examples of **correct** code for the `{allowLineSeparatedGroups: true}` option:
+`{allowLineSeparatedGroups: true}` 选项的正确代码示例：
 
 ::: correct
 
@@ -375,7 +377,7 @@ const obj7 = {
 
 ### ignoreComputedKeys
 
-Examples of **correct** code for the `{ignoreComputedKeys: true}` option:
+`{ignoreComputedKeys: true}` 选项的正确代码示例：
 
 ::: correct
 
@@ -402,10 +404,12 @@ const obj3 = {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 何时不应使用此规则
 
-If you don't want to notify about properties' order, then it's safe to disable this rule.
+如果你不希望收到有关属性顺序的提示，可以安全地禁用此规则。
 
-## Compatibility
+<a id="compatibility"></a>
+## 兼容性
 
-* **JSCS:** [validateOrderInObjectKeys](https://jscs-dev.github.io/rule/validateOrderInObjectKeys)
+* **JSCS：** [validateOrderInObjectKeys](https://jscs-dev.github.io/rule/validateOrderInObjectKeys)
