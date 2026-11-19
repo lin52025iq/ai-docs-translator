@@ -6,20 +6,22 @@ handled_by_typescript: true
 
 
 
-`ClassDeclaration` creates a variable, and we can modify the variable.
+`ClassDeclaration` 会创建一个变量，而我们可以修改该变量。
 
 ```js
 class A { }
 A = 0;
 ```
 
-But the modification is a mistake in most cases.
+但在大多数情况下，这种修改都是错误的。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed to flag modifying variables of class declarations.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在标记对类声明变量的修改。
+
+此规则下的错误代码示例：
 
 ::: incorrect
 
@@ -72,7 +74,7 @@ let A = class A {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则下的正确代码示例：
 
 ::: correct
 
@@ -113,10 +115,14 @@ class A {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-If you don't want to be notified about modifying variables of class declarations, you can safely disable this rule.
+<a id="when-not-to-use-it"></a>
+
+## 何时不使用此规则
+
+如果你不希望收到关于修改类声明变量的提示，可以安全地禁用此规则。
