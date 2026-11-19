@@ -3,15 +3,17 @@ title: space-unary-word-ops
 
 ---
 
-Requires spaces after unary word operators.
+要求一元字运算符后有空格。
 
 :::important
-This rule was removed in ESLint v0.10.0 and replaced by the [space-unary-ops](space-unary-ops) rule.
+此规则已在 ESLint v0.10.0 中移除，并由 [space-unary-ops](space-unary-ops) 规则取代。
 :::
 
-## Rule Details
+<a id="rule-details"></a>
 
-Examples of **incorrect** code for this rule:
+## 规则详情
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -45,7 +47,7 @@ delete(a.b)
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
