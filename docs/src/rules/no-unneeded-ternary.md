@@ -8,8 +8,8 @@ related_rules:
 
 
 
-It's a common mistake in JavaScript to use a conditional expression to select between two Boolean values instead of using `!` to convert the test to a Boolean.
-Here are some examples:
+在 JavaScript 中，一个常见错误是使用条件表达式在两个布尔值之间进行选择，而不是使用 `!` 将测试结果转换为布尔值。
+以下是一些示例：
 
 ```js
 // Bad
@@ -25,8 +25,8 @@ const isNo = answer === 1 ? false : true;
 const isNo = answer !== 1;
 ```
 
-Another common mistake is using a single variable as both the conditional test and the consequent. In such cases, the logical `OR` can be used to provide the same functionality.
-Here is an example:
+另一个常见错误是将同一个变量同时用作条件测试和后续表达式。在这种情况下，可以使用逻辑 `OR` 实现相同的功能。
+示例如下：
 
 ```js
 // Bad
@@ -36,11 +36,13 @@ foo(bar ? bar : 1);
 foo(bar || 1);
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallow ternary operators when simpler alternatives exist.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+当存在更简单的替代写法时，此规则会禁止使用三元运算符。
+
+此规则下的错误代码示例：
 
 ::: incorrect
 
@@ -54,7 +56,7 @@ const b = x ? true : false;
 
 :::
 
-Examples of **correct** code for this rule:
+此规则下的正确代码示例：
 
 ::: correct
 
@@ -74,18 +76,20 @@ f(x ? x : 1); // default assignment - would be disallowed if defaultAssignment o
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option:
+## 选项
 
-* `"defaultAssignment": true` (default) allows the conditional expression as a default assignment pattern
-* `"defaultAssignment": false` disallows the conditional expression as a default assignment pattern
+此规则有一个对象选项：
+
+* `"defaultAssignment": true`（默认值）允许将条件表达式用作默认赋值模式
+* `"defaultAssignment": false` 禁止将条件表达式用作默认赋值模式
 
 ### defaultAssignment
 
-When set to `true`, which it is by default, The `defaultAssignment` option allows expressions of the form `x ? x : expr` (where `x` is any identifier and `expr` is any expression).
+设置为 `true` 时（也是默认值），`defaultAssignment` 选项允许使用 `x ? x : expr` 形式的表达式（其中 `x` 是任意标识符，`expr` 是任意表达式）。
 
-Examples of additional **incorrect** code for this rule with the `{ "defaultAssignment": false }` option:
+启用 `{ "defaultAssignment": false }` 选项后，此规则下其他错误代码示例如下：
 
 ::: incorrect
 
@@ -99,8 +103,10 @@ f(x ? x : 1);
 
 :::
 
-Note that `defaultAssignment: false` still allows expressions of the form `x ? expr : x` (where the identifier is on the right hand side of the ternary).
+请注意，`defaultAssignment: false` 仍允许使用 `x ? expr : x` 形式的表达式（标识符位于三元表达式右侧）。
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You can turn this rule off if you are not concerned with unnecessary complexity in conditional expressions.
+## 何时不使用
+
+如果你不在意条件表达式中不必要的复杂性，可以关闭此规则。
