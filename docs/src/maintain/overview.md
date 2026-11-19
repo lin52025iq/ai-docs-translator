@@ -1,43 +1,51 @@
 ---
-title: How ESLint is Maintained
+title: ESLint 的维护方式
 eleventyNavigation:
     key: how eslint is maintained
     parent: maintain eslint
-    title: How ESLint is Maintained
+    title: ESLint 的维护方式
     order: 1
 ---
 
-This page explains the different roles and structures involved in maintaining ESLint.
+本页介绍维护 ESLint 涉及的不同角色和组织结构。
 
-## The ESLint Team
+<a id="the-eslint-team"></a>
 
-The ESLint team works together to develop and maintain ESLint. To learn more about the different roles on the ESLint team, refer to [Governance](../contribute/governance). To see the current team members, refer to [Team](/team/).
+## ESLint 团队
 
-## Organization Structure
+ESLint 团队齐心协力开发和维护 ESLint。若要进一步了解 ESLint 团队中的不同角色，请参阅[治理](../contribute/governance)。若要查看当前的团队成员，请参阅[团队](/team/)。
 
-ESLint is part of the [OpenJS Foundation](https://openjsf.org/), a nonprofit organization that supports open-source projects and communities in the JavaScript ecosystem.
+<a id="organization-structure"></a>
 
-The OpenJS Foundation provides legal infrastructure for JavaScript projects like ESLint. It is the owner of the intellectual property related to ESLint, including copyrights and trademarks, and ensures the independence of the project. They are also a resource for ESLint if we need legal advice or representation.
+## 组织结构
 
-The OpenJS Foundation does not participate in the day-to-day functioning of ESLint.
+ESLint 是 [OpenJS 基金会](https://openjsf.org/)的一部分。该非营利组织支持 JavaScript 生态系统中的开源项目和社区。
 
-## Funding
+OpenJS 基金会为 ESLint 等 JavaScript 项目提供法律基础设施。它拥有与 ESLint 相关的知识产权，包括版权和商标，并确保项目的独立性。如果 ESLint 需要法律建议或代理服务，OpenJS 基金会也可以提供帮助。
 
-ESLint is funded through several sources, including:
+OpenJS 基金会不参与 ESLint 的日常运作。
 
-- [**Open Collective**](https://opencollective.com/eslint): A platform for financing open source projects.
-- [**GitHub Sponsors**](https://github.com/sponsors/eslint): A platform for funding open source projects associated with GitHub.
-- [**Tidelift**](https://tidelift.com/subscription/pkg/npm-eslint): A subscription service that lets enterprises manage and fund the open source projects that their organization uses.
-- [**Carbon Ads**](https://www.carbonads.net/open-source): Developer-centric advertising provider used on [eslint.org](https://eslint.org/).
-- [**Stackaid.us**](https://simulation.stackaid.us/github/eslint/eslint): Tool that developers can use to allocate funding to the open source projects they use.
+<a id="funding"></a>
 
-ESLint uses this funding for the following purposes:
+## 资金
 
-- Pay team members and contractors.
-- Fund projects.
-- Pay for services that keep ESLint running (web hosting, software subscriptions, etc.).
-- Provide financial support to our dependencies and ecosystem.
+ESLint 的资金来自多个来源，包括：
 
-## Joining the Maintainer Team
+- [**Open Collective**](https://opencollective.com/eslint)：为开源项目提供资金的平台。
+- [**GitHub Sponsors**](https://github.com/sponsors/eslint)：为与 GitHub 相关的开源项目提供资金的平台。
+- [**Tidelift**](https://tidelift.com/subscription/pkg/npm-eslint)：一项订阅服务，帮助企业管理并资助其组织使用的开源项目。
+- [**Carbon Ads**](https://www.carbonads.net/open-source)：面向开发者的广告服务提供商，用于 [eslint.org](https://eslint.org/)。
+- [**Stackaid.us**](https://simulation.stackaid.us/github/eslint/eslint)：开发者可以使用此工具，为自己使用的开源项目分配资金。
 
-ESLint is an open-source project, and anyone can contribute to the project. If you're interested in becoming part of the maintainer team, stop by our [Discord](https://eslint.org/chat) and introduce yourself.
+ESLint 将这些资金用于以下用途：
+
+- 支付团队成员和承包商的报酬。
+- 为项目提供资金。
+- 支付维持 ESLint 运行所需的服务费用（网站托管、软件订阅等）。
+- 为我们的依赖项和生态系统提供财务支持。
+
+<a id="joining-the-maintainer-team"></a>
+
+## 加入维护者团队
+
+ESLint 是一个开源项目，任何人都可以参与贡献。如果你有兴趣加入维护者团队，欢迎前往我们的 [Discord](https://eslint.org/chat) 介绍自己。
