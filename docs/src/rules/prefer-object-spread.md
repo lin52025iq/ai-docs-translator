@@ -5,13 +5,15 @@ rule_type: suggestion
 
 
 
-When `Object.assign` is called using an object literal as the first argument, this rule requires using the object spread syntax instead. This rule also warns on cases where an `Object.assign` call is made using a single argument that is an object literal, in this case, the `Object.assign` call is not needed.
+当以对象字面量作为第一个参数调用 `Object.assign` 时，此规则要求改用对象展开语法。此规则还会对仅传入一个对象字面量参数的 `Object.assign` 调用发出警告，因为这种情况下不需要调用 `Object.assign`。
 
-Introduced in ES2018, object spread is a declarative alternative which may perform better than the more dynamic, imperative `Object.assign`.
+对象展开语法于 ES2018 引入，是一种声明式替代方案，相较于更加动态、命令式的 `Object.assign`，它的性能可能更好。
 
-## Rule Details
+<a id="rule-details"></a>
 
-Examples of **incorrect** code for this rule:
+## 规则详情
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -36,7 +38,7 @@ Object.assign({ foo: bar });
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -59,10 +61,14 @@ Object.assign(foo, { ...baz });
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-This rule should not be used unless ES2018 is supported in your codebase.
+<a id="when-not-to-use-it"></a>
+
+## 何时不应使用
+
+除非代码库支持 ES2018，否则不应使用此规则。
