@@ -4,7 +4,7 @@ rule_type: layout
 related_rules:
 - keyword-spacing
 ---
-When formatting a function, whitespace is allowed between the function name or `function` keyword and the opening paren. Named functions also require a space between the `function` keyword and the function name, but anonymous functions require no whitespace. For example:
+格式化函数时，函数名或 `function` 关键字与左括号之间可以有空白。具名函数还要求 `function` 关键字与函数名之间有空格，而匿名函数则不需要空白。例如：
 
 ```js
 function withoutSpace(x) {
@@ -20,15 +20,19 @@ var anonymousWithoutSpace = function() {};
 var anonymousWithSpace = function () {};
 ```
 
-Style guides may require a space after the `function` keyword for anonymous functions, while others specify no whitespace. Similarly, the space after a function name may or may not be required.
+某些代码风格指南要求匿名函数的 `function` 关键字后有空格，而另一些则规定不应有空白。同样，函数名后是否需要空格也因规范而异。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to enforce consistent spacing before function parentheses and as such, will warn whenever whitespace doesn't match the preferences specified.
+## 规则详情
 
-## Options
+此规则旨在确保函数括号前的空格保持一致，因此，只要空白与指定的偏好不符，就会发出警告。
 
-This rule has a string option or an object option:
+<a id="options"></a>
+
+## 选项
+
+此规则有一个字符串选项或一个对象选项：
 
 ```js
 {
@@ -42,21 +46,20 @@ This rule has a string option or an object option:
 }
 ```
 
-* `always` (default) requires a space followed by the `(` of arguments.
-* `never` disallows any space followed by the `(` of arguments.
+* `always`（默认值）要求参数的 `(` 前有空格。
+* `never` 禁止参数的 `(` 前出现空格。
 
-The string option does not check async arrow function expressions for backward compatibility.
+为保持向后兼容，字符串选项不会检查异步箭头函数表达式。
 
-You can also use a separate option for each type of function.
-Each of the following options can be set to `"always"`, `"never"`, or `"ignore"`. The default is `"always"`.
+你也可以为每种函数类型分别设置选项。以下每个选项都可以设为 `"always"`、`"never"` 或 `"ignore"`。默认值为 `"always"`。
 
-* `anonymous` is for anonymous function expressions (e.g. `function () {}`).
-* `named` is for named function expressions (e.g. `function foo () {}`).
-* `asyncArrow` is for async arrow function expressions (e.g. `async () => {}`).
+* `anonymous` 用于匿名函数表达式（例如 `function () {}`）。
+* `named` 用于具名函数表达式（例如 `function foo () {}`）。
+* `asyncArrow` 用于异步箭头函数表达式（例如 `async () => {}`）。
 
 ### "always"
 
-Examples of **incorrect** code for this rule with the default `"always"` option:
+在此规则的默认选项 `"always"` 下，以下代码示例属于**错误**：
 
 ::: incorrect
 
@@ -92,7 +95,7 @@ var baz = async() => 1
 
 :::
 
-Examples of **correct** code for this rule with the default `"always"` option:
+在此规则的默认选项 `"always"` 下，以下代码示例属于**正确**：
 
 ::: correct
 
@@ -130,7 +133,7 @@ var baz = async () => 1
 
 ### "never"
 
-Examples of **incorrect** code for this rule with the `"never"` option:
+在此规则的选项为 `"never"` 时，以下代码示例属于**错误**：
 
 ::: incorrect
 
@@ -166,7 +169,7 @@ var baz = async () => 1
 
 :::
 
-Examples of **correct** code for this rule with the `"never"` option:
+在此规则的选项为 `"never"` 时，以下代码示例属于**正确**：
 
 ::: correct
 
@@ -204,7 +207,7 @@ var baz = async() => 1
 
 ### `{"anonymous": "always", "named": "never", "asyncArrow": "always"}`
 
-Examples of **incorrect** code for this rule with the `{"anonymous": "always", "named": "never", "asyncArrow": "always"}` option:
+在此规则的选项为 `{"anonymous": "always", "named": "never", "asyncArrow": "always"}` 时，以下代码示例属于**错误**：
 
 ::: incorrect
 
@@ -236,7 +239,7 @@ var baz = async(a) => await a
 
 :::
 
-Examples of **correct** code for this rule with the `{"anonymous": "always", "named": "never", "asyncArrow": "always"}` option:
+在此规则的选项为 `{"anonymous": "always", "named": "never", "asyncArrow": "always"}` 时，以下代码示例属于**正确**：
 
 ::: correct
 
@@ -270,7 +273,7 @@ var baz = async (a) => await a
 
 ### `{"anonymous": "never", "named": "always"}`
 
-Examples of **incorrect** code for this rule with the `{"anonymous": "never", "named": "always"}` option:
+在此规则的选项为 `{"anonymous": "never", "named": "always"}` 时，以下代码示例属于**错误**：
 
 ::: incorrect
 
@@ -300,7 +303,7 @@ var baz = {
 
 :::
 
-Examples of **correct** code for this rule with the `{"anonymous": "never", "named": "always"}` option:
+在此规则的选项为 `{"anonymous": "never", "named": "always"}` 时，以下代码示例属于**正确**：
 
 ::: correct
 
@@ -332,7 +335,7 @@ var baz = {
 
 ### `{"anonymous": "ignore", "named": "always"}`
 
-Examples of **incorrect** code for this rule with the `{"anonymous": "ignore", "named": "always"}` option:
+在此规则的选项为 `{"anonymous": "ignore", "named": "always"}` 时，以下代码示例属于**错误**：
 
 ::: incorrect
 
@@ -358,7 +361,7 @@ var baz = {
 
 :::
 
-Examples of **correct** code for this rule with the `{"anonymous": "ignore", "named": "always"}` option:
+在此规则的选项为 `{"anonymous": "ignore", "named": "always"}` 时，以下代码示例属于**正确**：
 
 ::: correct
 
@@ -392,6 +395,8 @@ var baz = {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You can turn this rule off if you are not concerned with the consistency of spacing before function parenthesis.
+## 何时不应使用此规则
+
+如果你不在意函数括号前空格的一致性，可以关闭此规则。
