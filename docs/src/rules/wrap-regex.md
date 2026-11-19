@@ -2,7 +2,7 @@
 title: wrap-regex
 rule_type: layout
 ---
-When a regular expression is used in certain situations, it can end up looking like a division operator. For example:
+在某些情况下使用正则表达式时，它看起来可能像除法运算符。例如：
 
 ```js
 function a() {
@@ -10,11 +10,13 @@ function a() {
 }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This is used to disambiguate the slash operator and facilitates more readable code.
+## 规则详情
 
-Example of **incorrect** code for this rule:
+此规则用于区分斜杠运算符，并使代码更易读。
+
+此规则下**错误**代码示例：
 
 ::: incorrect
 
@@ -28,7 +30,7 @@ function a() {
 
 :::
 
-Example of **correct** code for this rule:
+此规则下**正确**代码示例：
 
 ::: correct
 
