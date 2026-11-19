@@ -6,11 +6,26 @@ import { isDeepStrictEqual } from 'node:util'
 const require = createRequire(resolve('docs/package.json'))
 const markdown = require('markdown-it')({ html: true, linkify: true })
 const yaml = require('js-yaml')
+const GithubSlugger = require('github-slugger')
 const path = process.argv[2]
 const source = readFileSync(path, 'utf8')
 const candidate = readFileSync(0, 'utf8')
+const anchorLine = /^<a id="([a-z0-9_-]+)"><\/a>[ \t]*$/gm
+const slugger = new GithubSlugger()
+const sourceTokens = markdown.parse(source, {})
+const headingIds = new Set(
+    sourceTokens.flatMap((token, index) => {
+        if (token.type !== 'heading_open') return []
+        const heading = sourceTokens[index + 1].children
+            .filter((part) => part.type === 'text' || part.type === 'code_inline')
+            .map((part) => part.content)
+            .join('')
+        return [slugger.slug(heading)]
+    })
+)
+for (const [, id] of source.matchAll(anchorLine)) headingIds.delete(id)
 
-function readDocument(content) {
+function readDocument(content, allowHeadingAliases = false) {
     const frontmatter = content.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/)
     const data = frontmatter ? yaml.load(frontmatter[1]) : null
     if (data && typeof data === 'object') {
@@ -22,8 +37,9 @@ function readDocument(content) {
         }
     }
 
-    const body = content.slice(frontmatter?.[0].length ?? 0)
-    const templates = body.match(/\{(?:\{|%|#)[\s\S]*?(?:\}\}|%\}|#\})/g) ?? []
+    const templates = content.match(/\{\{[\s\S]*?\}\}|\{%[\s\S]*?%\}|\{#[\s\S]*?#\}|\{\{|\{%|\{#/g) ?? []
+    let body = content.slice(frontmatter?.[0].length ?? 0)
+    if (allowHeadingAliases) body = body.replace(anchorLine, (line, id) => headingIds.delete(id) ? '' : line)
     const tokens = markdown.parse(body, {}).flatMap((token) => [token, ...(token.children ?? [])])
     const code = tokens
         .filter((token) => token.type === 'fence' || token.type === 'code_block')
@@ -35,13 +51,12 @@ function readDocument(content) {
         .sort()
     const html = tokens
         .filter((token) => token.type === 'html_block' || token.type === 'html_inline')
-        .map((token) => token.content.replace(/^<a id="[a-z0-9_-]+"><\/a>\n?$/gm, '').trim())
-        .filter(Boolean)
+        .map((token) => token.content.trim())
     return { data, templates, code, inlineCode, links, html }
 }
 
 const original = readDocument(source)
-const translated = readDocument(candidate)
+const translated = readDocument(candidate, true)
 const changed = Object.keys(original).filter((key) => !isDeepStrictEqual(original[key], translated[key]))
 if (changed.length) {
     console.log(JSON.stringify([{ message: '译文改变了应保留的内容：' + changed.join(', ') }]))
