@@ -12,9 +12,9 @@ further_reading:
 ---
 
 
-A getter and setter for the same property don't necessarily have to be defined adjacent to each other.
+同一属性的 getter 和 setter 不一定必须相邻定义。
 
-For example, the following statements would create the same object:
+例如，以下语句会创建相同的对象：
 
 ```js
 const o = {
@@ -38,19 +38,20 @@ const o1 = {
 };
 ```
 
-While it is allowed to define the pair for a getter or a setter anywhere in an object or class definition, it's considered a best practice to group accessor functions for the same property.
+虽然允许在对象或类定义中的任意位置定义 getter 或 setter，但将同一属性的访问器函数放在一起被认为是一种最佳实践。
 
-In other words, if a property has a getter and a setter, the setter should be defined right after the getter, or vice versa.
+换句话说，如果某个属性同时具有 getter 和 setter，那么 setter 应紧接在 getter 后定义，反之亦然。
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule requires grouped definitions of accessor functions for the same property in object literals, class declarations and class expressions.
+此规则要求在对象字面量、类声明和类表达式中，将同一属性的访问器函数定义在一起。
 
-Optionally, this rule can also enforce consistent order (`getBeforeSet` or `setBeforeGet`).
+此外，此规则还可以强制使用一致的顺序（`getBeforeSet` 或 `setBeforeGet`）。
 
-This rule does not enforce the existence of the pair for a getter or a setter. See [accessor-pairs](accessor-pairs) if you also want to enforce getter/setter pairs.
+此规则不要求 getter 或 setter 必须成对存在。如果你还想强制要求 getter/setter 成对出现，请参阅 [accessor-pairs](accessor-pairs)。
 
-Examples of **incorrect** code for this rule:
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -100,7 +101,7 @@ const Bar = class {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -150,20 +151,22 @@ const Bar = class {
 
 :::
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule has a primary string and an optional secondary object option.
-The string option specifies the order:
-* `"anyOrder"` (default) does not enforce order.
-* `"getBeforeSet"` if a property has both getter and setter, requires the getter to be defined before the setter.
-* `"setBeforeGet"` if a property has both getter and setter, requires the setter to be defined before the getter.
+此规则有一个主要的字符串选项和一个可选的次要对象选项。
+字符串选项指定顺序：
+* `"anyOrder"`（默认值）不强制顺序。
+* `"getBeforeSet"`：如果某个属性同时具有 getter 和 setter，则要求先定义 getter，再定义 setter。
+* `"setBeforeGet"`：如果某个属性同时具有 getter 和 setter，则要求先定义 setter，再定义 getter。
 
-The optional object option allows opting-in to check additional object-likes:
-* `enforceForTSTypes`: also check TypeScript types (interfaces and type literals)
+可选的对象选项用于选择是否检查其他类似对象的结构：
+* `enforceForTSTypes`：同时检查 TypeScript 类型（接口和类型字面量）
 
+<a id="getbeforeset"></a>
 ### getBeforeSet
 
-Examples of **incorrect** code for this rule with the `"getBeforeSet"` option:
+使用 `"getBeforeSet"` 选项时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -200,7 +203,7 @@ const Bar = class {
 
 :::
 
-Examples of **correct** code for this rule with the `"getBeforeSet"` option:
+使用 `"getBeforeSet"` 选项时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -237,9 +240,10 @@ const Bar = class {
 
 :::
 
+<a id="setbeforeget"></a>
 ### setBeforeGet
 
-Examples of **incorrect** code for this rule with the `"setBeforeGet"` option:
+使用 `"setBeforeGet"` 选项时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -276,7 +280,7 @@ const Bar = class {
 
 :::
 
-Examples of **correct** code for this rule with the `"setBeforeGet"` option:
+使用 `"setBeforeGet"` 选项时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -312,9 +316,10 @@ const Bar = class {
 ```
 
 :::
+<a id="enforcefortstypes"></a>
 ### enforceForTSTypes
 
-Examples of **incorrect** code for this rule with `["anyOrder", { enforceForTSTypes: true }]`:
+使用 `["anyOrder", { enforceForTSTypes: true }]` 时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -336,7 +341,7 @@ type T = {
 
 :::
 
-Examples of **correct** code for this rule with `["anyOrder", { enforceForTSTypes: true }]`:
+使用 `["anyOrder", { enforceForTSTypes: true }]` 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -356,10 +361,10 @@ type T = {
 
 :::
 
-## Known Limitations
+<a id="known-limitations"></a>
+## 已知限制
 
-Due to the limits of static analysis, this rule does not account for possible side effects and in certain cases
-might require or miss to require grouping or order for getters/setters that have a computed key, like in the following example:
+由于静态分析能力有限，此规则不会考虑可能产生的副作用。在某些情况下，对于具有计算属性键的 getter/setter，此规则可能会要求或未能要求将其放在一起或遵循特定顺序，如以下示例所示：
 
 ```js
 /*eslint grouped-accessor-pairs: "error"*/
@@ -389,8 +394,8 @@ const bar = {
 };
 ```
 
-Also, this rule does not report any warnings for properties that have duplicate getters or setters.
+此外，对于具有重复 getter 或 setter 的属性，此规则不会报告任何警告。
 
-See [no-dupe-keys](no-dupe-keys) if you also want to disallow duplicate keys in object literals.
+如果你还想禁止对象字面量中的重复键，请参阅 [no-dupe-keys](no-dupe-keys)。
 
-See [no-dupe-class-members](no-dupe-class-members) if you also want to disallow duplicate names in class definitions.
+如果你还想禁止类定义中的重复名称，请参阅 [no-dupe-class-members](no-dupe-class-members)。
