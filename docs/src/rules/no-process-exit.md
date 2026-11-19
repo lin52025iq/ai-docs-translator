@@ -3,7 +3,7 @@ title: no-process-exit
 rule_type: suggestion
 ---
 
-The `process.exit()` method in Node.js is used to immediately stop the Node.js process and exit. This is a dangerous operation because it can occur in any method at any point in time, potentially stopping a Node.js application completely when an error occurs. For example:
+在 Node.js 中，`process.exit()` 方法用于立即停止 Node.js 进程并退出。这是一项危险操作，因为它可能在任何时间、任何方法中发生，导致 Node.js 应用程序在发生错误时完全停止。例如：
 
 ```js
 if (somethingBadHappened) {
@@ -12,7 +12,7 @@ if (somethingBadHappened) {
 }
 ```
 
-This code could appear in any module and will stop the entire application when `somethingBadHappened` is truthy. This doesn't give the application any chance to respond to the error. It's usually better to throw an error and allow the application to handle it appropriately:
+这段代码可能出现在任何模块中；当 `somethingBadHappened` 为真值时，它会停止整个应用程序。这样一来，应用程序就没有机会处理错误。通常，更好的做法是抛出错误，让应用程序妥善处理：
 
 ```js
 if (somethingBadHappened) {
@@ -20,15 +20,17 @@ if (somethingBadHappened) {
 }
 ```
 
-By throwing an error in this way, other parts of the application have an opportunity to handle the error rather than stopping the application altogether. If the error bubbles all the way up to the process without being handled, then the process will exit and a non-zero exit code will returned, so the end result is the same.
+通过这种方式抛出错误，应用程序的其他部分就有机会处理错误，而不是直接停止整个应用程序。如果错误一路冒泡到进程且未得到处理，进程就会退出，并返回非零退出码，因此最终结果相同。
 
-If you are using `process.exit()` only for specifying the exit code, you can set [`process.exitCode`](https://nodejs.org/api/process.html#process_process_exitcode) (introduced in Node.js 0.11.8) instead.
+如果使用 `process.exit()` 只是为了指定退出码，可以改为设置 [`process.exitCode`](https://nodejs.org/api/process.html#process_process_exitcode)（在 Node.js 0.11.8 中引入）。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to prevent the use of `process.exit()` in Node.js JavaScript. As such, it warns whenever `process.exit()` is found in code.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在禁止在 Node.js JavaScript 中使用 `process.exit()`。因此，只要在代码中发现 `process.exit()`，就会发出警告。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -41,7 +43,7 @@ process.exit(0);
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -54,6 +56,8 @@ var exit = process.exit;
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-There may be a part of a Node.js application that is responsible for determining the correct exit code to return upon exiting. In that case, you should turn this rule off to allow proper handling of the exit code.
+## 何时不应使用
+
+Node.js 应用程序中可能有一部分负责确定退出时应返回的正确退出码。在这种情况下，应关闭此规则，以便正确处理退出码。
