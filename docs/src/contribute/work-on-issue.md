@@ -1,60 +1,70 @@
 ---
-title: Work on Issues
+title: 参与问题处理
 eleventyNavigation:
     key: work on issues
     parent: contribute to eslint
-    title: Work on Issues
+    title: 参与问题处理
     order: 10
 ---
 
-Our public [issues tracker](https://github.com/eslint/eslint/issues) lists all of the things we plan on doing as well as suggestions from the community. Before starting to work on an issue, be sure you read through the rest of this page.
+我们的公开[问题跟踪器](https://github.com/eslint/eslint/issues)列出了我们计划开展的所有工作，以及社区提出的建议。在开始处理某个问题之前，请务必先阅读本页其余内容。
 
-## Issue Labels
+<a id="issue-labels"></a>
 
-We use labels to indicate the status of issues. The most complete documentation on the labels is found in the [Maintain ESLint documentation](../maintain/manage-issues#when-an-issue-or-pull-request-is-opened), but most contributors should find the information on this page sufficient. The most important questions that labels can help you, as a contributor, answer are:
+## 问题标签
 
-1. **Is this issue ready for a pull request?** Issues that are ready for pull requests have the [`accepted`](https://github.com/eslint/eslint/labels/accepted) label, which indicates that the team has agreed to accept a pull request. Please do not send pull requests for issues that have not been marked as accepted.
-2. **Is this issue right for a beginner?** If you have little or no experience contributing to ESLint, the [`good first issue`](https://github.com/eslint/eslint/labels/good%20first%20issue) label marks appropriate issues. Otherwise, the [`help wanted`](https://github.com/eslint/eslint/labels/help%20wanted) label is an invitation to work on the issue. If you have more experience, you can try working on other issues labeled [`accepted`](https://github.com/eslint/eslint/labels/accepted).
-3. **What is this issue about?** Labels describing the nature of issues include `bug`, `enhancement`, `feature`, `question`, `rule`, `documentation`, `core`, `build`, `cli`, `infrastructure`, `breaking`, and `chore`. These are documented in [Maintain ESLint](../maintain/manage-issues#types-of-issues-and-pull-requests).
-4. **What is the priority of this issue?** Because we have a lot of issues, we prioritize certain issues above others. The following is the list of priorities, from highest to lowest:
-    1. **Bugs** - problems with the project are actively affecting users. We want to get these resolved as quickly as possible.
-    1. **Documentation** - documentation issues are a type of bug in that they actively affect current users. As such, we want to address documentation issues as quickly as possible.
-    1. **Features** - new functionality that will aid users in the future.
-    1. **Enhancements** - requested improvements for existing functionality.
-    1. **Other** - anything else.
+我们使用标签来表示问题的状态。关于标签最完整的文档位于[维护 ESLint 文档](../maintain/manage-issues#when-an-issue-or-pull-request-is-opened)，不过大多数贡献者只需了解本页的信息即可。作为贡献者，标签最能帮助你回答以下几个重要问题：
 
-## Start Work
+1. **这个问题是否已准备好提交拉取请求？** 已准备好接受拉取请求的问题带有 [`accepted`](https://github.com/eslint/eslint/labels/accepted) 标签，表示团队已同意接受相关拉取请求。请不要针对尚未标记为 accepted 的问题提交拉取请求。
+2. **这个问题适合初学者吗？** 如果你几乎没有或完全没有为 ESLint 做贡献的经验，带有 [`good first issue`](https://github.com/eslint/eslint/labels/good%20first%20issue) 标签的问题就适合你。否则，带有 [`help wanted`](https://github.com/eslint/eslint/labels/help%20wanted) 标签的问题表示欢迎你参与。如果你经验更丰富，也可以尝试处理其他带有 [`accepted`](https://github.com/eslint/eslint/labels/accepted) 标签的问题。
+3. **这个问题涉及什么？** 描述问题性质的标签包括 `bug`、`enhancement`、`feature`、`question`、`rule`、`documentation`、`core`、`build`、`cli`、`infrastructure`、`breaking` 和 `chore`。这些标签在[维护 ESLint](../maintain/manage-issues#types-of-issues-and-pull-requests)中有说明。
+4. **这个问题的优先级是什么？** 由于问题数量很多，我们会优先处理某些问题。以下是按优先级从高到低排列的列表：
+    1. **错误** - 项目中的问题正在直接影响用户。我们希望尽快解决这些问题。
+    1. **文档** - 文档问题也是一种错误，因为它们会直接影响当前用户。因此，我们希望尽快处理文档问题。
+    1. **功能** - 有助于未来用户的新功能。
+    1. **增强** - 对现有功能的改进请求。
+    1. **其他** - 其他所有事项。
+
+<a id="start-work"></a>
+
+## 开始处理
 
 ::: important
-Before starting to work on an existing issue, please check if the issue has been assigned to anyone. If it has, then that person is already responsible for submitting a pull request and you should choose a different issue to work on.
+开始处理已有问题之前，请先确认该问题是否已分配给其他人。如果已分配，那么此人已经负责提交拉取请求，你应该选择其他问题处理。
 :::
 
-### Claim an issue
+<a id="claim-an-issue"></a>
 
-If you're going to work on an issue, please _claim_ the issue by adding a comment saying you're working on it and indicating when you think you will complete it. This helps us to avoid duplication of effort. Some examples of good claim comments are:
+### 认领问题
 
-- "I'll take a look at this over the weekend."
-- "I'm going to do this, give me two weeks."
-- "Working on this" (as in, I'm working on it right now)
+如果你打算处理某个问题，请通过发表评论来_认领_该问题，说明你正在处理，并告知预计完成时间。这样有助于避免重复劳动。以下是一些合适的认领评论示例：
 
-The team will validate your claim by assigning the issue to you.
+- “我会在周末看看这个问题。”
+- “我来处理，给我两周时间。”
+- “正在处理”（也就是说，我现在就在处理）
 
-### Offer help on a claimed issue
+团队会将该问题分配给你，以确认你的认领。
 
-If an issue has an assignee or has already been claimed by someone, please be respectful of that person's desire to complete the work and don't work on it unless you verify that they are no longer interested or would welcome the help. If there hasn't been activity on the issue after two weeks, you can express your interest in helping with the issue. For example:
+<a id="offer-help-on-a-claimed-issue"></a>
 
-- "Are you still working on this? If not, I'd love to work on it."
-- "Do you need any help on this? I'm interested."
+### 为已认领的问题提供帮助
 
-It is up to the assignee to decide if they're going to continue working on the issue or if they'd like your help.
+如果某个问题已分配给他人，或已被他人认领，请尊重对方完成工作的意愿。除非你确认对方已不再感兴趣或愿意接受帮助，否则不要着手处理。如果该问题两周内没有任何进展，你可以表示有兴趣提供帮助。例如：
 
-If there is no response after a week, please contact a team member for help.
+- “你还在处理这个问题吗？如果没有，我很乐意接手。”
+- “你需要帮忙吗？我很感兴趣。”
 
-### Unclaim an issue
+是否继续处理该问题，或是否接受你的帮助，由被分配该问题的人决定。
 
-If you claimed an issue and find you can't finish the work, then add a comment letting people know, for example:
+如果一周后仍未收到回复，请联系团队成员寻求帮助。
 
-- "Sorry, it looks like I don't have time to do this."
-- "I thought I knew enough to fix this, but it turns out I don't."
+<a id="unclaim-an-issue"></a>
 
-No one will blame you for backing out of an issue if you are unable to complete it. We just want to keep the process moving along as efficiently as possible.
+### 取消认领问题
+
+如果你认领了某个问题，但发现无法完成，请发表评论告知大家，例如：
+
+- “抱歉，我好像没有时间处理这个问题。”
+- “我原以为自己掌握了足够的知识来修复这个问题，但事实并非如此。”
+
+如果你无法完成某个问题，没有人会责怪你退出。我们只是希望尽可能高效地推进整个流程。
