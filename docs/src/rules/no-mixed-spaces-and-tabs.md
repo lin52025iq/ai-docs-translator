@@ -4,13 +4,15 @@ rule_type: layout
 further_reading:
 - https://www.emacswiki.org/emacs/SmartTabs
 ---
-Most code conventions require either tabs or spaces be used for indentation. As such, it's usually an error if a single line of code is indented with both tabs and spaces.
+大多数代码规范要求使用制表符或空格进行缩进。因此，如果同一行代码同时使用制表符和空格缩进，通常会被视为错误。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows mixed spaces and tabs for indentation.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止在缩进中混用空格和制表符。
+
+此规则的**错误**代码示例：
 
 <!-- markdownlint-capture -->
 <!-- markdownlint-disable MD010 -->
@@ -32,7 +34,7 @@ function main() {
 :::
 <!-- markdownlint-restore -->
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 <!-- markdownlint-capture -->
 <!-- markdownlint-disable MD010 -->
@@ -49,15 +51,17 @@ function add(x, y) {
 :::
 <!-- markdownlint-restore -->
 
-## Options
+<a id="options"></a>
 
-This rule has a string option.
+## 选项
 
-* `"smart-tabs"` allows mixed tabs and spaces when the spaces are used for alignment.
+此规则有一个字符串选项。
+
+* `"smart-tabs"` 允许在使用空格进行对齐时混用制表符和空格。
 
 ### smart-tabs
 
-Examples of **correct** code for this rule with the `"smart-tabs"` option:
+使用 `"smart-tabs"` 选项时，此规则的**正确**代码示例：
 
 <!-- markdownlint-capture -->
 <!-- markdownlint-disable MD010 -->
