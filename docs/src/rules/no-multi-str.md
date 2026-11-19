@@ -4,20 +4,22 @@ rule_type: suggestion
 ---
 
 
-It's possible to create multiline strings in JavaScript by using a slash before a newline, such as:
+在 JavaScript 中，可以通过在换行符前使用反斜杠来创建多行字符串，例如：
 
 ```js
 const x = "Line 1 \
          Line 2";
 ```
 
-Some consider this to be a bad practice as it was an undocumented feature of JavaScript that was only formalized later.
+有些人认为这是一种不好的做法，因为这是 JavaScript 中一项未记录的特性，后来才被正式规范化。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at preventing the use of multiline strings.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在阻止使用多行字符串。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -30,7 +32,7 @@ long text";
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -45,6 +47,8 @@ const y = "some very " +
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
+
+此规则没有选项。
