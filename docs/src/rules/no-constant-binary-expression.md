@@ -8,9 +8,9 @@ further_reading:
 ---
 
 
-Comparisons which will always evaluate to true or false and logical expressions (`||`, `&&`, `??`) which either always short-circuit or never short-circuit are both likely indications of programmer error.
+比较结果始终为 true 或 false，以及始终会短路或从不短路的逻辑表达式（`||`、`&&`、`??`），都可能表明程序中存在错误。
 
-These errors are especially common in complex expressions where operator precedence is easy to misjudge. For example:
+在复杂表达式中，这类错误尤为常见，因为运算符优先级很容易被误判。例如：
 
 ```js
 // One might think this would evaluate as `a + (b ?? c)`:
@@ -20,7 +20,7 @@ const x = a + b ?? c;
 // the `?? c` has no effect.
 ```
 
-Additionally, this rule detects comparisons to newly constructed objects/arrays/functions/etc. In JavaScript, where objects are compared by reference, a newly constructed object can _never_ `===` any other value. This can be surprising for programmers coming from languages where objects are compared by value.
+此外，此规则还会检测与新创建的对象、数组、函数等进行的比较。在 JavaScript 中，对象按引用进行比较，因此新创建的对象永远不可能与任何其他值相等（`===`）。对于来自按值比较对象的语言的程序员来说，这可能令人意外。
 
 ```js
 // Programmers coming from a language where objects are compared by value might expect this to work:
@@ -29,13 +29,15 @@ const isEmpty = x === [];
 // However, this will always result in `isEmpty` being `false`.
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule identifies `==` and `===` comparisons which, based on the semantics of the JavaScript language, will always evaluate to `true` or `false`.
+## 规则详情
 
-It also identifies `||`, `&&` and `??` logical expressions which will either always or never short-circuit. Additionally, when configured with the `checkRelationalComparisons` option, it can identify constant relational comparisons (such as `<` or `>=`).
+此规则会识别根据 JavaScript 语言语义，结果始终为 `true` 或 `false` 的 `==` 和 `===` 比较。
 
-Examples of **incorrect** code for this rule:
+它还会识别始终会短路或从不短路的 `||`、`&&` 和 `??` 逻辑表达式。此外，配置 `checkRelationalComparisons` 选项后，它还可以识别结果恒定的关系比较（例如 `<` 或 `>=`）。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -63,7 +65,7 @@ const shortCircuit3 = condition1 ?? "non-nullish" ?? condition2;
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -85,15 +87,17 @@ const arrIsEmpty = someArr.length === 0;
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option:
+## 选项
 
-* `"checkRelationalComparisons": true` (default `false`) checks for relational comparisons (`<`, `<=`, `>`, `>=`) where both sides are literal values.
+此规则有一个对象选项：
+
+* `"checkRelationalComparisons": true`（默认值为 `false`）会检查两侧均为字面量的关系比较（`<`、`<=`、`>`、`>=`）。
 
 ### checkRelationalComparisons
 
-Examples of **incorrect** code for this rule with the `{ "checkRelationalComparisons": true }` option:
+使用 `{ "checkRelationalComparisons": true }` 选项时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -111,7 +115,7 @@ const hasStreak = profile.streak ?? 0 > 1;
 
 :::
 
-Examples of **correct** code for this rule with the `{ "checkRelationalComparisons": true }` option:
+使用 `{ "checkRelationalComparisons": true }` 选项时，此规则的**正确**代码示例：
 
 ::: correct
 
