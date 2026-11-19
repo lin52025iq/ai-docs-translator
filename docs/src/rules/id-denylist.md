@@ -4,32 +4,36 @@ rule_type: suggestion
 ---
 
 
-> "There are only two hard things in Computer Science: cache invalidation and naming things." — Phil Karlton
+> “计算机科学中只有两件难事：缓存失效和命名。” — Phil Karlton
 
-Generic names can lead to hard-to-decipher code. This rule allows you to specify a deny list of disallowed identifier names to avoid this practice.
+通用名称会导致代码难以理解。此规则允许你指定一个拒绝列表，列出不允许使用的标识符名称，以避免这种情况。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows specified identifiers in assignments and `function` definitions.
+## 规则详情
 
-This rule will catch disallowed identifiers that are:
+此规则禁止在赋值和 `function` 定义中使用指定的标识符。
 
-* variable declarations
-* function declarations
-* object properties assigned to during object creation
-* class fields
-* class methods
+此规则会检测以下位置的不允许使用的标识符：
 
-It will not catch disallowed identifiers that are:
+* 变量声明
+* 函数声明
+* 创建对象时被赋值的对象属性
+* 类字段
+* 类方法
 
-* function calls (so you can still use functions you do not have control over)
-* object properties (so you can still use objects you do not have control over)
+此规则不会检测以下位置的不允许使用的标识符：
 
-## Options
+* 函数调用（因此你仍然可以使用自己无法控制的函数）
+* 对象属性（因此你仍然可以使用自己无法控制的对象）
 
-The rule takes one or more strings as options: the names of restricted identifiers.
+<a id="options"></a>
 
-For example, to restrict the use of common generic identifiers:
+## 选项
+
+此规则接受一个或多个字符串作为选项：受限标识符的名称。
+
+例如，要限制常见通用标识符的使用：
 
 ```json
 {
@@ -37,9 +41,9 @@ For example, to restrict the use of common generic identifiers:
 }
 ```
 
-**Note:** The first element of the array is for the rule severity (see [Configure Rules](../use/configure/rules)). The other elements in the array are the identifiers that you want to disallow.
+**注意：**数组的第一个元素用于指定规则严重性（参见[配置规则](../use/configure/rules)）。数组中的其他元素是你要禁止使用的标识符。
 
-Examples of **incorrect** code for this rule with sample `"data", "callback"` restricted identifiers:
+以下是此规则的**错误**代码示例，其中受限标识符为示例中的 `"data", "callback"`：
 
 ::: incorrect
 
@@ -79,7 +83,7 @@ class Qux {
 
 :::
 
-Examples of **correct** code for this rule with sample `"data", "callback"` restricted identifiers:
+以下是此规则的**正确**代码示例，其中受限标识符为示例中的 `"data", "callback"`：
 
 ::: correct
 
@@ -125,6 +129,8 @@ class Qux {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You can turn this rule off if you do not want to restrict the use of certain identifiers.
+## 何时不使用
+
+如果你不想限制某些标识符的使用，可以关闭此规则。
