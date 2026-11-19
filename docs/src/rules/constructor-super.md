@@ -4,17 +4,19 @@ rule_type: problem
 handled_by_typescript: true
 ---
 
-Constructors of derived classes must call `super()`.
-Constructors of non derived classes must not call `super()`.
-If this is not observed, the JavaScript engine will raise a runtime error.
+派生类的构造函数必须调用 `super()`。
+非派生类的构造函数不得调用 `super()`。
+如果不遵守这一要求，JavaScript 引擎会在运行时抛出错误。
 
-This rule checks whether or not there is a valid `super()` call.
+此规则会检查是否存在有效的 `super()` 调用。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed to flag invalid/missing `super()` calls.
+## 规则详情
 
-This is a syntax error because there is no `extends` clause in the class:
+此规则旨在标记无效或缺失的 `super()` 调用。
+
+由于类中没有 `extends` 子句，因此这是一个语法错误：
 
 ```js
 class A {
@@ -24,7 +26,7 @@ class A {
 }
 ```
 
-Examples of **incorrect** code for this rule:
+此规则的**错误**代码示例：
 
 :::incorrect
 
@@ -49,7 +51,7 @@ class D extends null {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 :::correct
 
@@ -69,10 +71,14 @@ class B extends C {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-If you don't want to be notified about invalid/missing `super()` callings in constructors, you can safely disable this rule.
+<a id="when-not-to-use-it"></a>
+
+## 何时不使用
+
+如果你不希望收到构造函数中 `super()` 调用无效或缺失的通知，可以安全地禁用此规则。
