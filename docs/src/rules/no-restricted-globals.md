@@ -7,22 +7,23 @@ related_rules:
 ---
 
 
-Disallowing usage of specific global variables can be useful if you want to allow a set of global
-variables, but still want to disallow some of those.
+如果希望允许使用一组全局变量，但仍禁止使用其中某些变量，禁止使用特定的全局变量会很有用。
 
-For instance, early Internet Explorer versions exposed the current DOM event as a global variable
-`event`, but using this variable has been considered as a bad practice for a long time. Restricting
-this will make sure this variable isn't used in browser code.
+例如，早期版本的 Internet Explorer 会将当前 DOM 事件公开为全局变量 `event`，但长期以来，使用此变量一直被认为是不良做法。限制该变量可以确保它不会在浏览器代码中使用。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule allows you to specify global variable names that you don't want to use in your application.
+## 规则详情
 
-## Options
+此规则允许你指定不希望在应用程序中使用的全局变量名称。
 
-This rule has both string and object options to specify the global variables to restrict.
+<a id="options"></a>
 
-Using the string option, you can specify the name of a global variable that you want to restrict as a value in the rule options array:
+## 选项
+
+此规则支持字符串和对象两种选项，用于指定要限制的全局变量。
+
+使用字符串选项时，可以在规则选项数组中指定要限制的全局变量名称：
 
 ```json
 {
@@ -32,7 +33,7 @@ Using the string option, you can specify the name of a global variable that you 
 }
 ```
 
-Alternatively, the rule also accepts objects, where the global name and an optional custom message are specified:
+此外，此规则也接受对象，其中可以指定全局变量名称以及可选的自定义消息：
 
 ```json
 {
@@ -52,7 +53,7 @@ Alternatively, the rule also accepts objects, where the global name and an optio
 }
 ```
 
-Examples of **incorrect** code for sample `"event", "fdescribe"` global variable names:
+以下是全局变量名称为示例中的 `"event", "fdescribe"` 时的**错误**代码示例：
 
 ::: incorrect
 
@@ -70,7 +71,7 @@ fdescribe("foo", function() {
 
 :::
 
-Examples of **correct** code for a sample `"event"` global variable name:
+以下是全局变量名称为示例中的 `"event"` 时的**正确**代码示例：
 
 ::: correct
 
@@ -94,7 +95,7 @@ const event = 1;
 
 :::
 
-Examples of **incorrect** code for a sample `"event"` global variable name, along with a custom error message:
+以下是全局变量名称为示例中的 `"event"` 且带有自定义错误消息时的**错误**代码示例：
 
 ::: incorrect
 
@@ -111,9 +112,9 @@ function onClick() {
 
 ### globals
 
-An object option whose value is an array containing the names of the globals you want to restrict.
+对象选项，其值为一个数组，包含你希望限制的全局变量名称。
 
-Examples of **incorrect** code for `"event"` and `"fdescribe"` global variable names:
+以下是全局变量名称为 `"event"` 和 `"fdescribe"` 时的**错误**代码示例：
 
 ::: incorrect
 
@@ -131,9 +132,9 @@ fdescribe("foo", function() {
 
 :::
 
-Custom messages for a particular global can also be specified in `globals` array using objects with `name` and `message`:
+也可以在 `globals` 数组中使用包含 `name` 和 `message` 的对象，为特定全局变量指定自定义消息：
 
-Examples of **incorrect** code for an `"event"` global variable name, along with a custom error message:
+以下是全局变量名称为 `"event"` 且带有自定义错误消息时的**错误**代码示例：
 
 ::: incorrect
 
@@ -150,9 +151,9 @@ function onClick() {
 
 ### checkGlobalObject
 
-A boolean option that enables detection of restricted globals accessed via global objects. Default is `false`.
+布尔选项，启用对通过全局对象访问的受限全局变量的检测。默认为 `false`。
 
-Examples of **incorrect** code for `checkGlobalObject: true` option:
+以下是 `checkGlobalObject: true` 选项的**错误**代码示例：
 
 ::: incorrect
 
@@ -169,9 +170,9 @@ window.Promise
 
 ### globalObjects
 
-An array option that specifies additional global object names to check when `checkGlobalObject` is enabled. By default, the rule checks these global objects: `globalThis`, `self`, and `window`.
+数组选项，用于指定在启用 `checkGlobalObject` 时要检查的其他全局对象名称。默认情况下，此规则会检查以下全局对象：`globalThis`、`self` 和 `window`。
 
-Examples of **incorrect** code for `globalObjects` option:
+以下是 `globalObjects` 选项的**错误**代码示例：
 
 ::: incorrect
 
@@ -191,9 +192,9 @@ myGlobal.Promise;
 
 :::
 
-Restricted globals used in TypeScript type annotations—such as type references, interface inheritance, or class implementations—are ignored by this rule.
+此规则会忽略 TypeScript 类型注解中使用的受限全局变量，例如类型引用、接口继承或类实现中的变量。
 
-Examples of **correct** TypeScript code for "Promise", "Event", and "Window" global variable names:
+以下是全局变量名称为 "Promise"、"Event" 和 "Window" 时的**正确** TypeScript 代码示例：
 
 ::: correct
 
