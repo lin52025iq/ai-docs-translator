@@ -5,13 +5,14 @@ rule_type: problem
 
 
 
-This rule would disallow the use of number literals that lose precision at runtime when converted to a JS `Number` due to 64-bit floating-point rounding.
+此规则禁止使用在运行时转换为 JS `Number` 时，由于 64 位浮点数舍入而丢失精度的数字字面量。
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-In JS, `Number`s are stored as double-precision floating-point numbers according to the [IEEE 754 standard](https://en.wikipedia.org/wiki/IEEE_754). Because of this, numbers can only retain accuracy up to a certain amount of digits. If the programmer enters additional digits, those digits will be lost in the conversion to the `Number` type and will result in unexpected behavior.
+在 JS 中，`Number` 根据 [IEEE 754 标准](https://en.wikipedia.org/wiki/IEEE_754)以双精度浮点数的形式存储。因此，数字只能在一定的位数范围内保持准确。如果程序员输入了更多位数，这些多出的位数在转换为 `Number` 类型时就会丢失，从而导致意外行为。
 
-Examples of **incorrect** code for this rule:
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -28,7 +29,7 @@ const f = 0X2_000000000_0001;
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -46,6 +47,7 @@ const g = 9007_1992547409_91
 
 :::
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule has no options.
+此规则没有选项。
