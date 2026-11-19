@@ -1,60 +1,60 @@
 ---
-title: Migrating to v5.0.0
+title: 迁移到 v5.0.0
 ---
 
-ESLint v5.0.0 is the fifth major version release. We have made a few breaking changes in this release, but we expect that most users will be able to upgrade without any modifications to their build. This guide is intended to walk you through the breaking changes.
+ESLint v5.0.0 是第五个主要版本。本次发布包含一些破坏性变更，但我们预计大多数用户无需修改构建流程即可升级。本指南将带你了解这些破坏性变更。
 
-The lists below are ordered roughly by the number of users each change is expected to affect, where the first items are expected to affect the most users.
+下面的列表大致按照每项变更可能影响的用户数量排序，排在前面的预计会影响更多用户。
 
-## Breaking changes for users
+## 面向用户的破坏性变更
 
-1. [Node.js 4 is no longer supported](#drop-node-4)
-1. [New rules have been added to `eslint:recommended`](#eslint-recommended-changes)
-1. [The `experimentalObjectRestSpread` option has been deprecated](#experimental-object-rest-spread)
-1. [Linting nonexistent files from the command line is now a fatal error](#nonexistent-files)
-1. [The default options for some rules have changed](#rule-default-changes)
-1. [Deprecated globals have been removed from the `node`, `browser`, and `jest` environments](#deprecated-globals)
-1. [Empty files are now linted](#empty-files)
-1. [Plugins in scoped packages are now resolvable in configs](#scoped-plugins)
-1. [Multi-line `eslint-disable-line` directives are now reported as problems](#multiline-directives)
+1. [不再支持 Node.js 4](#drop-node-4)
+1. [向 `eslint:recommended` 添加了新规则](#eslint-recommended-changes)
+1. [已弃用 `experimentalObjectRestSpread` 选项](#experimental-object-rest-spread)
+1. [现在从命令行对不存在的文件进行代码检查会触发致命错误](#nonexistent-files)
+1. [部分规则的默认选项已更改](#rule-default-changes)
+1. [已从 `node`、`browser` 和 `jest` 环境中移除已弃用的全局变量](#deprecated-globals)
+1. [现在会对空文件进行代码检查](#empty-files)
+1. [现在可以在配置中解析作用域包中的插件](#scoped-plugins)
+1. [现在会将多行 `eslint-disable-line` 指令报告为问题](#multiline-directives)
 
-## Breaking changes for plugin/custom rule developers
+## 面向插件/自定义规则开发者的破坏性变更
 
-1. [The `parent` property of AST nodes is now set before rules start running](#parent-before-rules)
-1. [When using the default parser, spread operators now have type `SpreadElement`](#spread-operators)
-1. [When using the default parser, rest operators now have type `RestElement`](#rest-operators)
-1. [When using the default parser, text nodes in JSX elements now have type `JSXText`](#jsx-text-nodes)
-1. [The `context.getScope()` method now returns more proper scopes](#context-get-scope)
-1. [The `_linter` property on rule context objects has been removed](#no-context-linter)
-1. [`RuleTester` now uses strict equality checks in its assertions](#rule-tester-equality)
-1. [Rules are now required to provide messages along with reports](#required-report-messages)
+1. [现在会在规则开始运行前设置 AST 节点的 `parent` 属性](#parent-before-rules)
+1. [使用默认解析器时，扩展运算符的类型现在是 `SpreadElement`](#spread-operators)
+1. [使用默认解析器时，剩余运算符的类型现在是 `RestElement`](#rest-operators)
+1. [使用默认解析器时，JSX 元素中的文本节点类型现在是 `JSXText`](#jsx-text-nodes)
+1. [`context.getScope()` 方法现在会返回更准确的作用域](#context-get-scope)
+1. [已从规则上下文对象中移除 `_linter` 属性](#no-context-linter)
+1. [`RuleTester` 现在会在断言中使用严格相等检查](#rule-tester-equality)
+1. [规则现在必须在报告问题时同时提供消息](#required-report-messages)
 
-## Breaking changes for integration developers
+## 面向集成开发者的破坏性变更
 
-1. [The `source` property is no longer available on individual linting messages](#source-property)
-1. [Fatal errors now result in an exit code of 2](#exit-code-two)
-1. [The `eslint.linter` property is now non-enumerable](#non-enumerable-linter)
+1. [不再能在单条代码检查消息上获取 `source` 属性](#source-property)
+1. [致命错误现在会返回退出码 2](#exit-code-two)
+1. [`eslint.linter` 属性现在不可枚举](#non-enumerable-linter)
 
 ---
 
-## <a name="drop-node-4"></a> Node.js 4 is no longer supported
+## <a name="drop-node-4"></a> 不再支持 Node.js 4
 
-As of April 30th, 2018, Node.js 4 will be at EOL and will no longer be receiving security updates. As a result, we have decided to drop support for it in ESLint v5. We now support the following versions of Node.js:
+截至 2018 年 4 月 30 日，Node.js 4 将结束生命周期（EOL），不再接收安全更新。因此，我们决定在 ESLint v5 中停止支持它。现在支持以下 Node.js 版本：
 
-- Node.js 6 (6.14.0 and above)
-- Node.js 8 (8.10.0 and above)
-- Anything above Node.js 9.10.0
+- Node.js 6（6.14.0 及以上）
+- Node.js 8（8.10.0 及以上）
+- Node.js 9.10.0 以上的任何版本
 
-**To address:** Make sure you upgrade to at least Node.js 6 when using ESLint v5. If you are unable to upgrade, we recommend continuing to use ESLint v4.x until you are able to upgrade Node.js.
+**解决方法：** 使用 ESLint v5 时，请确保至少升级到 Node.js 6。如果无法升级，我们建议继续使用 ESLint v4.x，直到你能够升级 Node.js。
 
-## <a name="eslint-recommended-changes"/> `eslint:recommended` changes
+## <a name="eslint-recommended-changes"/> `eslint:recommended` 的变更
 
-Two new rules have been added to the [`eslint:recommended`](configure/configuration-files#use-predefined-configurations) config:
+[`eslint:recommended`](configure/configuration-files#use-predefined-configurations) 配置中新增了两条规则：
 
-- [`for-direction`](../rules/for-direction) enforces that a `for` loop update clause moves the counter in the right direction.
-- [`getter-return`](../rules/getter-return) enforces that a `return` statement is present in property getters.
+- [`for-direction`](../rules/for-direction) 要求 `for` 循环的更新子句朝正确的方向调整计数器。
+- [`getter-return`](../rules/getter-return) 要求属性 getter 中包含 `return` 语句。
 
-**To address:** To mimic the `eslint:recommended` behavior from 4.x, you can disable these rules in a config file:
+**解决方法：** 若要恢复 4.x 中 `eslint:recommended` 的行为，可以在配置文件中禁用这些规则：
 
 ```json
 {
@@ -67,9 +67,9 @@ Two new rules have been added to the [`eslint:recommended`](configure/configurat
 }
 ```
 
-## <a name="experimental-object-rest-spread"></a> The `experimentalObjectRestSpread` option has been deprecated
+## <a name="experimental-object-rest-spread"></a> `experimentalObjectRestSpread` 选项已弃用
 
-Previously, when using the default parser it was possible to use the `experimentalObjectRestSpread` option to enable support for [rest/spread properties](https://developers.google.com/web/updates/2017/06/object-rest-spread), as follows:
+此前，使用默认解析器时，可以通过 `experimentalObjectRestSpread` 选项启用对[对象剩余/展开属性](https://developers.google.com/web/updates/2017/06/object-rest-spread)的支持，如下所示：
 
 ```json
 {
@@ -81,7 +81,7 @@ Previously, when using the default parser it was possible to use the `experiment
 }
 ```
 
-Object rest/spread is now an official part of the JavaScript language, so our support for it is no longer experimental. In both ESLint v4 and ESLint v5, object rest/spread can now be enabled with the `"ecmaVersion": 2018` option:
+对象剩余/展开现在已成为 JavaScript 语言的正式组成部分，因此对它的支持不再是实验性的。在 ESLint v4 和 ESLint v5 中，现在都可以通过 `"ecmaVersion": 2018` 选项启用对象剩余/展开：
 
 ```json
 {
@@ -91,39 +91,39 @@ Object rest/spread is now an official part of the JavaScript language, so our su
 }
 ```
 
-Note that this also enables parsing for other features from ES2018, such as [async iteration](https://github.com/tc39/proposal-async-iteration). When using ESLint v5 with the default parser, it is no longer possible to toggle syntax support for object rest/spread independently of other features.
+请注意，这也会启用对 ES2018 其他特性的解析，例如[异步迭代](https://github.com/tc39/proposal-async-iteration)。在 ESLint v5 中使用默认解析器时，无法再单独切换对象剩余/展开语法的支持，而不影响其他特性。
 
-For compatibility, ESLint v5 will treat `ecmaFeatures: { experimentalObjectRestSpread: true }` as an alias for `ecmaVersion: 2018` when the former is found in a config file. As a result, if you use object rest/spread, your code should still parse successfully with ESLint v5. However, note that this alias will be removed in ESLint v6.
+为保证兼容性，当配置文件中出现 `ecmaFeatures: { experimentalObjectRestSpread: true }` 时，ESLint v5 会将它视为 `ecmaVersion: 2018` 的别名。因此，如果你使用对象剩余/展开，代码仍应能在 ESLint v5 中成功解析。不过请注意，这个别名将在 ESLint v6 中移除。
 
-**To address:** If you use the `experimentalObjectRestSpread` option, you should be able to upgrade to ESLint v5 without any changes, but you will encounter a deprecation warning. To avoid the warning, use `ecmaVersion: 2018` in your config file rather than `ecmaFeatures: { experimentalObjectRestSpread: true }`. If you would like to disallow the use of other ES2018 features, consider using rules such as [`no-restricted-syntax`](../rules/no-restricted-syntax).
+**解决方法：** 如果使用了 `experimentalObjectRestSpread` 选项，应该可以无需更改即可升级到 ESLint v5，但会看到弃用警告。若要避免警告，请在配置文件中使用 `ecmaVersion: 2018`，而不是 `ecmaFeatures: { experimentalObjectRestSpread: true }`。如果想禁止使用其他 ES2018 特性，可以考虑使用 [`no-restricted-syntax`](../rules/no-restricted-syntax) 等规则。
 
-## <a name="nonexistent-files"></a> Linting nonexistent files from the command line is now a fatal error
+## <a name="nonexistent-files"></a> 现在从命令行对不存在的文件进行代码检查会触发致命错误
 
-Previous versions of ESLint silently ignored any nonexistent files and globs provided on the command line:
+以前的 ESLint 版本会静默忽略通过命令行提供的所有不存在的文件和 glob：
 
 ```bash
 eslint nonexistent-file.js 'nonexistent-folder/**/*.js' # exits without any errors in ESLint v4
 ```
 
-Many users found this behavior confusing, because if they made a typo in a filename, ESLint would appear to lint that file successfully while actually not linting anything.
+许多用户认为这种行为令人困惑，因为如果文件名中有拼写错误，ESLint 看起来会像是成功检查了该文件，实际上却什么也没有检查。
 
-ESLint v5 will report a fatal error when either of the following conditions is met:
+当满足以下任一条件时，ESLint v5 会报告致命错误：
 
-- A file provided on the command line does not exist.
-- A glob or folder provided on the command line does not match any lintable files.
+- 命令行中指定的文件不存在。
+- 命令行中指定的 glob 或文件夹没有匹配到任何可检查的文件。
 
-Note that this also affects the [`CLIEngine.executeOnFiles()`](../integrate/nodejs-api#cliengineexecuteonfiles) API.
+请注意，这也会影响 [`CLIEngine.executeOnFiles()`](../integrate/nodejs-api#cliengineexecuteonfiles) API。
 
-**To address:** If you encounter an error about missing files after upgrading to ESLint v5, you may want to double-check that there are no typos in the paths you provide to ESLint. To make the error go away, you can simply remove the given files or globs from the list of arguments provided to ESLint on the command line.
+**解决方法：** 如果升级到 ESLint v5 后遇到文件缺失错误，请检查提供给 ESLint 的路径中是否有拼写错误。若要消除错误，只需从命令行传给 ESLint 的参数列表中移除相应文件或 glob。
 
-If you use a boilerplate generator that relies on this behavior (e.g. to generate a script that runs `eslint tests/` in a new project before any test files are actually present), you can work around this issue by adding a dummy file that matches the given pattern (e.g. an empty `tests/index.js` file).
+如果你使用的样板生成器依赖这种行为（例如，在新项目中尚无任何测试文件时，生成一个运行 `eslint tests/` 的脚本），可以添加一个与给定模式匹配的虚拟文件来规避此问题（例如，创建一个空的 `tests/index.js` 文件）。
 
-## <a name="rule-default-changes"></a> The default options for some rules have changed
+## <a name="rule-default-changes"></a> 部分规则的默认选项已更改
 
-- The default options for the [`object-curly-newline`](../rules/object-curly-newline) rule have changed from `{ multiline: true }` to `{ consistent: true }`.
-- The default options object for the [`no-self-assign`](../rules/no-self-assign) rule has changed from `{ props: false }` to `{ props: true }`.
+- [`object-curly-newline`](../rules/object-curly-newline) 规则的默认选项已从 `{ multiline: true }` 更改为 `{ consistent: true }`。
+- [`no-self-assign`](../rules/no-self-assign) 规则的默认选项对象已从 `{ props: false }` 更改为 `{ props: true }`。
 
-**To address:** To restore the rule behavior from ESLint v4, you can update your config file to include the previous options:
+**解决方法：** 若要恢复 ESLint v4 中的规则行为，可以更新配置文件，加入之前的选项：
 
 ```json
 {
@@ -134,11 +134,11 @@ If you use a boilerplate generator that relies on this behavior (e.g. to generat
 }
 ```
 
-## <a name="deprecated-globals"></a> Deprecated globals have been removed from the `node`, `browser`, and `jest` environments
+## <a name="deprecated-globals"></a> 已从 `node`、`browser` 和 `jest` 环境中移除已弃用的全局变量
 
-Some global variables have been deprecated or removed for code running in Node.js, browsers, and Jest. (For example, browsers used to expose an `SVGAltGlyphElement` global variable to JavaScript code, but this global has been removed from web standards and is no longer present in browsers.) As a result, we have removed these globals from the corresponding `eslint` environments, so use of these globals will trigger an error when using rules such as [`no-undef`](../rules/no-undef).
+一些用于 Node.js、浏览器和 Jest 代码的全局变量已弃用或移除。（例如，浏览器过去会向 JavaScript 代码提供一个名为 `SVGAltGlyphElement` 的全局变量，但该全局变量已从 Web 标准中移除，也不再存在于浏览器中。）因此，我们已从相应的 `eslint` 环境中移除这些全局变量；使用 [`no-undef`](../rules/no-undef) 等规则时，引用这些变量会触发错误。
 
-**To address:** If you use deprecated globals in the `node`, `browser`, or `jest` environments, you can add a `globals` section to your configuration to re-enable any globals you need. For example:
+**解决方法：** 如果你在 `node`、`browser` 或 `jest` 环境中使用了已弃用的全局变量，可以在配置中添加 `globals` 部分，重新启用所需的全局变量。例如：
 
 ```json
 {
@@ -151,25 +151,25 @@ Some global variables have been deprecated or removed for code running in Node.j
 }
 ```
 
-## <a name="empty-files"></a> Empty files are now linted
+## <a name="empty-files"></a> 现在会对空文件进行代码检查
 
-ESLint v4 had a special behavior when linting files that only contain whitespace: it would skip running the parser and rules, and it would always return zero errors. This led to some confusion for users and rule authors, particularly when writing tests for rules. (When writing a stylistic rule, rule authors would occasionally write a test where the source code only contained whitespace, to ensure that the rule behaved correctly when no applicable code was found. However, a test like this would actually not run the rule at all, so an aspect of the rule would end up untested.)
+ESLint v4 对只包含空白字符的文件有一种特殊处理：它会跳过解析器和规则的运行，并且始终返回零个错误。这让用户和规则作者感到困惑，尤其是在编写规则测试时。（编写风格规则时，规则作者有时会编写一个只包含空白字符的源代码测试，以确保在找不到适用代码时规则行为正确。但这样的测试实际上根本不会运行规则，因此规则的某些方面最终没有得到测试。）
 
-ESLint v5 treats whitespace-only files the same way as all other files: it parses them and runs enabled rules on them as appropriate. This could lead to additional linting problems if you use a custom rule that reports errors on empty files.
+ESLint v5 会像处理其他文件一样处理只包含空白字符的文件：解析这些文件，并在适当情况下对其运行已启用的规则。如果你使用的自定义规则会在空文件上报告错误，这可能导致额外的代码检查问题。
 
-**To address:** If you have an empty file in your project and you don't want it to be linted, consider adding it to an [`.eslintignore` file](configure/ignore).
+**解决方法：** 如果项目中有不希望进行代码检查的空文件，可以考虑将其添加到 [`.eslintignore` 文件](configure/ignore)中。
 
-If you have a custom rule, you should make sure it handles empty files appropriately. (In most cases, no changes should be necessary.)
+如果你编写了自定义规则，请确保它能妥善处理空文件。（在大多数情况下，无需进行任何更改。）
 
-## <a name="scoped-plugins"></a> Plugins in scoped packages are now resolvable in configs
+## <a name="scoped-plugins"></a> 现在可以在配置中解析作用域包中的插件
 
-When ESLint v5 encounters a plugin name in a config starting with `@`, the plugin will be resolved as a [scoped npm package](https://docs.npmjs.com/misc/scope). For example, if a config contains `"plugins": ["@foo"]`, ESLint v5 will attempt to load a package called `@foo/eslint-plugin`. (On the other hand, ESLint v4 would attempt to load a package called `eslint-plugin-@foo`.) This is a breaking change because users might have been relying on ESLint finding a package at `node_modules/eslint-plugin-@foo`. However, we think it is unlikely that many users were relying on this behavior, because packages published to npm cannot contain an `@` character in the middle.
+当 ESLint v5 在配置中遇到以 `@` 开头的插件名称时，会将该插件解析为[作用域 npm 包](https://docs.npmjs.com/misc/scope)。例如，如果配置中包含 `"plugins": ["@foo"]`，ESLint v5 会尝试加载名为 `@foo/eslint-plugin` 的包。（而 ESLint v4 会尝试加载名为 `eslint-plugin-@foo` 的包。）这是一个破坏性变更，因为用户可能依赖 ESLint 查找 `node_modules/eslint-plugin-@foo` 中的包。不过，我们认为依赖这种行为的用户不太可能很多，因为发布到 npm 的包名中间不能包含 `@` 字符。
 
-**To address:** If you rely on ESLint loading a package like `eslint-config-@foo`, consider renaming the package to something else.
+**解决方法：** 如果你依赖 ESLint 加载类似 `eslint-config-@foo` 的包，可以考虑将该包重命名为其他名称。
 
-## <a name="multiline-directives"></a> Multi-line `eslint-disable-line` directives are now reported as problems
+## <a name="multiline-directives"></a> 现在会将多行 `eslint-disable-line` 指令报告为问题
 
-`eslint-disable-line` and `eslint-disable-next-line` directive comments are only allowed to span a single line. For example, the following directive comment is invalid:
+`eslint-disable-line` 和 `eslint-disable-next-line` 指令注释只能跨越一行。例如，以下指令注释无效：
 
 ```js
 alert("foo");
@@ -179,95 +179,95 @@ alert("foo");
 // (which line is the rule disabled on?)
 ```
 
-Previously, ESLint would ignore these malformed directive comments. ESLint v5 will report an error when it sees a problem like this, so that the issue can be more easily corrected.
+以前，ESLint 会忽略这些格式错误的指令注释。ESLint v5 遇到此类问题时会报告错误，以便更容易地修正问题。
 
-**To address:** If you see new reported errors as a result of this change, ensure that your `eslint-disable-line` directives only span a single line. Note that "block comments" (delimited by `/* */`) are still allowed to be used for directives, provided that the block comments do not contain linebreaks.
-
----
-
-## <a name="parent-before-rules"></a> The `parent` property of AST nodes is now set before rules start running
-
-Previously, ESLint would set the `parent` property on each AST node immediately before running rule listeners for that node. This caused some confusion for rule authors, because the `parent` property would not initially be present on any nodes, and it was sometimes necessary to complicate the structure of a rule to ensure that the `parent` property of a given node would be available when needed.
-
-In ESLint v5, the `parent` property is set on all AST nodes before any rules have access to the AST. This makes it easier to write some rules, because the `parent` property is always available rather than being mutated behind the scenes. However, as a side-effect of having `parent` properties, the AST object has a circular structure the first time a rule sees it (previously, it only had a circular structure after the first rule listeners were called). As a result, a custom rule that enumerates all properties of a node in order to traverse the AST might now loop forever or run out of memory if it does not check for cycles properly.
-
-**To address:** If you have written a custom rule that enumerates all properties of an AST node, consider excluding the `parent` property or implementing cycle detection to ensure that you obtain the correct result.
-
-## <a name="spread-operators"></a> When using the default parser, spread operators now have type `SpreadElement`
-
-Previously, when parsing JS code like `const foo = {...data}` with the `experimentalObjectRestSpread` option enabled, the default parser would generate an `ExperimentalSpreadProperty` node type for the `...data` spread element.
-
-In ESLint v5, the default parser will now always give the `...data` AST node the `SpreadElement` type, even if the (now deprecated) [`experimentalObjectRestSpread`](#experimental-object-rest-spread) option is enabled. This makes the AST compliant with the current ESTree spec.
-
-**To address:** If you have written a custom rule that relies on spread operators having the `ExperimentalSpreadProperty` type, you should update it to also work with spread operators that have the `SpreadElement` type.
-
-## <a name="rest-operators"></a> When using the default parser, rest operators now have type `RestElement`
-
-Previously, when parsing JS code like `const {foo, ...rest} = data` with the `experimentalObjectRestSpread` option enabled, the default parser would generate an `ExperimentalRestProperty` node type for the `...data` rest element.
-
-In ESLint v5, the default parser will now always give the `...data` AST node the `RestElement` type, even if the (now deprecated) [`experimentalObjectRestSpread`](#experimental-object-rest-spread) option is enabled. This makes the AST compliant with the current ESTree spec.
-
-**To address:** If you have written a custom rule that relies on rest operators having the `ExperimentalRestProperty` type, you should update it to also work with rest operators that have the `RestElement` type.
-
-## <a name="jsx-text-nodes"></a> When using the default parser, text nodes in JSX elements now have type `JSXText`
-
-When parsing JSX code like `<a>foo</a>`, the default parser will now give the `foo` AST node the `JSXText` type, rather than the `Literal` type. This makes the AST compliant with a recent update to the JSX spec.
-
-**To address:** If you have written a custom rule that relies on text nodes in JSX elements having the `Literal` type, you should update it to also work with nodes that have the `JSXText` type.
-
-## <a name="context-get-scope"></a> The `context.getScope()` method now returns more proper scopes
-
-Previously, the `context.getScope()` method changed its behavior based on the `parserOptions.ecmaVersion` property. However, this could cause confusing behavior when using a parser that doesn't respond to the `ecmaVersion` option, such as `babel-eslint`.
-
-Additionally, `context.getScope()` incorrectly returned the parent scope of the proper scope on `CatchClause` (in ES5), `ForStatement` (in ≧ES2015), `ForInStatement` (in ≧ES2015), `ForOfStatement`, and `WithStatement` nodes.
-
-In ESLint v5, the `context.getScope()` method has the same behavior regardless of `parserOptions.ecmaVersion` and returns the proper scope. See [the documentation](../extend/scope-manager-interface) for more details on which scopes are returned.
-
-**To address:** If you have written a custom rule that uses the `context.getScope()` method in node handlers, you may need to update it to account for the modified scope information.
-
-## <a name="no-context-linter"></a> The `_linter` property on rule context objects has been removed
-
-Previously, rule context objects had an undocumented `_linter` property, which was used internally within ESLint to process reports from rules. Some rules used this property to achieve functionality that was not intended to be possible for rules. For example, several plugins used the `_linter` property in a rule to monitor reports from other rules, for the purpose of checking for unused `/* eslint-disable */` directive comments. Although this functionality was useful for users, it could also cause stability problems for projects using ESLint. For example, an upgrade to a rule in one plugin could unexpectedly cause a rule in another plugin to start reporting errors.
-
-The `_linter` property has been removed in ESLint v5.0, so it is no longer possible to implement rules with this functionality. However, the [`--report-unused-disable-directives`](command-line-interface#--report-unused-disable-directives) CLI flag can be used to flag unused directive comments.
-
-## <a name="rule-tester-equality"></a> `RuleTester` now uses strict equality checks in its assertions
-
-Previously, `RuleTester` used loose equality when making some of its assertions. For example, if a rule produced the string `"7"` as a result of autofixing, `RuleTester` would allow the number `7` in an `output` assertion, rather than the string `"7"`. In ESLint v5, comparisons from `RuleTester` use strict equality, so an assertion like this will no longer pass.
-
-**To address:** If you use `RuleTester` to write tests for your custom rules, make sure the expected values in your assertions are strictly equal to the actual values.
-
-## <a name="required-report-messages"></a> Rules are now required to provide messages along with reports
-
-Previously, it was possible for rules to report AST nodes without providing a report message. This was not intended behavior, and as a result the default formatter would crash if a rule omitted a message. However, it was possible to avoid a crash when using a non-default formatter, such as `json`.
-
-In ESLint v5, reporting a problem without providing a message always results in an error.
-
-**To address:** If you have written a custom rule that reports a problem without providing a message, update it to provide a message along with the report.
+**解决方法：** 如果此变更导致出现新的错误报告，请确保 `eslint-disable-line` 指令只跨越一行。请注意，仍然可以使用“块注释”（由 `/* */` 界定）作为指令，前提是块注释中不包含换行符。
 
 ---
 
-## <a name="source-property"></a> The `source` property is no longer available on individual linting messages
+## <a name="parent-before-rules"></a> 现在会在规则开始运行前设置 AST 节点的 `parent` 属性
 
-As announced in [October 2016](/blog/2016/10/eslint-v3.8.0-released#additional-property-on-linting-results), the `source` property has been removed from individual lint message objects.
+以前，ESLint 会在运行某个 AST 节点的规则监听器之前，立即为该节点设置 `parent` 属性。这让规则作者感到困惑，因为节点最初都没有 `parent` 属性，有时还必须让规则结构变得复杂，才能确保在需要时可以获取特定节点的 `parent` 属性。
 
-**To address:** If you have a formatter or integration which relies on using the `source` property on individual linting messages, you should update it to use the `source` property on file results objects instead.
+在 ESLint v5 中，所有规则都能访问 AST 之前，就会为所有 AST 节点设置 `parent` 属性。这让某些规则更容易编写，因为 `parent` 属性始终可用，不会再在幕后发生变更。不过，由于存在 `parent` 属性，规则首次看到 AST 对象时，它就会具有循环结构（以前只有在调用第一个规则监听器之后才会形成循环结构）。因此，如果自定义规则通过枚举节点的所有属性来遍历 AST，却没有正确检测循环引用，就可能陷入无限循环或耗尽内存。
 
-## <a name="exit-code-two"></a> Fatal errors now result in an exit code of 2
+**解决方法：** 如果你编写的自定义规则会枚举 AST 节点的所有属性，可以考虑排除 `parent` 属性，或实现循环检测，以确保获得正确结果。
 
-When using ESLint v4, both of the following scenarios resulted in an exit code of 1 when running ESLint on the command line:
+## <a name="spread-operators"></a> 使用默认解析器时，扩展运算符的类型现在是 `SpreadElement`
 
-- Linting completed successfully, but there are some linting errors
-- Linting was unsuccessful due to a fatal error (e.g. an invalid config file)
+以前，使用启用了 `experimentalObjectRestSpread` 选项的默认解析器解析类似 `const foo = {...data}` 的 JS 代码时，会为 `...data` 扩展元素生成 `ExperimentalSpreadProperty` 节点类型。
 
-As a result, it was difficult for an integration to distinguish between the two cases to determine whether it should try to extract linting results from the output.
+在 ESLint v5 中，即使启用了（现在已弃用的）[`experimentalObjectRestSpread`](#experimental-object-rest-spread) 选项，默认解析器也始终会将 `...data` AST 节点的类型设为 `SpreadElement`。这样 AST 就符合当前的 ESTree 规范。
 
-In ESLint v5, an unsuccessful linting run due to a fatal error will result in an exit code of 2, rather than 1.
+**解决方法：** 如果你编写的自定义规则依赖扩展运算符具有 `ExperimentalSpreadProperty` 类型，请更新规则，使其也能处理类型为 `SpreadElement` 的扩展运算符。
 
-**To address:** If you have an integration that detects all problems with linting runs by checking whether the exit code is equal to 1, update it to check whether the exit code is nonzero instead.
+## <a name="rest-operators"></a> 使用默认解析器时，剩余运算符的类型现在是 `RestElement`
 
-## <a name="non-enumerable-linter"></a> The `eslint.linter` property is now non-enumerable
+以前，使用启用了 `experimentalObjectRestSpread` 选项的默认解析器解析类似 `const {foo, ...rest} = data` 的 JS 代码时，会为 `...data` 剩余元素生成 `ExperimentalRestProperty` 节点类型。
 
-When using ESLint's Node.js API, the [`linter`](../integrate/nodejs-api#linter-1) property is now non-enumerable. Note that the `linter` property was deprecated in ESLint v4 in favor of the [`Linter`](../integrate/nodejs-api#linter) property.
+在 ESLint v5 中，即使启用了（现在已弃用的）[`experimentalObjectRestSpread`](#experimental-object-rest-spread) 选项，默认解析器也始终会将 `...data` AST 节点的类型设为 `RestElement`。这样 AST 就符合当前的 ESTree 规范。
 
-**To address:** If you rely on enumerating all the properties of the `eslint` object, use something like `Object.getOwnPropertyNames` to ensure that non-enumerable keys are captured.
+**解决方法：** 如果你编写的自定义规则依赖剩余运算符具有 `ExperimentalRestProperty` 类型，请更新规则，使其也能处理类型为 `RestElement` 的剩余运算符。
+
+## <a name="jsx-text-nodes"></a> 使用默认解析器时，JSX 元素中的文本节点类型现在是 `JSXText`
+
+解析类似 `<a>foo</a>` 的 JSX 代码时，默认解析器现在会将 `foo` AST 节点的类型设为 `JSXText`，而不是 `Literal`。这样 AST 就符合 JSX 规范最近的一次更新。
+
+**解决方法：** 如果你编写的自定义规则依赖 JSX 元素中的文本节点具有 `Literal` 类型，请更新规则，使其也能处理类型为 `JSXText` 的节点。
+
+## <a name="context-get-scope"></a> `context.getScope()` 方法现在会返回更准确的作用域
+
+以前，`context.getScope()` 方法会根据 `parserOptions.ecmaVersion` 属性改变行为。不过，使用不响应 `ecmaVersion` 选项的解析器（例如 `babel-eslint`）时，这可能导致令人困惑的行为。
+
+此外，在 `CatchClause`（ES5 中）、`ForStatement`（≧ES2015 中）、`ForInStatement`（≧ES2015 中）、`ForOfStatement` 和 `WithStatement` 节点上，`context.getScope()` 错误地返回了正确作用域的父级作用域。
+
+在 ESLint v5 中，无论 `parserOptions.ecmaVersion` 是什么，`context.getScope()` 的行为都相同，并且会返回正确的作用域。有关返回哪些作用域的更多详情，请参阅[文档](../extend/scope-manager-interface)。
+
+**解决方法：** 如果你编写的自定义规则在节点处理器中使用了 `context.getScope()` 方法，可能需要更新规则，以适应修改后的作用域信息。
+
+## <a name="no-context-linter"></a> 已从规则上下文对象中移除 `_linter` 属性
+
+以前，规则上下文对象有一个未记录的 `_linter` 属性，ESLint 内部使用它来处理规则报告。一些规则使用此属性实现本不应允许规则实现的功能。例如，有几个插件在规则中使用 `_linter` 属性监视其他规则的报告，以检查是否存在未使用的 `/* eslint-disable */` 指令注释。尽管此功能对用户有用，但也可能导致使用 ESLint 的项目出现稳定性问题。例如，一个插件中的规则升级，可能会意外导致另一个插件中的规则开始报告错误。
+
+ESLint v5.0 中已移除 `_linter` 属性，因此无法再实现具有此功能的规则。不过，可以使用 [`--report-unused-disable-directives`](command-line-interface#--report-unused-disable-directives) CLI 标志来标记未使用的指令注释。
+
+## <a name="rule-tester-equality"></a> `RuleTester` 现在会在断言中使用严格相等检查
+
+以前，`RuleTester` 在进行某些断言时使用宽松相等。例如，如果某条规则自动修复后生成字符串 `"7"`，`RuleTester` 会允许在 `output` 断言中使用数字 `7`，而不是字符串 `"7"`。在 ESLint v5 中，`RuleTester` 的比较使用严格相等，因此这类断言将不再通过。
+
+**解决方法：** 如果你使用 `RuleTester` 为自定义规则编写测试，请确保断言中的预期值与实际值严格相等。
+
+## <a name="required-report-messages"></a> 规则现在必须在报告问题时同时提供消息
+
+以前，规则可以报告 AST 节点而不提供报告消息。这并非预期行为，因此规则省略消息时，默认格式化程序会崩溃。不过，使用非默认格式化程序（例如 `json`）时，可以避免崩溃。
+
+在 ESLint v5 中，报告问题时未提供消息总会导致错误。
+
+**解决方法：** 如果你编写的自定义规则报告问题时未提供消息，请更新规则，在报告问题时同时提供消息。
+
+---
+
+## <a name="source-property"></a> 不再能在单条代码检查消息上获取 `source` 属性
+
+正如我们在 [2016 年 10 月](/blog/2016/10/eslint-v3.8.0-released#additional-property-on-linting-results)宣布的那样，已从单条代码检查消息对象中移除 `source` 属性。
+
+**解决方法：** 如果你的格式化程序或集成依赖单条代码检查消息上的 `source` 属性，请更新它，改用文件结果对象上的 `source` 属性。
+
+## <a name="exit-code-two"></a> 致命错误现在会返回退出码 2
+
+使用 ESLint v4 时，通过命令行运行 ESLint，以下两种情况都会返回退出码 1：
+
+- 代码检查成功完成，但存在一些代码检查错误。
+- 代码检查因致命错误（例如配置文件无效）而未能成功完成。
+
+因此，集成很难区分这两种情况，也就难以确定是否应尝试从输出中提取代码检查结果。
+
+在 ESLint v5 中，代码检查因致命错误而未能成功完成时，将返回退出码 2，而不是 1。
+
+**解决方法：** 如果你的集成通过检查退出码是否等于 1 来检测代码检查运行中的所有问题，请更新它，改为检查退出码是否非零。
+
+## <a name="non-enumerable-linter"></a> `eslint.linter` 属性现在不可枚举
+
+使用 ESLint 的 Node.js API 时，[`linter`](../integrate/nodejs-api#linter-1) 属性现在不可枚举。请注意，在 ESLint v4 中，`linter` 属性已弃用，建议改用 [`Linter`](../integrate/nodejs-api#linter) 属性。
+
+**解决方法：** 如果你依赖枚举 `eslint` 对象的所有属性，请使用 `Object.getOwnPropertyNames` 等方法，以确保获取不可枚举的键。
