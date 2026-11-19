@@ -2,7 +2,7 @@
 title: wrap-iife
 rule_type: layout
 ---
-You can immediately invoke function expressions, but not function declarations. A common technique to create an immediately-invoked function expression (IIFE) is to wrap a function declaration in parentheses. The opening parentheses causes the contained function to be parsed as an expression, rather than a declaration.
+可以立即调用函数表达式，但不能立即调用函数声明。创建立即调用函数表达式（IIFE）的一种常见做法，是用括号包裹函数声明。左括号会使其中的函数被解析为表达式，而不是声明。
 
 ```js
 // function expression could be unwrapped
@@ -12,27 +12,33 @@ var x = function () { return { y: 1 };}();
 function () { /* side effects */ }(); // SyntaxError
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule requires all immediately-invoked function expressions to be wrapped in parentheses.
+## 规则详情
 
-## Options
+此规则要求所有立即调用函数表达式都用括号包裹。
 
-This rule has two options, a string option and an object option.
+<a id="options"></a>
 
-String option:
+## 选项
 
-* `"outside"` enforces always wrapping the *call* expression. The default is `"outside"`.
-* `"inside"` enforces always wrapping the *function* expression.
-* `"any"` enforces always wrapping, but allows either style.
+此规则有两个选项：字符串选项和对象选项。
 
-Object option:
+字符串选项：
 
-* `"functionPrototypeMethods": true` additionally enforces wrapping function expressions invoked using `.call` and `.apply`. The default is `false`.
+* `"outside"` 强制始终包裹*调用*表达式。默认值为 `"outside"`。
+* `"inside"` 强制始终包裹*函数*表达式。
+* `"any"` 强制始终包裹，但允许采用任一种风格。
 
-### outside
+对象选项：
 
-Examples of **incorrect** code for the default `"outside"` option:
+* `"functionPrototypeMethods": true` 还会强制包裹通过 `.call` 和 `.apply` 调用的函数表达式。默认值为 `false`。
+
+<a id="outside"></a>
+
+### 外侧
+
+默认选项 `"outside"` 下的**错误**代码示例：
 
 ::: incorrect
 
@@ -45,7 +51,7 @@ var x = (function () { return { y: 1 };})(); // wrapped function expression
 
 :::
 
-Examples of **correct** code for the default `"outside"` option:
+默认选项 `"outside"` 下的**正确**代码示例：
 
 ::: correct
 
@@ -57,9 +63,11 @@ var x = (function () { return { y: 1 };}()); // wrapped call expression
 
 :::
 
-### inside
+<a id="inside"></a>
 
-Examples of **incorrect** code for the `"inside"` option:
+### 内侧
+
+选项 `"inside"` 下的**错误**代码示例：
 
 ::: incorrect
 
@@ -72,7 +80,7 @@ var x = (function () { return { y: 1 };}()); // wrapped call expression
 
 :::
 
-Examples of **correct** code for the `"inside"` option:
+选项 `"inside"` 下的**正确**代码示例：
 
 ::: correct
 
@@ -84,9 +92,11 @@ var x = (function () { return { y: 1 };})(); // wrapped function expression
 
 :::
 
-### any
+<a id="any"></a>
 
-Examples of **incorrect** code for the `"any"` option:
+### 任意
+
+选项 `"any"` 下的**错误**代码示例：
 
 ::: incorrect
 
@@ -98,7 +108,7 @@ var x = function () { return { y: 1 };}(); // unwrapped
 
 :::
 
-Examples of **correct** code for the `"any"` option:
+选项 `"any"` 下的**正确**代码示例：
 
 ::: correct
 
@@ -111,9 +121,11 @@ var x = (function () { return { y: 1 };})(); // wrapped function expression
 
 :::
 
-### functionPrototypeMethods
+<a id="functionprototypemethods"></a>
 
-Examples of **incorrect** code for this rule with the `"inside", { "functionPrototypeMethods": true }` options:
+### 函数原型方法
+
+此规则在选项 `"inside", { "functionPrototypeMethods": true }` 下的**错误**代码示例：
 
 ::: incorrect
 
@@ -128,7 +140,7 @@ var x = (function(){ foo(); }.call(bar))
 
 :::
 
-Examples of **correct** code for this rule with the `"inside", { "functionPrototypeMethods": true }` options:
+此规则在选项 `"inside", { "functionPrototypeMethods": true }` 下的**正确**代码示例：
 
 ::: correct
 
