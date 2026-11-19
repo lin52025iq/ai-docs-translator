@@ -7,8 +7,7 @@ related_rules:
 - computed-property-spacing
 - space-in-parens
 ---
-While formatting preferences are very personal, a number of style guides require
-or disallow spaces between curly braces in the following situations:
+虽然格式偏好因人而异，但许多风格指南会要求或禁止在以下情况下于花括号之间添加空格：
 
 ```js
 // simple object literals
@@ -25,29 +24,33 @@ import { foo } from "bar";
 export { foo };
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces consistent spacing inside braces of object literals, destructuring assignments, and import/export specifiers.
+## 规则详情
 
-## Options
+此规则要求对象字面量、解构赋值以及导入/导出说明符的花括号内空格保持一致。
 
-This rule has two options, a string option and an object option.
+<a id="options"></a>
 
-String option:
+## 选项
 
-* `"never"` (default) disallows spacing inside of braces
-* `"always"` requires spacing inside of braces (except `{}`)
+此规则有两个选项：字符串选项和对象选项。
 
-Object option:
+字符串选项：
 
-* `"arraysInObjects": true` requires spacing inside of braces of objects beginning and/or ending with an array element (applies when the first option is set to `never`)
-* `"arraysInObjects": false` disallows spacing inside of braces of objects beginning and/or ending with an array element (applies when the first option is set to `always`)
-* `"objectsInObjects": true` requires spacing inside of braces of objects beginning and/or ending with an object element (applies when the first option is set to `never`)
-* `"objectsInObjects": false` disallows spacing inside of braces of objects beginning and/or ending with an object element (applies when the first option is set to `always`)
+* `"never"`（默认值）禁止在花括号内添加空格
+* `"always"` 要求在花括号内添加空格（`{}` 除外）
+
+对象选项：
+
+* `"arraysInObjects": true` 要求在以数组元素开头和/或结尾的对象的花括号内添加空格（仅当第一个选项设为 `never` 时适用）
+* `"arraysInObjects": false` 禁止在以数组元素开头和/或结尾的对象的花括号内添加空格（仅当第一个选项设为 `always` 时适用）
+* `"objectsInObjects": true` 要求在以对象元素开头和/或结尾的对象的花括号内添加空格（仅当第一个选项设为 `never` 时适用）
+* `"objectsInObjects": false` 禁止在以对象元素开头和/或结尾的对象的花括号内添加空格（仅当第一个选项设为 `always` 时适用）
 
 ### never
 
-Examples of **incorrect** code for this rule with the default `"never"` option:
+使用默认选项 `"never"` 时，此规则的以下代码示例**错误**：
 
 ::: incorrect
 
@@ -64,7 +67,7 @@ import { foo } from 'bar';
 
 :::
 
-Examples of **correct** code for this rule with the default `"never"` option:
+使用默认选项 `"never"` 时，此规则的以下代码示例**正确**：
 
 ::: correct
 
@@ -89,7 +92,7 @@ import {foo} from 'bar';
 
 ### always
 
-Examples of **incorrect** code for this rule with the `"always"` option:
+使用选项 `"always"` 时，此规则的以下代码示例**错误**：
 
 ::: incorrect
 
@@ -110,7 +113,7 @@ import {foo } from 'bar';
 
 :::
 
-Examples of **correct** code for this rule with the `"always"` option:
+使用选项 `"always"` 时，此规则的以下代码示例**正确**：
 
 ::: correct
 
@@ -131,7 +134,7 @@ import { foo } from 'bar';
 
 #### arraysInObjects
 
-Examples of additional **correct** code for this rule with the `"never", { "arraysInObjects": true }` options:
+使用选项 `"never", { "arraysInObjects": true }` 时，此规则的其他**正确**代码示例：
 
 ::: correct
 
@@ -144,7 +147,7 @@ var obj = {"foo": [ "baz", "bar" ] };
 
 :::
 
-Examples of additional **correct** code for this rule with the `"always", { "arraysInObjects": false }` options:
+使用选项 `"always", { "arraysInObjects": false }` 时，此规则的其他**正确**代码示例：
 
 ::: correct
 
@@ -159,7 +162,7 @@ var obj = { "foo": [ "baz", "bar" ]};
 
 #### objectsInObjects
 
-Examples of additional **correct** code for this rule with the `"never", { "objectsInObjects": true }` options:
+使用选项 `"never", { "objectsInObjects": true }` 时，此规则的其他**正确**代码示例：
 
 ::: correct
 
@@ -171,7 +174,7 @@ var obj = {"foo": {"baz": 1, "bar": 2} };
 
 :::
 
-Examples of additional **correct** code for this rule with the `"always", { "objectsInObjects": false }` options:
+使用选项 `"always", { "objectsInObjects": false }` 时，此规则的其他**正确**代码示例：
 
 ::: correct
 
@@ -183,6 +186,8 @@ var obj = { "foo": { "baz": 1, "bar": 2 }};
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You can turn this rule off if you are not concerned with the consistency of spacing between curly braces.
+## 何时不使用
+
+如果你不关心花括号之间空格的一致性，可以关闭此规则。
