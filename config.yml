@@ -11,6 +11,8 @@ targets:
     branch: eslint-docs-zh-cn
 translation:
   model: gpt-6-luna
+  requestTimeoutMs: 300000
+  maxParallelFiles: 6
   scope:
     include: ['docs/**/*.md', 'docs/**/*.mdx']
   glossary: glossary.yml
