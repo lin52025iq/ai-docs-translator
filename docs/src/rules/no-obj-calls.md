@@ -8,42 +8,43 @@ further_reading:
 
 
 
-ECMAScript provides several global objects that are intended to be used as-is. Some of these objects look as if they could be constructors due to their capitalization (such as `Math`, `JSON`, and `Temporal`) but will throw an error if you try to execute them as functions.
+ECMAScript 提供了多个旨在直接使用的全局对象。由于名称首字母大写，其中一些对象看起来像是构造函数（例如 `Math`、`JSON` 和 `Temporal`），但如果尝试将它们作为函数执行，就会抛出错误。
 
-The [ECMAScript 5 specification](https://es5.github.io/#x15.8) makes it clear that both `Math` and `JSON` cannot be invoked:
+[ECMAScript 5 规范](https://es5.github.io/#x15.8)明确指出，`Math` 和 `JSON` 都不能被调用：
 
-> The Math object does not have a `[[Call]]` internal property; it is not possible to invoke the Math object as a function.
+> Math 对象没有 `[[Call]]` 内部属性；无法将 Math 对象作为函数调用。
 
-The [ECMAScript 2015 specification](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-reflect-object) makes it clear that `Reflect` cannot be invoked:
+[ECMAScript 2015 规范](https://www.ecma-international.org/ecma-262/6.0/index.html#sec-reflect-object)明确指出，`Reflect` 不能被调用：
 
-> The Reflect object also does not have a `[[Call]]` internal method; it is not possible to invoke the Reflect object as a function.
+> Reflect 对象也没有 `[[Call]]` 内部方法；无法将 Reflect 对象作为函数调用。
 
-The [ECMAScript 2017 specification](https://www.ecma-international.org/ecma-262/8.0/index.html#sec-atomics-object) makes it clear that `Atomics` cannot be invoked:
+[ECMAScript 2017 规范](https://www.ecma-international.org/ecma-262/8.0/index.html#sec-atomics-object)明确指出，`Atomics` 不能被调用：
 
-> The Atomics object does not have a `[[Call]]` internal method; it is not possible to invoke the Atomics object as a function.
+> Atomics 对象没有 `[[Call]]` 内部方法；无法将 Atomics 对象作为函数调用。
 
-The [ECMAScript Internationalization API Specification](https://tc39.es/ecma402/#intl-object) makes it clear that `Intl` cannot be invoked:
+[ECMAScript 国际化 API 规范](https://tc39.es/ecma402/#intl-object)明确指出，`Intl` 不能被调用：
 
-> The Intl object does not have a `[[Call]]` internal method; it is not possible to invoke the Intl object as a function.
+> Intl 对象没有 `[[Call]]` 内部方法；无法将 Intl 对象作为函数调用。
 
-The [Temporal proposal specification](https://tc39.es/proposal-temporal/#sec-temporal-objects) makes it clear that `Temporal` cannot be invoked:
+[Temporal 提案规范](https://tc39.es/proposal-temporal/#sec-temporal-objects)明确指出，`Temporal` 不能被调用：
 
-> The Temporal object does not have a `[[Call]]` internal method; it cannot be invoked as a function.
+> Temporal 对象没有 `[[Call]]` 内部方法；不能将其作为函数调用。
 
-The [ECMAScript 2020 specification](https://tc39.es/ecma262/2020/#sec-globalthis) defines `globalThis` as the global `this` value of the current realm. Unless the host specifies otherwise, this is the
-  [global object](https://tc39.es/ecma262/2020/#sec-global-object), which:
+[ECMAScript 2020 规范](https://tc39.es/ecma262/2020/#sec-globalthis)将 `globalThis` 定义为当前领域的全局 `this` 值。除非宿主另有规定，否则它就是[全局对象](https://tc39.es/ecma262/2020/#sec-global-object)，该对象：
 
-> does not have a `[[Construct]]` internal method; it cannot be used as a constructor with the `new` operator.
+> 没有 `[[Construct]]` 内部方法；不能使用 `new` 运算符将其用作构造函数。
 >
-> does not have a `[[Call]]` internal method; it cannot be invoked as a function.
+> 没有 `[[Call]]` 内部方法；不能将其作为函数调用。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows calling `Math`, `JSON`, `Reflect`, `Atomics`, `Intl`, `Temporal`, and `globalThis` as functions.
+## 规则详情
 
-This rule also disallows using these objects as constructors with the `new` operator.
+此规则禁止将 `Math`、`JSON`、`Reflect`、`Atomics`、`Intl`、`Temporal` 和 `globalThis` 作为函数调用。
 
-Examples of **incorrect** code for this rule:
+此规则也禁止使用 `new` 运算符将这些对象用作构造函数。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -82,7 +83,7 @@ const newGlobalObject = new globalThis();
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -108,6 +109,8 @@ const parsed = globalThis.parseInt("42", 10);
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
+
+此规则没有选项。
