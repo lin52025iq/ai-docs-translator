@@ -1,29 +1,31 @@
 ---
-title: Ignore Files
+title: 忽略文件
 eleventyNavigation:
     key: ignore files
     parent: configure
-    title: Ignore Files
+    title: 忽略文件
     order: 7
 ---
 
 {%- from 'components/npx_tabs.macro.html' import npx_tabs %}
 
 ::: tip
-This page explains how to ignore files using the flat config format.
+本页介绍如何使用扁平配置格式忽略文件。
 :::
 
 ::: tip
-This page explains how to use the `globalIgnores()` function to completely ignore files and directories. For more information on non-global ignores, see [Specify files and ignores](configuration-files#specify-files-and-ignores). For more information on the differences between global and non-global ignores, see [Globally ignore files with `ignores`](configuration-files#globally-ignore-files-with-ignores).
+本页介绍如何使用 `globalIgnores()` 函数彻底忽略文件和目录。有关非全局忽略的更多信息，请参阅[指定文件和忽略项](configuration-files#specify-files-and-ignores)。有关全局忽略与非全局忽略之间差异的更多信息，请参阅[使用 `ignores` 全局忽略文件](configuration-files#globally-ignore-files-with-ignores)。
 :::
-You can configure ESLint to ignore certain files and directories while linting by specifying one or more glob patterns in the following ways:
+你可以通过以下方式指定一个或多个 glob 模式，在代码检查时配置 ESLint 忽略特定文件和目录：
 
-- Inside of your `eslint.config.js` file.
-- On the command line using `--ignore-pattern`.
+- 在 `eslint.config.js` 文件中。
+- 在命令行中使用 `--ignore-pattern`。
 
-## Ignore Files
+<a id="ignore-files"></a>
 
-In your `eslint.config.js` file, you can use the `globalIgnores()` helper function to indicate patterns of files to be ignored. Here's an example:
+## 忽略文件
+
+在 `eslint.config.js` 文件中，你可以使用 `globalIgnores()` 辅助函数指定要忽略的文件模式。示例如下：
 
 ```js
 // eslint.config.js
@@ -32,9 +34,9 @@ import { defineConfig, globalIgnores } from "eslint/config";
 export default defineConfig([globalIgnores([".config/*"])]);
 ```
 
-This configuration specifies that all of the files in the `.config` directory should be ignored. This pattern is added after the default patterns, which are `["**/node_modules/", ".git/"]`.
+此配置会忽略 `.config` 目录中的所有文件。此模式会添加在默认模式 `["**/node_modules/", ".git/"]` 之后。
 
-By default, ESLint lints files that match the patterns `**/*.js`, `**/*.cjs`, and `**/*.mjs`. You can ignore them with `globalIgnores()` if you don't want ESLint to lint these files:
+默认情况下，ESLint 会对匹配 `**/*.js`、`**/*.cjs` 和 `**/*.mjs` 模式的文件进行代码检查。如果你不希望 ESLint 对这些文件进行代码检查，可以使用 `globalIgnores()` 忽略它们：
 
 ```js
 // eslint.config.js
@@ -45,7 +47,7 @@ export default defineConfig([
 ]);
 ```
 
-When non-JS files are specified in the `files` property, ESLint still lints files that match the default patterns. To lint only the files specified in the `files` property, you must ignore the default file patterns:
+当 `files` 属性中指定了非 JS 文件时，ESLint 仍会对匹配默认模式的文件进行代码检查。若只想检查 `files` 属性中指定的文件，则必须忽略默认文件模式：
 
 ```js
 // eslint.config.js
@@ -61,16 +63,18 @@ export default defineConfig([
 ]);
 ```
 
-You can also ignore files on the command line using [`--ignore-pattern`](../command-line-interface#--ignore-pattern), such as:
+你也可以在命令行中使用 [`--ignore-pattern`](../command-line-interface#--ignore-pattern) 忽略文件，例如：
 
 {{ npx_tabs({
     package: "eslint",
     args: [".", "--ignore-pattern", "\'.config/*\'"]
 }) }}
 
-## Ignore Directories
+<a id="ignore-directories"></a>
 
-Ignoring directories works the same way as ignoring files, by passing a pattern to the `globalIgnores()` helper function. For example, the following ignores the `.config` directory as a whole (meaning file search will not traverse into it at all):
+## 忽略目录
+
+忽略目录的方式与忽略文件相同，只需将模式传递给 `globalIgnores()` 辅助函数即可。例如，以下配置会整体忽略 `.config` 目录（也就是说，文件搜索完全不会遍历该目录）：
 
 ```js
 // eslint.config.js
@@ -79,7 +83,7 @@ import { defineConfig, globalIgnores } from "eslint/config";
 export default defineConfig([globalIgnores([".config/"])]);
 ```
 
-Unlike `.gitignore`, an ignore pattern like `.config` will only ignore the `.config` directory in the same directory as the configuration file. If you want to recursively ignore all directories named `.config`, you need to use `**/.config/`, as in this example:
+与 `.gitignore` 不同，像 `.config` 这样的忽略模式只会忽略与配置文件位于同一目录下的 `.config` 目录。如果要递归忽略所有名为 `.config` 的目录，则需要使用 `**/.config/`，如下例所示：
 
 ```js
 // eslint.config.js
@@ -88,9 +92,11 @@ import { defineConfig, globalIgnores } from "eslint/config";
 export default defineConfig([globalIgnores(["**/.config/"])]);
 ```
 
-## Unignore Files and Directories
+<a id="unignore-files-and-directories"></a>
 
-You can also unignore files and directories that are ignored by previous patterns, including the default patterns. For example, this config unignores `node_modules/mylibrary`:
+## 取消忽略文件和目录
+
+你还可以取消忽略之前的模式（包括默认模式）所忽略的文件和目录。例如，以下配置会取消对 `node_modules/mylibrary` 的忽略：
 
 ```js
 // eslint.config.js
@@ -105,9 +111,9 @@ export default defineConfig([
 ]);
 ```
 
-If you'd like to ignore a directory except for specific files or subdirectories, then the ignore pattern `directory/**/*` must be used instead of `directory/**`. The pattern `directory/**` ignores the entire directory and its contents, so traversal will skip over the directory completely and you cannot unignore anything inside.
+如果你想忽略某个目录，但保留其中的特定文件或子目录，则必须使用忽略模式 `directory/**/*`，而不是 `directory/**`。模式 `directory/**` 会忽略整个目录及其内容，因此遍历会完全跳过该目录，你也就无法取消忽略其中的任何内容。
 
-For example, `build/**` ignores directory `build` and its contents, whereas `build/**/*` ignores only its contents. If you'd like to ignore everything in the `build` directory except for `build/test.js`, you'd need to create a config like this:
+例如，`build/**` 会忽略 `build` 目录及其内容，而 `build/**/*` 只会忽略该目录中的内容。如果你想忽略 `build` 目录中的所有内容，但保留 `build/test.js`，则需要创建如下配置：
 
 ```js
 // eslint.config.js
@@ -121,9 +127,9 @@ export default defineConfig([
 ]);
 ```
 
-If you'd like to ignore a directory except for specific files at any level under the directory, you should also ensure that subdirectories are not ignored. Note that while patterns that end with `/` only match directories, patterns that don't end with `/` match both files and directories so it isn't possible to write a single pattern that only ignores files, but you can achieve this with two patterns: one to ignore all contents and another to unignore subdirectories.
+如果你想忽略某个目录，但保留该目录下任意层级中的特定文件，还应确保子目录未被忽略。请注意，以 `/` 结尾的模式只匹配目录，而不以 `/` 结尾的模式同时匹配文件和目录，因此无法编写一个只忽略文件的模式。不过，可以使用两个模式实现：一个忽略所有内容，另一个取消忽略子目录。
 
-For example, this config ignores all files in and under `build` directory except for files named `test.js` at any level:
+例如，以下配置会忽略 `build` 目录中及其下所有层级中的文件，但保留任意层级中名为 `test.js` 的文件：
 
 ```js
 // eslint.config.js
@@ -138,7 +144,7 @@ export default defineConfig([
 ]);
 ```
 
-If you want to ignore ESLint's default file patterns (`**/*.js`, `**/*.cjs`, and `**/*.mjs`) while still linting specific files or directories, you can use negative patterns to unignore them:
+如果你想忽略 ESLint 的默认文件模式（`**/*.js`、`**/*.cjs` 和 `**/*.mjs`），但仍要对特定文件或目录进行代码检查，可以使用否定模式取消忽略它们：
 
 ```js
 // eslint.config.js
@@ -149,31 +155,35 @@ export default defineConfig([
 ]);
 ```
 
-This configuration ignores all files matching the default patterns except for JavaScript files located within `src` directories.
+此配置会忽略匹配默认模式的所有文件，但 `src` 目录中的 JavaScript 文件除外。
 
 ::: important
-Note that only global `ignores` patterns can match directories.
-`ignores` patterns that are specific to a configuration will only match file names.
+请注意，只有全局 `ignores` 模式可以匹配目录。
+特定于某项配置的 `ignores` 模式只能匹配文件名。
 :::
 
-You can also unignore files on the command line using [`--ignore-pattern`](../command-line-interface#--ignore-pattern), such as:
+你也可以在命令行中使用 [`--ignore-pattern`](../command-line-interface#--ignore-pattern) 取消忽略文件，例如：
 
 {{ npx_tabs({
     package: "eslint",
     args: [".", "--ignore-pattern", "\'!node_modules/\'"]
 }) }}
 
-## Glob Pattern Resolution
+<a id="glob-pattern-resolution"></a>
 
-How glob patterns are evaluated depends on where they are located and how they are used:
+## Glob 模式的解析方式
 
-1. When using `globalIgnores()` in an `eslint.config.js` file, glob patterns are evaluated relative to the `eslint.config.js` file.
-1. When using `globalIgnores()` in an alternate configuration file specified using the [`--config`](../command-line-interface#-c---config) command line option, glob patterns are evaluated relative to the current working directory.
-1. When using [`--ignore-pattern`](../command-line-interface#--ignore-pattern), glob patterns are evaluated relative to the current working directory.
+glob 模式的求值方式取决于它们的位置和使用方式：
 
-## Name the Global Ignores Config
+1. 在 `eslint.config.js` 文件中使用 `globalIgnores()` 时，glob 模式相对于 `eslint.config.js` 文件进行求值。
+1. 在通过命令行选项 [`--config`](../command-line-interface#-c---config) 指定的备用配置文件中使用 `globalIgnores()` 时，glob 模式相对于当前工作目录进行求值。
+1. 使用 [`--ignore-pattern`](../command-line-interface#--ignore-pattern) 时，glob 模式相对于当前工作目录进行求值。
 
-By default, `globalIgnores()` will assign a name to the config that represents your ignores. You can override this name by providing a second argument to `globalIgnores()`, which is the name you'd like to use instead of the default:
+<a id="name-the-global-ignores-config"></a>
+
+## 为全局忽略配置命名
+
+默认情况下，`globalIgnores()` 会为表示忽略项的配置指定一个名称。你可以向 `globalIgnores()` 提供第二个参数，将此名称改为你想使用的名称，而非默认名称：
 
 ```js
 // eslint.config.js
@@ -184,11 +194,13 @@ export default defineConfig([
 ]);
 ```
 
-The `"Ignore Build Directory"` string in this example is the name of the config created for the global ignores. This is useful for debugging purposes.
+此示例中的字符串 `"Ignore Build Directory"` 是为全局忽略项创建的配置名称。这有助于调试。
 
-## Ignored File Warnings
+<a id="ignored-file-warnings"></a>
 
-When you pass directories to the ESLint CLI, files and directories are silently ignored. If you pass a specific file to ESLint, then ESLint creates a warning that the file was skipped. For example, suppose you have an `eslint.config.js` file that looks like this:
+## 被忽略文件的警告
+
+将目录传递给 ESLint CLI 时，其中的文件和目录会被静默忽略。如果将特定文件传递给 ESLint，它会发出警告，说明该文件已跳过。例如，假设你的 `eslint.config.js` 文件如下所示：
 
 ```js
 // eslint.config.js
@@ -197,14 +209,14 @@ import { defineConfig, globalIgnores } from "eslint/config";
 export default defineConfig([globalIgnores(["foo.js"])]);
 ```
 
-And then you run:
+然后运行：
 
 {{ npx_tabs({
     package: "eslint",
     args: ["foo.js"]
 }) }}
 
-You'll see this warning:
+你会看到以下警告：
 
 ```text
 foo.js
@@ -213,11 +225,13 @@ foo.js
 ✖ 1 problem (0 errors, 1 warning)
 ```
 
-This message occurs because ESLint is unsure if you wanted to actually lint the file or not. As the message indicates, you can use `--no-ignore` to omit using the ignore rules.
+出现此消息是因为 ESLint 无法确定你是否确实想对该文件进行代码检查。正如消息所述，你可以使用 `--no-ignore` 停用忽略规则。
 
-## Include `.gitignore` Files
+<a id="include-gitignore-files"></a>
 
-If you want to include patterns from a [`.gitignore`](https://git-scm.com/docs/gitignore) file or any other file with gitignore-style patterns, you can use the `includeIgnoreFile` utility.
+## 包含 `.gitignore` 文件
+
+如果你想包含 [`.gitignore`](https://git-scm.com/docs/gitignore) 文件中的模式，或任何其他采用 gitignore 风格模式的文件中的模式，可以使用 `includeIgnoreFile` 工具函数。
 
 ```js
 // eslint.config.js
@@ -235,9 +249,9 @@ export default defineConfig([
 ]);
 ```
 
-This automatically loads the specified file and translates gitignore-style patterns into a config object containing `ignores` glob patterns. The `{ gitignoreResolution: true }` option ensures that patterns will be interpreted relative to the location of the specified file.
+此函数会自动加载指定文件，并将 gitignore 风格的模式转换为包含 `ignores` glob 模式的配置对象。`{ gitignoreResolution: true }` 选项可确保模式相对于指定文件所在位置进行解析。
 
-An array of ignore file paths can also be provided:
+也可以提供一个忽略文件路径数组：
 
 ```js
 // eslint.config.js
@@ -260,11 +274,13 @@ export default defineConfig([
 ]);
 ```
 
-In this case, an array of config objects will be returned.
+在这种情况下，将返回一个配置对象数组。
 
-### Include other ignore files
+<a id="include-other-ignore-files"></a>
 
-If `{ gitignoreResolution: true }` is omitted, or if `{ gitignoreResolution: false" }` is specified, `includeIgnoreFile()` will interpret the ignore patterns relative to the location of the ESLint config file.
+### 包含其他忽略文件
+
+如果省略 `{ gitignoreResolution: true }`，或指定 `{ gitignoreResolution: false" }`，`includeIgnoreFile()` 会将忽略模式解释为相对于 ESLint 配置文件所在的位置。
 
 ```js
 // eslint.config.js
@@ -284,11 +300,13 @@ export default defineConfig([
 ]);
 ```
 
-By contrast, `.gitignore` files are specified such that the ignore patterns should be interpreted relative to the location of the `.gitignore` file itself. Therefore, `{ gitignoreResolution: true }`, which tells `includeIgnoreFile()` to match this behavior, should always be used when including ignore patterns from `.gitignore` files.
+与此不同，`.gitignore` 文件的模式应相对于 `.gitignore` 文件本身所在的位置进行解释。因此，使用 `.gitignore` 文件中的忽略模式时，应始终设置 `{ gitignoreResolution: true }`，以指示 `includeIgnoreFile()` 采用这种解析方式。
 
-### Customize name of output configs
+<a id="customize-name-of-output-configs"></a>
 
-By default, `includeIgnoreFile()` will assign a name to the config that represents your ignores. You can override this name by providing it in the second argument to `includeIgnoreFile()`:
+### 自定义输出配置的名称
+
+默认情况下，`includeIgnoreFile()` 会为表示忽略项的配置指定一个名称。你可以在 `includeIgnoreFile()` 的第二个参数中提供名称，以覆盖默认名称：
 
 ```js
 // eslint.config.js
