@@ -5,13 +5,13 @@ rule_type: suggestion
 
 
 
-JavaScript allows the omission of curly braces when a block contains only one statement. However, it is considered by many to be best practice to _never_ omit curly braces around blocks, even when they are optional, because it can lead to bugs and reduces code clarity. So the following:
+JavaScript 允许在代码块只包含一条语句时省略花括号。不过，许多人认为，即使花括号是可选的，也最好永远不要省略代码块周围的花括号，因为这样可能导致错误，并降低代码的清晰度。因此，下面的代码：
 
 ```js
 if (foo) foo++;
 ```
 
-Can be rewritten as:
+可以改写为：
 
 ```js
 if (foo) {
@@ -19,17 +19,21 @@ if (foo) {
 }
 ```
 
-There are, however, some who prefer to only use braces when there is more than one statement to be executed.
+不过，也有人更倾向于只在要执行多条语句时使用花括号。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at preventing bugs and increasing code clarity by ensuring that block statements are wrapped in curly braces. It will warn when it encounters blocks that omit curly braces.
+## 规则详情
 
-## Options
+此规则旨在确保代码块语句都用花括号括起来，从而预防错误并提高代码清晰度。遇到省略花括号的代码块时，此规则会发出警告。
+
+<a id="options"></a>
+
+## 选项
 
 ### all
 
-Examples of **incorrect** code for the default `"all"` option:
+默认的 `"all"` 选项下的错误代码示例：
 
 ::: incorrect
 
@@ -48,7 +52,7 @@ if (foo) {
 
 :::
 
-Examples of **correct** code for the default `"all"` option:
+默认的 `"all"` 选项下的正确代码示例：
 
 ::: correct
 
@@ -74,9 +78,9 @@ if (foo) {
 
 ### multi
 
-By default, this rule warns whenever `if`, `else`, `for`, `while`, or `do` are used without block statements as their body. However, you can specify that block statements should be used only when there are multiple statements in the block and warn when there is only one statement in the block.
+默认情况下，当 `if`、`else`、`for`、`while` 或 `do` 的主体未使用代码块语句时，此规则会发出警告。不过，你可以指定只有当代码块中有多条语句时才使用代码块语句，并在代码块中只有一条语句时发出警告。
 
-Examples of **incorrect** code for the `"multi"` option:
+`"multi"` 选项下的错误代码示例：
 
 ::: incorrect
 
@@ -103,7 +107,7 @@ for (let i=0; i < items.length; i++) {
 
 :::
 
-Examples of **correct** code for the `"multi"` option:
+`"multi"` 选项下的正确代码示例：
 
 ::: correct
 
@@ -124,9 +128,9 @@ while (true) {
 
 ### multi-line
 
-Alternatively, you can relax the rule to allow brace-less single-line `if`, `else if`, `else`, `for`, `while`, or `do`, while still enforcing the use of curly braces for other instances.
+或者，你可以放宽此规则，允许单行的 `if`、`else if`、`else`、`for`、`while` 或 `do` 不带花括号，同时仍要求其他情况下使用花括号。
 
-Examples of **incorrect** code for the `"multi-line"` option:
+`"multi-line"` 选项下的错误代码示例：
 
 ::: incorrect
 
@@ -145,7 +149,7 @@ if (foo) foo(
 
 :::
 
-Examples of **correct** code for the `"multi-line"` option:
+`"multi-line"` 选项下的正确代码示例：
 
 ::: correct
 
@@ -180,9 +184,9 @@ while (true) {
 
 ### multi-or-nest
 
-You can use another configuration that forces brace-less `if`, `else if`, `else`, `for`, `while`, or `do` if their body contains only one single-line statement. And forces braces in all other cases.
+你也可以使用另一种配置：当 `if`、`else if`、`else`、`for`、`while` 或 `do` 的主体仅包含一条单行语句时，强制不使用花括号；其他情况下则强制使用花括号。
 
-Examples of **incorrect** code for the `"multi-or-nest"` option:
+`"multi-or-nest"` 选项下的错误代码示例：
 
 ::: incorrect
 
@@ -216,7 +220,7 @@ for (let i = 0; foo; i++) {
 
 :::
 
-Examples of **correct** code for the `"multi-or-nest"` option:
+`"multi-or-nest"` 选项下的正确代码示例：
 
 ::: correct
 
@@ -249,9 +253,9 @@ for (let i = 0; foo; i++)
 
 :::
 
-For single-line statements preceded by a comment, braces are allowed but not required.
+对于前面有注释的单行语句，可以使用花括号，但并非必须。
 
-Examples of additional **correct** code for the `"multi-or-nest"` option:
+`"multi-or-nest"` 选项的其他正确代码示例：
 
 ::: correct
 
@@ -272,10 +276,9 @@ if (foo) {
 
 ### consistent
 
-When using any of the `multi*` options, you can add an option to enforce all bodies of a `if`,
-`else if` and `else` chain to be with or without braces.
+使用任意 `multi*` 选项时，你可以添加一个选项，强制 `if`、`else if` 和 `else` 链中的所有主体统一使用或不使用花括号。
 
-Examples of **incorrect** code for the `"multi", "consistent"` options:
+`"multi", "consistent"` 选项下的错误代码示例：
 
 ::: incorrect
 
@@ -310,7 +313,7 @@ if (foo) {
 
 :::
 
-Examples of **correct** code for the `"multi", "consistent"` options:
+`"multi", "consistent"` 选项下的正确代码示例：
 
 ::: correct
 
@@ -345,6 +348,8 @@ if (foo)
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you have no strict conventions about when to use block statements and when not to, you can safely disable this rule.
+## 何时不使用此规则
+
+如果你对何时使用代码块语句没有严格约定，可以放心禁用此规则。
