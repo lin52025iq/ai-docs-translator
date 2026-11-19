@@ -3,23 +3,25 @@ title: no-empty-class
 
 ---
 
-Disallows empty character classes in regular expressions.
+禁止在正则表达式中使用空字符类。
 
 ::: important
-This rule was removed in ESLint v1.0.0 and replaced by the [no-empty-character-class](no-empty-character-class) rule.
+此规则已在 ESLint v1.0.0 中移除，并由 [no-empty-character-class](no-empty-character-class) 规则取代。
 :::
 
-Empty character classes in regular expressions do not match anything and can result in code that may not work as intended.
+正则表达式中的空字符类无法匹配任何内容，可能导致代码无法按预期运行。
 
 ```js
 var foo = /^abc[]/;
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at highlighting possible typos and unexpected behavior in regular expressions which may arise from the use of empty character classes.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在指出正则表达式中可能存在的拼写错误和意外行为，这些问题可能由使用空字符类引起。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -33,7 +35,7 @@ bar.match(/^abc[]/);
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
