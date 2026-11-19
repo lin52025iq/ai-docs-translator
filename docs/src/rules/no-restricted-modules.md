@@ -3,26 +3,29 @@ title: no-restricted-modules
 rule_type: suggestion
 ---
 
-A module in Node.js is a simple or complex functionality organized in a JavaScript file which can be reused throughout the Node.js
-application. The keyword `require` is used in Node.js/CommonJS to import modules into an application. This way you can have dynamic loading where the loaded module name isn't predefined /static, or where you conditionally load a module only if it's "truly required".
+在 Node.js 中，模块是组织在 JavaScript 文件中的简单或复杂功能，可在整个 Node.js 应用程序中重复使用。关键字 `require` 用于在 Node.js/CommonJS 中将模块导入应用程序。这样可以实现动态加载：加载的模块名称无需预先定义为静态值，也可以有条件地仅在“确实需要”时加载模块。
 
-Why would you want to restrict a module?
+为什么要限制模块？
 
-Disallowing usage of specific Node.js modules can be useful if you want to limit the available methods a developer can use. For example, you can block usage of the `fs` module if you want to disallow file system access.
+如果你想限制开发者可使用的方法，禁止使用特定的 Node.js 模块会很有用。例如，如果你想禁止访问文件系统，可以阻止使用 `fs` 模块。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule allows you to specify modules that you don’t want to use in your application.
+## 规则详情
 
-## Options
+此规则允许你指定不希望在应用程序中使用的模块。
 
-The rule takes one or more strings as options: the names of restricted modules.
+<a id="options"></a>
+
+## 选项
+
+此规则接受一个或多个字符串作为选项，即受限模块的名称。
 
 ```json
 "no-restricted-modules": ["error", "foo-module", "bar-module"]
 ```
 
-It can also take an object with lists of `paths` and gitignore-style `patterns` strings.
+它也可以接受一个对象，其中包含 `paths` 列表和 gitignore 风格的 `patterns` 字符串列表。
 
 ```json
 "no-restricted-modules": ["error", { "paths": ["foo-module", "bar-module"] }]
@@ -35,7 +38,7 @@ It can also take an object with lists of `paths` and gitignore-style `patterns` 
 }]
 ```
 
-You may also specify a custom message for any paths you want to restrict as follows:
+你还可以按如下方式为要限制的路径指定自定义消息：
 
 ```json
 "no-restricted-modules": ["error", {
@@ -45,7 +48,7 @@ You may also specify a custom message for any paths you want to restrict as foll
 ]
 ```
 
-or like this:
+或者这样：
 
 ```json
 "no-restricted-modules": ["error",{
@@ -56,9 +59,9 @@ or like this:
 }]
 ```
 
-The custom message will be appended to the default error message. Please note that you may not specify custom error messages for restricted patterns as a particular module may match more than one pattern.
+自定义消息会附加到默认错误消息之后。请注意，不能为受限模式指定自定义错误消息，因为某个模块可能匹配多个模式。
 
-To restrict the use of all Node.js core modules (via <https://github.com/nodejs/node/tree/main/lib>):
+要限制使用所有 Node.js 核心模块（参见 <https://github.com/nodejs/node/tree/main/lib>）：
 
 ```json
 {
@@ -68,7 +71,7 @@ To restrict the use of all Node.js core modules (via <https://github.com/nodejs/
 }
 ```
 
-Examples of **incorrect** code for this rule  with sample `"fs", "cluster", "lodash"` restricted modules:
+以下是此规则的**错误**代码示例，示例中限制了模块 `"fs", "cluster", "lodash"`：
 
 ::: incorrect
 
@@ -101,7 +104,7 @@ const pick = require('lodash/pick');
 
 :::
 
-Examples of **correct** code for this rule with sample `"fs", "cluster", "lodash"` restricted modules:
+以下是此规则的**正确**代码示例，示例中限制了模块 `"fs", "cluster", "lodash"`：
 
 ::: correct
 
