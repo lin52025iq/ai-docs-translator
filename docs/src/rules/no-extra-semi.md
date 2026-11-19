@@ -5,15 +5,17 @@ related_rules:
 - semi
 - semi-spacing
 ---
-Typing mistakes and misunderstandings about where semicolons are required can lead to semicolons that are unnecessary. While not technically an error, extra semicolons can cause confusion when reading code.
+输入错误以及对何处需要分号的误解，可能会导致出现不必要的分号。虽然多余的分号严格来说并不算错误，但会让代码阅读者感到困惑。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows unnecessary semicolons.
+## 规则详情
 
-Problems reported by this rule can be fixed automatically, except when removing a semicolon would cause a following statement to become a directive such as `"use strict"`.
+此规则禁止使用不必要的分号。
 
-Examples of **incorrect** code for this rule:
+此规则报告的问题可以自动修复，但如果删除分号会导致后续语句变成指令（例如 `"use strict"`），则不会自动修复。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -41,7 +43,7 @@ class C {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -73,6 +75,8 @@ class C {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you intentionally use extra semicolons then you can disable this rule.
+## 何时不使用此规则
+
+如果你有意使用多余的分号，可以禁用此规则。
