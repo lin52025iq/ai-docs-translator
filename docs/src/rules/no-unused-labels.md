@@ -10,8 +10,7 @@ related_rules:
 
 
 
-
-Labels that are declared and not used anywhere in the code are most likely an error due to incomplete refactoring.
+标签已声明但在代码中从未使用，这通常是重构未完成导致的错误。
 
 ```js
 OUTER_LOOP:
@@ -23,16 +22,18 @@ for (const student of students) {
 }
 ```
 
-In this case, probably removing `OUTER_LOOP:` had been forgotten.
-Such labels take up space in the code and can lead to confusion by readers.
+在这种情况下，很可能是忘记删除 `OUTER_LOOP:`。
+这类标签会占用代码空间，也可能令读者困惑。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at eliminating unused labels.
+## 规则详情
 
-Problems reported by this rule can be fixed automatically, except when there are any comments between the label and the following statement, or when removing a label would cause the following statement to become a directive such as `"use strict"`.
+此规则旨在消除未使用的标签。
 
-Examples of **incorrect** code for this rule:
+此规则报告的问题可以自动修复，但以下情况除外：标签与其后的语句之间有注释，或者删除标签会导致其后的语句变成指令，例如 `"use strict"`。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -53,7 +54,7 @@ for (let i = 0; i < 10; ++i) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -78,10 +79,14 @@ for (let i = 0; i < 10; ++i) {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-If you don't want to be notified about unused labels, then it's safe to disable this rule.
+<a id="when-not-to-use-it"></a>
+
+## 何时不应使用此规则
+
+如果不希望收到有关未使用标签的提示，可以放心禁用此规则。
