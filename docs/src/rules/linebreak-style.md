@@ -2,28 +2,30 @@
 title: linebreak-style
 rule_type: layout
 ---
-When developing with a lot of people all having different editors, VCS applications and operating systems it may occur that
-different line endings are written by either of the mentioned (might especially happen when using the windows and mac versions of SourceTree together).
+当许多人使用不同的编辑器、VCS 应用和操作系统进行开发时，可能会出现这些工具写入不同换行符的情况（尤其是同时使用 SourceTree 的 Windows 版和 Mac 版时）。
 
-The linebreaks (new lines) used in windows operating system are usually _carriage returns_ (CR) followed by a _line feed_ (LF) making it a _carriage return line feed_ (CRLF)
-whereas Linux and Unix use a simple _line feed_ (LF). The corresponding _control sequences_ are `"\n"` (for LF) and `"\r\n"` for (CRLF).
+Windows 操作系统使用的换行符通常是_回车符_ (CR) 后跟_换行符_ (LF)，组成_回车换行符_ (CRLF)；而 Linux 和 Unix 使用简单的_换行符_ (LF)。对应的_控制序列_是 `"\n"`（表示 LF）和 `"\r\n"`（表示 CRLF）。
 
-Many versioning systems (like git and subversion) can automatically ensure the correct ending. However to cover all contingencies, you can activate this rule.
+许多版本控制系统（如 git 和 subversion）可以自动确保使用正确的行尾。不过，为了应对各种情况，你可以启用此规则。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces consistent line endings independent of operating system, VCS, or editor used across your codebase.
+## 规则详情
 
-### Options
+此规则强制代码库中的行尾保持一致，不受所用操作系统、VCS 或编辑器的影响。
 
-This rule has a string option:
+<a id="options"></a>
 
-* `"unix"` (default) enforces the usage of Unix line endings: `\n` for LF.
-* `"windows"` enforces the usage of Windows line endings: `\r\n` for CRLF.
+### 选项
+
+此规则接受一个字符串选项：
+
+* `"unix"`（默认值）强制使用 Unix 行尾：LF 对应 `\n`。
+* `"windows"` 强制使用 Windows 行尾：CRLF 对应 `\r\n`。
 
 ### unix
 
-Examples of **incorrect** code for this rule with the default `"unix"` option:
+以下是使用默认 `"unix"` 选项时，此规则报告为**不正确**的代码示例：
 
 ::: incorrect
 
@@ -36,7 +38,7 @@ var a = 'a'; // \r\n
 
 :::
 
-Examples of **correct** code for this rule with the default `"unix"` option:
+以下是使用默认 `"unix"` 选项时，此规则报告为**正确**的代码示例：
 
 ::: correct
 
@@ -56,7 +58,7 @@ function foo(params) { // \n
 
 ### windows
 
-Examples of **incorrect** code for this rule with the `"windows"` option:
+以下是使用 `"windows"` 选项时，此规则报告为**不正确**的代码示例：
 
 ::: incorrect
 
@@ -69,7 +71,7 @@ var a = 'a'; // \n
 
 :::
 
-Examples of **correct** code for this rule with the `"windows"` option:
+以下是使用 `"windows"` 选项时，此规则报告为**正确**的代码示例：
 
 ::: correct
 
@@ -87,20 +89,26 @@ function foo(params) { // \r\n
 
 :::
 
-### Using this rule with version control systems
+<a id="using-this-rule-with-version-control-systems"></a>
 
-Version control systems sometimes have special behavior for linebreaks. To make it easy for developers to contribute to your codebase from different platforms, you may want to configure your VCS to handle linebreaks appropriately.
+### 在版本控制系统中使用此规则
 
-For example, the default behavior of [git](https://git-scm.com/) on Windows systems is to convert LF linebreaks to CRLF when checking out files, but to store the linebreaks as LF when committing a change. This will cause the `linebreak-style` rule to report errors if configured with the `"unix"` setting, because the files that ESLint sees will have CRLF linebreaks. If you use git, you may want to add a line to your [`.gitattributes` file](https://git-scm.com/docs/gitattributes) to prevent git from converting linebreaks in `.js` files:
+版本控制系统有时会对换行符进行特殊处理。为了方便使用不同平台的开发者为你的代码库做贡献，你可能需要将 VCS 配置为适当处理换行符。
+
+例如，在 Windows 系统上，[git](https://git-scm.com/) 的默认行为是在检出文件时将 LF 换行符转换为 CRLF，但在提交更改时将换行符存储为 LF。如果将 `linebreak-style` 规则配置为 `"unix"`，就会导致该规则报告错误，因为 ESLint 读取到的文件使用的是 CRLF 换行符。如果你使用 git，可以考虑在 [`.gitattributes` 文件](https://git-scm.com/docs/gitattributes)中添加一行，以防止 git 转换 `.js` 文件中的换行符：
 
 ```txt
 *.js text eol=lf
 ```
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you aren't concerned about having different line endings within your code, then you can safely turn this rule off.
+## 何时不应使用此规则
 
-## Compatibility
+如果你不在意代码中使用不同的行尾，就可以安全地关闭此规则。
 
-* **JSCS**: [validateLineBreaks](https://jscs-dev.github.io/rule/validateLineBreaks)
+<a id="compatibility"></a>
+
+## 兼容性
+
+* **JSCS**：[validateLineBreaks](https://jscs-dev.github.io/rule/validateLineBreaks)
