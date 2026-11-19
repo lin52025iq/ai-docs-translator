@@ -1,30 +1,32 @@
 ---
-title: Share Configurations
+title: 共享配置
 eleventyNavigation:
     key: share configs
     parent: extend eslint
-    title: Share Configurations
+    title: 共享配置
     order: 3
 ---
 
-To share your ESLint configuration, create a **shareable config**. You can publish your shareable config on [npm](https://www.npmjs.com/) so that others can download and use it in their ESLint projects.
+要共享 ESLint 配置，请创建一个**可共享配置**。你可以将可共享配置发布到 [npm](https://www.npmjs.com/)，供其他人下载并在他们的 ESLint 项目中使用。
 
-This page explains how to create and publish a shareable config.
+本文介绍如何创建和发布可共享配置。
 
 ::: tip
-This page explains how to create a shareable config using the flat config format.
+本文介绍如何使用扁平配置格式创建可共享配置。
 :::
 
-## Create a Shareable Config
+<a id="create-a-shareable-config"></a>
 
-Shareable configs are simply npm packages that export a configuration object or array. To start, [create a Node.js module](https://docs.npmjs.com/getting-started/creating-node-modules) like you normally would.
+## 创建可共享配置
 
-While you can name the package in any way that you'd like, we recommend using one of the following conventions to make your package easier to identify:
+可共享配置只是导出配置对象或数组的 npm 包。首先，像往常一样[创建一个 Node.js 模块](https://docs.npmjs.com/getting-started/creating-node-modules)。
 
-- Begin with `eslint-config-`, such as `eslint-config-myconfig`.
-- For an npm [scoped module](https://docs.npmjs.com/misc/scope), name or prefix the module with `@scope/eslint-config`, such as `@scope/eslint-config` or `@scope/eslint-config-myconfig`.
+虽然包名可以任意选择，但我们建议使用以下命名惯例之一，以便他人更容易识别你的包：
 
-In your module, export the shareable config from the module's [`main`](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#main) entry point file. The default main entry point is `index.js`. For example:
+- 以 `eslint-config-` 开头，例如 `eslint-config-myconfig`。
+- 对于 npm [作用域模块](https://docs.npmjs.com/misc/scope)，使用 `@scope/eslint-config` 作为模块名或前缀，例如 `@scope/eslint-config` 或 `@scope/eslint-config-myconfig`。
+
+在模块中，从模块的 [`main`](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#main) 入口文件导出可共享配置。默认的 main 入口文件是 `index.js`。例如：
 
 ```js
 // index.js
@@ -43,17 +45,19 @@ export default [
 ];
 ```
 
-Because the `index.js` file is just JavaScript, you can read these settings from a file or generate them dynamically.
+由于 `index.js` 文件只是 JavaScript，你可以从文件中读取这些设置，也可以动态生成它们。
 
 ::: tip
-Most of the time, you'll want to export an array of config objects from your shareable config. However, you can also export a single config object. Make sure your documentation clearly shows an example of how to use your shareable config inside of an `eslint.config.js` file to avoid user confusion.
+大多数情况下，你会希望从可共享配置中导出一个配置对象数组。不过，你也可以只导出单个配置对象。请确保文档中清楚地展示如何在 `eslint.config.js` 文件中使用可共享配置，以免用户困惑。
 :::
 
-## Publishing a Shareable Config
+<a id="publishing-a-shareable-config"></a>
 
-Once your shareable config is ready, you can [publish it to npm](https://docs.npmjs.com/getting-started/publishing-npm-packages) to share it with others. We recommend using the `eslint` and `eslintconfig` [keywords](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#keywords) in the `package.json` file so others can easily find your module.
+## 发布可共享配置
 
-You should declare your dependency on ESLint in the `package.json` using the [peerDependencies](https://docs.npmjs.com/files/package.json#peerdependencies) field. The recommended way to declare a dependency for future-proof compatibility is with the ">=" range syntax, using the lowest required ESLint version. For example:
+可共享配置准备就绪后，你可以将其[发布到 npm](https://docs.npmjs.com/getting-started/publishing-npm-packages)，与他人共享。我们建议在 `package.json` 文件中使用 `eslint` 和 `eslintconfig` [关键字](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#keywords)，以便他人轻松找到你的模块。
+
+你应在 `package.json` 中使用 [peerDependencies](https://docs.npmjs.com/files/package.json#peerdependencies) 字段声明对 ESLint 的依赖。为了确保未来的兼容性，推荐使用 ">=" 范围语法，并指定所需的最低 ESLint 版本。例如：
 
 ```json
 {
@@ -63,11 +67,13 @@ You should declare your dependency on ESLint in the `package.json` using the [pe
 }
 ```
 
-If your shareable config depends on a plugin or a custom parser, you should specify these packages as `dependencies` in your `package.json`.
+如果可共享配置依赖某个插件或自定义解析器，应在 `package.json` 中将这些包指定为 `dependencies`。
 
-## Use a Shareable Config
+<a id="use-a-shareable-config"></a>
 
-To use a shareable config, import the package inside of an `eslint.config.js` file and add it into the exported array using `extends`, like this:
+## 使用可共享配置
+
+要使用可共享配置，请在 `eslint.config.js` 文件中导入该包，并像下面这样使用 `extends` 将其添加到导出的数组中：
 
 ```js
 // eslint.config.js
@@ -83,12 +89,14 @@ export default defineConfig([
 ```
 
 ::: warning
-It's not possible to use shareable configs with the ESLint CLI [`--config`](../use/command-line-interface#-c---config) flag.
+不能将可共享配置与 ESLint CLI 的 [`--config`](../use/command-line-interface#-c---config) 标志一起使用。
 :::
 
-### Overriding Settings from Shareable Configs
+<a id="overriding-settings-from-shareable-configs"></a>
 
-You can override settings from the shareable config by adding them directly into your `eslint.config.js` file after importing the shareable config. For example:
+### 覆盖可共享配置中的设置
+
+导入可共享配置后，你可以直接在 `eslint.config.js` 文件中添加设置来覆盖它。例如：
 
 ```js
 // eslint.config.js
@@ -108,11 +116,13 @@ export default defineConfig([
 ]);
 ```
 
-## Sharing Multiple Configs
+<a id="sharing-multiple-configs"></a>
 
-Because shareable configs are just npm packages, you can export as many configs as you'd like from the same package. In addition to specifying a default config using the `main` entry in your `package.json`, you can specify additional shareable configs by adding a new file to your npm package and then referencing it from your `eslint.config.js` file.
+## 共享多个配置
 
-As an example, you can create a file called `my-special-config.js` in the root of your npm package and export a config, such as:
+可共享配置只是 npm 包，因此你可以在同一个包中导出任意数量的配置。除了使用 `package.json` 中的 `main` 入口指定默认配置外，你还可以在 npm 包中添加新文件来指定其他可共享配置，然后在 `eslint.config.js` 文件中引用它们。
+
+例如，你可以在 npm 包的根目录中创建一个名为 `my-special-config.js` 的文件，并导出一个配置，如下所示：
 
 ```js
 // my-special-config.js
@@ -123,7 +133,7 @@ export default {
 };
 ```
 
-Then, assuming you're using the package name `eslint-config-myconfig`, you can access the additional config via:
+接下来，假设包名为 `eslint-config-myconfig`，你就可以通过以下方式访问其他配置：
 
 ```js
 // eslint.config.js
@@ -145,9 +155,11 @@ export default defineConfig([
 ```
 
 ::: important
-We strongly recommend always including a default export for your package to avoid confusion.
+我们强烈建议始终为你的包提供默认导出，以免造成混淆。
 :::
 
-## Further Reading
+<a id="further-reading"></a>
 
-- [npm Developer Guide](https://docs.npmjs.com/misc/developers)
+## 延伸阅读
+
+- [npm 开发者指南](https://docs.npmjs.com/misc/developers)
