@@ -6,9 +6,9 @@ further_reading:
 - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/static
 ---
 
-[Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes) are often used to encapsulate reusable logic, especially stateful logic, into an object where each instance's state is accessed via `this`. When an API is written with an instance method, it signals to consumers:
+[类](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes) 常用于将可复用逻辑（尤其是有状态的逻辑）封装到对象中，并通过 `this` 访问每个实例的状态。当 API 采用实例方法时，它向使用者传达了以下信息：
 
-- The method's outcome is related to the object on which it's invoked, including possibly its state.
+- 方法的结果与调用它的对象有关，也可能与该对象的状态有关。
 
 	```js
 	const array1 = [1, 2, 3];
@@ -23,9 +23,9 @@ further_reading:
 	array2.includes(1); // true
 	```
 
-- The method doesn't make sense to be used without an associated object. (For example, it doesn't make sense to call `Array#includes()` without an array to operate on.)
+- 如果没有关联的对象，该方法就没有意义。（例如，不提供数组来操作，就没有意义调用 `Array#includes()`。）
 
-It's possible to have a class method which doesn't use `this`, such as:
+类方法也可能不使用 `this`，例如：
 
 ```js
 class Person {
@@ -38,10 +38,10 @@ const person = new Person();
 person.sayHi(); // => "Hi!"
 ```
 
-If a class instance method does not use `this`, that normally means that it does not access any instance state and therefore doesn't need to be a method.
-Therefore, it can *sometimes* be refactored into an [ordinary function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions) or a [static method](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/static), which may better communicate intent to users of the API.
+如果类的实例方法不使用 `this`，通常意味着它不会访问任何实例状态，因此没有必要将它定义为方法。
+因此，有时可以将它重构为[普通函数](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions)或[静态方法](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/static)，从而更好地向 API 使用者传达意图。
 
-In the example above, the `sayHi` method doesn't use `this`, so we can make it an ordinary function:
+在上面的示例中，`sayHi` 方法没有使用 `this`，因此我们可以将它改为普通函数：
 
 ```js
 // Ordinary function
@@ -68,7 +68,7 @@ Person.sayHi(); // => "Hi!"
 // person.sayHi();
 ```
 
-It's also possible the author forgot to use some piece of instance data that they intended to include.
+作者也可能忘记使用原本打算包含在方法中的某些实例数据。
 
 ```js
 class Person {
@@ -88,11 +88,13 @@ const bob = new Person('Bob');
 bob.sayHi(); // => 'Hi from Bob!'
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule flags class instance methods that do not use `this`.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则会标记未使用 `this` 的类实例方法。
+
+此规则下的**错误**代码示例：
 
 ::: incorrect
 
@@ -108,7 +110,7 @@ class A {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -140,14 +142,18 @@ class C {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has four options:
+## 选项
 
-- `"exceptMethods"` allows specified method names to be ignored with this rule.
-- `"enforceForClassFields"` enforces that arrow functions and function expressions used as instance field initializers utilize `this`. This also applies to auto-accessor fields (fields declared with the `accessor` keyword) which are part of the [stage 3 decorators proposal](https://github.com/tc39/proposal-decorators). (default: `true`)
-- `"ignoreOverrideMethods"` ignores members that are marked with the [`override` modifier](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-3.html#override-and-the---noimplicitoverride-flag). (TypeScript only, default: `false`)
-- `"ignoreClassesWithImplements"` ignores class members that are defined within a class that [`implements`](https://www.typescriptlang.org/docs/handbook/2/classes.html#implements-clauses) an interface. (TypeScript only)
+此规则有四个选项：
+
+- `"exceptMethods"` 允许忽略指定的方法名。
+- `"enforceForClassFields"` 强制要求用作实例字段初始化器的箭头函数和函数表达式使用 `this`。这也适用于[第 3 阶段装饰器提案](https://github.com/tc39/proposal-decorators)中的自动访问器字段（使用 `accessor` 关键字声明的字段）。（默认值：`true`）
+- `"ignoreOverrideMethods"` 忽略标有 [`override` 修饰符](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-3.html#override-and-the---noimplicitoverride-flag)的成员。（仅适用于 TypeScript，默认值：`false`）
+- `"ignoreClassesWithImplements"` 忽略在使用 [`implements`](https://www.typescriptlang.org/docs/handbook/2/classes.html#implements-clauses) 实现接口的类中定义的类成员。（仅适用于 TypeScript）
+
+<a id="exceptmethods"></a>
 
 ### exceptMethods
 
@@ -155,9 +161,9 @@ This rule has four options:
 "class-methods-use-this": [<enabled>, { "exceptMethods": [<...exceptions>] }]
 ```
 
-The `"exceptMethods"` option allows you to pass an array of method names for which you would like to ignore warnings. For example, you might have a spec from an external library that requires you to overwrite a method as a regular function (and not as a static method) and does not use `this` inside the function body. In this case, you can add that method to ignore in the warnings.
+`"exceptMethods"` 选项允许你传入一个方法名数组，这些方法名对应的警告将被忽略。例如，外部库的规范可能要求你将某个方法重写为常规函数（而非静态方法），且该函数体内不使用 `this`。此时，你可以将该方法添加到忽略警告的列表中。
 
-Examples of **incorrect** code for this rule when used without `"exceptMethods"`:
+未使用 `"exceptMethods"` 时，此规则下的**错误**代码示例：
 
 ::: incorrect
 
@@ -172,7 +178,7 @@ class A {
 
 :::
 
-Examples of **correct** code for this rule when used with exceptMethods:
+使用 exceptMethods 时，此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -189,15 +195,17 @@ class A {
 
 :::
 
+<a id="enforceforclassfields"></a>
+
 ### enforceForClassFields
 
 ```ts
 "class-methods-use-this": [<enabled>, { "enforceForClassFields": true | false }]
 ```
 
-The `enforceForClassFields` option enforces that arrow functions and function expressions used as instance field initializers utilize `this`. This also applies to auto-accessor fields (fields declared with the `accessor` keyword) which are part of the [stage 3 decorators proposal](https://github.com/tc39/proposal-decorators). (default: `true`)
+`enforceForClassFields` 选项强制要求用作实例字段初始化器的箭头函数和函数表达式使用 `this`。这也适用于[第 3 阶段装饰器提案](https://github.com/tc39/proposal-decorators)中的自动访问器字段（使用 `accessor` 关键字声明的字段）。（默认值：`true`）
 
-Examples of **incorrect** code for this rule with the `{ "enforceForClassFields": true }` option (default):
+`{ "enforceForClassFields": true }` 选项（默认值）下，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -211,7 +219,7 @@ class A {
 
 :::
 
-Examples of **correct** code for this rule with the `{ "enforceForClassFields": true }` option (default):
+`{ "enforceForClassFields": true }` 选项（默认值）下，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -225,7 +233,7 @@ class A {
 
 :::
 
-Examples of **correct** code for this rule with the `{ "enforceForClassFields": false }` option:
+`{ "enforceForClassFields": false }` 选项下，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -239,7 +247,7 @@ class A {
 
 :::
 
-Examples of **incorrect** TypeScript code for this rule with the `{ "enforceForClassFields": true }` option (default):
+`{ "enforceForClassFields": true }` 选项（默认值）下，此规则的 **TypeScript** **错误**代码示例：
 
 ::: incorrect
 
@@ -254,7 +262,7 @@ class A {
 
 :::
 
-Examples of **correct** TypeScript code for this rule with the `{ "enforceForClassFields": true }` option (default):
+`{ "enforceForClassFields": true }` 选项（默认值）下，此规则的 **TypeScript** **正确**代码示例：
 
 ::: correct
 
@@ -269,7 +277,7 @@ class A {
 
 :::
 
-Examples of **correct** TypeScript code for this rule with the `{ "enforceForClassFields": false }` option:
+`{ "enforceForClassFields": false }` 选项下，此规则的 **TypeScript** **正确**代码示例：
 
 ::: correct
 
@@ -284,15 +292,17 @@ class A {
 
 :::
 
+<a id="ignoreoverridemethods"></a>
+
 ### ignoreOverrideMethods
 
 ```ts
 "class-methods-use-this": [<enabled>, { "ignoreOverrideMethods": true | false }]
 ```
 
-The `ignoreOverrideMethods` option ignores members that are marked with the `override` modifier. (default: `false`)
+`ignoreOverrideMethods` 选项会忽略标有 `override` 修饰符的成员。（默认值：`false`）
 
-Examples of **incorrect** TypeScript code for this rule with the `{ "ignoreOverrideMethods": false }` option (default):
+`{ "ignoreOverrideMethods": false }` 选项（默认值）下，此规则的 **TypeScript** **错误**代码示例：
 
 ::: incorrect
 
@@ -312,7 +322,7 @@ class Derived extends Base {
 
 :::
 
-Examples of **correct** TypeScript code for this rule with the `{ "ignoreOverrideMethods": false }` option (default):
+`{ "ignoreOverrideMethods": false }` 选项（默认值）下，此规则的 **TypeScript** **正确**代码示例：
 
 ::: correct
 
@@ -336,7 +346,7 @@ class Derived extends Base {
 
 :::
 
-Examples of **correct** TypeScript code for this rule with the `{ "ignoreOverrideMethods": true }` option:
+`{ "ignoreOverrideMethods": true }` 选项下，此规则的 **TypeScript** **正确**代码示例：
 
 ::: correct
 
@@ -356,18 +366,20 @@ class Derived extends Base {
 
 :::
 
+<a id="ignoreclasseswithimplements"></a>
+
 ### ignoreClassesWithImplements
 
 ```ts
 "class-methods-use-this": [<enabled>, { "ignoreClassesWithImplements": "all" | "public-fields" }]
 ```
 
-The `ignoreClassesWithImplements` ignores class members that are defined within a class that `implements` an interface. The option accepts two possible values:
+`ignoreClassesWithImplements` 选项会忽略在使用 `implements` 实现接口的类中定义的类成员。此选项接受两个可能的值：
 
-- `"all"` - Ignores all classes that implement interfaces
-- `"public-fields"` - Only ignores public fields in classes that implement interfaces
+- `"all"` - 忽略所有实现接口的类
+- `"public-fields"` - 仅忽略实现接口的类中的公共字段
 
-Examples of **incorrect** TypeScript code for this rule with the `{ "ignoreClassesWithImplements": "all" }`:
+`{ "ignoreClassesWithImplements": "all" }` 选项下，此规则的 **TypeScript** **错误**代码示例：
 
 ::: incorrect
 
@@ -382,7 +394,7 @@ class Standalone {
 
 :::
 
-Examples of **correct** TypeScript code for this rule with the `{ "ignoreClassesWithImplements": "all" }` option:
+`{ "ignoreClassesWithImplements": "all" }` 选项下，此规则的 **TypeScript** **正确**代码示例：
 
 ::: correct
 
@@ -401,7 +413,7 @@ class Derived implements Base {
 
 :::
 
-Examples of **incorrect** TypeScript code for this rule with the `{ "ignoreClassesWithImplements": "public-fields" }` option:
+`{ "ignoreClassesWithImplements": "public-fields" }` 选项下，此规则的 **TypeScript** **错误**代码示例：
 
 ::: incorrect
 
@@ -426,7 +438,7 @@ class Derived implements Base {
 
 :::
 
-Examples of **correct** TypeScript code for this rule with the `{ "ignoreClassesWithImplements": "public-fields" }` option:
+`{ "ignoreClassesWithImplements": "public-fields" }` 选项下，此规则的 **TypeScript** **正确**代码示例：
 
 ::: correct
 
@@ -445,8 +457,9 @@ class Derived implements Base {
 
 :::
 
+<a id="when-not-to-use-it"></a>
 
-## When Not To Use It
+## 何时不应使用
 
-Fixing violations of this rule almost always is a breaking change, since it requires a change at every usage of the affected method.
-Therefore, if your project has downstream consumers you cannot break, or you do not wish to make invasive changes to every call site of a method, it likely does not make sense to address violations of this rule.
+修复此规则的违规问题几乎总是属于破坏性变更，因为这要求在每个受影响方法的调用位置都进行修改。
+因此，如果你的项目有不能破坏的下游使用者，或者你不希望对方法的每个调用位置都进行侵入性修改，那么处理此规则的违规问题可能并无意义。
