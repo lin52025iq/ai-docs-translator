@@ -7,22 +7,24 @@ further_reading:
 
 
 
-It is considered good practice to use the type-safe equality operators `===` and `!==` instead of their regular counterparts `==` and `!=`.
+通常认为，使用类型安全的相等运算符 `===` 和 `!==`，而不是对应的普通运算符 `==` 和 `!=`，是一种良好实践。
 
-The reason for this is that `==` and `!=` do type coercion which follows the rather obscure [Abstract Equality Comparison Algorithm](https://www.ecma-international.org/ecma-262/5.1/#sec-11.9.3).
-For instance, the following statements are all considered `true`:
+这是因为 `==` 和 `!=` 会执行类型强制转换，而其遵循的 [抽象相等比较算法](https://www.ecma-international.org/ecma-262/5.1/#sec-11.9.3)相当晦涩。
+例如，以下语句的结果都被视为 `true`：
 
 * `[] == false`
 * `[] == ![]`
 * `3 == "03"`
 
-If one of those occurs in an innocent-looking statement such as `a == b` the actual problem is very difficult to spot.
+如果其中任何一种情况出现在 `a == b` 这类看似无害的语句中，就很难发现实际问题。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at eliminating the type-unsafe equality operators.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在消除类型不安全的相等运算符。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -38,17 +40,19 @@ if (obj.getStuff() != undefined) { }
 
 :::
 
-The `--fix` option on the command line automatically fixes some problems reported by this rule. A problem is only fixed if one of the operands is a `typeof` expression, or if both operands are literals with the same type.
+命令行中的 `--fix` 选项会自动修复此规则报告的部分问题。只有当其中一个操作数是 `typeof` 表达式，或者两个操作数都是类型相同的字面量时，才会修复问题。
 
-In other cases a suggestion is offered which can change runtime behavior if the operands have different types.
+在其他情况下，规则会提供建议；如果操作数的类型不同，应用建议可能会改变运行时行为。
 
-## Options
+<a id="options"></a>
+
+## 选项
 
 ### always
 
-The `"always"` option (default) enforces the use of `===` and `!==` in every situation (except when you opt-in to more specific handling of `null` [see below]).
+`"always"` 选项（默认值）会要求在所有情况下都使用 `===` 和 `!==`（除非你选择对 `null` 进行更具体的处理，见下文）。
 
-Examples of **incorrect** code for the `"always"` option:
+`"always"` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -69,7 +73,7 @@ foo == null
 
 :::
 
-Examples of **correct** code for the `"always"` option:
+`"always"` 选项的正确代码示例：
 
 ::: correct
 
@@ -90,22 +94,22 @@ foo === null
 
 :::
 
-This rule optionally takes a second argument, which should be an object with the following supported properties:
+此规则还可以接受第二个参数，该参数应为一个对象，并支持以下属性：
 
-* `"null"`: Customize how this rule treats `null` literals. Possible values:
-    * `always` (default) - Always use `===` or `!==`.
-    * `never` - Never use `===` or `!==` with `null`.
-    * `ignore` - Do not apply this rule to `null`.
+* `"null"`：自定义此规则对 `null` 字面量的处理方式。可选值：
+    * `always`（默认值）- 始终使用 `===` 或 `!==`。
+    * `never` - 对 `null` 不使用 `===` 或 `!==`。
+    * `ignore` - 不对 `null` 应用此规则。
 
 ### smart
 
-The `"smart"` option enforces the use of `===` and `!==` except for these cases:
+`"smart"` 选项要求使用 `===` 和 `!==`，但以下情况除外：
 
-* Comparing two literal values.
-* Evaluating the value of `typeof`.
-* Comparing against `null`.
+* 比较两个字面量值。
+* 求取 `typeof` 的值。
+* 与 `null` 比较。
 
-Examples of **incorrect** code for the `"smart"` option:
+`"smart"` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -125,7 +129,7 @@ value == undefined
 
 :::
 
-Examples of **correct** code for the `"smart"` option:
+`"smart"` 选项的正确代码示例：
 
 ::: correct
 
@@ -143,12 +147,14 @@ foo == null
 
 ### allow-null
 
-**Deprecated:** Instead of using this option use `"always"` and pass a `"null"` option property with value `"ignore"`. This will tell ESLint to always enforce strict equality except when comparing with the `null` literal.
+**已弃用：**请改用此选项的替代方式：使用 `"always"`，并传入值为 `"ignore"` 的 `"null"` 选项属性。这会告知 ESLint 始终强制使用严格相等运算符，但与 `null` 字面量比较时除外。
 
 ```js
 ["error", "always", {"null": "ignore"}]
 ```
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you don't want to enforce a style for using equality operators, then it's safe to disable this rule.
+## 何时不应使用此规则
+
+如果你不想强制规定相等运算符的使用风格，可以放心地禁用此规则。
