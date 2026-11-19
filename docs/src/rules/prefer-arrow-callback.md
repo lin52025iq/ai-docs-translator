@@ -7,21 +7,23 @@ further_reading:
 
 
 
-Arrow functions can be an attractive alternative to function expressions for callbacks or function arguments.
+对于回调或函数参数，箭头函数可以作为函数表达式的一种理想替代方案。
 
-For example, arrow functions are automatically bound to their surrounding scope/context. This provides an alternative to the pre-ES6 standard of explicitly binding function expressions to achieve similar behavior.
+例如，箭头函数会自动绑定到其外围作用域/上下文。这为 ES6 之前通过显式绑定函数表达式来实现类似行为的标准做法提供了另一种选择。
 
-Additionally, arrow functions are:
+此外，箭头函数还具有以下特点：
 
-* less verbose, and easier to reason about.
+* 更简洁，也更容易理解。
 
-* bound lexically regardless of where or when they are invoked.
+* 无论何时何地调用，都会进行词法绑定。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule locates function expressions used as callbacks or function arguments. An error will be produced for any that could be replaced by an arrow function without changing the result.
+## 规则详情
 
-The following examples **will** be flagged:
+此规则会定位用作回调或函数参数的函数表达式。对于任何可以替换为箭头函数且不改变结果的函数表达式，都会报告错误。
+
+以下示例**会**被标记：
 
 ::: incorrect
 
@@ -37,9 +39,9 @@ foo(function() { return this.a; }.bind(this)); // ERROR
 
 :::
 
-Instances where an arrow function would not produce identical results will be ignored.
+如果箭头函数无法产生完全相同的结果，则不会报告。
 
-The following examples **will not** be flagged:
+以下示例**不会**被标记：
 
 ::: correct
 
@@ -64,9 +66,9 @@ foo(function bar(n) { return n && n + bar(n - 1); }); // OK
 
 :::
 
-This rule additionally supports TypeScript type syntax.
+此规则还支持 TypeScript 类型语法。
 
-Examples of **incorrect** TypeScript code for this rule:
+此规则下的错误 TypeScript 代码示例如下：
 
 ::: incorrect
 
@@ -80,7 +82,7 @@ test('foo', function (this: any) {});
 
 :::
 
-Examples of **correct** TypeScript code for this rule:
+此规则下的正确 TypeScript 代码示例如下：
 
 ::: correct
 
@@ -94,19 +96,21 @@ const foo = function foo(bar: any) {};
 
 :::
 
-## Options
+<a id="options"></a>
 
-Access further control over this rule's behavior via an options object.
+## 选项
 
-Default: `{ allowNamedFunctions: false, allowUnboundThis: true }`
+可以通过选项对象进一步控制此规则的行为。
+
+默认值：`{ allowNamedFunctions: false, allowUnboundThis: true }`
 
 ### allowNamedFunctions
 
-By default `{ "allowNamedFunctions": false }`, this `boolean` option prohibits using named functions as callbacks or function arguments.
+默认情况下，`{ "allowNamedFunctions": false }`，此 `boolean` 选项禁止将具名函数用作回调或函数参数。
 
-Changing this value to `true` will reverse this option's behavior by allowing use of named functions without restriction.
+将此值设为 `true` 会反转此选项的行为，允许不受限制地使用具名函数。
 
-`{ "allowNamedFunctions": true }` **will not** flag the following example:
+`{ "allowNamedFunctions": true }` 时，以下示例**不会**被标记：
 
 ::: correct
 
@@ -118,7 +122,7 @@ foo(function bar() {});
 
 :::
 
-Examples of **incorrect** TypeScript code for this rule with `{ "allowNamedFunctions": true }`:
+当此规则的 `{ "allowNamedFunctions": true }` 时，错误的 TypeScript 代码示例如下：
 
 ::: incorrect
 
@@ -130,7 +134,7 @@ foo(function(a: string) {});
 
 :::
 
-Examples of **correct** TypeScript code for this rule with `{ "allowNamedFunctions": true }`:
+当此规则的 `{ "allowNamedFunctions": true }` 时，正确的 TypeScript 代码示例如下：
 
 ::: correct
 
@@ -144,11 +148,11 @@ foo(function bar(a: string) {});
 
 ### allowUnboundThis
 
-By default `{ "allowUnboundThis": true }`, this `boolean` option allows function expressions containing `this` to be used as callbacks, as long as the function in question has not been explicitly bound.
+默认情况下，`{ "allowUnboundThis": true }`，此 `boolean` 选项允许将包含 `this` 的函数表达式用作回调，前提是该函数未被显式绑定。
 
-When set to `false` this option prohibits the use of function expressions as callbacks or function arguments entirely, without exception.
+设为 `false` 时，此选项会毫无例外地禁止将函数表达式用作回调或函数参数。
 
-`{ "allowUnboundThis": false }` **will** flag the following examples:
+`{ "allowUnboundThis": false }` 时，以下示例**会**被标记：
 
 ::: incorrect
 
@@ -164,7 +168,7 @@ someArray.map(function(item) { return this.doSomething(item); }, someObject);
 
 :::
 
-Examples of **incorrect** TypeScript code for this rule with `{ "allowUnboundThis": false }`:
+当此规则的 `{ "allowUnboundThis": false }` 时，错误的 TypeScript 代码示例如下：
 
 ::: incorrect
 
@@ -178,8 +182,11 @@ foo(function(a: string) { (() => this); });
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-* In environments that have not yet adopted ES6 language features (ES3/5).
+## 不应使用此规则的情况
 
-* In ES6+ environments that allow the use of function expressions when describing callbacks or function arguments.
+* 在尚未采用 ES6 语言特性的环境中（ES3/5）。
+
+* 在允许使用函数表达式来编写回调或函数参数的 ES6+ 环境中。
+
