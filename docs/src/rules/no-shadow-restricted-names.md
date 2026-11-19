@@ -10,17 +10,18 @@ further_reading:
 
 
 
-ES2020 §18.1 Value Properties of the Global Object (`globalThis`, `NaN`, `Infinity`, `undefined`) as well as strict mode restricted identifiers `eval` and `arguments` are considered to be restricted names in JavaScript. Defining them to mean something else can have unintended consequences and confuse others reading the code. For example, there's nothing preventing you from writing:
+ES2020 §18.1《全局对象的值属性》（`globalThis`、`NaN`、`Infinity`、`undefined`），以及严格模式下受限的标识符 `eval` 和 `arguments`，都被视为 JavaScript 中的受限名称。将它们定义为其他含义可能造成意外后果，也会令阅读代码的人感到困惑。例如，下面的写法完全合法：
 
 ```js
 const undefined = "foo";
 ```
 
-Then any code used within the same scope would not get the global `undefined`, but rather the local version with a very different meaning.
+这样一来，同一作用域中的任何代码获取到的都不再是全局的 `undefined`，而是含义截然不同的局部版本。
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则的错误代码示例：
 
 ::: incorrect { "sourceType": "script" }
 
@@ -52,7 +53,7 @@ class Infinity {}
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct { "sourceType": "script" }
 
@@ -79,15 +80,16 @@ import { undefined as undef } from "bar";
 
 :::
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule has an object option:
+此规则有一个对象选项：
 
-* `"reportGlobalThis"`: `true` (default) reports declarations of `globalThis`.
+* `"reportGlobalThis"`：`true`（默认值）时，会报告对 `globalThis` 的声明。
 
 ### reportGlobalThis
 
-Examples of **incorrect** code for the default `{ "reportGlobalThis": true }` option:
+默认选项 `{ "reportGlobalThis": true }` 的错误代码示例：
 
 ::: incorrect
 
@@ -129,7 +131,7 @@ class globalThis {}
 
 :::
 
-Examples of **correct** code for the default `{ "reportGlobalThis": true }` option:
+默认选项 `{ "reportGlobalThis": true }` 的正确代码示例：
 
 ::: correct
 
@@ -147,7 +149,7 @@ import { globalThis as baz } from "foo";
 
 :::
 
-Examples of **correct** code for the `{ "reportGlobalThis": false }` option:
+选项 `{ "reportGlobalThis": false }` 的正确代码示例：
 
 ::: correct
 
