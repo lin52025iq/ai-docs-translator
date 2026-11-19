@@ -4,8 +4,8 @@ rule_type: problem
 ---
 
 
-Variables in a loop condition often are modified in the loop.
-If not, it's possibly a mistake.
+循环条件中的变量通常会在循环中被修改。
+如果没有被修改，则可能是一个错误。
 
 ```js
 while (node) {
@@ -20,18 +20,15 @@ while (node) {
 }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule finds references which are inside of loop conditions, then checks the
-variables of those references are modified in the loop.
+此规则会查找循环条件中的引用，然后检查这些引用所对应的变量是否在循环中被修改。
 
-By default, if a reference is inside of a binary expression or a ternary expression, this rule checks
-the result of the expression instead. The `checkConditionalExpressions` option stops the rule from
-grouping references solely because they belong to the same ternary expression.
-If a reference is inside of a dynamic expression (e.g. `CallExpression`,
-`YieldExpression`, ...), this rule ignores it.
+默认情况下，如果引用位于二元表达式或三元表达式中，此规则会改为检查整个表达式的结果。`checkConditionalExpressions` 选项可以阻止此规则仅因引用属于同一个三元表达式而将它们归为一组。
+如果引用位于动态表达式（例如 `CallExpression`、`YieldExpression` 等）中，此规则会忽略它。
 
-Examples of **incorrect** code for this rule:
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -56,7 +53,7 @@ while (node !== root) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -98,14 +95,15 @@ while (check(obj)) {
 
 :::
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule has an object option:
+此规则有一个对象选项：
 
-* `"checkConditionalExpressions": false` (default) checks the result of an entire ternary expression
-* `"checkConditionalExpressions": true` each branch in a ternary expression is checked independently
+* `"checkConditionalExpressions": false`（默认值）：检查整个三元表达式的结果
+* `"checkConditionalExpressions": true`：独立检查三元表达式中的每个分支
 
-Examples of **incorrect** code for this rule with the `{ "checkConditionalExpressions": true }` option:
+当使用 `{ "checkConditionalExpressions": true }` 选项时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -122,6 +120,7 @@ while (chunk ? !done : false) {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 何时不使用
 
-If you don't want to notified about references inside of loop conditions, then it's safe to disable this rule.
+如果你不希望收到关于循环条件中引用的提示，可以安全地禁用此规则。
