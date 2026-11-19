@@ -28,7 +28,7 @@ export function createValidation(project?: Project) {
             matches: picomatch(rule.include, { dot: true })
         })) ?? []
     const { global, prepare } = project?.config.validation ?? {}
-    const prepared = new Set<string>()
+    const prepared = new Map<string, Promise<void>>()
 
     async function run(command: [string, ...string[]], cwd: string, variables: Record<string, string>, stdin?: string) {
         const [program, ...parameters] = command
@@ -73,10 +73,14 @@ export function createValidation(project?: Project) {
     }
 
     async function prepareSnapshot(directory: string) {
-        if (!prepare || prepared.has(directory)) return
-        const issues = await run(prepare, directory, { configDir })
-        if (issues.length) throw new Error('校验环境准备失败：' + issues.map((issue) => issue.message).join('\n'))
-        prepared.add(directory)
+        if (!prepare) return
+        const existing = prepared.get(directory)
+        if (existing) return existing
+        const preparation = run(prepare, directory, { configDir }).then((issues) => {
+            if (issues.length) throw new Error('校验环境准备失败：' + issues.map((issue) => issue.message).join('\n'))
+        })
+        prepared.set(directory, preparation)
+        return preparation
     }
 
     return {

@@ -19,7 +19,7 @@ import { createValidation } from '../validation/runner.ts'
 import { createScopeMatcher, loadProject } from './config.ts'
 import { syncSource, syncTarget } from './sync.ts'
 
-/** 项目级顺序执行：同步分支、增量翻译、逐文件发布并更新配置分支进度。 */
+/** 同步项目分支、执行增量翻译，并按文件顺序发布译文和进度。 */
 export async function runProject(options: {
     project: string
     repository: string
@@ -30,7 +30,8 @@ export async function runProject(options: {
     const project = await loadProject(options.project)
     const { config } = project
     const validation = createValidation(project)
-    logProgress(`项目 ${config.project.id} 开始，执行方式：按语言、按文件顺序处理`)
+    const { maxParallelFiles, requestTimeoutMs } = config.translation
+    logProgress(`项目 ${config.project.id} 开始，每种语言最多并行处理 ${maxParallelFiles} 个文件`)
     if (options.push) config.translation.draft.pushDraft = true
     const git = repositoryGit(options.repository)
     const remote = config.translation.draft.remote
@@ -141,12 +142,10 @@ export async function runProject(options: {
         if (!tasks.length) logProgress(`[${target.locale}] 没有需要处理的文件，跳过模型调用`)
         const attempts = new Map<string, number>()
         const successfulPaths = new Set<string>()
-        const processFile = async (path: string, repair?: { candidate: string; diagnostics: string }) => {
-            translate ??= createTranslator()
-            let result: Awaited<ReturnType<typeof translateValidated>> | undefined
-            let nextManifest = manifest
+        const requestFile = async (path: string, repair?: { candidate: string; diagnostics: string }) => {
+            translate ??= createTranslator(requestTimeoutMs)
             try {
-                result = await translateValidated(
+                const result = await translateValidated(
                     translate,
                     {
                         path,
@@ -158,8 +157,15 @@ export async function runProject(options: {
                     (path, content) => validation.file(path, content, validationSnapshot?.directory),
                     attempts
                 )
+                return { result }
             } catch (error) {
                 if (!(error instanceof TranslationError)) throw error
+                return { error }
+            }
+        }
+        const processFile = async (path: string, { result, error }: Awaited<ReturnType<typeof requestFile>>) => {
+            let nextManifest = manifest
+            if (error) {
                 nextManifest = recordTranslationFailure(manifest, path, {
                     sourceBlobSha: source.files[path].blobSha,
                     contextHash: context.contextHash,
@@ -167,7 +173,7 @@ export async function runProject(options: {
                     status: error.status,
                     errorCode: error.code
                 })
-                providerBlocked = error.status === 'blocked' || error.status === 'retryable_failed'
+                providerBlocked ||= error.status === 'blocked' || error.status === 'retryable_failed'
                 failedFiles += 1
                 logProgress(`[${target.locale}] ${path} 翻译失败：${error.code}，状态 ${error.status}`)
             }
@@ -219,9 +225,18 @@ export async function runProject(options: {
             await publishProgress()
             return result?.approved === true
         }
-        for (const [fileIndex, file] of tasks.entries()) {
-            logProgress(`[${target.locale}] 文件 ${fileIndex + 1}/${tasks.length} 开始：${file.path}`)
-            await processFile(file.path)
+        for (let index = 0; index < tasks.length; index += maxParallelFiles) {
+            const batch = tasks.slice(index, index + maxParallelFiles)
+            const outcomes = await Promise.allSettled(
+                batch.map((file, offset) => {
+                    logProgress(`[${target.locale}] 文件 ${index + offset + 1}/${tasks.length} 开始：${file.path}`)
+                    return requestFile(file.path)
+                })
+            )
+            for (const [offset, outcome] of outcomes.entries()) {
+                if (outcome.status === 'rejected') throw outcome.reason
+                await processFile(batch[offset].path, outcome.value)
+            }
             if (providerBlocked) break
         }
 
@@ -238,11 +253,13 @@ export async function runProject(options: {
                     return withCommitWorktree(git, targetHead, validation.global)
                 },
                 canRepair: (path) => Object.hasOwn(source.contents, path) && Object.hasOwn(translated.contents, path),
-                repair: (path, issues) =>
-                    processFile(path, {
+                repair: async (path, issues) => {
+                    const outcome = await requestFile(path, {
                         candidate: translated.contents[path],
                         diagnostics: JSON.stringify(issues).slice(0, 8000)
                     })
+                    return processFile(path, outcome)
+                }
             })
             if (!passed) {
                 const draft = await commitGlobalValidationDraft({

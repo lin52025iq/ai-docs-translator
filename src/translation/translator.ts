@@ -21,8 +21,8 @@ export class TranslationError extends Error {
 }
 
 /** 仅在 Node.js 中实例化；凭据使用 OPENAI_API_KEY，关闭 SDK 自动重试以限制模型调用次数。 */
-export function createTranslator() {
-    const client = new OpenAI({ maxRetries: 0, timeout: 120_000 })
+export function createTranslator(timeout = 120_000) {
+    const client = new OpenAI({ maxRetries: 0, timeout })
     return async (input: {
         path: string
         sourceContent: string

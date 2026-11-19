@@ -200,7 +200,7 @@ program
             await using validationSnapshot = sourceGit
                 ? await openCommitWorktree(sourceGit, (await sourceGit.revparse(['HEAD'])).trim())
                 : undefined
-            const translate = createTranslator()
+            const translate = createTranslator(project?.config.translation.requestTimeoutMs)
             const result = await translateValidated(
                 translate,
                 {

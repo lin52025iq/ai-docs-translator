@@ -75,11 +75,11 @@ master（或仓库默认分支）
 在管理仓库的 Actions Secrets 中配置：
 
 - `OPENAI_API_KEY`：OpenAI API 密钥。
-- `<项目ID大写并将连字符替换为下划线>_SOURCE_REPO_TOKEN`：对应上游仓库的只读凭据，例如 `my-docs` 使用 `MY_DOCS_SOURCE_REPO_TOKEN`。翻译 Workflow 按项目 ID 自动选择。
+- `<项目ID大写并将连字符替换为下划线>_SOURCE_REPO_TOKEN`：对应上游仓库的只读凭据，例如 `my-docs` 使用 `MY_DOCS_SOURCE_REPO_TOKEN`。公开上游可使用工作流自带凭据。
 
 管理仓库通过 `GITHUB_TOKEN` 的 `contents: write` 权限发布分支和进度。Workflow 提交到默认分支后，可在 Actions 页面手动运行。
 
-翻译按语言、文件顺序执行。通过输出检查和审查后发布译文与状态；异常输出保存到项目 draft 分支，保留原文、候选译文和原因。后续运行只处理需要更新的文件。控制台输出实时进度，结束后在日志及 Job Summary 中显示完成、冲突和失败数量。
+每种语言默认逐个翻译文件。项目可用 `translation.maxParallelFiles` 设置并行文件数，用 `translation.requestTimeoutMs` 设置单次模型请求的超时。译文和状态按文件顺序发布；异常输出保存到项目 draft 分支，保留原文、候选译文和原因。后续运行只处理需要更新的文件，勾选 `retry_failed` 可重试已记录的失败或冲突。控制台输出实时进度，结束后在日志及 Job Summary 中显示完成、冲突和失败数量。
 
 ## 本地运行
 

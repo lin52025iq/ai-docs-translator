@@ -50,6 +50,8 @@ export const projectSchema = z
         translation: z
             .strictObject({
                 model: z.string().min(1).default('gpt-6-luna'),
+                requestTimeoutMs: z.number().int().positive().default(120_000),
+                maxParallelFiles: z.number().int().min(1).max(8).default(1),
                 scope: z
                     .strictObject({
                         include: z.array(z.string().min(1)).min(1).default(['**/*.md', '**/*.mdx']),

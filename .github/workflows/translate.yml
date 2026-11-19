@@ -114,7 +114,7 @@ jobs:
                   token: ${{ secrets[steps.source.outputs.token_secret] || github.token }}
                   persist-credentials: false
 
-            - name: 顺序执行项目文档翻译
+            - name: 执行项目文档翻译
               id: translate
               env:
                   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
