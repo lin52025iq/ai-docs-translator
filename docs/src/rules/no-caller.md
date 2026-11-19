@@ -4,7 +4,7 @@ rule_type: suggestion
 ---
 
 
-The use of `arguments.caller` and `arguments.callee` make several code optimizations impossible. They have been deprecated in future versions of JavaScript and their use is forbidden in ECMAScript 5 while in strict mode.
+使用 `arguments.caller` 和 `arguments.callee` 会导致多种代码优化无法实现。它们将在未来版本的 JavaScript 中弃用，并且在 ECMAScript 5 的严格模式下禁止使用。
 
 ```js
 function foo() {
@@ -12,11 +12,13 @@ function foo() {
 }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at discouraging the use of deprecated and sub-optimal code by disallowing the use of `arguments.caller` and `arguments.callee`. As such, it will warn when `arguments.caller` and `arguments.callee` are used.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在通过禁止使用 `arguments.caller` 和 `arguments.callee`，劝阻使用已弃用且次优的代码。因此，当使用 `arguments.caller` 和 `arguments.callee` 时，此规则会发出警告。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -38,7 +40,7 @@ function foo(n) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -60,6 +62,8 @@ function foo(n) {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
+
+此规则没有选项。
