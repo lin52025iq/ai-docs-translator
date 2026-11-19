@@ -59,6 +59,28 @@ const original = readDocument(source)
 const translated = readDocument(candidate, true)
 const changed = Object.keys(original).filter((key) => !isDeepStrictEqual(original[key], translated[key]))
 if (changed.length) {
-    console.log(JSON.stringify([{ message: '译文改变了应保留的内容：' + changed.join(', ') }]))
+    const diagnostics = [{ message: '译文改变了应保留的内容：' + changed.join(', ') }]
+    for (const key of ['inlineCode', 'links']) {
+        if (!changed.includes(key)) continue
+        const missing = [...original[key]]
+        const added = translated[key].filter((value) => {
+            const index = missing.indexOf(value)
+            if (index === -1) return true
+            missing.splice(index, 1)
+            return false
+        })
+        diagnostics.push({
+            message: `${key} 缺少：${JSON.stringify(missing).slice(0, 2000)}。多出：${JSON.stringify(added).slice(0, 2000)}`
+        })
+    }
+    if (changed.includes('code')) {
+        const index = original.code.findIndex((value, i) => !isDeepStrictEqual(value, translated.code[i]))
+        diagnostics.push({
+            message: index === -1
+                ? `原文有 ${original.code.length} 个代码块，译文有 ${translated.code.length} 个。`
+                : `第 ${index + 1} 个代码块应逐字复制原文：${JSON.stringify(original.code[index]).slice(0, 4000)}`
+        })
+    }
+    console.log(JSON.stringify(diagnostics))
     process.exitCode = 1
 }
