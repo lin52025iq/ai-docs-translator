@@ -229,7 +229,7 @@ const ThatComponent = (
 
 使用 `all` 和 `{ "ignoreJSX": "multi-line" }` 选项时，此规则的**错误**代码示例：
 
-::: incorrect { "parserOptions": { "ecmaFeatures": { "jsx: true } } }
+::: incorrect { "parserOptions": { "ecmaFeatures": { "jsx": true } } }
 
 ```jsx
 /* eslint no-extra-parens: ["error", "all", { ignoreJSX: "multi-line" }] */
