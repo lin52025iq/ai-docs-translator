@@ -7,7 +7,7 @@ related_rules:
 
 
 
-ES2015 allows for the renaming of references in import and export statements as well as destructuring assignments. This gives programmers a concise syntax for performing these operations while renaming these references:
+ES2015 允许在导入和导出语句以及解构赋值中重命名引用。这为程序员提供了一种简洁的语法来执行这些操作并重命名引用：
 
 ```js
 import { foo as bar } from "baz";
@@ -15,7 +15,7 @@ export { foo as bar };
 let { foo: bar } = baz;
 ```
 
-With this syntax, it is possible to rename a reference to the same name. This is a completely redundant operation, as this is the same as not renaming at all. For example, this:
+使用这种语法，可以将引用重命名为与原名相同的名称。这完全是多余的操作，效果与不重命名完全相同。例如，下面的代码：
 
 ```js
 import { foo as foo } from "bar";
@@ -23,7 +23,7 @@ export { foo as foo };
 let { foo: foo } = bar;
 ```
 
-is the same as:
+与下面的代码效果相同：
 
 ```js
 import { foo } from "bar";
@@ -31,19 +31,23 @@ export { foo };
 let { foo } = bar;
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows the renaming of import, export, and destructured assignments to the same name.
+## 规则详情
 
-## Options
+此规则禁止在导入、导出和解构赋值中将名称重命名为相同的名称。
 
-This rule allows for more fine-grained control with the following options:
+<a id="options"></a>
 
-* `ignoreImport`: When set to `true`, this rule does not check imports
-* `ignoreExport`: When set to `true`, this rule does not check exports
-* `ignoreDestructuring`: When set to `true`, this rule does not check destructuring assignments
+## 选项
 
-By default, all options are set to `false`:
+此规则提供以下选项，以便进行更细致的控制：
+
+* `ignoreImport`：设为 `true` 时，此规则不检查导入
+* `ignoreExport`：设为 `true` 时，此规则不检查导出
+* `ignoreDestructuring`：设为 `true` 时，此规则不检查解构赋值
+
+默认情况下，所有选项均设为 `false`：
 
 ```json
 "no-useless-rename": ["error", {
@@ -53,7 +57,7 @@ By default, all options are set to `false`:
 }]
 ```
 
-Examples of **incorrect** code for this rule by default:
+此规则默认情况下的**错误**代码示例：
 
 ::: incorrect
 
@@ -74,7 +78,7 @@ function foo({ bar: bar }) {}
 
 :::
 
-Examples of **correct** code for this rule by default:
+此规则默认情况下的**正确**代码示例：
 
 ::: correct
 
@@ -105,7 +109,7 @@ function foo4({ bar: baz }) {}
 
 :::
 
-Examples of **correct** code for this rule with `{ ignoreImport: true }`:
+使用 `{ ignoreImport: true }` 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -117,7 +121,7 @@ import { foo as foo } from "bar";
 
 :::
 
-Examples of **correct** code for this rule with `{ ignoreExport: true }`:
+使用 `{ ignoreExport: true }` 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -131,7 +135,7 @@ export { bar as bar } from "bar";
 
 :::
 
-Examples of **correct** code for this rule with `{ ignoreDestructuring: true }`:
+使用 `{ ignoreDestructuring: true }` 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -145,10 +149,14 @@ function baz({ bar: bar }) {}
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You can safely disable this rule if you do not care about redundantly renaming import, export, and destructuring assignments.
+## 何时不使用此规则
 
-## Compatibility
+如果你不介意在导入、导出和解构赋值中进行多余的重命名，可以安全地禁用此规则。
 
-* **JSCS**: [disallowIdenticalDestructuringNames](https://jscs-dev.github.io/rule/disallowIdenticalDestructuringNames)
+<a id="compatibility"></a>
+
+## 兼容性
+
+* **JSCS**：[disallowIdenticalDestructuringNames](https://jscs-dev.github.io/rule/disallowIdenticalDestructuringNames)
