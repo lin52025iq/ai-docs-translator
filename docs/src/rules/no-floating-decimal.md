@@ -2,7 +2,7 @@
 title: no-floating-decimal
 rule_type: suggestion
 ---
-Float values in JavaScript contain a decimal point, and there is no requirement that the decimal point be preceded or followed by a number. For example, the following are all valid JavaScript numbers:
+JavaScript 中的浮点数包含小数点，并且小数点前后不一定要有数字。例如，以下都是有效的 JavaScript 数字：
 
 ```js
 var num = .5;
@@ -10,13 +10,15 @@ var num = 2.;
 var num = -.7;
 ```
 
-Although not a syntax error, this format for numbers can make it difficult to distinguish between true decimal numbers and the dot operator. For this reason, some recommend that you should always include a number before and after a decimal point to make it clear the intent is to create a decimal number.
+这种数字格式虽然不会导致语法错误，却可能让人难以区分真正的小数和点运算符。因此，有些人建议小数点前后都应始终包含数字，以明确表示其意图是创建一个小数。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at eliminating floating decimal points and will warn whenever a numeric value has a decimal point but is missing a number either before or after it.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在消除缺少前置或后置数字的小数点；只要数值包含小数点，但小数点前后任一侧缺少数字，就会发出警告。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -30,7 +32,7 @@ var num = -.7;
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -44,10 +46,14 @@ var num = -0.7;
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you aren't concerned about misinterpreting floating decimal point values, then you can safely turn this rule off.
+## 何时不使用
 
-## Compatibility
+如果你不担心浮点数值可能被误解，就可以放心地关闭此规则。
 
-* **JSHint**: W008, W047
+<a id="compatibility"></a>
+
+## 兼容性
+
+* **JSHint**：W008、W047
