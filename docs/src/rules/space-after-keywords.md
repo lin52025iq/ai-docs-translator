@@ -3,13 +3,13 @@ title: space-after-keywords
 
 ---
 
-Enforces consistent spacing after keywords.
+强制关键字后的空格保持一致。
 
 :::important
-This rule was removed in ESLint v2.0.0 and replaced by the [keyword-spacing](keyword-spacing) rule.
+此规则已在 ESLint v2.0.0 中移除，并由 [keyword-spacing](keyword-spacing) 规则取代。
 :::
 
-Some style guides will require or disallow spaces following the certain keywords.
+某些代码风格指南要求或禁止在特定关键字后添加空格。
 
 ```js
 if (condition) {
@@ -25,14 +25,15 @@ if(condition) {
 }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule will enforce consistency of spacing after the keywords `if`, `else`, `for`, `while`, `do`, `switch`, `try`, `catch`, `finally`, and `with`.
+## 规则详情
 
-This rule takes one argument. If it is `"always"` then the keywords must be followed by at least one space. If `"never"`
-then there should be no spaces following. The default is `"always"`.
+此规则将强制 `if`、`else`、`for`、`while`、`do`、`switch`、`try`、`catch`、`finally` 和 `with` 关键字后的空格保持一致。
 
-Examples of **incorrect** code for this rule:
+此规则接受一个参数。如果参数为 `"always"`，则关键字后必须至少有一个空格。如果参数为 `"never"`，则关键字后不能有空格。默认值为 `"always"`。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -58,7 +59,7 @@ if (a) {}
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
