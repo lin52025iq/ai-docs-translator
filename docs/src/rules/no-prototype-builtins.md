@@ -5,17 +5,19 @@ rule_type: problem
 
 
 
-In ECMAScript 5.1, `Object.create` was added, which enables the creation of objects with a specified `[[Prototype]]`. `Object.create(null)` is a common pattern used to create objects that will be used as a Map. This can lead to errors when it is assumed that objects will have properties from `Object.prototype`. This rule prevents calling some `Object.prototype` methods directly from an object.
+在 ECMAScript 5.1 中新增了 `Object.create`，它可以创建具有指定 `[[Prototype]]` 的对象。`Object.create(null)` 是一种常见模式，用于创建将作为 Map 使用的对象。如果代码假定对象具有来自 `Object.prototype` 的属性，就可能导致错误。本规则禁止直接在对象上调用某些 `Object.prototype` 方法。
 
-Additionally, objects can have properties that shadow the builtins on `Object.prototype`, potentially causing unintended behavior or denial-of-service security vulnerabilities. For example, it would be unsafe for a webserver to parse JSON input from a client and call `hasOwnProperty` directly on the resulting object, because a malicious client could send a JSON value like `{"hasOwnProperty": 1}` and cause the server to crash.
+此外，对象可以包含遮蔽 `Object.prototype` 上内置方法的属性，这可能导致意外行为或拒绝服务安全漏洞。例如，如果 Web 服务器解析客户端传入的 JSON，并直接在解析后的对象上调用 `hasOwnProperty`，就会有安全风险，因为恶意客户端可以发送类似 `{"hasOwnProperty": 1}` 的 JSON 值，从而导致服务器崩溃。
 
-To avoid subtle bugs like this, it's better to always call these methods from `Object.prototype`. For example, `foo.hasOwnProperty("bar")` should be replaced with `Object.prototype.hasOwnProperty.call(foo, "bar")`.
+为避免此类隐蔽的 bug，最好始终从 `Object.prototype` 调用这些方法。例如，应将 `foo.hasOwnProperty("bar")` 替换为 `Object.prototype.hasOwnProperty.call(foo, "bar")`。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows calling some `Object.prototype` methods directly on object instances.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+本规则禁止直接在对象实例上调用某些 `Object.prototype` 方法。
+
+本规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -31,7 +33,7 @@ const barIsEnumerable = foo.propertyIsEnumerable("bar");
 
 :::
 
-Examples of **correct** code for this rule:
+本规则的**正确**代码示例：
 
 ::: correct
 
@@ -47,10 +49,14 @@ const barIsEnumerable = {}.propertyIsEnumerable.call(foo, "bar");
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+本规则没有选项。
 
-You may want to turn this rule off if your code only touches objects with hardcoded keys, and you will never use an object that shadows an `Object.prototype` method or which does not inherit from `Object.prototype`.
+<a id="when-not-to-use-it"></a>
+
+## 何时不使用
+
+如果你的代码只访问具有硬编码键的对象，并且绝不会使用遮蔽 `Object.prototype` 方法或不继承自 `Object.prototype` 的对象，则可以关闭本规则。
