@@ -7,23 +7,29 @@ related_rules:
 - object-property-newline
 - array-element-newline
 ---
-A number of style guides require or disallow line breaks between arguments of a function call.
+一些风格指南要求或禁止在函数调用的参数之间换行。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces line breaks between arguments of a function call.
+## 规则详情
 
-## Options
+此规则强制要求在函数调用的参数之间换行。
 
-This rule has a string option:
+<a id="options"></a>
 
-* `"always"` (default) requires line breaks between arguments
-* `"never"` disallows line breaks between arguments
-* `"consistent"` requires consistent usage of line breaks between arguments
+## 选项
+
+此规则有一个字符串选项：
+
+* `"always"`（默认值）要求在参数之间换行
+* `"never"` 禁止在参数之间换行
+* `"consistent"` 要求在参数之间一致地使用换行
+
+<a id="always"></a>
 
 ### always
 
-Examples of **incorrect** code for this rule with the default `"always"` option:
+使用默认选项 `"always"` 时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -44,7 +50,7 @@ baz("one", "two", (x) => {
 
 :::
 
-Examples of **correct** code for this rule with the default `"always"` option:
+使用默认选项 `"always"` 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -83,9 +89,11 @@ baz(
 
 :::
 
+<a id="never"></a>
+
 ### never
 
-Examples of **incorrect** code for this rule with the `"never"` option:
+使用选项 `"never"` 时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -115,7 +123,7 @@ baz(
 
 :::
 
-Examples of **correct** code for this rule with the `"never"` option:
+使用选项 `"never"` 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -142,9 +150,11 @@ baz("one", "two", (x) => {
 
 :::
 
+<a id="consistent"></a>
+
 ### consistent
 
-Examples of **incorrect** code for this rule with the `"consistent"` option:
+使用选项 `"consistent"` 时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -168,7 +178,7 @@ baz("one", "two",
 
 :::
 
-Examples of **correct** code for this rule with the `"consistent"` option:
+使用选项 `"consistent"` 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -218,6 +228,8 @@ baz(
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you don't want to enforce line breaks between arguments, don't enable this rule.
+## 何时不使用
+
+如果你不想强制要求在参数之间换行，就不要启用此规则。
