@@ -7,13 +7,15 @@ extra_typescript_info: Note that the compiler will not catch the `Object.assign(
 
 
 
-The updates of imported bindings by ES Modules cause runtime errors.
+ES 模块中对导入绑定的更新会导致运行时错误。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule warns the assignments, increments, and decrements of imported bindings.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则会对导入绑定的赋值、递增和递减操作发出警告。
+
+此规则中**错误**代码示例：
 
 ::: incorrect
 
@@ -33,7 +35,7 @@ Object.assign(mod_ns, { foo: "foo" }) // ERROR: The members of 'mod_ns' are read
 
 :::
 
-Examples of **correct** code for this rule:
+此规则中**正确**代码示例：
 
 ::: correct
 
@@ -56,10 +58,14 @@ test(mod_ns) // Not errored because it doesn't know that 'test' updates the memb
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-If you don't want to be notified about modifying imported bindings, you can disable this rule.
+<a id="when-not-to-use-it"></a>
+
+## 何时不应使用此规则
+
+如果不希望收到有关修改导入绑定的通知，可以禁用此规则。
