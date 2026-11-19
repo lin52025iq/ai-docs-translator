@@ -4,20 +4,22 @@ rule_type: layout
 related_rules:
 - brace-style
 ---
-An arrow function body can contain an implicit return as an expression instead of a block body. It can be useful to enforce a consistent location for the implicitly returned expression.
+箭头函数体可以是一个表达式，从而隐式返回结果，而不必使用块语句体。强制隐式返回的表达式位于统一位置可能会很有用。
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule aims to enforce a consistent location for an arrow function containing an implicit return.
+此规则旨在强制包含隐式返回的箭头函数将其表达式放在统一的位置。
 
-### Options
+<a id="options"></a>
+### 选项
 
-This rule accepts a string option:
+此规则接受一个字符串选项：
 
-* `"beside"` (default) disallows a newline before an arrow function body.
-* `"below"` requires a newline before an arrow function body.
+* `"beside"`（默认值）禁止在箭头函数体之前换行。
+* `"below"` 要求在箭头函数体之前换行。
 
-Examples of **incorrect** code for this rule with the default `"beside"` option:
+使用默认选项 `"beside"` 时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -42,7 +44,7 @@ Examples of **incorrect** code for this rule with the default `"beside"` option:
 
 :::
 
-Examples of **correct** code for this rule with the default `"beside"` option:
+使用默认选项 `"beside"` 时，此规则的正确代码示例：
 
 ::: correct
 
@@ -73,7 +75,7 @@ Examples of **correct** code for this rule with the default `"beside"` option:
 
 :::
 
-Examples of **incorrect** code for this rule with the `"below"` option:
+使用选项 `"below"` 时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -89,7 +91,7 @@ Examples of **incorrect** code for this rule with the `"below"` option:
 
 :::
 
-Examples of **correct** code for this rule with the `"below"` option:
+使用选项 `"below"` 时，此规则的正确代码示例：
 
 ::: correct
 
@@ -109,8 +111,9 @@ Examples of **correct** code for this rule with the `"below"` option:
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 何时不使用
 
-If you're not concerned about consistent locations of implicitly returned arrow function expressions, you should not turn on this rule.
+如果你不在意隐式返回的箭头函数表达式是否位于统一的位置，就不应启用此规则。
 
-You can also disable this rule if you are using the `"always"` option for the [`arrow-body-style`](arrow-body-style), since this will disable the use of implicit returns in arrow functions.
+如果你使用 [`arrow-body-style`](arrow-body-style) 的 `"always"` 选项，也可以禁用此规则，因为该选项会禁止在箭头函数中使用隐式返回。
