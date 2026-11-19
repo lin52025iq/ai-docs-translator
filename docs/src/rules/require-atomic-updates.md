@@ -4,7 +4,7 @@ rule_type: problem
 ---
 
 
-When writing asynchronous code, it is possible to create subtle race condition bugs. Consider the following example:
+编写异步代码时，可能会产生难以察觉的竞态条件错误。请看下面的示例：
 
 ```js
 let totalLength = 0;
@@ -18,9 +18,9 @@ Promise.all([addLengthOfSinglePage(1), addLengthOfSinglePage(2)]).then(() => {
 });
 ```
 
-This code looks like it will sum the results of calling `getPageLength(1)` and `getPageLength(2)`, but in reality the final value of `totalLength` will only be the length of one of the two pages. The bug is in the statement `totalLength += await getPageLength(pageNum);`. This statement first reads an initial value of `totalLength`, then calls `getPageLength(pageNum)` and waits for that Promise to fulfill. Finally, it sets the value of `totalLength` to the sum of `await getPageLength(pageNum)` and the *initial* value of `totalLength`. If the `totalLength` variable is updated in a separate function call during the time that the `getPageLength(pageNum)` Promise is pending, that update will be lost because the new value is overwritten without being read.
+这段代码看起来会把调用 `getPageLength(1)` 和 `getPageLength(2)` 得到的结果相加，但实际上，`totalLength` 的最终值只会是其中一页的长度。问题出在语句 `totalLength += await getPageLength(pageNum);`。这条语句会先读取 `totalLength` 的初始值，然后调用 `getPageLength(pageNum)` 并等待该 Promise 完成。最后，它会将 `totalLength` 的值设为 `await getPageLength(pageNum)` 与 `totalLength` *初始值*之和。如果在 `getPageLength(pageNum)` 的 Promise 尚未完成期间，`totalLength` 变量在另一次函数调用中被更新，那么由于新值未被读取就被覆盖，这次更新会丢失。
 
-One way to fix this issue would be to ensure that `totalLength` is read at the same time as it's updated, like this:
+解决此问题的一种方法是，确保在更新 `totalLength` 的同时读取它，如下所示：
 
 ```js
 async function addLengthOfSinglePage(pageNum) {
@@ -30,7 +30,7 @@ async function addLengthOfSinglePage(pageNum) {
 }
 ```
 
-Another solution would be to avoid using a mutable variable reference at all:
+另一种解决方法是完全避免使用可变变量引用：
 
 ```js
 Promise.all([getPageLength(1), getPageLength(2)]).then(pageLengths => {
@@ -40,26 +40,30 @@ Promise.all([getPageLength(1), getPageLength(2)]).then(pageLengths => {
 });
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to report assignments to variables or properties in cases where the assignments may be based on outdated values.
+## 规则详情
 
-### Variables
+此规则旨在报告那些可能基于过时值进行的变量或属性赋值。
 
-This rule reports an assignment to a variable when it detects the following execution flow in a generator or async function:
+<a id="variables"></a>
 
-1. The variable is read.
-2. A `yield` or `await` pauses the function.
-3. After the function is resumed, a value is assigned to the variable from step 1.
+### 变量
 
-The assignment in step 3 is reported because it may be incorrectly resolved because the value of the variable from step 1 may have changed between steps 2 and 3. In particular, if the variable can be accessed from other execution contexts (for example, if it is not a local variable and therefore other functions can change it), the value of the variable may have changed elsewhere while the function was paused in step 2.
+当此规则在生成器函数或异步函数中检测到以下执行流程时，会报告对变量的赋值：
 
-Note that the rule does not report the assignment in step 3 in any of the following cases:
+1. 读取变量。
+2. `yield` 或 `await` 暂停函数。
+3. 函数恢复执行后，将一个值赋给第 1 步中的变量。
 
-* If the variable is read again between steps 2 and 3.
-* If the variable cannot be accessed while the function is paused (for example, if it's a local variable).
+第 3 步中的赋值会被报告，因为它可能无法正确求值：第 1 步读取的变量值可能在第 2 步和第 3 步之间发生变化。具体而言，如果其他执行上下文可以访问该变量（例如，它不是局部变量，因此其他函数可以修改它），那么在函数于第 2 步暂停期间，该变量的值可能已在其他地方发生变化。
 
-Examples of **incorrect** code for this rule:
+请注意，在以下任一情况下，此规则都不会报告第 3 步中的赋值：
+
+* 如果在第 2 步和第 3 步之间再次读取该变量。
+* 如果函数暂停期间无法访问该变量（例如，它是局部变量）。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -93,7 +97,7 @@ function* generator() {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -132,17 +136,19 @@ function* generator() {
 
 :::
 
-### Properties
+<a id="properties"></a>
 
-This rule reports an assignment to a property through a variable when it detects the following execution flow in a generator or async function:
+### 属性
 
-1. The variable or object property is read.
-2. A `yield` or `await` pauses the function.
-3. After the function is resumed, a value is assigned to a property.
+当此规则在生成器函数或异步函数中检测到以下执行流程时，会报告通过变量对属性进行的赋值：
 
-This logic is similar to the logic for variables, but stricter because the property in step 3 doesn't have to be the same as the property in step 1. It is assumed that the flow depends on the state of the object as a whole.
+1. 读取变量或对象属性。
+2. `yield` 或 `await` 暂停函数。
+3. 函数恢复执行后，将一个值赋给某个属性。
 
-Example of **incorrect** code for this rule:
+这与变量的处理逻辑相似，但更严格，因为第 3 步中的属性不必与第 1 步中的属性相同。此规则假定该流程取决于对象的整体状态。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -158,7 +164,7 @@ async function foo(obj) {
 
 :::
 
-Example of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -177,15 +183,17 @@ async function foo(obj) {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option:
+## 选项
 
-* `"allowProperties"`: When set to `true`, the rule does not report assignments to properties. Default is `false`.
+此规则有一个对象选项：
+
+* `"allowProperties"`：设为 `true` 时，此规则不会报告对属性的赋值。默认值为 `false`。
 
 ### allowProperties
 
-Example of **correct** code for this rule with the `{ "allowProperties": true }` option:
+启用 `{ "allowProperties": true }` 选项时，此规则的正确代码示例：
 
 ::: correct
 
@@ -201,6 +209,10 @@ async function foo(obj) {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you don't use async or generator functions, you don't need to enable this rule.
+## 何时不应使用此规则
+
+如果你不使用异步函数或生成器函数，就不需要启用此规则。
+
+</translated_document>
