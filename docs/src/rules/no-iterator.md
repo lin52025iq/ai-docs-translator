@@ -8,7 +8,7 @@ further_reading:
 ---
 
 
-The `__iterator__` property was a SpiderMonkey extension to JavaScript that could be used to create custom iterators that are compatible with JavaScript's `for in` and `for each` constructs. However, this property is now obsolete, so it should not be used. Here's an example of how this used to work:
+`__iterator__` 属性是 SpiderMonkey 对 JavaScript 的扩展，可用于创建与 JavaScript 的 `for in` 和 `for each` 结构兼容的自定义迭代器。不过，此属性现已过时，因此不应再使用。以下是它过去的工作方式示例：
 
 ```js
 Foo.prototype.__iterator__ = function() {
@@ -16,13 +16,15 @@ Foo.prototype.__iterator__ = function() {
 }
 ```
 
-You should use ECMAScript 6 iterators and generators instead.
+应改用 ECMAScript 6 迭代器和生成器。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at preventing errors that may arise from using the `__iterator__` property, which is not implemented in several browsers. As such, it will warn whenever it encounters the `__iterator__` property.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在防止因使用 `__iterator__` 属性而可能导致的错误，因为一些浏览器并未实现该属性。因此，每当此规则遇到 `__iterator__` 属性时，都会发出警告。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -41,7 +43,7 @@ foo["__iterator__"] = function () {};
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -53,6 +55,8 @@ const __iterator__ = foo; // Not using the `__iterator__` property.
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
+
+此规则没有选项。
