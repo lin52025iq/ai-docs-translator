@@ -5,18 +5,20 @@ rule_type: suggestion
 
 
 
-The `parseInt()` and `Number.parseInt()` functions can be used to turn binary, octal, and hexadecimal strings into integers. As binary, octal, and hexadecimal literals are supported in ES6, this rule encourages use of those numeric literals instead of `parseInt()` or `Number.parseInt()`.
+`parseInt()` 和 `Number.parseInt()` 函数可用于将二进制、八进制和十六进制字符串转换为整数。由于 ES6 支持二进制、八进制和十六进制字面量，本规则鼓励使用这些数值字面量，而不是使用 `parseInt()` 或 `Number.parseInt()`。
 
 ```js
 0b111110111 === 503;
 0o767 === 503;
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows calls to `parseInt()` or `Number.parseInt()` if called with two arguments: a string; and a radix option of 2 (binary), 8 (octal), or 16 (hexadecimal).
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+如果调用 `parseInt()` 或 `Number.parseInt()` 时传入两个参数：一个字符串，以及值为 2（二进制）、8（八进制）或 16（十六进制）的基数选项，则本规则会禁止这种调用。
+
+本规则的错误代码示例如下：
 
 ::: incorrect
 
@@ -34,7 +36,7 @@ Number.parseInt("1F7", 16) === 503;
 
 :::
 
-Examples of **correct** code for this rule:
+本规则的正确代码示例如下：
 
 ::: correct
 
@@ -60,14 +62,21 @@ Number.parseInt(foo, 2);
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+本规则没有选项。
 
-If you want to allow use of `parseInt()` or `Number.parseInt()` for binary, octal, or hexadecimal integers, or if you are not using ES6 (because binary and octal literals are not supported in ES5 and below), you may wish to disable this rule.
+<a id="when-not-to-use-it"></a>
 
-## Compatibility
+## 何时不应使用
 
-* **JSCS**: [requireNumericLiterals](https://jscs-dev.github.io/rule/requireNumericLiterals)
+如果你希望允许使用 `parseInt()` 或 `Number.parseInt()` 处理二进制、八进制或十六进制整数，或者你没有使用 ES6（因为 ES5 及更早版本不支持二进制和八进制字面量），可以禁用本规则。
+
+<a id="compatibility"></a>
+
+## 兼容性
+
+* **JSCS**：[requireNumericLiterals](https://jscs-dev.github.io/rule/requireNumericLiterals)
+
