@@ -7,13 +7,15 @@ further_reading:
 - https://github.com/nodejs/node/issues/4660
 ---
 
-In Node.js, the behavior of the `Buffer` constructor is different depending on the type of its argument. Passing an argument from user input to `Buffer()` without validating its type can lead to security vulnerabilities such as remote memory disclosure and denial of service. As a result, the `Buffer` constructor has been deprecated and should not be used. Use the producer methods `Buffer.from`, `Buffer.alloc`, and `Buffer.allocUnsafe` instead.
+在 Node.js 中，`Buffer` 构造函数的行为会因参数类型不同而异。未经类型验证就将用户输入传递给 `Buffer()`，可能导致远程内存泄露和拒绝服务等安全漏洞。因此，`Buffer` 构造函数已被弃用，不应再使用。请改用创建方法 `Buffer.from`、`Buffer.alloc` 和 `Buffer.allocUnsafe`。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows calling and constructing the `Buffer()` constructor.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止调用或构造 `Buffer()` 构造函数。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -32,7 +34,7 @@ new Buffer(res.body.values);
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -49,6 +51,8 @@ Buffer.from(res.body.values);
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you don't use Node.js, or you still need to support versions of Node.js that lack methods like `Buffer.from`, then you should not enable this rule.
+## 不适用的情况
+
+如果你不使用 Node.js，或者仍需支持不具备 `Buffer.from` 等方法的 Node.js 版本，则不应启用此规则。
