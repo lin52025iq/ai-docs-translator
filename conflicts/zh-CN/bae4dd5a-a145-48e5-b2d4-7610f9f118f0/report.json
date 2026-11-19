@@ -1,0 +1,50 @@
+{
+    "schemaVersion": 1,
+    "status": "conflict",
+    "origin": "local_validation",
+    "projectId": "eslint-docs",
+    "locale": "zh-CN",
+    "sourcePath": "docs/src/rules/eol-last.md",
+    "createdAt": "2026-11-19T11:03:01.104Z",
+    "reason": "文件校验未通过",
+    "artifacts": {
+        "before": "before/docs/src/rules/eol-last.md",
+        "after": "after/docs/src/rules/eol-last.md",
+        "previous": "previous/docs/src/rules/eol-last.md"
+    },
+    "translationModel": "gpt-6-luna",
+    "translationResponseId": "resp_043ebc98d98787ca016afed744d53487d2905fe57cee9898cb",
+    "contextHash": "64ced0491d8917d86d3057d903a53f0f98ed63c72e258488e934ac7f76453200",
+    "diagnostics": [
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode",
+                "path": "docs/src/rules/eol-last.md"
+            },
+            {
+                "message": "inlineCode 缺少：[]。多出：[\"\\\"always\\\"\",\"\\\"always\\\"\"]",
+                "path": "docs/src/rules/eol-last.md"
+            }
+        ],
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode",
+                "path": "docs/src/rules/eol-last.md"
+            },
+            {
+                "message": "inlineCode 缺少：[\"\\\"always\\\"\",\"\\\"never\\\"\",\"\\\"unix\\\"\",\"\\\"unix\\\"\",\"\\\"windows\\\"\",\"\\\"windows\\\"\"]。多出：[]",
+                "path": "docs/src/rules/eol-last.md"
+            }
+        ],
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode",
+                "path": "docs/src/rules/eol-last.md"
+            },
+            {
+                "message": "inlineCode 缺少：[]。多出：[\"\\\"always\\\"\",\"\\\"always\\\"\"]",
+                "path": "docs/src/rules/eol-last.md"
+            }
+        ]
+    ]
+}
