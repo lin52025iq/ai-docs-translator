@@ -9,7 +9,7 @@ related_rules:
 
 
 
-If a loop contains no nested loops or switches, labeling the loop is unnecessary.
+如果循环中没有嵌套循环或 switch 语句，就没有必要为循环添加标签。
 
 ```js
 A: while (a) {
@@ -17,14 +17,16 @@ A: while (a) {
 }
 ```
 
-You can achieve the same result by removing the label and using `break` or `continue` without a label.
-Probably those labels would confuse developers because they expect labels to jump to further.
+移除标签，并使用不带标签的 `break` 或 `continue`，即可达到相同效果。
+这些标签可能会让开发者感到困惑，因为他们会认为标签可以跳转到更远的位置。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at eliminating unnecessary labels.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在消除不必要的标签。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -47,7 +49,7 @@ C: switch (a) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -88,10 +90,14 @@ C: switch (a) {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-If you don't want to be notified about usage of labels, then it's safe to disable this rule.
+<a id="when-not-to-use-it"></a>
+
+## 何时不使用此规则
+
+如果你不希望收到有关标签用法的提示，可以放心禁用此规则。
