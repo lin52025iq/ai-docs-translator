@@ -7,7 +7,7 @@ related_rules:
 
 
 
-In ES2015 (ES6), we can use template literals instead of string concatenation.
+在 ES2015 (ES6) 中，我们可以使用模板字面量代替字符串拼接。
 
 ```js
 const str = "Hello, " + name + "!";
@@ -17,11 +17,13 @@ const str = "Hello, " + name + "!";
 const str = `Hello, ${name}!`;
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed to flag usage of `+` operators with strings.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在标记与字符串一起使用的 `+` 运算符。
+
+以下示例展示了此规则的**错误**代码：
 
 ::: incorrect
 
@@ -34,7 +36,7 @@ const str1 = "Time: " + (12 * 60 * 60 * 1000);
 
 :::
 
-Examples of **correct** code for this rule:
+以下示例展示了此规则的**正确**代码：
 
 ::: correct
 
@@ -51,12 +53,16 @@ const str4 = "Hello, " + "World!";
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-This rule should not be used in ES3/5 environments.
+<a id="when-not-to-use-it"></a>
 
-In ES2015 (ES6) or later, if you don't want to be notified about string concatenation, you can safely disable this rule.
+## 何时不应使用
+
+此规则不应在 ES3/5 环境中使用。
+
+在 ES2015 (ES6) 或更高版本中，如果不想收到有关字符串拼接的提示，可以放心禁用此规则。
