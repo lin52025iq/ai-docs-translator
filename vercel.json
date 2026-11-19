@@ -1,0 +1,10 @@
+{
+    "$schema": "https://openapi.vercel.sh/vercel.json",
+    "git": { "deploymentEnabled": false },
+    "redirects": [
+        { "source": "/docs/latest/:path*", "destination": "/:path*", "permanent": false },
+        { "source": "/docs/head/:path*", "destination": "/:path*", "permanent": false },
+        { "source": "/play", "destination": "https://eslint.org/play", "permanent": false },
+        { "source": "/og", "destination": "https://eslint.org/og", "permanent": false }
+    ]
+}
