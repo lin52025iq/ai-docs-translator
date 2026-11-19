@@ -1,36 +1,40 @@
 ---
-title: Glossary
+title: 词汇表
 eleventyNavigation:
     key: glossary
-    title: Glossary
+    title: 词汇表
     parent: core concepts
 ---
 
-This page serves as a reference for common terms associated with ESLint.
+本页汇总了与 ESLint 相关的常用术语，供查阅参考。
 
 ## A
 
-### Abstract Syntax Tree (AST)
+<a id="abstract-syntax-tree-ast"></a>
 
-A structured representation of code syntax.
+### 抽象语法树（AST）
 
-Each section of source code in an AST is referred to as a [node](#node).
-Each node may have any number of properties, including properties that store child nodes.
+对代码语法的结构化表示。
 
-The AST format used by ESLint is the [ESTree](#estree) format.
+AST 中的每个源代码片段都称为一个[节点](#node)。
+每个节点可以有任意数量的属性，其中包括存储子节点的属性。
 
-ESLint [rules](#rule) are given an AST and may produce [violations](#violation) on parts of the AST when they detect a [violation](#violation).
+ESLint 使用的 AST 格式是 [ESTree](#estree) 格式。
+
+ESLint [规则](#rule)会接收 AST，并在检测到[违规](#violation)时，针对 AST 的某些部分生成[违规](#violation)。
 
 ## C
 
-### Config File (Configuration File)
+<a id="config-file-configuration-file"></a>
 
-A file containing preferences for how ESLint should parse files and run [rules](#rule).
+### 配置文件
 
-ESLint config files are named like `eslint.config.(c|m)?(j|t)s`.
-Each config file exports a [config array](#config-array) containing [config objects](#config-object).
+包含 ESLint 解析文件及运行[规则](#rule)时所用偏好的文件。
 
-For example, this `eslint.config.js` file enables the `prefer-const` [rule](#rule) at the _error_ [severity](#severity):
+ESLint 配置文件的命名格式为 `eslint.config.(c|m)?(j|t)s`。
+每个配置文件都会导出一个包含[配置对象](#config-object)的[配置数组](#config-array)。
+
+例如，以下 `eslint.config.js` 文件会以 _error_ [严重性](#severity)启用 `prefer-const` [规则](#rule)：
 
 ```js
 import { defineConfig } from "eslint/config";
@@ -44,45 +48,53 @@ export default defineConfig([
 ]);
 ```
 
-See [Configuration Files](../configure/configuration-files) for more details.
+更多详情请参阅[配置文件](../configure/configuration-files)。
 
-### Config Array
+<a id="config-array"></a>
 
-An array of [config objects](#config-object) within a [config file](#config-file-configuration-file).
+### 配置数组
 
-Each config file exports an array of config objects.
-The objects in the array are evaluated in order: later objects may override settings specified in earlier objects.
+[配置文件](#config-file-configuration-file)中的[配置对象](#config-object)数组。
 
-See [Configuration Files](../configure/configuration-files) for more details.
+每个配置文件都会导出一个配置对象数组。
+数组中的对象按顺序求值：后面的对象可以覆盖前面的对象所指定的设置。
 
-### Config Object
+更多详情请参阅[配置文件](../configure/configuration-files)。
 
-A [config file](#config-file-configuration-file) entry specifying all of the information ESLint needs to execute on a set of files.
+<a id="config-object"></a>
 
-Each configuration object may include properties describing which files to run on, how to handle different file types, which [plugins](#plugin) to include, and how to run [rules](#rule).
+### 配置对象
 
-See [Configuration Files > Configuration Objects](../configure/configuration-files#configuration-objects) for more details.
+[配置文件](#config-file-configuration-file)中的一项，其中指定了 ESLint 对一组文件执行检查所需的全部信息。
+
+每个配置对象都可以包含属性，用于描述要检查哪些文件、如何处理不同的文件类型、要包含哪些[插件](#plugin)，以及如何运行[规则](#rule)。
+
+更多详情请参阅[配置文件 > 配置对象](../configure/configuration-files#configuration-objects)。
 
 ## E
 
+<a id="esquery"></a>
+
 ### ESQuery
 
-The library used by ESLint to parse [selector](#selector) syntax for querying [nodes](#node) in an [AST](#abstract-syntax-tree-ast).
+ESLint 用来解析[选择器](#selector)语法的库，可用于查询 [AST](#abstract-syntax-tree-ast) 中的[节点](#node)。
 
-ESQuery interprets CSS syntax for AST node properties.
-Examples of ESQuery selectors include:
+ESQuery 会将 CSS 语法应用于 AST 节点属性。
+ESQuery 选择器示例：
 
-- `BinaryExpression`: selects all nodes of type _BinaryExpression_
-- `BinaryExpression[operator='+']`: selects all _BinaryExpression_ nodes whose _operator_ is `+`
-- `BinaryExpression > Literal[value=1]`: selects all _Literal_ nodes with _value_ `1` whose direct parent is a _BinaryExpression_
+- `BinaryExpression`：选择所有类型为 _BinaryExpression_ 的节点
+- `BinaryExpression[operator='+']`：选择所有 _operator_ 为 `+` 的 _BinaryExpression_ 节点
+- `BinaryExpression > Literal[value=1]`：选择所有 _value_ 为 `1` 且直接父节点为 _BinaryExpression_ 的 _Literal_ 节点
 
-See [github.com/estools/esquery](https://github.com/estools/esquery) for more information on the ESQuery format.
+有关 ESQuery 格式的更多信息，请参阅 [github.com/estools/esquery](https://github.com/estools/esquery)。
+
+<a id="estree"></a>
 
 ### ESTree
 
-The format used by ESLint for how to represent JavaScript syntax as an [AST](#abstract-syntax-tree-ast).
+ESLint 用来将 JavaScript 语法表示为 [AST](#abstract-syntax-tree-ast) 的格式。
 
-For example, the ESTree representation of the code `1 + 2;` would be an object roughly like:
+例如，代码 `1 + 2;` 的 ESTree 表示形式大致如下：
 
 ```json
 {
@@ -104,144 +116,160 @@ For example, the ESTree representation of the code `1 + 2;` would be an object r
 }
 ```
 
-[Static analysis](#static-analysis) tools such as ESLint typically operate by converting syntax into an AST in the ESTree format.
+ESLint 等[静态分析](#static-analysis)工具通常会将语法转换为 ESTree 格式的 AST，以此进行分析。
 
-See [github.com/estree/estree](https://github.com/estree/estree) for more information on the ESTree specification.
+有关 ESTree 规范的更多信息，请参阅 [github.com/estree/estree](https://github.com/estree/estree)。
 
 ## F
 
-### Fix
+<a id="fix"></a>
 
-An optional augmentation to a [rule](#rule) [violation](#violation) that describes how to automatically correct the violation.
+### 修复
 
-Fixes are generally "safe" to apply automatically: they shouldn't cause code behavior changes.
-ESLint attempts to apply as many fixes as possible in a [report](#report) when run with the `--fix` flag, though there is no guarantee that all fixes will be applied.
-Fixes may also be applied by common editor extensions.
+对[规则](#rule)[违规](#violation)的可选补充，描述如何自动纠正该违规。
 
-Rule violations may also include file changes that are unsafe and not automatically applied in the form of [suggestions](#suggestion).
+修复通常可以安全地自动应用：它们不应改变代码行为。
+使用 `--fix` 标志运行时，ESLint 会尝试在[报告](#report)中尽可能多地应用修复，但不保证一定会应用所有修复。常见的编辑器扩展也可以应用修复。
 
-### Flat Config
+规则违规也可能包含不安全、不会自动应用的文件更改，这类更改以[建议](#suggestion)的形式提供。
 
-The current configuration file format for ESLint.
+<a id="flat-config"></a>
 
-Flat config files are named in the format `eslint.config.(c|m)?(j|t)s`.
-"Flat" config files are named as such because all nesting must be done in one configuration file.
-In contrast, the ["Legacy" config format](#legacy-config) allowed nesting configuration files in sub-directories within a project.
+### 扁平配置
 
-You can read more about the motivations behind flat configurations in [ESLint's new config system, Part 2: Introduction to flat config](https://eslint.org/blog/2022/08/new-config-system-part-2).
+ESLint 当前使用的配置文件格式。
 
-### Formatter (Linting)
+扁平配置文件的命名格式为 `eslint.config.(c|m)?(j|t)s`。
+之所以称为“扁平”配置文件，是因为所有嵌套配置都必须放在同一个配置文件中。相比之下，[“旧版”配置格式](#legacy-config)允许在项目的子目录中嵌套配置文件。
 
-A package that presents the [report](#report) generated by ESLint.
+有关采用扁平配置的原因，请参阅 [ESLint's new config system, Part 2: Introduction to flat config](https://eslint.org/blog/2022/08/new-config-system-part-2)。
 
-ESLint ships with several built-in reporters, including `stylish` (default), `json`, and `html`.
+<a id="formatter-linting"></a>
 
-For more information, see [Formatters](../formatters).
+### 格式化器（代码检查）
 
-### Formatter (Tool)
+用于呈现 ESLint 生成的[报告](#report)的软件包。
 
-A [static analysis](#static-analysis) tool that quickly reformats code without changing its logic or names.
+ESLint 内置了多个报告器，包括 `stylish`（默认）、`json` 和 `html`。
 
-Formatters generally only modify the "trivia" of code, such as semicolons, spacing, newlines, and whitespace in general.
-Trivia changes generally don't modify the [AST](#abstract-syntax-tree-ast) of code.
+更多信息请参阅[格式化器](../formatters)。
 
-Common formatters in the ecosystem include [Prettier](https://prettier.io) and [dprint](https://dprint.dev).
+<a id="formatter-tool"></a>
 
-Note that although ESLint is a [linter](#linter) rather than a formatter, ESLint rules can also apply formatting changes to source code.
-See [Formatting (Rule)](#formatting-rule) for more information on formatting rules.
+### 格式化器（工具）
 
-### Formatting (Rule)
+一种[静态分析](#static-analysis)工具，可快速重新格式化代码，而不改变其逻辑或名称。
 
-A rule that solely targets [formatting](#formatter-tool) concerns, such as semicolons and whitespace.
-These rules don't change application logic and are a subset of [Stylistic rules](#stylistic-rule).
+格式化器通常只会修改代码中的“琐碎细节”，例如分号、间距、换行和一般空白字符。这些细节的修改通常不会改变代码的 [AST](#abstract-syntax-tree-ast)。
 
-ESLint no longer recommends formatting rules and previously deprecated its built-in formatting rules.
-ESLint recommends instead using a dedicated formatter such as [Prettier](https://prettier.io) or [dprint](https://dprint.dev).
-Alternately, the [ESLint Stylistic project](https://eslint.style) provides formatting-related lint rules.
+生态系统中常见的格式化器包括 [Prettier](https://prettier.io) 和 [dprint](https://dprint.dev)。
 
-For more information, see [Deprecation of formatting rules](https://eslint.org/blog/2023/10/deprecating-formatting-rules).
+请注意，ESLint 是[代码检查器](#linter)，而不是格式化器，不过 ESLint 规则也可以对源代码应用格式更改。有关格式化规则的更多信息，请参阅[格式化（规则）](#formatting-rule)。
+
+<a id="formatting-rule"></a>
+
+### 格式化（规则）
+
+仅针对[格式化](#formatter-tool)问题的规则，例如分号和空白字符。这些规则不会改变应用逻辑，属于[风格规则](#stylistic-rule)的子集。
+
+ESLint 不再推荐使用格式化规则，并且此前已弃用其内置格式化规则。ESLint 建议改用专用格式化器，例如 [Prettier](https://prettier.io) 或 [dprint](https://dprint.dev)。此外，[ESLint Stylistic 项目](https://eslint.style)也提供与格式相关的代码检查规则。
+
+更多信息请参阅[格式化规则弃用公告](https://eslint.org/blog/2023/10/deprecating-formatting-rules)。
 
 ## G
 
-### Global Declaration
+<a id="global-declaration"></a>
 
-A description to ESLint of a JavaScript [global variable](#global-variable) that should exist at runtime.
+### 全局声明
 
-Global declarations inform lint rules that check for proper uses of global variables.
-For example, the [`no-undef` rule](../../rules/no-undef) will create a violation for references to global variables not defined in the configured list of globals.
+向 ESLint 描述某个 JavaScript[全局变量](#global-variable)在运行时应当存在。
 
-[Config files](#config-file-configuration-file) have globals defined as JavaScript objects.
+全局声明会告知代码检查规则如何检查全局变量的正确用法。例如，[`no-undef` 规则](../../rules/no-undef)会针对引用了未在已配置全局变量列表中定义的全局变量的代码生成违规。
 
-For information about configuring globals, see [Configure Language Options > Specify Globals](../configure/language-options#specify-globals).
+[配置文件](#config-file-configuration-file)使用 JavaScript 对象定义全局变量。
 
-### Global Variable
+有关配置全局变量的信息，请参阅[配置语言选项 > 指定全局变量](../configure/language-options#specify-globals)。
 
-A runtime variable that exists in the global scope, meaning all modules and scripts have access to it.
+<a id="global-variable"></a>
 
-Global variables in JavaScript are declared on the `globalThis` object (generally aliased as `global` in Node.js and `window` in browsers).
+### 全局变量
 
-You can let ESLint know which global variables your code uses with [global declarations](#global-declaration).
+存在于全局作用域中的运行时变量，也就是说，所有模块和脚本都可以访问它。
+
+在 JavaScript 中，全局变量定义在 `globalThis` 对象上（在 Node.js 中通常别名为 `global`，在浏览器中通常别名为 `window`）。
+
+你可以通过[全局声明](#global-declaration)告知 ESLint 代码使用了哪些全局变量。
 
 ## I
 
-### Inline Config (Configuration Comment)
+<a id="inline-config-configuration-comment"></a>
 
-A source code comment that configures a rule to a different severity and/or set of options.
+### 行内配置（配置注释）
 
-Inline configs use similar syntax as [config files](#config-file-configuration-file) to specify any number of rules by name, their new severity, and optionally new options for the rules.
-For example, the following inline config comment simultaneously disables the [`eqeqeq`](../../rules/eqeqeq) rule and sets the [`curly`](../../rules/curly) rule to `"error"`:
+用于将规则配置为不同严重性和/或选项集的源代码注释。
+
+行内配置使用与[配置文件](#config-file-configuration-file)类似的语法，按名称指定任意数量的规则及其新的严重性，也可以选择为规则指定新选项。例如，以下行内配置注释会同时禁用 [`eqeqeq`](../../rules/eqeqeq) 规则，并将 [`curly`](../../rules/curly) 规则设为 `"error"`：
 
 ```js
 /* eslint eqeqeq: "off", curly: "error" */
 ```
 
-For documentation on inline config comments, see [Rules > Use configuration comments](../configure/rules#use-configuration-comments).
+有关行内配置注释的文档，请参阅[规则 > 使用配置注释](../configure/rules#use-configuration-comments)。
 
 ## L
 
-### Legacy Config
+<a id="legacy-config"></a>
 
-The previous configuration file format for ESLint, now superseded by ["Flat" config](#flat-config).
+### 旧版配置
 
-Legacy ESLint configurations are named in the format `.eslintrc.*` and allowed to be nested across files within sub-directories in a project.
+ESLint 之前使用的配置文件格式，现已被[“扁平”配置](#flat-config)取代。
 
-You can read more about the lifetime of legacy configurations in [ESLint's new config system, Part 1: Background](https://eslint.org/blog/2022/08/new-config-system-part-1).
+旧版 ESLint 配置的命名格式为 `.eslintrc.*`，并允许在项目子目录中的多个文件间嵌套配置。
 
-### Linter
+有关旧版配置的演变历程，请参阅 [ESLint's new config system, Part 1: Background](https://eslint.org/blog/2022/08/new-config-system-part-1)。
 
-A [static analysis](#static-analysis) tool that can [report](#report) the results from running a set of [rules](#rule) on source code.
-Each rule may report any number of [violations](#violation) in the source code.
+<a id="linter"></a>
 
-ESLint is a commonly used linter for JavaScript and other web technologies.
+### 代码检查器
 
-Note that a _linter_ is separate from [formatters](#formatter-tool) and [type checkers](#type-checker).
+一种[静态分析](#static-analysis)工具，可对源代码运行一组[规则](#rule)，并[报告](#report)运行结果。
+每条规则都可以报告源代码中的任意数量的[违规](#violation)。
 
-### Logical Rule
+ESLint 是常用于 JavaScript 和其他 Web 技术的代码检查器。
 
-A [rule](#rule) that inspects how code operates to find problems.
+请注意，_代码检查器_不同于[格式化器](#formatter-tool)和[类型检查器](#type-checker)。
 
-Many logical rules look for likely crashes (e.g. [`no-undef`](../../rules/no-undef)), unintended behavior (e.g. [`no-sparse-arrays`](../../rules/no-sparse-arrays)), and unused code (e.g. [`no-unused-vars`](../../rules/no-unused-vars)).
+<a id="logical-rule"></a>
 
-You can see the full list of logical rules that ship with ESLint under [Rules > Possible Problems](../../rules/#possible-problems).
+### 逻辑规则
+
+用于检查代码运行方式并查找问题的[规则](#rule)。
+
+许多逻辑规则会查找可能导致崩溃的代码（例如 [`no-undef`](../../rules/no-undef)）、意外行为（例如 [`no-sparse-arrays`](../../rules/no-sparse-arrays)）和未使用的代码（例如 [`no-unused-vars`](../../rules/no-unused-vars)）。
+
+你可以在 [规则 > 可能存在的问题](../../rules/#possible-problems)下查看 ESLint 自带逻辑规则的完整列表。
 
 ## N
 
-### Node
+<a id="node"></a>
 
-A section of code within an [AST](#abstract-syntax-tree-ast).
+### 节点
 
-Each node represents a type of syntax found in source code.
-For example, the `1 + 2` in the AST for `1 + 2;` is a _BinaryExpression_.
+[AST](#abstract-syntax-tree-ast)中的一段代码。
 
-See [ESQuery](#esquery) for the library ESLint uses to parse [selectors](#selector) that allow [rules](#rule) to search for nodes.
+每个节点都表示源代码中一种语法类型。例如，在 `1 + 2;` 的 AST 中，`1 + 2` 是一个 _BinaryExpression_。
+
+请参阅 [ESQuery](#esquery)，了解 ESLint 用来解析[选择器](#selector)的库。选择器允许[规则](#rule)查找节点。
 
 ## O
 
-### Override
+<a id="override"></a>
 
-When a [config object](#config-object) or [inline config](#inline-config-configuration-comment) sets a new severity and/or rule options that supersede previously set severity and/or options.
+### 覆盖
 
-The following [config file](#config-file-configuration-file) overrides `no-unused-expressions` from `"error"` to `"off"` in `*.test.js` files:
+当[配置对象](#config-object)或[行内配置](#inline-config-configuration-comment)设置了新的严重性和/或规则选项，从而取代之前设置的严重性和/或选项时，就会发生覆盖。
+
+以下[配置文件](#config-file-configuration-file)会在 `*.test.js` 文件中将 `no-unused-expressions` 从 `"error"` 覆盖为 `"off"`：
 
 ```js
 import { defineConfig } from "eslint/config";
@@ -261,7 +289,7 @@ export default defineConfig([
 ]);
 ```
 
-The following [inline config](#inline-config-configuration-comment) sets `no-unused-expressions` to `"error"`:
+以下[行内配置](#inline-config-configuration-comment)将 `no-unused-expressions` 设为 `"error"`：
 
 ```js
 /* eslint no-unused-expressions: "error" */
@@ -269,83 +297,91 @@ The following [inline config](#inline-config-configuration-comment) sets `no-unu
 
 ## P
 
-### Parser
+<a id="parser"></a>
 
-An object containing a method that reads in a string and converts it to a standardized format.
+### 解析器
 
-ESLint uses parsers to convert source code strings into an [AST](#abstract-syntax-tree-ast) shape.
-By default, ESLint uses the [Espree](https://github.com/eslint/js/tree/main/packages/espree) parser, which generates an AST compatible with standard JavaScript runtimes and versions.
+包含一个方法的对象，该方法读取字符串并将其转换为标准化格式。
 
-Custom parsers let ESLint parse non-standard JavaScript syntax.
-Often custom parsers are included as part of shareable configurations or plugins, so you don’t have to use them directly.
-For example, [@typescript-eslint/parser](https://www.npmjs.com/package/@typescript-eslint/parser) is a custom parser included in the [typescript-eslint](https://typescript-eslint.io) project that lets ESLint parse TypeScript code.
+ESLint 使用解析器将源代码字符串转换为 [AST](#abstract-syntax-tree-ast) 结构。默认情况下，ESLint 使用 [Espree](https://github.com/eslint/js/tree/main/packages/espree) 解析器，它会生成与标准 JavaScript 运行时和版本兼容的 AST。
 
-For more information on using parsers with ESLint, see [Configure a Parser](../configure/parser).
+自定义解析器可以让 ESLint 解析非标准 JavaScript 语法。自定义解析器通常包含在可共享配置或插件中，因此你无需直接使用它们。例如，[@typescript-eslint/parser](https://www.npmjs.com/package/@typescript-eslint/parser) 是 [typescript-eslint](https://typescript-eslint.io) 项目中的自定义解析器，可让 ESLint 解析 TypeScript 代码。
 
-### Plugin
+有关在 ESLint 中使用解析器的更多信息，请参阅[配置解析器](../configure/parser)。
 
-A package that can contain a set of [configurations](#shareable-config-configuration), [processors](#processor), and/or [rules](#rule).
+<a id="plugin"></a>
 
-A popular use case for plugins is to enforce best practices for a framework.
-For example, [@angular-eslint/eslint-plugin](https://www.npmjs.com/package/@angular-eslint/eslint-plugin) contains best practices for using the Angular framework.
+### 插件
 
-For more information, refer to [Configure Plugins](../configure/plugins).
+可以包含一组[配置](#shareable-config-configuration)、[处理器](#processor)和/或[规则](#rule)的软件包。
 
-### Processor
+插件的一种常见用途是为某个框架强制执行最佳实践。例如，[@angular-eslint/eslint-plugin](https://www.npmjs.com/package/@angular-eslint/eslint-plugin)包含了使用 Angular 框架的最佳实践。
 
-A part of a plugin that extracts JavaScript code from other kinds of files, then lets ESLint lint the JavaScript code.
+更多信息请参阅[配置插件](../configure/plugins)。
 
-For example, [`@eslint/markdown`](https://github.com/eslint/markdown) includes a processor that converts the text of <code>```</code> code blocks in Markdown files into code that can be linted.
+<a id="processor"></a>
 
-For more information on configuring processors, see [Plugins > Specify a Processor](../configure/plugins#specify-a-processor).
+### 处理器
+
+插件的一部分，可从其他类型的文件中提取 JavaScript 代码，然后让 ESLint 对这些 JavaScript 代码执行代码检查。
+
+例如，[`@eslint/markdown`](https://github.com/eslint/markdown)包含一个处理器，可以将 Markdown 文件中 <code>```</code> 代码块的文本转换为可执行代码检查的代码。
+
+有关配置处理器的信息，请参阅[插件 > 指定处理器](../configure/plugins#specify-a-processor)。
 
 ## R
 
-### Report
+<a id="report"></a>
 
-A collection of [violations](#violation) from a single ESLint run.
+### 报告
 
-When ESLint runs on source files, it will pass an [AST](#abstract-syntax-tree-ast) for each source file to each configured [rule](#rule).
-The collection of violations from each of the rules will be packaged together and passed to a [formatter](#formatter-linting) to be presented to the user.
+一次 ESLint 运行所产生的[违规](#violation)集合。
 
-### Rule
+ESLint 检查源文件时，会将每个源文件的 [AST](#abstract-syntax-tree-ast) 传递给每条已配置的[规则](#rule)。各条规则产生的违规会汇总在一起，然后传递给[格式化器（代码检查）](#formatter-linting)，以便呈现给用户。
 
-Code that checks an [AST](#abstract-syntax-tree-ast) for expected patterns. When a rule's expectation is not met, it creates a [violation](#violation).
+<a id="rule"></a>
 
-ESLint provides a large collection of rules that check for common JavaScript code issues.
-Many more rules may be loaded in by [plugins](#plugin).
+### 规则
 
-For an overview of rules provided, see [Core Concepts > Rules](../core-concepts/#rules).
+用于检查 [AST](#abstract-syntax-tree-ast) 是否符合预期模式的代码。当代码不符合规则的预期时，规则就会生成[违规](#violation)。
+
+ESLint 提供了大量规则，用于检查常见的 JavaScript 代码问题。[插件](#plugin)还可以加载更多规则。
+
+有关所提供规则的概览，请参阅[核心概念 > 规则](../core-concepts/#rules)。
 
 ## S
 
-### Selector
+<a id="selector"></a>
 
-Syntax describing how to search for [nodes](#node) within an [AST](#abstract-syntax-tree-ast).
+### 选择器
 
-ESLint [rules](#rule) use [ESQuery](#esquery) selectors to find nodes that should be checked.
+描述如何在 [AST](#abstract-syntax-tree-ast) 中搜索[节点](#node)的语法。
 
-### Severity
+ESLint [规则](#rule)使用 [ESQuery](#esquery) 选择器来查找需要检查的节点。
 
-What level of reporting a rule is configured to run, if at all.
+<a id="severity"></a>
 
-ESLint supports three levels of severity:
+### 严重性
 
-- `"off"` (`0`): Do not run the rule.
-- `"warn"` (`1`): Run the rule, but don't exit with a non-zero status code based on its violations (excluding the [`--max-warnings` flag](../command-line-interface#--max-warnings))
-- `"error"` (`2`): Run the rule, and exit with a non-zero status code if it produces any violations
+规则配置的报告级别，也可以配置为不运行该规则。
 
-For documentation on configuring rules, see [Configure Rules](../configure/rules).
+ESLint 支持三个严重性级别：
 
-### Shareable Config (Configuration)
+- `"off"`（`0`）：不运行规则。
+- `"warn"`（`1`）：运行规则，但不会因规则产生的违规而以非零状态码退出（[`--max-warnings` 标志](../command-line-interface#--max-warnings)除外）
+- `"error"`（`2`）：运行规则；如果规则产生任何违规，则以非零状态码退出
 
-A module that provides predefined [config file](#config-file-configuration-file) configurations.
+有关配置规则的文档，请参阅[配置规则](../configure/rules)。
 
-Shareable configs can configure all the same information from config files, including [plugins](#plugin) and [rules](#rule).
+<a id="shareable-config-configuration"></a>
 
-Shareable configs are often provided alongside [plugins](#plugin).
-Many plugins provide configs with names like _"recommended"_ that enable their suggested starting set of rules.
-For example, [`eslint-plugin-solid`](https://github.com/solidjs-community/eslint-plugin-solid) provides a shareable recommended config:
+### 可共享配置
+
+提供预定义[配置文件](#config-file-configuration-file)配置的模块。
+
+可共享配置可以设置与配置文件相同的各类信息，包括[插件](#plugin)和[规则](#rule)。
+
+可共享配置通常与[插件](#plugin)一起提供。许多插件都会提供名为 _"recommended"_ 等的配置，启用它们建议作为起点的一组规则。例如，[`eslint-plugin-solid`](https://github.com/solidjs-community/eslint-plugin-solid)提供了一份可共享的推荐配置：
 
 ```js
 import { defineConfig } from "eslint/config";
@@ -355,52 +391,57 @@ import solid from "eslint-plugin-solid/configs/recommended";
 export default defineConfig([js.configs.recommended, solid]);
 ```
 
-For information on shareable configs, see [Share Configurations](../../extend/shareable-configs).
+有关可共享配置的信息，请参阅[共享配置](../../extend/shareable-configs)。
 
-### Static Analysis
+<a id="static-analysis"></a>
 
-The process of analyzing source code without building or running it.
+### 静态分析
 
-[Linters](#linter) such as ESLint, [formatters](#formatter-tool), and [type checkers](#type-checker) are examples of static analysis tools.
+不构建或运行源代码而对其进行分析的过程。
 
-Static analysis is different from _dynamic_ analysis, which is the process of evaluating source code after it is built and executed.
-Unit, integration, and end-to-end tests are common examples of dynamic analysis.
+ESLint 等[代码检查器](#linter)、[格式化器](#formatter-tool)和[类型检查器](#type-checker)都是静态分析工具。
 
-### Stylistic (Rule)
+静态分析不同于_动态_分析。动态分析是在源代码构建并执行后对其进行评估的过程。单元测试、集成测试和端到端测试都是常见的动态分析示例。
 
-A rule that enforces a preference rather than a logical issue.
-Stylistic areas include [Formatting rules](#formatting-rule), naming conventions, and consistent choices between equivalent syntaxes.
+<a id="stylistic-rule"></a>
 
-ESLint's built-in stylistic rules are feature frozen: except for supporting new ECMAScript versions, they won't receive new features.
+### 风格规则
 
-For more information, see [Changes to our rules policies](https://eslint.org/blog/2020/05/changes-to-rules-policies) and [Deprecation of formatting rules](https://eslint.org/blog/2023/10/deprecating-formatting-rules).
+用于强制执行偏好而非解决逻辑问题的规则。
+风格方面的问题包括[格式化规则](#formatting-rule)、命名约定，以及在等效语法之间保持一致的选择。
 
-### Suggestion
+ESLint 内置的风格规则已冻结功能：除支持新的 ECMAScript 版本外，不会再获得新功能。
 
-An optional augmentation to a [rule](#rule) [violation](#violation) that describes how one may manually adjust the code to address the violation.
+更多信息请参阅[规则策略的变更](https://eslint.org/blog/2020/05/changes-to-rules-policies)和[格式化规则弃用公告](https://eslint.org/blog/2023/10/deprecating-formatting-rules)。
 
-Suggestions are not generally safe to apply automatically because they cause code behavior changes.
-ESLint does not apply suggestions directly but does provide suggestions to integrations that may choose to apply suggestions (such as an editor extension).
+<a id="suggestion"></a>
 
-Rule violations may also include file changes that are safe and may be automatically applied in the form of [fixes](#fix).
+### 建议
+
+对[规则](#rule)[违规](#violation)的可选补充，描述可以如何手动调整代码以解决该违规。
+
+建议通常不适合自动应用，因为它们会改变代码行为。ESLint 不会直接应用建议，但会将建议提供给集成工具，由这些工具决定是否应用（例如编辑器扩展）。
+
+规则违规也可能包含安全且可以自动应用的文件更改，这类更改以[修复](#fix)的形式提供。
 
 ## T
 
-### Type Checker
+<a id="type-checker"></a>
 
-A [static analysis](#static-analysis) tool that builds a full understanding of a project's code constructs and data shapes.
+### 类型检查器
 
-Type checkers are generally slower and more comprehensive than linters.
-Whereas linters traditionally operate only on a single file's or snippet's [AST](#abstract-syntax-tree-ast) at a time, type checkers understand cross-file dependencies and types.
+一种[静态分析](#static-analysis)工具，能够全面理解项目中的代码结构和数据形态。
 
-[TypeScript](https://typescriptlang.org) is the most common type checker for JavaScript.
-The [typescript-eslint](https://typescript-eslint.io) project provides integrations that allow using type checkers in lint rules.
+类型检查器通常比代码检查器更慢，但分析也更全面。代码检查器传统上一次只处理单个文件或代码片段的 [AST](#abstract-syntax-tree-ast)，而类型检查器能够理解跨文件依赖关系和类型。
+
+[TypeScript](https://typescriptlang.org) 是 JavaScript 最常用的类型检查器。[typescript-eslint](https://typescript-eslint.io) 项目提供了集成，使代码检查规则能够使用类型检查器。
 
 ## V
 
-### Violation
+<a id="violation"></a>
 
-An indication from a [rule](#rule) that an area of code doesn't meet the expectation of the rule.
+### 违规
 
-Rule violations indicate a range in source code and an error message explaining the violation.
-Violations may also optionally include a [fix](#fix) and/or [suggestions](#suggestion) that indicate how to improve the violating code.
+[规则](#rule)指出某段代码不符合该规则预期时所产生的提示。
+
+规则违规会指出源代码中的范围，并附带解释违规情况的错误消息。违规还可以选择包含[修复](#fix)和/或[建议](#suggestion)，说明如何改进违反规则的代码。
