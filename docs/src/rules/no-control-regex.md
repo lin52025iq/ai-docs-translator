@@ -8,22 +8,24 @@ related_rules:
 
 
 
-Control characters are special, invisible characters in the ASCII range 0-31. These characters are rarely used in JavaScript strings so a regular expression containing elements that explicitly match these characters is most likely a mistake.
+控制字符是 ASCII 范围 0-31 中的特殊不可见字符。这些字符很少用于 JavaScript 字符串，因此，包含显式匹配这些字符的元素的正则表达式很可能是错误的。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows control characters and some escape sequences that match control characters in regular expressions.
+## 规则详情
 
-The following elements of regular expression patterns are considered possible errors in typing and are therefore disallowed by this rule:
+此规则禁止在正则表达式中使用控制字符以及匹配控制字符的某些转义序列。
 
-* Hexadecimal character escapes from `\x00` to `\x1F`.
-* Unicode character escapes from `\u0000` to `\u001F`.
-* Unicode code point escapes from `\u{0}` to `\u{1F}`.
-* Unescaped raw characters from U+0000 to U+001F.
+以下正则表达式模式元素被视为可能的输入错误，因此此规则会禁止它们：
 
-Control escapes such as `\t` and `\n` are allowed by this rule. Control letter escapes such as `\cA`-`\cZ` (and `\ca`-`\cz`) are also allowed, since writing a control character this way makes the intent to match a control character explicit, unlike the hexadecimal, Unicode, and raw forms above, which can obscure that intent.
+* 从 `\x00` 到 `\x1F` 的十六进制字符转义。
+* 从 `\u0000` 到 `\u001F` 的 Unicode 字符转义。
+* 从 `\u{0}` 到 `\u{1F}` 的 Unicode 码点转义。
+* U+0000 到 U+001F 范围内未转义的原始字符。
 
-Examples of **incorrect** code for this rule:
+此规则允许使用 `\t` 和 `\n` 等控制转义。也允许使用 `\cA`-`\cZ`（以及 `\ca`-`\cz`）等控制字母转义，因为以这种方式书写控制字符，可以明确表达匹配控制字符的意图；而上述十六进制、Unicode 和原始字符形式则可能会掩盖这一意图。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -41,7 +43,7 @@ const pattern7 = new RegExp("\\x0C"); // \x0C pattern
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -61,13 +63,17 @@ const pattern9 = /\cJ/; // control letter escape for U+000A
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## Known Limitations
+此规则没有选项。
 
-When checking `RegExp` constructor calls, this rule examines evaluated regular expression patterns. Therefore, although this rule intends to allow syntax such as `\t`, it doesn't allow `new RegExp("\t")` since the evaluated pattern (string value of `"\t"`) contains a raw control character (the TAB character).
+<a id="known-limitations"></a>
+
+## 已知限制
+
+检查 `RegExp` 构造函数调用时，此规则会检查求值后的正则表达式模式。因此，虽然此规则原本允许使用 `\t` 这样的语法，但它不允许 `new RegExp("\t")`，因为求值后的模式（`"\t"` 的字符串值）包含原始控制字符（TAB 字符）。
 
 ```js
 /*eslint no-control-regex: "error"*/
@@ -77,8 +83,10 @@ new RegExp("\t"); // disallowed since the pattern is: <TAB>
 new RegExp("\\t"); // allowed since the pattern is: \t
 ```
 
-There is no difference in behavior between `new RegExp("\t")` and `new RegExp("\\t")`, and the intention to match the TAB character is clear in both cases. They are equally valid for the purpose of this rule, but it only allows `new RegExp("\\t")`.
+`new RegExp("\t")` 和 `new RegExp("\\t")` 的行为没有区别，而且两种情况下匹配 TAB 字符的意图都很明确。对于此规则而言，它们同样有效，但规则只允许 `new RegExp("\\t")`。
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you need to use control character pattern matching, then you should turn this rule off.
+## 何时不使用此规则
+
+如果需要使用控制字符模式匹配，则应关闭此规则。
