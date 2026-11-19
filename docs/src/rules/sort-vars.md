@@ -8,14 +8,15 @@ related_rules:
 
 
 
-When declaring multiple variables within the same block, some developers prefer to sort variable names alphabetically to be able to find necessary variable easier at the later time. Others feel that it adds complexity and becomes burden to maintain.
+在同一代码块中声明多个变量时，有些开发者喜欢按字母顺序排列变量名，以便日后更容易找到所需变量。另一些开发者则认为这样会增加复杂性和维护负担。
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule checks all variable declaration blocks and verifies that all variables are sorted alphabetically.
-The default configuration of the rule is case-sensitive.
+此规则会检查所有变量声明块，并确认其中的变量是否按字母顺序排列。
+此规则的默认配置区分大小写。
 
-Examples of **incorrect** code for this rule:
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -31,7 +32,7 @@ let f, F;
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -50,7 +51,7 @@ let G, f, h;
 
 :::
 
-Alphabetical list is maintained starting from the first variable and excluding any that are considered problems. So the following code will produce two problems:
+字母顺序列表从第一个变量开始维护，并排除任何被视为问题的变量。因此，以下代码会产生两个问题：
 
 ```js
 /*eslint sort-vars: "error"*/
@@ -58,7 +59,7 @@ Alphabetical list is maintained starting from the first variable and excluding a
 let c, d, a, b;
 ```
 
-But this one, will only produce one:
+而下面这段代码只会产生一个问题：
 
 ```js
 /*eslint sort-vars: "error"*/
@@ -66,15 +67,16 @@ But this one, will only produce one:
 let c, d, a, e;
 ```
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule has an object option:
+此规则接受一个对象选项：
 
-* `"ignoreCase": true` (default `false`) ignores the case-sensitivity of the variables order
+* `"ignoreCase": true`（默认值为 `false`）忽略变量顺序中的大小写区别
 
 ### ignoreCase
 
-Examples of **correct** code for this rule with the `{ "ignoreCase": true }` option:
+启用 `{ "ignoreCase": true }` 选项时，此规则的正确代码示例：
 
 ::: correct
 
@@ -88,6 +90,7 @@ let c, D, e;
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 不适用的情形
 
-This rule is a formatting preference and not following it won't negatively affect the quality of your code. If you alphabetizing variables isn't a part of your coding standards, then you can leave this rule off.
+此规则是一种格式偏好，不遵循它不会对代码质量产生负面影响。如果按字母顺序排列变量不属于你的编码规范，可以禁用此规则。
