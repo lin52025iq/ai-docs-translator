@@ -10,13 +10,15 @@ further_reading:
 
 
 
-The `debugger` statement is used to tell the executing JavaScript environment to stop execution and start up a debugger at the current point in the code. This has fallen out of favor as a good practice with the advent of modern debugging and development tools. Production code should definitely not contain `debugger`, as it will cause the browser to stop executing code and open an appropriate debugger.
+`debugger` 语句用于告知正在执行的 JavaScript 环境停止执行，并在代码当前位置启动调试器。随着现代调试和开发工具的出现，这种做法已不再被视为良好实践。生产代码中绝对不应包含 `debugger`，因为它会导致浏览器停止执行代码并打开相应的调试器。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows `debugger` statements.
+## 规则详情
 
-Example of **incorrect** code for this rule:
+本规则禁止使用 `debugger` 语句。
+
+本规则的错误代码示例：
 
 ::: incorrect
 
@@ -31,7 +33,7 @@ function isTruthy(x) {
 
 :::
 
-Example of **correct** code for this rule:
+本规则的正确代码示例：
 
 ::: correct
 
@@ -45,10 +47,14 @@ function isTruthy(x) {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+本规则没有选项。
 
-If your code is still very much in development and don't want to worry about stripping `debugger` statements, then turn this rule off. You'll generally want to turn it back on when testing code prior to deployment.
+<a id="when-not-to-use-it"></a>
+
+## 何时不使用
+
+如果你的代码仍处于开发阶段，而且不想担心移除 `debugger` 语句，可以关闭此规则。通常，你会希望在部署前测试代码时重新启用它。
