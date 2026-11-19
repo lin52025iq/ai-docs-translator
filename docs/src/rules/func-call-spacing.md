@@ -4,7 +4,7 @@ rule_type: layout
 related_rules:
 - no-spaced-func
 ---
-When calling a function, developers may insert optional whitespace between the function's name and the parentheses that invoke it. The following pairs of function calls are equivalent:
+调用函数时，开发者可以在函数名和调用它的括号之间插入可选空白。以下各组函数调用是等价的：
 
 ```js
 alert('Hello');
@@ -17,22 +17,26 @@ new Date();
 new Date ();
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule requires or disallows spaces between the function name and the opening parenthesis that calls it.
+## 规则详情
 
-## Options
+此规则要求或禁止在函数名与调用它的左括号之间添加空格。
 
-This rule has a string option:
+<a id="options"></a>
 
-* `"never"` (default) disallows space between the function name and the opening parenthesis.
-* `"always"` requires space between the function name and the opening parenthesis.
+## 选项
 
-Further, in `"always"` mode, a second object option is available that contains a single boolean `allowNewlines` property.
+此规则接受一个字符串选项：
+
+* `"never"`（默认值）禁止在函数名与左括号之间添加空格。
+* `"always"` 要求在函数名与左括号之间添加空格。
+
+此外，在 `"always"` 模式下，还可以设置第二个对象选项，其中包含一个布尔属性 `allowNewlines`。
 
 ### never
 
-Examples of **incorrect** code for this rule with the default `"never"` option:
+使用默认选项 `"never"` 时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -47,7 +51,7 @@ fn
 
 :::
 
-Examples of **correct** code for this rule with the default `"never"` option:
+使用默认选项 `"never"` 时，此规则的正确代码示例：
 
 ::: correct
 
@@ -61,7 +65,7 @@ fn();
 
 ### always
 
-Examples of **incorrect** code for this rule with the `"always"` option:
+使用选项 `"always"` 时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -76,7 +80,7 @@ fn
 
 :::
 
-Examples of **correct** code for this rule with the `"always"` option:
+使用选项 `"always"` 时，此规则的正确代码示例：
 
 ::: correct
 
@@ -90,9 +94,9 @@ fn ();
 
 #### allowNewlines
 
-By default, `"always"` does not allow newlines. To permit newlines when in `"always"` mode, set the `allowNewlines` option to `true`. Newlines are never required.
+默认情况下，`"always"` 不允许换行。若要在 `"always"` 模式下允许换行，请将 `allowNewlines` 选项设为 `true`。规则不会要求换行。
 
-Examples of **incorrect** code for this rule with `allowNewlines` option enabled:
+启用 `allowNewlines` 选项时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -104,7 +108,7 @@ fn();
 
 :::
 
-Examples of **correct** code for this rule with the `allowNewlines` option enabled:
+启用 `allowNewlines` 选项时，此规则的正确代码示例：
 
 ::: correct
 
@@ -119,11 +123,15 @@ fn
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-This rule can safely be turned off if your project does not care about enforcing a consistent style for spacing within function calls.
+## 何时不使用
 
-## Compatibility
+如果你的项目不需要对函数调用中的空格风格进行统一约束，可以放心关闭此规则。
 
-* **JSCS**: [disallowSpacesInCallExpression](https://jscs-dev.github.io/rule/disallowSpacesInCallExpression)
-* **JSCS**: [requireSpacesInCallExpression](https://jscs-dev.github.io/rule/requireSpacesInCallExpression)
+<a id="compatibility"></a>
+
+## 兼容性
+
+* **JSCS**：[disallowSpacesInCallExpression](https://jscs-dev.github.io/rule/disallowSpacesInCallExpression)
+* **JSCS**：[requireSpacesInCallExpression](https://jscs-dev.github.io/rule/requireSpacesInCallExpression)
