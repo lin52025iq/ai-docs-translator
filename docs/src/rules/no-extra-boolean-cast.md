@@ -3,7 +3,7 @@ title: no-extra-boolean-cast
 rule_type: suggestion
 ---
 
-In contexts such as an `if` statement's test where the result of the expression will already be coerced to a Boolean, casting to a Boolean via double negation (`!!`) or a `Boolean` call is unnecessary. For example, these `if` statements are equivalent:
+在 `if` 语句的测试条件等上下文中，表达式的结果本就会被强制转换为布尔值，因此通过双重否定（`!!`）或调用 `Boolean` 转换为布尔值是不必要的。例如，以下 `if` 语句是等价的：
 
 ```js
 if (!!foo) {
@@ -19,11 +19,13 @@ if (foo) {
 }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows unnecessary boolean casts.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止不必要的布尔值转换。
+
+此规则中**错误**代码的示例：
 
 ::: incorrect
 
@@ -61,7 +63,7 @@ for (; !!foo; ) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则中**正确**代码的示例：
 
 ::: correct
 
@@ -80,17 +82,19 @@ foo = bar ? !!baz : !!bat;
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option:
+## 选项
 
-*   `"enforceForInnerExpressions"` when set to `true`, in addition to checking default contexts, checks whether extra boolean casts are present in expressions whose result is used in a boolean context. See examples below. Default is `false`, meaning that this rule by default does not warn about extra booleans cast inside inner expressions.
+此规则有一个对象选项：
 
-**Deprecated:** The object property `enforceForLogicalOperands` is deprecated ([eslint#18222](https://github.com/eslint/eslint/pull/18222)). Please use `enforceForInnerExpressions` instead.
+*   当 `"enforceForInnerExpressions"` 设置为 `true` 时，除了检查默认上下文外，还会检查结果用于布尔上下文的表达式中是否存在多余的布尔值转换。请参阅以下示例。默认值为 `false`，这表示此规则默认不会针对内部表达式中的多余布尔值转换发出警告。
+
+**已弃用：**对象属性 `enforceForLogicalOperands` 已弃用（[eslint#18222](https://github.com/eslint/eslint/pull/18222)）。请改用 `enforceForInnerExpressions`。
 
 ### enforceForInnerExpressions
 
-Examples of **incorrect** code for this rule with `"enforceForInnerExpressions"` option set to `true`:
+将 `"enforceForInnerExpressions"` 选项设为 `true` 时，此规则中**错误**代码的示例：
 
 ::: incorrect
 
@@ -127,7 +131,7 @@ for (let i = 0; console.log(i), Boolean(i < 10); i++) {
 
 :::
 
-Examples of **correct** code for this rule with `"enforceForInnerExpressions"` option set to `true`:
+将 `"enforceForInnerExpressions"` 选项设为 `true` 时，此规则中**正确**代码的示例：
 
 ::: correct
 
