@@ -5,13 +5,14 @@ rule_type: problem
 
 
 
-If a `switch` statement has duplicate test expressions in `case` clauses, it is likely that a programmer copied a `case` clause but forgot to change the test expression.
+如果 `switch` 语句的 `case` 子句中存在重复的测试表达式，通常是因为程序员复制了某个 `case` 子句，却忘记更改测试表达式。
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule disallows duplicate test expressions in `case` clauses of `switch` statements.
+此规则禁止 `switch` 语句的 `case` 子句中出现重复的测试表达式。
 
-Examples of **incorrect** code for this rule:
+此规则下的错误代码示例：
 
 :::incorrect
 
@@ -57,7 +58,7 @@ switch (a) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则下的正确代码示例：
 
 :::correct
 
@@ -103,13 +104,15 @@ switch (a) {
 
 :::
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule has no options.
+此规则没有选项。
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 何时不应使用
 
-In rare cases where identical test expressions in `case` clauses produce different values, which necessarily means that the expressions are causing and relying on side effects, you will have to disable this rule.
+在少数情况下，`case` 子句中相同的测试表达式会产生不同的值。这必然意味着表达式会产生副作用，而代码依赖这些副作用；此时你必须禁用此规则。
 
 ```js
 switch (a) {
