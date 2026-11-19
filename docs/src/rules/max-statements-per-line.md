@@ -10,23 +10,27 @@ related_rules:
 - max-params
 - max-statements
 ---
-A line of code containing too many statements can be difficult to read. Code is generally read from the top down, especially when scanning, so limiting the number of statements allowed on a single line can be very beneficial for readability and maintainability.
+一行代码中包含过多语句会难以阅读。人们通常从上到下阅读代码，尤其是在快速浏览时，因此限制单行允许的语句数量有助于提高代码的可读性和可维护性。
 
 ```js
 function foo () { var bar; if (condition) { bar = 1; } else { bar = 2; } return true; } // too many statements
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces a maximum number of statements allowed per line.
+## 规则详情
 
-## Options
+此规则强制限制每行允许的语句数量。
+
+<a id="options"></a>
+
+## 选项
 
 ### max
 
-The "max" object property is optional (default: 1).
+"max" 对象属性是可选的（默认值：1）。
 
-Examples of **incorrect** code for this rule with the default `{ "max": 1 }` option:
+此规则在默认选项 `{ "max": 1 }` 下的错误代码示例：
 
 ::: incorrect
 
@@ -44,7 +48,7 @@ var qux = function qux() { bar = 1; };
 
 :::
 
-Examples of **correct** code for this rule with the default `{ "max": 1 }` option:
+此规则在默认选项 `{ "max": 1 }` 下的正确代码示例：
 
 ::: correct
 
@@ -62,7 +66,7 @@ var qux = function qux() { };
 
 :::
 
-Examples of **incorrect** code for this rule with the `{ "max": 2 }` option:
+此规则在选项 `{ "max": 2 }` 下的错误代码示例：
 
 ::: incorrect
 
@@ -80,7 +84,7 @@ var qux = function qux() { bar = 1; baz = 2; };
 
 :::
 
-Examples of **correct** code for this rule with the `{ "max": 2 }` option:
+此规则在选项 `{ "max": 2 }` 下的正确代码示例：
 
 ::: correct
 
@@ -98,6 +102,8 @@ var qux = function qux() { bar = 1; };
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You can turn this rule off if you are not concerned with the number of statements on each line.
+## 何时不使用此规则
+
+如果你不在意每行的语句数量，可以关闭此规则。
