@@ -9,26 +9,27 @@ related_rules:
 
 
 
-
-Regular expressions can be very complex and difficult to understand, which is why it's important to keep them as simple as possible in order to avoid mistakes. One of the more error-prone things you can do with a regular expression is to use more than one space, such as:
+正则表达式可能非常复杂，难以理解，因此应尽可能保持简单，以避免出错。正则表达式中比较容易出错的一种写法是使用多个空格，例如：
 
 ```js
 const re = /foo   bar/;
 ```
 
-In this regular expression, it's very hard to tell how many spaces are intended to be matched. It's better to use only one space and then specify how many spaces are expected, such as:
+在这个正则表达式中，很难看出预期匹配多少个空格。更好的做法是只使用一个空格，然后指定预期的空格数量，例如：
 
 ```js
 const re = /foo {3}bar/;
 ```
 
-Now it is very clear that three spaces are expected to be matched.
+这样就能非常清楚地看出预期匹配三个空格。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows multiple spaces in regular expression literals.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止在正则表达式字面量中使用多个空格。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -41,7 +42,7 @@ const re1 = new RegExp("foo   bar");
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -54,10 +55,14 @@ const re1 = new RegExp("foo {3}bar");
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-If you want to allow multiple spaces in a regular expression, then you can safely turn this rule off.
+<a id="when-not-to-use-it"></a>
+
+## 何时不应使用此规则
+
+如果你想允许正则表达式中出现多个空格，可以放心关闭此规则。
