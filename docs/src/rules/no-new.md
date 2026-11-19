@@ -4,25 +4,27 @@ rule_type: suggestion
 ---
 
 
-The goal of using `new` with a constructor is typically to create an object of a particular type and store that object in a variable, such as:
+使用构造函数时，通常会通过 `new` 创建特定类型的对象，并将该对象存储在变量中，例如：
 
 ```js
 const person = new Person();
 ```
 
-It's less common to use `new` and not store the result, such as:
+使用 `new` 却不存储结果的情况则不太常见，例如：
 
 ```js
 new Person();
 ```
 
-In this case, the created object is thrown away because its reference isn't stored anywhere, and in many cases, this means that the constructor should be replaced with a function that doesn't require `new` to be used.
+在这种情况下，创建的对象会被丢弃，因为没有在任何地方存储对它的引用。在许多情况下，这意味着应该将构造函数替换为不需要使用 `new` 的函数。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at maintaining consistency and convention by disallowing constructor calls using the `new` keyword that do not assign the resulting object to a variable.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在保持一致性和惯例，禁止使用 `new` 关键字调用构造函数，却不将生成的对象赋值给变量。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -34,7 +36,7 @@ new Thing();
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -48,6 +50,8 @@ Foo();
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
+
+此规则没有选项。
