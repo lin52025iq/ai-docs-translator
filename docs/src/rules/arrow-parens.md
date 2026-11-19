@@ -4,12 +4,13 @@ rule_type: layout
 further_reading:
 - https://github.com/airbnb/javascript#arrows--one-arg-parens
 ---
-Arrow functions can omit parentheses when they have exactly one parameter. In all other cases the parameter(s) must
-be wrapped in parentheses. This rule enforces the consistent use of parentheses in arrow functions.
+箭头函数恰好有一个参数时，可以省略圆括号。其他情况下，参数必须用圆括号括起来。此规则用于确保箭头函数中圆括号的使用保持一致。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces parentheses around arrow function parameters regardless of arity. For example:
+## 规则详情
+
+无论参数数量是多少，此规则都会要求箭头函数的参数使用圆括号。例如：
 
 ```js
 // Bad
@@ -19,8 +20,7 @@ a => {}
 (a) => {}
 ```
 
-Following this style will help you find arrow functions (`=>`) which may be mistakenly included in a condition
-when a comparison such as `>=` was the intent.
+遵循这种风格有助于你发现误写在条件中的箭头函数（`=>`），而这里原本可能是要使用 `>=` 这样的比较运算符。
 
 ```js
 // Bad
@@ -32,7 +32,7 @@ if (a >= 2) {
 }
 ```
 
-The rule can also be configured to discourage the use of parens when they are not required:
+此规则也可以配置为：在不需要圆括号时，建议不要使用圆括号：
 
 ```js
 // Bad
@@ -42,22 +42,24 @@ The rule can also be configured to discourage the use of parens when they are no
 a => {}
 ```
 
-## Options
+<a id="options"></a>
 
-This rule has a string option and an object one.
+## 选项
 
-String options are:
+此规则有一个字符串选项和一个对象选项。
 
-* `"always"` (default) requires parens around arguments in all cases.
-* `"as-needed"` enforces no parens where they can be omitted.
+字符串选项如下：
 
-Object properties for variants of the `"as-needed"` option:
+* `"always"`（默认值）要求所有情况下都在参数周围使用圆括号。
+* `"as-needed"` 要求在可以省略圆括号时不使用圆括号。
 
-* `"requireForBlockBody": true` modifies the as-needed rule in order to require parens if the function body is in an instructions block (surrounded by braces).
+`"as-needed"` 选项变体的对象属性如下：
+
+* `"requireForBlockBody": true` 修改按需使用圆括号的规则：如果函数体是语句块（用花括号括起来），则要求使用圆括号。
 
 ### always
 
-Examples of **incorrect** code for this rule with the default `"always"` option:
+以下是使用默认选项 `"always"` 时违反此规则的代码示例：
 
 :::incorrect
 
@@ -74,7 +76,7 @@ a(foo => { if (true) {} });
 
 :::
 
-Examples of **correct** code for this rule with the default `"always"` option:
+以下是使用默认选项 `"always"` 时符合此规则的代码示例：
 
 :::correct
 
@@ -91,9 +93,11 @@ a.then((foo) => { if (true) {} });
 
 :::
 
-#### If Statements
+<a id="if-statements"></a>
 
-One of the benefits of this option is that it prevents the incorrect use of arrow functions in conditionals:
+#### If 语句
+
+此选项的一个好处是，可以防止在条件语句中错误地使用箭头函数：
 
 ```js
 var a = 1;
@@ -107,9 +111,9 @@ if (a => b) {
 // outputs 'bigger', not smaller as expected
 ```
 
-The contents of the `if` statement is an arrow function, not a comparison.
+`if` 语句中的内容是一个箭头函数，而不是比较表达式。
 
-If the arrow function is intentional, it should be wrapped in parens to remove ambiguity.
+如果确实有意使用箭头函数，应将其用圆括号括起来以消除歧义。
 
 ```js
 var a = 1;
@@ -123,7 +127,7 @@ if ((a) => b) {
 // outputs 'truthy value returned'
 ```
 
-The following is another example of this behavior:
+下面是另一个展示这种行为的示例：
 
 ```js
 var a = 1, b = 2, c = 3, d = 4;
@@ -131,9 +135,9 @@ var f = a => b ? c: d;
 // f = ?
 ```
 
-`f` is an arrow function which takes `a` as an argument and returns the result of `b ? c: d`.
+`f` 是一个箭头函数，它接受 `a` 作为参数，并返回 `b ? c: d` 的结果。
 
-This should be rewritten like so:
+应将其改写如下：
 
 ```js
 var a = 1, b = 2, c = 3, d = 4;
@@ -142,7 +146,7 @@ var f = (a) => b ? c: d;
 
 ### as-needed
 
-Examples of **incorrect** code for this rule with the `"as-needed"` option:
+以下是使用 `"as-needed"` 选项时违反此规则的代码示例：
 
 :::incorrect
 
@@ -162,7 +166,7 @@ const h = (a) /* comment */ => a + a;
 
 :::
 
-Examples of **correct** code for this rule with the `"as-needed"` option:
+以下是使用 `"as-needed"` 选项时符合此规则的代码示例：
 
 :::correct
 
@@ -188,7 +192,7 @@ const h = (a /* comment */) => a + a;
 
 ### requireForBlockBody
 
-Examples of **incorrect** code for the `{ "requireForBlockBody": true }` option:
+以下是使用 `{ "requireForBlockBody": true }` 选项时违反此规则的代码示例：
 
 :::incorrect
 
@@ -207,7 +211,7 @@ a.then(foo => {});
 
 :::
 
-Examples of **correct** code for the `{ "requireForBlockBody": true }` option:
+以下是使用 `{ "requireForBlockBody": true }` 选项时符合此规则的代码示例：
 
 :::correct
 
