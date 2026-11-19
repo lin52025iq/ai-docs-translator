@@ -5,7 +5,7 @@ rule_type: problem
 
 
 
-The `new Promise` constructor accepts an *executor* function as an argument, which has `resolve` and `reject` parameters that can be used to control the state of the created Promise. For example:
+`new Promise` 构造函数接受一个 *执行器* 函数作为参数，该函数有 `resolve` 和 `reject` 参数，可用于控制所创建 Promise 的状态。例如：
 
 ```js
 const result = new Promise(function executor(resolve, reject) {
@@ -19,16 +19,18 @@ const result = new Promise(function executor(resolve, reject) {
 });
 ```
 
-The executor function can also be an `async function`. However, this is usually a mistake, for a few reasons:
+执行器函数也可以是 `async function`。但这通常是个错误，原因有以下几点：
 
-* If an async executor function throws an error, the error will be lost and won't cause the newly-constructed `Promise` to reject. This could make it difficult to debug and handle some errors.
-* If a Promise executor function is using `await`, this is usually a sign that it is not actually necessary to use the `new Promise` constructor, or the scope of the `new Promise` constructor can be reduced.
+* 如果异步执行器函数抛出错误，该错误会丢失，也不会导致新构造的 `Promise` 被拒绝。这可能会让某些错误难以调试和处理。
+* 如果 Promise 执行器函数使用了 `await`，这通常表明实际上并不需要使用 `new Promise` 构造函数，或者可以缩小 `new Promise` 构造函数的作用范围。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to disallow async Promise executor functions.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在禁止使用异步 Promise 执行器函数。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -52,7 +54,7 @@ const result = new Promise(async (resolve, reject) => {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -74,10 +76,14 @@ const result = Promise.resolve(foo);
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-If your codebase doesn't support `async function` syntax, there's no need to enable this rule.
+<a id="when-not-to-use-it"></a>
+
+## 何时不应使用
+
+如果你的代码库不支持 `async function` 语法，就无需启用此规则。
