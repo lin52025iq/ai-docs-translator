@@ -8,7 +8,7 @@ further_reading:
 ---
 
 
-The `new Promise` constructor accepts a single argument, called an *executor*.
+`new Promise` 构造函数接受一个参数，称为 *executor*（执行器）。
 
 ```js
 const myPromise = new Promise(function executor(resolve, reject) {
@@ -22,17 +22,19 @@ const myPromise = new Promise(function executor(resolve, reject) {
 });
 ```
 
-The executor function usually initiates some asynchronous operation. Once it is finished, the executor should call `resolve` with the result, or `reject` if an error occurred.
+执行器函数通常会启动某种异步操作。操作完成后，执行器应使用结果调用 `resolve`；如果发生错误，则调用 `reject`。
 
-The return value of the executor is ignored. Returning a value from an executor function is a possible error because the returned value cannot be used and it doesn't affect the promise in any way.
+执行器的返回值会被忽略。从执行器函数返回值可能是个错误，因为返回值无法使用，也不会以任何方式影响 Promise。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows returning values from Promise executor functions.
+## 规则详细信息
 
-Only `return` without a value is allowed, as it's a control flow statement.
+此规则禁止从 Promise 执行器函数返回值。
 
-Examples of **incorrect** code for this rule:
+只允许不带值的 `return`，因为它是控制流语句。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -69,7 +71,7 @@ new Promise(r => r(1));
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -109,15 +111,17 @@ Promise.resolve(1);
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule takes one option, an object, with the following properties:
+## 选项
 
-* `allowVoid`: If set to `true` (`false` by default), this rule will allow returning void values.
+此规则接受一个对象作为选项，其中包含以下属性：
+
+* `allowVoid`：如果设置为 `true`（默认为 `false`），此规则将允许返回 void 值。
 
 ### allowVoid
 
-Examples of **correct** code for this rule with the `{ "allowVoid": true }` option:
+启用 `{ "allowVoid": true }` 选项时，此规则的**正确**代码示例：
 
 ::: correct
 
