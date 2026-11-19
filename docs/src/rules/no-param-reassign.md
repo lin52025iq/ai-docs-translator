@@ -6,15 +6,16 @@ further_reading:
 ---
 
 
-Assignment to variables declared as function parameters can be misleading and lead to confusing behavior, as modifying function parameters will also mutate the `arguments` object when not in `strict` mode (see [When Not To Use It](#when-not-to-use-it) below). Often, assignment to function parameters is unintended and indicative of a mistake or programmer error.
+对声明为函数参数的变量赋值可能会产生误导，并导致令人困惑的行为，因为在非 `strict` 模式下，修改函数参数也会改变 `arguments` 对象（参见下文[何时不应使用](#when-not-to-use-it)）。通常，对函数参数赋值并非本意，往往表明存在错误或程序员失误。
 
-This rule can be also configured to fail when function parameters are modified. Side effects on parameters can cause counter-intuitive execution flow and make errors difficult to track down.
+此规则也可以配置为在函数参数被修改时报告问题。修改参数带来的副作用可能导致反直觉的执行流程，并使错误难以追查。
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule aims to prevent unintended behavior caused by modification or reassignment of function parameters.
+此规则旨在防止因修改或重新赋值函数参数而导致的意外行为。
 
-Examples of **incorrect** code for this rule:
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -40,7 +41,7 @@ const foo3 = function(bar) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -54,13 +55,14 @@ const foo = function(bar) {
 
 :::
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule takes one option, an object, with a boolean property `"props"`, and  arrays `"ignorePropertyModificationsFor"` and `"ignorePropertyModificationsForRegex"`. `"props"` is `false` by default. If `"props"` is set to `true`, this rule warns against the modification of parameter properties unless they're included in `"ignorePropertyModificationsFor"` or `"ignorePropertyModificationsForRegex"`, which is an empty array by default.
+此规则接受一个对象选项，其中包含一个布尔属性 `"props"`，以及数组 `"ignorePropertyModificationsFor"` 和 `"ignorePropertyModificationsForRegex"`。`"props"` 默认为 `false`。如果将 `"props"` 设为 `true`，则此规则会针对参数属性的修改发出警告，除非这些参数包含在 `"ignorePropertyModificationsFor"` 或 `"ignorePropertyModificationsForRegex"` 中；这两个选项默认均为空数组。
 
 ### props
 
-Examples of **correct** code for the default `{ "props": false }` option:
+默认选项 `{ "props": false }` 的正确代码示例：
 
 ::: correct
 
@@ -90,7 +92,7 @@ const foo4 = function(bar) {
 
 :::
 
-Examples of **incorrect** code for the `{ "props": true }` option:
+`{ "props": true }` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -120,7 +122,7 @@ const foo4 = function(bar) {
 
 :::
 
-Examples of **correct** code for the `{ "props": true }` option with `"ignorePropertyModificationsFor"` set:
+设置 `"ignorePropertyModificationsFor"` 后，`{ "props": true }` 选项的正确代码示例：
 
 ::: correct
 
@@ -150,7 +152,7 @@ const foo4 = function(bar) {
 
 :::
 
-Examples of **correct** code for the `{ "props": true }` option with `"ignorePropertyModificationsForRegex"` set:
+设置 `"ignorePropertyModificationsForRegex"` 后，`{ "props": true }` 选项的正确代码示例：
 
 ::: correct
 
@@ -180,8 +182,9 @@ const foo4 = function(barBaz) {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 何时不应使用
 
-If you want to allow assignment to function parameters, then you can safely disable this rule.
+如果你希望允许对函数参数赋值，可以放心地禁用此规则。
 
-`strict` mode code doesn't sync indices of the arguments object with each parameter binding. Therefore, this rule is not necessary to protect against arguments object mutation in ESM modules or other `strict` mode functions.
+`strict` 模式代码不会将 arguments 对象的索引与各个参数绑定同步。因此，在 ESM 模块或其他 `strict` 模式函数中，此规则并非防止 arguments 对象被修改所必需。
