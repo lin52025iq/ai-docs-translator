@@ -3,7 +3,7 @@ title: newline-after-var
 rule_type: layout
 ---
 
-As of today there is no consistency in separating variable declarations from the rest of the code. Some developers leave an empty line between var statements and the rest of the code like:
+目前，变量声明与其余代码之间的分隔方式并不统一。一些开发者会在 var 语句与其余代码之间留一个空行，例如：
 
 ```js
 var foo;
@@ -11,32 +11,38 @@ var foo;
 // do something with foo
 ```
 
-Whereas others don't leave any empty newlines at all.
+而另一些开发者则完全不留空行。
 
 ```js
 var foo;
 // do something with foo
 ```
 
-The problem is when these developers work together in a project. This rule enforces a coding style where empty newlines are allowed or disallowed after `var`, `let`, or `const` statements. It helps the code to look consistent across the entire project.
+问题在于，这些开发者可能会在同一个项目中协作。本规则规定 `var`、`let` 或 `const` 语句后是否允许留空行，帮助整个项目的代码风格保持一致。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces a coding style where empty lines are required or disallowed after `var`, `let`, or `const` statements to achieve a consistent coding style across the project.
+## 规则详情
 
-## Options
+本规则规定 `var`、`let` 或 `const` 语句后是否必须留空行，以确保整个项目的代码风格保持一致。
 
-This rule has a string option:
+<a id="options"></a>
 
-* `"always"` (default) requires an empty line after `var`, `let`, or `const`
+## 选项
 
-  Comments on a line directly after var statements are treated like additional var statements.
+本规则接受一个字符串选项：
 
-* `"never"` disallows empty lines after `var`, `let`, or `const`
+* `"always"`（默认值）要求在 `var`、`let` 或 `const` 语句后留一个空行
 
-### always
+  紧跟在 var 语句后面一行的注释会被视为额外的 var 语句。
 
-Examples of **incorrect** code for this rule with the default `"always"` option:
+* `"never"` 禁止在 `var`、`let` 或 `const` 语句后留空行
+
+<a id="always"></a>
+
+### 始终
+
+以下代码在默认的 `"always"` 选项下会被本规则判定为**不正确**：
 
 ::: incorrect
 
@@ -63,7 +69,7 @@ console.log(greet, name);
 
 :::
 
-Examples of **correct** code for this rule with the default `"always"` option:
+以下代码在默认的 `"always"` 选项下会被本规则判定为**正确**：
 
 ::: correct
 
@@ -94,9 +100,11 @@ console.log(greet, name);
 
 :::
 
-### never
+<a id="never"></a>
 
-Examples of **incorrect** code for this rule with the `"never"` option:
+### 从不
+
+以下代码在 `"never"` 选项下会被本规则判定为**不正确**：
 
 ::: incorrect
 
@@ -127,7 +135,7 @@ console.log(greet, name);
 
 :::
 
-Examples of **correct** code for this rule with the `"never"` option:
+以下代码在 `"never"` 选项下会被本规则判定为**正确**：
 
 ::: correct
 
