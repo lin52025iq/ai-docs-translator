@@ -4,30 +4,34 @@ rule_type: suggestion
 ---
 
 
-In a project, certain names may be disallowed from being used as exported names for various reasons.
+在项目中，出于各种原因，某些名称可能不允许用作导出名称。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows specified names from being used as exported names.
+## 规则详情
 
-## Options
+此规则禁止将指定名称用作导出名称。
 
-By default, this rule doesn't disallow any names. Only the names you specify in the configuration will be disallowed.
+<a id="options"></a>
 
-This rule has an object option:
+## 选项
 
-* `"restrictedNamedExports"` is an array of strings, where each string is a name to be restricted.
-* `"restrictedNamedExportsPattern"` is a string representing a regular expression pattern. Named exports matching this pattern will be restricted. This option does not apply to `default` named exports.
-* `"restrictDefaultExports"` is an object option with boolean properties to restrict certain default export declarations. The option works only if the `restrictedNamedExports` option does not contain the `"default"` value. The following properties are allowed:
-    * `direct`: restricts `export default` declarations.
-    * `named`: restricts `export { foo as default };` declarations.
-    * `defaultFrom`: restricts `export { default } from 'foo';` declarations.
-    * `namedFrom`: restricts `export { foo as default } from 'foo';` declarations.
-    * `namespaceFrom`: restricts `export * as default from 'foo';` declarations.
+默认情况下，此规则不会禁止任何名称。只有配置中指定的名称才会被禁止。
+
+此规则有一个对象选项：
+
+* `"restrictedNamedExports"` 是一个字符串数组，其中每个字符串都是要限制的名称。
+* `"restrictedNamedExportsPattern"` 是一个表示正则表达式模式的字符串。匹配此模式的命名导出将受到限制。此选项不适用于 `default` 命名导出。
+* `"restrictDefaultExports"` 是一个对象选项，包含用于限制某些默认导出声明的布尔属性。仅当 `restrictedNamedExports` 选项不包含 `"default"` 值时，此选项才有效。允许使用以下属性：
+    * `direct`：限制 `export default` 声明。
+    * `named`：限制 `export { foo as default };` 声明。
+    * `defaultFrom`：限制 `export { default } from 'foo';` 声明。
+    * `namedFrom`：限制 `export { foo as default } from 'foo';` 声明。
+    * `namespaceFrom`：限制 `export * as default from 'foo';` 声明。
 
 ### restrictedNamedExports
 
-Examples of **incorrect** code for the `"restrictedNamedExports"` option:
+`"restrictedNamedExports"` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -59,7 +63,7 @@ export { "👍" } from "some_module";
 
 :::
 
-Examples of **correct** code for the `"restrictedNamedExports"` option:
+`"restrictedNamedExports"` 选项的正确代码示例：
 
 ::: correct
 
@@ -91,11 +95,13 @@ export { "👍" as thumbsUp } from "some_module";
 
 :::
 
-#### Default exports
+<a id="default-exports"></a>
 
-By design, the `"restrictedNamedExports"` option doesn't disallow `export default` declarations. If you configure `"default"` as a restricted name, that restriction will apply only to named export declarations.
+#### 默认导出
 
-Examples of additional **incorrect** code for the `"restrictedNamedExports": ["default"]` option:
+按照设计，`"restrictedNamedExports"` 选项不会禁止 `export default` 声明。如果将 `"default"` 配置为受限名称，则此限制仅适用于命名导出声明。
+
+`"restrictedNamedExports": ["default"]` 选项的其他错误代码示例：
 
 ::: incorrect
 
@@ -119,7 +125,7 @@ export { default } from "some_module";
 
 :::
 
-Examples of additional **correct** code for the `"restrictedNamedExports": ["default"]` option:
+`"restrictedNamedExports": ["default"]` 选项的其他正确代码示例：
 
 ::: correct
 
@@ -133,7 +139,7 @@ export default function foo() {}
 
 ### restrictedNamedExportsPattern
 
-Example of **incorrect** code for the `"restrictedNamedExportsPattern"` option:
+`"restrictedNamedExportsPattern"` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -147,7 +153,7 @@ export const foobar = 1;
 
 :::
 
-Example of **correct** code for the `"restrictedNamedExportsPattern"` option:
+`"restrictedNamedExportsPattern"` 选项的正确代码示例：
 
 ::: correct
 
@@ -161,15 +167,15 @@ export const abc = 1;
 
 :::
 
-Note that this option does not apply to `export default` or any `default` named exports. If you want to also restrict `default` exports, use the `restrictDefaultExports` option.
+请注意，此选项不适用于 `export default` 或任何 `default` 命名导出。如果还想限制 `default` 导出，请使用 `restrictDefaultExports` 选项。
 
 ### restrictDefaultExports
 
-This option allows you to restrict certain `default` declarations. The option works only if the `restrictedNamedExports` option does not contain the `"default"` value. This option accepts the following properties:
+此选项允许限制某些 `default` 声明。仅当 `restrictedNamedExports` 选项不包含 `"default"` 值时，此选项才有效。此选项接受以下属性：
 
 #### direct
 
-Examples of **incorrect** code for the `"restrictDefaultExports": { "direct": true }` option:
+`"restrictDefaultExports": { "direct": true }` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -203,7 +209,7 @@ export default function foo() {}
 
 #### named
 
-Examples of **incorrect** code for the `"restrictDefaultExports": { "named": true }` option:
+`"restrictDefaultExports": { "named": true }` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -219,7 +225,7 @@ export { foo as default };
 
 #### defaultFrom
 
-Examples of **incorrect** code for the `"restrictDefaultExports": { "defaultFrom": true }` option:
+`"restrictDefaultExports": { "defaultFrom": true }` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -243,7 +249,7 @@ export { default as default } from 'foo';
 
 #### namedFrom
 
-Examples of **incorrect** code for the `"restrictDefaultExports": { "namedFrom": true }` option:
+`"restrictDefaultExports": { "namedFrom": true }` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -257,7 +263,7 @@ export { foo as default } from 'foo';
 
 #### namespaceFrom
 
-Examples of **incorrect** code for the `"restrictDefaultExports": { "namespaceFrom": true }` option:
+`"restrictDefaultExports": { "namespaceFrom": true }` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -269,9 +275,11 @@ export * as default from 'foo';
 
 :::
 
-## Known Limitations
+<a id="known-limitations"></a>
 
-This rule doesn't inspect the content of source modules in re-export declarations. In particular, if you are re-exporting everything from another module's export, that export may include a restricted name. This rule cannot detect such cases.
+## 已知限制
+
+此规则不会检查重新导出声明中源模块的内容。尤其是，如果你重新导出另一个模块导出的所有内容，其中可能包含受限名称。此规则无法检测这类情况。
 
 ```js
 
