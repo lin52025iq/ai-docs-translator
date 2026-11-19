@@ -9,23 +9,24 @@ related_rules:
 
 
 
-JavaScript environments contain a number of built-in global variables, such as `window` in browsers and `process` in Node.js. In almost all cases, you don't want to assign a value to these global variables as doing so could result in losing access to important functionality. For example, you probably don't want to do this in browser code:
+JavaScript 环境包含许多内置全局变量，例如浏览器中的 `window` 和 Node.js 中的 `process`。几乎在所有情况下，你都不应该给这些全局变量赋值，因为这样可能会导致无法再访问重要功能。例如，你可能不希望在浏览器代码中这样做：
 
 ```js
 window = {};
 ```
 
-While examples such as `window` are obvious, there are often hundreds of built-in global objects provided by JavaScript environments. It can be hard to know if you're assigning to a global variable or not.
+像 `window` 这样的示例显而易见，但 JavaScript 环境通常提供数百个内置全局对象。你可能很难判断自己赋值的是否为全局变量。
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule disallows modifications to read-only global variables.
+此规则禁止修改只读全局变量。
 
-ESLint has the capability to configure global variables as read-only.
+ESLint 可以将全局变量配置为只读。
 
-See also: [Specify Globals](../use/configure/language-options#specify-globals)
+另请参阅：[指定全局变量](../use/configure/language-options#specify-globals)
 
-Examples of **incorrect** code for this rule:
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -49,7 +50,7 @@ window = {}
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -74,9 +75,10 @@ onload = function() {}
 
 :::
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule accepts an `exceptions` option, which can be used to specify a list of builtins for which reassignments will be allowed:
+此规则接受一个 `exceptions` 选项，可用于指定允许重新赋值的内置对象列表：
 
 ```json
 {
@@ -86,6 +88,7 @@ This rule accepts an `exceptions` option, which can be used to specify a list of
 }
 ```
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 何时不应使用
 
-If you are trying to override one of the native objects.
+如果你想要覆盖某个原生对象，则不应使用此规则。
