@@ -8,7 +8,7 @@ further_reading:
 
 
 
-The `bind()` method is used to create functions with specific `this` values and, optionally, binds arguments to specific values. When used to specify the value of `this`, it's important that the function actually uses `this` in its function body. For example:
+`bind()` 方法用于创建具有特定 `this` 值的函数，也可以选择将参数绑定到特定值。使用它来指定 `this` 的值时，函数体中必须确实使用 `this`。例如：
 
 ```js
 const boundGetName = (function getName() {
@@ -18,9 +18,9 @@ const boundGetName = (function getName() {
 console.log(boundGetName());      // "ESLint"
 ```
 
-This code is an example of a good use of `bind()` for setting the value of `this`.
+这段代码展示了如何正确使用 `bind()` 来设置 `this` 的值。
 
-Sometimes during the course of code maintenance, the `this` value is removed from the function body. In that case, you can end up with a call to `bind()` that doesn't accomplish anything:
+有时在维护代码的过程中，函数体中的 `this` 值会被移除。这样就可能留下一个毫无作用的 `bind()` 调用：
 
 ```js
 // useless bind
@@ -31,15 +31,17 @@ const boundGetName = (function getName() {
 console.log(boundGetName());      // "ESLint"
 ```
 
-In this code, the reference to `this` has been removed but `bind()` is still used. In this case, the `bind()` is unnecessary overhead (and a performance hit) and can be safely removed.
+在这段代码中，对 `this` 的引用已被移除，但仍然使用了 `bind()`。此时，`bind()` 只会带来不必要的开销（并影响性能），可以安全地移除。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at avoiding the unnecessary use of `bind()` and as such will warn whenever an immediately-invoked function expression (IIFE) is using `bind()` and doesn't have an appropriate `this` value. This rule won't flag usage of `bind()` that includes function argument binding.
+## 规则详情
 
-**Note:** Arrow functions can never have their `this` value set using `bind()`. This rule flags all uses of `bind()` with arrow functions as a problem
+此规则旨在避免不必要地使用 `bind()`，因此，当立即调用函数表达式（IIFE）使用了 `bind()`，但没有适当的 `this` 值时，规则会发出警告。此规则不会标记用于绑定函数参数的 `bind()`。
 
-Examples of **incorrect** code for this rule:
+**注意：** 箭头函数的 `this` 值无法通过 `bind()` 设置。此规则会将箭头函数上的所有 `bind()` 用法都标记为问题。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -73,7 +75,7 @@ const b = function () {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -91,10 +93,14 @@ const y = function (a) {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-If you are not concerned about unnecessary calls to `bind()`, you can safely disable this rule.
+<a id="when-not-to-use-it"></a>
+
+## 何时不使用
+
+如果你不在意不必要的 `bind()` 调用，可以安全地禁用此规则。
