@@ -1,132 +1,148 @@
 ---
-title: Review Pull Requests
+title: 审查拉取请求
 eleventyNavigation:
     key: review pull requests
     parent: maintain eslint
-    title: Review Pull Requests
+    title: 审查拉取请求
     order: 3
 ---
 
-Pull requests are submitted frequently and represent our best opportunity to interact with the community. As such, it's important that pull requests are well-reviewed before being merged and that interactions on pull requests are positive.
+我们经常收到拉取请求，这是我们与社区互动的最佳机会。因此，在合并拉取请求之前，务必对其进行充分审查，并确保互动氛围积极友好。
 
-## Who Can Review Pull Requests?
+<a id="who-can-review-pull-requests"></a>
 
-Anyone, both team members and the public, may leave comments on pull requests.
+## 谁可以审查拉取请求？
 
-## Reviewing a Pull Request
+任何人，无论是团队成员还是公众，都可以对拉取请求发表评论。
 
-When a pull request is opened, the bot will check the following:
+<a id="reviewing-a-pull-request"></a>
 
-1. Has the submitter signed a CLA?
-1. Is the commit message summary in the correct format?
-1. Is the commit summary too long?
+## 审查拉取请求
 
-The bot will add a comment specifying the problems that it finds. You do not need to look at the pull request any further until those problems have been addressed (there's no need to comment on the pull request to ask the submitter to do what the bot asked - that's why we have the bot!).
+创建拉取请求后，机器人会检查以下事项：
 
-Once the bot checks have been satisfied, you check the following:
+1. 提交者是否已签署 CLA？
+1. 提交消息摘要的格式是否正确？
+1. 提交摘要是否过长？
 
-1. Double-check that the pull request title is correct based on the issue (or, if no issue is referenced, based on the stated problem).
-1. If the pull request makes a change to core, ensure that an issue exists and the pull request references the issue in the commit message.
-1. Does the code follow our conventions (including header comments, JSDoc comments, etc.)? If not, please leave that feedback and reference the [Code Conventions](../contribute/code-conventions) documentation.
-1. For code changes:
-    - Are there tests that verify the change? If not, please ask for them.
-    - Is documentation needed for the change? If yes, please ask the submitter to add the necessary documentation.
-1. Are there any automated testing errors? If yes, please ask the submitter to check on them.
-1. If you've reviewed the pull request and there are no outstanding issues, leave a comment "LGTM" to indicate your approval. If you would like someone else to verify the change, comment "LGTM but would like someone else to verify."
+机器人会发表评论，指出发现的问题。在这些问题得到解决之前，你无需继续查看拉取请求（也不必发表评论要求提交者按机器人提示处理——这正是我们使用机器人的原因！）。
 
-**Note:** If you are a team member and you've left a comment on the pull request, please follow up to verify that your comments have been addressed.
+机器人检查通过后，请检查以下事项：
 
-## Required Approvals for Pull Requests
+1. 根据关联的问题（如果没有关联问题，则根据所述问题），再次确认拉取请求标题是否正确。
+1. 如果拉取请求修改了核心代码，请确保存在相应的问题，并且拉取请求的提交消息中引用了该问题。
+1. 代码是否遵循我们的约定（包括文件头注释、JSDoc 注释等）？如果没有，请留下反馈，并参考[代码约定](../contribute/code-conventions)文档。
+1. 对于代码更改：
+    - 是否有测试来验证更改？如果没有，请提出要求。
+    - 是否需要为更改编写文档？如果需要，请要求提交者补充必要的文档。
+1. 是否存在自动化测试错误？如果有，请要求提交者检查并处理。
+1. 如果你已审查拉取请求，且没有尚未解决的问题，请发表评论“LGTM”表示批准。如果你希望其他人验证此更改，请评论“LGTM but would like someone else to verify.”。
 
-Any committer, reviewer, or TSC member may approve a pull request, but the approvals required for merging differ based on the type of pull request.
+**注意：**如果你是团队成员，并且已对拉取请求发表评论，请跟进确认你的意见已得到处理。
 
-One committer approval is required to merge a non-breaking change that is:
+<a id="required-approvals-for-pull-requests"></a>
 
-1. A documentation change
-1. A bug fix (for either rules or core)
-1. A dependency upgrade
-1. Related to the build
-1. A chore
+## 拉取请求所需的批准
 
-For a non-breaking feature, pull requests require approval from one reviewer or TSC member, plus one additional approval from any other team member.
+任何提交者、审阅者或 TSC 成员都可以批准拉取请求，但合并所需的批准数量因拉取请求的类型而异。
 
-For a breaking change, pull requests require an approval from two TSC members.
+合并以下非破坏性更改，需要一位提交者批准：
+
+1. 文档更改
+1. 错误修复（针对规则或核心代码）
+1. 依赖项升级
+1. 与构建相关的更改
+1. 杂务
+
+对于非破坏性功能，拉取请求需要一位审阅者或 TSC 成员的批准，此外还需要另一位团队成员批准。
+
+对于破坏性更改，拉取请求需要两位 TSC 成员批准。
 
 ::: important
-If you approve a pull request and don't merge it, please leave a comment explaining why you didn't merge it. You might say something like, "LGTM. Waiting three days before merging." or "LGTM. Requires TSC member approval before merging." or "LGTM. Would like another review before merging.".
+如果你批准了拉取请求但没有合并，请发表评论说明原因。你可以这样说：“LGTM。等待三天后再合并。”、“LGTM。合并前需要 TSC 成员批准。”或“LGTM。合并前希望再进行一次审查。”
 :::
 
-## Moving a Pull Request Through the Triage Board
+<a id="moving-a-pull-request-through-the-triage-board"></a>
 
-When a pull request is created, whether by a team member or an outside contributor, it is placed in the "Needs Triage" column of the Triage board automatically. The pull request should remain in that column until a team member begins reviewing it.
+## 在分诊看板上推进拉取请求
 
-If the pull request does not have a related issue, then it should be moved through the normal [triage process for issues](./manage-issues) to be marked as accepted. Once accepted, move the pull request to the "Implementing" column.
+创建拉取请求时，无论创建者是团队成员还是外部贡献者，它都会自动进入分诊看板的“待分诊”列。拉取请求应留在该列，直到团队成员开始审查。
 
-If the pull request does have a related issue, then:
+如果拉取请求没有关联问题，则应按照正常的[问题分诊流程](./manage-issues)将其标记为已接受。接受后，将拉取请求移至“正在实施”列。
 
-- If the issue is accepted, move the pull request to the "Implementing" column.
-- If the issue is not accepted, move the pull request to the "Evaluating" column until the issue is marked as accepted, at which point move the pull request to "Implementing".
+如果拉取请求有关联问题，则：
 
-Once the pull request has one approval, one of three things can happen:
+- 如果问题已被接受，将拉取请求移至“正在实施”列。
+- 如果问题尚未被接受，将拉取请求移至“评估中”列，直到问题被标记为已接受；之后再将拉取请求移至“正在实施”列。
 
-1. The pull request has the required approvals and the waiting period (see below) has passed so it can be merged.
-1. The pull request has the required approvals and the waiting period has not passed, so it should be moved to the "Merge Candidates" column.
-1. The pull request requires another approval before it can be merged, so it should be moved to the "Second Review Needed" column.
+拉取请求获得一项批准后，可能出现以下三种情况之一：
 
-When the pull request has a second approval, it should either be merged (if 100% ready) or moved to the "Merge Candidates" column if there are any outstanding concerns that should be reviewed before the next release.
+1. 拉取请求已获得所需的批准，且等待期（见下文）已过，可以合并。
+1. 拉取请求已获得所需的批准，但等待期尚未结束，因此应将其移至“待合并候选”列。
+1. 拉取请求在合并前还需要另一项批准，因此应将其移至“需要二次审查”列。
 
-## Who Can Merge a Pull Request
+拉取请求获得第二项批准后，如果已完全就绪，则应予以合并；如果仍有需要在下次发布前审查的问题，则应将其移至“待合并候选”列。
 
-TSC members, reviewers, committers, and website team members may merge pull requests, depending on the contents of the pull request, once it has received the required approvals.
+<a id="who-can-merge-a-pull-request"></a>
 
-Website Team Members may merge a pull request in the `eslint.org` repository if it is:
+## 谁可以合并拉取请求
 
-1. A documentation change
-1. A dependency upgrade
-1. A chore
+根据拉取请求的内容，在获得所需批准后，TSC 成员、审阅者、提交者和网站团队成员都可以合并拉取请求。
 
-## When to Merge a Pull Request
+如果拉取请求属于以下类型，网站团队成员可以合并 `eslint.org` 仓库中的拉取请求：
 
-We use the "Merge" button to merge requests into the repository. Before merging a pull request, verify that:
+1. 文档更改
+1. 依赖项升级
+1. 杂务
 
-1. All comments have been addressed.
-1. Any team members who made comments have verified that their concerns were addressed.
-1. All automated tests are passing (never merge a pull request with failing tests).
+<a id="when-to-merge-a-pull-request"></a>
 
-Be sure to say thank you to the submitter before merging, especially if they put a lot of work into the pull request.
+## 何时合并拉取请求
 
-Team members may merge a pull request immediately if it:
+我们使用“Merge”按钮将请求合并到仓库中。合并拉取请求之前，请确认：
 
-1. Makes a small documentation change.
-1. Is a chore.
-1. Fixes a block of other work on the repository (build-related, test-related, dependency-related, etc.).
-1. Is an important fix to get into a patch release.
+1. 所有评论都已处理。
+1. 留过评论的团队成员都已确认其关注的问题已得到解决。
+1. 所有自动化测试均已通过（切勿合并测试失败的拉取请求）。
 
-Otherwise, team members should observe a waiting period before merging a pull request:
+合并之前，务必向提交者表示感谢，尤其是在对方为拉取请求投入了大量精力的情况下。
 
-- Wait **2 days** if the pull request was opened Monday through Friday.
-- Wait **3 days** if the pull request was opened on Saturday or Sunday.
+如果符合以下情况，团队成员可以立即合并拉取请求：
 
-The waiting period ensures that other team members have a chance to review the pull request before it is merged.
+1. 只涉及小型文档更改。
+1. 属于杂务。
+1. 能解除仓库中其他工作的阻塞（例如与构建、测试、依赖项等相关的工作）。
+1. 是需要纳入补丁版本的重要修复。
 
-**Note:** You should not merge your pull request unless you receive the required approvals.
+否则，团队成员在合并拉取请求之前应等待一段时间：
 
-## When to Close a Pull Request
+- 如果拉取请求在周一至周五创建，等待 **2 天**。
+- 如果拉取请求在周六或周日创建，等待 **3 天**。
 
-There are several times when it's appropriate to close a pull request without merging:
+等待期可确保其他团队成员有机会在拉取请求合并前进行审查。
 
-1. The pull request addresses an issue that is already fixed.
-1. The pull request hasn't been updated in 17 days.
-1. The pull request submitter isn't willing to follow project guidelines.
+**注意：**除非获得所需的批准，否则不要合并自己的拉取请求。
 
-In any of these cases, please be sure to leave a comment stating why the pull request is being closed.
+<a id="when-to-close-a-pull-request"></a>
 
-### Example Closing Comments
+## 何时关闭拉取请求
 
-If a pull request hasn't been updated in 17 days:
+在以下几种情况下，适合关闭拉取请求而不予合并：
 
-> Closing because there hasn't been activity for 17 days. If you're still interested in submitting this code, please feel free to resubmit.
+1. 拉取请求所针对的问题已修复。
+1. 拉取请求已有 17 天未更新。
+1. 拉取请求提交者不愿遵循项目指南。
 
-If a pull request submitter isn't willing to follow project guidelines.
+在上述任何情况下，请务必发表评论，说明关闭拉取请求的原因。
 
-> Unfortunately, we can't accept pull requests that don't follow our guidelines. I'm going to close this pull request now, but if you'd like to resubmit following our guidelines, we'll be happy to review.
+<a id="example-closing-comments"></a>
+
+### 关闭评论示例
+
+如果拉取请求已有 17 天未更新：
+
+> 由于 17 天内没有任何活动，现关闭此请求。如果你仍有兴趣提交这段代码，欢迎重新提交。
+
+如果拉取请求提交者不愿遵循项目指南：
+
+> 很遗憾，我们无法接受不遵循项目指南的拉取请求。我现在将关闭此拉取请求；如果你愿意按照我们的指南重新提交，我们很乐意再次审查。
