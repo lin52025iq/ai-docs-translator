@@ -2,19 +2,23 @@
 title: template-curly-spacing
 rule_type: layout
 ---
-We can embed expressions in template strings with using a pair of `${` and `}`.
+我们可以使用一对 `${` 和 `}` 在模板字符串中嵌入表达式。
 
-This rule can force usage of spacing _within_ the curly brace pair according to style guides.
+此规则可以根据风格指南，强制要求在花括号内添加空格。
 
 ```js
 let hello = `hello, ${people.name}!`;
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to maintain consistency around the spacing inside of template literals.
+## 规则详情
 
-## Options
+此规则旨在确保模板字面量内部的空格用法保持一致。
+
+<a id="options"></a>
+
+## 选项
 
 ```json
 {
@@ -22,14 +26,14 @@ This rule aims to maintain consistency around the spacing inside of template lit
 }
 ```
 
-This rule has one option which has either `"never"` or `"always"` as value.
+此规则有一个选项，其值可以是 `"never"` 或 `"always"`。
 
-* `"never"` (by default) - Disallows spaces inside of the curly brace pair.
-* `"always"` - Requires one or more spaces inside of the curly brace pair.
+* `"never"`（默认值）- 禁止在花括号内添加空格。
+* `"always"` - 要求在花括号内添加一个或多个空格。
 
 ### never
 
-Examples of **incorrect** code for this rule with the default `"never"` option:
+以下是使用默认选项 `"never"` 时，此规则判定为**不正确**的代码示例：
 
 ::: incorrect
 
@@ -44,7 +48,7 @@ Examples of **incorrect** code for this rule with the default `"never"` option:
 
 :::
 
-Examples of **correct** code for this rule with the default `"never"` option:
+以下是使用默认选项 `"never"` 时，此规则判定为**正确**的代码示例：
 
 ::: correct
 
@@ -62,7 +66,7 @@ Examples of **correct** code for this rule with the default `"never"` option:
 
 ### always
 
-Examples of **incorrect** code for this rule with the `"always"` option:
+以下是使用选项 `"always"` 时，此规则判定为**不正确**的代码示例：
 
 ::: incorrect
 
@@ -77,7 +81,7 @@ Examples of **incorrect** code for this rule with the `"always"` option:
 
 :::
 
-Examples of **correct** code for this rule with the `"always"` option:
+以下是使用选项 `"always"` 时，此规则判定为**正确**的代码示例：
 
 ::: correct
 
@@ -93,6 +97,8 @@ Examples of **correct** code for this rule with the `"always"` option:
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you don't want to be notified about usage of spacing inside of template strings, then it's safe to disable this rule.
+## 何时不使用此规则
+
+如果你不希望收到关于模板字符串中空格用法的提示，可以放心禁用此规则。
