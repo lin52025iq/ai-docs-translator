@@ -6,15 +6,15 @@ related_rules:
 - no-extra-semi
 ---
 
-Disallows spaces before semicolons.
+禁止在分号前添加空格。
 
 ::: important
-This rule was removed in ESLint v1.0.0 and replaced by the [semi-spacing](semi-spacing) rule.
+此规则已在 ESLint v1.0.0 中移除，并由 [semi-spacing](semi-spacing) 规则取代。
 :::
 
-JavaScript allows for placing unnecessary spaces between an expression and the closing semicolon.
+JavaScript 允许在表达式和结束分号之间添加不必要的空格。
 
-Space issues can also cause code to look inconsistent and harder to read.
+空格问题也会让代码显得不一致，更难阅读。
 
 ```js
 var thing = function () {
@@ -22,11 +22,13 @@ var thing = function () {
 }  ;
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule prevents the use of spaces before a semicolon in expressions.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止在表达式的分号前使用空格。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -43,7 +45,7 @@ var foo = 1 + 2 ;
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
