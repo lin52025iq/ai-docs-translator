@@ -4,16 +4,18 @@ rule_type: problem
 ---
 
 
-Private class members that are declared and not used anywhere in the code are most likely an error due to incomplete refactoring. Such class members take up space in the code and can lead to confusion by readers.
+声明后却未在代码任何位置使用的私有类成员，很可能是重构未完成导致的错误。这类成员会占用代码空间，也可能让读者感到困惑。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule reports unused private class members.
+## 规则详情
 
-* A private field or method is considered to be unused if its value is never read.
-* A private accessor is considered to be unused if it is never accessed (read or write).
+此规则会报告未使用的私有类成员。
 
-Examples of **incorrect** code for this rule:
+* 如果私有字段或方法的值从未被读取，则视为未使用。
+* 如果私有访问器从未被访问（读取或写入），则视为未使用。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -50,7 +52,7 @@ class E {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -85,10 +87,14 @@ class C {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-If you don't want to be notified about unused private class members, you can safely turn this rule off.
+<a id="when-not-to-use-it"></a>
+
+## 何时不使用
+
+如果不希望收到有关未使用私有类成员的通知，可以放心地关闭此规则。
