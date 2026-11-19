@@ -7,7 +7,7 @@ rule_type: suggestion
 
 
 
-Escaping non-special characters in strings, template literals, and regular expressions doesn't have any effect, as demonstrated in the following example:
+对字符串、模板字面量和正则表达式中的非特殊字符进行转义不会产生任何效果，如下例所示：
 
 ```js
 let foo = "hol\a"; // > foo = "hola"
@@ -15,11 +15,13 @@ let bar = `${foo}\!`; // > bar = "hola!"
 let baz = /\:/ // same functionality with /:/
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule flags escapes that can be safely removed without changing behavior.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则会标记那些可以安全移除且不会改变行为的转义。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -41,7 +43,7 @@ Examples of **incorrect** code for this rule:
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct { "sourceType": "script" }
 
@@ -67,15 +69,17 @@ Examples of **correct** code for this rule:
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option:
+## 选项
 
-* `allowRegexCharacters` - An array of characters that should be allowed to have unnecessary escapes in regular expressions. This is useful for characters like `-` where escaping can prevent accidental character ranges. For example, in `/[0\-]/`, the escape is technically unnecessary but helps prevent the pattern from becoming a range if another character is added later (e.g., `/[0\-9]/` vs `/[0-9]/`).
+此规则有一个对象选项：
+
+* `allowRegexCharacters` - 一个字符数组，指定正则表达式中允许出现不必要转义的字符。此选项适用于 `-` 之类的字符，因为对它们进行转义可以避免意外形成字符范围。例如，在 `/[0\-]/` 中，转义在技术上并非必需，但如果之后添加另一个字符（例如 `/[0\-9]/` 与 `/[0-9]/`），它有助于避免模式变成字符范围。
 
 ### allowRegexCharacters
 
-Examples of **incorrect** code for the `{ "allowRegexCharacters": ["-"] }` option:
+对于 `{ "allowRegexCharacters": ["-"] }` 选项，以下是**错误**代码示例：
 
 ::: incorrect
 
@@ -89,7 +93,7 @@ Examples of **incorrect** code for the `{ "allowRegexCharacters": ["-"] }` optio
 
 :::
 
-Examples of **correct** code for the `{ "allowRegexCharacters": ["-"] }` option:
+对于 `{ "allowRegexCharacters": ["-"] }` 选项，以下是**正确**代码示例：
 
 ::: correct
 
@@ -103,6 +107,8 @@ Examples of **correct** code for the `{ "allowRegexCharacters": ["-"] }` option:
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you don't want to be notified about unnecessary escapes, you can safely disable this rule.
+## 何时不应使用此规则
+
+如果你不想收到有关不必要转义的提示，可以放心禁用此规则。
