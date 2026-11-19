@@ -5,7 +5,7 @@ rule_type: problem
 
 
 
-In JavaScript, prior to ES6, a function declaration is only allowed in the first level of a program or the body of another function, though parsers sometimes [erroneously accept them elsewhere](https://code.google.com/p/esprima/issues/detail?id=422). This only applies to function declarations; named or anonymous function expressions can occur anywhere an expression is permitted.
+在 JavaScript 中，ES6 之前，函数声明只能出现在程序的顶层或另一个函数体的顶层，不过解析器有时会[错误地接受它们出现在其他位置](https://code.google.com/p/esprima/issues/detail?id=422)。这仅适用于函数声明；命名或匿名函数表达式可以出现在任何允许表达式出现的位置。
 
 ```js
 // Good
@@ -30,7 +30,7 @@ function anotherThing() {
 }
 ```
 
-In ES6, [block-level functions](https://leanpub.com/understandinges6/read#leanpub-auto-block-level-functions) (functions declared inside a block) are limited to the scope of the block they are declared in and outside of the block scope they can't be accessed and called, but only when the code is in strict mode (code with `"use strict"` tag or ESM modules). In non-strict mode, they can be accessed and called outside of the block scope.
+在 ES6 中，[块级函数](https://leanpub.com/understandinges6/read#leanpub-auto-block-level-functions)（在代码块内声明的函数）的作用域仅限于其声明所在的代码块；只有在严格模式下（带有 `"use strict"` 标记的代码或 ESM 模块），才能在代码块作用域之外访问和调用它们。在非严格模式下，可以在代码块作用域之外访问和调用它们。
 
 ```js
 "use strict";
@@ -44,7 +44,7 @@ if (test) {
 doSomething(); // error
 ```
 
-A variable declaration is permitted anywhere a statement can go, even nested deeply inside other blocks. This is often undesirable due to variable hoisting, and moving declarations to the root of the program or function body can increase clarity. Note that [block bindings](https://leanpub.com/understandinges6/read#leanpub-auto-block-bindings) (`let`, `const`) are not hoisted and therefore they are not affected by this rule.
+变量声明可以出现在任何允许语句出现的位置，即使是在其他代码块深处嵌套的位置。由于变量提升，这通常并不可取；将声明移至程序或函数体的顶层可以提高代码清晰度。请注意，[块级绑定](https://leanpub.com/understandinges6/read#leanpub-auto-block-bindings)（`let`、`const`）不会被提升，因此不受此规则影响。
 
 ```js
 // Good
@@ -71,21 +71,25 @@ function doSomething() {
 }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule requires that function declarations and, optionally, variable declarations be in the root of a program, or in the root of the body of a function, or in the root of the body of a class static block.
+## 规则详情
 
-## Options
+此规则要求函数声明以及（可选的）变量声明必须位于程序的顶层、函数体的顶层，或类静态代码块的顶层。
 
-This rule has a string and an object option:
+<a id="options"></a>
 
-* `"functions"` (default) disallows `function` declarations in nested blocks
-* `"both"` disallows `function` and `var` declarations in nested blocks
-* `{ blockScopedFunctions: "allow" }` (default) this option allows `function` declarations in nested blocks when code is in strict mode (code with `"use strict"` tag or ESM modules) and `languageOptions.ecmaVersion` is set to `2015` or above. This option can be disabled by setting it to `"disallow"`.
+## 选项
+
+此规则接受一个字符串选项和一个对象选项：
+
+* `"functions"`（默认值）禁止在嵌套代码块中声明 `function`
+* `"both"` 禁止在嵌套代码块中声明 `function` 和 `var`
+* `{ blockScopedFunctions: "allow" }`（默认值）此选项允许在严格模式下（带有 `"use strict"` 标记的代码或 ESM 模块）于嵌套代码块中声明 `function`，且 `languageOptions.ecmaVersion` 必须设为 `2015` 或更高版本。将此选项设为 `"disallow"` 即可禁用该行为。
 
 ### functions
 
-Examples of **incorrect** code for this rule with the default `"functions"` option:
+使用默认选项 `"functions"` 时，以下代码示例违反此规则：
 
 ::: incorrect { "sourceType": "script" }
 
@@ -109,7 +113,7 @@ if (foo) function f(){}
 
 :::
 
-Examples of **correct** code for this rule with the default `"functions"` option:
+使用默认选项 `"functions"` 时，以下代码示例符合此规则：
 
 ::: correct { "sourceType": "script" }
 
@@ -152,7 +156,7 @@ if (foo) var a;
 
 ### both
 
-Examples of **incorrect** code for this rule with the `"both"` option:
+使用选项 `"both"` 时，以下代码示例违反此规则：
 
 ::: incorrect { "sourceType": "script" }
 
@@ -184,7 +188,7 @@ class C {
 
 :::
 
-Examples of **correct** code for this rule with the `"both"` option:
+使用选项 `"both"` 时，以下代码示例符合此规则：
 
 ::: correct { "sourceType": "script" }
 
@@ -212,7 +216,7 @@ class C {
 
 ### blockScopedFunctions
 
-Example of **incorrect** code for this rule with `{ blockScopedFunctions: "disallow" }` option with `ecmaVersion: 2015`:
+当 `ecmaVersion: 2015` 且使用 `{ blockScopedFunctions: "disallow" }` 选项时，以下代码示例违反此规则：
 
 ::: incorrect { "sourceType": "script", "ecmaVersion": 2015 }
 
@@ -244,7 +248,7 @@ function foo() {
 
 :::
 
-Example of **correct** code for this rule with `{ blockScopedFunctions: "disallow" }` option with `ecmaVersion: 2015`:
+当 `ecmaVersion: 2015` 且使用 `{ blockScopedFunctions: "disallow" }` 选项时，以下代码示例符合此规则：
 
 ::: correct { "sourceType": "script", "ecmaVersion": 2015 }
 
@@ -260,7 +264,7 @@ function doSomething() {
 
 :::
 
-Example of **correct** code for this rule with `{ blockScopedFunctions: "allow" }` option with `ecmaVersion: 2015`:
+当 `ecmaVersion: 2015` 且使用 `{ blockScopedFunctions: "allow" }` 选项时，以下代码示例符合此规则：
 
 ::: correct { "sourceType": "script", "ecmaVersion": 2015 }
 
@@ -292,7 +296,7 @@ function foo() {
 
 :::
 
-`ESM modules` and both `class` declarations and expressions are always in strict mode.
+`ESM modules` 以及 `class` 声明和表达式始终处于严格模式。
 
 ::: correct
 
@@ -328,10 +332,12 @@ const C = class {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-By default, this rule disallows inner function declarations only in contexts where their behavior is unspecified and thus inconsistent (pre-ES6 environments) or legacy semantics apply (non-strict mode code). If your code targets pre-ES6 environments or is not in strict mode, you should enable this rule to prevent unexpected behavior.
+## 何时不应使用此规则
 
-In ES6+ environments, in strict mode code, the behavior of inner function declarations is well-defined and consistent - they are always block-scoped. If your code targets only ES6+ environments and is in strict mode (ES modules, or code with `"use strict"` directives) then there is no need to enable this rule unless you want to disallow inner functions as a stylistic choice, in which case you should enable this rule with the option `blockScopedFunctions: "disallow"`.
+默认情况下，此规则仅在函数声明行为未明确定义、因而可能不一致的环境（ES6 之前的环境），或适用旧版语义的环境（非严格模式代码）中禁止内部函数声明。如果代码面向 ES6 之前的环境，或未处于严格模式，应启用此规则以避免意外行为。
 
-Disable checking variable declarations when using [block-scoped-var](block-scoped-var) or if declaring variables in nested blocks is acceptable despite hoisting.
+在 ES6+ 环境的严格模式代码中，内部函数声明的行为定义明确且一致——它们始终具有块级作用域。如果代码仅面向 ES6+ 环境且处于严格模式（ES 模块，或带有 `"use strict"` 指令的代码），则无需启用此规则；除非你出于风格考虑想禁止内部函数，此时应将此规则的选项设为 `blockScopedFunctions: "disallow"`。
+
+使用 [block-scoped-var](block-scoped-var) 时，或者即使存在变量提升，在嵌套代码块中声明变量也可以接受时，请禁用对变量声明的检查。
