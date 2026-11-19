@@ -2,15 +2,15 @@
 title: newline-per-chained-call
 rule_type: layout
 ---
-Chained method calls on a single line without line breaks are harder to read, so some developers place a newline character after each method call in the chain to make it more readable and easy to maintain.
+单行中连续调用方法且不换行会降低可读性，因此有些开发者会在链中的每次方法调用后换行，使代码更易读、更易维护。
 
-Let's look at the following perfectly valid (but single line) code.
+来看下面这段完全有效（但写在单行中）的代码。
 
 ```js
 d3.select("body").selectAll("p").data([4, 8, 15, 16, 23, 42 ]).enter().append("p").text(function(d) { return "I'm number " + d + "!"; });
 ```
 
-However, with appropriate new lines, it becomes easy to read and understand. Look at the same code written below with line breaks after each call.
+不过，适当地换行后，代码会更易阅读和理解。看看下面这段在每次调用后换行的相同代码。
 
 ```js
 d3
@@ -31,16 +31,16 @@ d3
     });
 ```
 
-Another argument in favor of this style is that it improves the clarity of diffs when something in the method chain is changed:
+这种风格还有一个优点：当方法链中的内容发生变化时，它能让差异更加清晰：
 
-Less clear:
+不够清晰：
 
 ```diff
 -d3.select("body").selectAll("p").style("color", "white");
 +d3.select("body").selectAll("p").style("color", "blue");
 ```
 
-More clear:
+更加清晰：
 
 ```diff
 d3
@@ -50,19 +50,23 @@ d3
 +    .style("color", "blue");
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule requires a newline after each call in a method chain or deep member access. Computed property accesses such as `instance[something]` are excluded.
+## 规则详情
 
-## Options
+此规则要求在方法链中的每次调用或深层成员访问后换行。计算属性访问（例如 `instance[something]`）除外。
 
-This rule has an object option:
+<a id="options"></a>
 
-* `"ignoreChainWithDepth"` (default: `2`) allows chains up to a specified depth.
+## 选项
+
+此规则有一个对象选项：
+
+* `"ignoreChainWithDepth"`（默认值：`2`）允许指定深度以内的链式调用。
 
 ### ignoreChainWithDepth
 
-Examples of **incorrect** code for this rule with the default `{ "ignoreChainWithDepth": 2 }` option:
+以下是使用默认选项 `{ "ignoreChainWithDepth": 2 }` 时违反此规则的代码示例：
 
 ::: incorrect
 
@@ -85,7 +89,7 @@ obj.method().method2().method3();
 
 :::
 
-Examples of **correct** code for this rule with the default `{ "ignoreChainWithDepth": 2 }` option:
+以下是使用默认选项 `{ "ignoreChainWithDepth": 2 }` 时符合此规则的代码示例：
 
 ::: correct
 
@@ -123,6 +127,8 @@ obj
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you have conflicting rules or when you are fine with chained calls on one line, you can safely turn this rule off.
+## 何时不应使用
+
+如果你有相互冲突的规则，或者不介意在单行中进行链式调用，可以放心关闭此规则。
