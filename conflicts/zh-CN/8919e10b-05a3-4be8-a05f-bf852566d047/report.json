@@ -1,0 +1,50 @@
+{
+    "schemaVersion": 1,
+    "status": "conflict",
+    "origin": "local_validation",
+    "projectId": "eslint-docs",
+    "locale": "zh-CN",
+    "sourcePath": "docs/src/rules/no-template-curly-in-string.md",
+    "createdAt": "2026-11-19T11:28:07.978Z",
+    "reason": "文件校验未通过",
+    "artifacts": {
+        "before": "before/docs/src/rules/no-template-curly-in-string.md",
+        "after": "after/docs/src/rules/no-template-curly-in-string.md",
+        "previous": "previous/docs/src/rules/no-template-curly-in-string.md"
+    },
+    "translationModel": "gpt-6-luna",
+    "translationResponseId": "resp_0ec7a7d44168e499016afedd39185c87d2b5c6ebbba5199707",
+    "contextHash": "64ced0491d8917d86d3057d903a53f0f98ed63c72e258488e934ac7f76453200",
+    "diagnostics": [
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode",
+                "path": "docs/src/rules/no-template-curly-in-string.md"
+            },
+            {
+                "message": "inlineCode 缺少：[\"\\\"${variable}\\\"\",\"\\\"${variable}\\\"\",\"${variable}\"]。多出：[\") 之间写入 \",\"这样的表达式。想使用模板字面量时，很容易误用引号，例如写成\",\"，结果得到的只是字面值 \"]",
+                "path": "docs/src/rules/no-template-curly-in-string.md"
+            }
+        ],
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode",
+                "path": "docs/src/rules/no-template-curly-in-string.md"
+            },
+            {
+                "message": "inlineCode 缺少：[\"\\\"${variable}\\\"\",\"\\\"${variable}\\\"\",\"${variable}\"]。多出：[\"\\\\`` 之间写入 \",\"这样的表达式。想使用模板字面量时，很容易误用引号，例如写成\",\"，结果得到的只是字面值 \"]",
+                "path": "docs/src/rules/no-template-curly-in-string.md"
+            }
+        ],
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode",
+                "path": "docs/src/rules/no-template-curly-in-string.md"
+            },
+            {
+                "message": "inlineCode 缺少：[\"\\\"${variable}\\\"\",\"\\\"${variable}\\\"\",\"${variable}\"]。多出：[\"\\\\``）之间写入 \",\"这样的表达式。想使用模板字面量时，很容易误用引号，例如写成\",\"，结果得到的只是字面值 \"]",
+                "path": "docs/src/rules/no-template-curly-in-string.md"
+            }
+        ]
+    ]
+}
