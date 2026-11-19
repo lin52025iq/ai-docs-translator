@@ -1,49 +1,65 @@
 ---
-title: Extend ESLint
+title: 扩展 ESLint
 eleventyNavigation:
     key: extend eslint
-    title: Extend ESLint
+    title: 扩展 ESLint
     order: 2
 ---
 
-This guide is intended for those who wish to extend the functionality of ESLint.
+本指南面向希望扩展 ESLint 功能的读者。
 
-In order to extend ESLint, it's recommended that:
+要扩展 ESLint，建议你：
 
-- You know JavaScript, since ESLint is written in JavaScript.
-- You have some familiarity with Node.js, since ESLint runs on it.
-- You're comfortable with command-line programs.
+- 了解 JavaScript，因为 ESLint 是用 JavaScript 编写的。
+- 熟悉一些 Node.js，因为 ESLint 运行于 Node.js 之上。
+- 能够熟练使用命令行程序。
 
-If that sounds like you, then continue reading to get started.
+如果你符合这些条件，请继续阅读，开始了解如何扩展 ESLint。
 
-## [Ways to Extend ESLint](ways-to-extend)
+<a id="ways-to-extend-eslint"></a>
 
-This page summarizes the various ways that you can extend ESLint and how these extensions all fit together.
+## [扩展 ESLint 的方式](ways-to-extend)
 
-## [Create Plugins](plugins)
+本页概述了扩展 ESLint 的各种方式，以及这些扩展如何相互配合。
 
-You've developed custom rules for ESLint and you want to share them with the community. You can publish an ESLint plugin on npm.
+<a id="create-plugins"></a>
 
-## [Custom Rule Tutorial](custom-rule-tutorial)
+## [创建插件](plugins)
 
-A tutorial that walks you through creating a custom rule for ESLint.
+你已经为 ESLint 开发了自定义规则，并希望与社区分享。你可以在 npm 上发布 ESLint 插件。
 
-## [Custom Rules](custom-rules)
+<a id="custom-rule-tutorial"></a>
 
-This section explains how to create custom rules to use with ESLint.
+## [自定义规则教程](custom-rule-tutorial)
 
-## [Custom Formatters](custom-formatters)
+本教程将带你逐步创建 ESLint 自定义规则。
 
-This section explains how you can create a custom formatter to control what ESLint outputs.
+<a id="custom-rules"></a>
 
-## [Custom Parsers](custom-parsers)
+## [自定义规则](custom-rules)
 
-If you don't want to use the default parser of ESLint, this section explains how to create custom parsers.
+本节介绍如何创建可与 ESLint 配合使用的自定义规则。
 
-## [Custom Processors](custom-processors)
+<a id="custom-formatters"></a>
 
-This section explains how you can use a custom processor to have ESLint process files other than JavaScript.
+## [自定义格式化器](custom-formatters)
 
-## [Share Configurations](shareable-configs)
+本节介绍如何创建自定义格式化器，以控制 ESLint 的输出内容。
 
-This section explains how you can bundle and share ESLint configuration in a JavaScript package.
+<a id="custom-parsers"></a>
+
+## [自定义解析器](custom-parsers)
+
+如果你不想使用 ESLint 的默认解析器，本节将介绍如何创建自定义解析器。
+
+<a id="custom-processors"></a>
+
+## [自定义处理器](custom-processors)
+
+本节介绍如何使用自定义处理器，让 ESLint 处理 JavaScript 以外的文件。
+
+<a id="share-configurations"></a>
+
+## [共享配置](shareable-configs)
+
+本节介绍如何将 ESLint 配置打包到 JavaScript 包中并进行共享。
