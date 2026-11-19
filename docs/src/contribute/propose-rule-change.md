@@ -1,28 +1,34 @@
 ---
-title: Propose a Rule Change
+title: 提议更改规则
 eleventyNavigation:
     key: propose rule change
     parent: contribute to eslint
-    title: Propose a Rule Change
+    title: 提议更改规则
     order: 4
 ---
 
-Occasionally, a core ESLint rule needs to be changed. This is not necessarily a bug, but rather, an enhancement that makes a rule more configurable. In those situations, we will consider making changes to rules.
+有时，ESLint 核心规则需要进行更改。这不一定是 bug，也可能是为了让规则更易配置而进行的改进。在这种情况下，我们会考虑修改规则。
 
-## Propose a Rule Change
+<a id="propose-a-rule-change"></a>
 
-To propose a change to an existing rule, [create a pull request](pull-requests) or [new issue](https://github.com/eslint/eslint/issues/new/choose) and fill out the template.
+## 提议更改规则
 
-We need all of this information in order to determine whether or not the change is a good candidate for inclusion.
+要提议更改现有规则，请[创建拉取请求](pull-requests)或[新建议题](https://github.com/eslint/eslint/issues/new/choose)，并填写模板。
 
-## Accept a Rule Change
+我们需要这些信息，以便判断这项更改是否适合纳入 ESLint。
 
-In order for a rule change to be accepted into ESLint, it must:
+<a id="accept-a-rule-change"></a>
 
-1. Adhere to the [Core Rule Guidelines](propose-new-rule#core-rule-guidelines).
-1. Have an ESLint team member champion the change.
-1. Be important enough that rule is deemed incomplete without this change.
+## 接受规则更改
 
-## Implementation is Your Responsibility
+规则更改要被 ESLint 接受，必须满足以下条件：
 
-The ESLint team doesn't implement rule changes that are suggested by users because we have a limited number of people and need to focus on the overall roadmap. Once a rule change is accepted, you are responsible for implementing and documenting it. You may, alternately, recruit another person to help you. The ESLint team member who championed the rule is your resource to help guide you through the rest of this process.
+1. 遵循[核心规则指南](propose-new-rule#core-rule-guidelines)。
+1. 有一位 ESLint 团队成员支持这项更改。
+1. 这项更改足够重要，缺少它会使该规则被视为不完整。
+
+<a id="implementation-is-your-responsibility"></a>
+
+## 由你负责实现
+
+ESLint 团队不会实现用户提出的规则更改，因为团队人手有限，需要专注于整体路线图。规则更改获接受后，你需要负责实现并编写相关文档。你也可以邀请其他人协助你。支持这项规则更改的 ESLint 团队成员可以为你提供指导，帮助你完成后续流程。
