@@ -4,7 +4,7 @@ rule_type: layout
 related_rules:
 - comma-style
 ---
-When a statement is too long to fit on a single line, line breaks are generally inserted next to the operators separating expressions. The first style coming to mind would be to place the operator at the end of the line, following the English punctuation rules.
+当语句过长，无法放在同一行时，通常会在分隔表达式的运算符旁插入换行符。首先想到的风格可能是将运算符放在行末，遵循英语标点规则。
 
 ```js
 var fullHeight = borderTop +
@@ -12,7 +12,7 @@ var fullHeight = borderTop +
                  borderBottom;
 ```
 
-Some developers find that placing operators at the beginning of the line makes the code more readable.
+有些开发者认为，将运算符放在行首能让代码更易读。
 
 ```js
 var fullHeight = borderTop
@@ -20,29 +20,33 @@ var fullHeight = borderTop
                + borderBottom;
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces a consistent linebreak style for operators.
+## 规则详情
 
-## Options
+此规则用于强制运算符采用一致的换行风格。
 
-This rule has two options, a string option and an object option.
+<a id="options"></a>
 
-String option:
+## 选项
 
-* `"after"` requires linebreaks to be placed after the operator
-* `"before"` requires linebreaks to be placed before the operator
-* `"none"` disallows linebreaks on either side of the operator
+此规则有两个选项：字符串选项和对象选项。
 
-Object option:
+字符串选项：
 
-* `"overrides"` overrides the global setting for specified operators
+* `"after"` 要求在运算符后换行
+* `"before"` 要求在运算符前换行
+* `"none"` 禁止在运算符任一侧换行
 
-The default configuration is `"after", { "overrides": { "?": "before", ":": "before" } }`
+对象选项：
+
+* `"overrides"` 为指定运算符覆盖全局设置
+
+默认配置为 `"after", { "overrides": { "?": "before", ":": "before" } }`
 
 ### after
 
-Examples of **incorrect** code for this rule with the `"after"` option:
+使用 `"after"` 选项时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -80,7 +84,7 @@ class Foo {
 
 :::
 
-Examples of **correct** code for this rule with the `"after"` option:
+使用 `"after"` 选项时，此规则的正确代码示例：
 
 ::: correct
 
@@ -119,7 +123,7 @@ class Foo {
 
 ### before
 
-Examples of **incorrect** code for this rule with the `"before"` option:
+使用 `"before"` 选项时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -153,7 +157,7 @@ class Foo {
 
 :::
 
-Examples of **correct** code for this rule with the `"before"` option:
+使用 `"before"` 选项时，此规则的正确代码示例：
 
 ::: correct
 
@@ -192,7 +196,7 @@ class Foo {
 
 ### none
 
-Examples of **incorrect** code for this rule with the `"none"` option:
+使用 `"none"` 选项时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -241,7 +245,7 @@ class Foo {
 
 :::
 
-Examples of **correct** code for this rule with the `"none"` option:
+使用 `"none"` 选项时，此规则的正确代码示例：
 
 ::: correct
 
@@ -273,7 +277,7 @@ class Foo {
 
 ### overrides
 
-Examples of additional **incorrect** code for this rule with the `{ "overrides": { "+=": "before" } }` option:
+使用 `{ "overrides": { "+=": "before" } }` 选项时，此规则的其他错误代码示例：
 
 ::: incorrect
 
@@ -287,7 +291,7 @@ thing +=
 
 :::
 
-Examples of additional **correct** code for this rule with the `{ "overrides": { "+=": "before" } }` option:
+使用 `{ "overrides": { "+=": "before" } }` 选项时，此规则的其他正确代码示例：
 
 ::: correct
 
@@ -301,7 +305,7 @@ thing
 
 :::
 
-Examples of additional **correct** code for this rule with the `{ "overrides": { "?": "ignore", ":": "ignore" } }` option:
+使用 `{ "overrides": { "?": "ignore", ":": "ignore" } }` 选项时，此规则的其他正确代码示例：
 
 ::: correct
 
@@ -321,7 +325,7 @@ answer = everything
 
 :::
 
-Examples of **incorrect** code for this rule with the default `"after", { "overrides": { "?": "before", ":": "before" } }` option:
+使用默认选项 `"after", { "overrides": { "?": "before", ":": "before" } }` 时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -349,7 +353,7 @@ answer = everything ?
 
 :::
 
-Examples of **correct** code for this rule with the default `"after", { "overrides": { "?": "before", ":": "before" } }` option:
+使用默认选项 `"after", { "overrides": { "?": "before", ":": "before" } }` 时，此规则的正确代码示例：
 
 ::: correct
 
@@ -375,6 +379,8 @@ answer = everything
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If your project will not be using a common operator line break style, turn this rule off.
+## 何时不应使用
+
+如果项目不会采用统一的运算符换行风格，请关闭此规则。
