@@ -6,13 +6,15 @@ further_reading:
 - https://blog.benhall.me.uk/2012/02/storing-application-config-data-in/
 ---
 
-The `process.env` object in Node.js is used to store deployment/configuration parameters. Littering it through out a project could lead to maintenance issues as it's another kind of global dependency. As such, it could lead to merge conflicts in a multi-user setup and deployment issues in a multi-server setup. Instead, one of the best practices is to define all those parameters in a single configuration/settings file which could be accessed throughout the project.
+Node.js 中的 `process.env` 对象用于存储部署/配置参数。在项目中到处使用它可能会导致维护问题，因为它也是一种全局依赖。因此，在多人协作的环境中可能会引发合并冲突，在多服务器环境中则可能导致部署问题。更好的做法之一是将所有这些参数定义在一个配置/设置文件中，以便在整个项目中访问。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at discouraging use of `process.env` to avoid global dependencies. As such, it will warn whenever `process.env` is used.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在避免使用 `process.env`，以免产生全局依赖。因此，每当使用 `process.env` 时，都会发出警告。
+
+以下是此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -26,7 +28,7 @@ if(process.env.NODE_ENV === "development") {
 
 :::
 
-Examples of **correct** code for this rule:
+以下是此规则的**正确**代码示例：
 
 ::: correct
 
@@ -42,6 +44,8 @@ if(config.env === "development") {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you prefer to use `process.env` throughout your project to retrieve values from environment variables, then you can safely disable this rule.
+## 何时不使用此规则
+
+如果你倾向于在整个项目中使用 `process.env` 来获取环境变量的值，则可以安全地禁用此规则。
