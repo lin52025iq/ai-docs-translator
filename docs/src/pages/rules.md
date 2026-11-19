@@ -1,17 +1,17 @@
 ---
-title: Rules Reference
+title: 规则参考
 permalink: /rules/index.html
 eleventyNavigation:
     key: rules
     parent: use eslint
-    title: Rules Reference
+    title: 规则参考
     order: 5
 ---
 
 {% from 'components/rule-categories.macro.html' import ruleCategories, recommended, fixable, hasSuggestions %}
 {% from 'components/rule.macro.html' import rule %}
 
-Rules in ESLint are grouped by type to help you understand their purpose. Each rule has emojis denoting:
+ESLint 中的规则按类型分组，帮助你了解其用途。每条规则旁的表情符号表示：
 
 {{ ruleCategories({
         index: true,
