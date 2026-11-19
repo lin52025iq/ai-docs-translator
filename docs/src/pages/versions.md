@@ -1,6 +1,6 @@
 ---
 layout: main.html
-title: Versions
+title: 版本
 permalink: /versions/
 hook: "versions-page"
 ---
