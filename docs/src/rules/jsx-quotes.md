@@ -4,35 +4,39 @@ rule_type: layout
 related_rules:
 - quotes
 ---
-JSX attribute values can contain string literals, which are delimited with single or double quotes.
+JSX 属性值可以包含字符串字面量，并使用单引号或双引号括起来。
 
 ```jsx
 <a b='c' />;
 <a b="c" />;
 ```
 
-Unlike string literals in JavaScript, string literals within JSX attributes can’t contain escaped quotes.
-If you want to have e.g. a double quote within a JSX attribute value, you have to use single quotes as string delimiter.
+与 JavaScript 中的字符串字面量不同，JSX 属性中的字符串字面量不能包含转义引号。
+例如，如果要在 JSX 属性值中使用双引号，必须使用单引号作为字符串分隔符。
 
 ```jsx
 <a b="'" />;
 <a b='"' />;
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces the consistent use of either double or single quotes in JSX attributes.
+## 规则详情
 
-## Options
+此规则要求在 JSX 属性中统一使用双引号或单引号。
 
-This rule has a string option:
+<a id="options"></a>
 
-* `"prefer-double"` (default) enforces the use of double quotes for all JSX attribute values that don't contain a double quote.
-* `"prefer-single"` enforces the use of single quotes for all JSX attribute values that don’t contain a single quote.
+## 选项
+
+此规则有一个字符串选项：
+
+* `"prefer-double"`（默认）要求所有不包含双引号的 JSX 属性值都使用双引号。
+* `"prefer-single"` 要求所有不包含单引号的 JSX 属性值都使用单引号。
 
 ### prefer-double
 
-Examples of **incorrect** code for this rule with the default `"prefer-double"` option:
+使用默认选项 `"prefer-double"` 时，此规则下的错误代码示例：
 
 :::incorrect { "parserOptions": { "ecmaFeatures": { "jsx": true } } }
 
@@ -44,7 +48,7 @@ Examples of **incorrect** code for this rule with the default `"prefer-double"` 
 
 :::
 
-Examples of **correct** code for this rule with the default `"prefer-double"` option:
+使用默认选项 `"prefer-double"` 时，此规则下的正确代码示例：
 
 :::correct { "parserOptions": { "ecmaFeatures": { "jsx": true } } }
 
@@ -59,7 +63,7 @@ Examples of **correct** code for this rule with the default `"prefer-double"` op
 
 ### prefer-single
 
-Examples of **incorrect** code for this rule with the `"prefer-single"` option:
+使用选项 `"prefer-single"` 时，此规则下的错误代码示例：
 
 :::incorrect { "parserOptions": { "ecmaFeatures": { "jsx": true } } }
 
@@ -71,7 +75,7 @@ Examples of **incorrect** code for this rule with the `"prefer-single"` option:
 
 :::
 
-Examples of **correct** code for this rule with the `"prefer-single"` option:
+使用选项 `"prefer-single"` 时，此规则下的正确代码示例：
 
 :::correct { "parserOptions": { "ecmaFeatures": { "jsx": true } } }
 
@@ -84,6 +88,8 @@ Examples of **correct** code for this rule with the `"prefer-single"` option:
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You can turn this rule off if you don’t use JSX or if you aren’t concerned with a consistent usage of quotes within JSX attributes.
+## 何时不使用
+
+如果你不使用 JSX，或者不关心 JSX 属性中引号的使用是否一致，可以关闭此规则。
