@@ -4,7 +4,7 @@ rule_type: suggestion
 ---
 
 
-The `continue` statement terminates execution of the statements in the current iteration of the current or labeled loop, and continues execution of the loop with the next iteration. When used incorrectly it makes code less testable, less readable and less maintainable. Structured control flow statements such as `if` should be used instead.
+`continue` 语句会终止当前循环迭代中语句的执行（无论是当前循环还是带标签的循环），并继续执行循环的下一次迭代。错误使用时，它会降低代码的可测试性、可读性和可维护性。应改用 `if` 等结构化控制流语句。
 
 ```js
 let sum = 0,
@@ -19,11 +19,13 @@ for(i = 0; i < 10; i++) {
 }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows `continue` statements.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止使用 `continue` 语句。
+
+此规则下的错误代码示例：
 
 ::: incorrect
 
@@ -63,7 +65,7 @@ labeledLoop: for(i = 0; i < 10; i++) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则下的正确代码示例：
 
 ::: correct
 
@@ -82,10 +84,14 @@ for(i = 0; i < 10; i++) {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## Compatibility
+此规则没有选项。
 
-* **JSLint**: `continue`
+<a id="compatibility"></a>
+
+## 兼容性
+
+* **JSLint**：`continue`
