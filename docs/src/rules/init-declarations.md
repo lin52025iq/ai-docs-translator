@@ -6,7 +6,7 @@ related_rules:
 ---
 
 
-In JavaScript, variables can be assigned during declaration, or at any point afterwards using an assignment statement. For example, in the following code, `foo` is initialized during declaration, while `bar` is initialized later.
+在 JavaScript 中，变量可以在声明时赋值，也可以在之后的任意时刻通过赋值语句赋值。例如，在以下代码中，`foo` 在声明时初始化，而 `bar` 则在之后初始化。
 
 ```js
 let foo = 1;
@@ -19,9 +19,11 @@ if (foo) {
 }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at enforcing or eliminating variable initializations during declaration. For example, in the following code, `foo` is initialized during declaration, while `bar` is not.
+## 规则详情
+
+此规则旨在强制要求或禁止在声明时初始化变量。例如，在以下代码中，`foo` 在声明时初始化，而 `bar` 则没有。
 
 ```js
 let foo = 1;
@@ -30,18 +32,20 @@ let bar;
 bar = 2;
 ```
 
-This rule aims to bring consistency to variable initializations and declarations.
+此规则旨在使变量初始化和声明的方式保持一致。
 
-## Options
+<a id="options"></a>
 
-The rule takes two options:
+## 选项
 
-1. A string which must be either `"always"` (the default), to enforce initialization at declaration, or `"never"` to disallow initialization during declaration. This rule applies to `var`, `let`, `const`, `using`, and `await using` variables, however `"never"` is ignored for `const`, `using`, and `await using` variables, as not initializing these variables would generate a parse error.
-2. An object that further controls the behavior of this rule. Currently, the only available parameter is `ignoreForLoopInit`, which indicates if initialization at declaration is allowed in `for` loops when `"never"` is set, since it is a very typical use case.
+此规则接受两个选项：
 
-You can configure the rule as follows:
+1. 一个字符串，只能是 `"always"`（默认值），表示强制要求在声明时初始化；或 `"never"`，表示禁止在声明时初始化。此规则适用于 `var`、`let`、`const`、`using` 和 `await using` 变量。不过，对于 `const`、`using` 和 `await using` 变量，`"never"` 会被忽略，因为不初始化这些变量会导致解析错误。
+2. 一个用于进一步控制此规则行为的对象。目前唯一可用的参数是 `ignoreForLoopInit`，它表示设置为 `"never"` 时，是否允许在 `for` 循环中声明变量时初始化。因为这是一个非常常见的用例。
 
-Variables must be initialized at declaration (default)
+可以按如下方式配置此规则：
+
+变量必须在声明时初始化（默认值）
 
 ```json
 {
@@ -49,7 +53,7 @@ Variables must be initialized at declaration (default)
 }
 ```
 
-Variables must not be initialized at declaration
+变量不得在声明时初始化
 
 ```json
 {
@@ -57,7 +61,7 @@ Variables must not be initialized at declaration
 }
 ```
 
-Variables must not be initialized at declaration, except in for loops, where it is allowed
+变量不得在声明时初始化，但允许在 for 循环中这样做
 
 ```json
 {
@@ -67,7 +71,7 @@ Variables must not be initialized at declaration, except in for loops, where it 
 
 ### always
 
-Examples of **incorrect** code for the default `"always"` option:
+默认选项 `"always"` 下的**错误**代码示例：
 
 ::: incorrect
 
@@ -82,7 +86,7 @@ function foo() {
 
 :::
 
-Examples of **correct** code for the default `"always"` option:
+默认选项 `"always"` 下的**正确**代码示例：
 
 ::: correct
 
@@ -105,7 +109,7 @@ async function foobar() {
 
 ### never
 
-Examples of **incorrect** code for the `"never"` option:
+选项 `"never"` 下的**错误**代码示例：
 
 ::: incorrect
 
@@ -122,7 +126,7 @@ function foo() {
 
 :::
 
-Examples of **correct** code for the `"never"` option:
+选项 `"never"` 下的**正确**代码示例：
 
 ::: correct
 
@@ -143,11 +147,11 @@ async function foobar() {
 
 :::
 
-The `"never"` option ignores `const`, `using`, and `await using` variable initializations.
+选项 `"never"` 会忽略 `const`、`using` 和 `await using` 变量的初始化。
 
 ### ignoreForLoopInit
 
-Examples of **correct** code for the `"never", { "ignoreForLoopInit": true }` options:
+选项 `"never", { "ignoreForLoopInit": true }` 下的**正确**代码示例：
 
 ::: correct
 
@@ -158,9 +162,9 @@ for (let i = 0; i < 1; i++) {}
 
 :::
 
-This rule additionally supports TypeScript type syntax.
+此规则还支持 TypeScript 类型语法。
 
-Examples of **incorrect** TypeScript code for this rule:
+此规则的 TypeScript **错误**代码示例：
 
 ::: incorrect
 
@@ -206,7 +210,7 @@ namespace myLib1 {
 
 :::
 
-Examples of **correct** TypeScript code for this rule:
+此规则的 TypeScript **正确**代码示例：
 
 ::: correct
 
@@ -250,6 +254,8 @@ interface GreetingSettings {
 :::
 
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-When you are indifferent as to how your variables are initialized.
+## 何时不应使用此规则
+
+如果你不在意变量以何种方式初始化，就不应使用此规则。
