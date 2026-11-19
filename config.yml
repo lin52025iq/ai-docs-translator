@@ -1,0 +1,34 @@
+schemaVersion: 1
+project:
+  id: eslint-docs
+source:
+  repository: lin52025iq/eslint
+  ref: main
+  branch: eslint-docs-source
+  language: en
+targets:
+  - locale: zh-CN
+    branch: eslint-docs-zh-cn
+translation:
+  model: gpt-6-luna
+  scope:
+    include: ['docs/**/*.md', 'docs/**/*.mdx']
+  glossary: glossary.yml
+  prompts:
+    common: prompts/common.md
+validation:
+  prepare: [bash, docs/tools/localization-install.sh]
+  files:
+    - include: ['docs/**/*.md', 'docs/**/*.mdx']
+      cwd: snapshot
+      stdin: true
+      command: [node, '{configDir}/validate-markdown.mjs', '{path}']
+  global:
+    command: [bash, docs/tools/localization-build.sh]
+deployment:
+  provider: vercel
+  locale: zh-CN
+  name: eslint-docs
+  teamId: team_fEBZtKMNvmjodbBzMmTWage5
+  projectId: prj_eTuyWRvAfLpqVHIooITp02fN7wsy
+  repositoryId: '1448072497'
