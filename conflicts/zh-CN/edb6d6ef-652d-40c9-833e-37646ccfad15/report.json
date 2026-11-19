@@ -1,0 +1,50 @@
+{
+    "schemaVersion": 1,
+    "status": "conflict",
+    "origin": "local_validation",
+    "projectId": "eslint-docs",
+    "locale": "zh-CN",
+    "sourcePath": "docs/src/rules/no-useless-backreference.md",
+    "createdAt": "2026-11-19T11:32:06.075Z",
+    "reason": "文件校验未通过",
+    "artifacts": {
+        "before": "before/docs/src/rules/no-useless-backreference.md",
+        "after": "after/docs/src/rules/no-useless-backreference.md",
+        "previous": "previous/docs/src/rules/no-useless-backreference.md"
+    },
+    "translationModel": "gpt-6-luna",
+    "translationResponseId": "resp_029405d5d6be2bdd016afede27aea087d29db9c47eeb760c12",
+    "contextHash": "64ced0491d8917d86d3057d903a53f0f98ed63c72e258488e934ac7f76453200",
+    "diagnostics": [
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode",
+                "path": "docs/src/rules/no-useless-backreference.md"
+            },
+            {
+                "message": "inlineCode 缺少：[\"/(\\\\1)/\"]。多出：[\"/(\\u001c1)/\"]",
+                "path": "docs/src/rules/no-useless-backreference.md"
+            }
+        ],
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode",
+                "path": "docs/src/rules/no-useless-backreference.md"
+            },
+            {
+                "message": "inlineCode 缺少：[\"/(\\\\1)/\"]。多出：[\"/(�\\\\1)/\"]",
+                "path": "docs/src/rules/no-useless-backreference.md"
+            }
+        ],
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode",
+                "path": "docs/src/rules/no-useless-backreference.md"
+            },
+            {
+                "message": "inlineCode 缺少：[\"/(\\\\1)/\"]。多出：[\"/(�\\\\1)/\"]",
+                "path": "docs/src/rules/no-useless-backreference.md"
+            }
+        ]
+    ]
+}
