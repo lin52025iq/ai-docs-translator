@@ -1,14 +1,16 @@
 ---
-title: Migrating to v1.0.0
+title: 迁移到 v1.0.0
 ---
 
-ESLint v1.0.0 is the first major version release. As a result, there are some significant changes between how ESLint worked during its life in 0.x and how it will work going forward. These changes are the direct result of feedback from the ESLint community of users and were not made without due consideration for the upgrade path. We believe that these changes make ESLint even better, and while some work is necessary to upgrade, we hope the pain of this upgrade is small enough that you will see the benefit of upgrading.
+ESLint v1.0.0 是首个主要版本。因此，ESLint 在 0.x 版本生命周期中的运行方式与今后的运行方式之间存在一些重大变化。这些变化直接源于 ESLint 用户社区的反馈，在制定时也充分考虑了升级路径。我们相信，这些变化会让 ESLint 变得更好。虽然升级需要做一些工作，但我们希望升级过程中的不便足够小，让你能切实感受到升级的好处。
 
-## All Rules Off by Default
+<a id="all-rules-off-by-default"></a>
 
-The most important difference in v1.0.0 is that all rules are off by default. We made this change after numerous requests to allow turning off the default rules from within configuration files. While that wasn't technically feasible, it was feasible to have all rules off by default and then re-enable rules in configuration files using `extends`. As such, we've made the `--reset` behavior the default and removed this command line option.
+## 默认关闭所有规则
 
-When using `--init`, your configuration file will automatically include the following line:
+v1.0.0 中最重要的变化是默认关闭所有规则。我们作出这一改变，是因为许多人要求能够在配置文件中关闭默认规则。虽然从技术上讲无法实现这一点，但可以默认关闭所有规则，然后使用 `extends` 在配置文件中重新启用规则。因此，我们将 `--reset` 的行为设为默认行为，并移除了这个命令行选项。
+
+使用 `--init` 时，你的配置文件会自动包含以下内容：
 
 ```json
 {
@@ -16,11 +18,11 @@ When using `--init`, your configuration file will automatically include the foll
 }
 ```
 
-This setting mimics some of the default behavior from 0.x, but not all. If you don't want to use any of the recommended rules, you can delete this line.
+此设置模拟了 0.x 中的部分默认行为，但并非全部。如果你不想使用任何推荐规则，可以删除这一行。
 
-**To address:** If you are currently using `--reset`, then you should stop passing `--reset` on the command line; no other changes are necessary. If you are not using `--reset`, then you should review your configuration to determine which rules should be on by default. You can partially restore some of the default behavior by adding the following to your configuration file:
+**应采取的措施：**如果你目前在使用 `--reset`，请停止在命令行中传入 `--reset`；无需进行其他更改。如果你没有使用 `--reset`，则应检查配置，确定哪些规则应默认启用。你可以在配置文件中添加以下内容，部分恢复默认行为：
 
-The `"eslint:recommended"` configuration contains many of the same default rule settings from 0.x, but not all. These rules are no longer on by default, so you should review your settings to ensure they are still as you expect:
+`"eslint:recommended"` 配置包含了许多与 0.x 相同的默认规则设置，但并非全部。这些规则现在不再默认启用，因此你应检查设置，确保其仍符合预期：
 
 - [no-alert](../rules/no-alert)
 - [no-array-constructor](../rules/no-array-constructor)
@@ -79,9 +81,9 @@ The `"eslint:recommended"` configuration contains many of the same default rule 
 - [strict](../rules/strict)
 - [yoda](../rules/yoda)
 
-See also: the [full diff](https://github.com/eslint/eslint/commit/e3e9dbd9876daf4bdeb4e15f8a76a9d5e6e03e39#diff-b01a5cfd9361ca9280a460fd6bb8edbbL1) where the defaults were changed.
+另请参阅默认设置变更的[完整差异](https://github.com/eslint/eslint/commit/e3e9dbd9876daf4bdeb4e15f8a76a9d5e6e03e39#diff-b01a5cfd9361ca9280a460fd6bb8edbbL1)。
 
-Here's a configuration file with the closest equivalent of the old defaults:
+下面的配置文件与旧默认设置最为接近：
 
 ```json
 {
@@ -146,45 +148,53 @@ Here's a configuration file with the closest equivalent of the old defaults:
 }
 ```
 
-## Removed Rules
+<a id="removed-rules"></a>
 
-Over the past several releases, we have been deprecating rules and introducing new rules to take their place. The following is a list of the removed rules and their replacements:
+## 移除的规则
 
-- [generator-star](../rules/generator-star) is replaced by [generator-star-spacing](../rules/generator-star-spacing)
-- [global-strict](../rules/global-strict) is replaced by [strict](../rules/strict)
-- [no-comma-dangle](../rules/no-comma-dangle) is replaced by [comma-dangle](../rules/comma-dangle)
-- [no-empty-class](../rules/no-empty-class) is replaced by [no-empty-character-class](../rules/no-empty-character-class)
-- [no-extra-strict](../rules/no-extra-strict) is replaced by [strict](../rules/strict)
-- [no-reserved-keys](../rules/no-reserved-keys) is replaced by [quote-props](../rules/quote-props)
-- [no-space-before-semi](../rules/no-space-before-semi) is replaced by [semi-spacing](../rules/semi-spacing)
-- [no-wrap-func](../rules/no-wrap-func) is replaced by [no-extra-parens](../rules/no-extra-parens)
-- [space-after-function-name](../rules/space-after-function-name) is replaced by [space-before-function-paren](../rules/space-before-function-paren)
-- [space-before-function-parentheses](../rules/space-before-function-parentheses) is replaced by [space-before-function-paren](../rules/space-before-function-paren)
-- [space-in-brackets](../rules/space-in-brackets) is replaced by[object-curly-spacing](../rules/object-curly-spacing) and [array-bracket-spacing](../rules/array-bracket-spacing)
-- [space-unary-word-ops](../rules/space-unary-word-ops) is replaced by [space-unary-ops](../rules/space-unary-ops)
-- [spaced-line-comment](../rules/spaced-line-comment) is replaced by [spaced-comment](../rules/spaced-comment)
+在过去的几个版本中，我们一直在弃用某些规则，并引入新的规则来取代它们。以下列出了已移除的规则及其替代规则：
 
-**To address:** You'll need to update your rule configurations to use the new rules. ESLint v1.0.0 will also warn you when you're using a rule that has been removed and will suggest the replacement rules. Hopefully, this will result in few surprises during the upgrade process.
+- [generator-star](../rules/generator-star) 已由 [generator-star-spacing](../rules/generator-star-spacing) 取代
+- [global-strict](../rules/global-strict) 已由 [strict](../rules/strict) 取代
+- [no-comma-dangle](../rules/no-comma-dangle) 已由 [comma-dangle](../rules/comma-dangle) 取代
+- [no-empty-class](../rules/no-empty-class) 已由 [no-empty-character-class](../rules/no-empty-character-class) 取代
+- [no-extra-strict](../rules/no-extra-strict) 已由 [strict](../rules/strict) 取代
+- [no-reserved-keys](../rules/no-reserved-keys) 已由 [quote-props](../rules/quote-props) 取代
+- [no-space-before-semi](../rules/no-space-before-semi) 已由 [semi-spacing](../rules/semi-spacing) 取代
+- [no-wrap-func](../rules/no-wrap-func) 已由 [no-extra-parens](../rules/no-extra-parens) 取代
+- [space-after-function-name](../rules/space-after-function-name) 已由 [space-before-function-paren](../rules/space-before-function-paren) 取代
+- [space-before-function-parentheses](../rules/space-before-function-parentheses) 已由 [space-before-function-paren](../rules/space-before-function-paren) 取代
+- [space-in-brackets](../rules/space-in-brackets) 已由[object-curly-spacing](../rules/object-curly-spacing) 和 [array-bracket-spacing](../rules/array-bracket-spacing) 取代
+- [space-unary-word-ops](../rules/space-unary-word-ops) 已由 [space-unary-ops](../rules/space-unary-ops) 取代
+- [spaced-line-comment](../rules/spaced-line-comment) 已由 [spaced-comment](../rules/spaced-comment) 取代
 
-## Column Numbers are 1-based
+**应采取的措施：**你需要更新规则配置，以使用新规则。使用已移除规则时，ESLint v1.0.0 也会发出警告，并建议使用替代规则。希望这能让升级过程中的意外情况尽可能少。
 
-From the beginning, ESLint has reported errors using 0-based columns because that's what Esprima, and later Espree, reported. However, most tools and editors use 1-based columns, which made for some tricky integrations with ESLint. In v1.0.0, we've switched over to reporting errors using 1-based columns to fall into line with the tools developers use everyday.
+<a id="column-numbers-are-1-based"></a>
 
-**To address:** If you've created an editor integration, or a tool that had to correct the column number, you'll need to update to just pass through the column number from ESLint. Otherwise, no change is necessary.
+## 列号从 1 开始计数
 
-## No Longer Exporting cli
+从一开始，ESLint 就使用从 0 开始计数的列号报告错误，因为 Esprima 以及后来的 Espree 都是这样报告的。不过，大多数工具和编辑器使用从 1 开始计数的列号，这给 ESLint 的集成带来了一些麻烦。在 v1.0.0 中，我们改用从 1 开始计数的列号报告错误，以与开发者日常使用的工具保持一致。
 
-In 0.x, the `cli` object was exported for use by external tools. It was later deprecated in favor of `CLIEngine`. In v1.0.0, we are no longer exporting `cli` as it should not be used by external tools. This will break existing tools that make use of it.
+**应采取的措施：**如果你创建了编辑器集成，或创建了需要修正列号的工具，就需要更新它，使其直接传递 ESLint 提供的列号。除此之外，无需更改。
 
-**To address:** If you are using the exported `cli` object, switch to using `CLIEngine` instead.
+<a id="no-longer-exporting-cli"></a>
 
-## Deprecating eslint-tester
+## 不再导出 cli
 
-The `eslint-tester` module, which has long been the primary tester for ESLint rules, has now been moved into the `eslint` module. This was the result of a difficult relationship between these two modules that created circular dependencies and was causing a lot of problems in rule tests. Moving the tester into the `eslint` module fixed a lot of those issues.
+在 0.x 中，`cli` 对象会导出供外部工具使用。后来，它被弃用，推荐改用 `CLIEngine`。在 v1.0.0 中，我们不再导出 `cli`，因为外部工具不应使用它。这会导致现有的依赖它的工具无法正常工作。
 
-The replacement for `eslint-tester` is called `RuleTester`. It's a simplified version of `ESLintTester` that's designed to work with any testing framework. This object is exposed by the package.
+**应采取的措施：**如果你正在使用导出的 `cli` 对象，请改用 `CLIEngine`。
 
-**To address:** Convert all of your rule tests to use `RuleTester`. If you have this as a test using `ESLintTester`:
+<a id="deprecating-eslint-tester"></a>
+
+## 弃用 eslint-tester
+
+长期以来，`eslint-tester` 模块一直是测试 ESLint 规则的主要工具，现在已移入 `eslint` 模块。这是因为这两个模块之间的依赖关系较为复杂，导致循环依赖，并给规则测试带来了许多问题。将测试工具移入 `eslint` 模块解决了其中的许多问题。
+
+`eslint-tester` 的替代品名为 `RuleTester`。它是 `ESLintTester` 的简化版本，旨在适用于任何测试框架。该对象由此软件包提供。
+
+**应采取的措施：**将所有规则测试改为使用 `RuleTester`。如果你有如下使用 `ESLintTester` 的测试：
 
 ```js
 var eslint = require("../../../lib/eslint"),
@@ -197,7 +207,7 @@ eslintTester.addRuleTest("lib/rules/your-rule", {
 });
 ```
 
-Then you can change to:
+那么可以改成：
 
 ```js
 var rule = require("../../../lib/rules/your-rule"),
