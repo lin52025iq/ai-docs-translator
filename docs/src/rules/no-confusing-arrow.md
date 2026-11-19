@@ -5,9 +5,9 @@ related_rules:
 - no-constant-condition
 - arrow-parens
 ---
-Arrow functions (`=>`) are similar in syntax to some comparison operators (`>`, `<`, `<=`, and `>=`). This rule warns against using the arrow function syntax in places where it could be confused with a comparison operator.
+箭头函数（`=>`）的语法与某些比较运算符（`>`、`<`、`<=` 和 `>=`）相似。本规则会对在可能与比较运算符混淆的地方使用箭头函数语法的情况发出警告。
 
-Here's an example where the usage of `=>` could be confusing:
+下面的示例中，`=>` 的用法可能会造成混淆：
 
 ```js
 // The intent is not clear
@@ -20,9 +20,11 @@ var x = function (a) {
 var x = a <= 1 ? 2 : 3;
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-Examples of **incorrect** code for this rule:
+## 规则详情
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -35,7 +37,7 @@ var x = (a) => 1 ? 2 : 3;
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -52,9 +54,11 @@ var x = a => { return 1 ? 2 : 3; };
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule accepts two options argument with the following defaults:
+## 选项
+
+本规则接受两个选项参数，默认值如下：
 
 ```json
 {
@@ -67,12 +71,12 @@ This rule accepts two options argument with the following defaults:
 }
 ```
 
-`allowParens` is a boolean setting that can be `true`(default) or `false`:
+`allowParens` 是一个布尔设置，可以为 `true`（默认值）或 `false`：
 
-1. `true` relaxes the rule and accepts parenthesis as a valid "confusion-preventing" syntax.
-2. `false` warns even if the expression is wrapped in parenthesis
+1. `true` 会放宽规则，接受圆括号作为有效的“防止混淆”语法。
+2. `false` 即使表达式被圆括号括起来，也会发出警告。
 
-Examples of **incorrect** code for this rule with the `{"allowParens": false}` option:
+使用 `{"allowParens": false}` 选项时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -85,12 +89,12 @@ var x = (a) => (1 ? 2 : 3);
 
 :::
 
-`onlyOneSimpleParam` is a boolean setting that can be `true` or `false`(default):
+`onlyOneSimpleParam` 是一个布尔设置，可以为 `true` 或 `false`（默认值）：
 
-1. `true` relaxes the rule and doesn't report errors if the arrow function has 0 or more than 1 parameters, or the parameter is not an identifier.
-2. `false` warns regardless of parameters.
+1. `true` 会放宽规则：如果箭头函数没有参数、参数多于一个，或参数不是标识符，则不会报告错误。
+2. `false` 无论参数如何，都会发出警告。
 
-Examples of **correct** code for this rule with the `{"onlyOneSimpleParam": true}` option:
+使用 `{"onlyOneSimpleParam": true}` 选项时，此规则的正确代码示例：
 
 ::: correct
 
