@@ -6,7 +6,7 @@ related_rules:
 ---
 
 
-Some code conventions require that all `switch` statements have a `default` case, even if the default case is empty, such as:
+某些代码约定要求所有 `switch` 语句都包含一个 `default` 分支，即使该分支为空，例如：
 
 ```js
 switch (foo) {
@@ -23,9 +23,9 @@ switch (foo) {
 }
 ```
 
-The thinking is that it's better to always explicitly state what the default behavior should be so that it's clear whether or not the developer forgot to include the default behavior by mistake.
+这样做的理由是，最好始终明确说明默认行为是什么，这样就能看出开发者是否误忘了添加默认行为。
 
-Other code conventions allow you to skip the `default` case so long as there is a comment indicating the omission is intentional, such as:
+其他代码约定则允许省略 `default` 分支，只要有注释表明这是有意为之，例如：
 
 ```js
 switch (foo) {
@@ -41,13 +41,15 @@ switch (foo) {
 }
 ```
 
-Once again, the intent here is to show that the developer intended for there to be no default behavior.
+同样，这样做的目的是表明开发者有意不设置默认行为。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to require `default` case in `switch` statements. You may optionally include a `// no default` after the last `case` if there is no `default` case. The comment may be in any desired case, such as `// No Default`.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在要求 `switch` 语句包含 `default` 分支。如果没有 `default` 分支，可以选择在最后一个 `case` 后添加 `// no default`。注释可以使用任意大小写形式，例如 `// No Default`。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -64,7 +66,7 @@ switch (a) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -100,15 +102,17 @@ switch (a) {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule accepts a single options argument:
+## 选项
 
-* Set the `commentPattern` option to a regular expression string to change the default `/^no default$/i` comment test pattern.
+此规则接受一个选项参数：
+
+* 将 `commentPattern` 选项设为正则表达式字符串，以更改默认的 `/^no default$/i` 注释测试模式。
 
 ### commentPattern
 
-Examples of **correct** code for the `{ "commentPattern": "^skip\\sdefault" }` option:
+`{ "commentPattern": "^skip\\sdefault" }` 选项的**正确**代码示例：
 
 ::: correct
 
@@ -134,6 +138,8 @@ switch(a) {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you don't want to enforce a `default` case for `switch` statements, you can safely disable this rule.
+## 何时不使用
+
+如果不想强制要求 `switch` 语句包含 `default` 分支，可以放心禁用此规则。
