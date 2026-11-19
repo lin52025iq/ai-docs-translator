@@ -9,18 +9,18 @@ further_reading:
 - https://blog.izs.me/2010/12/an-open-letter-to-javascript-leaders-regarding/
 - https://web.archive.org/web/20200420230322/http://inimino.org/~inimino/blog/javascript_semicolons
 ---
-JavaScript doesn't require semicolons at the end of each statement. In many cases, the JavaScript engine can determine that a semicolon should be in a certain spot and will automatically add it. This feature is known as **automatic semicolon insertion (ASI)** and is considered one of the more controversial features of JavaScript. For example, the following lines are both valid:
+JavaScript 并不要求在每条语句末尾添加分号。在很多情况下，JavaScript 引擎可以判断应在何处添加分号，并自动插入。此功能称为**自动分号插入（ASI）**，被认为是 JavaScript 最具争议的特性之一。例如，以下两行代码都是有效的：
 
 ```js
 var name = "ESLint"
 var website = "eslint.org";
 ```
 
-On the first line, the JavaScript engine will automatically insert a semicolon, so this is not considered a syntax error. The JavaScript engine still knows how to interpret the line and knows that the line end indicates the end of the statement.
+在第一行中，JavaScript 引擎会自动插入分号，因此这不被视为语法错误。JavaScript 引擎仍然知道如何解析这一行，也知道行尾表示语句结束。
 
-In the debate over ASI, there are generally two schools of thought. The first is that we should treat ASI as if it didn't exist and always include semicolons manually. The rationale is that it's easier to always include semicolons than to try to remember when they are or are not required, and thus decreases the possibility of introducing an error.
+关于 ASI 的争论通常有两种观点。第一种观点认为，我们应该假装 ASI 不存在，始终手动添加分号。其理由是，始终添加分号比记住何时需要或不需要分号更容易，因此可以降低引入错误的可能性。
 
-However, the ASI mechanism can sometimes be tricky to people who are using semicolons. For example, consider this code:
+不过，对于使用分号的人来说，ASI 机制有时会带来一些棘手的问题。例如，看看下面的代码：
 
 ```js
 return
@@ -29,7 +29,7 @@ return
 };
 ```
 
-This may look like a `return` statement that returns an object literal, however, the JavaScript engine will interpret this code as:
+这看起来可能像是一个返回对象字面量的 `return` 语句，但 JavaScript 引擎会将这段代码解析为：
 
 ```js
 return;
@@ -38,9 +38,9 @@ return;
 }
 ```
 
-Effectively, a semicolon is inserted after the `return` statement, causing the code below it (a labeled literal inside a block) to be unreachable. This rule and the [no-unreachable](no-unreachable) rule will protect your code from such cases.
+实际上，`return` 语句后插入了一个分号，导致其后的代码（块中的带标签语句）无法执行。此规则和 [no-unreachable](no-unreachable) 规则可以保护你的代码免受此类问题影响。
 
-On the other side of the argument are those who say that since semicolons are inserted automatically, they are optional and do not need to be inserted manually. However, the ASI mechanism can also be tricky to people who don't use semicolons. For example, consider this code:
+另一方面，有人认为，既然分号会自动插入，它们就是可选的，不需要手动添加。不过，对于不使用分号的人来说，ASI 机制也可能带来棘手的问题。例如，看看下面的代码：
 
 ```js
 var globalCounter = { }
@@ -53,44 +53,50 @@ var globalCounter = { }
 })()
 ```
 
-In this example, a semicolon will not be inserted after the first line, causing a run-time error (because an empty object is called as if it's a function). The [no-unexpected-multiline](no-unexpected-multiline) rule can protect your code from such cases.
+在这个例子中，第一行后不会插入分号，从而导致运行时错误（因为空对象被当作函数调用）。[no-unexpected-multiline](no-unexpected-multiline) 规则可以保护你的代码免受此类问题影响。
 
-Although ASI allows for more freedom over your coding style, it can also make your code behave in an unexpected way, whether you use semicolons or not. Therefore, it is best to know when ASI takes place and when it does not, and have ESLint protect your code from these potentially unexpected cases. In short, as once described by Isaac Schlueter, a `\n` character always ends a statement (just like a semicolon) unless one of the following is true:
+虽然 ASI 让编码风格有了更多自由，但无论你是否使用分号，它也可能导致代码以出乎意料的方式运行。因此，最好了解 ASI 何时会生效、何时不会生效，并让 ESLint 保护你的代码免受这些潜在意外的影响。简而言之，正如 Isaac Schlueter 曾经所说，除非符合以下任一情况，否则 `\n` 字符总会结束一条语句（就像分号一样）：
 
-1. The statement has an unclosed paren, array literal, or object literal or ends in some other way that is not a valid way to end a statement. (For instance, ending with `.` or `,`.)
-1. The line is `--` or `++` (in which case it will decrement/increment the next token.)
-1. It is a `for()`, `while()`, `do`, `if()`, or `else`, and there is no `{`
-1. The next line starts with `[`, `(`, `+`, `*`, `/`, `-`, `,`, `.`, or some other binary operator that can only be found between two tokens in a single expression.
+1. 语句中有未闭合的括号、数组字面量或对象字面量，或者以其他无效的语句结束方式结尾。（例如，以 `.` 或 `,` 结尾。）
+1. 该行是 `--` 或 `++`（此时它会对下一个标记执行递减或递增操作）。
+1. 它是 `for()`、`while()`、`do`、`if()` 或 `else`，且后面没有 `{`
+1. 下一行以 `[`, `(`, `+`, `*`, `/`, `-`, `,`, `.` 或其他只能出现在单个表达式中两个标记之间的二元运算符开头。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces consistent use of semicolons.
+## 规则详情
 
-## Options
+此规则用于强制统一分号的使用方式。
 
-This rule has two options, a string option and an object option.
+<a id="options"></a>
 
-String option:
+## 选项
 
-* `"always"` (default) requires semicolons at the end of statements
-* `"never"` disallows semicolons at the end of statements (except to disambiguate statements beginning with `[`, `(`, `/`, `+`, or `-`)
+此规则有两个选项：字符串选项和对象选项。
 
-Object option (when `"always"`):
+字符串选项：
 
-* `"omitLastInOneLineBlock": true` disallows the last semicolon in a block in which its braces (and therefore the content of the block) are in the same line
-* `"omitLastInOneLineClassBody": true` disallows the last semicolon in a class body in which its braces (and therefore the content of the class body) are in the same line
+* `"always"`（默认值）要求在语句末尾添加分号
+* `"never"` 禁止在语句末尾添加分号（但以 `[`, `(`, `/`, `+` 或 `-` 开头的语句除外，以避免歧义）
 
-Object option (when `"never"`):
+对象选项（当使用 `"always"` 时）：
 
-* `"beforeStatementContinuationChars": "any"` (default) ignores semicolons (or lacking semicolon) at the end of statements if the next line starts with `[`, `(`, `/`, `+`, or `-`.
-* `"beforeStatementContinuationChars": "always"` requires semicolons at the end of statements if the next line starts with `[`, `(`, `/`, `+`, or `-`.
-* `"beforeStatementContinuationChars": "never"` disallows semicolons at the end of statements if it doesn't make ASI hazard even if the next line starts with `[`, `(`, `/`, `+`, or `-`.
+* `"omitLastInOneLineBlock": true` 禁止在花括号（因此也包括块内容）位于同一行的代码块末尾添加分号
+* `"omitLastInOneLineClassBody": true` 禁止在花括号（因此也包括类主体内容）位于同一行的类主体末尾添加分号
 
-**Note:** `beforeStatementContinuationChars` does not apply to class fields because class fields are not statements.
+对象选项（当使用 `"never"` 时）：
 
-### always
+* `"beforeStatementContinuationChars": "any"`（默认值）忽略语句末尾是否有分号（或缺少分号），前提是下一行以 `[`, `(`, `/`, `+` 或 `-` 开头。
+* `"beforeStatementContinuationChars": "always"` 如果下一行以 `[`, `(`, `/`, `+` 或 `-` 开头，则要求在语句末尾添加分号。
+* `"beforeStatementContinuationChars": "never"` 即使下一行以 `[`, `(`, `/`, `+` 或 `-` 开头，只要不会造成 ASI 隐患，就禁止在语句末尾添加分号。
 
-Examples of **incorrect** code for this rule with the default `"always"` option:
+**注意：**`beforeStatementContinuationChars` 不适用于类字段，因为类字段不是语句。
+
+<a id="always"></a>
+
+### 始终
+
+此规则在默认的 `"always"` 选项下，以下代码示例属于**错误**：
 
 ::: incorrect
 
@@ -110,7 +116,7 @@ class Foo {
 
 :::
 
-Examples of **correct** code for this rule with the default `"always"` option:
+此规则在默认的 `"always"` 选项下，以下代码示例属于**正确**：
 
 ::: correct
 
@@ -132,7 +138,7 @@ class Foo {
 
 #### omitLastInOneLineBlock
 
-Examples of additional **correct** code for this rule with the `"always", { "omitLastInOneLineBlock": true }` options:
+使用 `"always", { "omitLastInOneLineBlock": true }` 选项时，以下是其他**正确**代码示例：
 
 ::: correct
 
@@ -156,7 +162,7 @@ class C {
 
 #### omitLastInOneLineClassBody
 
-Examples of additional **correct** code for this rule with the `"always", { "omitLastInOneLineClassBody": true }` options:
+使用 `"always", { "omitLastInOneLineClassBody": true }` 选项时，以下是其他**正确**代码示例：
 
 ::: correct
 
@@ -176,9 +182,11 @@ export class Variant2 extends SomeClass{type=2; anotherType=3}
 
 :::
 
-### never
+<a id="never"></a>
 
-Examples of **incorrect** code for this rule with the `"never"` option:
+### 从不
+
+使用 `"never"` 选项时，以下代码示例属于**错误**：
 
 ::: incorrect
 
@@ -198,7 +206,7 @@ class Foo {
 
 :::
 
-Examples of **correct** code for this rule with the `"never"` option:
+使用 `"never"` 选项时，以下代码示例属于**正确**：
 
 ::: correct
 
@@ -236,7 +244,7 @@ class Foo {
 
 #### beforeStatementContinuationChars
 
-Examples of additional **incorrect** code for this rule with the `"never", { "beforeStatementContinuationChars": "always" }` options:
+使用 `"never", { "beforeStatementContinuationChars": "always" }` 选项时，以下是其他**错误**代码示例：
 
 ::: incorrect
 
@@ -251,7 +259,7 @@ import a from "a"
 
 :::
 
-Examples of additional **incorrect** code for this rule with the `"never", { "beforeStatementContinuationChars": "never" }` options:
+使用 `"never", { "beforeStatementContinuationChars": "never" }` 选项时，以下是其他**错误**代码示例：
 
 ::: incorrect
 
@@ -266,6 +274,8 @@ import a from "a"
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you do not want to enforce semicolon usage (or omission) in any particular way, then you can turn this rule off.
+## 何时不应使用
+
+如果你不想以任何特定方式强制要求使用（或省略）分号，可以关闭此规则。
