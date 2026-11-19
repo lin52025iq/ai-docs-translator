@@ -8,17 +8,16 @@ further_reading:
 
 
 
-There are two ways to create a regular expression:
+创建正则表达式有两种方式：
 
-* Regular expression literals, e.g., `/abc/u`.
-* The `RegExp` constructor function, e.g., `new RegExp("abc", "u")` or `RegExp("abc", "u")`.
+* 正则表达式字面量，例如 `/abc/u`。
+* `RegExp` 构造函数，例如 `new RegExp("abc", "u")` 或 `RegExp("abc", "u")`。
 
-The constructor function is particularly useful when you want to dynamically generate the pattern,
-because it takes string arguments.
+构造函数在需要动态生成模式时尤其有用，因为它接受字符串参数。
 
-When using the constructor function with string literals, don't forget that the string escaping rules still apply.
-If you want to put a backslash in the pattern, you need to escape it in the string literal.
-Thus, the following are equivalent:
+使用构造函数和字符串字面量时，别忘了字符串转义规则仍然适用。
+如果要在模式中加入反斜杠，就需要在字符串字面量中对它进行转义。
+因此，下面两种写法等价：
 
 ```js
 new RegExp("^\\d\\.$");
@@ -28,8 +27,8 @@ new RegExp("^\\d\\.$");
 // matches "0.", "1.", "2." ... "9."
 ```
 
-In the above example, the regular expression literal is easier to read and reason about.
-Also, it's a common mistake to omit the extra `\` in the string literal, which would produce a completely different regular expression:
+在上面的示例中，正则表达式字面量更容易阅读和理解。
+此外，常见的错误是在字符串字面量中漏掉额外的 `\`，这会生成完全不同的正则表达式：
 
 ```js
 new RegExp("^\d\.$");
@@ -37,20 +36,19 @@ new RegExp("^\d\.$");
 // equivalent to /^d.$/, matches "d1", "d2", "da", "db" ...
 ```
 
-When a regular expression is known in advance, it is considered a best practice to avoid the string literal notation on top
-of the regular expression notation, and use regular expression literals instead of the constructor function.
+如果正则表达式是预先已知的，最佳实践是避免在正则表达式表示法外再套一层字符串字面量表示法，并使用正则表达式字面量，而不是构造函数。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows the use of the `RegExp` constructor function with string literals as its arguments.
+## 规则详情
 
-This rule also disallows the use of the `RegExp` constructor function with template literals without expressions
-and `String.raw` tagged template literals without expressions.
+此规则禁止将字符串字面量作为参数传递给 `RegExp` 构造函数。
 
-The rule does not disallow all use of the `RegExp` constructor. It should be still used for
-dynamically generated regular expressions.
+此规则还禁止使用不包含表达式的模板字面量，以及不包含表达式的 `String.raw` 标记模板字面量调用 `RegExp` 构造函数。
 
-Examples of **incorrect** code for this rule:
+此规则并不禁止所有对 `RegExp` 构造函数的使用。动态生成正则表达式时，仍应使用它。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -74,7 +72,7 @@ new RegExp(String.raw`^\d\.$`);
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -104,17 +102,19 @@ new RegExp(String.raw`^\d\. ${suffix}`);
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has an object option:
+## 选项
 
-* `disallowRedundantWrapping` set to `true` additionally checks for unnecessarily wrapped regex literals (Default `false`).
+此规则有一个对象选项：
+
+* `disallowRedundantWrapping` 设为 `true` 时，还会检查是否存在不必要地包装起来的正则表达式字面量（默认值为 `false`）。
 
 ### disallowRedundantWrapping
 
-By default, this rule doesn’t check when a regex literal is unnecessarily wrapped in a `RegExp` constructor call. When the option `disallowRedundantWrapping` is set to `true`, the rule will also disallow such unnecessary patterns.
+默认情况下，此规则不会检查正则表达式字面量是否被不必要地包装在 `RegExp` 构造函数调用中。将选项 `disallowRedundantWrapping` 设为 `true` 后，此规则也会禁止这类不必要的写法。
 
-Examples of `incorrect` code for `{ "disallowRedundantWrapping": true }`
+`{ "disallowRedundantWrapping": true }` 的 `incorrect` 代码示例：
 
 ::: incorrect
 
@@ -128,7 +128,7 @@ new RegExp(/abc/, 'u');
 
 :::
 
-Examples of `correct` code for `{ "disallowRedundantWrapping": true }`
+`{ "disallowRedundantWrapping": true }` 的 `correct` 代码示例：
 
 ::: correct
 
