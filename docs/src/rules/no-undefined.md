@@ -13,7 +13,7 @@ further_reading:
 ---
 
 
-The `undefined` variable in JavaScript is actually a property of the global object. As such, in ECMAScript 3 it was possible to overwrite the value of `undefined`. While ECMAScript 5 disallows overwriting `undefined`, it's still possible to shadow `undefined`, such as:
+在 JavaScript 中，`undefined` 变量实际上是全局对象的一个属性。因此，在 ECMAScript 3 中，可以改写 `undefined` 的值。尽管 ECMAScript 5 禁止改写 `undefined`，但仍然可以遮蔽 `undefined`，例如：
 
 ```js
 function doSomething(data) {
@@ -27,19 +27,21 @@ function doSomething(data) {
 }
 ```
 
-Because `undefined` can be overwritten or shadowed, reading `undefined` can give an unexpected value. (This is not the case for `null`, which is a keyword that always produces the same value.) To guard against this, you can avoid all uses of `undefined`, which is what some style guides recommend and what this rule enforces. Those style guides then also recommend:
+由于 `undefined` 可以被改写或遮蔽，读取 `undefined` 时可能会得到意料之外的值。（`null` 则不会如此，因为它是一个关键字，始终会产生相同的值。）为避免这种情况，可以完全不使用 `undefined`；一些风格指南就建议这样做，而本规则也强制执行这一做法。这些风格指南还建议：
 
-* Variables that should be `undefined` are simply left uninitialized. (All uninitialized variables automatically get the value of `undefined` in JavaScript.)
-* Checking if a value is `undefined` should be done with `typeof`.
-* Using the `void` operator to generate the value of `undefined` if necessary.
+* 应为 `undefined` 的变量只需保持未初始化状态。（在 JavaScript 中，所有未初始化的变量都会自动获得 `undefined` 值。）
+* 应使用 `typeof` 检查值是否为 `undefined`。
+* 必要时使用 `void` 运算符生成 `undefined` 值。
 
-As an alternative, you can use the [no-global-assign](no-global-assign) and [no-shadow-restricted-names](no-shadow-restricted-names) rules to prevent `undefined` from being shadowed or assigned a different value. This ensures that `undefined` will always hold its original, expected value.
+或者，你也可以使用 [no-global-assign](no-global-assign) 和 [no-shadow-restricted-names](no-shadow-restricted-names) 规则，防止 `undefined` 被遮蔽或赋予其他值。这样可以确保 `undefined` 始终保持其原本预期的值。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to eliminate the use of `undefined`, and as such, generates a warning whenever it is used.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+本规则旨在消除对 `undefined` 的使用，因此每当使用它时都会发出警告。
+
+本规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -63,7 +65,7 @@ bar(undefined, "lorem");
 
 :::
 
-Examples of **correct** code for this rule:
+本规则的**正确**代码示例：
 
 ::: correct
 
@@ -85,10 +87,14 @@ bar(void 0, "lorem");
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+本规则没有选项。
 
-If you want to allow the use of `undefined` in your code, then you can safely turn this rule off.
+<a id="when-not-to-use-it"></a>
+
+## 何时不应使用
+
+如果你希望允许在代码中使用 `undefined`，可以放心关闭本规则。
