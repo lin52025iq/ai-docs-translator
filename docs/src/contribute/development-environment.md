@@ -1,33 +1,37 @@
 ---
-title: Set up a Development Environment
+title: 设置开发环境
 eleventyNavigation:
     key: development environment
     parent: contribute to eslint
-    title: Set up a Development Environment
+    title: 设置开发环境
     order: 7
 ---
 
 {%- from 'components/npm_tabs.macro.html' import npm_tabs with context %}
 
-ESLint has a very lightweight development environment that makes updating code fast and easy. This is a step-by-step guide to setting up a local development environment that will let you contribute back to the project.
+ESLint 的开发环境非常轻量，因此更新代码既快速又简单。本指南将逐步介绍如何设置本地开发环境，以便你为该项目贡献代码。
 
-## Step 1: Install Node.js
+<a id="step-1-install-nodejs"></a>
 
-Go to <https://nodejs.org/> to download and install the latest stable version for your operating system.
+## 步骤 1：安装 Node.js
 
-Most of the installers already come with [npm](https://www.npmjs.com/) but if for some reason npm doesn't work on your system, you can install it manually using the instructions on the site.
+前往 <https://nodejs.org/>，下载并安装适用于你的操作系统的最新稳定版本。
 
-## Step 2: Fork and Checkout Your Own ESLint Repository
+大多数安装程序都自带 [npm](https://www.npmjs.com/)，但如果 npm 因某些原因无法在你的系统上运行，可以按照网站上的说明手动安装。
 
-Go to <https://github.com/eslint/eslint> and click the "Fork" button. Follow the [GitHub documentation](https://help.github.com/articles/fork-a-repo) for forking and cloning.
+<a id="step-2-fork-and-checkout-your-own-eslint-repository"></a>
 
-Clone your fork:
+## 步骤 2：派生并检出你自己的 ESLint 仓库
+
+前往 <https://github.com/eslint/eslint> 并点击“Fork”按钮。按照 [GitHub 文档](https://help.github.com/articles/fork-a-repo)进行派生和克隆。
+
+克隆你的派生仓库：
 
 ```shell
 git clone https://github.com/<Your GitHub Username>/eslint
 ```
 
-Once you've cloned the repository, run `npm install` to get all the necessary dependencies:
+克隆仓库后，运行 `npm install` 以获取所有必需的依赖项：
 
 ```shell
 cd eslint
@@ -39,25 +43,29 @@ cd eslint
     args: []
 }) }}
 
-You must be connected to the Internet for this step to work. You'll see a lot of utilities being downloaded.
+此步骤需要连接互联网才能完成。你会看到系统正在下载许多实用工具。
 
-**Note:** It's a good idea to re-run `npm install` whenever you pull from the main repository to ensure you have the latest development dependencies.
+**注意：**每次从主仓库拉取更新后，最好重新运行 `npm install`，以确保拥有最新的开发依赖项。
 
-## Step 3: Add the Upstream Source
+<a id="step-3-add-the-upstream-source"></a>
 
-The _upstream source_ is the main ESLint repository where active development happens. While you won't have push access to upstream, you will have pull access, allowing you to pull in the latest code whenever you want.
+## 步骤 3：添加上游源
 
-To add the upstream source for ESLint, run the following in your repository:
+_上游源_是进行活跃开发的 ESLint 主仓库。虽然你没有权限向上游推送更改，但可以从上游拉取代码，因此可以随时获取最新代码。
+
+要为 ESLint 添加上游源，请在你的仓库中运行以下命令：
 
 ```shell
 git remote add upstream git@github.com:eslint/eslint.git
 ```
 
-Now, the remote `upstream` points to the upstream source.
+现在，远程仓库 `upstream` 指向上游源。
 
-## Step 4: Install the Yeoman Generator
+<a id="step-4-install-the-yeoman-generator"></a>
 
-[Yeoman](https://yeoman.io) is a scaffold generator that ESLint uses to help streamline development of new rules. If you don't already have Yeoman installed, you can install it via npm:
+## 步骤 4：安装 Yeoman 生成器
+
+[Yeoman](https://yeoman.io) 是一种脚手架生成器，ESLint 使用它来简化新规则的开发。如果你尚未安装 Yeoman，可以通过 npm 安装：
 
 {{ npm_tabs({
     command: "install",
@@ -65,7 +73,7 @@ Now, the remote `upstream` points to the upstream source.
     args: ["--global"]
 }) }}
 
-Then, you can install the ESLint Yeoman generator:
+然后，你可以安装 ESLint 的 Yeoman 生成器：
 
 {{ npm_tabs({
     command: "install",
@@ -73,61 +81,71 @@ Then, you can install the ESLint Yeoman generator:
     args: ["--global"]
 }) }}
 
-Please see the [generator documentation](https://github.com/eslint/generator-eslint) for instructions on how to use it.
+有关如何使用它的说明，请参阅[生成器文档](https://github.com/eslint/generator-eslint)。
 
-## Step 5: Run the Tests
+<a id="step-5-run-the-tests"></a>
 
-Running the tests is the best way to ensure you have correctly set up your development environment. Make sure you're in the `eslint` directory and run:
+## 步骤 5：运行测试
+
+运行测试是确保开发环境设置正确的最佳方式。请确保你位于 `eslint` 目录中，然后运行：
 
 ```shell
 npm test
 ```
 
-The testing takes a few minutes to complete. If any tests fail, that likely means one or more parts of the environment setup didn't complete correctly. The upstream tests always pass.
+测试需要几分钟才能完成。如果有任何测试失败，很可能是环境设置中的某个环节未能正确完成。上游测试始终可以通过。
 
-## Reference Information
+<a id="reference-information"></a>
 
-### Directory Structure
+## 参考信息
 
-The ESLint directory and file structure is as follows:
+<a id="directory-structure"></a>
 
-- `bin` - executable files that are available when ESLint is installed.
-- `conf` - default configuration information.
-- `docs` - documentation for the project.
-- `lib` - contains the source code.
-    - `formatters` - all source files defining formatters.
-    - `rules` - all source files defining rules.
-- `tests` - the main unit test folder.
-    - `lib` - tests for the source code.
-        - `formatters` - tests for the formatters.
-        - `rules` - tests for the rules.
+### 目录结构
 
-### Workflow
+ESLint 的目录和文件结构如下：
 
-Once you have your development environment installed, you can make and submit changes to the ESLint source files. Doing this successfully requires careful adherence to our [pull-request submission workflow](./pull-requests).
+- `bin` - 安装 ESLint 后可用的可执行文件。
+- `conf` - 默认配置信息。
+- `docs` - 项目文档。
+- `lib` - 包含源代码。
+    - `formatters` - 定义格式化器的所有源文件。
+    - `rules` - 定义规则的所有源文件。
+- `tests` - 主要的单元测试目录。
+    - `lib` - 源代码的测试。
+        - `formatters` - 格式化器的测试。
+        - `rules` - 规则的测试。
 
-### Build Scripts
+<a id="workflow"></a>
 
-ESLint has several build scripts that help with various parts of development.
+### 工作流程
+
+设置好开发环境后，你就可以修改并提交 ESLint 源文件。要成功完成此操作，必须严格遵循我们的[拉取请求提交工作流程](./pull-requests)。
+
+<a id="build-scripts"></a>
+
+### 构建脚本
+
+ESLint 提供了多个构建脚本，可帮助完成开发中的各种工作。
 
 #### npm test
 
-The primary script to use is `npm test`, which does several things:
+主要使用的脚本是 `npm test`，它会执行以下操作：
 
-1. Lints all JavaScript (including tests) and JSON.
-1. Runs all tests on Node.js.
-1. Checks code coverage targets.
-1. Generates `build/eslint.js` for use in a browser.
-1. Runs a subset of tests in PhantomJS.
+1. 对所有 JavaScript（包括测试）和 JSON 文件进行代码检查。
+1. 在 Node.js 上运行所有测试。
+1. 检查代码覆盖率目标。
+1. 生成供浏览器使用的 `build/eslint.js`。
+1. 在 PhantomJS 中运行部分测试。
 
-Be sure to run this after making changes and before sending a pull request with your changes.
+完成更改后、提交拉取请求之前，请务必运行此脚本。
 
-**Note:** The full code coverage report is output into `/coverage`.
+**注意：**完整的代码覆盖率报告会输出到 `/coverage`。
 
 #### npm run lint
 
-Runs just the JavaScript and JSON linting on the repository.
+仅对仓库中的 JavaScript 和 JSON 文件进行代码检查。
 
 #### npm run webpack
 
-Generates `build/eslint.js`, a version of ESLint for use in the browser.
+生成供浏览器使用的 ESLint 版本 `build/eslint.js`。
