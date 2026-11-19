@@ -8,7 +8,7 @@ further_reading:
 ---
 
 
-Shadowing is the process by which a local variable shares the same name as a variable in its containing scope. For example:
+变量遮蔽是指局部变量与其所在作用域中的变量同名的情况。例如：
 
 ```js
 const a = 3;
@@ -17,13 +17,15 @@ function b() {
 }
 ```
 
-In this case, the variable `a` inside of `b()` is shadowing the variable `a` in the global scope. This can cause confusion while reading the code and it's impossible to access the global variable.
+在这种情况下，`b()` 中的变量 `a` 遮蔽了全局作用域中的变量 `a`。这会让代码难以阅读，而且全局变量也无法访问。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to eliminate shadowed variable declarations.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在消除被遮蔽的变量声明。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -55,7 +57,7 @@ const C = wrap(class C {});
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -84,15 +86,17 @@ const C = class C {};
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule takes one option, an object, with the following properties:
+## 选项
+
+此规则接受一个对象作为选项，包含以下属性：
 - `"builtinGlobals"`
 - `"hoist"`
 - `"allow"`
 - `"ignoreOnInitialization"`
-- `"ignoreTypeValueShadow"` (TypeScript only)
-- `"ignoreFunctionTypeParameterNameValueShadow"` (TypeScript only)
+- `"ignoreTypeValueShadow"`（仅限 TypeScript）
+- `"ignoreFunctionTypeParameterNameValueShadow"`（仅限 TypeScript）
 
 ```json
 {
@@ -102,10 +106,10 @@ This rule takes one option, an object, with the following properties:
 
 ### builtinGlobals
 
-The `builtinGlobals` option is `false` by default.
-If it is `true`, the rule prevents shadowing of built-in global variables: `Object`, `Array`, `Number`, and so on.
+`builtinGlobals` 选项默认为 `false`。
+如果设置为 `true`，此规则会阻止遮蔽内置全局变量，例如 `Object`、`Array`、`Number` 等。
 
-Examples of **incorrect** code for the `{ "builtinGlobals": true }` option:
+`{ "builtinGlobals": true }` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -121,17 +125,17 @@ function foo() {
 
 ### hoist
 
-The `hoist` option has five settings:
+`hoist` 选项有五种设置：
 
-- `functions` (by default) - reports shadowing before the outer functions are defined.
-- `all` - reports all shadowing before the outer variables/functions are defined.
-- `never` - never report shadowing before the outer variables/functions are defined.
-- `types` (TypeScript only) - reports shadowing before the outer types are defined.
-- `functions-and-types` (TypeScript only) - reports shadowing before the outer functions and types are defined.
+- `functions`（默认值）——在外层函数声明之前报告变量遮蔽。
+- `all`——在外层变量或函数声明之前报告所有变量遮蔽。
+- `never`——在外层变量或函数声明之前不报告变量遮蔽。
+- `types`（仅限 TypeScript）——在外层类型声明之前报告变量遮蔽。
+- `functions-and-types`（仅限 TypeScript）——在外层函数或类型声明之前报告变量遮蔽。
 
 #### hoist: functions
 
-Examples of **incorrect** code for the default `{ "hoist": "functions" }` option:
+默认 `{ "hoist": "functions" }` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -147,9 +151,9 @@ function b() {}
 
 :::
 
-Although `const b` in the `if` statement is before the *function* declaration in the outer scope, it is incorrect.
+尽管 `if` 语句中的 `const b` 位于外层作用域的 *函数* 声明之前，但这仍然是错误的。
 
-Examples of **correct** code for the default `{ "hoist": "functions" }` option:
+默认 `{ "hoist": "functions" }` 选项的正确代码示例：
 
 ::: correct
 
@@ -165,11 +169,11 @@ const a = 5;
 
 :::
 
-Because `const a` in the `if` statement is before the *variable* declaration in the outer scope, it is correct.
+因为 `if` 语句中的 `const a` 位于外层作用域的 *变量* 声明之前，所以这是正确的。
 
 #### hoist: all
 
-Examples of **incorrect** code for the `{ "hoist": "all" }` option:
+`{ "hoist": "all" }` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -189,7 +193,7 @@ function b() {}
 
 #### hoist: never
 
-Examples of **correct** code for the `{ "hoist": "never" }` option:
+`{ "hoist": "never" }` 选项的正确代码示例：
 
 ::: correct
 
@@ -207,11 +211,11 @@ function b() {}
 
 :::
 
-Because `const a` and `const b` in the `if` statement are before the declarations in the outer scope, they are correct.
+因为 `if` 语句中的 `const a` 和 `const b` 位于外层作用域的声明之前，所以它们是正确的。
 
 #### hoist: types
 
-Examples of **incorrect** code for the `{ "hoist": "types" }` option:
+`{ "hoist": "types" }` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -226,7 +230,7 @@ type Foo = 1;
 
 #### hoist: functions-and-types
 
-Examples of **incorrect** code for the `{ "hoist": "functions-and-types" }` option:
+`{ "hoist": "functions-and-types" }` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -249,9 +253,9 @@ function b() {}
 
 ### allow
 
-The `allow` option is an array of identifier names for which shadowing is allowed. For example, `"resolve"`, `"reject"`, `"done"`, `"cb"`.
+`allow` 选项是一个标识符名称数组，其中的名称允许被遮蔽。例如，`"resolve"`、`"reject"`、`"done"`、`"cb"`。
 
-Examples of **correct** code for the `{ "allow": ["done"] }` option:
+`{ "allow": ["done"] }` 选项的正确代码示例：
 
 ::: correct
 
@@ -275,11 +279,11 @@ foo(function (err, result) {
 
 ### ignoreOnInitialization
 
-The `ignoreOnInitialization` option is `false` by default. If it is `true`, it prevents reporting shadowing of variables in their initializers when the shadowed variable is presumably still uninitialized.
+`ignoreOnInitialization` 选项默认为 `false`。如果设置为 `true`，当被遮蔽的变量可能尚未初始化时，此选项会阻止在变量初始化表达式中报告遮蔽。
 
-The shadowed variable must be on the left side. The shadowing variable must be on the right side and declared in a callback function or in an IIFE.
+被遮蔽的变量必须位于左侧。遮蔽变量必须位于右侧，并在回调函数或 IIFE 中声明。
 
-Examples of **incorrect** code for the `{ "ignoreOnInitialization": "true" }` option:
+`{ "ignoreOnInitialization": "true" }` 选项的错误代码示例：
 
 ::: incorrect
 
@@ -291,9 +295,9 @@ const x = x => x;
 
 :::
 
-Because the shadowing variable `x` will shadow the already initialized shadowed variable `x`.
+因为遮蔽变量 `x` 会遮蔽已经初始化的被遮蔽变量 `x`。
 
-Examples of **correct** code for the `{ "ignoreOnInitialization": true }` option:
+`{ "ignoreOnInitialization": true }` 选项的正确代码示例：
 
 ::: correct
 
@@ -307,15 +311,15 @@ const y = (y => y)()
 
 :::
 
-The rationale for callback functions is the assumption that they will be called during the initialization, so that at the time when the shadowing variable will be used, the shadowed variable has not yet been initialized.
+对回调函数采用此规则的理由是，假定它们会在初始化期间被调用，因此在使用遮蔽变量时，被遮蔽的变量尚未初始化。
 
 ### ignoreTypeValueShadow
 
-Whether to ignore types named the same as a variable. Default: `true`.
+是否忽略与变量同名的类型。默认值：`true`。
 
-This is generally safe because you cannot use variables in type locations without a typeof operator, so there's little risk of confusion.
+通常这样做是安全的，因为在类型位置使用变量必须借助 typeof 运算符，因此几乎不会造成混淆。
 
-Examples of **correct** code with `{ "ignoreTypeValueShadow": true }`:
+`{ "ignoreTypeValueShadow": true }` 的正确代码示例：
 
 ::: correct
 
@@ -335,14 +339,14 @@ function f() {
 
 :::
 
-**Note:** Shadowing specifically refers to two identical identifiers that are in different, nested scopes. This is different from redeclaration, which is when two identical identifiers are in the same scope. Redeclaration is covered by the [`no-redeclare`](/rules/no-redeclare) rule instead.
+**注意：**变量遮蔽特指位于不同嵌套作用域中的两个同名标识符。这与重复声明不同；重复声明是指两个同名标识符位于同一作用域中。重复声明由 [`no-redeclare`](/rules/no-redeclare) 规则处理。
 
 
 ### ignoreFunctionTypeParameterNameValueShadow
 
-Whether to ignore function parameters named the same as a variable. Default: `true`.
+是否忽略与变量同名的函数参数。默认值：`true`。
 
-Each of a function type's arguments creates a value variable within the scope of the function type. This is done so that you can reference the type later using the typeof operator:
+函数类型的每个参数都会在该函数类型的作用域内创建一个值变量。这样做是为了让你之后可以使用 typeof 运算符引用该类型：
 
 ```ts
 type Func = (test: string) => typeof test;
@@ -351,7 +355,7 @@ declare const fn: Func;
 const result = fn('str'); // typeof result === string
 ```
 
-This means that function type arguments shadow value variable names in parent scopes:
+这意味着，函数类型的参数会遮蔽父作用域中的值变量名称：
 
 ```ts
 let test = 1;
@@ -362,9 +366,9 @@ declare const fn: Func;
 const result = fn('str'); // typeof result === string
 ```
 
-If you do not use the `typeof` operator in a function type return type position, you can safely turn this option on.
+如果函数类型的返回类型位置没有使用 `typeof` 运算符，则可以安全地启用此选项。
 
-Examples of **correct** code with `{ "ignoreFunctionTypeParameterNameValueShadow": true }`:
+`{ "ignoreFunctionTypeParameterNameValueShadow": true }` 的正确代码示例：
 
 ::: correct
 
@@ -377,11 +381,13 @@ type Func = (test: string) => typeof test;
 
 :::
 
-### Why does the rule report on enum members that share the same name as a variable in a parent scope?
+<a id="why-does-the-rule-report-on-enum-members-that-share-the-same-name-as-a-variable-in-a-parent-scope"></a>
 
-This isn't a bug — the rule is working exactly as intended! The report is correct because of a lesser-known aspect of enums: enum members introduce a variable within the enum's own scope, allowing them to be referenced without needing a qualifier.
+### 为什么规则会报告与父作用域中的变量同名的枚举成员？
 
-Here's a simple example to explain:
+这不是错误——规则的行为完全符合预期！此报告是正确的，因为枚举有一个鲜为人知的特性：枚举成员会在枚举自身的作用域中引入一个变量，因此无需限定名称即可引用它们。
+
+下面用一个简单示例来说明：
 
 ```ts
 const A = 2;
@@ -393,4 +399,4 @@ enum Test {
 console.log(Test.B); // what should be logged?
 ```
 
-At first glance, you might think it should log `2`, because the outer variable A's value is `2`. However, it actually logs `1`, the value of `Test.A`. This happens because inside the enum `B = A` is treated as `B = Test.A`. Due to this behavior, the enum member has shadowed the outer variable declaration.
+乍一看，你可能会认为它应该输出 `2`，因为外层变量 A 的值是 `2`。然而，实际输出的是 `1`，也就是 `Test.A` 的值。这是因为在枚举内部，`B = A` 会被视为 `B = Test.A`。由于这种行为，枚举成员遮蔽了外层变量声明。
