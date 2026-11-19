@@ -6,9 +6,9 @@ related_rules:
 ---
 
 
-In JavaScript, you can extend any object, including builtin or "native" objects. Sometimes people change the behavior of these native objects in ways that break the assumptions made about them in other parts of the code.
+在 JavaScript 中，你可以扩展任何对象，包括内置对象或“原生”对象。有时，人们会更改这些原生对象的行为，从而破坏代码其他部分对它们的假设。
 
-For example here we are overriding a builtin method that will then affect all Objects, even other builtins.
+例如，下面我们重写了一个内置方法，这会影响所有对象，甚至其他内置对象。
 
 ```js
 // seems harmless
@@ -26,13 +26,15 @@ for (const id in users) {
 }
 ```
 
-A common suggestion to avoid this problem would be to wrap the inside of the `for` loop with `users.hasOwnProperty(id)`. However, if this rule is strictly enforced throughout your codebase you won't need to take that step.
+避免这个问题的常见建议是在 `for` 循环内部使用 `users.hasOwnProperty(id)` 进行包装。不过，如果在整个代码库中严格执行此规则，就不需要采取这一步了。
 
-## Rule Details
+<a id="rule-details"></a>
 
-Disallows directly modifying the prototype of builtin objects.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+禁止直接修改内置对象的原型。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -45,13 +47,17 @@ Object.defineProperty(Array.prototype, "times", { value: 999 });
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule accepts an `exceptions` option, which can be used to specify a list of builtins for which extensions will be allowed.
+## 选项
 
-### exceptions
+此规则接受一个 `exceptions` 选项，可用于指定允许扩展的内置对象列表。
 
-Examples of **correct** code for the sample `{ "exceptions": ["Object"] }` option:
+<a id="exceptions"></a>
+
+### 例外
+
+以下是示例 `{ "exceptions": ["Object"] }` 选项的正确代码示例：
 
 ::: correct
 
@@ -63,9 +69,11 @@ Object.prototype.a = "a";
 
 :::
 
-## Known Limitations
+<a id="known-limitations"></a>
 
-This rule *does not* report any of the following less obvious approaches to modify the prototype of builtin objects:
+## 已知限制
+
+此规则*不会*报告以下这些不太明显的内置对象原型修改方式：
 
 ```js
 const x = Object;
@@ -80,6 +88,8 @@ with(Array) {
 window.Function.prototype.bind = 'tight';
 ```
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You may want to disable this rule when working with polyfills that try to patch older versions of JavaScript with the latest spec, such as those that might `Function.prototype.bind` or `Array.prototype.forEach` in a future-friendly way.
+## 何时不应使用
+
+如果你正在使用垫片，尝试用最新规范修补旧版 JavaScript，可能需要禁用此规则。例如，这类垫片可能会以兼容未来规范的方式实现 `Function.prototype.bind` 或 `Array.prototype.forEach`。
