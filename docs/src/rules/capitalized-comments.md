@@ -5,17 +5,19 @@ rule_type: suggestion
 
 
 
-Comments are useful for leaving information for future developers. In order for that information to be useful and not distracting, it is sometimes desirable for comments to follow a particular style. One element of comment formatting styles is whether the first word of a comment should be capitalized or lowercase.
+注释可用于为未来的开发者留下信息。为了让这些信息有用且不造成干扰，有时希望注释遵循特定的风格。注释格式风格的一个方面是注释的第一个单词应当首字母大写还是小写。
 
-In general, no comment style is any more or less valid than any others, but many developers would agree that a consistent style can improve a project's maintainability.
+一般来说，任何一种注释风格都没有高下之分，但许多开发者都认同，保持风格一致有助于提高项目的可维护性。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to enforce a consistent style of comments across your codebase, specifically by either requiring or disallowing a capitalized letter as the first word character in a comment. This rule will not issue warnings when non-cased letters are used.
+## 规则详情
 
-By default, this rule will require a non-lowercase letter at the beginning of comments.
+此规则旨在确保代码库中的注释风格一致，具体来说，就是要求或禁止注释的第一个词以大写字母开头。使用不区分大小写的字母时，此规则不会发出警告。
 
-Examples of **incorrect** code for this rule:
+默认情况下，此规则要求注释以非小写字母开头。
+
+此规则中**错误**代码的示例：
 
 :::incorrect
 
@@ -28,7 +30,7 @@ Examples of **incorrect** code for this rule:
 
 :::
 
-Examples of **correct** code for this rule:
+此规则中**正确**代码的示例：
 
 :::correct
 
@@ -61,18 +63,20 @@ bar // eslint-disable-line
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has two options: a string value `"always"` or `"never"` which determines whether capitalization of the first word of a comment should be required or forbidden, and optionally an object containing more configuration parameters for the rule.
+## 选项
 
-Here are the supported object options:
+此规则有两个选项：字符串值 `"always"` 或 `"never"`，用于决定是否要求或禁止注释第一个单词的首字母大写；还可以选择提供一个包含此规则更多配置参数的对象。
 
-* `ignorePattern`: A string representing a regular expression pattern of words that should be ignored by this rule. If the first word of a comment matches the pattern, this rule will not report that comment.
-    * Note that the following words are always ignored by this rule: `["jscs", "jshint", "eslint", "istanbul", "global", "globals", "exported"]`.
-* `ignoreInlineComments`: If this is `true`, the rule will not report on comments in the middle of code. By default, this is `false`.
-* `ignoreConsecutiveComments`: If this is `true`, the rule will not report on a comment which violates the rule, as long as the comment immediately follows another comment. By default, this is `false`.
+支持的对象选项如下：
 
-Here is an example configuration:
+* `ignorePattern`：一个字符串，表示此规则应忽略的单词的正则表达式模式。如果注释的第一个单词与该模式匹配，此规则就不会报告该注释。
+    * 请注意，以下单词始终会被此规则忽略：`["jscs", "jshint", "eslint", "istanbul", "global", "globals", "exported"]`。
+* `ignoreInlineComments`：如果此选项为 `true`，此规则不会报告代码中间的注释。默认值为 `false`。
+* `ignoreConsecutiveComments`：如果此选项为 `true`，只要违反规则的注释紧跟在另一个注释后面，此规则就不会报告该注释。默认值为 `false`。
+
+以下是一个配置示例：
 
 ```json
 {
@@ -87,13 +91,15 @@ Here is an example configuration:
 }
 ```
 
+<a id="always"></a>
+
 ### `"always"`
 
-Using the `"always"` option means that this rule will report any comments which start with a lowercase letter. This is the default configuration for this rule.
+使用 `"always"` 选项时，此规则会报告所有以小写字母开头的注释。这是此规则的默认配置。
 
-Note that configuration comments and comments which start with URLs are never reported.
+请注意，配置注释以及以 URL 开头的注释永远不会被报告。
 
-Examples of **incorrect** code for this rule:
+此规则中**错误**代码的示例：
 
 :::incorrect
 
@@ -106,7 +112,7 @@ Examples of **incorrect** code for this rule:
 
 :::
 
-Examples of **correct** code for this rule:
+此规则中**正确**代码的示例：
 
 :::correct
 
@@ -139,11 +145,13 @@ bar // eslint-disable-line
 
 :::
 
+<a id="never"></a>
+
 ### `"never"`
 
-Using the `"never"` option means that this rule will report any comments which start with an uppercase letter.
+使用 `"never"` 选项时，此规则会报告所有以大写字母开头的注释。
 
-Examples of **incorrect** code with the `"never"` option:
+使用 `"never"` 选项时，**错误**代码的示例：
 
 :::incorrect
 
@@ -156,7 +164,7 @@ Examples of **incorrect** code with the `"never"` option:
 
 :::
 
-Examples of **correct** code with the `"never"` option:
+使用 `"never"` 选项时，**正确**代码的示例：
 
 :::correct
 
@@ -173,11 +181,13 @@ Examples of **correct** code with the `"never"` option:
 
 :::
 
+<a id="ignorepattern"></a>
+
 ### `ignorePattern`
 
-The `ignorePattern` object takes a string value, which is used as a regular expression applied to the first word of a comment.
+`ignorePattern` 对象接受一个字符串值，该值用作正则表达式，并应用于注释的第一个单词。
 
-Examples of **correct** code with the `"ignorePattern"` option set to `"pragma"`:
+将 `"ignorePattern"` 选项设置为 `"pragma"` 时，**正确**代码的示例：
 
 :::correct
 
@@ -192,11 +202,13 @@ function foo() {
 
 :::
 
+<a id="ignoreinlinecomments"></a>
+
 ### `ignoreInlineComments`
 
-Setting the `ignoreInlineComments` option to `true` means that comments in the middle of code (with a token on the same line as the beginning of the comment, and another token on the same line as the end of the comment) will not be reported by this rule.
+将 `ignoreInlineComments` 选项设为 `true` 时，代码中间的注释（注释起始位置所在行上有一个标记，注释结束位置所在行上也有另一个标记）不会被此规则报告。
 
-Examples of **correct** code with the `"ignoreInlineComments"` option set to `true`:
+将 `"ignoreInlineComments"` 选项设为 `true` 时，**正确**代码的示例：
 
 :::correct
 
@@ -210,11 +222,13 @@ function foo(/* ignored */ a) {
 
 :::
 
+<a id="ignoreconsecutivecomments"></a>
+
 ### `ignoreConsecutiveComments`
 
-If the `ignoreConsecutiveComments` option is set to `true`, then comments which otherwise violate the rule will not be reported as long as they immediately follow another comment. This can be applied more than once.
+如果将 `ignoreConsecutiveComments` 选项设为 `true`，那么只要违反规则的注释紧跟在另一个注释后面，此规则就不会报告该注释。此行为可以连续应用多次。
 
-Examples of **correct** code with `ignoreConsecutiveComments` set to `true`:
+将 `ignoreConsecutiveComments` 设为 `true` 时，**正确**代码的示例：
 
 :::correct
 
@@ -236,7 +250,7 @@ bar();
 
 :::
 
-Examples of **incorrect** code with `ignoreConsecutiveComments` set to `true`:
+将 `ignoreConsecutiveComments` 设为 `true` 时，**错误**代码的示例：
 
 :::incorrect
 
@@ -250,9 +264,11 @@ foo();
 
 :::
 
-### Use Different Options for Line and Block Comments
+<a id="use-different-options-for-line-and-block-comments"></a>
 
-If you wish to have a different configuration for line comments and block comments, you can do so by using two different object configurations (note that the capitalization option will be enforced consistently for line and block comments):
+### 为行注释和块注释使用不同选项
+
+如果希望为行注释和块注释使用不同的配置，可以使用两个不同的对象配置（请注意，大小写选项对行注释和块注释的要求始终一致）：
 
 ```json
 {
@@ -272,7 +288,7 @@ If you wish to have a different configuration for line comments and block commen
 }
 ```
 
-Examples of **incorrect** code with different line and block comment configuration:
+使用不同的行注释和块注释配置时，**错误**代码的示例：
 
 :::incorrect
 
@@ -286,7 +302,7 @@ Examples of **incorrect** code with different line and block comment configurati
 
 :::
 
-Examples of **correct** code with different line and block comment configuration:
+使用不同的行注释和块注释配置时，**正确**代码的示例：
 
 :::correct
 
@@ -300,11 +316,15 @@ Examples of **correct** code with different line and block comment configuration
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-This rule can be disabled if you do not care about the grammatical style of comments in your codebase.
+## 何时不使用
 
-## Compatibility
+如果你不在意代码库中注释的语法风格，可以禁用此规则。
 
-* **JSCS**: [requireCapitalizedComments](https://jscs-dev.github.io/rule/requireCapitalizedComments)
-* **JSCS**: [disallowCapitalizedComments](https://jscs-dev.github.io/rule/disallowCapitalizedComments)
+<a id="compatibility"></a>
+
+## 兼容性
+
+* **JSCS**：[requireCapitalizedComments](https://jscs-dev.github.io/rule/requireCapitalizedComments)
+* **JSCS**：[disallowCapitalizedComments](https://jscs-dev.github.io/rule/disallowCapitalizedComments)
