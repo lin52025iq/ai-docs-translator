@@ -6,18 +6,20 @@ handled_by_typescript: true
 
 
 
-JavaScript functions can be written as a FunctionDeclaration `function foo() { ... }` or as a FunctionExpression `const foo = function() { ... };`. While a JavaScript interpreter might tolerate it, overwriting/reassigning a function written as a FunctionDeclaration is often indicative of a mistake or issue.
+JavaScript 函数可以写成 FunctionDeclaration `function foo() { ... }`，也可以写成 FunctionExpression `const foo = function() { ... };`。虽然 JavaScript 解释器可能允许这种做法，但覆盖或重新赋值给以 FunctionDeclaration 形式编写的函数，通常表明存在错误或问题。
 
 ```js
 function foo() {}
 foo = bar;
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows reassigning `function` declarations.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止对 `function` 声明重新赋值。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -38,7 +40,7 @@ let a = function hello() {
 
 :::
 
-Examples of **incorrect** code for this rule, unlike the corresponding rule in JSHint:
+与 JSHint 中对应规则不同，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -51,7 +53,7 @@ function foo() {}
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -72,6 +74,8 @@ function qux() {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
+
+此规则没有选项。
