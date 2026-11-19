@@ -6,50 +6,56 @@ related_rules:
 further_reading:
 - https://gist.github.com/isaacs/357981
 ---
-The Comma Style rule enforces styles for comma-separated lists. There are two comma styles primarily used in JavaScript:
+逗号样式规则用于强制逗号分隔列表遵循特定样式。JavaScript 中主要使用两种逗号样式：
 
-* The standard style, in which commas are placed at the end of the current line
-* Comma First style, in which commas are placed at the start of the next line
+* 标准样式：逗号放在当前行的末尾
+* 逗号前置样式：逗号放在下一行的开头
 
-One of the justifications for using Comma First style is that it can help track missing and trailing commas. These are problematic because missing commas in variable declarations can lead to the leakage of global variables and trailing commas can lead to errors in older versions of IE.
+使用逗号前置样式的一个理由是，它有助于发现缺失的逗号和尾随逗号。这些逗号问题可能会带来麻烦：变量声明中缺少逗号可能导致全局变量泄漏，而尾随逗号可能会在较旧版本的 IE 中引发错误。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforce consistent comma style in array literals, object literals, and variable declarations.
+## 规则详情
 
-This rule does not apply in either of the following cases:
+此规则会在数组字面量、对象字面量和变量声明中强制使用一致的逗号样式。
 
-* comma preceded and followed by linebreak (lone comma)
-* single-line array literals, object literals, and variable declarations
+以下两种情况不适用此规则：
 
-## Options
+* 逗号前后都有换行符（孤立逗号）
+* 单行数组字面量、对象字面量和变量声明
 
-This rule has a string option:
+<a id="options"></a>
 
-* `"last"` (default) requires a comma after and on the same line as an array element, object property, or variable declaration
-* `"first"` requires a comma before and on the same line as an array element, object property, or variable declaration
+## 选项
 
-This rule also accepts an additional `exceptions` object:
+此规则接受一个字符串选项：
 
-* `"exceptions"` has properties whose names correspond to node types in the abstract syntax tree (AST) of JavaScript code:
+* `"last"`（默认值）要求逗号位于数组元素、对象属性或变量声明之后，并且与其位于同一行
+* `"first"` 要求逗号位于数组元素、对象属性或变量声明之前，并且与其位于同一行
 
-    * `"ArrayExpression": true` ignores comma style in array literals
-    * `"ArrayPattern": true` ignores comma style in array patterns of destructuring
-    * `"ArrowFunctionExpression": true` ignores comma style in the parameters of arrow function expressions
-    * `"CallExpression": true` ignores comma style in the arguments of function calls
-    * `"FunctionDeclaration": true` ignores comma style in the parameters of function declarations
-    * `"FunctionExpression": true` ignores comma style in the parameters of function expressions
-    * `"ImportDeclaration": true` ignores comma style in the specifiers of import declarations
-    * `"ObjectExpression": true` ignores comma style in object literals
-    * `"ObjectPattern": true` ignores comma style in object patterns of destructuring
-    * `"VariableDeclaration": true` ignores comma style in variable declarations
-    * `"NewExpression": true` ignores comma style in the parameters of constructor expressions
+此规则还接受一个额外的 `exceptions` 对象：
 
-A way to determine the node types as defined by [ESTree](https://github.com/estree/estree) is to use [AST Explorer](https://astexplorer.net/) with the espree parser.
+* `"exceptions"` 包含的属性名称对应于 JavaScript 代码抽象语法树（AST）中的节点类型：
+
+    * `"ArrayExpression": true` 忽略数组字面量中的逗号样式
+    * `"ArrayPattern": true` 忽略解构数组模式中的逗号样式
+    * `"ArrowFunctionExpression": true` 忽略箭头函数表达式参数中的逗号样式
+    * `"CallExpression": true` 忽略函数调用参数中的逗号样式
+    * `"FunctionDeclaration": true` 忽略函数声明参数中的逗号样式
+    * `"FunctionExpression": true` 忽略函数表达式参数中的逗号样式
+    * `"ImportDeclaration": true` 忽略导入声明说明符中的逗号样式
+    * `"ObjectExpression": true` 忽略对象字面量中的逗号样式
+    * `"ObjectPattern": true` 忽略解构对象模式中的逗号样式
+    * `"VariableDeclaration": true` 忽略变量声明中的逗号样式
+    * `"NewExpression": true` 忽略构造函数表达式参数中的逗号样式
+
+可以使用 [AST Explorer](https://astexplorer.net/) 和 espree 解析器来确定 [ESTree](https://github.com/estree/estree) 定义的节点类型。
+
+<a id="last"></a>
 
 ### last
 
-Examples of **incorrect** code for this rule with the default `"last"` option:
+以下是使用默认选项 `"last"` 时，此规则的错误代码示例：
 
 :::incorrect
 
@@ -76,7 +82,7 @@ function baz() {
 
 :::
 
-Examples of **correct** code for this rule with the default `"last"` option:
+以下是使用默认选项 `"last"` 时，此规则的正确代码示例：
 
 :::correct
 
@@ -101,9 +107,11 @@ function baz() {
 
 :::
 
+<a id="first"></a>
+
 ### first
 
-Examples of **incorrect** code for this rule with the `"first"` option:
+以下是使用选项 `"first"` 时，此规则的错误代码示例：
 
 :::incorrect
 
@@ -126,7 +134,7 @@ function baz() {
 
 :::
 
-Examples of **correct** code for this rule with the `"first"` option:
+以下是使用选项 `"first"` 时，此规则的正确代码示例：
 
 :::correct
 
@@ -151,11 +159,13 @@ function baz() {
 
 :::
 
+<a id="exceptions"></a>
+
 ### exceptions
 
-An example use case is to enforce comma style *only* in var statements.
+一种使用场景是仅在 var 语句中强制使用逗号样式。
 
-Examples of **incorrect** code for this rule with sample `"first", { "exceptions": { … } }` options:
+以下是使用示例选项 `"first", { "exceptions": { … } }` 时，此规则的错误代码示例：
 
 :::incorrect
 
@@ -168,7 +178,7 @@ var o = {},
 
 :::
 
-Examples of **correct** code for this rule with sample `"first", { "exceptions": { … } }` options:
+以下是使用示例选项 `"first", { "exceptions": { … } }` 时，此规则的正确代码示例：
 
 :::correct
 
@@ -183,6 +193,8 @@ var o = {fst:1,
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-This rule can safely be turned off if your project does not care about enforcing a consistent comma style.
+## 何时不使用此规则
+
+如果你的项目不需要强制使用一致的逗号样式，可以放心关闭此规则。
