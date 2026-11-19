@@ -3,19 +3,21 @@ title: space-return-throw-case
 
 ---
 
-Requires spaces after `return`, `throw`, and `case` keywords.
+要求在 `return`、`throw` 和 `case` 关键字后添加空格。
 
 ::: important
-This rule was removed in ESLint v2.0.0 and replaced by the [keyword-spacing](keyword-spacing) rule.
+此规则已在 ESLint v2.0.0 中移除，并由 [keyword-spacing](keyword-spacing) 规则取代。
 :::
 
-(fixable) The `--fix` option on the [command line](../use/command-line-interface#--fix) automatically fixed problems reported by this rule.
+（可自动修复）此规则报告的问题可通过[命令行](../use/command-line-interface#--fix)中的 `--fix` 选项自动修复。
 
-Require spaces following `return`, `throw`, and `case`.
+要求在 `return`、`throw` 和 `case` 后添加空格。
 
-## Rule Details
+<a id="rule-details"></a>
 
-Examples of **incorrect** code for this rule:
+## 规则详情
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -31,7 +33,7 @@ switch(a){ case'a': break; }
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
