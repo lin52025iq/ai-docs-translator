@@ -9,31 +9,32 @@ further_reading:
 
 
 
-Invalid or irregular whitespace causes issues with ECMAScript 5 parsers and also makes code harder to debug in a similar nature to mixed tabs and spaces.
+无效或不规则的空白字符会导致 ECMAScript 5 解析器出现问题，也会像混用制表符和空格一样，让代码更难调试。
 
-Various whitespace characters can be inputted by programmers by mistake for example from copying or keyboard shortcuts. Pressing Alt + Space on macOS adds in a non breaking space character for example.
+程序员可能会因复制内容或使用键盘快捷键而意外输入各种空白字符。例如，在 macOS 上按下 Alt + Space 会插入一个不换行空格。
 
-A simple fix for this problem could be to rewrite the offending line from scratch. This might also be a problem introduced by the text editor: if rewriting the line does not fix it, try using a different editor.
+解决此问题的简单方法是从头重写有问题的那一行。这也可能是文本编辑器引入的问题：如果重写该行仍无法解决，请尝试使用其他编辑器。
 
-Known issues these spaces cause:
+这些空格已知会导致以下问题：
 
-* Ogham Space Mark
-    * Is a valid token separator, but is rendered as a visible glyph in most typefaces, which may be misleading in source code.
-* Mongolian Vowel Separator
-    * Is no longer considered a space separator since Unicode 6.3. It will result in a syntax error in current parsers when used in place of a regular token separator.
-* Line Separator and Paragraph Separator
-    * These have always been valid whitespace characters and line terminators, but were considered illegal in string literals prior to ECMAScript 2019.
-* Zero Width Space
-    * Is NOT considered a separator for tokens and is often parsed as an `Unexpected token ILLEGAL`.
-    * Is NOT shown in modern browsers making code repository software expected to resolve the visualization.
+* 奥甘空格符
+    * 它是有效的标记分隔符，但在大多数字体中会显示为可见字形，可能会误导阅读源代码的人。
+* 蒙古文元音分隔符
+    * 自 Unicode 6.3 起，它不再被视为空格分隔符。在当前解析器中，如果用它代替常规标记分隔符，会导致语法错误。
+* 行分隔符和段落分隔符
+    * 它们一直都是有效的空白字符和行终止符，但在 ECMAScript 2019 之前，在字符串字面量中被视为非法字符。
+* 零宽空格
+    * 它不被视为标记分隔符，通常会被解析为 `Unexpected token ILLEGAL`。
+    * 现代浏览器不会显示它，因此需要由代码仓库软件处理其可视化问题。
 
-In JSON, none of the characters listed as irregular whitespace by this rule may appear outside of a string.
+在 JSON 中，本规则列出的不规则空白字符均不得出现在字符串之外。
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule is aimed at catching invalid whitespace that is not a normal tab and space. Some of these characters may cause issues in modern browsers and others will be a debugging issue to spot.
+此规则旨在捕获并非普通制表符或空格的无效空白字符。其中一些字符可能会在现代浏览器中引发问题，其他字符则可能难以发现，导致调试困难。
 
-This rule disallows the following characters except where the options allow:
+除选项允许的情况外，此规则禁止使用以下字符：
 
 ```text
 \u000B - Line Tabulation (\v) - <VT>
@@ -62,19 +63,20 @@ This rule disallows the following characters except where the options allow:
 \uFEFF - Zero Width No-Break Space - <BOM>
 ```
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule has an object option for exceptions:
+此规则有一个对象选项，用于设置例外：
 
-* `"skipStrings": true` (default) allows any whitespace characters in string literals
-* `"skipComments": true` allows any whitespace characters in comments
-* `"skipRegExps": true` allows any whitespace characters in regular expression literals
-* `"skipTemplates": true` allows any whitespace characters in template literals
-* `"skipJSXText": true` allows any whitespace characters in JSX text
+* `"skipStrings": true`（默认值）允许字符串字面量中出现任意空白字符
+* `"skipComments": true` 允许注释中出现任意空白字符
+* `"skipRegExps": true` 允许正则表达式字面量中出现任意空白字符
+* `"skipTemplates": true` 允许模板字面量中出现任意空白字符
+* `"skipJSXText": true` 允许 JSX 文本中出现任意空白字符
 
 ### skipStrings
 
-Examples of **incorrect** code for this rule with the default `{ "skipStrings": true }` option:
+以下代码示例在此规则的默认 `{ "skipStrings": true }` 选项下属于**错误**：
 
 ::: incorrect
 
@@ -124,7 +126,7 @@ const myFunc = function() {
 
 :::
 
-Examples of **correct** code for this rule with the default `{ "skipStrings": true }` option:
+以下代码示例在此规则的默认 `{ "skipStrings": true }` 选项下属于**正确**：
 
 ::: correct
 
@@ -148,7 +150,7 @@ const bar = function() {
 
 ### skipComments
 
-Examples of additional **correct** code for this rule with the `{ "skipComments": true }` option:
+以下是启用 `{ "skipComments": true }` 选项后新增的**正确**代码示例：
 
 ::: correct
 
@@ -168,7 +170,7 @@ Description <NBSP>: some descriptive text
 
 ### skipRegExps
 
-Examples of additional **correct** code for this rule with the `{ "skipRegExps": true }` option:
+以下是启用 `{ "skipRegExps": true }` 选项后新增的**正确**代码示例：
 
 ::: correct
 
@@ -184,7 +186,7 @@ function thing() {
 
 ### skipTemplates
 
-Examples of additional **correct** code for this rule with the `{ "skipTemplates": true }` option:
+以下是启用 `{ "skipTemplates": true }` 选项后新增的**正确**代码示例：
 
 ::: correct
 
@@ -200,7 +202,7 @@ function thing() {
 
 ### skipJSXText
 
-Examples of additional **correct** code for this rule with the `{ "skipJSXText": true }` option:
+以下是启用 `{ "skipJSXText": true }` 选项后新增的**正确**代码示例：
 
 ::: correct { "parserOptions": { "ecmaFeatures": { "jsx": true } } }
 
@@ -214,6 +216,7 @@ function Thing() {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 何时不应使用
 
-If you decide that you wish to use whitespace other than tabs and spaces outside of strings in your application.
+如果你决定在应用中字符串之外也使用制表符和空格以外的空白字符，则不应使用此规则。
