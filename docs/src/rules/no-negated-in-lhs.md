@@ -3,13 +3,15 @@ title: no-negated-in-lhs
 rule_type: problem
 ---
 
-Just as developers might type `-a + b` when they mean `-(a + b)` for the negative of a sum, they might type `!key in object` by mistake when they almost certainly mean `!(key in object)` to test that a key is not in an object.
+正如开发者可能会误将表示和的相反数的 `-(a + b)` 写成 `-a + b`，他们也可能会误写成 `!key in object`，而他们几乎肯定是想写 `!(key in object)`，以测试某个键是否不在对象中。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows negating the left operand in `in` expressions.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止在 `in` 表达式中对左操作数取反。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -24,7 +26,7 @@ if(!key in object) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -43,6 +45,8 @@ if(('' + !key) in object) {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-Never.
+## 何时不使用此规则
+
+永远不要。
