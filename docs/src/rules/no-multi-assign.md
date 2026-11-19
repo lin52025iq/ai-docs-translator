@@ -4,7 +4,7 @@ rule_type: suggestion
 ---
 
 
-Chaining the assignment of variables can lead to unexpected results and be difficult to read.
+链接多个变量的赋值可能会导致意外结果，而且难以阅读。
 
 ```js
 (function() {
@@ -14,11 +14,12 @@ Chaining the assignment of variables can lead to unexpected results and be diffi
 console.log(bar);        // This will output 1 since `bar` is not scoped.
 ```
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule disallows using multiple assignments within a single statement.
+此规则禁止在单条语句中进行多次赋值。
 
-Examples of **incorrect** code for this rule:
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -42,7 +43,7 @@ a = b = "quux";
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -70,15 +71,16 @@ b = "quux";
 
 :::
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule has an object option:
+此规则有一个对象选项：
 
-* `"ignoreNonDeclaration"`: When set to `true`, the rule allows chains that don't include initializing a variable in a declaration or initializing a class field. Default is `false`.
+* `"ignoreNonDeclaration"`：设为 `true` 时，此规则允许不包含在声明中初始化变量或初始化类字段的赋值链。默认值为 `false`。
 
 ### ignoreNonDeclaration
 
-Examples of **correct** code for the `{ "ignoreNonDeclaration": true }` option:
+`{ "ignoreNonDeclaration": true }` 选项的**正确**代码示例：
 
 ::: correct
 
@@ -96,7 +98,7 @@ x.one = y.one = 1;
 
 :::
 
-Examples of **incorrect** code for the `{ "ignoreNonDeclaration": true }` option:
+`{ "ignoreNonDeclaration": true }` 选项的**错误**代码示例：
 
 ::: incorrect
 
