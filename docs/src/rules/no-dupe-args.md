@@ -6,15 +6,17 @@ handled_by_typescript: true
 
 
 
-If more than one parameter has the same name in a function definition, the last occurrence "shadows" the preceding occurrences. A duplicated name might be a typing error.
+如果函数定义中有多个参数使用相同的名称，最后一次出现的名称会“遮蔽”前面出现的名称。名称重复可能是输入错误。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows duplicate parameter names in function declarations or expressions. It does not apply to arrow functions or class methods, because the parser reports the error.
+## 规则详情
 
-If ESLint parses code in strict mode, the parser (instead of this rule) reports the error.
+此规则禁止在函数声明或表达式中使用重复的参数名称。此规则不适用于箭头函数或类方法，因为解析器会报告错误。
 
-Examples of **incorrect** code for this rule:
+如果 ESLint 以严格模式解析代码，解析器（而非此规则）会报告错误。
+
+此规则的**错误**代码示例：
 
 ::: incorrect { "sourceType": "script" }
 
@@ -32,7 +34,7 @@ const bar = function (a, b, a) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct { "sourceType": "script" }
 
@@ -50,6 +52,8 @@ const bar = function (a, b, c) {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
+
+此规则没有选项。
