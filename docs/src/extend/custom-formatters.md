@@ -1,21 +1,23 @@
 ---
-title: Custom Formatters
+title: 自定义格式化器
 eleventyNavigation:
     key: custom formatters
     parent: extend eslint
-    title: Custom Formatters
+    title: 自定义格式化器
     order: 4
 ---
 
-Custom formatters let you display linting results in a format that best fits your needs, whether that's in a specific file format, a certain display style, or a format optimized for a particular tool.
+自定义格式化器可以按照最适合你需求的格式显示代码检查结果，无论是特定的文件格式、某种显示样式，还是针对特定工具优化的格式。
 
-ESLint also has [built-in formatters](../use/formatters/) that you can use.
+ESLint 还提供可供使用的[内置格式化器](../use/formatters/)。
 
-You can include custom formatters in your project directly or create an npm package to distribute them separately.
+你可以直接在项目中使用自定义格式化器，也可以创建 npm 包单独分发。
 
-## Create a Custom Formatter
+<a id="create-a-custom-formatter"></a>
 
-Each formatter is a function that receives a `results` object and a `context` as arguments and returns a string. For example, the following is how the built-in [JSON formatter](../use/formatters/#json) is implemented:
+## 创建自定义格式化器
+
+每个格式化器都是一个函数，它接收一个 `results` 对象和一个 `context` 作为参数，并返回一个字符串。例如，内置的 [JSON 格式化器](../use/formatters/#json)实现如下：
 
 ```js
 //my-awesome-formatter.js
@@ -24,7 +26,7 @@ module.exports = function (results, context) {
 };
 ```
 
-A formatter can also be an async function (from ESLint v8.4.0), the following shows a simple example:
+格式化器也可以是异步函数（从 ESLint v8.4.0 开始支持），下面是一个简单的示例：
 
 ```js
 //my-awesome-formatter.js
@@ -34,17 +36,19 @@ module.exports = async function (results) {
 };
 ```
 
-To run ESLint with this formatter, you can use the [`-f` (or `--format`)](../use/command-line-interface#-f---format) command line flag. You must begin the path to a locally defined custom formatter with a period (`.`), such as `./my-awesome-formatter.js` or `../formatters/my-awesome-formatter.js`.
+要使用此格式化器运行 ESLint，可以使用 [`-f`（或 `--format`）](../use/command-line-interface#-f---format)命令行标志。本地定义的自定义格式化器路径必须以句点（`.`）开头，例如 `./my-awesome-formatter.js` 或 `../formatters/my-awesome-formatter.js`。
 
 ```bash
 eslint -f ./my-awesome-formatter.js src/
 ```
 
-The remainder of this section contains reference information on how to work with custom formatter functions.
+本节其余部分介绍有关如何使用自定义格式化器函数的参考信息。
 
-### The `results` Argument
+<a id="the-results-argument"></a>
 
-The `results` object passed into a formatter is an array of [`LintResult`](../integrate/nodejs-api#-lintresult-type) objects containing the linting results for individual files. Here's an example output:
+### `results` 参数
+
+传递给格式化器的 `results` 对象是一个 [`LintResult`](../integrate/nodejs-api#-lintresult-type) 对象数组，其中包含各个文件的代码检查结果。输出示例如下：
 
 ```js
 [
@@ -83,18 +87,20 @@ The `results` object passed into a formatter is an array of [`LintResult`](../in
 ];
 ```
 
-### The `context` Argument
+<a id="the-context-argument"></a>
 
-The formatter function receives a `context` object as its second argument. The object has the following properties:
+### `context` 参数
 
-- `color` (optional): If `--color` was set, this property is `true`. If `--no-color` was set, it is `false`. If neither option was provided, the property is omitted.
-- `cwd`: The current working directory. This value comes from the `cwd` constructor option of the [ESLint](../integrate/nodejs-api#-new-eslintoptions) class.
-- `maxWarningsExceeded` (optional): If `--max-warnings` was set and the number of warnings exceeded the limit, this property's value is an object containing two properties:
-    - `maxWarnings`: the value of the `--max-warnings` option
-    - `foundWarnings`: the number of lint warnings
-- `rulesMeta`: The `meta` property values of rules. See the [Custom Rules](custom-rules) page for more information about rules.
+格式化器函数接收一个 `context` 对象作为第二个参数。该对象具有以下属性：
 
-For example, here's what the object would look like if the rule `no-extra-semi` had been run:
+- `color`（可选）：如果设置了 `--color`，此属性为 `true`；如果设置了 `--no-color`，则为 `false`。如果没有提供这两个选项中的任何一个，则省略此属性。
+- `cwd`：当前工作目录。该值来自 [ESLint](../integrate/nodejs-api#-new-eslintoptions) 类的 `cwd` 构造函数选项。
+- `maxWarningsExceeded`（可选）：如果设置了 `--max-warnings`，且警告数量超出限制，则此属性的值为一个包含以下两个属性的对象：
+    - `maxWarnings`：`--max-warnings` 选项的值
+    - `foundWarnings`：代码检查发现的警告数量
+- `rulesMeta`：规则的 `meta` 属性值。有关规则的更多信息，请参阅[自定义规则](custom-rules)页面。
+
+例如，如果运行了 `no-extra-semi` 规则，该对象看起来会是这样：
 
 ```js
 {
@@ -121,17 +127,21 @@ For example, here's what the object would look like if the rule `no-extra-semi` 
 }
 ```
 
-**Note:** if a linting is executed by the deprecated `CLIEngine` class, the `context` argument may be a different value because it is up to the API users. Please check whether the `context` argument is an expected value or not if you want to support legacy environments.
+**注意：**如果通过已弃用的 `CLIEngine` 类执行代码检查，`context` 参数可能会有所不同，因为其值由 API 用户决定。如果你想支持旧版环境，请检查 `context` 参数是否符合预期。
 
-### Passing Arguments to Formatters
+<a id="passing-arguments-to-formatters"></a>
 
-While formatter functions do not receive arguments in addition to the results object and the context, it is possible to pass additional data into custom formatters using the methods described below.
+### 向格式化器传递参数
 
-#### Use Environment Variables
+虽然格式化器函数除了 results 对象和 context 之外不会接收其他参数，但你可以使用下面介绍的方法向自定义格式化器传递额外数据。
 
-Custom formatters have access to environment variables and so can change their behavior based on environment variable data.
+<a id="use-environment-variables"></a>
 
-Here's an example that uses a `FORMATTER_SKIP_WARNINGS` environment variable to determine whether to show warnings in the results:
+#### 使用环境变量
+
+自定义格式化器可以访问环境变量，因此能够根据环境变量数据改变行为。
+
+下面的示例使用 `FORMATTER_SKIP_WARNINGS` 环境变量来决定是否在结果中显示警告：
 
 ```js
 module.exports = function (results) {
@@ -192,13 +202,13 @@ module.exports = function (results) {
 };
 ```
 
-You would run ESLint with this custom formatter and an environment variable set like this:
+你可以像这样设置环境变量并使用此自定义格式化器运行 ESLint：
 
 ```bash
 FORMATTER_SKIP_WARNINGS=true eslint -f ./my-awesome-formatter.js src/
 ```
 
-The output would be:
+输出如下：
 
 ```bash
 error space-infix-ops
@@ -208,49 +218,59 @@ error semi
   src/configs/bundler.js:6:10
 ```
 
-#### Complex Argument Passing
+<a id="complex-argument-passing"></a>
 
-If you find the custom formatter pattern doesn't provide enough options for the way you'd like to format ESLint results, the best option is to use ESLint's built-in [JSON formatter](../use/formatters/#json) and pipe the output to a second program. For example:
+#### 传递复杂参数
+
+如果自定义格式化器模式无法提供你所需的足够选项来格式化 ESLint 结果，最佳做法是使用 ESLint 内置的 [JSON 格式化器](../use/formatters/#json)，并将其输出通过管道传递给另一个程序。例如：
 
 ```bash
 eslint -f json src/ | your-program-that-reads-JSON --option
 ```
 
-In this example, the `your-program-that-reads-json` program can accept the raw JSON of ESLint results and process it before outputting its own format of the results. You can pass as many command line arguments to that program as are necessary to customize the output.
+在此示例中，`your-program-that-reads-json` 程序可以接收 ESLint 结果的原始 JSON，并在输出自己的结果格式之前对其进行处理。你可以向该程序传递任意数量的命令行参数，以便自定义输出。
 
-### Formatting for Terminals
+<a id="formatting-for-terminals"></a>
 
-Modern terminals like [iTerm2](https://www.iterm2.com/) or [Guake](http://guake.org/) expect a specific results format to automatically open filenames when they are clicked. Most terminals support this format for that purpose:
+### 适用于终端的格式
+
+[iTerm2](https://www.iterm2.com/) 或 [Guake](http://guake.org/) 等现代终端要求结果采用特定格式，以便在点击文件名时自动打开文件。大多数终端都支持以下格式：
 
 ```bash
 file:line:column
 ```
 
-## Packaging a Custom Formatter
+<a id="packaging-a-custom-formatter"></a>
 
-Custom formatters can be distributed through npm packages. To do so, create an npm package with a name in the format `eslint-formatter-*`, where `*` is the name of your formatter (such as `eslint-formatter-awesome`). Projects should then install the package and use the custom formatter with the [`-f` (or `--format`)](../use/command-line-interface#-f---format) flag like this:
+## 打包自定义格式化器
+
+自定义格式化器可以通过 npm 包分发。为此，请创建一个名称格式为 `eslint-formatter-*` 的 npm 包，其中 `*` 是格式化器的名称（例如 `eslint-formatter-awesome`）。然后，项目应安装该包，并像这样使用 [`-f`（或 `--format`）](../use/command-line-interface#-f---format)标志调用自定义格式化器：
 
 ```bash
 eslint -f awesome src/
 ```
 
-Because ESLint knows to look for packages beginning with `eslint-formatter-` when the specified formatter doesn't begin with a period, you do not need to type `eslint-formatter-` when using a packaged custom formatter.
+如果指定的格式化器名称不是以句点开头，ESLint 会查找以 `eslint-formatter-` 开头的包。因此，使用已打包的自定义格式化器时，无需输入 `eslint-formatter-`。
 
-Tips for the `package.json` of a custom formatter:
+自定义格式化器的 `package.json` 提示：
 
-- The [`main`](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#main) entry point must be the JavaScript file implementing your custom formatter.
-- Add these [`keywords`](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#keywords) to help users find your formatter:
+- [`main`](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#main) 入口必须指向实现自定义格式化器的 JavaScript 文件。
+- 添加以下 [`keywords`](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#keywords)，帮助用户找到你的格式化器：
     - `"eslint"`
     - `"eslint-formatter"`
     - `"eslintformatter"`
 
-See all [custom formatters on npm](https://www.npmjs.com/search?q=eslint-formatter).
+查看 npm 上的所有[自定义格式化器](https://www.npmjs.com/search?q=eslint-formatter)。
 
-## Examples
+<a id="examples"></a>
 
-### Summary Formatter
+## 示例
 
-A formatter that only reports on the total count of errors and warnings will look like this:
+<a id="summary-formatter"></a>
+
+### 汇总格式化器
+
+仅报告错误和警告总数的格式化器如下所示：
 
 ```javascript
 module.exports = function (results, context) {
@@ -278,21 +298,23 @@ module.exports = function (results, context) {
 };
 ```
 
-Run `eslint` with the above summary formatter:
+使用上述汇总格式化器运行 `eslint`：
 
 ```bash
 eslint -f ./my-awesome-formatter.js src/
 ```
 
-Will produce the following output:
+将产生以下输出：
 
 ```bash
 Errors: 2, Warnings: 4
 ```
 
-### Detailed Formatter
+<a id="detailed-formatter"></a>
 
-A more complex report could look like this:
+### 详细格式化器
+
+更复杂的报告可能如下所示：
 
 ```javascript
 module.exports = function (results, context) {
@@ -352,13 +374,13 @@ module.exports = function (results, context) {
 };
 ```
 
-When you run ESLint with this custom formatter:
+使用此自定义格式化器运行 ESLint：
 
 ```bash
 eslint -f ./my-awesome-formatter.js src/
 ```
 
-The output is:
+输出如下：
 
 ```bash
 error space-infix-ops (https://eslint.org/docs/rules/space-infix-ops)
