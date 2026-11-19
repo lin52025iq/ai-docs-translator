@@ -15,7 +15,7 @@ further_reading:
 ---
 
 
-Many JavaScript libraries use the callback pattern to manage asynchronous operations. A program of any complexity will most likely need to manage several asynchronous operations at various levels of concurrency. A common pitfall that is easy to fall into is nesting callbacks, which makes code more difficult to read the deeper the callbacks are nested.
+许多 JavaScript 库使用回调模式来管理异步操作。任何复杂度的程序都很可能需要管理多个并发级别各异的异步操作。一个很容易遇到的常见陷阱是嵌套回调：回调嵌套得越深，代码就越难阅读。
 
 ```js
 foo(function () {
@@ -29,22 +29,26 @@ foo(function () {
 });
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces a maximum depth that callbacks can be nested to increase code clarity.
+## 规则详情
 
-## Options
+此规则限制回调的最大嵌套深度，以提高代码清晰度。
 
-This rule has a number or object option:
+<a id="options"></a>
 
-* `"max"` (default `10`) enforces a maximum depth that callbacks can be nested
-* `"checkConstructorCallCallbacks"` (default `false`) also check callbacks passed to a constructor call
+## 选项
 
-**Deprecated:** The object property `maximum` is deprecated; please use the object property `max` instead.
+此规则接受数字或对象选项：
+
+* `"max"`（默认值为 `10`）限制回调的最大嵌套深度
+* `"checkConstructorCallCallbacks"`（默认值为 `false`）还会检查传递给构造函数调用的回调
+
+**已弃用：** 对象属性 `maximum` 已弃用；请改用对象属性 `max`。
 
 ### max
 
-Examples of **incorrect** code for this rule with the `{ "max": 3 }` option:
+启用 `{ "max": 3 }` 选项时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -64,7 +68,7 @@ foo1(function() {
 
 :::
 
-Examples of **correct** code for this rule with the `{ "max": 3 }` option:
+启用 `{ "max": 3 }` 选项时，此规则的正确代码示例：
 
 ::: correct
 
@@ -94,7 +98,7 @@ function handleFoo4() {
 
 ### checkConstructorCallCallbacks
 
-Examples of **incorrect** code for this rule with the `{ "checkConstructorCallCallbacks": true }` option:
+启用 `{ "checkConstructorCallCallbacks": true }` 选项时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -108,7 +112,7 @@ setTimeout(() => {
 
 :::
 
-Examples of **correct** code for this rule with the `{ "checkConstructorCallCallbacks": true }` option:
+启用 `{ "checkConstructorCallCallbacks": true }` 选项时，此规则的正确代码示例：
 
 ::: correct
 
