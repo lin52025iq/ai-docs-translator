@@ -2,10 +2,10 @@
 title: keyword-spacing
 rule_type: layout
 ---
-Keywords are syntax elements of JavaScript, such as `try` and `if`.
-These keywords have special meaning to the language and so often appear in a different color in code editors.
-As an important part of the language, style guides often refer to the spacing that should be used around keywords.
-For example, you might have a style guide that says keywords should be always surrounded by spaces, which would mean `if-else` statements must look like this:
+JavaScript 关键字是语法元素，例如 `try` 和 `if`。
+这些关键字在语言中有特殊含义，因此通常会在代码编辑器中以不同颜色显示。
+作为语言的重要组成部分，代码风格指南通常会规定关键字周围应如何使用空格。
+例如，某份代码风格指南可能规定关键字两侧都必须有空格，这意味着 `if-else` 语句必须写成这样：
 
 ```js
 if (foo) {
@@ -15,27 +15,33 @@ if (foo) {
 }
 ```
 
-Of course, you could also have a style guide that disallows spaces around keywords.
+当然，你也可以使用禁止在关键字周围添加空格的代码风格指南。
 
-However, if you want to enforce the style of spacing between the `function` keyword and the following opening parenthesis, please refer to [space-before-function-paren](space-before-function-paren).
+不过，如果你想强制规定 `function` 关键字与其后左括号之间的空格风格，请参阅 [space-before-function-paren](space-before-function-paren)。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces consistent spacing around keywords and keyword-like tokens: `as` (in module declarations), `async` (of async functions), `await` (of await expressions), `break`, `case`, `catch`, `class`, `const`, `continue`, `debugger`, `default`, `delete`, `do`, `else`, `export`, `extends`, `finally`, `for`, `from` (in module declarations), `function`, `get` (of getters), `if`, `import`, `in` (in for-in statements), `let`, `new`, `of` (in for-of statements), `return`, `set` (of setters), `static`, `super`, `switch`, `this`, `throw`, `try`, `typeof`, `var`, `void`, `while`, `with`, and `yield`. This rule is designed carefully not to conflict with other spacing rules: it does not apply to spacing where other rules report problems.
+## 规则详情
 
-## Options
+此规则要求关键字及类似关键字的标记周围的空格保持一致：`as`（在模块声明中）、`async`（用于异步函数）、`await`（用于 await 表达式）、`break`、`case`、`catch`、`class`、`const`、`continue`、`debugger`、`default`、`delete`、`do`、`else`、`export`、`extends`、`finally`、`for`、`from`（在模块声明中）、`function`、`get`（用于 getter）、`if`、`import`、`in`（用于 for-in 语句）、`let`、`new`、`of`（用于 for-of 语句）、`return`、`set`（用于 setter）、`static`、`super`、`switch`、`this`、`throw`、`try`、`typeof`、`var`、`void`、`while`、`with` 和 `yield`。此规则经过精心设计，不会与其他空格规则冲突：如果其他规则会报告问题，则此规则不会检查相应位置的空格。
 
-This rule has an object option:
+<a id="options"></a>
 
-* `"before": true` (default) requires at least one space before keywords
-* `"before": false` disallows spaces before keywords
-* `"after": true` (default) requires at least one space after keywords
-* `"after": false` disallows spaces after keywords
-* `"overrides"` allows overriding spacing style for specified keywords
+## 选项
+
+此规则接受一个对象选项：
+
+* `"before": true`（默认值）要求关键字前至少有一个空格
+* `"before": false` 禁止关键字前有空格
+* `"after": true`（默认值）要求关键字后至少有一个空格
+* `"after": false` 禁止关键字后有空格
+* `"overrides"` 可针对指定关键字覆盖空格风格
+
+<a id="before"></a>
 
 ### before
 
-Examples of **incorrect** code for this rule with the default `{ "before": true }` option:
+使用默认选项 `{ "before": true }` 时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -53,7 +59,7 @@ if (foo) {
 
 :::
 
-Examples of **correct** code for this rule with the default `{ "before": true }` option:
+使用默认选项 `{ "before": true }` 时，此规则的正确代码示例：
 
 ::: correct { "parserOptions": { "ecmaFeatures": { "jsx": true } } }
 
@@ -111,7 +117,7 @@ let f = <A foo={this.foo} bar={function(){}} />
 
 :::
 
-Examples of **incorrect** code for this rule with the `{ "before": false }` option:
+使用选项 `{ "before": false }` 时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -129,7 +135,7 @@ if (foo) {
 
 :::
 
-Examples of **correct** code for this rule with the `{ "before": false }` option:
+使用选项 `{ "before": false }` 时，此规则的正确代码示例：
 
 ::: correct
 
@@ -147,9 +153,11 @@ if (foo) {
 
 :::
 
+<a id="after"></a>
+
 ### after
 
-Examples of **incorrect** code for this rule with the default `{ "after": true }` option:
+使用默认选项 `{ "after": true }` 时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -167,7 +175,7 @@ if(foo) {
 
 :::
 
-Examples of **correct** code for this rule with the default `{ "after": true }` option:
+使用默认选项 `{ "after": true }` 时，此规则的正确代码示例：
 
 ::: correct { "parserOptions": { "ecmaFeatures": { "jsx": true } } }
 
@@ -238,7 +246,7 @@ let e = <A foo={this.foo} bar={function(){}} />
 
 :::
 
-Examples of **incorrect** code for this rule with the `{ "after": false }` option:
+使用选项 `{ "after": false }` 时，此规则的错误代码示例：
 
 ::: incorrect
 
@@ -256,7 +264,7 @@ if (foo) {
 
 :::
 
-Examples of **correct** code for this rule with the `{ "after": false }` option:
+使用选项 `{ "after": false }` 时，此规则的正确代码示例：
 
 ::: correct
 
@@ -274,9 +282,11 @@ if(foo) {
 
 :::
 
+<a id="overrides"></a>
+
 ### overrides
 
-Examples of **correct** code for this rule with the `{ "overrides": { "if": { "after": false }, "for": { "after": false }, "while": { "after": false }, "static": { "after": false }, "as": { "after": false } } }` option:
+使用选项 `{ "overrides": { "if": { "after": false }, "for": { "after": false }, "while": { "after": false }, "static": { "after": false }, "as": { "after": false } } }` 时，此规则的正确代码示例：
 
 ::: correct
 
@@ -314,6 +324,8 @@ export { C as"my class" };
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you don't want to enforce consistency on keyword spacing, then it's safe to disable this rule.
+## 何时不应使用
+
+如果你不想强制要求关键字周围的空格保持一致，可以安全地禁用此规则。
