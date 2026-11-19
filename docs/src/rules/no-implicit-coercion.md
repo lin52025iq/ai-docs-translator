@@ -5,10 +5,10 @@ rule_type: suggestion
 
 
 
-In JavaScript, there are a lot of different ways to convert value types.
-Some of them might be hard to read and understand.
+在 JavaScript 中，有许多不同的方式可以转换值的类型。
+其中一些可能难以阅读和理解。
 
-Such as:
+例如：
 
 ```js
 const b = !!foo;
@@ -21,7 +21,7 @@ const s = "" + foo;
 foo += ``;
 ```
 
-Those can be replaced with the following code:
+这些写法可以替换为以下代码：
 
 ```js
 const b = Boolean(foo);
@@ -34,25 +34,31 @@ const s = String(foo);
 foo = String(foo);
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed to flag shorter notations for the type conversion, then suggest a more self-explanatory notation.
+## 规则详情
 
-## Options
+此规则旨在标记较短的类型转换写法，并建议使用更易于理解的写法。
 
-This rule has three main options and one override option to allow some coercions as required.
+<a id="options"></a>
 
-* `"boolean"` (`true` by default) - When this is `true`, this rule warns shorter type conversions for `boolean` type.
-* `"number"` (`true` by default) - When this is `true`, this rule warns shorter type conversions for `number` type.
-* `"string"` (`true` by default) - When this is `true`, this rule warns shorter type conversions for `string` type.
-* `"disallowTemplateShorthand"` (`false` by default) - When this is `true`, this rule warns `string` type conversions using `${expression}` form.
-* `"allow"` (`empty` by default) - Each entry in this array can be one of `~`, `!!`, `+`, `- -`, `-`, or `*` that are to be allowed.
+## 选项
 
-Note that operator `+` in `allow` list would allow `+foo` (number coercion) as well as `"" + foo` (string coercion).
+此规则有三个主要选项，以及一个用于按需允许某些强制转换的覆盖选项。
 
-### boolean
+* `"boolean"`（默认为 `true`）- 为 `true` 时，此规则会对 `boolean` 类型的较短转换写法发出警告。
+* `"number"`（默认为 `true`）- 为 `true` 时，此规则会对 `number` 类型的较短转换写法发出警告。
+* `"string"`（默认为 `true`）- 为 `true` 时，此规则会对 `string` 类型的较短转换写法发出警告。
+* `"disallowTemplateShorthand"`（默认为 `false`）- 为 `true` 时，此规则会对使用 `${expression}` 形式的 `string` 类型转换发出警告。
+* `"allow"`（默认为 `empty`）- 此数组中的每个条目可以是 `~`、`!!`、`+`、`- -`、`-` 或 `*`，用于允许相应的运算符。
 
-Examples of **incorrect** code for the default `{ "boolean": true }` option:
+请注意，`allow` 列表中的运算符 `+` 会同时允许 `+foo`（数字强制转换）和 `"" + foo`（字符串强制转换）。
+
+<a id="boolean"></a>
+
+### 布尔值
+
+默认选项 `{ "boolean": true }` 下的**错误**代码示例：
 
 ::: incorrect
 
@@ -66,7 +72,7 @@ const b1 = ~foo.indexOf(".");
 
 :::
 
-Examples of **correct** code for the default `{ "boolean": true }` option:
+默认选项 `{ "boolean": true }` 下的**正确**代码示例：
 
 ::: correct
 
@@ -81,9 +87,11 @@ const n = ~foo; // This is a just bitwise not.
 
 :::
 
-### number
+<a id="number"></a>
 
-Examples of **incorrect** code for the default `{ "number": true }` option:
+### 数字
+
+默认选项 `{ "number": true }` 下的**错误**代码示例：
 
 ::: incorrect
 
@@ -98,7 +106,7 @@ const n3 = 1 * foo;
 
 :::
 
-Examples of **correct** code for the default `{ "number": true }` option:
+默认选项 `{ "number": true }` 下的**正确**代码示例：
 
 ::: correct
 
@@ -114,9 +122,11 @@ const n3 = foo * 1/4; // `* 1` is allowed when followed by the `/` operator
 
 :::
 
-### string
+<a id="string"></a>
 
-Examples of **incorrect** code for the default `{ "string": true }` option:
+### 字符串
+
+默认选项 `{ "string": true }` 下的**错误**代码示例：
 
 ::: incorrect
 
@@ -131,7 +141,7 @@ foo += ``;
 
 :::
 
-Examples of **correct** code for the default `{ "string": true }` option:
+默认选项 `{ "string": true }` 下的**正确**代码示例：
 
 ::: correct
 
@@ -144,11 +154,13 @@ foo = String(foo);
 
 :::
 
-### disallowTemplateShorthand
+<a id="disallowtemplateshorthand"></a>
 
-This option is **not** affected by the `string` option.
+### 禁止模板简写
 
-Examples of **incorrect** code for the `{ "disallowTemplateShorthand": true }` option:
+此选项**不受** `string` 选项影响。
+
+选项 `{ "disallowTemplateShorthand": true }` 下的**错误**代码示例：
 
 ::: incorrect
 
@@ -160,7 +172,7 @@ const s = `${foo}`;
 
 :::
 
-Examples of **correct** code for the `{ "disallowTemplateShorthand": true }` option:
+选项 `{ "disallowTemplateShorthand": true }` 下的**正确**代码示例：
 
 ::: correct
 
@@ -180,7 +192,7 @@ const s4 = tag`${foo}`;
 
 :::
 
-Examples of **correct** code for the default `{ "disallowTemplateShorthand": false }` option:
+默认选项 `{ "disallowTemplateShorthand": false }` 下的**正确**代码示例：
 
 ::: correct
 
@@ -192,11 +204,13 @@ const s = `${foo}`;
 
 :::
 
-### allow
+<a id="allow"></a>
 
-Using `allow` list, we can override and allow specific operators.
+### 允许
 
-Examples of **correct** code for the sample `{ "allow": ["!!", "~"] }` option:
+使用 `allow` 列表，可以覆盖默认设置并允许特定运算符。
+
+示例选项 `{ "allow": ["!!", "~"] }` 下的**正确**代码示例：
 
 ::: correct
 
@@ -209,6 +223,8 @@ const b1 = ~foo.indexOf(".");
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you don't want to be notified about shorter notations for the type conversion, you can safely disable this rule.
+## 何时不应使用此规则
+
+如果不希望收到关于较短类型转换写法的提示，可以放心禁用此规则。
