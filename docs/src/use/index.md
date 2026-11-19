@@ -1,48 +1,66 @@
 ---
-title: Use ESLint in Your Project
+title: 在项目中使用 ESLint
 eleventyNavigation:
     key: use eslint
-    title: Use ESLint in Your Project
+    title: 在项目中使用 ESLint
     order: 1
 ---
 
-This guide is intended for those who wish to use ESLint as an end-user. If you're looking for how to extend ESLint or work with the ESLint source code, please see the [Extend ESLint documentation](../extend/).
+本指南面向希望以最终用户身份使用 ESLint 的读者。如果你想了解如何扩展 ESLint 或使用 ESLint 源代码，请参阅[扩展 ESLint 文档](../extend/)。
 
-## [Getting Started](getting-started)
+<a id="getting-started"></a>
 
-Want to skip ahead and just start using ESLint? This section gives a high-level overview of installation, setup, and configuration options.
+## [入门](getting-started)
 
-## [Core Concepts](core-concepts)
+想跳过前面的内容，直接开始使用 ESLint 吗？本节将概述安装、设置和配置选项。
 
-Understand the main components of ESLint and how to use them in your project.
+<a id="core-concepts"></a>
 
-## [Configure ESLint](configure/)
+## [核心概念](core-concepts)
 
-Once you've got ESLint running, you'll probably want to adjust the configuration to better suit your project. This section explains all the different ways you can configure ESLint.
+了解 ESLint 的主要组成部分，以及如何在项目中使用它们。
 
-## [Command Line Interface Reference](command-line-interface)
+<a id="configure-eslint"></a>
 
-There are a lot of command line flags for ESLint and this section explains what they do.
+## [配置 ESLint](configure/)
 
-## [Rules Reference](../rules/)
+运行 ESLint 后，你可能会想调整配置，使其更适合你的项目。本节将介绍配置 ESLint 的各种方式。
 
-ESLint has a lot of rules that you can configure to fine-tune it to your project. This section is an exhaustive list of every rule and link to each rule's documentation.
+<a id="command-line-interface-reference"></a>
 
-## [Formatters Reference](formatters)
+## [命令行界面参考](command-line-interface)
 
-Control the appearance of the linting results with formatters. View all built-in formatters on this page.
+ESLint 有许多命令行标志，本节将说明它们的作用。
 
-## [Integrations](integrations)
+<a id="rules-reference"></a>
 
-Wondering if ESLint will work with your favorite editor or build system? This page has a list of integrations (submitted by their authors).
+## [规则参考](../rules/)
 
-## [Rule Deprecation](rule-deprecation)
+ESLint 提供了许多规则，你可以通过配置它们来更好地适配项目。本节列出了所有规则，并链接到每条规则的文档。
 
-The ESLint team is committed to making upgrading as easy and painless as possible. This section outlines the guidelines the team has set in place for the deprecation of rules in future releases.
+<a id="formatters-reference"></a>
 
-## Migrating
+## [格式化程序参考](formatters)
 
-If you were using a prior version of ESLint, you can get help with the transition by reading:
+使用格式化程序控制代码检查结果的显示方式。本页列出了所有内置格式化程序。
+
+<a id="integrations"></a>
+
+## [集成](integrations)
+
+想知道 ESLint 是否能与你常用的编辑器或构建系统配合使用吗？本页列出了各种集成（由其作者提交）。
+
+<a id="rule-deprecation"></a>
+
+## [规则弃用](rule-deprecation)
+
+ESLint 团队致力于让升级尽可能轻松、顺利。本节概述了团队为未来版本中弃用规则制定的准则。
+
+<a id="migrating"></a>
+
+## 迁移
+
+如果你使用的是较早版本的 ESLint，可以阅读以下内容，获取迁移帮助：
 
 - [migrating-to-1.0.0](migrating-to-1.0.0)
 - [migrating-to-2.0.0](migrating-to-2.0.0)
