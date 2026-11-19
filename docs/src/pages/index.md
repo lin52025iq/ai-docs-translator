@@ -1,27 +1,37 @@
 ---
-title: Documentation
+title: 文档
 permalink: /index.html
 ---
 
-Welcome to our documentation pages! What would you like to view?
+欢迎阅读我们的文档！您想查看什么内容？
 
-## [Use ESLint in Your Project](use/)
+<a id="use-eslint-in-your-project"></a>
 
-Intended for end users of ESLint. Contains information about core rules, configuration, command line options, formatters, and integrations,
-as well as guides for migrating from earlier versions of ESLint.
+## [在项目中使用 ESLint](use/)
 
-## [Extend ESLint](extend/)
+面向 ESLint 的最终用户。介绍核心规则、配置、命令行选项、格式化程序和集成，
+以及从早期版本迁移的指南。
 
-Intended for people who wish to extend ESLint. Contains information about creating custom rules, configurations, plugins, and formatters.
+<a id="extend-eslint"></a>
 
-## [Integrate ESLint](integrate/)
+## [扩展 ESLint](extend/)
 
-Intended for people who wish to create integrations with ESLint. Contains information about creating integrations and using the Node.js API.
+面向希望扩展 ESLint 的用户。介绍如何创建自定义规则、配置、插件和格式化程序。
 
-## [Contribute to ESLint](contribute/)
+<a id="integrate-eslint"></a>
 
-Intended for people who wish to contribute to the ESLint project. Contains information about ways you can contribute, the project structure, and setting up the development environment.
+## [集成 ESLint](integrate/)
 
-## [Maintain ESLint](maintain/)
+面向希望将 ESLint 集成到其他工具中的用户。介绍如何创建集成以及使用 Node.js API。
 
-Intended for maintainers of ESLint.
+<a id="contribute-to-eslint"></a>
+
+## [为 ESLint 做贡献](contribute/)
+
+面向希望为 ESLint 项目做贡献的用户。介绍贡献方式、项目结构以及如何设置开发环境。
+
+<a id="maintain-eslint"></a>
+
+## [维护 ESLint](maintain/)
+
+面向 ESLint 的维护者。
