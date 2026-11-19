@@ -4,15 +4,17 @@ rule_type: suggestion
 ---
 
 
-An unused expression which has no effect on the state of the program indicates a logic error.
+没有影响程序状态的未使用表达式表明存在逻辑错误。
 
-For example, `n + 1;` is not a syntax error, but it might be a typing mistake where a programmer meant an assignment statement `n += 1;` instead. Sometimes, such unused expressions may be eliminated by some build tools in production environment, which possibly breaks application logic.
+例如，`n + 1;` 并非语法错误，但它可能是输入错误，程序员原本想写的是赋值语句 `n += 1;`。有时，某些构建工具可能会在生产环境中移除这类未使用的表达式，从而可能破坏应用程序逻辑。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to eliminate unused expressions which have no effect on the state of the program.
+## 规则详情
 
-This rule does not apply to function calls or constructor calls with the `new` operator, because they could have *side effects* on the state of the program.
+此规则旨在消除不会影响程序状态的未使用表达式。
+
+此规则不适用于函数调用或使用 `new` 运算符的构造函数调用，因为它们可能会对程序状态产生*副作用*。
 
 ```js
 let i = 0;
@@ -24,23 +26,25 @@ function Thing() { nThings += 1; }
 new Thing(); // constructed object is unused, but nThings changed as a side effect
 ```
 
-This rule does not apply to directives (which are in the form of literal string expressions such as `"use strict";` at the beginning of a script, module, or function) when using ES5+ environments. In ES3 environments, directives are treated as unused expressions by default, but this behavior can be changed using the `ignoreDirectives` option.
+在 ES5+ 环境中，此规则不适用于指令（即脚本、模块或函数开头处的字面量字符串表达式，例如 `"use strict";`）。在 ES3 环境中，默认情况下指令会被视为未使用的表达式，但可以通过 `ignoreDirectives` 选项更改此行为。
 
-Sequence expressions (those using a comma, such as `a = 1, b = 2`) are always considered unused unless their return value is assigned or used in a condition evaluation, or a function call is made with the sequence expression value.
+除非序列表达式（使用逗号的表达式，例如 `a = 1, b = 2`）的返回值被赋值或用于条件求值，或者函数调用使用了该序列表达式的值，否则它们始终会被视为未使用。
 
-## Options
+<a id="options"></a>
 
-This rule, in its default state, does not require any arguments. If you would like to enable one or more of the following you may pass an object with the options set as follows:
+## 选项
 
-* `allowShortCircuit` set to `true` will allow you to use short circuit evaluations in your expressions (Default: `false`).
-* `allowTernary` set to `true` will enable you to use ternary operators in your expressions similarly to short circuit evaluations (Default: `false`).
-* `allowTaggedTemplates` set to `true` will enable you to use tagged template literals in your expressions (Default: `false`).
-* `enforceForJSX` set to `true` will flag unused JSX element expressions (Default: `false`).
-* `ignoreDirectives` set to `true` will prevent directives from being reported as unused expressions when linting with `ecmaVersion: 3` (Default: `false`).
+此规则在默认状态下不需要任何参数。如果要启用以下一个或多个选项，可以传入一个设置如下的对象：
 
-These options allow unused expressions *only if all* of the code paths either directly change the state (for example, assignment statement) or could have *side effects* (for example, function call).
+* 将 `allowShortCircuit` 设为 `true`，即可在表达式中使用短路求值（默认值：`false`）。
+* 将 `allowTernary` 设为 `true`，即可像使用短路求值一样在表达式中使用三元运算符（默认值：`false`）。
+* 将 `allowTaggedTemplates` 设为 `true`，即可在表达式中使用带标签的模板字面量（默认值：`false`）。
+* 将 `enforceForJSX` 设为 `true`，即可标记未使用的 JSX 元素表达式（默认值：`false`）。
+* 将 `ignoreDirectives` 设为 `true`，即可在使用 `ecmaVersion: 3` 进行代码检查时，不将指令报告为未使用的表达式（默认值：`false`）。
 
-Examples of **incorrect** code for the default `{ "allowShortCircuit": false, "allowTernary": false }` options:
+只有在所有代码路径都直接改变状态（例如赋值语句）或可能产生*副作用*（例如函数调用）时，这些选项才允许未使用的表达式。
+
+默认选项 `{ "allowShortCircuit": false, "allowTernary": false }` 下的**错误**代码示例：
 
 ::: incorrect
 
@@ -71,7 +75,7 @@ injectGlobal`body{ color: red; }`
 
 :::
 
-Examples of **correct** code for the default `{ "allowShortCircuit": false, "allowTernary": false }` options:
+默认选项 `{ "allowShortCircuit": false, "allowTernary": false }` 下的**正确**代码示例：
 
 ::: correct
 
@@ -99,9 +103,9 @@ void a
 
 :::
 
-Note that one or more string expression statements (with or without semi-colons) will only be considered as unused if they are not in the beginning of a script, module, or function (alone and uninterrupted by other statements). Otherwise, they will be treated as part of a "directive prologue", a section potentially usable by JavaScript engines. This includes "strict mode" directives.
+请注意，只有当一个或多个字符串表达式语句（带或不带分号）不位于脚本、模块或函数的开头（即它们单独出现且中间没有其他语句）时，才会被视为未使用。否则，它们会被视为“指令序言”的一部分，而 JavaScript 引擎可能会使用该部分。这包括“严格模式”指令。
 
-Examples of **correct** code for this rule in regard to directives:
+关于指令，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -128,7 +132,7 @@ class Foo {
 
 :::
 
-Examples of **incorrect** code for this rule in regard to directives:
+关于指令，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -151,9 +155,11 @@ class Foo {
 
 :::
 
-### allowShortCircuit
+<a id="allowshortcircuit"></a>
 
-Examples of **incorrect** code for the `{ "allowShortCircuit": true }` option:
+### 允许短路求值
+
+`{ "allowShortCircuit": true }` 选项下的**错误**代码示例：
 
 ::: incorrect
 
@@ -165,7 +171,7 @@ a || b
 
 :::
 
-Examples of **correct** code for the `{ "allowShortCircuit": true }` option:
+`{ "allowShortCircuit": true }` 选项下的**正确**代码示例：
 
 ::: correct
 
@@ -178,9 +184,11 @@ a() || (b = c)
 
 :::
 
-### allowTernary
+<a id="allowternary"></a>
 
-Examples of **incorrect** code for the `{ "allowTernary": true }` option:
+### 允许三元运算符
+
+`{ "allowTernary": true }` 选项下的**错误**代码示例：
 
 ::: incorrect
 
@@ -193,7 +201,7 @@ a ? b : c()
 
 :::
 
-Examples of **correct** code for the `{ "allowTernary": true }` option:
+`{ "allowTernary": true }` 选项下的**正确**代码示例：
 
 ::: correct
 
@@ -206,9 +214,11 @@ a ? (b = c) : d()
 
 :::
 
-### allowShortCircuit and allowTernary
+<a id="allowshortcircuit-and-allowternary"></a>
 
-Examples of **correct** code for the `{ "allowShortCircuit": true, "allowTernary": true }` options:
+### 允许短路求值和三元运算符
+
+`{ "allowShortCircuit": true, "allowTernary": true }` 选项下的**正确**代码示例：
 
 ::: correct
 
@@ -220,9 +230,11 @@ a ? b() || (c = d) : e()
 
 :::
 
-### allowTaggedTemplates
+<a id="allowtaggedtemplates"></a>
 
-Examples of **incorrect** code for the `{ "allowTaggedTemplates": true }` option:
+### 允许带标签的模板字面量
+
+`{ "allowTaggedTemplates": true }` 选项下的**错误**代码示例：
 
 ::: incorrect
 
@@ -234,7 +246,7 @@ Examples of **incorrect** code for the `{ "allowTaggedTemplates": true }` option
 
 :::
 
-Examples of **correct** code for the `{ "allowTaggedTemplates": true }` option:
+`{ "allowTaggedTemplates": true }` 选项下的**正确**代码示例：
 
 ::: correct
 
@@ -246,11 +258,13 @@ tag`some tagged template string`;
 
 :::
 
-### enforceForJSX
+<a id="enforceforjsx"></a>
 
-JSX is most-commonly used in the React ecosystem, where it is compiled to `React.createElement` expressions. Though free from side-effects, these calls are not automatically flagged by the `no-unused-expressions` rule. If you're using React, or any other side-effect-free JSX pragma, this option can be enabled to flag these expressions.
+### 对 JSX 强制执行
 
-Examples of **incorrect** code for the `{ "enforceForJSX": true }` option:
+JSX 最常用于 React 生态系统，在该生态系统中，它会被编译为 `React.createElement` 表达式。虽然这些调用没有副作用，但 `no-unused-expressions` 规则不会自动标记它们。如果你使用 React 或任何其他没有副作用的 JSX pragma，可以启用此选项来标记这些表达式。
+
+`{ "enforceForJSX": true }` 选项下的**错误**代码示例：
 
 ::: incorrect { "parserOptions": { "ecmaFeatures": { "jsx": true } } }
 
@@ -264,7 +278,7 @@ Examples of **incorrect** code for the `{ "enforceForJSX": true }` option:
 
 :::
 
-Examples of **correct** code for the `{ "enforceForJSX": true }` option:
+`{ "enforceForJSX": true }` 选项下的**正确**代码示例：
 
 ::: correct { "parserOptions": { "ecmaFeatures": { "jsx": true } } }
 
@@ -278,15 +292,17 @@ const myFragment = <></>;
 
 :::
 
-### ignoreDirectives
+<a id="ignoredirectives"></a>
 
-When set to `false` (default), this rule reports directives (like `"use strict"`) as unused expressions when linting with `ecmaVersion: 3`. This default behavior exists because ES3 environments do not formally support directives, meaning such strings are effectively unused expressions in that specific context.
+### 忽略指令
 
-Set this option to `true` to prevent directives from being reported as unused, even when `ecmaVersion: 3` is specified. This option is primarily useful for projects that need to maintain a single codebase containing directives while supporting both older ES3 environments and modern (ES5+) environments.
+设为 `false`（默认值）时，在使用 `ecmaVersion: 3` 进行代码检查时，此规则会将指令（如 `"use strict"`）报告为未使用的表达式。此默认行为是因为 ES3 环境并未正式支持指令，因此在这种特定情况下，这类字符串实际上属于未使用的表达式。
 
-**Note:** In ES5+ environments, directives are always ignored regardless of this setting.
+将此选项设为 `true`，即可防止指令被报告为未使用，即使指定了 `ecmaVersion: 3` 也是如此。此选项主要适用于需要维护单一代码库的项目：该代码库包含指令，同时还要兼容较旧的 ES3 环境和现代的 ES5+ 环境。
 
-Examples of **incorrect** code for the `{ "ignoreDirectives": false }` option and `ecmaVersion: 3`:
+**注意：**在 ES5+ 环境中，无论此设置为何，指令始终会被忽略。
+
+`{ "ignoreDirectives": false }` 选项和 `ecmaVersion: 3` 下的**错误**代码示例：
 
 ::: incorrect { "ecmaVersion": 3, "sourceType": "script" }
 
@@ -307,7 +323,7 @@ function foo() {
 
 :::
 
-Examples of **correct** code for the `{ "ignoreDirectives": true }` option and `ecmaVersion: 3`:
+`{ "ignoreDirectives": true }` 选项和 `ecmaVersion: 3` 下的**正确**代码示例：
 
 ::: correct { "ecmaVersion": 3, "sourceType": "script" }
 
@@ -328,19 +344,21 @@ function foo() {
 
 :::
 
-### TypeScript Support
+<a id="typescript-support"></a>
 
-This rule supports TypeScript-specific expressions and follows these guidelines:
+### TypeScript 支持
 
-1. Directives (like `'use strict'`) are allowed in module and namespace declarations
-2. Type-related expressions are treated as unused if their wrapped value expressions are unused:
-   * Type assertions (`x as number`, `<number>x`)
-   * Non-null assertions (`x!`)
-   * Type instantiations (`Set<number>`)
+此规则支持 TypeScript 特有的表达式，并遵循以下准则：
 
-**Note**: Although type expressions never have runtime side effects (e.g., `x!` is equivalent to `x` at runtime), they can be used to assert types for testing purposes.
+1. 在模块和命名空间声明中允许使用指令（如 `'use strict'`）
+2. 如果类型相关表达式中包装的值表达式未被使用，则该类型相关表达式也会被视为未使用：
+   * 类型断言（`x as number`、`<number>x`）
+   * 非空断言（`x!`）
+   * 类型实例化（`Set<number>`）
 
-Examples of **correct** code for this rule when using TypeScript:
+**注意：**虽然类型表达式不会产生运行时副作用（例如，`x!` 在运行时等价于 `x`），但它们可以用于测试目的的类型断言。
+
+使用 TypeScript 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -369,7 +387,7 @@ namespace Bar {
 
 :::
 
-Examples of **incorrect** code for this rule when using TypeScript:
+使用 TypeScript 时，此规则的**错误**代码示例：
 
 ::: incorrect
 
