@@ -1,44 +1,47 @@
 ---
-title: Custom Rule Tutorial
+title: 自定义规则教程
 eleventyNavigation:
     key: custom rule tutorial
     parent: create plugins
-    title: Custom Rule Tutorial
+    title: 自定义规则教程
     order: 1
 ---
 
 {%- from 'components/npm_tabs.macro.html' import npm_tabs with context %}
 {%- from 'components/npx_tabs.macro.html' import npx_tabs %}
 
-This tutorial covers how to create a custom rule for ESLint and distribute it with a plugin.
+本教程介绍如何为 ESLint 创建自定义规则，并通过插件分发该规则。
 
-You can create custom rules to validate if your code meets a certain expectation, and determine what to do if it does not meet that expectation. Plugins package custom rules and other configuration, allowing you to easily share and reuse them in different projects.
+你可以创建自定义规则，验证代码是否符合特定预期，并确定代码不符合预期时应如何处理。插件会打包自定义规则和其他配置，让你可以轻松地在不同项目中分享和复用它们。
 
-To learn more about custom rules and plugins refer to the following documentation:
+如需详细了解自定义规则和插件，请参阅以下文档：
 
-- [Custom Rules](custom-rules)
-- [Plugins](plugins)
+- [自定义规则](custom-rules)
+- [插件](plugins)
 
-## Why Create a Custom Rule?
+<a id="why-create-a-custom-rule"></a>
+## 为什么要创建自定义规则？
 
-Create a custom rule if the ESLint [built-in rules](../rules/) and community-published custom rules do not meet your needs. You might create a custom rule to enforce a best practice for your company or project, prevent a particular bug from recurring, or ensure compliance with a style guide.
+如果 ESLint 的[内置规则](../rules/)和社区发布的自定义规则无法满足你的需求，可以创建自定义规则。你可以创建自定义规则来强制执行公司或项目的最佳实践、防止特定错误再次发生，或确保符合某种风格指南。
 
-Before creating a custom rule that isn't specific to your company or project, it's worth searching the web to see if someone has published a plugin with a custom rule that solves your use case. It's quite possible the rule may already exist.
+在创建并非专门针对你的公司或项目的自定义规则之前，最好先在网上搜索一下，看看是否有人发布了能满足你使用场景的自定义规则插件。该规则很可能已经存在。
 
-## Prerequisites
+<a id="prerequisites"></a>
+## 前提条件
 
-Before you begin, make sure you have the following installed in your development environment:
+开始之前，请确保你的开发环境中已安装以下软件：
 
 - [Node.js](https://nodejs.org/en/download/)
 - [npm](https://www.npmjs.com/)
 
-This tutorial also assumes that you have a basic understanding of ESLint and ESLint rules.
+本教程还假设你已基本了解 ESLint 和 ESLint 规则。
 
-## The Custom Rule
+<a id="the-custom-rule"></a>
+## 自定义规则
 
-The custom rule in this tutorial requires that all `const` variables named `foo` are assigned the string literal `"bar"`. The rule is defined in the file `enforce-foo-bar.js`. The rule also suggests replacing any other value assigned to `const foo` with `"bar"`.
+本教程中的自定义规则要求所有名为 `foo` 的 `const` 变量都赋值为字符串字面量 `"bar"`。该规则定义在文件 `enforce-foo-bar.js` 中。该规则还会建议将赋给 `const foo` 的任何其他值替换为 `"bar"`。
 
-For example, say you had the following `foo.js` file:
+例如，假设你有以下 `foo.js` 文件：
 
 ```javascript
 // foo.js
@@ -46,7 +49,7 @@ For example, say you had the following `foo.js` file:
 const foo = "baz123";
 ```
 
-Running ESLint with the rule would flag `"baz123"` as an incorrect value for variable `foo`. If ESLint is running in autofix mode, then ESLint would fix the file to contain the following:
+使用该规则运行 ESLint 时，会将 `"baz123"` 标记为变量 `foo` 的错误值。如果 ESLint 以自动修复模式运行，就会修改文件，使其内容如下：
 
 ```javascript
 // foo.js
@@ -54,9 +57,10 @@ Running ESLint with the rule would flag `"baz123"` as an incorrect value for var
 const foo = "bar";
 ```
 
-## Step 1: Set up Your Project
+<a id="step-1-set-up-your-project"></a>
+## 第 1 步：设置项目
 
-First, create a new project for your custom rule. Create a new directory, initiate a new npm project in it, and create a new file for the custom rule:
+首先，为你的自定义规则创建一个新项目。创建一个新目录，在其中初始化一个 npm 项目，并为自定义规则创建一个新文件：
 
 ```shell
 mkdir eslint-custom-rule-example # create directory
@@ -65,9 +69,10 @@ npm init -y # init new npm project
 touch enforce-foo-bar.js # create file enforce-foo-bar.js
 ```
 
-## Step 2: Stub Out the Rule File
+<a id="step-2-stub-out-the-rule-file"></a>
+## 第 2 步：创建规则文件框架
 
-In the `enforce-foo-bar.js` file, add some scaffolding for the `enforce-foo-bar` custom rule. Also, add a `meta` object with some basic information about the rule.
+在 `enforce-foo-bar.js` 文件中，为 `enforce-foo-bar` 自定义规则添加一些框架代码。同时，添加一个 `meta` 对象，包含规则的一些基本信息。
 
 ```javascript
 // enforce-foo-bar.js
@@ -84,13 +89,14 @@ module.exports = {
 };
 ```
 
-## Step 3: Add Rule Metadata
+<a id="step-3-add-rule-metadata"></a>
+## 第 3 步：添加规则元数据
 
-Before writing the rule, add some metadata to the rule object. ESLint uses this information when running the rule.
+编写规则之前，先为规则对象添加一些元数据。ESLint 在运行规则时会使用这些信息。
 
-Start by exporting an object with a `meta` property containing the rule's metadata, such as the rule type, documentation, and fixability. In this case, the rule type is "problem," the description is "Enforce that a variable named `foo` can only be assigned a value of 'bar'.", and the rule is fixable by modifying the code.
+首先，导出一个对象，其中包含 `meta` 属性，用于存放规则的元数据，例如规则类型、文档信息和可修复性。在本例中，规则类型为“problem”，描述为“强制要求名为 `foo` 的变量只能赋值为 'bar'。”，并且该规则可以通过修改代码进行修复。
 
-Because this rule targets JavaScript, we also add `languages: ["js/js"]` to declare that it only applies to the built-in JavaScript language. ESLint will throw an error if this rule is enabled for a non-JavaScript language.
+由于该规则针对 JavaScript，我们还添加 `languages: ["js/js"]`，声明它仅适用于内置的 JavaScript 语言。如果在非 JavaScript 语言中启用该规则，ESLint 会抛出错误。
 
 ```javascript
 // enforce-foo-bar.js
@@ -114,20 +120,21 @@ module.exports = {
 };
 ```
 
-To learn more about rule metadata, refer to [Rule Structure](custom-rules#rule-structure).
+如需详细了解规则元数据，请参阅[规则结构](custom-rules#rule-structure)。
 
-## Step 4: Add Rule Visitor Methods
+<a id="step-4-add-rule-visitor-methods"></a>
+## 第 4 步：添加规则访问者方法
 
-Define the rule's `create` function, which accepts a `context` object and returns an object with a property for each syntax node type you want to handle. In this case, you want to handle `VariableDeclarator` nodes.
-You can choose any [ESTree node type](https://github.com/estree/estree) or [selector](selectors).
+定义规则的 `create` 函数。该函数接受一个 `context` 对象，并返回一个对象，其中的属性分别对应你想要处理的语法节点类型。本例中，你要处理 `VariableDeclarator` 节点。
+你可以选择任意 [ESTree 节点类型](https://github.com/estree/estree)或[选择器](selectors)。
 
 ::: tip
-You can view the AST for any JavaScript code using [Code Explorer](https://explorer.eslint.org). This is helpful in determining the type of nodes you'd like to target.
+你可以使用 [Code Explorer](https://explorer.eslint.org) 查看任何 JavaScript 代码的 AST。这有助于确定你想要针对的节点类型。
 :::
 
-Inside the `VariableDeclarator` visitor method, check if the node represents a `const` variable declaration, if its name is `foo`, and if it's not assigned to the string `"bar"`. You do this by evaluating the `node` passed to the `VariableDeclaration` method.
+在 `VariableDeclarator` 访问者方法中，检查节点是否表示 `const` 变量声明、变量名是否为 `foo`，以及它是否未被赋值为字符串 `"bar"`。你可以通过检查传递给 `VariableDeclaration` 方法的 `node` 来完成这些判断。
 
-If the `const foo` declaration is assigned a value of `"bar"`, then the rule does nothing. If `const foo` **is not** assigned a value of `"bar"`, then `context.report()` reports an error to ESLint. The error report includes information about the error and how to fix it.
+如果 `const foo` 声明被赋值为 `"bar"`，规则就不执行任何操作。如果 `const foo` **未**被赋值为 `"bar"`，那么 `context.report()` 会向 ESLint 报告错误。错误报告包含错误信息以及如何修复该错误的说明。
 
 ```javascript
 // enforce-foo-bar.js
@@ -184,19 +191,20 @@ module.exports = {
 {% endraw %}
 ```
 
-## Step 5: Set up Testing
+<a id="step-5-set-up-testing"></a>
+## 第 5 步：设置测试
 
-With the rule written, you can test it to make sure it's working as expected.
+编写好规则后，就可以测试它，确保其按预期工作。
 
-ESLint provides the built-in [`RuleTester`](../integrate/nodejs-api#ruletester) class to test rules. You do not need to use third-party testing libraries to test ESLint rules, but `RuleTester` works seamlessly with tools like Mocha and Jest.
+ESLint 提供内置的 [`RuleTester`](../integrate/nodejs-api#ruletester) 类来测试规则。你无需使用第三方测试库来测试 ESLint 规则，但 `RuleTester` 能与 Mocha 和 Jest 等工具无缝协作。
 
-Next, create the file for the tests, `enforce-foo-bar.test.js`:
+接下来，创建测试文件 `enforce-foo-bar.test.js`：
 
 ```shell
 touch enforce-foo-bar.test.js
 ```
 
-You will use the `eslint` package in the test file. Install it as a development dependency:
+你将在测试文件中使用 `eslint` 包。请将其安装为开发依赖：
 
 {{ npm_tabs({
     command: "install",
@@ -204,7 +212,7 @@ You will use the `eslint` package in the test file. Install it as a development 
     args: ["--save-dev"]
 }) }}
 
-And add a test script to your `package.json` file to run the tests:
+然后在 `package.json` 文件中添加测试脚本来运行测试：
 
 ```javascript
 // package.json
@@ -217,12 +225,13 @@ And add a test script to your `package.json` file to run the tests:
 }
 ```
 
-## Step 6: Write the Test
+<a id="step-6-write-the-test"></a>
+## 第 6 步：编写测试
 
-To write the test using `RuleTester`, import the class and your custom rule into the `enforce-foo-bar.test.js` file.
+要使用 `RuleTester` 编写测试，请将该类和你的自定义规则导入 `enforce-foo-bar.test.js` 文件。
 
-The `RuleTester#run()` method tests the rule against valid and invalid test cases. If the rule fails to pass any of the test scenarios, this method throws an error.
-`RuleTester` requires that at least one valid and one invalid test scenario be present.
+`RuleTester#run()` 方法会针对有效和无效的测试用例测试规则。如果规则未能通过任何测试场景，该方法就会抛出错误。
+`RuleTester` 要求至少包含一个有效测试场景和一个无效测试场景。
 
 ```javascript
 // enforce-foo-bar.test.js
@@ -261,31 +270,32 @@ ruleTester.run(
 console.log("All tests passed!");
 ```
 
-Run the test with the following command:
+运行以下命令来执行测试：
 
 ```shell
 npm test
 ```
 
-If the test passes, you should see the following in your console:
+如果测试通过，你应该会在控制台看到以下内容：
 
 ```shell
 All tests passed!
 ```
 
-## Step 7: Bundle the Custom Rule in a Plugin
+<a id="step-7-bundle-the-custom-rule-in-a-plugin"></a>
+## 第 7 步：将自定义规则打包到插件中
 
-Now that you've written the custom rule and validated that it works, you can include it in a plugin. Using a plugin, you can share the rule in an npm package to use in other projects.
+编写并验证自定义规则可正常工作后，就可以将它加入插件。使用插件，你可以将规则分享到 npm 包中，以便在其他项目中使用。
 
-Create the file for the plugin:
+创建插件文件：
 
 ```shell
 touch eslint-plugin-example.js
 ```
 
-And now write the plugin code. Plugins are just exported JavaScript objects. To include a rule in a plugin, include it in the plugin's `rules` object, which contains key-value pairs of rule names and their source code.
+接下来编写插件代码。插件只是导出的 JavaScript 对象。要将规则加入插件，请把它放入插件的 `rules` 对象中。该对象包含规则名称及其源代码组成的键值对。
 
-To learn more about creating plugins, refer to [Create Plugins](plugins).
+如需详细了解如何创建插件，请参阅[创建插件](plugins)。
 
 ```javascript
 // eslint-plugin-example.js
@@ -295,22 +305,23 @@ const plugin = { rules: { "enforce-foo-bar": fooBarRule } };
 module.exports = plugin;
 ```
 
-## Step 8: Use the Plugin Locally
+<a id="step-8-use-the-plugin-locally"></a>
+## 第 8 步：在本地使用插件
 
-You can use a locally defined plugin to execute the custom rule in your project. To use a local plugin, specify the path to the plugin in the `plugins` property of your ESLint configuration file.
+你可以使用本地定义的插件，在项目中执行自定义规则。要使用本地插件，请在 ESLint 配置文件的 `plugins` 属性中指定插件路径。
 
-You might want to use a locally defined plugin in one of the following scenarios:
+以下场景可能适合使用本地定义的插件：
 
-- You want to test the plugin before publishing it to npm.
-- You want to use a plugin, but do not want to publish it to npm.
+- 你想在发布插件到 npm 之前先测试它。
+- 你想使用插件，但不想将它发布到 npm。
 
-Before you can add the plugin to the project, create an ESLint configuration for your project using a [flat configuration file](../use/configure/configuration-files), `eslint.config.js`:
+在将插件加入项目之前，请使用[扁平配置文件](../use/configure/configuration-files) `eslint.config.js` 为项目创建 ESLint 配置：
 
 ```shell
 touch eslint.config.js
 ```
 
-Then, add the following code to `eslint.config.js`:
+然后将以下代码添加到 `eslint.config.js`：
 
 ```javascript
 // eslint.config.js
@@ -337,15 +348,15 @@ module.exports = defineConfig([
 ]);
 ```
 
-Before you can test the rule, you must create a file to test the rule on.
+在测试规则之前，你必须先创建一个用于测试规则的文件。
 
-Create a file `example.js`:
+创建文件 `example.js`：
 
 ```shell
 touch example.js
 ```
 
-Add the following code to `example.js`:
+将以下代码添加到 `example.js`：
 
 ```javascript
 // example.js
@@ -359,16 +370,16 @@ function incorrectFoo() {
 }
 ```
 
-Now you're ready to test the custom rule with the locally defined plugin.
+现在，你已经可以使用本地定义的插件来测试自定义规则了。
 
-Run ESLint on `example.js`:
+对 `example.js` 运行 ESLint：
 
 {{ npx_tabs({
     package: "eslint",
     args: ["example.js"]
 }) }}
 
-This produces the following output in the terminal:
+终端中会显示以下输出：
 
 ```text
 /<path-to-directory>/eslint-custom-rule-example/example.js
@@ -378,17 +389,18 @@ This produces the following output in the terminal:
   1 error and 0 warnings potentially fixable with the `--fix` option.
 ```
 
-## Step 9: Publish the Plugin
+<a id="step-9-publish-the-plugin"></a>
+## 第 9 步：发布插件
 
-To publish a plugin containing a rule to npm, you need to configure the `package.json`. Add the following in the corresponding fields:
+要将包含规则的插件发布到 npm，需要配置 `package.json`。在相应字段中添加以下内容：
 
-1. `"name"`: A unique name for the package. No other package on npm can have the same name.
-1. `"main"`: The relative path to the plugin file. Following this example, the path is `"eslint-plugin-example.js"`.
-1. `"description"`: A description of the package that's viewable on npm.
-1. `"peerDependencies"`: Add `"eslint": ">=10.0.0"` as a peer dependency. Any version greater than or equal to that is necessary to use the plugin. Declaring `eslint` as a peer dependency requires that users add the package to the project separately from the plugin.
-1. `"keywords"`: Include the standard keywords `["eslint", "eslintplugin", "eslint-plugin"]` to make the package easy to find. You can add any other keywords that might be relevant to your plugin as well.
+1. `"name"`：包的唯一名称。npm 上不能有其他包使用相同名称。
+1. `"main"`：插件文件的相对路径。按照本例，路径为 `"eslint-plugin-example.js"`。
+1. `"description"`：包的描述，可在 npm 上查看。
+1. `"peerDependencies"`：添加 `"eslint": ">=10.0.0"` 作为对等依赖项。使用该插件需要安装此版本或更高版本。将 `eslint` 声明为对等依赖项，意味着用户需要将该包与插件分开添加到项目中。
+1. `"keywords"`：包含标准关键字 `["eslint", "eslintplugin", "eslint-plugin"]`，便于用户找到该包。你也可以添加其他可能与插件相关的关键字。
 
-A complete annotated example of what a plugin's `package.json` file should look like:
+以下是一个完整示例，并附有注释，展示插件的 `package.json` 文件应包含哪些内容：
 
 ```javascript
 // package.json
@@ -420,15 +432,16 @@ A complete annotated example of what a plugin's `package.json` file should look 
 }
 ```
 
-To publish the package, run `npm publish` and follow the CLI prompts.
+要发布该包，请运行 `npm publish` 并按照 CLI 提示操作。
 
-You should see the package live on npm!
+之后，你应该就能在 npm 上看到已发布的包了！
 
-## Step 10: Use the Published Custom Rule
+<a id="step-10-use-the-published-custom-rule"></a>
+## 第 10 步：使用已发布的自定义规则
 
-Next, you can use the published plugin.
+接下来，你可以使用已发布的插件。
 
-Run the following command in your project to download the package:
+在项目中运行以下命令来下载该包：
 
 {{ npm_tabs({
     command: "install",
@@ -437,7 +450,7 @@ Run the following command in your project to download the package:
     comment: "Add your package name here"
 }) }}
 
-Update the `eslint.config.js` to use the packaged version of the plugin:
+更新 `eslint.config.js`，以使用打包后的插件版本：
 
 ```javascript
 // eslint.config.js
@@ -449,16 +462,16 @@ const eslintPluginExample = require("eslint-plugin-example");
 // ... rest of configuration
 ```
 
-Now you're ready to test the custom rule.
+现在，你已经可以测试自定义规则了。
 
-Run ESLint on the `example.js` file you created in step 8, now with the downloaded plugin:
+使用下载的插件，对你在第 8 步创建的 `example.js` 文件运行 ESLint：
 
 {{ npx_tabs({
     package: "eslint",
     args: ["example.js"]
 }) }}
 
-This produces the following output in the terminal:
+终端中会显示以下输出：
 
 ```text
 /<path-to-directory>/eslint-custom-rule-example/example.js
@@ -468,16 +481,16 @@ This produces the following output in the terminal:
   1 error and 0 warnings potentially fixable with the `--fix` option.
 ```
 
-As you can see in the above message, you can actually fix the issue with the `--fix` flag, correcting the variable assignment to be `"bar"`.
+如上面的消息所示，你可以使用 `--fix` 标志修复此问题，将变量赋值更正为 `"bar"`。
 
-Run ESLint again with the `--fix` flag:
+再次运行 ESLint，并加上 `--fix` 标志：
 
 {{ npx_tabs({
     package: "eslint",
     args: ["example.js", "--fix"]
 }) }}
 
-There is no error output in the terminal when you run this, but you can see the fix applied in `example.js`. You should see the following:
+运行后，终端中不会显示错误输出，但你可以在 `example.js` 中看到修复结果。内容应该如下：
 
 ```javascript
 // example.js
@@ -489,18 +502,20 @@ function incorrectFoo() {
 }
 ```
 
-## Summary
+<a id="summary"></a>
+## 总结
 
-In this tutorial, you've made a custom rule that requires all `const` variables named `foo` to be assigned the string `"bar"` and suggests replacing any other value assigned to `const foo` with `"bar"`. You've also added the rule to a plugin, and published the plugin on npm.
+在本教程中，你创建了一个自定义规则，要求所有名为 `foo` 的 `const` 变量都赋值为字符串 `"bar"`，并建议将赋给 `const foo` 的任何其他值替换为 `"bar"`。你还将该规则加入插件，并将插件发布到了 npm。
 
-Through doing this, you've learned the following practices which you can apply to create other custom rules and plugins:
+通过这些操作，你学到了以下实践，可用于创建其他自定义规则和插件：
 
-1. Creating a custom ESLint rule
-1. Testing the custom rule
-1. Bundling the rule in a plugin
-1. Publishing the plugin
-1. Using the rule from the plugin
+1. 创建自定义 ESLint 规则
+1. 测试自定义规则
+1. 将规则打包到插件中
+1. 发布插件
+1. 使用插件中的规则
 
-## View the Tutorial Code
+<a id="view-the-tutorial-code"></a>
+## 查看教程代码
 
-You can view the [annotated source code for the tutorial](https://github.com/eslint/eslint/tree/main/docs/_examples/custom-rule-tutorial-code).
+你可以查看[教程的带注释源代码](https://github.com/eslint/eslint/tree/main/docs/_examples/custom-rule-tutorial-code)。
