@@ -5,7 +5,7 @@ further_reading:
 - https://www.adequatelygood.com/JavaScript-Scoping-and-Hoisting.html
 ---
 
-There are two ways of defining functions in JavaScript: `function` declarations and function expressions assigned to variables. Function declarations are statements that begin with the `function` keyword. Function expressions can either be arrow functions or use the `function` keyword with an optional name. Here are some examples:
+在 JavaScript 中定义函数有两种方式：`function` 声明和赋值给变量的函数表达式。函数声明是以 `function` 关键字开头的语句。函数表达式可以是箭头函数，也可以使用 `function` 关键字并带有可选名称。以下是一些示例：
 
 ```js
 // function declaration
@@ -24,7 +24,7 @@ const doSomethingAgain = function() {
 };
 ```
 
-The primary difference between `function` declarations and function expressions is that declarations are *hoisted* to the top of the scope in which they are defined, which allows you to write code that uses the function before its declaration. For example:
+`function` 声明与函数表达式的主要区别在于，声明会被*提升*到其定义所在作用域的顶部，因此你可以在函数声明之前编写使用该函数的代码。例如：
 
 ```js
 doSomething(); // ok
@@ -34,7 +34,7 @@ function doSomething() {
 }
 ```
 
-For function expressions, you must define the function before it is used, otherwise it causes an error. Example:
+对于函数表达式，必须先定义函数再使用，否则会导致错误。例如：
 
 ```js
 doSomething();  // error!
@@ -44,36 +44,39 @@ const doSomething = function() {
 };
 ```
 
-In this case, `doSomething` is `undefined` at the time of invocation and so causes a runtime error.
+在这种情况下，调用时 `doSomething` 的值是 `undefined`，因此会导致运行时错误。
 
-Due to these different behaviors, it is common to have guidelines as to which style of function should be used. There is really no correct or incorrect choice here, it is just a preference.
+由于这些行为不同，人们通常会制定指南来规定应使用哪种函数风格。这里并没有绝对正确或错误的选择，只是个人偏好不同。
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule enforces a particular type of function style, either `function` declarations or expressions assigned to variables. You can specify which you prefer in the configuration.
+此规则强制采用特定的函数风格：`function` 声明，或赋值给变量的函数表达式。你可以在配置中指定偏好的风格。
 
-Note: This rule does not apply to *all* functions. For example, a callback function passed as an argument to another function is not considered by this rule.
+注意：此规则并不适用于*所有*函数。例如，作为参数传递给另一个函数的回调函数不受此规则检查。
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule has a string option:
+此规则有一个字符串选项：
 
-* `"expression"` (default) requires the use of function expressions instead of function declarations
-* `"declaration"` requires the use of function declarations instead of function expressions
+* `"expression"`（默认值）要求使用函数表达式，而不是函数声明
+* `"declaration"` 要求使用函数声明，而不是函数表达式
 
-This rule has an object option for two exceptions:
+此规则还有一个用于两种例外情况的对象选项：
 
-* `"allowArrowFunctions"`: `true` (default `false`) allows the use of arrow functions. This option applies only when the string option is set to `"declaration"` (arrow functions are always allowed when the string option is set to `"expression"`, regardless of this option)
-* `"allowTypeAnnotation"`: `true` (default `false`) allows the use of function expressions and arrow functions when the variable declaration has type annotation, regardless of the `allowArrowFunctions` option. This option applies only when the string option is set to `"declaration"`. (TypeScript only)
-* `"overrides"`:
-    * `"namedExports": "expression" | "declaration" | "ignore"`: used to override function styles in named exports
-        * `"expression"`: like string option
-        * `"declaration"`: like string option
-        * `"ignore"`: either style is acceptable
+* `"allowArrowFunctions"`：`true`（默认值为 `false`）允许使用箭头函数。此选项仅在字符串选项设为 `"declaration"` 时生效（字符串选项设为 `"expression"` 时始终允许箭头函数，无论此选项如何设置）
+* `"allowTypeAnnotation"`：`true`（默认值为 `false`）允许在变量声明带有类型注释时使用函数表达式和箭头函数，不受 `allowArrowFunctions` 选项影响。此选项仅在字符串选项设为 `"declaration"` 时生效。（仅适用于 TypeScript）
+* `"overrides"`：
+    * `"namedExports": "expression" | "declaration" | "ignore"`：用于覆盖命名导出中的函数风格
+        * `"expression"`：与字符串选项相同
+        * `"declaration"`：与字符串选项相同
+        * `"ignore"`：两种风格均可接受
 
-### expression
+<a id="expression"></a>
+### 表达式
 
-Examples of **incorrect** code for this rule with the default `"expression"` option:
+使用默认选项 `"expression"` 时，以下代码示例违反此规则：
 
 ::: incorrect
 
@@ -87,7 +90,7 @@ function foo() {
 
 :::
 
-Examples of **correct** code for this rule with the default `"expression"` option:
+使用默认选项 `"expression"` 时，以下代码示例符合此规则：
 
 ::: correct
 
@@ -105,9 +108,9 @@ const foo1 = () => {};
 
 :::
 
-Overloaded function declarations are not reported as errors by this rule. These are functions that have multiple declarations with the same name but different parameter types or return types (commonly used in TypeScript to provide type information for different ways of calling the same function).
+此规则不会将重载的函数声明报告为错误。这类函数使用相同名称进行多次声明，但参数类型或返回类型不同（TypeScript 中常用这种方式，为同一函数的不同调用方式提供类型信息）。
 
-Examples of **correct** TypeScript code for this rule with the default `"expression"` option:
+使用默认选项 `"expression"` 时，以下 TypeScript 代码示例符合此规则：
 
 ::: correct
 
@@ -123,9 +126,10 @@ function process(value: unknown) {
 
 :::
 
-### declaration
+<a id="declaration"></a>
+### 声明
 
-Examples of **incorrect** code for this rule with the `"declaration"` option:
+使用选项 `"declaration"` 时，以下代码示例违反此规则：
 
 ::: incorrect
 
@@ -141,7 +145,7 @@ const foo1 = () => {};
 
 :::
 
-Examples of **correct** code for this rule with the `"declaration"` option:
+使用选项 `"declaration"` 时，以下代码示例符合此规则：
 
 ::: correct
 
@@ -160,9 +164,10 @@ SomeObject.foo = function() {
 
 :::
 
-### allowArrowFunctions
+<a id="allowarrowfunctions"></a>
+### 允许箭头函数
 
-Examples of additional **correct** code for this rule with the `"declaration", { "allowArrowFunctions": true }` options:
+使用选项 `"declaration", { "allowArrowFunctions": true }` 时，以下额外的代码示例符合此规则：
 
 ::: correct
 
@@ -174,9 +179,10 @@ const foo = () => {};
 
 :::
 
-### allowTypeAnnotation
+<a id="allowtypeannotation"></a>
+### 允许类型注释
 
-Examples of **incorrect** TypeScript code for this rule with the `"declaration", { "allowTypeAnnotation": true }` options:
+使用选项 `"declaration", { "allowTypeAnnotation": true }` 时，以下 TypeScript 代码示例违反此规则：
 
 ::: incorrect
 
@@ -188,7 +194,7 @@ const foo = function(): void {};
 
 :::
 
-Examples of **correct** TypeScript code for this rule with the `"declaration", { "allowTypeAnnotation": true }` options:
+使用选项 `"declaration", { "allowTypeAnnotation": true }` 时，以下 TypeScript 代码示例符合此规则：
 
 ::: correct
 
@@ -204,13 +210,15 @@ const bar: Fn = () => {};
 
 :::
 
-### overrides
+<a id="overrides"></a>
+### 覆盖项
 
 #### namedExports
 
-##### expression
+<a id="expression-1"></a>
+##### 表达式
 
-Examples of **incorrect** code for this rule with the `"declaration"` and `{"overrides": { "namedExports": "expression" }}` option:
+使用选项 `"declaration"` 和 `{"overrides": { "namedExports": "expression" }}` 时，以下代码示例违反此规则：
 
 ::: incorrect
 
@@ -224,7 +232,7 @@ export function foo() {
 
 :::
 
-Examples of **correct** code for this rule with the `"declaration"` and `{"overrides": { "namedExports": "expression" }}` option:
+使用选项 `"declaration"` 和 `{"overrides": { "namedExports": "expression" }}` 时，以下代码示例符合此规则：
 
 ::: correct
 
@@ -240,9 +248,10 @@ export const bar = () => {};
 
 :::
 
-##### declaration
+<a id="declaration-1"></a>
+##### 声明
 
-Examples of **incorrect** code for this rule with the `"expression"` and `{"overrides": { "namedExports": "declaration" }}` option:
+使用选项 `"expression"` 和 `{"overrides": { "namedExports": "declaration" }}` 时，以下代码示例违反此规则：
 
 ::: incorrect
 
@@ -258,7 +267,7 @@ export const bar = () => {};
 
 :::
 
-Examples of **correct** code for this rule with the `"expression"` and `{"overrides": { "namedExports": "declaration" }}` option:
+使用选项 `"expression"` 和 `{"overrides": { "namedExports": "declaration" }}` 时，以下代码示例符合此规则：
 
 ::: correct
 
@@ -272,7 +281,7 @@ export function foo() {
 
 :::
 
-Examples of **correct** code for this rule with the `"expression"` and `{ "allowTypeAnnotation": true, "overrides": { "namedExports": "declaration" }}` option:
+使用选项 `"expression"` 和 `{ "allowTypeAnnotation": true, "overrides": { "namedExports": "declaration" }}` 时，以下代码示例符合此规则：
 
 ::: correct
 
@@ -286,7 +295,7 @@ export const foo: () => void = function () {}
 
 ##### ignore
 
-Examples of **correct** code for this rule with the `{"overrides": { "namedExports": "ignore" }}` option:
+使用选项 `{"overrides": { "namedExports": "ignore" }}` 时，以下代码示例符合此规则：
 
 ::: correct
 
@@ -306,6 +315,7 @@ export function baz() {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 何时不应使用此规则
 
-If you want to allow developers to each decide how they want to write functions on their own, then you can disable this rule.
+如果你希望开发者自行决定如何编写函数，可以禁用此规则。
