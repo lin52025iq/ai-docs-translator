@@ -7,6 +7,10 @@ on:
                 description: 项目 ID（读取对应的配置分支）
                 required: true
                 type: string
+            retry_failed:
+                description: 重试已记录的失败或冲突
+                type: boolean
+                default: false
 
     workflow_call:
         inputs:
@@ -94,11 +98,9 @@ jobs:
             - name: 检查运行凭据
               env:
                   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-                  SOURCE_REPO_TOKEN: ${{ secrets[steps.source.outputs.token_secret] }}
-                  SOURCE_TOKEN_SECRET: ${{ steps.source.outputs.token_secret }}
               run: |
-                  if [ -z "$OPENAI_API_KEY" ] || [ -z "$SOURCE_REPO_TOKEN" ]; then
-                      echo "请在仓库 Secrets 中配置 OPENAI_API_KEY 和 $SOURCE_TOKEN_SECRET。" >&2
+                  if [ -z "$OPENAI_API_KEY" ]; then
+                      echo "请在仓库 Secrets 中配置 OPENAI_API_KEY。" >&2
                       exit 1
                   fi
 
@@ -109,20 +111,23 @@ jobs:
                   ref: ${{ steps.source.outputs.ref }}
                   path: .translation-source
                   fetch-depth: 0
-                  token: ${{ secrets[steps.source.outputs.token_secret] }}
+                  token: ${{ secrets[steps.source.outputs.token_secret] || github.token }}
                   persist-credentials: false
 
             - name: 顺序执行项目文档翻译
               id: translate
               env:
                   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+                  RETRY_FAILED: ${{ inputs.retry_failed }}
               run: |
                   mkdir -p .translation-drafts
+                  retry=()
+                  if [ "$RETRY_FAILED" = true ]; then retry+=(--retry-failed); fi
                   pnpm --silent translator run-project \
                       --project "$PROJECT_CONFIG" \
                       --source-root .translation-source \
                       --repository . \
-                      --push \
+                      --push "${retry[@]}" \
                       > .translation-drafts/result.json
 
             - name: 导出通过校验的提交
