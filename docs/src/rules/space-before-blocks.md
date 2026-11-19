@@ -8,33 +8,34 @@ related_rules:
 - block-spacing
 - brace-style
 ---
-Consistency is an important part of any style guide.
-While it is a personal preference where to put the opening brace of blocks,
-it should be consistent across a whole project.
-Having an inconsistent style distracts the reader from seeing the important parts of the code.
+一致性是任何风格指南的重要组成部分。
+虽然代码块左花括号的位置属于个人偏好，
+但整个项目中应保持一致。
+风格不一致会分散读者的注意力，使其无法关注代码的重要部分。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule will enforce consistency of spacing before blocks. It is only applied on blocks that don’t begin on a new line.
+## 规则详情
 
-* This rule ignores spacing which is between `=>` and a block. The spacing is handled by the `arrow-spacing` rule.
-* This rule ignores spacing which is between a keyword and a block. The spacing is handled by the `keyword-spacing` rule.
-* This rule ignores spacing which is between `:` of a switch case and a block. The spacing is handled by the `switch-colon-spacing` rule.
+此规则用于确保代码块前空格的一致性。它仅适用于未在新行开始的代码块。
 
-## Options
+* 此规则忽略 `=>` 与代码块之间的空格。这类空格由 `arrow-spacing` 规则处理。
+* 此规则忽略关键字与代码块之间的空格。这类空格由 `keyword-spacing` 规则处理。
+* 此规则忽略 switch case 中 `:` 与代码块之间的空格。这类空格由 `switch-colon-spacing` 规则处理。
 
-This rule takes one argument. If it is `"always"` then blocks must always have at least one preceding space. If `"never"`
-then all blocks should never have any preceding space. If different spacing is desired for function
-blocks, keyword blocks and classes, an optional configuration object can be passed as the rule argument to
-configure the cases separately. If any value in the configuration object is `"off"`, then neither style will be enforced for blocks of that kind.
+<a id="options"></a>
 
-( e.g. `{ "functions": "never", "keywords": "always", "classes": "always" }` )
+## 选项
 
-The default is `"always"`.
+此规则接受一个参数。如果设为 `"always"`，则代码块前必须至少有一个空格。如果设为 `"never"`，则代码块前不得有空格。如果希望函数代码块、关键字代码块和类使用不同的空格规则，可以将可选配置对象作为规则参数，分别配置这些情况。如果配置对象中的任何值为 `"off"`，则不会对相应类型的代码块强制执行这两种风格中的任何一种。
+
+( 例如：`{ "functions": "never", "keywords": "always", "classes": "always" }` )
+
+默认值为 `"always"`。
 
 ### "always"
 
-Examples of **incorrect** code for this rule with the "always" option:
+使用 "always" 选项时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -60,7 +61,7 @@ class Foo{
 
 :::
 
-Examples of **correct** code for this rule with the `"always"` option:
+使用 `"always"` 选项时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -94,7 +95,7 @@ try {} catch(a) {}
 
 ### "never"
 
-Examples of **incorrect** code for this rule with the `"never"` option:
+使用 `"never"` 选项时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -116,7 +117,7 @@ try {} catch(a) {}
 
 :::
 
-Examples of **correct** code for this rule with the `"never"` option:
+使用 `"never"` 选项时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -142,7 +143,7 @@ class Foo{
 
 :::
 
-Examples of **incorrect** code for this rule when configured `{ "functions": "never", "keywords": "always", "classes": "never" }`:
+配置为 `{ "functions": "never", "keywords": "always", "classes": "never" }` 时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -160,7 +161,7 @@ class Foo{
 
 :::
 
-Examples of **correct** code for this rule when configured `{ "functions": "never", "keywords": "always", "classes": "never" }`:
+配置为 `{ "functions": "never", "keywords": "always", "classes": "never" }` 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -182,7 +183,7 @@ class Foo{
 
 :::
 
-Examples of **incorrect** code for this rule when configured `{ "functions": "always", "keywords": "never", "classes": "never" }`:
+配置为 `{ "functions": "always", "keywords": "never", "classes": "never" }` 时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -200,7 +201,7 @@ class Foo {
 
 :::
 
-Examples of **correct** code for this rule when configured `{ "functions": "always", "keywords": "never", "classes": "never" }`:
+配置为 `{ "functions": "always", "keywords": "never", "classes": "never" }` 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -220,7 +221,7 @@ class Foo{
 
 :::
 
-Examples of **incorrect** code for this rule when configured `{ "functions": "never", "keywords": "never", "classes": "always" }`:
+配置为 `{ "functions": "never", "keywords": "never", "classes": "always" }` 时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -234,7 +235,7 @@ class Foo{
 
 :::
 
-Examples of **correct** code for this rule when configured `{ "functions": "never", "keywords": "never", "classes": "always" }`:
+配置为 `{ "functions": "never", "keywords": "never", "classes": "always" }` 时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -248,6 +249,8 @@ class Foo {
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-You can turn this rule off if you are not concerned with the consistency of spacing before blocks.
+## 何时不使用此规则
+
+如果你不关心代码块前空格的一致性，可以关闭此规则。
