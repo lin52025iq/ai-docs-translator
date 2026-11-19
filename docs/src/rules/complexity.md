@@ -17,7 +17,7 @@ further_reading:
 ---
 
 
-Cyclomatic complexity measures the number of linearly independent paths through a program's source code. This rule allows setting a cyclomatic complexity threshold.
+圈复杂度用于衡量程序源代码中线性独立路径的数量。此规则允许设置圈复杂度阈值。
 
 ```js
 function a(x) {
@@ -31,11 +31,12 @@ function a(x) {
 }
 ```
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule is aimed at reducing code complexity by capping the amount of cyclomatic complexity allowed in a program. As such, it will warn when the cyclomatic complexity crosses the configured threshold (default is `20`).
+此规则旨在通过限制程序允许的圈复杂度来降低代码复杂度。因此，当圈复杂度超过配置的阈值时（默认为 `20`），此规则会发出警告。
 
-Examples of **incorrect** code for a maximum of `2`:
+最大值为 `2` 时，以下代码**不正确**：
 
 ::: incorrect
 
@@ -68,7 +69,7 @@ function d(a) {
 
 :::
 
-Examples of **correct** code for a maximum of `2`:
+最大值为 `2` 时，以下代码**正确**：
 
 ::: correct
 
@@ -90,9 +91,9 @@ function b() {
 
 :::
 
-Class field initializers and class static blocks are implicit functions. Therefore, their complexity is calculated separately for each initializer and each static block, and it doesn't contribute to the complexity of the enclosing code.
+类字段初始化器和类静态块都是隐式函数。因此，它们的复杂度会针对每个初始化器和每个静态块分别计算，且不会计入外围代码的复杂度。
 
-Examples of additional **incorrect** code for a maximum of `2`:
+最大值为 `2` 时，以下额外代码**不正确**：
 
 ::: incorrect
 
@@ -114,7 +115,7 @@ class D { // this static block has complexity = 3
 
 :::
 
-Examples of additional **correct** code for a maximum of `2`:
+最大值为 `2` 时，以下额外代码**正确**：
 
 ::: correct
 
@@ -145,40 +146,43 @@ function foo() { // this function has complexity = 1
 
 :::
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule has a number or object option:
+此规则的选项可以是数字或对象：
 
-* `"max"` (default: `20`) enforces a maximum complexity
+* `"max"`（默认值：`20`）用于设置复杂度上限
 
-* `"variant": "classic" | "modified"` (default: `"classic"`) cyclomatic complexity variant to use
+* `"variant": "classic" | "modified"`（默认值：`"classic"`）指定要使用的圈复杂度变体
 
+<a id="max"></a>
 ### max
 
-Customize the threshold with the `max` property.
+使用 `max` 属性自定义阈值。
 
 ```json
 "complexity": ["error", { "max": 2 }]
 ```
 
-**Deprecated:** the object property `maximum` is deprecated. Please use the property `max` instead.
+**已弃用：**对象属性 `maximum` 已弃用。请改用 `max` 属性。
 
-Or use the shorthand syntax:
+也可以使用简写语法：
 
 ```json
 "complexity": ["error", 2]
 ```
 
+<a id="variant"></a>
 ### variant
 
-Cyclomatic complexity variant to use:
+要使用的圈复杂度变体：
 
-* `"classic"` (default) - Classic McCabe cyclomatic complexity
-* `"modified"` - Modified cyclomatic complexity
+* `"classic"`（默认值）- 经典 McCabe 圈复杂度
+* `"modified"` - 修改版圈复杂度
 
-_Modified cyclomatic complexity_ is the same as the classic cyclomatic complexity, but each `switch` statement only increases the complexity value by `1`, regardless of how many `case` statements it contains.
+_修改版圈复杂度_与经典圈复杂度相同，但每个 `switch` 语句只会使复杂度值增加 `1`，无论其中包含多少个 `case` 语句。
 
-Examples of **correct** code for this rule with the `{ "max": 3, "variant": "modified" }` option:
+在 `{ "max": 3, "variant": "modified" }` 选项下，以下代码对此规则而言**正确**：
 
 ::: correct
 
@@ -206,8 +210,9 @@ function a(x) {     // initial modified complexity is 1
 
 :::
 
-The classic cyclomatic complexity of the above function is `5`, but the modified cyclomatic complexity is only `3`.
+上述函数的经典圈复杂度为 `5`，而修改版圈复杂度仅为 `3`。
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 何时不应使用
 
-If you can't determine an appropriate complexity limit for your code, then it's best to disable this rule.
+如果无法为代码确定合适的复杂度上限，最好禁用此规则。
