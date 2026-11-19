@@ -2,26 +2,29 @@
 title: new-parens
 rule_type: layout
 ---
-JavaScript allows the omission of parentheses when invoking a function via the `new` keyword and the constructor has no arguments. However, some coders believe that omitting the parentheses is inconsistent with the rest of the language and thus makes code less clear.
+JavaScript 允许在使用 `new` 关键字调用函数且构造函数没有参数时省略括号。不过，有些编码者认为省略括号与语言的其他部分不一致，因此会降低代码的清晰度。
 
 ```js
 var person = new Person;
 ```
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule can enforce or disallow parentheses when invoking a constructor with no arguments using the `new` keyword.
+此规则可以强制要求或禁止在使用 `new` 关键字调用无参数构造函数时使用括号。
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule takes one option.
+此规则接受一个选项。
 
-* `"always"` enforces parenthesis after a new constructor with no arguments (default)
-* `"never"` enforces no parenthesis after a new constructor with no arguments
+* `"always"` 要求在无参数构造函数后使用括号（默认值）
+* `"never"` 要求在无参数构造函数后不使用括号
 
-### always
+<a id="always"></a>
+### 始终使用
 
-Examples of **incorrect** code for this rule with the `"always"` option:
+使用 `"always"` 选项时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -34,7 +37,7 @@ var person = new (Person);
 
 :::
 
-Examples of **correct** code for this rule with the `"always"` option:
+使用 `"always"` 选项时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -47,9 +50,10 @@ var person = new (Person)();
 
 :::
 
-### never
+<a id="never"></a>
+### 从不使用
 
-Examples of **incorrect** code for this rule with the `"never"` option:
+使用 `"never"` 选项时，此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -62,7 +66,7 @@ var person = new (Person)();
 
 :::
 
-Examples of **correct** code for this rule with the `"never"` option:
+使用 `"never"` 选项时，此规则的**正确**代码示例：
 
 ::: correct
 
