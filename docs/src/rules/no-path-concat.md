@@ -3,33 +3,35 @@ title: no-path-concat
 rule_type: suggestion
 ---
 
-In Node.js, the `__dirname` and `__filename` global variables contain the directory path and the file path of the currently executing script file, respectively. Sometimes, developers try to use these variables to create paths to other files, such as:
+在 Node.js 中，全局变量 `__dirname` 和 `__filename` 分别包含当前正在执行的脚本文件的目录路径和文件路径。有时，开发者会尝试使用这些变量来创建指向其他文件的路径，例如：
 
 ```js
 var fullPath = __dirname + "/foo.js";
 ```
 
-However, there are a few problems with this. First, you can't be sure what type of system the script is running on. Node.js can be run on any computer, including Windows, which uses a different path separator. It's very easy, therefore, to create an invalid path using string concatenation and assuming Unix-style separators. There's also the possibility of having double separators, or otherwise ending up with an invalid path.
+不过，这样做有几个问题。首先，你无法确定脚本运行在哪种系统上。Node.js 可以在任何计算机上运行，包括使用不同路径分隔符的 Windows。因此，使用字符串拼接并假设路径分隔符采用 Unix 风格，很容易创建无效路径。此外，还可能出现重复的分隔符，或以其他方式得到无效路径。
 
-In order to avoid any confusion as to how to create the correct path, Node.js provides the `path` module. This module uses system-specific information to always return the correct value. So you can rewrite the previous example as:
+为避免在如何创建正确路径方面产生混淆，Node.js 提供了 `path` 模块。该模块会利用特定于系统的信息，始终返回正确的值。因此，可以将前面的示例改写为：
 
 ```js
 var fullPath = path.join(__dirname, "foo.js");
 ```
 
-This example doesn't need to include separators as `path.join()` will do it in the most appropriate manner. Alternately, you can use `path.resolve()` to retrieve the fully-qualified path:
+此示例无需包含分隔符，因为 `path.join()` 会以最合适的方式处理。或者，你可以使用 `path.resolve()` 获取绝对路径：
 
 ```js
 var fullPath = path.resolve(__dirname, "foo.js");
 ```
 
-Both `path.join()` and `path.resolve()` are suitable replacements for string concatenation wherever file or directory paths are being created.
+在创建文件或目录路径时，无论何处使用字符串拼接，`path.join()` 和 `path.resolve()` 都是合适的替代方案。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to prevent string concatenation of directory paths in Node.js
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在防止在 Node.js 中使用字符串拼接目录路径。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -44,7 +46,7 @@ var fullPath = __filename + "/foo.js";
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -56,6 +58,8 @@ var fullPath = dirname + "/foo.js";
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you want to allow string concatenation of path names.
+## 何时不应使用
+
+如果你希望允许使用字符串拼接路径名。
