@@ -6,14 +6,16 @@ related_rules:
 - no-new-wrappers
 ---
 
-Use of the `Object` constructor to construct a new empty object is generally discouraged in favor of object literal notation because of conciseness and because the `Object` global may be redefined.
-The exception is when the `Object` constructor is used to intentionally wrap a specified value which is passed as an argument.
+通常不建议使用 `Object` 构造函数创建新的空对象，而应使用对象字面量表示法，因为它更简洁，而且全局变量 `Object` 可能会被重新定义。
+例外情况是，使用 `Object` 构造函数有意包装作为参数传入的指定值。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows calling the `Object` constructor without an argument.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止在不带参数的情况下调用 `Object` 构造函数。
+
+此规则的错误代码示例：
 
 :::incorrect
 
@@ -27,7 +29,7 @@ new Object();
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 :::correct
 
@@ -45,10 +47,14 @@ const createObject = Object => new Object();
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-If you wish to allow the use of the `Object` constructor, you can safely turn this rule off.
+<a id="when-not-to-use-it"></a>
+
+## 何时不应使用此规则
+
+如果希望允许使用 `Object` 构造函数，可以放心关闭此规则。
