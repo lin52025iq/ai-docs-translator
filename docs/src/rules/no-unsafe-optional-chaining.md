@@ -5,7 +5,7 @@ rule_type: problem
 
 
 
-The optional chaining (`?.`) expression can short-circuit with a return value of `undefined`. Therefore, treating an evaluated optional chaining expression as a function, object, number, etc., can cause TypeError or unexpected results. For example:
+可选链（`?.`）表达式可能会短路并返回 `undefined`。因此，将求值后的可选链表达式当作函数、对象、数字等使用，可能会导致 TypeError 或意外结果。例如：
 
 ```js
 const obj = undefined;
@@ -17,7 +17,7 @@ bar instanceof obj?.foo;  // TypeError
 const { bar } = obj?.foo;  // TypeError
 ```
 
-Also, parentheses limit the scope of short-circuiting in chains. For example:
+此外，括号会限制链中短路的作用范围。例如：
 
 ```js
 const obj = undefined;
@@ -26,11 +26,12 @@ const obj = undefined;
 (obj?.foo).bar; // TypeError
 ```
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule aims to detect some cases where the use of optional chaining doesn't prevent runtime errors. In particular, it flags optional chaining expressions in positions where short-circuiting to `undefined` causes throwing a TypeError afterward.
+此规则旨在检测某些使用可选链却无法避免运行时错误的情况。具体来说，它会标记那些短路并返回 `undefined` 后会导致 TypeError 的可选链表达式。
 
-Examples of **incorrect** code for this rule:
+此规则的错误代码示例：
 
 ::: incorrect { "sourceType": "script" }
 
@@ -92,7 +93,7 @@ async function foo () {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -133,21 +134,23 @@ async function foo () {
 
 :::
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule has an object option:
+此规则有一个对象选项：
 
-* `disallowArithmeticOperators`: Disallow arithmetic operations on optional chaining expressions (Default `false`). If this is `true`, this rule warns arithmetic operations on optional chaining expressions, which possibly result in `NaN`.
+* `disallowArithmeticOperators`：禁止对可选链表达式执行算术运算（默认为 `false`）。如果该选项设为 `true`，此规则会警告对可选链表达式执行的算术运算，因为这可能导致 `NaN`。
 
+<a id="disallowarithmeticoperators"></a>
 ### disallowArithmeticOperators
 
-With this option set to `true` the rule is enforced for:
+将此选项设为 `true` 后，此规则会检查以下运算：
 
-* Unary operators: `-`, `+`
-* Arithmetic operators: `+`, `-`, `/`, `*`, `%`, `**`
-* Assignment operators: `+=`, `-=`, `/=`, `*=`, `%=`, `**=`
+* 一元运算符：`-`、`+`
+* 算术运算符：`+`、`-`、`/`、`*`、`%`、`**`
+* 赋值运算符：`+=`、`-=`、`/=`、`*=`、`%=`、`**=`
 
-Examples of additional **incorrect** code for this rule with the `{ "disallowArithmeticOperators": true }` option:
+启用 `{ "disallowArithmeticOperators": true }` 选项时，此规则的其他错误代码示例：
 
 ::: incorrect
 
