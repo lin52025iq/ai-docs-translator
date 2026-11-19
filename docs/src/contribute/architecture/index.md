@@ -1,9 +1,9 @@
 ---
-title: Architecture
+title: 架构
 eleventyNavigation:
     key: architecture
     parent: contribute to eslint
-    title: Architecture
+    title: 架构
     order: 6
 ---
 
@@ -11,87 +11,95 @@ eleventyNavigation:
 <img alt="dependency graph" src="../../assets/images/architecture/dependency.svg">
 :::
 
-At a high level, there are a few key parts to ESLint:
+从整体上看，ESLint 由几个关键部分组成：
 
-- `bin/eslint.js` - this is the file that actually gets executed with the command line utility. It's a dumb wrapper that does nothing more than bootstrap ESLint, passing the command line arguments to `cli`. This is intentionally small so as not to require heavy testing.
-- `lib/api.js` - this is the entry point of `require("eslint")`. This file exposes an object that contains public classes `Linter`, `ESLint`, `RuleTester`, and `SourceCode`.
-- `lib/cli.js` - this is the heart of the ESLint CLI. It takes an array of arguments and then uses the `ESLint` class to execute the commands. The main call is `cli.execute()`. This is also the part that handles all the input and output.
-- `lib/eslint/` - this module contains the `ESLint` class that finds source code files and configuration files, then lints code with the `Linter` class. This includes the loading logic of configuration files, languages, plugins, and formatters.
-- `lib/languages/js/` - the implementation for the default JavaScript language, including the `SourceCode` class that is used to represent the parsed source code. The `SourceCode` class takes in source code and the `Program` node of the AST representing that code.
-- `lib/linter/` - this module is the core `Linter` class that does code verifying based on configuration options. This file does no file I/O and does not interact with the `console` at all. Node.js programs that need to verify source text should use this interface directly.
-- `lib/rule-tester/` - this module contains the `RuleTester` class that is a wrapper around Mocha-like testing APIs, so that rules can be unit tested. This class lets us write consistently formatted tests for each rule that is implemented and be confident that each of the rules work. The `RuleTester` interface was modeled after Mocha and works with Mocha's globals `describe` and `it`, but `RuleTester` can also be adapted to work with other testing frameworks.
-- `lib/rules/` - this contains built-in rules that verify source code.
+- `bin/eslint.js` - 这是通过命令行工具实际执行的文件。它只是一个简单的包装器，所做的仅仅是启动 ESLint，并将命令行参数传递给 `cli`。特意将它设计得很小，以免需要进行大量测试。
+- `lib/api.js` - 这是 `require("eslint")` 的入口点。该文件公开了一个对象，其中包含 `Linter`、`ESLint`、`RuleTester` 和 `SourceCode` 这些公共类。
+- `lib/cli.js` - 这是 ESLint CLI 的核心。它接收一个参数数组，然后使用 `ESLint` 类执行命令。主要调用是 `cli.execute()`。输入和输出也都由这一部分处理。
+- `lib/eslint/` - 该模块包含 `ESLint` 类，它会查找源代码文件和配置文件，然后使用 `Linter` 类对代码进行代码检查。其中包括配置文件、语言、插件和格式化器的加载逻辑。
+- `lib/languages/js/` - 默认 JavaScript 语言的实现，其中包括用于表示解析后源代码的 `SourceCode` 类。`SourceCode` 类接收源代码和表示该代码的 AST 的 `Program` 节点。
+- `lib/linter/` - 该模块包含核心 `Linter` 类，它根据配置选项验证代码。此文件不执行任何文件 I/O，也完全不与 `console` 交互。需要验证源文本的 Node.js 程序应直接使用此接口。
+- `lib/rule-tester/` - 该模块包含 `RuleTester` 类，它是一个类似 Mocha 的测试 API 包装器，因此可以对规则进行单元测试。此类让我们能够为每条已实现的规则编写格式一致的测试，并确信每条规则都能正常工作。`RuleTester` 接口以 Mocha 为蓝本，支持 Mocha 的全局函数 `describe` 和 `it`，但 `RuleTester` 也可以调整为与其他测试框架配合使用。
+- `lib/rules/` - 此目录包含用于验证源代码的内置规则。
 
-## The `cli` object
+<a id="the-cli-object"></a>
 
-The `cli` object is the internal API for the command line interface. Literally, the `bin/eslint.js` file simply passes arguments to the `cli` object and then sets `process.exitCode` to the returned exit code.
+## `cli` 对象
 
-The main method is `cli.execute()`, which accepts an array of strings that represent the command line options (as if `process.argv` were passed without the first two arguments).
+`cli` 对象是命令行界面的内部 API。具体来说，`bin/eslint.js` 文件只是将参数传递给 `cli` 对象，然后将 `process.exitCode` 设置为返回的退出代码。
 
-This object's responsibilities include:
+主要方法是 `cli.execute()`，它接收一个字符串数组，表示命令行选项（相当于传入不含前两个参数的 `process.argv`）。
 
-- Interpreting command line arguments.
-- Reading from the file system.
-- Outputting to the console.
-- Outputting to the filesystem.
-- Use a formatter.
-- Returning the correct exit code.
+此对象的职责包括：
 
-This object may not call `process.exit()` directly.
+- 解析命令行参数。
+- 从文件系统读取内容。
+- 向控制台输出内容。
+- 向文件系统输出内容。
+- 使用格式化器。
+- 返回正确的退出代码。
 
-## The `ESLint` class
+此对象不得直接调用 `process.exit()`。
 
-The `ESLint` class represents the core functionality of the CLI except that it reads nothing from the command line and doesn't output anything by default. Instead, it accepts many (but not all) of the arguments that are passed into the CLI. It reads both configuration and source files as well as managing the environment that is passed into the `Linter` object.
+<a id="the-eslint-class"></a>
 
-The main method on `ESLint` instances is `lintFiles()`, which accepts an array of file paths, directory paths, and glob patterns to run the linter on.
+## `ESLint` 类
 
-This object's responsibilities include:
+`ESLint` 类实现了 CLI 的核心功能，但不会读取命令行内容，默认也不会输出任何内容。它接收传递给 CLI 的许多（但不是全部）参数。它会读取配置文件和源文件，并管理传递给 `Linter` 对象的环境。
 
-- Managing the execution environment for `Linter`.
-- Reading from the file system.
-- Reading configuration information from config files (usually `eslint.config.js`).
-- Loading formatters.
+`ESLint` 实例的主要方法是 `lintFiles()`，它接收一个文件路径、目录路径和 glob 模式数组，并对其运行代码检查。
 
-This object may not:
+此对象的职责包括：
 
-- Call `process.exit()` directly.
-- Output to the console.
-- Use loaded formatters.
+- 管理 `Linter` 的执行环境。
+- 从文件系统读取内容。
+- 从配置文件（通常是 `eslint.config.js`）读取配置信息。
+- 加载格式化器。
 
-## The `Linter` object
+此对象不得：
 
-The main method of the `Linter` object is `verify()` and accepts three arguments: the source text to verify, a configuration object, and additional options. The method first parses the given text with `espree` (or whatever parser is used by the configured language) and retrieves the AST. The AST is produced with both line/column and range locations which are useful for reporting location of issues and retrieving the source text related to an AST node, respectively.
+- 直接调用 `process.exit()`。
+- 向控制台输出内容。
+- 使用已加载的格式化器。
 
-The AST is traversed from top to bottom: at each node, the `Linter` object emits an event that has the same name as the node type (i.e., `"Identifier"`, `"WithStatement"`, etc.). On the way back up the subtree, an event is emitted with the AST type name and suffixed with `":exit"`, such as `"Identifier:exit"` - this allows rules to take action both on the way down and on the way up in the traversal. Each event is emitted with the appropriate AST node available. Additionally, certain events with specific parameters are emitted by ESLint's code path analysis while processing JavaScript sources.
+<a id="the-linter-object"></a>
 
-This object's responsibilities include:
+## `Linter` 对象
 
-- Inspecting the provided source text.
-- Creating an AST for the code.
-- Executing rules on the AST.
-- Reporting back the results of the execution.
+`Linter` 对象的主要方法是 `verify()`，它接收三个参数：要验证的源文本、配置对象和其他选项。该方法首先使用 `espree`（或配置的语言所用的其他解析器）解析给定文本，并获取 AST。生成的 AST 同时包含行/列位置和范围位置，前者用于报告问题所在位置，后者用于获取与 AST 节点相关的源文本。
 
-This object may not:
+遍历 AST 的顺序是从上到下：对于每个节点，`Linter` 对象都会触发一个与节点类型同名的事件（例如，`"Identifier"`、`"WithStatement"` 等）。回溯子树时，会触发一个事件，其名称为 AST 类型名加上 `":exit"` 后缀，例如 `"Identifier:exit"`——这样规则就可以在遍历向下和向上时采取操作。每个事件都会提供相应的 AST 节点。此外，ESLint 在处理 JavaScript 源代码时，还会通过代码路径分析触发一些带有特定参数的事件。
 
-- Call `process.exit()` directly.
-- Perform any asynchronous operations.
-- Use Node.js-specific features.
-- Access the file system.
-- Call `console.log()` or any other similar method.
+此对象的职责包括：
 
-## Rules
+- 检查提供的源文本。
+- 为代码创建 AST。
+- 在 AST 上执行规则。
+- 返回执行结果。
 
-Individual rules are the most specialized part of the ESLint architecture. Rules can do very little, they are simply a set of instructions executed against an AST that is provided. They do get some context information passed in, but the primary responsibility of a rule is to inspect the AST and report warnings.
+此对象不得：
 
-These objects' responsibilities are:
+- 直接调用 `process.exit()`。
+- 执行任何异步操作。
+- 使用 Node.js 特有的功能。
+- 访问文件系统。
+- 调用 `console.log()` 或任何类似方法。
 
-- Inspect the AST for specific patterns.
-- Reporting warnings when certain patterns are found.
+<a id="rules"></a>
 
-These objects may not:
+## 规则
 
-- Call `process.exit()` directly.
-- Perform any asynchronous operations.
-- Use Node.js-specific features.
-- Access the file system.
-- Call `console.log()` or any other similar method.
+单条规则是 ESLint 架构中最专门化的部分。规则能做的事情很有限，它们只是一组针对给定 AST 执行的指令。规则会接收到一些上下文信息，但其主要职责是检查 AST 并报告警告。
+
+这些对象的职责包括：
+
+- 检查 AST 中是否存在特定模式。
+- 在发现特定模式时报告警告。
+
+这些对象不得：
+
+- 直接调用 `process.exit()`。
+- 执行任何异步操作。
+- 使用 Node.js 特有的功能。
+- 访问文件系统。
+- 调用 `console.log()` 或任何类似方法。
