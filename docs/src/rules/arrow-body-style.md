@@ -3,21 +3,25 @@ title: arrow-body-style
 rule_type: suggestion
 ---
 
-Arrow functions have two syntactic forms for their function bodies.  They may be defined with a *block* body (denoted by curly braces) `() => { ... }` or with a single expression `() => ...`, whose value is implicitly returned.
+箭头函数的函数体有两种语法形式。可以使用 *块* 函数体（以花括号表示）`() => { ... }`，也可以使用单个表达式 `() => ...`，其值会被隐式返回。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule can enforce or disallow the use of braces around arrow function body.
+## 规则详情
 
-## Options
+此规则可以强制或禁止在箭头函数函数体周围使用花括号。
 
-The rule takes one or two options. The first is a string, which can be:
+<a id="options"></a>
 
-* `"always"` enforces braces around the function body
-* `"as-needed"` enforces no braces where they can be omitted (default)
-* `"never"` enforces no braces around the function body (constrains arrow functions to the role of returning an expression)
+## 选项
 
-The second one is an object for more fine-grained configuration when the first option is `"as-needed"`. Currently, the only available option is `requireReturnForObjectLiteral`, a boolean property. It's `false` by default. If set to `true`, it requires braces and an explicit return for object literals.
+此规则接受一个或两个选项。第一个选项是字符串，可以是：
+
+* `"always"` 强制要求函数体使用花括号
+* `"as-needed"` 在可以省略花括号时强制省略（默认）
+* `"never"` 强制函数体不使用花括号（将箭头函数限制为返回表达式）
+
+当第一个选项为 `"as-needed"` 时，第二个选项是一个对象，用于更精细地配置。目前唯一可用的选项是布尔属性 `requireReturnForObjectLiteral`。其默认值为 `false`。如果设为 `true`，则对象字面量必须使用花括号并显式返回。
 
 ```json
 "arrow-body-style": ["error", "always"]
@@ -25,7 +29,7 @@ The second one is an object for more fine-grained configuration when the first o
 
 ### always
 
-Examples of **incorrect** code for this rule with the `"always"` option:
+启用 `"always"` 选项时，此规则的**错误**代码示例：
 
 :::incorrect
 
@@ -37,7 +41,7 @@ const foo = () => 0;
 
 :::
 
-Examples of **correct** code for this rule with the `"always"` option:
+启用 `"always"` 选项时，此规则的**正确**代码示例：
 
 :::correct
 
@@ -58,7 +62,7 @@ const bar = (retv, name) => {
 
 ### as-needed
 
-Examples of **incorrect** code for this rule with the default `"as-needed"` option:
+使用默认的 `"as-needed"` 选项时，此规则的**错误**代码示例：
 
 :::incorrect
 
@@ -81,7 +85,7 @@ const bar = () => {
 
 :::
 
-Examples of **correct** code for this rule with the default `"as-needed"` option:
+使用默认的 `"as-needed"` 选项时，此规则的**正确**代码示例：
 
 :::correct
 
@@ -117,9 +121,9 @@ const foo8 = () => ({ bar: 0 });
 
 #### requireReturnForObjectLiteral
 
-> This option is only applicable when used in conjunction with the `"as-needed"` option.
+> 此选项仅适用于与 `"as-needed"` 选项搭配使用的情况。
 
-Examples of **incorrect** code for this rule with the `{ "requireReturnForObjectLiteral": true }` option:
+启用 `{ "requireReturnForObjectLiteral": true }` 选项时，此规则的**错误**代码示例：
 
 :::incorrect
 
@@ -133,7 +137,7 @@ const bar = () => ({ bar: 0 });
 
 :::
 
-Examples of **correct** code for this rule with the `{ "requireReturnForObjectLiteral": true }` option:
+启用 `{ "requireReturnForObjectLiteral": true }` 选项时，此规则的**正确**代码示例：
 
 :::correct
 
@@ -149,7 +153,7 @@ const bar = () => { return { bar: 0 }; };
 
 ### never
 
-Examples of **incorrect** code for this rule with the `"never"` option:
+启用 `"never"` 选项时，此规则的**错误**代码示例：
 
 :::incorrect
 
@@ -168,7 +172,7 @@ const bar = (retv, name) => {
 
 :::
 
-Examples of **correct** code for this rule with the `"never"` option:
+启用 `"never"` 选项时，此规则的**正确**代码示例：
 
 :::correct
 
