@@ -1,14 +1,14 @@
 ---
-title: Report Bugs
+title: 报告 Bug
 eleventyNavigation:
     key: report bugs
     parent: contribute to eslint
-    title: Report Bugs
+    title: 报告 Bug
     order: 2
 ---
 
-If you think you've found a bug in ESLint, please [create a new issue](https://github.com/eslint/eslint/issues/new/choose) or a [pull request](pull-requests) on GitHub.
+如果你认为自己发现了 ESLint 中的 Bug，请在 GitHub 上[创建新问题](https://github.com/eslint/eslint/issues/new/choose)或提交[拉取请求](pull-requests)。
 
-Please include as much detail as possible to help us properly address your issue. If we need to triage issues and constantly ask people for more detail, that's time taken away from actually fixing issues. Help us be as efficient as possible by including a lot of detail in your issues.
+请尽可能提供详细信息，以便我们妥善处理你的问题。如果我们需要分诊问题，并不断要求大家补充更多信息，就会占用原本可以用于实际修复问题的时间。请在提交的问题中提供尽可能多的细节，帮助我们提高效率。
 
-**Note:** If you just have a question that won't necessarily result in a change to ESLint, such as asking how something works or how to contribute, please open a [discussion](https://github.com/eslint/eslint/discussions) or stop by our [Discord server](https://eslint.org/chat) instead of filing an issue.
+**注意：**如果你只是有疑问，而且不一定会因此对 ESLint 做出更改，例如想了解某项功能的工作方式或如何参与贡献，请改为发起[讨论](https://github.com/eslint/eslint/discussions)，或访问我们的 [Discord 服务器](https://eslint.org/chat)，而不要提交问题。
