@@ -7,19 +7,17 @@ related_rules:
 
 
 
-This rule disallows lexical declarations (`let`, `const`, `function` and `class`)
-in `case`/`default` clauses. The reason is that the lexical declaration is visible
-in the entire `switch` block but it only gets initialized when it is assigned, which
-will only happen if the `case` where it is defined is reached.
+此规则禁止在 `case`/`default` 子句中进行词法声明（`let`、`const`、`function` 和 `class`）。这是因为词法声明在整个 `switch` 块中都可见，但只有在赋值时才会初始化，而只有执行到定义它的 `case` 时才会发生这种情况。
 
-To ensure that the lexical declaration only applies to the current `case` clause
-wrap your clauses in blocks.
+若要确保词法声明仅适用于当前 `case` 子句，请将子句包裹在块中。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule aims to prevent access to uninitialized lexical bindings as well as accessing hoisted functions across `case` clauses.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在防止访问尚未初始化的词法绑定，以及跨 `case` 子句访问提升后的函数。
+
+以下是违反此规则的代码示例：
 
 ::: incorrect
 
@@ -43,7 +41,7 @@ switch (foo) {
 
 :::
 
-Examples of **correct** code for this rule:
+以下是符合此规则的代码示例：
 
 ::: correct
 
@@ -79,10 +77,15 @@ switch (foo) {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## When Not To Use It
+此规则没有选项。
 
-If you depend on fall through behavior and want access to bindings introduced in the `case` block.
+<a id="when-not-to-use-it"></a>
+
+## 不应使用此规则的情况
+
+如果你依赖贯穿执行行为，并希望访问在 `case` 块中引入的绑定，则不应使用此规则。
+
