@@ -3,13 +3,15 @@ title: no-spaced-func
 rule_type: layout
 ---
 
-While it's possible to have whitespace between the name of a function and the parentheses that execute it, such patterns tend to look more like errors.
+函数名称与调用它的括号之间可以有空白，但这种写法往往看起来像是错误。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows spacing between function identifiers and their applications.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止函数标识符与其调用之间出现空格。
+
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -24,7 +26,7 @@ fn
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
