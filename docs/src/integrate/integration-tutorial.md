@@ -1,71 +1,62 @@
 ---
-title: Integrate with the Node.js API Tutorial
+title: Node.js API 集成教程
 eleventyNavigation:
     key: integrate with the node.js api tutorial
     parent: integrate eslint
-    title: Integrate with the Node.js API Tutorial
+    title: Node.js API 集成教程
     order: 1
 ---
 
 {%- from 'components/npm_tabs.macro.html' import npm_tabs with context %}
 
-This guide walks you through integrating the `ESLint` class to lint files and
-retrieve results, which can be useful for creating integrations with other
-projects.
+本指南将带你了解如何集成 `ESLint` 类来检查文件并获取结果，这对于与其他项目创建集成很有帮助。
 
-## Why Create an Integration?
+<a id="why-create-an-integration"></a>
 
-You might want to create an ESLint integration if you're creating developer
-tooling, such as the following:
+## 为什么要创建集成？
 
-- **Code editors and IDEs**: Integrating ESLint with code editors and IDEs can
-  provide real-time feedback on code quality and automatically highlight
-  potential issues as you type. Many editors already have ESLint plugins
-  available, but you may need to create a custom integration if the existing
-  plugins do not meet your specific requirements.
+如果你正在开发以下类型的开发者工具，可能会希望创建 ESLint 集成：
 
-- **Custom linter tools**: If you're building a custom linter tool that combines
-  multiple linters or adds specific functionality, you may want to integrate
-  ESLint into your tool to provide JavaScript linting capabilities.
+- **代码编辑器和 IDE**：将 ESLint 集成到代码编辑器和 IDE 中，可以实时反馈代码质量，并在你输入时自动突出显示潜在问题。许多编辑器已经提供了 ESLint 插件，但如果现有插件无法满足你的特定需求，你可能需要创建自定义集成。
 
-- **Code review tools**: Integrating ESLint with code review tools can help
-  automate the process of identifying potential issues in the codebase.
+- **自定义代码检查工具**：如果你正在构建一个结合多个代码检查器或添加特定功能的自定义代码检查工具，可能会希望将 ESLint 集成到工具中，以提供 JavaScript 代码检查能力。
 
-- **Learning platforms**: If you are developing a learning platform or coding
-  tutorial, integrating ESLint can provide real-time feedback to users as they
-  learn JavaScript, helping them improve their coding skills and learn best
-  practices.
+- **代码审查工具**：将 ESLint 集成到代码审查工具中，有助于自动识别代码库中的潜在问题。
 
-- **Developer tool integration**: If you're creating or extending a developer
-  tool, such as a bundler or testing framework, you may want to integrate ESLint
-  to provide linting capabilities. You can integrate ESLint directly into the
-  tool or as a plugin.
+- **学习平台**：如果你正在开发学习平台或编程教程，集成 ESLint 可以在用户学习 JavaScript 时提供实时反馈，帮助他们提升编程技能并学习最佳实践。
 
-## What You'll Build
+- **开发者工具集成**：如果你正在创建或扩展开发者工具（例如打包器或测试框架），可能会希望集成 ESLint 以提供代码检查能力。你可以将 ESLint 直接集成到工具中，也可以将其作为插件集成。
 
-In this guide, you'll create a simple Node.js project that uses the `ESLint`
-class to lint files and retrieve results.
+<a id="what-youll-build"></a>
 
-## Requirements
+## 你将构建什么
 
-This tutorial assumes you are familiar with JavaScript and Node.js.
+在本指南中，你将创建一个简单的 Node.js 项目，使用 `ESLint` 类检查文件并获取结果。
 
-To follow this tutorial, you'll need to have the following:
+<a id="requirements"></a>
 
-- Node.js (`^20.19.0`, `^22.13.0`, or `>=24`)
+## 要求
+
+本教程假设你熟悉 JavaScript 和 Node.js。
+
+要完成本教程，你需要具备以下条件：
+
+- Node.js (`^20.19.0`, `^22.13.0`, 或 `>=24`)
 - npm
-- A text editor
+- 文本编辑器
 
-## Step 1: Setup
+<a id="step-1-setup"></a>
 
-First, create a new project directory:
+## 第 1 步：设置
+
+首先，创建一个新的项目目录：
 
 ```shell
 mkdir eslint-integration
 cd eslint-integration
 ```
 
-Initialize the project with a `package.json` file:
+使用 `package.json` 文件初始化项目：
 
 {{ npm_tabs({
     command: "init",
@@ -73,7 +64,7 @@ Initialize the project with a `package.json` file:
     args: ["-y"]
 }) }}
 
-Install the `eslint` package as a dependency (**not** as a dev dependency):
+将 `eslint` 包作为依赖项安装（**而非**开发依赖项）：
 
 {{ npm_tabs({
     command: "install",
@@ -81,18 +72,19 @@ Install the `eslint` package as a dependency (**not** as a dev dependency):
     args: []
 }) }}
 
-Create a new file called `example-eslint-integration.js` in the project root:
+在项目根目录中创建一个名为 `example-eslint-integration.js` 的新文件：
 
 ```shell
 touch example-eslint-integration.js
 ```
 
-## Step 2: Import and Configure the `ESLint` Instance
+<a id="step-2-import-and-configure-the-eslint-instance"></a>
 
-Import the `ESLint` class from the `eslint` package and create a new instance.
+## 第 2 步：导入并配置 `ESLint` 实例
 
-You can customize the ESLint configuration by passing an options object to the
-`ESLint` constructor:
+从 `eslint` 包中导入 `ESLint` 类，并创建一个新实例。
+
+你可以向 `ESLint` 构造函数传入一个选项对象来自定义 ESLint 配置：
 
 ```javascript
 // example-eslint-integration.js
@@ -109,16 +101,13 @@ function createESLintInstance(overrideConfig) {
 }
 ```
 
-## Step 3: Lint and Fix Files
+<a id="step-3-lint-and-fix-files"></a>
 
-To lint a file, use the `lintFiles` method of the `ESLint` instance. The
-`filePaths` argument passed to `ESLint#lintFiles()` can be a string or an array
-of strings, representing the file path(s) you want to lint. The file paths can
-be globs or filenames.
+## 第 3 步：检查并修复文件
 
-The static method `ESLint.outputFixes()` takes the linting results from the call
-to `ESLint#lintFiles()`, and then writes the fixed code back to the source
-files.
+要检查文件，请使用 `ESLint` 实例的 `lintFiles` 方法。传给 `ESLint#lintFiles()` 的 `filePaths` 参数可以是字符串或字符串数组，表示你要检查的文件路径。文件路径可以是 glob 模式或文件名。
+
+静态方法 `ESLint.outputFixes()` 接收调用 `ESLint#lintFiles()` 得到的检查结果，然后将修复后的代码写回源文件。
 
 ```javascript
 // example-eslint-integration.js
@@ -136,13 +125,13 @@ async function lintAndFix(eslint, filePaths) {
 }
 ```
 
-## Step 4: Output Results
+<a id="step-4-output-results"></a>
 
-Define a function to output the linting results to the console. This should be
-specific to your integration's needs. For example, you could report the linting
-results to a user interface.
+## 第 4 步：输出结果
 
-In this example, we'll simply log the results to the console:
+定义一个函数，将检查结果输出到控制台。该函数应根据你的集成需求进行定制。例如，你可以将检查结果报告到用户界面中。
+
+在本例中，我们只会将结果记录到控制台：
 
 ```javascript
 // example-eslint-integration.js
@@ -168,10 +157,11 @@ function outputLintingResults(results) {
 }
 ```
 
-## Step 5: Put It All Together
+<a id="step-5-put-it-all-together"></a>
 
-Put the above functions together in a new function called `lintFiles`. This
-function will be the main entry point for your integration:
+## 第 5 步：整合所有内容
+
+将上述函数整合到一个名为 `lintFiles` 的新函数中。这个函数将作为集成的主要入口点：
 
 ```javascript
 // example-eslint-integration.js
@@ -200,7 +190,7 @@ async function lintFiles(filePaths) {
 module.exports = { lintFiles };
 ```
 
-Here's the complete code example for `example-eslint-integration.js`:
+以下是 `example-eslint-integration.js` 的完整代码示例：
 
 ```javascript
 const { ESLint } = require("eslint");
@@ -265,13 +255,14 @@ async function lintFiles(filePaths) {
 module.exports = { lintFiles };
 ```
 
-## Conclusion
+<a id="conclusion"></a>
 
-In this tutorial, we have covered the essentials of using the `ESLint` class to
-lint files and retrieve results in your projects. This knowledge can be applied
-to create custom integrations, such as code editor plugins, to provide real-time
-feedback on code quality.
+## 总结
 
-## View the Tutorial Code
+本教程介绍了如何在项目中使用 `ESLint` 类检查文件并获取结果的基本知识。你可以运用这些知识创建自定义集成，例如代码编辑器插件，从而实时反馈代码质量。
 
-You can view the [annotated source code for the tutorial](https://github.com/eslint/eslint/tree/main/docs/_examples/integration-tutorial-code).
+<a id="view-the-tutorial-code"></a>
+
+## 查看教程代码
+
+你可以查看[本教程的注释版源代码](https://github.com/eslint/eslint/tree/main/docs/_examples/integration-tutorial-code)。
