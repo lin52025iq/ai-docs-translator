@@ -1,21 +1,23 @@
 ---
-title: Custom Processors
+title: 自定义处理器
 eleventyNavigation:
     key: custom processors
     parent: create plugins
-    title: Custom Processors
+    title: 自定义处理器
     order: 3
 ---
 
-You can also create custom processors that tell ESLint how to process files other than standard JavaScript. For example, you could write a custom processor to extract and process JavaScript from Markdown files ([@eslint/markdown](https://www.npmjs.com/package/@eslint/markdown) includes a custom processor for this).
+你还可以创建自定义处理器，告诉 ESLint 如何处理标准 JavaScript 以外的文件。例如，你可以编写一个自定义处理器，从 Markdown 文件中提取 JavaScript 并进行处理（[@eslint/markdown](https://www.npmjs.com/package/@eslint/markdown) 就包含了用于此目的的自定义处理器）。
 
 ::: tip
-This page explains how to create a custom processor for use with the flat config format.
+本页介绍如何创建适用于扁平配置格式的自定义处理器。
 :::
 
-## Custom Processor Specification
+<a id="custom-processor-specification"></a>
 
-In order to create a custom processor, the object exported from your module has to conform to the following interface:
+## 自定义处理器规范
+
+要创建自定义处理器，从模块导出的对象必须符合以下接口：
 
 ```js
 const plugin = {
@@ -63,15 +65,15 @@ export default plugin;
 module.exports = plugin;
 ```
 
-**The `preprocess` method** takes the file contents and filename as arguments, and returns an array of code blocks to lint. The code blocks will be linted separately but still be registered to the filename.
+**`preprocess` 方法**接收文件内容和文件名作为参数，并返回一个待进行代码检查的代码块数组。代码块会分别进行代码检查，但仍会关联到该文件名。
 
-A code block has two properties `text` and `filename`. The `text` property is the content of the block and the `filename` property is the name of the block. The name of the block can be anything, but should include the file extension, which tells ESLint how to process the current block. ESLint checks matching `files` entries in the project's config to determine if the code blocks should be linted.
+代码块有两个属性：`text` 和 `filename`。`text` 属性是代码块的内容，`filename` 属性是代码块的名称。代码块名称可以任意指定，但应包含文件扩展名，以便告知 ESLint 如何处理当前代码块。ESLint 会检查项目配置中匹配的 `files` 条目，以确定是否应该对代码块进行代码检查。
 
-It's up to the plugin to decide if it needs to return just one part of the non-JavaScript file or multiple pieces. For example in the case of processing `.html` files, you might want to return just one item in the array by combining all scripts. However, for `.md` files, you can return multiple items because each JavaScript block might be independent.
+由插件决定是只返回非 JavaScript 文件中的一个部分，还是返回多个部分。例如，处理 `.html` 文件时，你可能会将所有脚本合并，只在数组中返回一个项目。而对于 `.md` 文件，你可以返回多个项目，因为每个 JavaScript 代码块都可能是独立的。
 
-**The `postprocess` method** takes a two-dimensional array of arrays of lint messages and the filename. Each item in the input array corresponds to the part that was returned from the `preprocess` method. The `postprocess` method must adjust the locations of all errors to correspond to locations in the original, unprocessed code, and aggregate them into a single flat array and return it.
+**`postprocess` 方法**接收一个由代码检查消息数组组成的二维数组，以及文件名。输入数组中的每一项都对应于 `preprocess` 方法返回的部分。`postprocess` 方法必须调整所有错误的位置，使其对应到未经处理的原始代码中的位置，然后将它们合并为一个一维数组并返回。
 
-Reported problems have the following location information in each lint message:
+报告的问题在每条代码检查消息中都包含以下位置信息：
 
 ```typescript
 type LintMessage = {
@@ -118,9 +120,9 @@ type Suggestion = {
 };
 ```
 
-By default, ESLint does not perform autofixes when a custom processor is used, even when the `--fix` flag is enabled on the command line. To allow ESLint to autofix code when using your processor, you should take the following additional steps:
+默认情况下，使用自定义处理器时，ESLint 不会执行自动修复，即使在命令行中启用了 `--fix` 标志也是如此。若要让 ESLint 在使用处理器时自动修复代码，请执行以下额外步骤：
 
-1. Update the `postprocess` method to additionally transform the `fix` property of reported problems. All autofixable problems have a `fix` property, which is an object with the following schema:
+1. 更新 `postprocess` 方法，同时转换所报告问题的 `fix` 属性。所有可自动修复的问题都有一个 `fix` 属性，其对象符合以下架构：
 
     ```typescript
     {
@@ -129,23 +131,27 @@ By default, ESLint does not perform autofixes when a custom processor is used, e
     }
     ```
 
-    The `range` property contains two indexes in the code, referring to the start and end location of a contiguous section of text that will be replaced. The `text` property refers to the text that will replace the given range.
+    `range` 属性包含代码中的两个索引，分别指向将被替换的连续文本片段的起始和结束位置。`text` 属性是用于替换指定范围的文本。
 
-    In the initial list of problems, the `fix` property will refer to a fix in the processed JavaScript. The `postprocess` method should transform the object to refer to a fix in the original, unprocessed file.
+    在初始问题列表中，`fix` 属性指向经过处理的 JavaScript 中的修复位置。`postprocess` 方法应转换该对象，使其指向原始、未经处理的文件中的修复位置。
 
-2. Add a `supportsAutofix: true` property to the processor.
+2. 为处理器添加 `supportsAutofix: true` 属性。
 
-You can have both rules and custom processors in a single plugin. You can also have multiple processors in one plugin. To support multiple extensions, add each one to the `processors` element and point them to the same object.
+你可以在单个插件中同时包含规则和自定义处理器，也可以在一个插件中包含多个处理器。若要支持多个扩展名，请将每个扩展名添加到 `processors` 元素，并让它们指向同一个对象。
 
-### How `meta` Objects are Used
+<a id="how-meta-objects-are-used"></a>
 
-The `meta` object helps ESLint cache configurations that use a processor and to provide more friendly debug messages.
+### `meta` 对象的用途
 
-#### Plugin `meta` Object
+`meta` 对象有助于 ESLint 缓存使用处理器的配置，并提供更易读的调试消息。
 
-The [plugin `meta` object](plugins#meta-data-in-plugins) provides information about the plugin itself. When a processor is specified using the string format `plugin-name/processor-name`, ESLint automatically uses the plugin `meta` to generate a name for the processor. This is the most common case for processors.
+<a id="plugin-meta-object"></a>
 
-Example:
+#### 插件的 `meta` 对象
+
+[插件的 `meta` 对象](plugins#meta-data-in-plugins)提供有关插件本身的信息。当使用字符串格式 `plugin-name/processor-name` 指定处理器时，ESLint 会自动使用插件的 `meta` 为处理器生成名称。这是最常见的处理器指定方式。
+
+示例：
 
 ```js
 // eslint.config.js
@@ -164,13 +170,15 @@ export default defineConfig([
 ]);
 ```
 
-In this example, the processor name is `"example/processor-name"`, and that's the value that will be used for serializing configurations.
+在此示例中，处理器名称为 `"example/processor-name"`，该值将用于序列化配置。
 
-#### Processor `meta` Object
+<a id="processor-meta-object"></a>
 
-Each processor can also specify its own `meta` object. This information is used when the processor object is passed directly to `processor` in a configuration. In that case, ESLint doesn't know which plugin the processor belongs to. The `meta.name` property should match the processor name and the `meta.version` property should match the npm package version for your processors. The easiest way to accomplish this is by reading this information from your `package.json`.
+#### 处理器的 `meta` 对象
 
-Example:
+每个处理器也可以指定自己的 `meta` 对象。当处理器对象直接传递给配置中的 `processor` 时，会用到此信息。在这种情况下，ESLint 不知道该处理器属于哪个插件。`meta.name` 属性应与处理器名称一致，`meta.version` 属性应与处理器所在 npm 包的版本一致。最简单的做法是从 `package.json` 中读取这些信息。
+
+示例：
 
 ```js
 // eslint.config.js
@@ -186,15 +194,19 @@ export default defineConfig([
 ]);
 ```
 
-In this example, specifying `example.processors["processor-name"]` directly uses the processor's own `meta` object, which must be defined to ensure proper handling when the processor is not referenced through the plugin name.
+在此示例中，直接指定 `example.processors["processor-name"]` 会使用处理器自己的 `meta` 对象。必须定义该对象，才能确保在处理器不是通过插件名称引用时得到正确处理。
 
-#### Why Both Meta Objects are Needed
+<a id="why-both-meta-objects-are-needed"></a>
 
-It is recommended that both the plugin and each processor provide their respective meta objects. This ensures that features relying on meta objects, such as `--print-config` and `--cache`, work correctly regardless of how the processor is specified in the configuration.
+#### 为什么需要两个 meta 对象
 
-## Specify Processor in Config Files
+建议插件和每个处理器都提供各自的 meta 对象。这样，无论配置中如何指定处理器，依赖 meta 对象的功能（例如 `--print-config` 和 `--cache`）都能正常工作。
 
-In order to use a processor from a plugin in a configuration file, import the plugin and include it in the `plugins` key, specifying a namespace. Then, use that namespace to reference the processor in the `processor` configuration, like this:
+<a id="specify-processor-in-config-files"></a>
+
+## 在配置文件中指定处理器
+
+若要在配置文件中使用插件提供的处理器，请导入插件并在 `plugins` 键中指定一个命名空间，将其包含在配置中。然后，像下面这样在 `processor` 配置中使用该命名空间引用处理器：
 
 ```js
 // eslint.config.js
@@ -212,4 +224,4 @@ export default defineConfig([
 ]);
 ```
 
-See [Specify a Processor](../use/configure/plugins#specify-a-processor) in the Plugin Configuration documentation for more details.
+更多详情请参阅插件配置文档中的[指定处理器](../use/configure/plugins#specify-a-processor)。
