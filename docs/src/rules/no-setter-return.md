@@ -10,23 +10,25 @@ further_reading:
 
 
 
-Setters cannot return values.
+setter 不能返回值。
 
-While returning a value from a setter does not produce an error, the returned value is being ignored. Therefore, returning a value from a setter is either unnecessary or a possible error, since the returned value cannot be used.
+虽然从 setter 返回值不会导致错误，但返回值会被忽略。因此，从 setter 返回值要么是多余的，要么可能是错误，因为返回值无法使用。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows returning values from setters and reports `return` statements in setter functions.
+## 规则详情
 
-Only `return` without a value is allowed, as it's a control flow statement.
+此规则禁止从 setter 返回值，并会报告 setter 函数中的 `return` 语句。
 
-This rule checks setters in:
+只允许不带值的 `return`，因为它是一种控制流语句。
 
-* Object literals.
-* Class declarations and class expressions.
-* Property descriptors in `Object.create`, `Object.defineProperty`, `Object.defineProperties`, and `Reflect.defineProperty` methods of the global objects.
+此规则会检查以下位置的 setter：
 
-Examples of **incorrect** code for this rule:
+* 对象字面量。
+* 类声明和类表达式。
+* 全局对象的 `Object.create`、`Object.defineProperty`、`Object.defineProperties` 和 `Reflect.defineProperty` 方法中的属性描述符。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -69,7 +71,7 @@ Object.defineProperty(foo, "bar", {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -110,6 +112,8 @@ Object.defineProperty(foo, "bar", {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
+
+此规则没有选项。
