@@ -11,23 +11,27 @@ related_rules:
 ---
 
 
-Many developers consider code difficult to read if blocks are nested beyond a certain depth.
+许多开发者认为，如果代码块嵌套超过一定深度，代码就会难以阅读。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces a maximum depth that blocks can be nested to reduce code complexity.
+## 规则详情
 
-## Options
+此规则强制限制代码块的最大嵌套深度，以降低代码复杂度。
 
-This rule has a number or object option:
+<a id="options"></a>
 
-* `"max"` (default `4`) enforces a maximum depth that blocks can be nested
+## 选项
 
-**Deprecated:** The object property `maximum` is deprecated; please use the object property `max` instead.
+此规则有一个数字或对象选项：
+
+* `"max"`（默认值为 `4`）强制限制代码块的最大嵌套深度
+
+**已弃用：** 对象属性 `maximum` 已弃用；请改用对象属性 `max`。
 
 ### max
 
-Examples of **incorrect** code for this rule with the default `{ "max": 4 }` option:
+此规则在使用默认选项 `{ "max": 4 }` 时，以下代码示例为**错误**：
 
 ::: incorrect
 
@@ -50,7 +54,7 @@ function foo() {
 
 :::
 
-Examples of **correct** code for this rule with the default `{ "max": 4 }` option:
+此规则在使用默认选项 `{ "max": 4 }` 时，以下代码示例为**正确**：
 
 ::: correct
 
@@ -71,9 +75,9 @@ function foo() {
 
 :::
 
-Note that class static blocks do not count as nested blocks, and that the depth in them is calculated separately from the enclosing context.
+请注意，类静态块不计为嵌套代码块，其内部的深度会独立于外围上下文计算。
 
-Examples of **incorrect** code for this rule with `{ "max": 2 }` option:
+此规则在使用选项 `{ "max": 2 }` 时，以下代码示例为**错误**：
 
 ::: incorrect
 
@@ -98,7 +102,7 @@ function foo() {
 
 :::
 
-Examples of **correct** code for this rule with `{ "max": 2 }` option:
+此规则在使用选项 `{ "max": 2 }` 时，以下代码示例为**正确**：
 
 ::: correct
 
