@@ -7,9 +7,9 @@ related_rules:
 further_reading:
 - https://en.wikipedia.org/wiki/Indent_style
 ---
-Brace style is closely related to [indent style](https://en.wikipedia.org/wiki/Indent_style) in programming and describes the placement of braces relative to their control statement and body. There are probably a dozen, if not more, brace styles in the world.
+花括号风格与编程中的[缩进风格](https://en.wikipedia.org/wiki/Indent_style)密切相关，用于描述花括号相对于控制语句及其主体的位置。世界上的花括号风格可能有十几种，甚至更多。
 
-The *one true brace style* is one of the most common brace styles in JavaScript, in which the opening brace of a block is placed on the same line as its corresponding statement or declaration. For example:
+*唯一正确的花括号风格*是 JavaScript 中最常见的花括号风格之一，其块的左花括号与相应的语句或声明位于同一行。例如：
 
 ```js
 if (foo) {
@@ -19,7 +19,7 @@ if (foo) {
 }
 ```
 
-One common variant of one true brace style is called Stroustrup, in which the `else` statements in an `if-else` construct, as well as `catch` and `finally`, must be on its own line after the preceding closing brace. For example:
+唯一正确的花括号风格有一种常见变体，称为 Stroustrup 风格。在这种风格中，`if-else` 结构中的 `else` 语句，以及 `catch` 和 `finally`，都必须另起一行，放在前一个右花括号之后。例如：
 
 ```js
 if (foo) {
@@ -30,7 +30,7 @@ else {
 }
 ```
 
-Another style is called [Allman](https://en.wikipedia.org/wiki/Indent_style#Allman_style), in which all the braces are expected to be on their own lines without any extra indentation. For example:
+另一种风格称为 [Allman](https://en.wikipedia.org/wiki/Indent_style#Allman_style) 风格，要求所有花括号都单独占一行，且不额外缩进。例如：
 
 ```js
 if (foo)
@@ -43,27 +43,31 @@ else
 }
 ```
 
-While no style is considered better than the other, most developers agree that having a consistent style throughout a project is important for its long-term maintainability.
+虽然没有哪种风格被认为优于其他风格，但大多数开发者都认同，在整个项目中保持风格一致，对项目的长期可维护性很重要。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces consistent brace style for blocks.
+## 规则详情
 
-## Options
+此规则强制要求块的花括号风格保持一致。
 
-This rule has a string option:
+<a id="options"></a>
 
-* `"1tbs"` (default) enforces one true brace style.
-* `"stroustrup"` enforces Stroustrup style.
-* `"allman"` enforces Allman style.
+## 选项
 
-This rule has an object option for an exception:
+此规则接受一个字符串选项：
 
-* `"allowSingleLine": true` (default `false`) allows the opening and closing braces for a block to be on the *same* line.
+* `"1tbs"`（默认值）强制采用唯一正确的花括号风格。
+* `"stroustrup"` 强制采用 Stroustrup 风格。
+* `"allman"` 强制采用 Allman 风格。
+
+此规则还接受一个用于例外情况的对象选项：
+
+* `"allowSingleLine": true`（默认值为 `false`）允许块的左、右花括号位于*同一*行。
 
 ### 1tbs
 
-Examples of **incorrect** code for this rule with the default `"1tbs"` option:
+使用默认选项 `"1tbs"` 时，此规则的错误代码示例如下：
 
 :::incorrect
 
@@ -106,7 +110,7 @@ class C
 
 :::
 
-Examples of **correct** code for this rule with the default `"1tbs"` option:
+使用默认选项 `"1tbs"` 时，此规则的正确代码示例如下：
 
 :::correct
 
@@ -146,7 +150,7 @@ else if (baz) boom();
 
 :::
 
-Examples of **correct** code for this rule with the `"1tbs", { "allowSingleLine": true }` options:
+使用选项 `"1tbs", { "allowSingleLine": true }` 时，此规则的正确代码示例如下：
 
 :::correct
 
@@ -193,7 +197,7 @@ class D { static { foo(); } }
 
 ### stroustrup
 
-Examples of **incorrect** code for this rule with the `"stroustrup"` option:
+使用选项 `"stroustrup"` 时，此规则的错误代码示例如下：
 
 :::incorrect
 
@@ -235,7 +239,7 @@ if (foo) {
 
 :::
 
-Examples of **correct** code for this rule with the `"stroustrup"` option:
+使用选项 `"stroustrup"` 时，此规则的正确代码示例如下：
 
 :::correct
 
@@ -277,7 +281,7 @@ else if (baz) boom();
 
 :::
 
-Examples of **correct** code for this rule with the `"stroustrup", { "allowSingleLine": true }` options:
+使用选项 `"stroustrup", { "allowSingleLine": true }` 时，此规则的正确代码示例如下：
 
 :::correct
 
@@ -305,7 +309,7 @@ class D { static { foo(); } }
 
 ### allman
 
-Examples of **incorrect** code for this rule with the `"allman"` option:
+使用选项 `"allman"` 时，此规则的错误代码示例如下：
 
 :::incorrect
 
@@ -343,7 +347,7 @@ if (foo) {
 
 :::
 
-Examples of **correct** code for this rule with the `"allman"` option:
+使用选项 `"allman"` 时，此规则的正确代码示例如下：
 
 :::correct
 
@@ -393,7 +397,7 @@ else if (baz) boom();
 
 :::
 
-Examples of **correct** code for this rule with the `"allman", { "allowSingleLine": true }` options:
+使用选项 `"allman", { "allowSingleLine": true }` 时，此规则的正确代码示例如下：
 
 :::correct
 
@@ -423,6 +427,8 @@ class D { static { foo(); } }
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you don't want to enforce a particular brace style, don't enable this rule.
+## 何时不应使用
+
+如果你不想强制采用特定的花括号风格，就不要启用此规则。
