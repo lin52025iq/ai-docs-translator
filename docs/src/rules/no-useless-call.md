@@ -6,14 +6,16 @@ related_rules:
 ---
 
 
-The function invocation can be written by `Function.prototype.call()` and `Function.prototype.apply()`.
-But `Function.prototype.call()` and `Function.prototype.apply()` are slower than the normal function invocation.
+函数调用可以通过 `Function.prototype.call()` 和 `Function.prototype.apply()` 来实现。
+但与普通函数调用相比，`Function.prototype.call()` 和 `Function.prototype.apply()` 的速度更慢。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed to flag usage of `Function.prototype.call()` and `Function.prototype.apply()` that can be replaced with the normal function invocation.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在标记可替换为普通函数调用的 `Function.prototype.call()` 和 `Function.prototype.apply()` 用法。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -33,7 +35,7 @@ obj.foo.apply(obj, [1, 2, 3]);
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -57,16 +59,20 @@ obj.foo.apply(obj, args);
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
 
-## Known Limitations
+此规则没有选项。
 
-This rule compares code statically to check whether or not `thisArg` is changed.
-So if the code about `thisArg` is a dynamic expression, this rule cannot judge correctly.
+<a id="known-limitations"></a>
 
-Examples of **incorrect** code for this rule:
+## 已知限制
+
+此规则通过静态比较代码来检查 `thisArg` 是否发生变化。
+因此，如果有关 `thisArg` 的代码是动态表达式，此规则就无法正确判断。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -78,7 +84,7 @@ a[i++].foo.call(a[i++], 1, 2, 3);
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -90,6 +96,8 @@ a[++i].foo.call(a[i], 1, 2, 3);
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you don't want to be notified about unnecessary `.call()` and `.apply()`, you can safely disable this rule.
+## 何时不应使用
+
+如果你不希望收到有关不必要的 `.call()` 和 `.apply()` 的提示，可以放心禁用此规则。
