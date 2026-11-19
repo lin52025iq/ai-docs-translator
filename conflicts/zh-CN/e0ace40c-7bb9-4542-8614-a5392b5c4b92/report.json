@@ -1,0 +1,46 @@
+{
+    "schemaVersion": 1,
+    "status": "conflict",
+    "origin": "local_validation",
+    "projectId": "eslint-docs",
+    "locale": "zh-CN",
+    "sourcePath": "docs/src/integrate/nodejs-api.md",
+    "createdAt": "2026-11-19T10:54:38.916Z",
+    "reason": "文件校验未通过",
+    "artifacts": {
+        "before": "before/docs/src/integrate/nodejs-api.md",
+        "after": "after/docs/src/integrate/nodejs-api.md",
+        "previous": "previous/docs/src/integrate/nodejs-api.md"
+    },
+    "translationModel": "gpt-6-luna",
+    "translationResponseId": "resp_0726ceaa5cb52141016afed4e5a1f087d285fe1b2e99b8e226",
+    "contextHash": "64ced0491d8917d86d3057d903a53f0f98ed63c72e258488e934ac7f76453200",
+    "diagnostics": [
+        [
+            {
+                "message": "/tmp/translator-snapshot-e5G2nI/snapshot/docs/node_modules/js-yaml/lib/loader.js:197\n  return new YAMLException(message, mark)\n         ^\nYAMLException: bad indentation of a mapping entry (2:20)\n\n 1 | title: Node.js API 参考\n 2 |  eleventyNavigation:\n------------------------^\n 3 |     key: node.js api\n 4 |     parent: integrate eslint\n    at generateError (/tmp/translator-snapshot-e5G2nI/snapshot/docs/node_modules/js-yaml/lib/loader.js:197:10)\n    at throwError (/tmp/translator-snapshot-e5G2nI/snapshot/docs/node_modules/js-yaml/lib/loader.js:201:9)\n    at readBlockMapping (/tmp/translator-snapshot-e5G2nI/snapshot/docs/node_modules/js-yaml/lib/loader.js:1232:7)\n    at composeNode (/tmp/translator-snapshot-e5G2nI/snapshot/docs/node_modules/js-yaml/lib/loader.js:1520:53)\n    at readDocument (/tmp/translator-snapshot-e5G2nI/snapshot/docs/node_modules/js-yaml/lib/loader.js:1710:3)\n    at loadDocuments (/tmp/translator-snapshot-e5G2nI/snapshot/docs/node_modules/js-yaml/lib/loader.js:1768:5)\n    at Object.load (/tmp/translator-snapshot-e5G2nI/snapshot/docs/node_modules/js-yaml/lib/loader.js:1792:21)\n    at readDocument (file:///home/runner/work/ai-docs-translator/ai-docs-translator/.translation-config/validate-markdown.mjs:30:37)\n    at file:///home/runner/work/ai-docs-translator/ai-docs-translator/.translation-config/validate-markdown.mjs:59:20\n    at ModuleJob.run (node:internal/modules/esm/module_job:561:25) {\n  reason: 'bad indentation of a mapping entry',\n  mark: {\n    name: null,\n    buffer: 'title: Node.js API 参考\\n' +\n      ' eleventyNavigation:\\n' +\n      '    key: node.js api\\n' +\n      '    parent: integrate eslint\\n' +\n      '    title: Node.js API 参考\\n' +\n      '    order: 2\\n',\n    position: 41,\n    line: 1,\n    column: 19,\n    snippet: ' 1 | title: Node.js API 参考\\n' +\n      ' 2 |  eleventyNavigation:\\n' +\n      '------------------------^\\n' +\n      ' 3 |     key: node.js api\\n' +\n      ' 4 |     parent: integrate eslint'\n  }\n}\n\nNode.js v24.22.2",
+                "path": "docs/src/integrate/nodejs-api.md"
+            }
+        ],
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode, html",
+                "path": "docs/src/integrate/nodejs-api.md"
+            },
+            {
+                "message": "inlineCode 缺少：[\"RuleTester\",\"RuleTester\",\"RuleTester.describe\",\"RuleTester.it\"]。多出：[\"null\",\"true\",\"true\",\"undefined\",\"undefined\",\"undefined\",\"undefined\",\"undefined\",\"undefined\",\"undefined\"]",
+                "path": "docs/src/integrate/nodejs-api.md"
+            }
+        ],
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode, html",
+                "path": "docs/src/integrate/nodejs-api.md"
+            },
+            {
+                "message": "inlineCode 缺少：[\"RuleTester\",\"RuleTester\"]。多出：[\"messageId\",\"messageId\",\"null\",\"true\",\"true\",\"undefined\",\"undefined\",\"undefined\",\"undefined\",\"undefined\",\"undefined\",\"undefined\"]",
+                "path": "docs/src/integrate/nodejs-api.md"
+            }
+        ]
+    ]
+}
