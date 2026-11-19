@@ -1,18 +1,20 @@
 ---
-title: Rule
+title: 规则
 ---
 
-The rule component is a macro defined in `/components/rule.macro.html`. The macro accepts a set of parameters used to render the rule.
+规则组件是一个定义在 `/components/rule.macro.html` 中的宏。该宏接受一组用于呈现规则的参数。
 
-A rule has a:
+规则包含：
 
-- name
-- description
-- a flag to indicate whether it's deprecated or removed: `deprecated` and `removed` respectively
-- a replacedBy value indicating the rule it has been replaced with (if applicable)
-- a categories object indicating the rule's category
+- 名称
+- 描述
+- 用于指示规则是否已弃用或移除的标志：分别为 `deprecated` 和 `removed`
+- 一个 replacedBy 值，用于指示该规则被哪个规则替换（如果适用）
+- 一个 categories 对象，用于指示规则所属的类别
 
-## Usage
+<a id="usage"></a>
+
+## 用法
 
 ```html
 <!-- import the macro -->
@@ -25,7 +27,9 @@ getters.', categories: { recommended: true, fixable: true, hasSuggestions: false
 } }) } }
 ```
 
-## Examples
+<a id="examples"></a>
+
+## 示例
 
 {% from 'components/rule.macro.html' import rule %}
 
