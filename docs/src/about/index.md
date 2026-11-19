@@ -1,40 +1,40 @@
 ---
-title: About
+title: 关于
 ---
 
-ESLint is an open source JavaScript linting utility originally created by Nicholas C. Zakas in June 2013. Code [linting][] is a type of static analysis that is frequently used to find problematic patterns or code that doesn't adhere to certain style guidelines. There are code linters for most programming languages, and compilers sometimes incorporate linting into the compilation process.
+ESLint 是一款开源的 JavaScript 代码检查工具，由 Nicholas C. Zakas 于 2013 年 6 月创建。代码[检查][]是一种静态分析，常用于发现有问题的模式，或不符合特定风格指南的代码。大多数编程语言都有代码检查工具，有时编译器也会将代码检查纳入编译过程。
 
-JavaScript, being a dynamic and loosely-typed language, is especially prone to developer error. Without the benefit of a compilation process, JavaScript code is typically executed in order to find syntax or other errors. Linting tools like ESLint allow developers to discover problems with their JavaScript code without executing it.
+JavaScript 是一种动态、弱类型语言，因此开发者尤其容易出错。由于没有编译过程，通常需要执行 JavaScript 代码才能发现语法错误或其他错误。ESLint 这类代码检查工具可以帮助开发者在不执行代码的情况下发现 JavaScript 代码中的问题。
 
-The primary reason ESLint was created was to allow developers to create their own linting rules. ESLint is designed to have all rules completely pluggable. The default rules are written just like any plugin rules would be. They can all follow the same pattern, both for the rules themselves as well as tests. While ESLint will ship with some built-in rules to make it useful from the start, you'll be able to dynamically load rules at any point in time.
+创建 ESLint 的主要目的是让开发者能够创建自己的代码检查规则。ESLint 的设计理念是让所有规则都完全可插拔。默认规则的编写方式与任何插件规则相同。无论是规则本身还是测试，都可以遵循同一种模式。虽然 ESLint 会内置一些规则，让用户从一开始就能使用，但用户也可以随时动态加载规则。
 
-ESLint is written using Node.js to provide a fast runtime environment and easy installation via [npm][].
+ESLint 使用 Node.js 编写，以提供快速的运行环境，并可通过 [npm][] 轻松安装。
 
-[linting]: https://en.wikipedia.org/wiki/Lint_(software)
+[检查]: https://en.wikipedia.org/wiki/Lint_(software)
 [npm]: https://npmjs.org/
 
-## Philosophy
+## 理念
 
-Everything is pluggable:
+一切皆可插拔：
 
-- Rule API is used both by bundled and custom rules.
-- Formatter API is used both by bundled and custom formatters.
-- Additional rules and formatters can be specified at runtime.
-- Rules and formatters don't have to be bundled to be used.
+- 规则 API 同时用于内置规则和自定义规则。
+- 格式化器 API 同时用于内置格式化器和自定义格式化器。
+- 可以在运行时指定其他规则和格式化器。
+- 规则和格式化器无需内置也可使用。
 
-Every rule:
+每条规则：
 
-- Is standalone.
-- Can be turned off or on (nothing can be deemed "too important to turn off").
-- Can be set to a warning or error individually.
+- 都是独立的。
+- 可以关闭或启用（没有任何规则重要到不能关闭）。
+- 可以单独设置为警告或错误。
 
-Additionally:
+此外：
 
-- Rules are "agenda free" - ESLint does not promote any particular coding style.
-- Any bundled rules are generalizable.
+- 规则不带有特定立场——ESLint 不推崇任何特定的编码风格。
+- 任何内置规则都具有普遍适用性。
 
-The project:
+本项目：
 
-- Values documentation and clear communication.
-- Is as transparent as possible.
-- Believes in the importance of testing.
+- 重视文档和清晰的沟通。
+- 尽可能保持透明。
+- 坚信测试的重要性。
