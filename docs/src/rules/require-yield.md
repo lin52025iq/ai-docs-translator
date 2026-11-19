@@ -7,11 +7,12 @@ related_rules:
 
 
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule generates warnings for generator functions that do not have the `yield` keyword.
+对于没有 `yield` 关键字的生成器函数，此规则会发出警告。
 
-Examples of **incorrect** code for this rule:
+此规则的**错误**代码示例：
 
 ::: incorrect
 
@@ -25,7 +26,7 @@ function* foo() {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct
 
@@ -47,10 +48,12 @@ function* baz() { }
 
 :::
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule has no options.
+此规则没有选项。
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 何时不应使用
 
-If you don't want to notify generator functions that have no `yield` expression, then it's safe to disable this rule.
+如果你不希望对没有 `yield` 表达式的生成器函数发出通知，可以放心禁用此规则。
