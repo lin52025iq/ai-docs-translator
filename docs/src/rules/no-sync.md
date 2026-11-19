@@ -3,17 +3,21 @@ title: no-sync
 rule_type: suggestion
 ---
 
-In Node.js, most I/O is done through asynchronous methods. However, there are often synchronous versions of the asynchronous methods. For example, `fs.exists()` and `fs.existsSync()`. In some contexts, using synchronous operations is okay (if, as with ESLint, you are writing a command line utility). However, in other contexts the use of synchronous operations is considered a bad practice that should be avoided. For example, if you are running a high-travel web server on Node.js, you should consider carefully if you want to allow any synchronous operations that could lock up the server.
+在 Node.js 中，大多数 I/O 都通过异步方法完成。不过，异步方法通常也有对应的同步版本。例如，`fs.exists()` 和 `fs.existsSync()`。在某些情况下，使用同步操作是可以接受的（例如 ESLint，编写命令行工具时）。但在其他情况下，使用同步操作被视为应当避免的不良实践。例如，如果你在 Node.js 上运行高流量 Web 服务器，就应仔细考虑是否允许任何可能导致服务器阻塞的同步操作。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at preventing synchronous methods from being called in Node.js. It looks specifically for the method suffix "`Sync`" (as is the convention with Node.js operations).
+## 规则详情
 
-## Options
+此规则旨在防止在 Node.js 中调用同步方法。它专门检查方法名后缀 "`Sync`"（这是 Node.js 操作的惯例）。
 
-This rule has an optional object option `{ allowAtRootLevel: <boolean> }`, which determines whether synchronous methods should be allowed at the top level of a file, outside of any functions. This option defaults to `false`.
+<a id="options"></a>
 
-Examples of **incorrect** code for this rule with the default `{ allowAtRootLevel: false }` option:
+## 选项
+
+此规则有一个可选的对象选项 `{ allowAtRootLevel: <boolean> }`，用于确定是否允许在文件顶层（即任何函数之外）调用同步方法。此选项默认为 `false`。
+
+以下是使用默认选项 `{ allowAtRootLevel: false }` 时违反此规则的代码示例：
 
 ::: incorrect
 
@@ -29,7 +33,7 @@ function foo() {
 
 :::
 
-Examples of **correct** code for this rule with the default `{ allowAtRootLevel: false }` option:
+以下是使用默认选项 `{ allowAtRootLevel: false }` 时符合此规则的代码示例：
 
 ::: correct
 
@@ -45,7 +49,7 @@ async(function() {
 
 :::
 
-Examples of **incorrect** code for this rule with the `{ allowAtRootLevel: true }` option
+以下是使用选项 `{ allowAtRootLevel: true }` 时违反此规则的代码示例：
 
 ::: incorrect
 
@@ -61,7 +65,7 @@ var bar = baz => fs.readFileSync(qux);
 
 :::
 
-Examples of **correct** code for this rule with the `{ allowAtRootLevel: true }` option
+以下是使用选项 `{ allowAtRootLevel: true }` 时符合此规则的代码示例：
 
 ::: correct
 
@@ -73,6 +77,8 @@ fs.readFileSync(somePath).toString();
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you want to allow synchronous operations in your script, do not enable this rule.
+## 何时不应使用此规则
+
+如果你希望在脚本中允许使用同步操作，请勿启用此规则。
