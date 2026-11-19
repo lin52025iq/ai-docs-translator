@@ -1,14 +1,10 @@
 ---
-title: Code Conventions
+title: 代码约定
 ---
 
-Code conventions for ESLint are determined by
-[eslint-config-eslint](https://www.npmjs.com/package/eslint-config-eslint).
+ESLint 的代码约定由
+[eslint-config-eslint](https://www.npmjs.com/package/eslint-config-eslint) 确定。
 
-The rationales for the specific rules in use can be found by looking to the
-project documentation for any given rule. If the rule is one of our own, see
-our own [rule documentation](../rules/) and otherwise, see
-the documentation of the plugin in which the rule can be found.
+如需了解所使用的具体规则的理由，可以查阅相应规则的项目文档。如果该规则由我们维护，请参阅我们自己的[规则文档](../rules/)；否则，请参阅包含该规则的插件文档。
 
-If you need to make changes to a `package.json` file, please see the
-[package.json conventions](./package-json-conventions).
+如果需要修改 `package.json` 文件，请参阅 [package.json 约定](./package-json-conventions)。
