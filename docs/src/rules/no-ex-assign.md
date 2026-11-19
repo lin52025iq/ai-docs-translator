@@ -7,14 +7,16 @@ further_reading:
 
 
 
-If a `catch` clause in a `try` statement accidentally (or purposely) assigns another value to the exception parameter, it is impossible to refer to the error from that point on.
-Since there is no `arguments` object to offer alternative access to this data, assignment of the parameter is absolutely destructive.
+如果 `try` 语句中的 `catch` 子句意外（或故意）将另一个值赋给异常参数，那么从此之后就无法再引用该错误。
+由于没有 `arguments` 对象提供访问此数据的替代方式，给该参数赋值会造成彻底的破坏。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule disallows reassigning exceptions in `catch` clauses.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则禁止在 `catch` 子句中重新赋值异常。
+
+此规则下的**错误**代码示例：
 
 ::: incorrect
 
@@ -30,7 +32,7 @@ try {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则下的**正确**代码示例：
 
 ::: correct
 
@@ -46,6 +48,8 @@ try {
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has no options.
+## 选项
+
+此规则没有选项。
