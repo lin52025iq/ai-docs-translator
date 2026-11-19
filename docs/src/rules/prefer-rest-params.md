@@ -6,16 +6,17 @@ related_rules:
 ---
 
 
-There are rest parameters in ES2015.
-We can use that feature for variadic functions instead of the `arguments` variable.
+ES2015 引入了剩余参数。
+我们可以在可变参数函数中使用这一特性，而不是使用 `arguments` 变量。
 
-`arguments` does not have methods of `Array.prototype`, so it's a bit of an inconvenience.
+`arguments` 没有 `Array.prototype` 的方法，因此使用起来有些不便。
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule is aimed to flag usage of `arguments` variables.
+此规则旨在标记对 `arguments` 变量的使用。
 
-Examples of **incorrect** code for this rule:
+此规则下的错误代码示例：
 
 ::: incorrect { "sourceType": "script" }
 
@@ -39,7 +40,7 @@ function foo(action) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则下的正确代码示例：
 
 ::: correct { "sourceType": "script" }
 
@@ -66,12 +67,14 @@ function foo() {
 
 :::
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule has no options.
+此规则没有选项。
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 何时不应使用
 
-This rule should not be used in ES3/5 environments.
+不应在 ES3/5 环境中使用此规则。
 
-In ES2015 (ES6) or later, if you don't want to be notified about `arguments` variables, then it's safe to disable this rule.
+在 ES2015 (ES6) 或更高版本中，如果你不希望收到有关 `arguments` 变量的提示，则可以放心地禁用此规则。
