@@ -5,19 +5,20 @@ rule_type: problem
 
 
 
-Self assignments have no effect, so probably those are an error due to incomplete refactoring.
-Those indicate that what you should do is still remaining.
+自我赋值不会产生任何效果，因此很可能是重构未完成导致的错误。这些赋值表明仍有工作尚未完成。
 
 ```js
 foo = foo;
 [bar, baz] = [bar, qiz];
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule is aimed at eliminating self assignments.
+## 规则详情
 
-Examples of **incorrect** code for this rule:
+此规则旨在消除自我赋值。
+
+此规则的错误代码示例：
 
 ::: incorrect
 
@@ -39,7 +40,7 @@ foo ??= foo;
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确代码示例：
 
 ::: correct
 
@@ -76,9 +77,11 @@ obj["a" + "b"] = obj["a" + "b"];
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule has the option to check properties as well.
+## 选项
+
+此规则还可以选择检查属性。
 
 ```json
 {
@@ -86,11 +89,11 @@ This rule has the option to check properties as well.
 }
 ```
 
-* `props` - if this is `true`, `no-self-assign` rule warns self-assignments of properties. Default is `true`.
+* `props` - 如果此值为 `true`，`no-self-assign` 规则会对属性的自我赋值发出警告。默认值为 `true`。
 
 ### props
 
-Examples of **correct** code with the `{ "props": false }` option:
+使用 `{ "props": false }` 选项时的正确代码示例：
 
 ::: correct
 
@@ -106,6 +109,8 @@ obj[a] = obj[a];
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If you don't want to notify about self assignments, then it's safe to disable this rule.
+## 何时不使用
+
+如果你不希望收到有关自我赋值的提示，可以放心地禁用此规则。
