@@ -1,24 +1,26 @@
 ---
-title: Create Plugins
+title: 创建插件
 eleventyNavigation:
     key: create plugins
     parent: extend eslint
-    title: Create Plugins
+    title: 创建插件
     order: 2
 ---
 
-ESLint plugins extend ESLint with additional functionality. In most cases, you'll extend ESLint by creating plugins that encapsulate the additional functionality you want to share across multiple projects.
+ESLint 插件通过添加额外功能来扩展 ESLint。在大多数情况下，你可以创建插件来封装希望在多个项目之间共享的额外功能，从而扩展 ESLint。
 
-## Create a plugin
+<a id="create-a-plugin"></a>
 
-A plugin is a JavaScript object that exposes certain properties to ESLint:
+## 创建插件
 
-- `meta` - information about the plugin.
-- `configs` - an object containing named configurations.
-- `rules` - an object containing the definitions of custom rules.
-- `processors` - an object containing named processors.
+插件是一个 JavaScript 对象，它向 ESLint 暴露特定属性：
 
-To get started, create a JavaScript file and export an object containing the properties you'd like ESLint to use. To make your plugin as easy to maintain as possible, we recommend that you format your plugin entrypoint file to look like this:
+- `meta` - 插件相关信息。
+- `configs` - 包含命名配置的对象。
+- `rules` - 包含自定义规则定义的对象。
+- `processors` - 包含命名处理器的对象。
+
+首先，创建一个 JavaScript 文件，并导出一个包含你希望 ESLint 使用的属性的对象。为了让插件尽可能易于维护，我们建议将插件入口文件整理成如下形式：
 
 ```js
 const plugin = {
@@ -35,11 +37,13 @@ export default plugin;
 module.exports = plugin;
 ```
 
-If you plan to distribute your plugin as an npm package, make sure that the module that exports the plugin object is the default export of your package. This will enable ESLint to import the plugin when it is specified in the command line in the [`--plugin` option](../use/command-line-interface#--plugin).
+如果计划将插件作为 npm 包分发，请确保导出插件对象的模块是包的默认导出。这样，当在命令行的 [`--plugin` 选项](../use/command-line-interface#--plugin)中指定插件时，ESLint 就可以导入它。
 
-### Meta Data in Plugins
+<a id="meta-data-in-plugins"></a>
 
-For easier debugging and more effective caching of plugins, it's recommended to provide a `name`, `version`, and `namespace` in a `meta` object at the root of your plugin, like this:
+### 插件中的元数据
+
+为了便于调试并更有效地缓存插件，建议在插件根目录的 `meta` 对象中提供 `name`、`version` 和 `namespace`，如下所示：
 
 ```js
 const plugin = {
@@ -61,9 +65,9 @@ export default plugin;
 module.exports = plugin;
 ```
 
-The `meta.name` property should match the npm package name for your plugin and the `meta.version` property should match the npm package version for your plugin. The `meta.namespace` property should match the prefix you'd like users to use for accessing the plugin's rules, processors, languages, and configs. The namespace is typically what comes after `eslint-plugin-` in your package name, which is why this example uses `"example"`. Providing a namespace allows the `defineConfig()` function to find your plugin even when a user assigns a different namespace in their config file.
+`meta.name` 属性应与插件的 npm 包名称一致，`meta.version` 属性应与插件的 npm 包版本一致。`meta.namespace` 属性应与用户用于访问插件的规则、处理器、语言和配置的前缀一致。命名空间通常是包名称中 `eslint-plugin-` 后面的部分，因此此示例使用了 `"example"`。提供命名空间后，即使用户在配置文件中指定了不同的命名空间，`defineConfig()` 函数也能找到你的插件。
 
-The easiest way to add the name and version is by reading this information from your `package.json`, as in this example:
+最简单的方式是从 `package.json` 中读取名称和版本信息，如下例所示：
 
 ```js
 import fs from "fs";
@@ -88,14 +92,14 @@ export default plugin;
 ```
 
 ::: tip
-While there are no restrictions on plugin names, it helps others to find your plugin on [npm](https://npmjs.com) when you follow these naming conventions:
+插件名称没有限制，但遵循以下命名约定有助于其他人在 [npm](https://npmjs.com) 上找到你的插件：
 
-- **Unscoped:** If your npm package name won't be scoped (doesn't begin with `@`), then the plugin name should begin with `eslint-plugin-`, such as `eslint-plugin-example`.
-- **Scoped:** If your npm package name will be scoped, then the plugin name should be in the format of `@<scope>/eslint-plugin-<plugin-name>` such as `@jquery/eslint-plugin-jquery` or even `@<scope>/eslint-plugin` such as `@jquery/eslint-plugin`.
+- **无作用域：** 如果你的 npm 包名称不使用作用域（不以 `@` 开头），插件名称应以 `eslint-plugin-` 开头，例如 `eslint-plugin-example`。
+- **使用作用域：** 如果你的 npm 包名称使用作用域，插件名称应采用 `@<scope>/eslint-plugin-<plugin-name>` 格式，例如 `@jquery/eslint-plugin-jquery`；也可以采用 `@<scope>/eslint-plugin` 格式，例如 `@jquery/eslint-plugin`。
 
 :::
 
-As an alternative, you can also expose `name` and `version` properties at the root of your plugin, such as:
+你也可以选择在插件根目录暴露 `name` 和 `version` 属性，例如：
 
 ```js
 const plugin = {
@@ -115,12 +119,14 @@ module.exports = plugin;
 ```
 
 ::: important
-While the `meta` object is the preferred way to provide the plugin name and version, this format is also acceptable and is provided for backward compatibility.
+虽然 `meta` 对象是提供插件名称和版本的首选方式，但这种格式也可以接受，并且是为了向后兼容而提供的。
 :::
 
-### Rules in Plugins
+<a id="rules-in-plugins"></a>
 
-Plugins can expose custom rules for use in ESLint. To do so, the plugin must export a `rules` object containing a key-value mapping of rule ID to rule. The rule ID does not have to follow any naming convention except that it should not contain a `/` character (so it can just be `dollar-sign` but not `foo/dollar-sign`, for instance). To learn more about creating custom rules in plugins, refer to [Custom Rules](custom-rules).
+### 插件中的规则
+
+插件可以暴露供 ESLint 使用的自定义规则。为此，插件必须导出一个 `rules` 对象，其中包含从规则 ID 到规则的键值映射。规则 ID 无须遵循任何命名约定，但不能包含 `/` 字符（例如，可以是 `dollar-sign`，但不能是 `foo/dollar-sign`）。有关如何在插件中创建自定义规则的更多信息，请参阅[自定义规则](custom-rules)。
 
 ```js
 const plugin = {
@@ -144,7 +150,7 @@ export default plugin;
 module.exports = plugin;
 ```
 
-In order to use a rule from a plugin in a configuration file, import the plugin and include it in the `plugins` key, specifying a namespace. Then, use that namespace to reference the rule in the `rules` configuration, like this:
+若要在配置文件中使用插件的规则，请导入插件并将其添加到 `plugins` 键中，同时指定一个命名空间。然后在 `rules` 配置中使用该命名空间引用规则，如下所示：
 
 ```js
 // eslint.config.js
@@ -165,12 +171,14 @@ export default defineConfig([
 ```
 
 ::: warning
-Namespaces that don't begin with `@` may not contain a `/`; namespaces that begin with `@` may contain a `/`. For example, `eslint/plugin` is not a valid namespace but `@eslint/plugin` is valid. This restriction is for backwards compatibility with eslintrc plugin naming restrictions.
+不以 `@` 开头的命名空间不能包含 `/`；以 `@` 开头的命名空间可以包含 `/`。例如，`eslint/plugin` 不是有效的命名空间，但 `@eslint/plugin` 是有效的。此限制是为了向后兼容 eslintrc 对插件命名的限制。
 :::
 
-### Processors in Plugins
+<a id="processors-in-plugins"></a>
 
-Plugins can expose [processors](custom-processors) for use in configuration file by providing a `processors` object. Similar to rules, each key in the `processors` object is the name of a processor and each value is the processor object itself. Here's an example:
+### 插件中的处理器
+
+插件可以通过提供 `processors` 对象，暴露供配置文件使用的[处理器](custom-processors)。与规则类似，`processors` 对象中的每个键都是处理器的名称，每个值则是处理器对象本身。示例如下：
 
 ```js
 const plugin = {
@@ -197,7 +205,7 @@ export default plugin;
 module.exports = plugin;
 ```
 
-In order to use a processor from a plugin in a configuration file, import the plugin and include it in the `plugins` key, specifying a namespace. Then, use that namespace to reference the processor in the `processor` configuration, like this:
+若要在配置文件中使用插件的处理器，请导入插件并将其添加到 `plugins` 键中，同时指定一个命名空间。然后在 `processor` 配置中使用该命名空间引用处理器，如下所示：
 
 ```js
 // eslint.config.js
@@ -215,11 +223,13 @@ export default defineConfig([
 ]);
 ```
 
-### Configs in Plugins
+<a id="configs-in-plugins"></a>
 
-You can bundle configurations inside a plugin by specifying them under the `configs` key. This can be useful when you want to bundle a set of custom rules with a configuration that enables the recommended options. Multiple configurations are supported per plugin.
+### 插件中的配置
 
-You can include individual rules from a plugin in a config that's also included in the plugin. In the config, you must specify your plugin name in the `plugins` object as well as any rules you want to enable that are part of the plugin. Any plugin rules must be prefixed with the plugin namespace. Here's an example:
+你可以在 `configs` 键下指定配置，将其打包到插件中。如果你想将一组自定义规则与启用推荐选项的配置打包在一起，这会很有用。每个插件支持多个配置。
+
+你可以在插件所包含的配置中加入插件的单条规则。在配置中，必须在 `plugins` 对象中指定插件名称，并列出你希望启用的、属于该插件的规则。插件规则都必须带有插件命名空间前缀。示例如下：
 
 ```js
 const plugin = {
@@ -268,9 +278,9 @@ export default plugin;
 module.exports = plugin;
 ```
 
-This plugin exports a `recommended` config that is an array with one config object. When there is just one config object, you can also export just the object without an enclosing array.
+此插件导出一个 `recommended` 配置，它是一个包含单个配置对象的数组。如果只有一个配置对象，也可以直接导出该对象，而不必将其放在数组中。
 
-In order to use a config from a plugin in a configuration file, import the plugin and use the `extends` key to reference the name of the config, like this:
+若要在配置文件中使用插件中的配置，请导入插件，并使用 `extends` 键引用配置名称，如下所示：
 
 ```js
 // eslint.config.js
@@ -289,14 +299,16 @@ export default defineConfig([
 ```
 
 ::: important
-Plugins cannot force a specific configuration to be used. Users must manually include a plugin's configurations in their configuration file.
+插件无法强制使用特定配置。用户必须在自己的配置文件中手动加入插件的配置。
 :::
 
-#### Backwards Compatibility for Legacy Configs
+<a id="backwards-compatibility-for-legacy-configs"></a>
 
-If your plugin needs to export configs that work both with the current (flat config) system and the old (eslintrc) system, you can export both config types from the `configs` key. When exporting legacy configs, we recommend prefixing the name with `"legacy-"` (for example, `"legacy-recommended"`) to make it clear how the config should be used.
+#### 旧版配置的向后兼容性
 
-If you're working on a plugin that has existed prior to ESLint v9.0.0, then you may already have legacy configs with names such as `"recommended"`. If you don't want to update the config name, you can also create an additional entry in the `configs` object prefixed with `"flat/"` (for example, `"flat/recommended"`). Here's an example:
+如果你的插件需要导出同时适用于当前（扁平配置）系统和旧版（eslintrc）系统的配置，可以在 `configs` 键中同时导出这两种配置类型。导出旧版配置时，我们建议在名称前加上 `"legacy-"`（例如 `"legacy-recommended"`），以便明确该配置的使用方式。
+
+如果你的插件在 ESLint v9.0.0 之前就已存在，那么你可能已经有名为 `"recommended"` 的旧版配置。如果你不想更改配置名称，也可以在 `configs` 对象中额外添加一个以 `"flat/"` 为前缀的条目（例如 `"flat/recommended"`）。示例如下：
 
 ```js
 const plugin = {
@@ -362,25 +374,31 @@ export default plugin;
 module.exports = plugin;
 ```
 
-With this approach, both configuration systems recognize `"recommended"`. The old config system uses the `recommended` key while the current config system uses the `flat/recommended` key. The `defineConfig()` helper first looks at the `recommended` key, and if that is not in the correct format, it looks for the `flat/recommended` key. This allows you an upgrade path if you'd later like to rename `flat/recommended` to `recommended` when you no longer need to support the old config system.
+采用这种方式后，两种配置系统都能识别 `"recommended"`。旧配置系统使用 `recommended` 键，而当前配置系统使用 `flat/recommended` 键。`defineConfig()` 辅助函数会先查找 `recommended` 键；如果其格式不正确，则会查找 `flat/recommended` 键。如果之后不再需要支持旧配置系统，这种方式也为你提供了升级路径，届时可以将 `flat/recommended` 重命名为 `recommended`。
 
-## Testing a Plugin
+<a id="testing-a-plugin"></a>
 
-ESLint provides the [`RuleTester`](../integrate/nodejs-api#ruletester) utility to make it easy to test the rules of your plugin.
+## 测试插件
 
-## Linting a Plugin
+ESLint 提供了 [`RuleTester`](../integrate/nodejs-api#ruletester) 工具，方便你测试插件中的规则。
 
-ESLint plugins should be linted too! It's suggested to lint your plugin with the `recommended` configurations of:
+<a id="linting-a-plugin"></a>
+
+## 检查插件
+
+ESLint 插件也应该经过代码检查！建议使用以下工具的 `recommended` 配置对插件进行代码检查：
 
 - [eslint](https://www.npmjs.com/package/eslint)
 - [eslint-plugin-eslint-plugin](https://www.npmjs.com/package/eslint-plugin-eslint-plugin)
 - [eslint-plugin-n](https://www.npmjs.com/package/eslint-plugin-n)
 
-## Share Plugins
+<a id="share-plugins"></a>
 
-In order to make your plugin available publicly, you have to publish it on npm. When doing so, please be sure to:
+## 分享插件
 
-1. **List ESLint as a peer dependency.** Because plugins are intended for use with ESLint, it's important to add the `eslint` package as a peer dependency. To do so, manually edit your `package.json` file to include a `peerDependencies` block, like this:
+若要公开你的插件，必须将其发布到 npm。发布时，请务必：
+
+1. **将 ESLint 列为对等依赖。** 插件是为配合 ESLint 使用而设计的，因此将 `eslint` 包添加为对等依赖非常重要。为此，请手动编辑 `package.json` 文件，加入 `peerDependencies` 代码块，如下所示：
 
     ```json
     {
@@ -390,4 +408,4 @@ In order to make your plugin available publicly, you have to publish it on npm. 
     }
     ```
 
-2. **Specify keywords.** ESLint plugins should specify `eslint`, `eslintplugin` and `eslint-plugin` as [keywords](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#keywords) in your `package.json` file.
+2. **指定关键字。** ESLint 插件应在 `package.json` 文件中将 `eslint`、`eslintplugin` 和 `eslint-plugin` 指定为[关键字](https://docs.npmjs.com/cli/v9/configuring-npm/package-json#keywords)。
