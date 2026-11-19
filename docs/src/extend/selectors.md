@@ -1,64 +1,72 @@
 ---
-title: Selectors
+title: 选择器
 ---
 
-Some rules and APIs allow the use of selectors to query an AST. This page is intended to:
+某些规则和 API 允许使用选择器查询 AST。本页旨在：
 
-1. Explain what selectors are
-2. Describe the syntax for creating selectors
-3. Describe what selectors can be used for
+1. 解释什么是选择器
+2. 描述创建选择器的语法
+3. 介绍选择器的用途
 
-## What is a selector?
+<a id="what-is-a-selector"></a>
 
-A selector is a string that can be used to match nodes in an Abstract Syntax Tree (AST). This is useful for describing a particular syntax pattern in your code.
+## 什么是选择器？
 
-The syntax for AST selectors is similar to the syntax for [CSS selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors). If you've used CSS selectors before, the syntax for AST selectors should be easy to understand.
+选择器是一个字符串，可用于匹配抽象语法树（AST）中的节点。这有助于描述代码中的特定语法模式。
 
-The simplest selector is just a node type. A node type selector will match all nodes with the given type. For example, consider the following program:
+AST 选择器的语法与 [CSS 选择器](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors)类似。如果你以前使用过 CSS 选择器，那么 AST 选择器的语法应该很容易理解。
+
+最简单的选择器就是节点类型。节点类型选择器会匹配所有具有指定类型的节点。例如，请看下面的程序：
 
 ```js
 var foo = 1;
 bar.baz();
 ```
 
-The selector "`Identifier`" will match all `Identifier` nodes in the program. In this case, the selector will match the nodes for `foo`, `bar`, and `baz`.
+选择器 "`Identifier`" 会匹配程序中的所有 `Identifier` 节点。在本例中，该选择器会匹配 `foo`、`bar` 和 `baz` 对应的节点。
 
-Selectors are not limited to matching against single node types. For example, the selector `VariableDeclarator > Identifier` will match all `Identifier` nodes that have a `VariableDeclarator` as a direct parent. In the program above, this will match the node for `foo`, but not the nodes for `bar` and `baz`.
+选择器不仅限于匹配单个节点类型。例如，选择器 `VariableDeclarator > Identifier` 会匹配所有直接父节点为 `VariableDeclarator` 的 `Identifier` 节点。在上面的程序中，它会匹配 `foo` 对应的节点，但不会匹配 `bar` 和 `baz` 对应的节点。
 
-## What syntax can selectors have?
+<a id="what-syntax-can-selectors-have"></a>
 
-The following selectors are supported:
+## 选择器可以使用哪些语法？
 
-- AST node type: `ForStatement`
-- wildcard (matches all nodes): `*`
-- attribute existence: `[attr]`
-- attribute value: `[attr="foo"]` or `[attr=123]`
-- attribute regex: `[attr=/foo.*/]`
-- attribute conditions: `[attr!="foo"]`, `[attr>2]`, `[attr<3]`, `[attr>=2]`, or `[attr<=3]`
-- nested attribute: `[attr.level2="foo"]`
-- field: `FunctionDeclaration > Identifier.id`
-- First or last child: `:first-child` or `:last-child`
-- nth-child (no ax+b support): `:nth-child(2)`
-- nth-last-child (no ax+b support): `:nth-last-child(1)`
-- descendant: `FunctionExpression ReturnStatement`
-- child: `UnaryExpression > Literal`
-- following sibling: `VariableDeclaration ~ VariableDeclaration`
-- adjacent sibling: `ArrayExpression > Literal + SpreadElement`
-- negation: `:not(ForStatement)`
-- matches-any: `:matches([attr] > :first-child, :last-child)` or `:is([attr] > :first-child, :last-child)`
-- class of AST node: `:statement`, `:expression`, `:declaration`, `:function`, or `:pattern`
+支持以下选择器：
 
-This syntax is very powerful, and can be used to precisely select many syntactic patterns in your code.
+- AST 节点类型：`ForStatement`
+- 通配符（匹配所有节点）：`*`
+- 属性存在：`[attr]`
+- 属性值：`[attr="foo"]` 或 `[attr=123]`
+- 属性正则表达式：`[attr=/foo.*/]`
+- 属性条件：`[attr!="foo"]`、`[attr>2]`、`[attr<3]`、`[attr>=2]` 或 `[attr<=3]`
+- 嵌套属性：`[attr.level2="foo"]`
+- 字段：`FunctionDeclaration > Identifier.id`
+- 第一个或最后一个子节点：`:first-child` 或 `:last-child`
+- 第 n 个子节点（不支持 ax+b）：`:nth-child(2)`
+- 倒数第 n 个子节点（不支持 ax+b）：`:nth-last-child(1)`
+- 后代：`FunctionExpression ReturnStatement`
+- 子节点：`UnaryExpression > Literal`
+- 后续兄弟节点：`VariableDeclaration ~ VariableDeclaration`
+- 相邻兄弟节点：`ArrayExpression > Literal + SpreadElement`
+- 否定：`:not(ForStatement)`
+- 匹配任意项：`:matches([attr] > :first-child, :last-child)` 或 `:is([attr] > :first-child, :last-child)`
+- AST 节点类别：`:statement`、`:expression`、`:declaration`、`:function` 或 `:pattern`
 
-<sup>The examples in this section were adapted from the [esquery](https://github.com/estools/esquery) documentation.</sup>
+这种语法功能强大，可用于精确选择代码中的许多语法模式。
 
-## What can selectors be used for?
+<sup>本节示例改编自 [esquery](https://github.com/estools/esquery) 文档。</sup>
 
-If you're writing custom ESLint rules, you might be interested in using selectors to examine specific parts of the AST. If you're configuring ESLint for your codebase, you might be interested in restricting particular syntax patterns with selectors.
+<a id="what-can-selectors-be-used-for"></a>
 
-### Listening for selectors in rules
+## 选择器有哪些用途？
 
-When writing a custom ESLint rule, you can listen for nodes that match a particular selector as the AST is traversed.
+如果你正在编写自定义 ESLint 规则，可能会想使用选择器检查 AST 的特定部分。如果你正在为代码库配置 ESLint，则可能会想使用选择器限制特定的语法模式。
+
+<a id="listening-for-selectors-in-rules"></a>
+
+### 在规则中监听选择器
+
+编写自定义 ESLint 规则时，可以在遍历 AST 的过程中监听与特定选择器匹配的节点。
 
 ```js
 module.exports = {
@@ -82,18 +90,20 @@ module.exports = {
 };
 ```
 
-Adding `:exit` to the end of a selector will cause the listener to be called when the matching nodes are exited during traversal, rather than when they are entered.
+在选择器末尾添加 `:exit`，会使监听器在遍历过程中退出匹配节点时调用，而不是在进入节点时调用。
 
-If two or more selectors match the same node, their listeners will be called in order of increasing specificity. The specificity of an AST selector is similar to the specificity of a CSS selector:
+如果有两个或更多选择器匹配同一个节点，它们对应的监听器会按特异性从低到高的顺序调用。AST 选择器的特异性与 CSS 选择器类似：
 
-- When comparing two selectors, the selector that contains more class selectors, attribute selectors, and pseudo-class selectors (excluding `:not()`) has higher specificity.
-- If the class/attribute/pseudo-class count is tied, the selector that contains more node type selectors has higher specificity.
+- 比较两个选择器时，包含更多类选择器、属性选择器和伪类选择器（不包括 `:not()`）的选择器特异性更高。
+- 如果类、属性和伪类选择器的数量相同，则包含更多节点类型选择器的选择器特异性更高。
 
-If multiple selectors have equal specificity, their listeners will be called in alphabetical order for that node.
+如果多个选择器的特异性相同，则针对该节点的监听器会按字母顺序调用。
 
-### Restricting syntax with selectors
+<a id="restricting-syntax-with-selectors"></a>
 
-With the [no-restricted-syntax](../rules/no-restricted-syntax) rule, you can restrict the usage of particular syntax in your code. For example, you can use the following configuration to disallow using `if` statements that do not have block statements as their body:
+### 使用选择器限制语法
+
+借助 [no-restricted-syntax](../rules/no-restricted-syntax) 规则，你可以限制代码中特定语法的使用。例如，可以使用以下配置，禁止使用主体不是块语句的 `if` 语句：
 
 ```json
 {
@@ -106,7 +116,7 @@ With the [no-restricted-syntax](../rules/no-restricted-syntax) rule, you can res
 }
 ```
 
-...or equivalently, you can use this configuration:
+……或者，也可以使用以下配置：
 
 ```json
 {
@@ -119,7 +129,7 @@ With the [no-restricted-syntax](../rules/no-restricted-syntax) rule, you can res
 }
 ```
 
-As another example, you can disallow calls to `require()`:
+再举一个例子，你可以禁止调用 `require()`：
 
 ```json
 {
@@ -132,7 +142,7 @@ As another example, you can disallow calls to `require()`:
 }
 ```
 
-Or you can enforce that calls to `setTimeout` always have two arguments:
+或者，你可以强制要求调用 `setTimeout` 时始终传入两个参数：
 
 ```json
 {
@@ -145,17 +155,19 @@ Or you can enforce that calls to `setTimeout` always have two arguments:
 }
 ```
 
-Using selectors in the `no-restricted-syntax` rule can give you a lot of control over problematic patterns in your codebase, without needing to write custom rules to detect each pattern.
+在 `no-restricted-syntax` 规则中使用选择器，可以让你灵活控制代码库中的问题模式，而不必为检测每种模式都编写自定义规则。
 
-### Using regular expressions
+<a id="using-regular-expressions"></a>
 
-You can use regular expressions in attribute selectors. For example, the following selector matches all `Identifier` nodes with a `name` value that starts with "foo":
+### 使用正则表达式
+
+你可以在属性选择器中使用正则表达式。例如，以下选择器会匹配所有 `name` 值以 "foo" 开头的 `Identifier` 节点：
 
 ```text
 Identifier[name=/^foo/]
 ```
 
-You can also use forward slashes in your regular expressions. For example, the following configuration disallows importing from `some/path`:
+你也可以在正则表达式中使用正斜杠。例如，以下配置会禁止从 `some/path` 导入：
 
 ```json
 {
@@ -168,4 +180,4 @@ You can also use forward slashes in your regular expressions. For example, the f
 }
 ```
 
-Note that the `/` character inside the regular expression needs to be escaped (`\/`) so it is not interpreted as the end of the regular expression. Additionally, because the selector is inside a JSON string, the backslash character itself needs to be escaped (`\\`).
+请注意，正则表达式中的 `/` 字符需要转义（`\/`），以免被解释为正则表达式的结束符。此外，由于选择器位于 JSON 字符串中，反斜杠字符本身也需要转义（`\\`）。
