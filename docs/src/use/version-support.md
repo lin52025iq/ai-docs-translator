@@ -3,6 +3,6 @@ eleventyNavigation:
     key: Version Support
     url: https://eslint.org/version-support/
     parent: use eslint
-    title: Version Support
+    title: 版本支持
     order: 10
 ---
