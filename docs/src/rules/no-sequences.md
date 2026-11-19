@@ -4,7 +4,7 @@ rule_type: suggestion
 ---
 
 
-The comma operator includes multiple expressions where only one is expected. It evaluates each operand from left to right and returns the value of the last operand. However, this frequently obscures side effects, and its use is often an accident. Here are some examples of sequences:
+逗号运算符在只需要一个表达式的地方包含多个表达式。它会从左到右计算每个操作数，并返回最后一个操作数的值。不过，这通常会掩盖副作用，而且使用逗号运算符往往是无意的。以下是一些序列表达式示例：
 
 ```js
 let a = (3, 5); // a = 5
@@ -16,14 +16,16 @@ while (a = next(), a && a.length);
 (0, eval)("doSomething();");
 ```
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule forbids the use of the comma operator, with the following exceptions:
+## 规则详情
 
-* In the initialization or update portions of a `for` statement.
-* By default, if the expression sequence is explicitly wrapped in parentheses. This exception can be removed with the `allowInParentheses` option.
+此规则禁止使用逗号运算符，但以下情况除外：
 
-Examples of **incorrect** code for this rule:
+* 在 `for` 语句的初始化部分或更新部分中。
+* 默认情况下，如果表达式序列显式地用括号括起来。可以通过 `allowInParentheses` 选项取消此例外。
+
+此规则的**错误**代码示例：
 
 ::: incorrect { "sourceType": "script" }
 
@@ -49,7 +51,7 @@ with (doSomething(), val) {}
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的**正确**代码示例：
 
 ::: correct { "sourceType": "script" }
 
@@ -75,11 +77,13 @@ with ((doSomething(), val)) {}
 
 :::
 
-### Note about arrow function bodies
+<a id="note-about-arrow-function-bodies"></a>
 
-If an arrow function body is a statement rather than a block, and that statement contains a sequence, you need to use double parentheses around the statement to indicate that the sequence is intentional.
+### 关于箭头函数体的说明
 
-Examples of **incorrect** code for arrow functions:
+如果箭头函数体是语句而不是代码块，并且该语句包含序列表达式，则需要在该语句两侧使用双层括号，以表明该序列表达式是有意使用的。
+
+箭头函数的**错误**代码示例：
 
 ::: incorrect
 
@@ -94,7 +98,7 @@ const qux = () => { return (bar = 123), 10 }
 
 :::
 
-Examples of **correct** code for arrow functions:
+箭头函数的**正确**代码示例：
 
 ::: correct
 
@@ -109,15 +113,17 @@ const qux = () => { return ((bar = 123), 10) }
 
 :::
 
-## Options
+<a id="options"></a>
 
-This rule takes one option, an object, with the following properties:
+## 选项
 
-* `"allowInParentheses"`: If set to `true` (default), this rule allows expression sequences that are explicitly wrapped in parentheses.
+此规则接受一个对象作为选项，该对象具有以下属性：
+
+* `"allowInParentheses"`：如果设为 `true`（默认值），此规则允许显式地用括号括起来的表达式序列。
 
 ### allowInParentheses
 
-Examples of **incorrect** code for this rule with the `{ "allowInParentheses": false }` option:
+使用 `{ "allowInParentheses": false }` 选项时，此规则的**错误**代码示例：
 
 ::: incorrect { "sourceType": "script" }
 
@@ -145,7 +151,7 @@ const foo = (val) => ((console.log('bar'), val));
 
 :::
 
-Examples of **correct** code for this rule with the `{ "allowInParentheses": false }` option:
+使用 `{ "allowInParentheses": false }` 选项时，此规则的**正确**代码示例：
 
 ::: correct
 
@@ -157,10 +163,12 @@ for (i = 0, j = 10; i < j; i++, j--);
 
 :::
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-Disable this rule if sequence expressions with the comma operator are acceptable.
-Another case is where you might want to report all usages of the comma operator, even in a `for` loop. You can achieve this using rule `no-restricted-syntax`:
+## 何时不应使用此规则
+
+如果可以接受使用逗号运算符的序列表达式，请禁用此规则。
+另一种情况是，你可能希望报告逗号运算符的所有用法，包括在 `for` 循环中的用法。可以通过规则 `no-restricted-syntax` 实现：
 
 ```js
 {
