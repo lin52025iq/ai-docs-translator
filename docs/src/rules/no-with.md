@@ -7,15 +7,16 @@ further_reading:
 
 
 
-The `with` statement is potentially problematic because it adds members of an object to the current scope, making it impossible to tell what a variable inside the block actually refers to.
+`with` 语句可能会带来问题，因为它会将对象的成员添加到当前作用域中，使得无法判断代码块中的变量实际指向什么。
 
-## Rule Details
+<a id="rule-details"></a>
+## 规则详情
 
-This rule disallows `with` statements.
+此规则禁止使用 `with` 语句。
 
-If ESLint parses code in strict mode, the parser (instead of this rule) reports the error.
+如果 ESLint 在严格模式下解析代码，则由解析器（而不是此规则）报告错误。
 
-Examples of **incorrect** code for this rule:
+此规则的错误示例：
 
 ::: incorrect { "sourceType": "script" }
 
@@ -29,7 +30,7 @@ with (point) {
 
 :::
 
-Examples of **correct** code for this rule:
+此规则的正确示例：
 
 ::: correct { "sourceType": "script" }
 
@@ -41,10 +42,12 @@ const r = ({x, y}) => Math.sqrt(x * x + y * y);
 
 :::
 
-## Options
+<a id="options"></a>
+## 选项
 
-This rule has no options.
+此规则没有选项。
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
+## 何时不应使用此规则
 
-If you intentionally use `with` statements then you can disable this rule.
+如果你有意使用 `with` 语句，可以禁用此规则。
