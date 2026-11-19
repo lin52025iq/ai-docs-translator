@@ -3,25 +3,27 @@ title: no-mixed-requires
 rule_type: suggestion
 ---
 
-In the Node.js community it is often customary to separate initializations with calls to `require` modules from other variable declarations, sometimes also grouping them by the type of module. This rule helps you enforce this convention.
+在 Node.js 社区中，通常会将通过调用 `require` 初始化模块的语句与其他变量声明分开，有时还会按模块类型分组。此规则可帮助你强制执行这一约定。
 
-## Rule Details
+<a id="rule-details"></a>
 
-When this rule is enabled, each `var` statement must satisfy the following conditions:
+## 规则详情
 
-* either none or all variable declarations must be require declarations (default)
-* all require declarations must be of the same type (grouping)
+启用此规则后，每条 `var` 语句都必须满足以下条件：
 
-This rule distinguishes between six kinds of variable declaration types:
+* 变量声明可以全都不是 require 声明，也可以全都是 require 声明（默认）
+* 所有 require 声明必须属于同一类型（分组）
 
-* `core`: declaration of a required [core module][1]
-* `file`: declaration of a required [file module][2]
-* `module`: declaration of a required module from the [node_modules folder][3]
-* `computed`: declaration of a required module whose type could not be determined (either because it is computed or because require was called without an argument)
-* `uninitialized`: a declaration that is not initialized
-* `other`: any other kind of declaration
+此规则将变量声明分为六种类型：
 
-In this document, the first four types are summed up under the term *require declaration*.
+* `core`：所需[核心模块][1]的声明
+* `file`：所需[文件模块][2]的声明
+* `module`：所需的 [node_modules 文件夹][3]中模块的声明
+* `computed`：无法确定类型的所需模块的声明（可能是因为模块名是计算得出的，也可能是因为调用 require 时没有传入参数）
+* `uninitialized`：未初始化的声明
+* `other`：其他任何类型的声明
+
+本文将前四种类型统称为 *require 声明*。
 
 ```js
 var fs = require('fs'),        // "core"     \
@@ -32,13 +34,15 @@ var fs = require('fs'),        // "core"     \
     bam;                       // "uninitialized"
 ```
 
-## Options
+<a id="options"></a>
 
-This rule can have an object literal option whose two properties have `false` values by default.
+## 选项
 
-Configuring this rule with one boolean option `true` is deprecated.
+此规则可接受一个对象字面量选项，其中两个属性的默认值均为 `false`。
 
-Examples of **incorrect** code for this rule with the default `{ "grouping": false, "allowCall": false }` options:
+使用一个布尔选项 `true` 配置此规则的方式已弃用。
+
+以下示例展示了在默认选项 `{ "grouping": false, "allowCall": false }` 下违反此规则的代码：
 
 ::: incorrect
 
@@ -55,7 +59,7 @@ var async = require('async'),
 
 :::
 
-Examples of **correct** code for this rule with the default `{ "grouping": false, "allowCall": false }` options:
+以下示例展示了在默认选项 `{ "grouping": false, "allowCall": false }` 下符合此规则的代码：
 
 ::: correct
 
@@ -80,9 +84,11 @@ var foo = require('foo' + VERSION),
 
 :::
 
-### grouping
+<a id="grouping"></a>
 
-Examples of **incorrect** code for this rule with the `{ "grouping": true }` option:
+### 分组
+
+以下示例展示了使用 `{ "grouping": true }` 选项时违反此规则的代码：
 
 ::: incorrect
 
@@ -100,9 +106,11 @@ var foo = require('foo'),
 
 :::
 
-### allowCall
+<a id="allowcall"></a>
 
-Examples of **incorrect** code for this rule with the `{ "allowCall": true }` option:
+### 允许调用
+
+以下示例展示了使用 `{ "allowCall": true }` 选项时违反此规则的代码：
 
 ::: incorrect
 
@@ -116,7 +124,7 @@ var async = require('async'),
 
 :::
 
-Examples of **correct** code for this rule with the `{ "allowCall": true }` option:
+以下示例展示了使用 `{ "allowCall": true }` 选项时符合此规则的代码：
 
 ::: correct
 
@@ -130,16 +138,20 @@ var async = require('async'),
 
 :::
 
-## Known Limitations
+<a id="known-limitations"></a>
 
-* The implementation is not aware of any local functions with the name `require` that may shadow Node.js' global `require`.
+## 已知限制
 
-* Internally, the list of core modules is retrieved via `require("repl")._builtinLibs`. If you use different versions of Node.js for ESLint and your application, the list of core modules for each version may be different.
-  The above mentioned `_builtinLibs` property became available in 0.8, for earlier versions a hardcoded list of module names is used as a fallback. If your version of Node.js is older than 0.6 that list may be inaccurate.
+* 此实现无法识别名称为 `require`、可能会遮蔽 Node.js 全局 `require` 的本地函数。
 
-## When Not To Use It
+* 在内部，核心模块列表通过 `require("repl")._builtinLibs` 获取。如果 ESLint 和你的应用使用不同版本的 Node.js，那么各版本的核心模块列表可能不同。
+  上述 `_builtinLibs` 属性从 0.8 版本起可用；对于更早的版本，会使用硬编码的模块名称列表作为回退。如果你的 Node.js 版本早于 0.6，该列表可能不准确。
 
-If you use a pattern such as [UMD][4] where the `require`d modules are not loaded in variable declarations, this rule will obviously do nothing for you.
+<a id="when-not-to-use-it"></a>
+
+## 何时不使用此规则
+
+如果你使用 [UMD][4] 之类的模式，其中由 `require` 加载的模块并未在变量声明中加载，那么此规则显然不会起作用。
 
 [1]: https://nodejs.org/api/modules.html#modules_core_modules
 [2]: https://nodejs.org/api/modules.html#modules_file_modules
