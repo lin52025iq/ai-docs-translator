@@ -1,16 +1,18 @@
 ---
-title: Buttons
+title: 按钮
 ---
 
 {% from 'components/button.macro.html' import button %}
 
-There are three types of buttons: primary, secondary, and "ghost". The button styles can be applied to buttons and/or links that look like buttons.
+按钮有三种类型：主要、次要和“ghost”。按钮样式可应用于按钮和/或看起来像按钮的链接。
 
-To render the proper semantic element, provide the kind of behavior that is expected: `action` or `link` value. If the button performs an action, it is rendered as a `button`. If the button links somewhere, it renders as a `<a>`.
+要呈现正确的语义元素，请提供预期行为的类型：`action` 或 `link` 值。如果按钮执行操作，则会将其呈现为 `button`。如果按钮链接到某处，则会将其呈现为 `<a>`。
 
-The button macro will default to `link`, which will render an <code>&lt;a&gt;</code> tag that looks like a button. If you provide `action` as a value for `behavior`, it indicates that it is a button _that performs an action_ and is therefore rendered as a `<button type="button">`.
+按钮宏默认使用 `link`，这会呈现一个看起来像按钮的 <code>&lt;a&gt;</code> 标签。如果将 `action` 作为 `behavior` 的值提供，则表示这是一个 _执行操作的_ 按钮，因此会将其呈现为 `<button type="button">`。
 
-## Usage
+<a id="usage"></a>
+
+## 用法
 
 ```html
 <!-- import the macro in the page(s) you want to render the button(s) in -->
@@ -25,7 +27,9 @@ The button macro will default to `link`, which will render an <code>&lt;a&gt;</c
 } }
 ```
 
-## Examples
+<a id="examples"></a>
+
+## 示例
 
 {{ button({ behavior: "action", type: "primary" }) }}
 {{ button({ behavior: "action", text: "I perform an action", type: "secondary" }) }}
