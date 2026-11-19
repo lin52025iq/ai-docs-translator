@@ -4,16 +4,16 @@ further_reading:
 - https://leanpub.com/understandinges6/read/#leanpub-auto-generators
 ---
 
-Enforces consistent spacing around the asterisk in generator functions.
+强制生成器函数中星号周围的空格保持一致。
 
 ::: important
-This rule was removed in ESLint v1.0.0 and replaced by the [generator-star-spacing](generator-star-spacing) rule.
+此规则已在 ESLint v1.0.0 中移除，并由 [generator-star-spacing](generator-star-spacing) 规则取代。
 :::
 
-Generators are a new type of function in ECMAScript 6 that can return multiple values over time.
-These special functions are indicated by placing an `*` after the `function` keyword.
+生成器是 ECMAScript 6 中一种新型函数，可以随时间返回多个值。
+这种特殊函数通过在 `function` 关键字后放置 `*` 来表示。
 
-Here is an example of a generator function:
+下面是生成器函数的示例：
 
 ```js
 function* generator() {
@@ -22,7 +22,7 @@ function* generator() {
 }
 ```
 
-This is also valid:
+下面这种写法也有效：
 
 ```js
 function *generator() {
@@ -31,7 +31,7 @@ function *generator() {
 }
 ```
 
-This is valid as well:
+下面这种写法同样有效：
 
 ```js
 function * generator() {
@@ -40,71 +40,74 @@ function * generator() {
 }
 ```
 
-To keep a sense of consistency when using generators this rule enforces a single position for the `*`.
+为使生成器的用法保持一致，此规则会强制 `*` 只能放在一个固定位置。
 
-## Rule Details
+<a id="rule-details"></a>
 
-This rule enforces that the `*` is either placed next to the `function` keyword or the name of the function. The single
-option for this rule is a string specifying the placement of the asterisk. For this option you may pass
-`"start"`, `"middle"` or `"end"`. The default is `"end"`.
+## 规则详情
 
-You can set the style in configuration like this:
+此规则会强制将 `*` 放在 `function` 关键字旁边或函数名称旁边。此规则唯一的选项是一个字符串，用于指定星号的位置。该选项可设为
+`"start"`、`"middle"` 或 `"end"`。默认值为 `"end"`。
+
+可以像这样在配置中设置样式：
 
 ```json
 "generator-star": ["error", "start"]
 ```
 
-When using `"start"` this placement will be enforced:
+使用 `"start"` 时，将强制采用以下位置：
 
 ```js
 function* generator() {
 }
 ```
 
-When using `"middle"` this placement will be enforced:
+使用 `"middle"` 时，将强制采用以下位置：
 
 ```js
 function * generator() {
 }
 ```
 
-When using `"end"` this placement will be enforced:
+使用 `"end"` 时，将强制采用以下位置：
 
 ```js
 function *generator() {
 }
 ```
 
-When using the expression syntax `"start"` will be enforced here:
+使用表达式语法时，`"start"` 将强制采用以下写法：
 
 ```js
 var generator = function* () {
 }
 ```
 
-When using the expression syntax `"middle"` will be enforced here:
+使用表达式语法时，`"middle"` 将强制采用以下写法：
 
 ```js
 var generator = function * () {
 }
 ```
 
-When using the expression syntax `"end"` will be enforced here:
+使用表达式语法时，`"end"` 将强制采用以下写法：
 
 ```js
 var generator = function *() {
 }
 ```
 
-When using the expression syntax this is valid for both `"start"` and `"end"`:
+使用表达式语法时，以下写法对 `"start"` 和 `"end"` 都有效：
 
 ```js
 var generator = function*() {
 }
 ```
 
-The shortened object literal syntax for generators is not affected by this rule.
+生成器的对象字面量简写语法不受此规则影响。
 
-## When Not To Use It
+<a id="when-not-to-use-it"></a>
 
-If your project will not be using generators you do not need this rule.
+## 不适用场景
+
+如果项目中不会使用生成器，则无需使用此规则。
