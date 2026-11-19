@@ -1,0 +1,50 @@
+{
+    "schemaVersion": 1,
+    "status": "conflict",
+    "origin": "local_validation",
+    "projectId": "eslint-docs",
+    "locale": "zh-CN",
+    "sourcePath": "docs/src/rules/consistent-this.md",
+    "createdAt": "2026-11-19T11:01:59.973Z",
+    "reason": "文件校验未通过",
+    "artifacts": {
+        "before": "before/docs/src/rules/consistent-this.md",
+        "after": "after/docs/src/rules/consistent-this.md",
+        "previous": "previous/docs/src/rules/consistent-this.md"
+    },
+    "translationModel": "gpt-6-luna",
+    "translationResponseId": "resp_02091e6288ea435b016afed7085c8087d29f1cbad4e1eb5abe",
+    "contextHash": "64ced0491d8917d86d3057d903a53f0f98ed63c72e258488e934ac7f76453200",
+    "diagnostics": [
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode",
+                "path": "docs/src/rules/consistent-this.md"
+            },
+            {
+                "message": "inlineCode 缺少：[]。多出：[\"this\"]",
+                "path": "docs/src/rules/consistent-this.md"
+            }
+        ],
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode",
+                "path": "docs/src/rules/consistent-this.md"
+            },
+            {
+                "message": "inlineCode 缺少：[\"\\\"that\\\"\",\"\\\"that\\\"\",\"\\\"that\\\"\",\"\\\"that\\\"\"]。多出：[\"this\"]",
+                "path": "docs/src/rules/consistent-this.md"
+            }
+        ],
+        [
+            {
+                "message": "译文改变了应保留的内容：inlineCode",
+                "path": "docs/src/rules/consistent-this.md"
+            },
+            {
+                "message": "inlineCode 缺少：[]。多出：[\"this\"]",
+                "path": "docs/src/rules/consistent-this.md"
+            }
+        ]
+    ]
+}
