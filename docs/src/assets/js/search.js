@@ -43,6 +43,8 @@ function fetchSearchResults(query) {
 	return index
 		.search(query, {
 			facetFilters: ["tags:docs"],
+			highlightPreTag: "\uE000",
+			highlightPostTag: "\uE001",
 		})
 		.then(({ hits }) => hits);
 }
@@ -100,21 +102,45 @@ function displaySearchResults(results) {
 		for (const result of results) {
 			const link = document.createElement("a");
 			link.href = result.url;
-			if (link.origin !== "https://eslint.org" || !link.pathname.startsWith("/docs/")) {
+			if (
+				link.origin !== "https://eslint.org" ||
+				!link.pathname.startsWith("/docs/")
+			) {
 				continue;
 			}
-			const localPath = link.pathname.replace(/^\/docs\/(?:latest|head)(?=\/|$)/u, "");
-			if (document.documentElement.lang === "zh-CN" && localPath !== link.pathname) {
-				link.href = window.location.origin + (localPath || "/") + link.search + link.hash;
+			const localPath = link.pathname.replace(
+				/^\/docs\/(?:latest|head)(?=\/|$)/u,
+				"",
+			);
+			if (
+				document.documentElement.lang === "zh-CN" &&
+				localPath !== link.pathname
+			) {
+				link.href =
+					window.location.origin + (localPath || "/") + link.search + link.hash;
 			}
-			link.textContent = result.hierarchy.lvl0;
+			link.textContent = result.hierarchy?.lvl0 ?? "";
 
 			const heading = document.createElement("h2");
 			heading.className = "search-results__item__title";
 			heading.append(link);
 			const context = document.createElement("p");
 			context.className = "search-results__item__context";
-			context.textContent = result.content || Object.values(result.hierarchy).filter(Boolean).at(-1);
+			const highlights = result._highlightResult;
+			const snippet =
+				highlights?.content?.value ??
+				Object.values(highlights?.hierarchy ?? {}).filter(Boolean).at(-1)?.value;
+			for (const [index, fragment] of String(snippet ?? "")
+				.split(/\uE000([^\uE001]*)\uE001/u)
+				.entries()) {
+				if (index % 2 === 0) {
+					context.append(fragment);
+				} else {
+					const emphasis = document.createElement("em");
+					emphasis.textContent = fragment;
+					context.append(emphasis);
+				}
+			}
 
 			const listItem = document.createElement("li");
 			listItem.classList.add("search-results__item");

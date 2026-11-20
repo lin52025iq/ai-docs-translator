@@ -10,7 +10,7 @@
         </p>
         {%- if params.replacedBy|length -%}
         <p class="rule__description">{{ site.docs_ui.replaced_by or "Replaced by" }} {{ replacementRuleList({ specifiers: params.replacedBy }) }}</p>
-        {%- else -%}<p class="rule__description">{{ params.description | markdownInline | safe }}</p>
+        {%- else -%}<p class="rule__description">{{ (params.description or "") | markdownInline | safe }}</p>
         {%- endif -%}
         {%- elseif params.removed == true -%}
         <p class="rule__name">
@@ -19,7 +19,7 @@
         </p>
         {%- if params.replacedBy|length -%}
         <p class="rule__description">{{ site.docs_ui.replaced_by or "Replaced by" }} {{ replacementRuleList({ specifiers: params.replacedBy }) }}</p>
-        {%- else -%}<p class="rule__description">{{ params.description | markdownInline | safe }}</p>
+        {%- else -%}<p class="rule__description">{{ (params.description or "") | markdownInline | safe }}</p>
         {%- endif -%}
         {%- else -%}
         <div class="rule__name_wrapper">
@@ -28,7 +28,7 @@
                 <p class="frozen"> ❄️ <span class="visually-hidden">{{ site.docs_ui.frozen or "Frozen" }}</span></p>
             {%- endif -%}
         </div>
-        <p class="rule__description">{{ params.description | markdownInline | safe }}</p>
+        <p class="rule__description">{{ (params.description or "") | markdownInline | safe }}</p>
         {%- endif -%}
     </div>
     {%- if params.removed == undefined -%}
