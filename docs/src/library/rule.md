@@ -2,15 +2,15 @@
 title: 规则
 ---
 
-规则组件是一个定义在 `/components/rule.macro.html` 中的宏。该宏接受一组用于呈现规则的参数。
+规则组件是定义在 `/components/rule.macro.html` 中的宏。该宏接受一组用于呈现规则的参数。
 
-规则包含：
+规则包含以下内容：
 
 - 名称
 - 描述
 - 用于指示规则是否已弃用或移除的标志：分别为 `deprecated` 和 `removed`
-- 一个 replacedBy 值，用于指示该规则被哪个规则替换（如果适用）
-- 一个 categories 对象，用于指示规则所属的类别
+- `replacedBy` 值，用于指示该规则被哪个规则替换（如果适用）
+- `categories` 对象，用于指示规则所属的类别
 
 <a id="usage"></a>
 
@@ -31,7 +31,7 @@ getters.', categories: { recommended: true, fixable: true, hasSuggestions: false
 
 ## 示例
 
-{% from 'components/rule.macro.html' import rule %}
+{% from 'components/rule.macro.html' import rule with context %}
 
 {{ rule({
     name: "array-bracket-newline",
@@ -66,3 +66,4 @@ getters.', categories: { recommended: true, fixable: true, hasSuggestions: false
         hasSuggestions: false
     }
 }) }}
+
