@@ -42,6 +42,7 @@
 		toc = document.getElementById("js-toc-panel"),
 		body = document.getElementsByTagName("body")[0],
 		open = false;
+	const tocLabel = toc_trigger?.textContent;
 
 	if (toc && matchMedia) {
 		const mq = window.matchMedia("(max-width: 1023px)");
@@ -52,10 +53,9 @@
 	// media query change
 	function WidthChange(mq) {
 		if (mq.matches && toc_trigger) {
-			let text = toc_trigger.innerText;
 			let headingButton = document.createElement("button");
 			headingButton.setAttribute("aria-expanded", "false");
-			headingButton.innerText = text;
+			headingButton.textContent = tocLabel;
 			toc_trigger.innerHTML = "";
 
 			toc_trigger.appendChild(headingButton);
@@ -65,7 +65,7 @@
 			toc_trigger.setAttribute("aria-expanded", "false");
 			headingButton.addEventListener("click", toggleTOC, true);
 		} else {
-			toc_trigger.innerHTML = "Table of Contents";
+			toc_trigger.textContent = tocLabel;
 			toc.setAttribute("data-open", "true");
 		}
 	}
@@ -298,6 +298,7 @@ if (index) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+	anchors.options.ariaLabel = document.documentElement.dataset.sectionLink;
 	anchors.add(
 		".docs-content h2:not(.c-toc__label), .docs-content h3, .docs-content h4",
 	);
