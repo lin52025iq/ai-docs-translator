@@ -71,3 +71,73 @@ edit_link:
     start_with: https://github.com/lin52025iq/ai-docs-translator/blob/eslint-docs-zh-cn/docs/
     start_with_latest: https://github.com/lin52025iq/ai-docs-translator/blob/eslint-docs-zh-cn/docs/
     text: 在 GitHub 查看此页
+
+docs_ui:
+    category_names:
+        problem: 可能的问题
+        suggestion: 建议
+        layout: 布局与格式
+        deprecated: 已弃用
+        removed: 已移除
+    category_descriptions:
+        problem: 这些规则帮助发现代码中可能存在的逻辑错误。
+        suggestion: 这些规则建议采用其他写法。
+        layout: 这些规则检查代码的排版和格式。
+        deprecated: '根据<a href="/use/rule-deprecation">弃用政策</a>，这些规则已弃用，并已由较新的规则取代。'
+        removed: '这些来自早期版本的规则已移除，请参阅<a href="/use/rule-deprecation">弃用政策</a>。'
+    flag_descriptions:
+        unstable_native_nodejs_ts_config: 使用 Node.js 原生加载 TypeScript 配置。
+    toc: "目录"
+    index: "文档索引"
+    search: "搜索"
+    search_hint: "输入时会显示并更新搜索结果。"
+    clear_search: "清除搜索"
+    no_results: "未找到结果。"
+    powered_by: "搜索由以下服务提供"
+    versions: "文档版本"
+    versions_title: "ESLint 文档版本"
+    versions_intro: "选择要查看的文档版本"
+    previous_versions: "历史版本"
+    version: "版本"
+    version_hint: "选择版本后，将前往对应版本的 ESLint 文档。"
+    languages: "语言"
+    language_intro: "选择你的语言"
+    typescript: "由 TypeScript 检查"
+    typescript_check: "使用 TypeScript 时可以关闭此规则，因为 TypeScript 编译器会执行这项检查。"
+    related_rules: "相关规则"
+    rule_introduced: "此规则自 ESLint v{version} 起提供"
+    rule_removed: "，并在 v{version} 中移除"
+    further_reading: "延伸阅读"
+    resources: "资源"
+    rule_source: "规则源码"
+    tests_source: "测试源码"
+    rule_categories: "规则分类"
+    recommended: "推荐"
+    fixable: "可修复"
+    suggestions: "建议"
+    frozen: "已冻结"
+    deprecated: "已弃用"
+    removed: "已移除"
+    replaced_by: "替代规则"
+    rule_deprecated: "此规则从 ESLint v{version} 开始弃用。"
+    rule_removal: "此规则将在 v{version} 中移除。"
+    no_replacement: "暂无替代规则。"
+    replacement_prefix: "请改用"
+    corresponding_rule: "相应规则"
+    replacement_plugin: "请改用 {plugin} 中的{rule}。"
+    learn_more: "了解更多"
+    important: "重要"
+    warning: "警告"
+    tip: "提示"
+    skip: "跳转到正文"
+    scroll_top: "返回顶部"
+    copied: "已复制"
+    copy_failed: "复制失败"
+    component_library: "文档组件库"
+    component_intro: "这里列出了文档所用的短代码、宏和局部模板。每个组件都附有使用说明。"
+    playground: "在演练场中打开"
+    copy: "将代码复制到剪贴板"
+    intro_recommended: "在[配置文件](../use/configure/configuration-files#use-predefined-configurations)中使用 `@eslint/js` 的 `recommended` 配置会启用此规则。"
+    intro_fixable: "可以用[命令行](../use/command-line-interface#--fix)选项 `--fix` 自动修复此规则报告的部分问题。"
+    intro_suggestions: "可以通过编辑器中的[建议](../use/core-concepts#rule-suggestions)手动修复此规则报告的部分问题。"
+    intro_frozen: "此规则已[冻结](../contribute/core-rules#frozen-rules)，暂停接受功能请求。"

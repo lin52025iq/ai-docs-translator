@@ -23,6 +23,7 @@ const resultsLiveRegion = document.querySelector(
 	"#search-results-announcement",
 );
 const searchInput = document.querySelector("#search");
+const noResultsText = searchInput?.closest(".search").dataset.noResults;
 const searchClearBtn = document.querySelector("#search__clear-btn");
 const poweredByLink = document.querySelector(".search_powered-by-wrapper");
 let activeIndex = -1;
@@ -66,8 +67,8 @@ function clearSearchResults(removeEventListener = false) {
  * @returns {void} - This function doesn't return anything.
  */
 function showNoResults() {
-	resultsLiveRegion.innerHTML = "No results found.";
-	resultsElement.innerHTML = "No results found.";
+	resultsLiveRegion.textContent = noResultsText;
+	resultsElement.textContent = noResultsText;
 	resultsElement.setAttribute("data-results", "false");
 }
 
@@ -97,19 +98,30 @@ function displaySearchResults(results) {
 		activeIndex = -1;
 
 		for (const result of results) {
+			const link = document.createElement("a");
+			link.href = result.url;
+			if (link.origin !== "https://eslint.org" || !link.pathname.startsWith("/docs/")) {
+				continue;
+			}
+			const localPath = link.pathname.replace(/^\/docs\/(?:latest|head)(?=\/|$)/u, "");
+			if (document.documentElement.lang === "zh-CN" && localPath !== link.pathname) {
+				link.href = window.location.origin + (localPath || "/") + link.search + link.hash;
+			}
+			link.textContent = result.hierarchy.lvl0;
+
+			const heading = document.createElement("h2");
+			heading.className = "search-results__item__title";
+			heading.append(link);
+			const context = document.createElement("p");
+			context.className = "search-results__item__context";
+			context.textContent = result.content || Object.values(result.hierarchy).filter(Boolean).at(-1);
+
 			const listItem = document.createElement("li");
 			listItem.classList.add("search-results__item");
-			const maxLvl = Math.max(
-				...Object.keys(result._highlightResult.hierarchy).map(k =>
-					Number(k.substring(3)),
-				),
-			);
-			listItem.innerHTML = `
-                <h2 class="search-results__item__title"><a href="${result.url}">${result.hierarchy.lvl0}</a></h2>
-                <p class="search-results__item__context">${typeof result._highlightResult.content !== "undefined" ? result._highlightResult.content.value : result._highlightResult.hierarchy[`lvl${maxLvl}`].value}</p>
-            `.trim();
+			listItem.append(heading, context);
 			list.append(listItem);
 		}
+		if (!list.childElementCount) showNoResults();
 	} else {
 		showNoResults();
 	}

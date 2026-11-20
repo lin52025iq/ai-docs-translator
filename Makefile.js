@@ -233,6 +233,12 @@ function generateRuleIndexPage() {
 
 	JSON.stringify(ruleTypesData, null, 4).to(docsSiteOutputFile);
 	JSON.stringify(meta, null, 4).to(docsSiteMetaOutputFile);
+	const descriptions = Object.fromEntries(
+		Object.entries(meta).map(([name, rule]) => [name, rule.docs.description]),
+	);
+	(JSON.stringify(descriptions, null, "\t") + "\n").to(
+		path.join(DOCS_DATA_DIR, "rule_descriptions.json"),
+	);
 }
 
 /**

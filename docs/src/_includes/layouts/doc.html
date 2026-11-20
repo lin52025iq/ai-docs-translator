@@ -3,8 +3,7 @@ layout: base.html
 ---
 
 {% include "partials/docs-header.html" %}
-{% from 'components/rule-categories.macro.html' import ruleCategories %}
-{% from 'components/alert.macro.html' import important %}
+{% from 'components/rule-categories.macro.html' import ruleCategories with context %}
 
 <div class="docs-wrapper">
     <div class="docs-nav">
@@ -22,9 +21,9 @@ layout: base.html
 
     {% if handled_by_typescript %}
         {% set handled_by_typescript_content %}
-            <h2 id="handled_by_typescript">Handled by TypeScript</h2>
+            <h2 id="handled_by_typescript">{{ site.docs_ui.typescript }}</h2>
             <p>
-                It is safe to disable this rule when using TypeScript because TypeScript's compiler enforces this check.
+                {{ site.docs_ui.typescript_check }}
             </p>
             {% if extra_typescript_info %}
                 <p>
@@ -38,7 +37,7 @@ layout: base.html
 
     {% if related_rules %}
         {% set related_rules_content %}
-            <h2 id="related-rules">Related Rules</h2>
+            <h2 id="related-rules">{{ site.docs_ui.related_rules }}</h2>
             {% related_rules related_rules %}
         {% endset %}
 
@@ -47,9 +46,8 @@ layout: base.html
 
     {% if added_version %}
         {% set version_content %}
-            <h2 id="version">Version</h2>
-            <p>This rule was introduced in ESLint v{{added_version}}{% if removed_version%}
-                 and removed in v{{removed_version}}{% endif %}.</p>
+            <h2 id="version">{{ site.docs_ui.version }}</h2>
+            <p>{{ site.docs_ui.rule_introduced | replace("{version}", added_version) }}{% if removed_version %}{{ site.docs_ui.rule_removed | replace("{version}", removed_version) }}{% endif %}{{ "。" if site.language.code == "zh-CN" else "." }}</p>
         {% endset %}
 
         {% set all_content = [all_content, version_content] | join %}
@@ -57,7 +55,7 @@ layout: base.html
 
     {% if further_reading %}
         {% set further_reading_content %}
-            <h2 id="further-reading">Further Reading</h2>
+            <h2 id="further-reading">{{ site.docs_ui.further_reading }}</h2>
             {% for url in further_reading %}
                 {% link url %}
             {% endfor %}
@@ -68,10 +66,10 @@ layout: base.html
 
     {% if rule_meta %}
         {% set resources_content %}
-            <h2 id="resources">Resources</h2>
+            <h2 id="resources">{{ site.docs_ui.resources }}</h2>
             <ul>
-                <li><a href="https://github.com/eslint/eslint/blob/main/lib/rules/{{ title }}.js">Rule source</a></li>
-                <li><a href="https://github.com/eslint/eslint/blob/main/tests/lib/rules/{{ title }}.js">Tests source</a></li>
+                <li><a href="https://github.com/eslint/eslint/blob/main/lib/rules/{{ title }}.js">{{ site.docs_ui.rule_source }}</a></li>
+                <li><a href="https://github.com/eslint/eslint/blob/main/tests/lib/rules/{{ title }}.js">{{ site.docs_ui.tests_source }}</a></li>
             </ul>
         {% endset %}
         {% set all_content = [all_content, resources_content] | join %}
@@ -83,7 +81,8 @@ layout: base.html
                 <h1>{{ title }}</h1>
                 {% if rule_meta %}
                     {%set id = true if (rule_meta.docs.recommended or rule_meta.fixable or rule_meta.hasSuggestions) else false %}
-                    <p>{{ rule_meta.docs.description | markdown | safe }}</p>
+                    {% set description = (rule_descriptions[title] or rule_meta.docs.description) if site.language.code == "zh-CN" else rule_meta.docs.description %}
+                    <p>{{ description | markdownInline | safe }}</p>
                     {{ ruleCategories({
                     index: id,
                     recommended: rule_meta.docs.recommended,
@@ -94,19 +93,22 @@ layout: base.html
 
                     {% if rule_meta.deprecated %}
                         {% set deprecated_description %}
-                            <p>This rule was <strong>deprecated</strong> in ESLint v{{ rule_meta.deprecated.deprecatedSince }}.
+                            <p>{{ site.docs_ui.rule_deprecated | replace("{version}", rule_meta.deprecated.deprecatedSince) }}
    
                             {% if rule_meta.deprecated.availableUntil %}
-                                It will be removed in <strong>v{{ rule_meta.deprecated.availableUntil }}</strong>.
+                                {{ site.docs_ui.rule_removal | replace("{version}", rule_meta.deprecated.availableUntil) }}
                             {% endif %}
 
                             {% if rule_meta.deprecated.replacedBy.length === 0 %}
-                                There is no replacement rule.
+                                {{ site.docs_ui.no_replacement }}
                             {% elif rule_meta.deprecated.replacedBy[0].plugin %}
-                                Please use the <a href="{{ rule_meta.deprecated.replacedBy[0].rule.url }}">corresponding rule</a> in <a href="{{ rule_meta.deprecated.replacedBy[0].plugin.url }}">{{ rule_meta.deprecated.replacedBy[0].plugin.name }}</a>.
+                                {% set replacementRule %}<a href="{{ rule_meta.deprecated.replacedBy[0].rule.url }}">{{ site.docs_ui.corresponding_rule }}</a>{% endset %}
+                                {% set replacementPlugin %}<a href="{{ rule_meta.deprecated.replacedBy[0].plugin.url }}">{{ rule_meta.deprecated.replacedBy[0].plugin.name }}</a>{% endset %}
+                                {{ site.docs_ui.replacement_plugin | replace("{rule}", replacementRule) | replace("{plugin}", replacementPlugin) | safe }}
                             {% else %}
-                                Please replace the rule with <a href="{{ rule_meta.deprecated.replacedBy[0].rule.name }}">{{ rule_meta.deprecated.replacedBy[0].rule.name }}</a>.
+                                {{ site.docs_ui.replacement_prefix }} <a href="{{ rule_meta.deprecated.replacedBy[0].rule.name }}">{{ rule_meta.deprecated.replacedBy[0].rule.name }}</a>{{ "。" if site.language.code == "zh-CN" else "." }}
                             {% endif %}
+                            </p>
                         {% endset %}
 
                         {% important deprecated_description, rule_meta.deprecated.url %}
@@ -147,12 +149,12 @@ layout: base.html
         </div>
     </div>
 
-    <a id="scroll-up-btn" href="#site_top" aria-label="Scroll to top">
+    <a id="scroll-up-btn" href="#site_top" aria-label="{{ site.docs_ui.scroll_top }}">
         <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"><line x1="12" x2="12" y1="19" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
     </a>
 </div>
 
-<div id="copy-announcement" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+<div id="copy-announcement" class="visually-hidden" aria-live="polite" aria-atomic="true" data-copied="{{ site.docs_ui.copied }}" data-copy-failed="{{ site.docs_ui.copy_failed }}"></div>
 
 <script>
     (function() {
@@ -166,16 +168,16 @@ layout: base.html
                 navigator.clipboard
                     .writeText(copyText)
                     .then(() => {
-                        announcementRegion.innerHTML = "Copied!";
+                        announcementRegion.textContent = announcementRegion.dataset.copied;
                         copyBtn.setAttribute("data-copied", "true");
 
                         setTimeout(() => {
                             copyBtn.removeAttribute("data-copied");
-                            announcementRegion.innerHTML = "";
+                            announcementRegion.textContent = "";
                         }, 2000);
                     })
                     .catch((err) => {
-                        announcementRegion.innerHTML = "Failed to copy!";
+                        announcementRegion.textContent = announcementRegion.dataset.copyFailed;
                         console.error("Clipboard write failed: ", err);
                     });
             };
