@@ -8,8 +8,8 @@ hook: "versions-page"
 {%- from 'components/hero.macro.html' import hero %}
 
 {{ hero({
-    title: "ESLint Versions",
-    supporting_text: "Choose the documentation version"
+    title: site.docs_ui.versions_title,
+    supporting_text: site.docs_ui.versions_intro
 }) }}
 
 <section class="versions-section section">
