@@ -14,7 +14,7 @@ translation:
   requestTimeoutMs: 300000
   maxParallelFiles: 6
   scope:
-    include: ['docs/**/*.md', 'docs/**/*.mdx']
+    include: ['docs/**/*.md', 'docs/**/*.mdx', docs/src/_data/rule_descriptions.json]
   glossary: glossary.yml
   prompts:
     common: prompts/common.md
@@ -25,6 +25,10 @@ validation:
       cwd: snapshot
       stdin: true
       command: [node, '{configDir}/validate-markdown.mjs', '{path}']
+    - include: [docs/src/_data/rule_descriptions.json]
+      cwd: snapshot
+      stdin: true
+      command: [node, '{configDir}/validate-rule-descriptions.mjs', '{path}']
   global:
     command: [bash, docs/tools/localization-build.sh]
 deployment:
