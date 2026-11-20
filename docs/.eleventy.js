@@ -143,7 +143,11 @@ module.exports = function (eleventyConfig) {
 		markdownForFilter.render(value),
 	);
 	eleventyConfig.addFilter("markdownInline", value =>
-		markdownForFilter.renderInline(value),
+		markdownForFilter.renderInline(value).replace(/<code>(.*?)<\/code>/gu, (_, code) => {
+			// Markdown pages parse their rendered templates again.
+			const literal = code.replace(/[().-]/gu, char => `&#${char.codePointAt(0)};`);
+			return `<code>${literal}</code>`;
+		}),
 	);
 
 	/*
