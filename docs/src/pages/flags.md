@@ -50,7 +50,7 @@ ESLint 通过功能标志提供实验性功能和未来可能引入的破坏性�
     </thead>
     <tbody>
 {%- for name, desc in flags.active -%}
-        <tr><td><code>{{name}}</code></td><td>{{desc}}</td></tr>
+        <tr><td><code>{{name}}</code></td><td>{{ site.docs_ui.flag_descriptions[name] or desc }}</td></tr>
 {%- endfor -%}
     </tbody>
 </table>
