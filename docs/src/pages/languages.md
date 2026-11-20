@@ -8,8 +8,8 @@ hook: "languages-page"
 {%- from 'components/hero.macro.html' import hero %}
 
 {{ hero({
-    title: "Languages",
-    supporting_text: "Choose your language"
+    title: site.docs_ui.languages,
+    supporting_text: site.docs_ui.language_intro
 }) }}
 
 <section class="languages-section section">
