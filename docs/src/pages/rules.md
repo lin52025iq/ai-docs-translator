@@ -8,8 +8,8 @@ eleventyNavigation:
     order: 5
 ---
 
-{% from 'components/rule-categories.macro.html' import ruleCategories, recommended, fixable, hasSuggestions %}
-{% from 'components/rule.macro.html' import rule %}
+{% from 'components/rule-categories.macro.html' import ruleCategories with context %}
+{% from 'components/rule.macro.html' import rule with context %}
 
 Rules in ESLint are grouped by type to help you understand their purpose. Each rule has emojis denoting:
 
@@ -23,9 +23,9 @@ Rules in ESLint are grouped by type to help you understand their purpose. Each r
 
 {%- for type, content in rules.types -%}
 
-<h2 id="{{ rules_categories[type].displayName | slugify }}"> {{ rules_categories[type].displayName }} </h2>
+<h2 id="{{ rules_categories[type].displayName | slugify }}"> {{ site.docs_ui.category_names[type] or rules_categories[type].displayName }} </h2>
 
-{{ rules_categories[type].description | safe }}
+{{ (site.docs_ui.category_descriptions[type] or rules_categories[type].description) | safe }}
 
     {%- for the_rule in content -%}
 
@@ -34,7 +34,7 @@ Rules in ESLint are grouped by type to help you understand their purpose. Each r
     {%- endif -%}
 
     {%- set name_value = the_rule.name -%}
-    {%- set description_value = the_rule.description -%}
+    {%- set description_value = (rule_descriptions[the_rule.name] or the_rule.description) if site.language.code == 'zh-CN' else the_rule.description -%}
     {%- set isRecommended = the_rule.recommended -%}
     {%- set isFrozen = the_rule.frozen -%}
     {%- set isFixable = the_rule.fixable -%}
@@ -57,9 +57,9 @@ Rules in ESLint are grouped by type to help you understand their purpose. Each r
 
 {%- if rules.deprecated -%}
 
-<h2 id="{{ rules_categories.deprecated.displayName | slugify }}">{{ rules_categories.deprecated.displayName }}</h2>
+<h2 id="{{ rules_categories.deprecated.displayName | slugify }}">{{ site.docs_ui.category_names.deprecated or rules_categories.deprecated.displayName }}</h2>
 
-{{ rules_categories.deprecated.description | safe }}
+{{ (site.docs_ui.category_descriptions.deprecated or rules_categories.deprecated.description) | safe }}
 
 {%- for the_rule in rules.deprecated -%}
 {%- set name_value = the_rule.name -%}
@@ -84,9 +84,9 @@ Rules in ESLint are grouped by type to help you understand their purpose. Each r
 
 {%- if rules.removed -%}
 
-<h2 id="{{ rules_categories.removed.displayName | slugify }}">{{ rules_categories.removed.displayName }}</h2>
+<h2 id="{{ rules_categories.removed.displayName | slugify }}">{{ site.docs_ui.category_names.removed or rules_categories.removed.displayName }}</h2>
 
-{{ rules_categories.removed.description | safe }}
+{{ (site.docs_ui.category_descriptions.removed or rules_categories.removed.description) | safe }}
 
 {%- for the_rule in rules.removed -%}
 {%- set name_value = the_rule.removed -%}

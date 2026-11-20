@@ -46,7 +46,7 @@ The following flags are currently available for use in ESLint.
     </thead>
     <tbody>
 {%- for name, desc in flags.active -%}
-        <tr><td><code>{{name}}</code></td><td>{{desc}}</td></tr>
+        <tr><td><code>{{name}}</code></td><td>{{ site.docs_ui.flag_descriptions[name] or desc }}</td></tr>
 {%- endfor -%}
     </tbody>
 </table>

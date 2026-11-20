@@ -27,7 +27,7 @@ getters.', categories: { recommended: true, fixable: true, hasSuggestions: false
 
 ## Examples
 
-{% from 'components/rule.macro.html' import rule %}
+{% from 'components/rule.macro.html' import rule with context %}
 
 {{ rule({
     name: "array-bracket-newline",

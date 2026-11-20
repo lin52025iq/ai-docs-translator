@@ -13,7 +13,7 @@ ruleCategories({ recommended: true, fixable: true, hasSuggestions: true }) } }
 
 ### Example
 
-{% from 'components/rule-categories.macro.html' import ruleCategories, recommended, fixable, hasSuggestions %}
+{% from 'components/rule-categories.macro.html' import ruleCategories, recommended, fixable, hasSuggestions with context %}
 
 {{ ruleCategories({
         recommended: true,

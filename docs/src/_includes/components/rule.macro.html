@@ -6,47 +6,47 @@
         {%- if params.deprecated == true -%}
         <p class="rule__name">
             {{ params.name }}
-            <span class="rule__status">deprecated</span>
+            <span class="rule__status">{{ site.docs_ui.deprecated or "deprecated" }}</span>
         </p>
         {%- if params.replacedBy|length -%}
-        <p class="rule__description">Replaced by {{ replacementRuleList({ specifiers: params.replacedBy }) }}</p>
-        {%- else -%}<p class="rule__description">{{ params.description }}</p>
+        <p class="rule__description">{{ site.docs_ui.replaced_by or "Replaced by" }} {{ replacementRuleList({ specifiers: params.replacedBy }) }}</p>
+        {%- else -%}<p class="rule__description">{{ params.description | markdownInline | safe }}</p>
         {%- endif -%}
         {%- elseif params.removed == true -%}
         <p class="rule__name">
             {{ params.name }}
-            <span class="rule__status">removed</span>
+            <span class="rule__status">{{ site.docs_ui.removed or "removed" }}</span>
         </p>
         {%- if params.replacedBy|length -%}
-        <p class="rule__description">Replaced by {{ replacementRuleList({ specifiers: params.replacedBy }) }}</p>
-        {%- else -%}<p class="rule__description">{{ params.description }}</p>
+        <p class="rule__description">{{ site.docs_ui.replaced_by or "Replaced by" }} {{ replacementRuleList({ specifiers: params.replacedBy }) }}</p>
+        {%- else -%}<p class="rule__description">{{ params.description | markdownInline | safe }}</p>
         {%- endif -%}
         {%- else -%}
         <div class="rule__name_wrapper">
         <a href="{{ ['/rules/', params.name] | join | url }}" class="rule__name">{{ params.name }}</a>
             {%- if params.categories and params.categories.frozen %}
-                <p class="frozen"> ❄️ <span class="visually-hidden">Frozen</span></p>
+                <p class="frozen"> ❄️ <span class="visually-hidden">{{ site.docs_ui.frozen or "Frozen" }}</span></p>
             {%- endif -%}
         </div>
-        <p class="rule__description">{{ params.description }}</p>
+        <p class="rule__description">{{ params.description | markdownInline | safe }}</p>
         {%- endif -%}
     </div>
     {%- if params.removed == undefined -%}
     <div class="rule__categories">
-        <span class="visually-hidden">Categories:</span>
+        <span class="visually-hidden">{{ site.docs_ui.rule_categories or "Categories" }}</span>
         {%- if params.deprecated -%}
             <p class="rule__categories__type">❌</p>
             {%- else -%}
             <p class="rule__categories__type"{% if params.categories.recommended == false %} aria-hidden="true"{%- endif -%}>
-            ✅ <span class="visually-hidden">Extends</span>
+            ✅ <span class="visually-hidden">{{ site.docs_ui.recommended or "Extends" }}</span>
         </p>
         {%- endif -%}
 
         <p class="rule__categories__type"{% if params.categories.fixable == false %} aria-hidden="true"{%- endif -%}>
-            🔧 <span class="visually-hidden">Fix</span>
+            🔧 <span class="visually-hidden">{{ site.docs_ui.fixable or "Fix" }}</span>
         </p>
         <p class="rule__categories__type"{% if params.categories.hasSuggestions == false %} aria-hidden="true"{%- endif -%}>
-            💡 <span class="visually-hidden">Suggestions</span>
+            💡 <span class="visually-hidden">{{ site.docs_ui.suggestions or "Suggestions" }}</span>
         </p>
     </div>
     {%- endif -%}
