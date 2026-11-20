@@ -37,6 +37,8 @@ ESLint v8.0.0 是 ESLint 的一个主要版本。此版本包含一些不兼容�
 
 ---
 
+<a id="-nodejs-10-13-and-15-are-no-longer-supported"></a>
+
 ## <a name="drop-old-node"></a> 不再支持 Node.js 10、13 和 15
 
 Node.js 10、13 和 15 均已于 2020 年或 2021 年初结束生命周期。自 ESLint v8.0.0 起，ESLint 正式停止支持这些 Node.js 版本。ESLint 现在支持以下 Node.js 版本：
@@ -49,6 +51,8 @@ Node.js 10、13 和 15 均已于 2020 年或 2021 年初结束生命周期。自
 
 **相关问题：** [#14023](https://github.com/eslint/eslint/issues/14023)
 
+<a id="-removed-codeframe-and-table-formatters"></a>
+
 ## <a name="removed-formatters"></a> 已移除 `codeframe` 和 `table` 格式化器
 
 ESLint v8.0.0 已从核心中移除 `codeframe` 和 `table` 格式化器。这些格式化器依赖的其他包在 ESLint 中没有别的用途。移除它们可以减小 ESLint 的体积，从而加快安装速度。
@@ -56,6 +60,8 @@ ESLint v8.0.0 已从核心中移除 `codeframe` 和 `table` 格式化器。这�
 **解决方法：** 如果你正在使用 `codeframe` 或 `table` 格式化器，则需要分别安装独立的 [`eslint-formatter-codeframe`](https://github.com/eslint-community/eslint-formatter-codeframe) 或 [`eslint-formatter-table`](https://github.com/eslint-community/eslint-formatter-table) 包，才能在 ESLint v8.0.0 中使用它们。
 
 **相关问题：** [#14277](https://github.com/eslint/eslint/issues/14277), [#14316](https://github.com/eslint/eslint/pull/14316)
+
+<a id="-comma-dangle-rule-schema-is-stricter"></a>
 
 ## <a name="comma-dangle"></a> `comma-dangle` 规则的 schema 更严格
 
@@ -98,6 +104,8 @@ ESLint v8.0.0 已从核心中移除 `codeframe` 和 `table` 格式化器。这�
 
 **相关问题：** [#13739](https://github.com/eslint/eslint/issues/13739)
 
+<a id="-unused-disable-directives-are-now-fixable"></a>
+
 ## <a name="directives"></a> 现在可以自动修复未使用的禁用指令
 
 在 ESLint v7.0.0 中，在命令行中同时使用 `--report-unused-disable-directives` 和 `--fix`，只会修复规则问题，而不会移除未使用的禁用指令。在 ESLint v8.0.0 中，同时使用这两个命令行选项会移除未使用的禁用指令。
@@ -105,6 +113,8 @@ ESLint v8.0.0 已从核心中移除 `codeframe` 和 `table` 格式化器。这�
 **解决方法：** 如果你在命令行中同时使用 `--report-unused-disable-directives` 和 `--fix`，但不希望移除未使用的禁用指令，请添加命令行选项 `--fix-type problem,suggestion,layout`。
 
 **相关问题：** [#11815](https://github.com/eslint/eslint/issues/11815)
+
+<a id="-eslintrecommended-has-been-updated"></a>
 
 ## <a name="eslint-recommended"></a> `eslint:recommended` 已更新
 
@@ -118,6 +128,8 @@ ESLint v8.0.0 已从核心中移除 `codeframe` 和 `table` 格式化器。这�
 **解决方法：** 修复错误或禁用这些规则。
 
 **相关问题：** [#14673](https://github.com/eslint/eslint/issues/14673)
+
+<a id="-rules-require-metahassuggestions-to-provide-suggestions"></a>
 
 ## <a name="suggestions"></a> 规则必须设置 `meta.hasSuggestions` 才能提供建议
 
@@ -139,6 +151,8 @@ module.exports = {
 [eslint-plugin/require-meta-has-suggestions](https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/require-meta-has-suggestions.md) 规则可以自动修复并确保你的规则正确指定了 `meta.hasSuggestions`。
 
 **相关问题：** [#14312](https://github.com/eslint/eslint/issues/14312)
+
+<a id="-rules-require-metafixable-to-provide-fixes"></a>
 
 ## <a name="fixes"></a> 规则必须设置 `meta.fixable` 才能提供修复
 
@@ -173,6 +187,8 @@ module.exports = {
 
 **相关问题：** [#13349](https://github.com/eslint/eslint/issues/13349)
 
+<a id="-sourcecodegetcomments-fails-in-ruletester"></a>
+
 ## <a name="get-comments"></a> `SourceCode#getComments()` 在 `RuleTester` 中会失败
 
 早在 ESLint v4.0.0 中，我们就弃用了 `SourceCode#getComments()`，但后来没有将其移除。我们没有在 v8.0.0 中直接彻底移除它，而是采取了一个过渡步骤：更新 `RuleTester`，使其在规则中使用 `SourceCode#getComments()` 时失败。因此，所有现有规则仍可继续工作，但开发者运行规则测试时会遇到失败。
@@ -182,6 +198,8 @@ module.exports = {
 **解决方法：** 如果你的规则使用了 `SourceCode#getComments()`，请改用 [`SourceCode#getCommentsBefore()`、`SourceCode#getCommentsAfter()` 或 `SourceCode#getCommentsInside()`](../extend/custom-rules#accessing-comments)。
 
 **相关问题：** [#14744](https://github.com/eslint/eslint/issues/14744)
+
+<a id="-changes-to-shorthand-property-ast-format"></a>
 
 ## <a name="ast-format"></a> 简写属性 AST 格式变更
 
@@ -232,6 +250,8 @@ if (propertyNode.key === propertyNode.value) {
 
 **相关问题：** [#14591](https://github.com/eslint/eslint/pull/14591#issuecomment-887733070)
 
+<a id="-the-cliengine-class-has-been-removed"></a>
+
 ## <a name="remove-cliengine"></a> 已移除 `CLIEngine` 类
 
 `CLIEngine` 类已被移除，并由 [`ESLint` 类](../integrate/nodejs-api#eslint-class)取代。
@@ -258,6 +278,8 @@ if (propertyNode.key === propertyNode.value) {
 
 **相关问题：** [RFC80](https://github.com/eslint/rfcs/tree/main/designs/2021-package-exports), [#14716](https://github.com/eslint/eslint/pull/14716), [#13654](https://github.com/eslint/eslint/issues/13654)
 
+<a id="-the-linter-object-has-been-removed"></a>
+
 ## <a name="remove-linter"></a> 已移除 `linter` 对象
 
 ESLint v8.0.0 已从 ESLint 包中移除已弃用的 `linter` 对象。
@@ -276,6 +298,8 @@ const linter = new Linter();
 ```
 
 **相关问题：** [RFC80](https://github.com/eslint/rfcs/tree/main/designs/2021-package-exports), [#14716](https://github.com/eslint/eslint/pull/14716), [#13654](https://github.com/eslint/eslint/issues/13654)
+
+<a id="-the-lib-entrypoint-has-been-removed"></a>
 
 ## <a name="remove-lib"></a> 已移除 `/lib` 入口点
 

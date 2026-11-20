@@ -89,6 +89,8 @@ Codemod 只是迁移的起点。请检查变更，并参考下文的破坏性变
 
 ---
 
+<a id="-nodejs--v1818-v19-are-no-longer-supported"></a>
+
 ## <a name="drop-old-node"></a> 不再支持 Node.js < v18.18 和 v19
 
 从 ESLint v9.0.0 开始，ESLint 正式停止支持这些 Node.js 版本。ESLint 现在支持以下 Node.js 版本：
@@ -101,6 +103,8 @@ Codemod 只是迁移的起点。请检查变更，并参考下文的破坏性变
 
 **相关问题：** [#17595](https://github.com/eslint/eslint/issues/17595)
 
+<a id="-new-default-config-format-eslintconfigjs"></a>
+
 ## <a name="flat-config"></a> 新的默认配置格式（`eslint.config.js`）
 
 正如我们在[博客文章](/blog/2023/10/flat-config-rollout-plans/)中宣布的那样，ESLint v9.0.0 将 [`eslint.config.js`](./configure/configuration-files) 作为新的默认配置格式。之前的格式 eslintrc 现已弃用，且不会再被自动搜索。
@@ -110,6 +114,8 @@ Codemod 只是迁移的起点。请检查变更，并参考下文的破坏性变
 **解决方法：** 按照[配置迁移指南](./configure/migration-guide)，手动将配置更新为新格式。如果仍需使用已弃用的 eslintrc 配置格式，请将环境变量 `ESLINT_USE_FLAT_CONFIG` 设置为 `false`。
 
 **相关问题：** [#13481](https://github.com/eslint/eslint/issues/13481)
+
+<a id="-removed-multiple-formatters"></a>
 
 ## <a name="removed-formatters"></a> 移除了多个格式化程序
 
@@ -131,6 +137,8 @@ ESLint v9.0.0 从核心中移除了以下格式化程序：
 
 **相关问题：** [#17524](https://github.com/eslint/eslint/issues/17524)
 
+<a id="-removed-require-jsdoc-and-valid-jsdoc-rules"></a>
+
 ## <a name="remove-jsdoc-rules"></a> 移除了 `require-jsdoc` 和 `valid-jsdoc` 规则
 
 ESLint v9.0.0 移除了 `require-jsdoc` 和 `valid-jsdoc` 规则。这些规则最初于 2018 年弃用。
@@ -140,6 +148,8 @@ ESLint v9.0.0 移除了 `require-jsdoc` 和 `valid-jsdoc` 规则。这些规则�
 **解决方法：** 在 `eslint-plugin-jsdoc` 中使用[替代规则](https://github.com/gajus/eslint-plugin-jsdoc/wiki/Comparison-with-deprecated-JSdoc-related-ESLint-rules)，实现相同的代码检查效果。
 
 **相关问题：** [#15820](https://github.com/eslint/eslint/issues/15820)
+
+<a id="-eslintrecommended-has-been-updated"></a>
 
 ## <a name="eslint-recommended"></a> `eslint:recommended` 已更新
 
@@ -163,6 +173,8 @@ ESLint v9.0.0 移除了 `require-jsdoc` 和 `valid-jsdoc` 规则。这些规则�
 
 **相关问题：** [#15576](https://github.com/eslint/eslint/issues/15576)、[#17446](https://github.com/eslint/eslint/issues/17446)、[#17596](https://github.com/eslint/eslint/issues/17596)
 
+<a id="---quiet-no-longer-runs-rules-set-to-warn"></a>
+
 ## <a name="quiet-warn"></a> `--quiet` 不再运行设置为 `"warn"` 的规则
 
 在 ESLint v9.0.0 之前，`--quiet` CLI 标志会运行所有设置为 `"error"` 或 `"warn"` 的规则，然后隐藏设置为 `"warn"` 的规则所产生的结果。在 ESLint v9.0.0 中，`--quiet` 会阻止设置为 `"warn"` 的规则执行。对于包含许多设置为 `"warn"` 的规则的配置，这可能会提升性能。
@@ -173,6 +185,8 @@ ESLint v9.0.0 移除了 `require-jsdoc` 和 `valid-jsdoc` 规则。这些规则�
 
 **相关问题：** [#16450](https://github.com/eslint/eslint/issues/16450)
 
+<a id="---output-file-now-writes-a-file-to-disk-even-with-an-empty-output"></a>
+
 ## <a name="output-file"></a> `--output-file` 现在即使输出为空也会写入磁盘文件
 
 在 ESLint v9.0.0 之前，如果输出为空，`--output-file` 标志会跳过写入磁盘文件。但在 ESLint v9.0.0 中，即使输出为空，`--output-file` 也会始终将文件写入磁盘。此更新让 `--output-file` 的行为更加一致、可靠。
@@ -180,6 +194,8 @@ ESLint v9.0.0 移除了 `require-jsdoc` 和 `valid-jsdoc` 规则。这些规则�
 **解决方法：** 检查 `--output-file` 标志的使用情况，尤其是那些根据输出内容判断文件是否存在的流程。如有必要，请更新脚本或配置以适应此变更。
 
 **相关问题：** [#17660](https://github.com/eslint/eslint/issues/17660)
+
+<a id="-change-in-behavior-when-no-patterns-are-passed-to-cli"></a>
 
 ## <a name="cli-empty-patterns"></a> 未向 CLI 传入模式时的行为变更
 
@@ -191,6 +207,8 @@ ESLint v9.0.0 移除了 `require-jsdoc` 和 `valid-jsdoc` 规则。这些规则�
 **解决方法：** 在大多数情况下，无需更改；你可能会发现某些原以为 ESLint 正在运行、实际上并未运行的地方。如果要保留 v8.x 的行为，即不传入模式时 ESLint 以代码 0 退出，请在 CLI 调用中添加 `--pass-on-no-patterns` 标志。
 
 **相关问题：** [#14308](https://github.com/eslint/eslint/issues/14308)
+
+<a id="--eslint--comments-with-only-severity-now-retain-options-from-the-config-file"></a>
 
 ## <a name="eslint-comment-options"></a> 仅指定严重级别的 `/* eslint */` 注释现在会保留配置文件中的选项
 
@@ -234,6 +252,8 @@ export default [
 
 **相关问题：** [#17381](https://github.com/eslint/eslint/issues/17381)
 
+<a id="-multiple--eslint--comments-for-the-same-rule-are-now-disallowed"></a>
+
 ## <a name="multiple-eslint-comments"></a> 现在不允许针对同一规则使用多个 `/* eslint */` 注释
 
 在 ESLint v9.0.0 之前，如果待检查文件中包含针对同一规则的多个 `/* eslint */` 配置注释，则只会应用最后一个，其他注释会被静默忽略。例如：
@@ -259,6 +279,8 @@ foo(); // error: Missing semicolon
 **解决方法：** 删除重复的 `/* eslint */` 注释。
 
 **相关问题：** [#18132](https://github.com/eslint/eslint/issues/18132)
+
+<a id="-stricter--exported--parsing"></a>
 
 ## <a name="exported-parsing"></a> `/* exported */` 的解析更加严格
 
@@ -286,6 +308,8 @@ foo(); // error: Missing semicolon
 
 **相关问题：** [#17622](https://github.com/eslint/eslint/issues/17622)
 
+<a id="-no-constructor-return-and-no-sequences-rule-schemas-are-stricter"></a>
+
 ## <a name="stricter-rule-schemas"></a> `no-constructor-return` 和 `no-sequences` 的规则架构更加严格
 
 在之前的 ESLint 版本中，`no-constructor-return` 和 `no-sequences` 规则会错误地接受无效选项。
@@ -310,6 +334,8 @@ foo(); // error: Missing semicolon
 
 **相关问题：** [#16879](https://github.com/eslint/eslint/issues/16879)
 
+<a id="-new-checks-in-no-implicit-coercion-by-default"></a>
+
 ## <a name="no-implicit-coercion"></a> `no-implicit-coercion` 默认会执行新的检查
 
 在 ESLint v9.0.0 中，`no-implicit-coercion` 规则默认还会报告以下情况：
@@ -331,6 +357,8 @@ foo - 0;
 
 **相关问题：** [#17832](https://github.com/eslint/eslint/pull/17832)
 
+<a id="-case-sensitive-flags-in-no-invalid-regexp"></a>
+
 ## <a name="no-invalid-regexp"></a> `no-invalid-regexp` 中的标志区分大小写
 
 在 ESLint v9.0.0 中，`allowConstructorFlags` 选项现在区分大小写。
@@ -340,6 +368,8 @@ foo - 0;
 **解决方法：** 如有需要，请手动更新配置。
 
 **相关问题：** [#16574](https://github.com/eslint/eslint/issues/16574)
+
+<a id="-varsignorepattern-option-of-no-unused-vars-no-longer-applies-to-catch-arguments"></a>
 
 ## <a name="vars-ignore-pattern"></a> `no-unused-vars` 的 `varsIgnorePattern` 选项不再适用于 catch 参数
 
@@ -361,6 +391,8 @@ try {
 **解决方法：** 如果想为 `catch` 子句变量名指定忽略模式，请在 `varsIgnorePattern` 之外使用 `caughtErrorsIgnorePattern` 选项。
 
 **相关问题：** [#17540](https://github.com/eslint/eslint/issues/17540)
+
+<a id="-no-restricted-imports-now-accepts-multiple-config-entries-with-the-same-name"></a>
 
 ## <a name="no-restricted-imports"></a> `no-restricted-imports` 现在接受多个具有相同 `name` 的配置项
 
@@ -399,6 +431,8 @@ try {
 
 **相关问题：** [#15261](https://github.com/eslint/eslint/issues/15261)
 
+<a id="-eslintrecommended-and-eslintall-no-longer-accepted-in-flat-config"></a>
+
 ## <a name="string-config"></a> 扁平配置不再接受 `"eslint:recommended"` 和 `"eslint:all"` 字符串
 
 在 ESLint v8.x 中，可以在配置数组中插入字符串，以便在 `eslint.config.js` 中引用 `"eslint:recommended"` 和 `"eslint:all"` 配置，如下例所示：
@@ -423,6 +457,8 @@ export default [js.configs.recommended, js.configs.all];
 
 **相关问题：** [#17488](https://github.com/eslint/eslint/issues/17488)
 
+<a id="-no-inner-declarations-has-a-new-default-behavior-with-a-new-option"></a>
+
 ## <a name="no-inner-declarations"></a> `no-inner-declarations` 有了新的默认行为和新选项
 
 ESLint v9.0.0 为 `no-inner-declarations` 规则引入了一个名为 `blockScopeFunctions` 的新选项。默认情况下，当 `languageOptions.ecmaVersion` 设置为 `2015` 或更高版本时，该选项允许严格模式下的块级 `function`。
@@ -441,6 +477,8 @@ if (test) {
 **解决方法：** 如果无论严格模式还是非严格模式，你都希望在任何情况下报告块级 `function`，请将 `blockScopeFunctions` 选项设置为 `"disallow"`。
 
 **相关问题：** [#15576](https://github.com/eslint/eslint/issues/15576)
+
+<a id="-no-unused-vars-now-defaults-caughterrors-to-all"></a>
 
 ## <a name="no-unused-vars"></a> `no-unused-vars` 的 `caughtErrors` 默认值现在为 `"all"`
 
@@ -471,6 +509,8 @@ try {
 
 **相关问题：** [#17974](https://github.com/eslint/eslint/issues/17974)
 
+<a id="-no-useless-computed-key-flags-unnecessary-computed-member-names-in-classes-by-default"></a>
+
 ## <a name="no-useless-computed-key"></a> `no-useless-computed-key` 默认会标记类中不必要的计算属性成员名
 
 在 ESLint v9.0.0 中，`no-useless-computed-key` 规则的 `enforceForClassMembers` 选项默认值从 `false` 改为 `true`。
@@ -490,6 +530,8 @@ class SomeClass {
 
 **相关问题：** [#18042](https://github.com/eslint/eslint/issues/18042)
 
+<a id="-camelcase-allow-option-only-accepts-an-array-of-strings"></a>
+
 ## <a name="camelcase"></a> `camelcase` 的 allow 选项仅接受字符串数组
 
 以前，camelcase 规则不会强制要求 `allow` 选项为字符串数组。在 ESLint v9.0.0 中，`allow` 选项现在仅接受字符串数组。
@@ -499,6 +541,8 @@ class SomeClass {
 **解决方法：** 如果 ESLint 仍然报告此规则的配置无效，请手动更新配置。
 
 **相关问题：** [#18232](https://github.com/eslint/eslint/pull/18232)
+
+<a id="-removed-multiple-context-methods"></a>
 
 ## <a name="removed-context-methods"></a> 移除了多个 `context` 方法
 
@@ -543,6 +587,8 @@ ESLint v9.0.0 从 `context` 对象中移除了多个已弃用的方法，并将�
 
 **相关问题：** [#16999](https://github.com/eslint/eslint/issues/16999)、[#13481](https://github.com/eslint/eslint/issues/13481)
 
+<a id="-removed-sourcecodegetcomments"></a>
+
 ## <a name="removed-sourcecode-getcomments"></a> 移除了 `sourceCode.getComments()`
 
 ESLint v9.0.0 移除了已弃用的 `sourceCode.getComments()` 方法。
@@ -553,6 +599,8 @@ ESLint v9.0.0 移除了已弃用的 `sourceCode.getComments()` 方法。
 
 **相关问题：** [#14744](https://github.com/eslint/eslint/issues/14744)
 
+<a id="-removed-codepathcurrentsegments"></a>
+
 ## <a name="removed-codepath-currentsegments"></a> 移除了 `CodePath#currentSegments`
 
 ESLint v9.0.0 移除了已弃用的 `CodePath#currentSegments` 属性。
@@ -562,6 +610,8 @@ ESLint v9.0.0 移除了已弃用的 `CodePath#currentSegments` 属性。
 **解决方法：** 按照[博客文章](https://eslint.org/blog/2023/09/preparing-custom-rules-eslint-v9/#codepath%23currentsegments)中的建议更新代码。
 
 **相关问题：** [#17457](https://github.com/eslint/eslint/issues/17457)
+
+<a id="-code-paths-are-now-precalculated"></a>
 
 ## <a name="codepath-precalc"></a> 现在会预先计算代码路径
 
@@ -578,6 +628,8 @@ ESLint v9.0.0 现在会在规则遍历之前预先计算代码路径信息。因
 
 **相关问题：** [#16999](https://github.com/eslint/eslint/issues/16999)
 
+<a id="-function-style-rules-are-no-longer-supported"></a>
+
 ## <a name="drop-function-style-rules"></a> 不再支持函数式规则
 
 ESLint v9.0.0 不再支持函数式规则。函数式规则是指通过导出函数（而不是带有 `create()` 方法的对象）创建的规则。此规则格式已于 2016 年弃用。
@@ -589,6 +641,8 @@ ESLint v9.0.0 不再支持函数式规则。函数式规则是指通过导出函
 [eslint-plugin/prefer-object-rule](https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/prefer-object-rule.md) 规则可以帮助强制使用对象式规则，并自动修复剩余的函数式规则。
 
 **相关问题：** [#14709](https://github.com/eslint/eslint/issues/14709)
+
+<a id="-metaschema-is-required-for-rules-with-options"></a>
 
 ## <a name="meta-schema-required"></a> 带选项的规则必须提供 `meta.schema`
 
@@ -605,6 +659,8 @@ ESLint v9.0.0 不再支持函数式规则。函数式规则是指通过导出函
 [eslint-plugin/require-meta-schema](https://github.com/eslint-community/eslint-plugin-eslint-plugin/blob/main/docs/rules/require-meta-schema.md) 规则可以帮助确保规则在需要时提供架构。
 
 **相关问题：** [#14709](https://github.com/eslint/eslint/issues/14709)
+
+<a id="-flatruletester-is-now-ruletester"></a>
 
 ## <a name="flat-rule-tester"></a> `FlatRuleTester` 现在是 `RuleTester`
 
@@ -658,6 +714,8 @@ ESLint v9.0.0 不再支持函数式规则。函数式规则是指通过导出函
 
 **相关问题：** [#13481](https://github.com/eslint/eslint/issues/13481)
 
+<a id="-stricter-ruletester-checks"></a>
+
 ## <a name="stricter-rule-tester"></a> `RuleTester` 检查更加严格
 
 为了帮助开发高质量且不含常见错误的自定义规则，ESLint v9.0.0 对 `RuleTester` 做出了多项更改：
@@ -680,6 +738,8 @@ ESLint v9.0.0 不再支持函数式规则。函数式规则是指通过导出函
 
 **相关问题：** [#15104](https://github.com/eslint/eslint/issues/15104)、[#15735](https://github.com/eslint/eslint/issues/15735)、[#16908](https://github.com/eslint/eslint/issues/16908)、[#18016](https://github.com/eslint/eslint/issues/18016)
 
+<a id="-flateslint-is-now-eslint"></a>
+
 ## <a name="flat-eslint"></a> `FlatESLint` 现在是 `ESLint`
 
 正如我们在[博客文章](/blog/2023/10/flat-config-rollout-plans/)中宣布的那样，临时的 `FlatESLint` 类已重命名为 `ESLint`，而 v8.x 中的 `ESLint` 类已重命名为 `LegacyESLint`。
@@ -695,6 +755,8 @@ const { LegacyESLint } = require("eslint/use-at-your-own-risk");
 ```
 
 **相关问题：** [#13481](https://github.com/eslint/eslint/issues/13481)
+
+<a id="-linter-now-expects-flat-config-format"></a>
 
 ## <a name="flat-linter"></a> `Linter` 现在要求使用扁平配置格式
 

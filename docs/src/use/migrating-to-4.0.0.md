@@ -32,6 +32,8 @@ ESLint v4.0.0 是第四个主版本。此版本中我们做出了几项破坏性
 
 ---
 
+<a id="-eslintrecommended-changes"></a>
+
 ## <a name="eslint-recommended-changes"></a> `eslint:recommended` 的更改
 
 [`eslint:recommended`](configure/configuration-files#use-predefined-configurations) 配置中新增了两条规则：
@@ -52,6 +54,8 @@ ESLint v4.0.0 是第四个主版本。此版本中我们做出了几项破坏性
 }
 ```
 
+<a id="-the-indent-rule-is-more-strict"></a>
+
 ## <a name="indent-rewrite"></a> `indent` 规则更加严格
 
 此前，[`indent`](../rules/indent) 规则对缩进的检查相当宽松；有许多代码模式不会由该规则检查缩进。这让用户感到困惑，因为他们可能会不小心写出缩进错误的代码，却以为 ESLint 会发现这些问题。
@@ -71,11 +75,15 @@ ESLint v4.0.0 是第四个主版本。此版本中我们做出了几项破坏性
 }
 ```
 
+<a id="-unrecognized-properties-in-config-files-now-cause-a-fatal-error"></a>
+
 ## <a name="config-validation"></a> 配置文件中的无法识别属性现在会导致致命错误
 
 用户编写配置时，有时会拼错内容，或误解配置应采用的结构。此前，ESLint 不会验证配置文件的属性，因此排查配置中的拼写错误可能非常费时。从 4.0.0 开始，如果配置文件中的属性无法识别或类型不正确，ESLint 就会报错。
 
 **解决方法：**升级后如果看到配置验证错误，请检查配置中是否有拼写错误。如果使用了无法识别的属性，删除该属性应可恢复之前的行为。
+
+<a id="-eslintignore-patterns-are-now-resolved-from-the-location-of-the-file"></a>
 
 ## <a name="eslintignore-patterns"></a> .eslintignore 模式现在从文件所在位置解析
 
@@ -83,11 +91,15 @@ ESLint v4.0.0 是第四个主版本。此版本中我们做出了几项破坏性
 
 **解决方法：**如果你使用 `.eslintignore` 文件，并且经常在项目根目录之外运行 ESLint，模式的匹配结果可能会有所不同。你应更新 `.eslintignore` 文件中的模式，确保它们相对于该文件，而不是相对于工作目录。
 
+<a id="-the-padded-blocks-rule-is-more-strict-by-default"></a>
+
 ## <a name="padded-blocks-defaults"></a> `padded-blocks` 规则的默认行为更加严格
 
 现在，默认情况下，[`padded-blocks`](../rules/padded-blocks) 规则会要求类主体和 switch 语句中包含空行。此前，除非用户选择启用这些检查，否则规则会忽略这些情况。
 
 **解决方法：**如果此更改导致代码库中出现更多代码检查错误，应修复这些错误或重新配置该规则。
+
+<a id="-the-space-before-function-paren-rule-is-more-strict-by-default"></a>
 
 ## <a name="space-before-function-paren-defaults"></a> `space-before-function-paren` 规则的默认行为更加严格
 
@@ -110,6 +122,8 @@ ESLint v4.0.0 是第四个主版本。此版本中我们做出了几项破坏性
 }
 ```
 
+<a id="-the-no-multi-spaces-rule-is-more-strict-by-default"></a>
+
 ## <a name="no-multi-spaces-eol-comments"></a> `no-multi-spaces` 规则的默认行为更加严格
 
 现在，默认情况下，[`no-multi-spaces`](../rules/no-multi-spaces) 规则会禁止在行末注释之前使用多个空格。此前，规则不会检查这种情况。
@@ -123,6 +137,8 @@ ESLint v4.0.0 是第四个主版本。此版本中我们做出了几项破坏性
 	}
 }
 ```
+
+<a id="-references-to-scoped-plugins-in-config-files-are-now-required-to-include-the-scope"></a>
 
 ## <a name="scoped-plugin-resolution"></a> 配置文件中对作用域插件的引用现在必须包含作用域
 
@@ -154,11 +170,15 @@ ESLint v4.0.0 是第四个主版本。此版本中我们做出了几项破坏性
 
 ---
 
+<a id="-ruletester-now-validates-properties-of-test-cases"></a>
+
 ## <a name="rule-tester-validation"></a> `RuleTester` 现在会验证测试用例的属性
 
 从 4.0 开始，`RuleTester` 工具会验证测试用例对象的属性；如果遇到未知属性，就会抛出错误。我们加入此更改，是因为发现开发者在规则测试中拼错内容的情况相当常见，而且这往往会使测试用例原本要执行的断言失效。
 
 **解决方法：**如果自定义规则的测试中包含多余属性，应删除这些属性。
+
+<a id="-ast-nodes-no-longer-have-comment-properties"></a>
 
 ## <a name="comment-attachment"></a> AST 节点不再具有注释属性
 
@@ -178,6 +198,8 @@ ESLint v4.0.0 是第四个主版本。此版本中我们做出了几项破坏性
 - `getTokenOrCommentBefore()` - 替换为使用 `{ includeComments: true }` 选项的 `getTokenBefore()`
 - `getTokenOrCommentAfter()` - 替换为使用 `{ includeComments: true }` 选项的 `getTokenAfter()`
 
+<a id="-linecomment-and-blockcomment-events-will-no-longer-be-emitted-during-ast-traversal"></a>
+
 ## <a name="event-comments"></a> 遍历 AST 时不再发出 `LineComment` 和 `BlockComment` 事件
 
 从 4.0 开始，遍历 AST 时不会再发出 `LineComment` 和 `BlockComments` 事件。原因有两个：
@@ -191,6 +213,8 @@ ESLint v4.0.0 是第四个主版本。此版本中我们做出了几项破坏性
 sourceCode.getAllComments().filter(comment => comment.type === "Line");
 sourceCode.getAllComments().filter(comment => comment.type === "Block");
 ```
+
+<a id="-shebangs-are-now-returned-from-comment-apis"></a>
 
 ## <a name="shebangs"></a> 注释 API 现在会返回 shebang
 
@@ -206,11 +230,15 @@ sourceCode.getAllComments().filter(comment => comment.type !== "Shebang");
 
 ---
 
+<a id="-the-global-property-in-the-linterverify-api-is-no-longer-supported"></a>
+
 ## <a name="global-property"></a> `linter.verify()` API 不再支持 `global` 属性
 
 此前，`linter.verify()` API 接受一个 `global` 配置选项，它是文档中所述 `globals` 属性的同义项。`global` 选项从未在文档中说明或得到官方支持，而且在配置文件中也不起作用。它已在 4.0 中移除。
 
 **解决方法：**如果你之前使用了 `global` 属性，请改用 `globals` 属性，两者作用相同。
+
+<a id="-more-report-messages-now-have-full-location-ranges"></a>
 
 ## <a name="report-locations"></a> 现在更多报告消息会包含完整的位置范围
 
@@ -219,6 +247,8 @@ sourceCode.getAllComments().filter(comment => comment.type !== "Shebang");
 预计这不会造成兼容性问题。不过，与之前相比，报告的位置范围可能会更大。例如，如果规则报告 AST 的根节点，报告问题的范围将覆盖整个程序。在某些集成中，这可能会导致糟糕的用户体验（例如，为了指示错误而高亮整个程序）。
 
 **解决方法：**如果你的集成会处理报告问题的位置范围，请确保以对用户友好的方式处理较大的报告范围。
+
+<a id="-some-exposed-apis-are-now-es2015-classes"></a>
 
 ## <a name="exposed-es2015-classes"></a> 部分公开 API 现在是 ES2015 类
 

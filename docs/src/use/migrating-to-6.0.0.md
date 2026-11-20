@@ -36,6 +36,8 @@ ESLint v6.0.0 是 ESLint 的一个主要版本。本次发布包含一些破坏�
 
 ---
 
+<a id="-nodejs-6-is-no-longer-supported"></a>
+
 ## <a name="drop-node-6"></a> 不再支持 Node.js 6
 
 截至 2019 年 4 月，Node.js 6 将到达生命周期终止（EOL），不再获得安全更新。因此，我们决定在 ESLint v6 中停止支持它。现在支持以下 Node.js 版本：
@@ -47,6 +49,8 @@ ESLint v6.0.0 是 ESLint 的一个主要版本。本次发布包含一些破坏�
 **解决方法：** 使用 ESLint v6 时，请确保升级到至少 Node.js 8。如果无法升级，我们建议继续使用 ESLint v5.x，直到能够升级 Node.js。
 
 **相关问题：** [eslint/eslint#11546](https://github.com/eslint/eslint/issues/11456)
+
+<a id="-eslintrecommended-has-been-updated"></a>
 
 ## <a name="eslint-recommended-changes"></a> `eslint:recommended` 已更新
 
@@ -90,6 +94,8 @@ ESLint v6.0.0 是 ESLint 的一个主要版本。本次发布包含一些破坏�
 
 **相关问题：** [eslint/eslint#10768](https://github.com/eslint/eslint/issues/10768)、[eslint/eslint#10873](https://github.com/eslint/eslint/issues/10873)
 
+<a id="-plugins-and-shareable-configs-are-no-longer-affected-by-eslints-location"></a>
+
 ## <a name="package-loading-simplification"></a> 插件和可共享配置不再受 ESLint 所在位置的影响
 
 以前，ESLint 会相对于 ESLint 包自身所在的位置加载插件。因此，我们曾建议全局安装 ESLint 的用户也全局安装插件，而本地安装 ESLint 的用户则在本地安装插件。然而，由于一个设计缺陷，在某些情况下这种做法会导致 ESLint 随机无法加载插件和可共享配置，尤其是在使用 [`lerna`](https://github.com/lerna/lerna) 和 [Yarn Plug n' Play](https://yarnpkg.com/lang/en/docs/pnp/) 之类的包管理工具时。
@@ -102,6 +108,8 @@ ESLint v6.0.0 是 ESLint 的一个主要版本。本次发布包含一些破坏�
 
 **相关问题：** [eslint/eslint#10125](https://github.com/eslint/eslint/issues/10125)、[eslint/rfcs#7](https://github.com/eslint/rfcs/pull/7)
 
+<a id="-the-default-parser-now-validates-options-more-strictly"></a>
+
 ## <a name="espree-validation"></a> 默认解析器现在会更严格地验证选项
 
 ESLint 使用的默认解析器 `espree` 现在会在以下情况下报错：
@@ -113,6 +121,8 @@ ESLint 使用的默认解析器 `espree` 现在会在以下情况下报错：
 **解决方法：** 如果你的配置将 `ecmaVersion` 设为非数字值，可以移除 `ecmaVersion`，以恢复以前的行为。（不过，你可能需要仔细确认配置是否确实按预期工作。）如果你的配置设置了 `parserOptions: { sourceType: "module" }`，但没有同时设置 `parserOptions.ecmaVersion`，则应添加 `parserOptions: { ecmaVersion: 2015 }`，以恢复以前的行为。
 
 **相关问题：** [eslint/eslint#9687](https://github.com/eslint/eslint/issues/9687)、[eslint/espree#384](https://github.com/eslint/espree/issues/384)
+
+<a id="-rule-configuration-are-validated-more-strictly"></a>
 
 ## <a name="rule-config-validating"></a> 规则配置现在会经过更严格的验证
 
@@ -129,6 +139,8 @@ ESLint 使用的默认解析器 `espree` 现在会在以下情况下报错：
 **解决方法：** 你可以从（内联）配置中移除不存在的规则。
 
 **相关问题：** [eslint/eslint#9505](https://github.com/eslint/eslint/issues/9505)
+
+<a id="-the-no-redeclare-rule-is-now-more-strict-by-default"></a>
 
 ## <a name="no-redeclare-updates"></a> `no-redeclare` 规则的默认行为现在更加严格
 
@@ -149,6 +161,8 @@ ESLint 使用的默认解析器 `espree` 现在会在以下情况下报错：
 此外，如果代码中的 `global` 注释现在触发了新的错误，应移除这些注释。
 
 **相关问题：** [eslint/eslint#11370](https://github.com/eslint/eslint/issues/11370)、[eslint/eslint#11405](https://github.com/eslint/eslint/issues/11405)
+
+<a id="-the-comma-dangle-rule-is-now-more-strict-by-default"></a>
 
 ## <a name="comma-dangle-updates"></a> `comma-dangle` 规则的默认行为现在更加严格
 
@@ -177,6 +191,8 @@ ESLint 使用的默认解析器 `espree` 现在会在以下情况下报错：
 
 **相关问题：** [eslint/eslint#11502](https://github.com/eslint/eslint/issues/11502)
 
+<a id="-the-no-confusing-arrow-rule-is-now-more-lenient-by-default"></a>
+
 ## <a name="no-confusing-arrow-updates"></a> `no-confusing-arrow` 规则的默认行为现在更加宽松
 
 [`no-confusing-arrow`](../rules/no-confusing-arrow) 规则的默认选项已从 `{ allowParens: false }` 更改为 `{ allowParens: true }`。
@@ -193,6 +209,8 @@ ESLint 使用的默认解析器 `espree` 现在会在以下情况下报错：
 
 **相关问题：** [eslint/eslint#11503](https://github.com/eslint/eslint/issues/11503)
 
+<a id="-overrides-in-a-config-file-can-now-match-dotfiles"></a>
+
 ## <a name="overrides-dotfiles"></a> 配置文件中的 overrides 现在可以匹配点文件
 
 由于一个错误，配置文件的 `overrides` 部分中 `files` 列表里的 glob 模式始终无法匹配点文件，因此无法让 overrides 应用于以点开头的文件。此错误已在 ESLint v6 中修复。
@@ -200,6 +218,8 @@ ESLint 使用的默认解析器 `espree` 现在会在以下情况下报错：
 **解决方法：** 如果你不希望 override 匹配点文件，可以考虑在该 `overrides` 部分中添加类似 `excludedFiles: [".*"]` 的配置。更多详情请参阅[文档](../use/configure#configuration-based-on-glob-patterns)。
 
 **相关问题：** [eslint/eslint#11201](https://github.com/eslint/eslint/issues/11201)
+
+<a id="-overrides-in-an-extended-config-file-can-now-be-overridden-by-a-parent-config-file"></a>
 
 ## <a name="overrides-precedence"></a> 扩展配置文件中的 overrides 现在可以被父配置文件覆盖
 
@@ -233,6 +253,8 @@ module.exports = {
 
 **相关问题：** [eslint/eslint#11510](https://github.com/eslint/eslint/issues/11510)
 
+<a id="-configuration-values-for-globals-are-now-validated"></a>
+
 ## <a name="globals-validation"></a> 现在会验证全局变量的配置值
 
 以前，使用对象配置一组全局变量时，对象的值可以是任意内容。未知值会被视为与 `"writable"` 相同。
@@ -251,6 +273,8 @@ module.exports = {
 经过这项变更后，`globals` 对象中的任何未知值都会导致配置验证错误。
 
 **解决方法：** 如果更新后看到与全局变量相关的配置验证错误，请确保为全局变量配置的所有值都是 `readonly`、`writable` 或 `off`。（为保持兼容性，ESLint 也接受一些替代拼写和变体。）
+
+<a id="-the-deprecated-experimentalobjectrestspread-option-has-been-removed"></a>
 
 ## <a name="experimental-object-rest-spread"></a> 已移除弃用的 `experimentalObjectRestSpread` 选项
 
@@ -282,6 +306,8 @@ module.exports = {
 
 **相关问题：** [eslint/eslint#9990](https://github.com/eslint/eslint/issues/9990)
 
+<a id="-user-provided-regular-expressions-in-rule-options-are-parsed-with-the-unicode-flag"></a>
+
 ## <a name="unicode-regexes"></a> 规则选项中用户提供的正则表达式现在会使用 unicode 标志解析
 
 [`max-len`](../rules/max-len) 等规则接受字符串选项，并将其解释为正则表达式。在 ESLint v6.0.0 中，这些正则表达式会使用 [unicode 标志](https://mathiasbynens.be/notes/es6-unicode-regex)进行解释，在匹配超出基本多文种平面的符号等字符时，行为会更加合理。与非 unicode 正则表达式相比，unicode 正则表达式还会更严格地验证转义序列。
@@ -292,11 +318,15 @@ module.exports = {
 
 ---
 
+<a id="-plugin-authors-may-need-to-update-installation-instructions"></a>
+
 ## <a name="plugin-documentation"></a> 插件作者可能需要更新安装说明
 
 如果你维护插件并提供安装说明，应确保安装说明反映[面向用户的插件加载方式变更](#package-loading-simplification)。尤其是，如果你的插件是通过 [`generator-eslint`](https://github.com/eslint/generator-eslint) 包生成的，其中很可能包含了在全局安装 ESLint 时如何使用插件的过时说明。
 
 **相关问题：** [eslint/rfcs#7](https://github.com/eslint/rfcs/pull/7)
+
+<a id="-ruletester-now-validates-against-invalid-default-keywords-in-rule-schemas"></a>
 
 ## <a name="rule-tester-defaults"></a> `RuleTester` 现在会验证规则架构中的 `default` 关键字是否有效
 
@@ -306,6 +336,8 @@ module.exports = {
 
 **相关问题：** [eslint/eslint#11473](https://github.com/eslint/eslint/issues/11473)
 
+<a id="-ruletester-now-requires-an-absolute-path-on-parser-option"></a>
+
 ## <a name="rule-tester-parser"></a> `RuleTester` 现在要求 `parser` 选项使用绝对路径
 
 在测试中使用自定义解析器时，可以通过 `parser` 属性指定包名或文件路径。不过，如果提供的是包名，就无法确定测试器应从哪里加载解析器包，因为测试器不知道运行测试器的是哪些文件。在 ESLint v6.0.0 中，`RuleTester` 不再允许 `parser` 属性使用包名。
@@ -313,6 +345,8 @@ module.exports = {
 **解决方法：** 如果你在测试用例中通过包名使用 `parser` 属性，请使用 `require.resolve()` 函数将包名解析为该包的绝对路径。
 
 **相关问题：** [eslint/eslint#11728](https://github.com/eslint/eslint/issues/11728)、[eslint/eslint#10125](https://github.com/eslint/eslint/issues/10125)、[eslint/rfcs#7](https://github.com/eslint/rfcs/pull/7)
+
+<a id="-the-eslintexplicitglobalcomment-scope-analysis-property-has-been-removed"></a>
 
 ## <a name="eslintExplicitGlobalComment"></a> 已移除 `eslintExplicitGlobalComment` 作用域分析属性
 
@@ -323,6 +357,8 @@ module.exports = {
 **相关问题：** [eslint/rfcs#17](https://github.com/eslint/rfcs/pull/17)
 
 ---
+
+<a id="-linter-no-longer-tries-to-load-missing-parsers-from-the-filesystem"></a>
 
 ## <a name="linter-parsers"></a> `Linter` 不再尝试从文件系统加载缺失的解析器
 

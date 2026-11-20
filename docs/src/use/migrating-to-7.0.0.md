@@ -36,6 +36,8 @@ ESLint v7.0.0 是 ESLint 的一个主要版本。本次发布中我们做出了�
 
 ---
 
+<a id="-nodejs-8-is-no-longer-supported"></a>
+
 ## <a name="drop-node-8"></a> 不再支持 Node.js 8
 
 Node.js 8 于 2019 年 12 月结束生命周期，我们将在此版本中正式停止对它的支持。ESLint 现在支持以下版本的 Node.js：
@@ -46,6 +48,8 @@ Node.js 8 于 2019 年 12 月结束生命周期，我们将在此版本中正式
 **应对方法：** 使用 ESLint v7.0.0 时，请确保升级到至少 Node.js `10.12.0`。另一个需要特别确认的重要事项是：通过编辑器集成使用 ESLint 时，你的编辑器支持哪个 Node.js 版本。如果你无法升级，我们建议继续使用 ESLint 6，直到能够升级 Node.js。
 
 **相关问题：** [RFC44](https://github.com/eslint/rfcs/blob/master/designs/2019-drop-node8/README.md)、[#12700](https://github.com/eslint/eslint/pull/12700)
+
+<a id="-lint-files-matched-by-overridesfiles-by-default"></a>
 
 ## <a name="additional-lint-targets"></a> 默认对 `overrides[].files` 匹配的文件进行代码检查
 
@@ -69,6 +73,8 @@ overrides:
 
 **相关问题：** [RFC20](https://github.com/eslint/rfcs/blob/master/designs/2019-additional-lint-targets/README.md)、[#12677](https://github.com/eslint/eslint/pull/12677)
 
+<a id="-the-base-path-of-overrides-and-ignorepatterns-has-changed-when-using-the---config--ignore-path-options"></a>
+
 ## <a name="base-path-change"></a> 使用 `--config`/`--ignore-path` 选项时，`overrides` 和 `ignorePatterns` 的基准路径已更改
 
 到目前为止，ESLint 会将以下路径解析为相对于_入口_配置文件所在目录的路径：
@@ -86,6 +92,8 @@ overrides:
 
 **相关问题：** [RFC37](https://github.com/eslint/rfcs/blob/master/designs/2019-changing-base-path-in-config-files-that-cli-options-specify/README.md)、[#12887](https://github.com/eslint/eslint/pull/12887)
 
+<a id="-plugin-resolution-has-been-updated"></a>
+
 ## <a name="plugin-loading-change"></a> 插件解析方式已更新
 
 在以前的版本中，ESLint 默认会从当前工作目录解析所有插件。
@@ -100,6 +108,8 @@ overrides:
 
 **相关问题：** [RFC47](https://github.com/eslint/rfcs/blob/master/designs/2019-plugin-loading-improvement/README.md)、[#12922](https://github.com/eslint/eslint/pull/12922)
 
+<a id="-runtime-deprecation-warnings-for-eslintrc-config-files"></a>
+
 ## <a name="runtime-deprecation-on-personal-config-files"></a> `~/.eslintrc.*` 配置文件的运行时弃用警告
 
 个人配置文件自 [v6.7.0](https://eslint.org/blog/2019/11/eslint-v6.7.0-released) 起已弃用。ESLint v7.0.0 将开始在运行时打印弃用警告。以下情况会触发警告：
@@ -110,6 +120,8 @@ overrides:
 **应对方法：** 移除 `~/.eslintrc.*` 配置文件，并在项目中添加 `.eslintrc.*` 配置文件。或者，使用 `--config` 选项来使用共享配置文件。
 
 **相关问题：** [RFC32](https://github.com/eslint/rfcs/tree/master/designs/2019-deprecating-personal-config/README.md)、[#12678](https://github.com/eslint/eslint/pull/12678)
+
+<a id="-default-ignore-patterns-have-changed"></a>
 
 ## <a name="default-ignore-patterns"></a> 默认忽略模式已更改
 
@@ -128,6 +140,8 @@ ESLint v7.0.0 也会忽略子目录中的 `node_modules/*`，但不再忽略 `bo
 
 **相关问题：** [RFC51](https://github.com/eslint/rfcs/blob/master/designs/2019-update-default-ignore-patterns/README.md)、[#12888](https://github.com/eslint/eslint/pull/12888)
 
+<a id="-descriptions-in-directive-comments"></a>
+
 ## <a name="description-in-directive-comments"></a> 指令注释中的说明
 
 在 ESLint 的旧版本中，没有方便的方法来说明为什么需要使用指令注释，例如 `/*eslint-disable*/`。
@@ -141,6 +155,8 @@ ESLint v7.0.0 也会忽略子目录中的 `node_modules/*`，但不再忽略 `bo
 **应对方法：** 如果指令注释中包含由空白字符包围的 `--`，请考虑将其移到配置文件中。
 
 **相关问题：** [RFC33](https://github.com/eslint/rfcs/blob/master/designs/2019-description-in-directive-comments/README.md)、[#12699](https://github.com/eslint/eslint/pull/12699)
+
+<a id="-nodejscommonjs-rules-have-been-deprecated"></a>
 
 ## <a name="deprecate-node-rules"></a> Node.js/CommonJS 规则已弃用
 
@@ -163,6 +179,8 @@ ESLint v7.0.0 也会忽略子目录中的 `node_modules/*`，但不再忽略 `bo
 
 **相关问题：** [#12898](https://github.com/eslint/eslint/pull/12898)
 
+<a id="-several-rules-have-been-updated-to-cover-more-cases"></a>
+
 ## <a name="rules-strict"></a> 多条规则已更新以涵盖更多情况
 
 多条规则得到了增强，现在会报告更多错误：
@@ -182,6 +200,8 @@ ESLint v7.0.0 也会忽略子目录中的 `node_modules/*`，但不再忽略 `bo
 
 **相关问题：** [#12490](https://github.com/eslint/eslint/pull/12490)、[#12608](https://github.com/eslint/eslint/pull/12608)、[#12670](https://github.com/eslint/eslint/pull/12670)、[#12701](https://github.com/eslint/eslint/pull/12701)、[#12765](https://github.com/eslint/eslint/pull/12765)、[#12837](https://github.com/eslint/eslint/pull/12837)、[#12913](https://github.com/eslint/eslint/pull/12913)、[#12915](https://github.com/eslint/eslint/pull/12915)、[#12919](https://github.com/eslint/eslint/pull/12919)
 
+<a id="-eslintrecommended-has-been-updated"></a>
+
 ## <a name="eslint-recommended"></a> `eslint:recommended` 已更新
 
 `eslint:recommended` 预设中启用了三条新规则。
@@ -194,6 +214,8 @@ ESLint v7.0.0 也会忽略子目录中的 `node_modules/*`，但不再忽略 `bo
 
 **相关问题：** [#12920](https://github.com/eslint/eslint/pull/12920)
 
+<a id="-additional-validation-added-to-the-ruletester-class"></a>
+
 ## <a name="rule-tester-strict"></a> `RuleTester` 类新增验证
 
 `RuleTester` 现在会验证以下内容：
@@ -205,6 +227,8 @@ ESLint v7.0.0 也会忽略子目录中的 `node_modules/*`，但不再忽略 `bo
 **应对方法：** 如果现有测试用例失败，请修改规则或测试用例。
 
 **相关问题：** [RFC25](https://github.com/eslint/rfcs/blob/master/designs/2019-rule-tester-improvements/README.md)、[#12096](https://github.com/eslint/eslint/pull/12096)、[#12955](https://github.com/eslint/eslint/pull/12955)
+
+<a id="-the-cliengine-class-has-been-deprecated"></a>
 
 ## <a name="deprecate-cliengine"></a> `CLIEngine` 类已弃用
 

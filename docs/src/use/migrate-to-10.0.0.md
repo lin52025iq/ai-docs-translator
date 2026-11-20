@@ -73,6 +73,8 @@ Codemod 只是迁移的起点。请检查变更，并参阅下文的重大变更
 
 ---
 
+<a id="-nodejs--v2019-v21-v23-are-no-longer-supported"></a>
+
 ## <a name="drop-old-node"></a> 不再支持 Node.js < v20.19、v21、v23
 
 从 ESLint v10.0.0 开始，ESLint 正式停止支持这些版本的 Node.js。ESLint 现在支持以下 Node.js 版本：
@@ -85,6 +87,8 @@ Codemod 只是迁移的起点。请检查变更，并参阅下文的重大变更
 
 **相关 issue：** [#19969](https://github.com/eslint/eslint/issues/19969)
 
+<a id="-eslintrecommended-has-been-updated"></a>
+
 ## <a name="eslint-recommended"></a> `eslint:recommended` 已更新
 
 `eslint:recommended` 中启用了三条新规则：
@@ -96,6 +100,8 @@ Codemod 只是迁移的起点。请检查变更，并参阅下文的重大变更
 **应对方法：** 修复错误或禁用这些规则。
 
 **相关 issue：** [#19966](https://github.com/eslint/eslint/issues/19966)
+
+<a id="-new-configuration-file-lookup-algorithm"></a>
 
 ## <a name="config-lookup-from-file"></a> 新的配置文件查找算法
 
@@ -113,6 +119,8 @@ Codemod 只是迁移的起点。请检查变更，并参阅下文的重大变更
 
 **相关 issue：** [RFC120](https://github.com/eslint/rfcs/tree/main/designs/2024-config-lookup-from-file)、[#19967](https://github.com/eslint/eslint/issues/19967)
 
+<a id="-old-config-format-no-longer-supported"></a>
+
 ## <a name="remove-eslintrc"></a> 不再支持旧版配置格式
 
 ESLint v9 引入了基于 `eslint.config.js` 文件的[新默认配置格式](./configure/configuration-files)。在 v9 中，仍可将 `ESLINT_USE_FLAT_CONFIG` 环境变量设为 `false`，以启用使用 `.eslintrc` 或 `.eslintrc.json` 的旧版格式。
@@ -128,6 +136,8 @@ ESLint v9 引入了基于 `eslint.config.js` 文件的[新默认配置格式](./
 - `Linter` 类的 `configType` 选项不再能设为 `"eslintrc"`。移除该选项即可使用新的配置格式。
 
 **相关 issue：** [#13481](https://github.com/eslint/eslint/issues/13481)
+
+<a id="-jsx-references-are-now-tracked"></a>
 
 ## <a name="jsx-reference-tracking"></a> 现在会跟踪 JSX 引用
 
@@ -154,6 +164,8 @@ export function createCard(name) {
 
 **相关 issue：** [#19495](https://github.com/eslint/eslint/issues/19495)
 
+<a id="-eslint-env-comments-are-reported-as-errors"></a>
+
 ## <a name="eslint-env-comments"></a> `eslint-env` 注释会作为错误报告
 
 在现已过时的 ESLint v8 配置系统中，可以使用 `/* eslint-env */` 注释为文件定义全局变量。当前配置系统不支持此类注释，从 ESLint v10.0.0 开始，代码检查时会将其作为错误报告。
@@ -168,6 +180,8 @@ error: /* eslint-env */ comments are no longer supported at file.js:1:1:
 
 **相关 issue：** [#13481](https://github.com/eslint/eslint/issues/13481)
 
+<a id="-jiti--v220-are-no-longer-supported"></a>
+
 ## <a name="drop-old-jiti"></a> 不再支持 Jiti < v2.2.0
 
 ESLint 正式停止支持低于 v2.2.0 的 `jiti` 版本。
@@ -175,6 +189,8 @@ ESLint 正式停止支持低于 v2.2.0 的 `jiti` 版本。
 **应对方法：** 如果你的配置文件使用 `TypeScript` 编写，并且安装的是 `jiti` v2.1.2 或更早版本，请确保在使用 ESLint v10.0.0 时将其更新到至少 `2.2.0`。
 
 **相关 issue：** [#19765](https://github.com/eslint/eslint/issues/19765)
+
+<a id="-posix-character-classes-in-glob-patterns"></a>
 
 ## <a name="posix-character-classes"></a> glob 模式中的 POSIX 字符类
 
@@ -191,6 +207,8 @@ npx eslint "**/[[:upper:]]*.js"
 **应对方法：** 如果配置、CLI 参数或 Node.js API 调用中的 glob 模式看起来包含 POSIX 字符类，请确认它们能按预期匹配文件。
 
 **相关 issue：** [eslint/rewrite#66](https://github.com/eslint/rewrite/issues/66)
+
+<a id="-stylish-formatter-now-uses-native-styletext-instead-of-chalk"></a>
 
 ## <a name="stylish-formatter"></a> `stylish` 格式化器现在使用原生 `styleText` 而非 `chalk`
 
@@ -211,6 +229,8 @@ npx eslint "**/[[:upper:]]*.js"
 
 **相关 issue：** [#20012](https://github.com/eslint/eslint/issues/20012)
 
+<a id="-deprecated-options-of-the-radix-rule"></a>
+
 ## <a name="radix"></a> `radix` 规则的已弃用选项
 
 从 ESLint v10.0.0 开始，[`radix`](../rules/radix) 规则的字符串选项 `"always"` 和 `"as-needed"` 已弃用。设置这两个选项中的任意一个都不会改变规则的行为；该规则现在始终要求提供基数，就像指定了 `"always"`（默认值）选项时一样。由于默认基数取决于 `parseInt()` 的第一个参数，因此该规则会假定始终需要第二个参数（基数）。
@@ -224,6 +244,8 @@ npx eslint "**/[[:upper:]]*.js"
 - 如果使用 `"as-needed"` 选项，请移除该选项，并更新代码，使其始终为 `parseInt()` 函数提供第二个参数。或者，也可以禁用此规则。
 
 **相关 issue：** [#19916](https://github.com/eslint/eslint/issues/19916)
+
+<a id="-no-shadow-restricted-names-now-reports-globalthis-by-default"></a>
 
 ## <a name="no-shadow-restricted-names"></a> `no-shadow-restricted-names` 现在默认报告 `globalThis`
 
@@ -244,6 +266,8 @@ npx eslint "**/[[:upper:]]*.js"
 
 **相关 issue：** [#19673](https://github.com/eslint/eslint/issues/19673)
 
+<a id="-func-names-schema-is-stricter"></a>
+
 ## <a name="func-names"></a> `func-names` 的 schema 更严格
 
 在 ESLint v10.0.0 中，[`func-names`](../rules/func-names) 规则的 schema 现在不允许选项数组中包含额外项。以前，包含超出允许选项范围的额外数组元素的配置会被接受，但这些元素会被忽略。现在，此类配置会被视为无效。
@@ -262,6 +286,8 @@ npx eslint "**/[[:upper:]]*.js"
 
 **相关 issue：** [#20134](https://github.com/eslint/eslint/issues/20134)
 
+<a id="-allowconstructorflags-option-of-no-invalid-regexp-now-accepts-only-unique-items"></a>
+
 ## <a name="no-invalid-regexp"></a> `no-invalid-regexp` 的 `allowConstructorFlags` 选项现在只接受不重复的项
 
 在 ESLint v10.0.0 中，`no-invalid-regexp` 的 `allowConstructorFlags` 选项不再接受重复的标志作为输入。以前，数组中含有重复标志的配置会被接受，但其处理结果与只包含唯一标志相同。现在，此类配置会被视为无效，并导致配置错误。
@@ -276,6 +302,8 @@ npx eslint "**/[[:upper:]]*.js"
 
 **相关 issue：** [#18755](https://github.com/eslint/eslint/issues/18755)
 
+<a id="-name-property-added-to-eslint-core-configs"></a>
+
 ## <a name="eslint-config-name"></a> ESLint 核心配置中新增 `name` 属性
 
 在 ESLint v10.0.0 中，`@eslint/js` 导出的 ESLint 核心配置恢复了 `name` 属性。由于与旧版 eslintrc 配置系统不兼容，这个属性以前曾被移除。现在 eslintrc 已不再受支持，因此 `name` 属性得以恢复。
@@ -286,6 +314,8 @@ npx eslint "**/[[:upper:]]*.js"
 
 **相关 issue：** [#19864](https://github.com/eslint/eslint/issues/19864)
 
+<a id="-removal-of-type-property-in-errors-of-invalid-ruletester-cases"></a>
+
 ## <a name="ruletester-type-removed"></a> 移除无效 `RuleTester` 用例错误中的 `type` 属性
 
 在 ESLint v10.0.0 中，规则无效测试用例错误中已弃用的 `type` 属性已被移除。现在，在测试用例中使用 `type` 属性会抛出错误。
@@ -295,6 +325,8 @@ npx eslint "**/[[:upper:]]*.js"
 **应对方法：** 手动从无效测试用例的错误对象中移除 `type` 属性。
 
 **相关 issue：** [#19029](https://github.com/eslint/eslint/issues/19029)
+
+<a id="-program-ast-node-range-spans-entire-source-text"></a>
 
 ## <a name="program-node-range"></a> `Program` AST 节点范围现在涵盖整个源文本
 
@@ -319,6 +351,8 @@ const x = 1;
 
 **相关 issue：** [eslint/js#648](https://github.com/eslint/js/issues/648)
 
+<a id="-fixer-methods-now-require-string-text-arguments"></a>
+
 ## <a name="fixer-text-must-be-string"></a> Fixer 方法现在要求 `text` 参数为字符串
 
 在 ESLint v10.0.0 中，所有接受 `text` 参数的规则 fixer 方法现在都要求该参数为字符串。传入非字符串值会抛出 `TypeError`。
@@ -336,6 +370,8 @@ const x = 1;
 
 **相关 issue：** [#18807](https://github.com/eslint/eslint/issues/18807)
 
+<a id="-new-requirements-for-scopemanager-implementations"></a>
+
 ## <a name="scope-manager"></a> `ScopeManager` 实现的新要求
 
 在 ESLint v10.0.0 中，自定义 `ScopeManager` 实现必须自动解析对代码中声明的全局变量的引用，包括 `var` 和 `function` 声明；并提供实例方法 `addGlobals(names: string[])`，用于在全局作用域中创建给定名称的变量并解析对它们的引用。
@@ -347,6 +383,8 @@ const x = 1;
 **应对方法：** 如果你维护的自定义解析器提供了自定义 `ScopeManager` 实现，请更新你的自定义 `ScopeManager` 实现。
 
 **相关 issue：** [eslint/js#665](https://github.com/eslint/js/issues/665)
+
+<a id="-removal-of-deprecated-context-members"></a>
 
 ## <a name="rule-context"></a> 移除已弃用的 `context` 成员
 
@@ -391,6 +429,8 @@ eslint-transforms v9-rule-migration rules/
 
 **相关 issue：** [eslint/eslint#16999](https://github.com/eslint/eslint/issues/16999)
 
+<a id="-removal-of-deprecated-sourcecode-methods"></a>
+
 ## <a name="sourcecode-methods-removed"></a> 移除已弃用的 `SourceCode` 方法
 
 以下已弃用的 `SourceCode` 方法已在 ESLint v10.0.0 中移除：
@@ -416,6 +456,8 @@ eslint-transforms v9-rule-migration rules/
 [`@eslint/compat`](https://www.npmjs.com/package/@eslint/compat) 包提供了兼容性补丁，可帮助完成迁移。
 
 **相关 issue：** [#20113](https://github.com/eslint/eslint/issues/20113)
+
+<a id="-prohibiting-errors-or-output-of-valid-ruletester-test-cases"></a>
 
 ## <a name="stricter-rule-tester"></a> 禁止在有效的 RuleTester 测试用例中使用 `errors` 或 `output`
 
@@ -446,6 +488,8 @@ ruleTester.run("rule-id", rule, { valid: validTestCases, invalid: [] });
 **应对方法：** 手动从有效测试用例中移除所有 `errors`/`output` 属性。
 
 **相关 issue：** [#18960](https://github.com/eslint/eslint/issues/18960)
+
+<a id="-removal-of-nodetype-property-in-lintmessage-objects"></a>
 
 ## <a name="lintmessage-nodetype-removed"></a> 移除 `LintMessage` 对象中的 `nodeType` 属性
 
