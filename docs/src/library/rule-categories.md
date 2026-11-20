@@ -6,7 +6,7 @@ title: 规则类别
 
 ## 规则类别
 
-规则类别，即“recommended”、“fixable”和“hasSuggestions”，显示在[规则页面](../rules/)中。它们使用 `ruleCategories` 宏（从 `/components/rule-categories.macro.html` 导入）进行渲染。每种类别类型也有各自的宏。
+规则类别——即“recommended”、“fixable”和“hasSuggestions”——显示在[规则页面](../rules/)中。它们使用 `ruleCategories` 宏（从 `/components/rule-categories.macro.html` 导入）进行渲染。每种类别类型也有各自的宏。
 
 ```html
 { % from 'components/rule-categories.macro.html' import ruleCategories % } { {
@@ -17,7 +17,7 @@ ruleCategories({ recommended: true, fixable: true, hasSuggestions: true }) } }
 
 ### 示例
 
-{% from 'components/rule-categories.macro.html' import ruleCategories, recommended, fixable, hasSuggestions %}
+{% from 'components/rule-categories.macro.html' import ruleCategories, recommended, fixable, hasSuggestions with context %}
 
 {{ ruleCategories({
         recommended: true,
@@ -42,3 +42,4 @@ ruleCategories({ recommended: true, fixable: true, hasSuggestions: true }) } }
 {% recommended %}
 {% fixable %}
 {% hasSuggestions %}
+
